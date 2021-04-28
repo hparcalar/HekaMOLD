@@ -3,9 +3,55 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Presentation Layer", "1. Presentation Layer", "{6CED9299-E70D-46A5-BD4E-1B8ADCD10E48}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Service Layer", "2. Service Layer", "{FA05715F-214B-4F3C-9035-887F86EA846E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Business Layer", "3. Business Layer", "{474F5916-2E0A-45B5-B34C-9CCF98EF3DB4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Data Layer", "4. Data Layer", "{13208FB5-9E93-40F9-A248-7960EEF75F72}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Unit Tests", "5. Unit Tests", "{436853C6-0A91-4130-BD14-BC2F89CE9308}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heka.DataAccess", "Heka.DataAccess\Heka.DataAccess.csproj", "{5505497B-D26E-4DF1-B217-15CB4E53E831}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HekaMOLD.Business", "HekaMOLD.Business\HekaMOLD.Business.csproj", "{C0239521-ABD9-4041-BFBB-1A46C8E7FF0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HekaMOLD.Enterprise", "HekaMOLD.Enterprise\HekaMOLD.Enterprise.csproj", "{F6E7E470-E3A9-4A10-808E-FF60927EC254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HekaMOLD.ProductionZone", "HekaMOLD.ProductionZone\HekaMOLD.ProductionZone.csproj", "{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5505497B-D26E-4DF1-B217-15CB4E53E831}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5505497B-D26E-4DF1-B217-15CB4E53E831}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5505497B-D26E-4DF1-B217-15CB4E53E831}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5505497B-D26E-4DF1-B217-15CB4E53E831}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0239521-ABD9-4041-BFBB-1A46C8E7FF0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0239521-ABD9-4041-BFBB-1A46C8E7FF0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0239521-ABD9-4041-BFBB-1A46C8E7FF0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0239521-ABD9-4041-BFBB-1A46C8E7FF0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6E7E470-E3A9-4A10-808E-FF60927EC254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6E7E470-E3A9-4A10-808E-FF60927EC254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6E7E470-E3A9-4A10-808E-FF60927EC254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6E7E470-E3A9-4A10-808E-FF60927EC254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5505497B-D26E-4DF1-B217-15CB4E53E831} = {13208FB5-9E93-40F9-A248-7960EEF75F72}
+		{C0239521-ABD9-4041-BFBB-1A46C8E7FF0B} = {474F5916-2E0A-45B5-B34C-9CCF98EF3DB4}
+		{F6E7E470-E3A9-4A10-808E-FF60927EC254} = {6CED9299-E70D-46A5-BD4E-1B8ADCD10E48}
+		{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05} = {6CED9299-E70D-46A5-BD4E-1B8ADCD10E48}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C16C6462-6736-4EE4-88A4-92E852F03809}

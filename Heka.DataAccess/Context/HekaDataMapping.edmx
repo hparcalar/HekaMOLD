@@ -1,0 +1,2735 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Heka.DataAccess.Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Firm">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirmCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="FirmName" Type="nvarchar" MaxLength="250" />
+          <Property Name="FirmTitle" Type="nvarchar" MaxLength="300" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="FirmType" Type="int" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="300" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="Gsm" Type="nvarchar" MaxLength="50" />
+          <Property Name="Facebook" Type="nvarchar" MaxLength="150" />
+          <Property Name="Twitter" Type="nvarchar" MaxLength="150" />
+          <Property Name="Instagram" Type="nvarchar" MaxLength="150" />
+          <Property Name="Address" Type="nvarchar" MaxLength="500" />
+          <Property Name="Author" Type="nvarchar" MaxLength="100" />
+          <Property Name="Email" Type="nvarchar" MaxLength="250" />
+          <Property Name="TaxNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="TaxOffice" Type="nvarchar" MaxLength="150" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ForexType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ForexType" Type="nvarchar" MaxLength="50" />
+          <Property Name="ActiveSalesRate" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ActiveBuyingRate" Type="decimal" Precision="18" Scale="5" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="250" />
+          <Property Name="ItemType" Type="int" />
+          <Property Name="ItemCategoryId" Type="int" />
+          <Property Name="ItemGroupId" Type="int" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemCategoryCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="ItemCategoryName" Type="nvarchar" MaxLength="150" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemGroupCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="ItemGroupName" Type="nvarchar" MaxLength="150" />
+          <Property Name="ItemCategoryId" Type="int" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="DocumentNo" Type="nvarchar" MaxLength="100" />
+          <Property Name="OrderDate" Type="datetime" />
+          <Property Name="OrderType" Type="int" />
+          <Property Name="DateOfNeed" Type="datetime" />
+          <Property Name="FirmId" Type="int" />
+          <Property Name="InWarehouseId" Type="int" />
+          <Property Name="OutWarehouseId" Type="int" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="500" />
+          <Property Name="OrderStatus" Type="int" />
+          <Property Name="ItemRequestId" Type="int" />
+          <Property Name="SyncStatus" Type="int" />
+          <Property Name="SyncPointId" Type="int" />
+          <Property Name="SyncDate" Type="datetime" />
+          <Property Name="SyncUserId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemOrderDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemOrderId" Type="int" />
+          <Property Name="LineNumber" Type="int" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="UnitId" Type="int" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="NetQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="GrossQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="UnitPrice" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ForexId" Type="int" />
+          <Property Name="ForexRate" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ForexUnitPrice" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="TaxRate" Type="int" />
+          <Property Name="TaxAmount" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="DiscountRate" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="DiscountAmount" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="SubTotal" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="OverallTotal" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="300" />
+          <Property Name="SyncStatus" Type="int" />
+          <Property Name="SyncDate" Type="datetime" />
+          <Property Name="ItemRequestDetailId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemReceipt">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReceiptNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="DocumentNo" Type="nvarchar" MaxLength="100" />
+          <Property Name="ReceiptDate" Type="datetime" />
+          <Property Name="ReceiptType" Type="int" />
+          <Property Name="FirmId" Type="int" />
+          <Property Name="InWarehouseId" Type="int" />
+          <Property Name="OutWarehouseId" Type="int" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="DeliveryAddress" Type="nvarchar" MaxLength="300" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="300" />
+          <Property Name="SyncStatus" Type="int" />
+          <Property Name="SyncPointId" Type="int" />
+          <Property Name="SyncDate" Type="datetime" />
+          <Property Name="SyncUserId" Type="int" />
+          <Property Name="ItemOrderId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemReceiptDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemReceiptId" Type="int" />
+          <Property Name="LineNumber" Type="int" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="UnitId" Type="int" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="NetQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="GrossQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="UnitPrice" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ForexId" Type="int" />
+          <Property Name="ForexRate" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ForexUnitPrice" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="TaxRate" Type="int" />
+          <Property Name="TaxAmount" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="DiscountRate" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="DiscountAmount" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="SubTotal" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="OverallTotal" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="300" />
+          <Property Name="SyncStatus" Type="int" />
+          <Property Name="SyncDate" Type="datetime" />
+          <Property Name="ItemOrderDetailId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemRequest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RequestNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="RequestType" Type="int" />
+          <Property Name="DateOfNeed" Type="datetime" />
+          <Property Name="RequestStatus" Type="int" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemRequestApproveLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemRequestId" Type="int" />
+          <Property Name="OldRequestStatus" Type="int" />
+          <Property Name="NewRequestStatus" Type="int" />
+          <Property Name="ActorUserId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ItemRequestDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemRequestId" Type="int" />
+          <Property Name="LineNumber" Type="int" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="UnitId" Type="int" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="NetQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ApprovedQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="300" />
+          <Property Name="RequestStatus" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemUnit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="UnitId" Type="int" />
+          <Property Name="IsMainUnit" Type="bit" />
+          <Property Name="MultiplierFactor" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="DividerFactor" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="Plant">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PlantCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="PlantName" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="SyncPoint">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SyncPointCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="SyncPointName" Type="nvarchar" MaxLength="150" />
+          <Property Name="SyncPointType" Type="int" />
+          <Property Name="ConnectionString" Type="nvarchar" MaxLength="300" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+          <Property Name="EnabledOnPurchaseOrders" Type="bit" />
+          <Property Name="EnabledOnSalesOrders" Type="bit" />
+          <Property Name="EnabledOnPurchaseItemReceipts" Type="bit" />
+          <Property Name="EnabledOnSalesItemReceipts" Type="bit" />
+          <Property Name="EnabledOnConsumptionReceipts" Type="bit" />
+        </EntityType>
+        <EntityType Name="UnitType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UnitCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="UnitName" Type="nvarchar" MaxLength="150" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="150" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="250" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="UserRoleId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="UserAuth">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AuthTypeId" Type="int" />
+          <Property Name="UserRoleId" Type="int" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="IsGranted" Type="bit" />
+        </EntityType>
+        <EntityType Name="UserAuthType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AuthTypeCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="AuthTypeName" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="100" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="Warehouse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WarehouseCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="WarehouseName" Type="nvarchar" MaxLength="150" />
+          <Property Name="WarehouseType" Type="int" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <Association Name="FK_Firm_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="Firm" Type="Self.Firm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Firm">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemCategory">
+          <End Role="ItemCategory" Type="Self.ItemCategory" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="ItemCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemGroup">
+          <End Role="ItemGroup" Type="Self.ItemGroup" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="ItemGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemCategory_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemCategory" Type="Self.ItemCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemCategory">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemGroup_ItemCategory">
+          <End Role="ItemCategory" Type="Self.ItemCategory" Multiplicity="0..1" />
+          <End Role="ItemGroup" Type="Self.ItemGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemGroup">
+              <PropertyRef Name="ItemCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemGroup_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemGroup" Type="Self.ItemGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemGroup">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_Firm">
+          <End Role="Firm" Type="Self.Firm" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="FirmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_ItemRequest">
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequest">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="ItemRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_SyncPoint">
+          <End Role="SyncPoint" Type="Self.SyncPoint" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SyncPoint">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="SyncPointId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_WarehouseIn">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="InWarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_WarehouseOut">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="OutWarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_ForexType">
+          <End Role="ForexType" Type="Self.ForexType" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForexType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="ForexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_ItemOrder">
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="ItemOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_ItemRequestDetail">
+          <End Role="ItemRequestDetail" Type="Self.ItemRequestDetail" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequestDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="ItemRequestDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_Firm">
+          <End Role="Firm" Type="Self.Firm" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="FirmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_ItemOrder">
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="ItemOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_SyncPoint">
+          <End Role="SyncPoint" Type="Self.SyncPoint" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SyncPoint">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="SyncPointId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_WarehouseIn">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="InWarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_WarehouseOut">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="OutWarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_ForexType">
+          <End Role="ForexType" Type="Self.ForexType" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForexType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="ForexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_ItemOrderDetail">
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="ItemOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_ItemReceipt">
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceipt">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="ItemReceiptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequest_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequest">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestApproveLog_ItemRequest">
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="0..1" />
+          <End Role="ItemRequestApproveLog" Type="Self.ItemRequestApproveLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequest">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestApproveLog">
+              <PropertyRef Name="ItemRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestApproveLog_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ItemRequestApproveLog" Type="Self.ItemRequestApproveLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestApproveLog">
+              <PropertyRef Name="ActorUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestDetail_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemRequestDetail" Type="Self.ItemRequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestDetail_ItemRequest">
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="0..1" />
+          <End Role="ItemRequestDetail" Type="Self.ItemRequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequest">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestDetail">
+              <PropertyRef Name="ItemRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestDetail_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ItemRequestDetail" Type="Self.ItemRequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestDetail">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemUnit_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemUnit" Type="Self.ItemUnit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemUnit">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemUnit_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ItemUnit" Type="Self.ItemUnit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemUnit">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SyncPoint_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="SyncPoint" Type="Self.SyncPoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SyncPoint">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UnitType_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UnitType">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_UserRole">
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="0..1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAuth_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="UserAuth" Type="Self.UserAuth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAuth">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAuth_UserAuthType">
+          <End Role="UserAuthType" Type="Self.UserAuthType" Multiplicity="0..1" />
+          <End Role="UserAuth" Type="Self.UserAuth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAuthType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAuth">
+              <PropertyRef Name="AuthTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAuth_UserRole">
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="0..1" />
+          <End Role="UserAuth" Type="Self.UserAuth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAuth">
+              <PropertyRef Name="UserRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Warehouse_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Warehouse">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HekaDataAccessModelsStoreContainer">
+          <EntitySet Name="Firm" EntityType="Self.Firm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ForexType" EntityType="Self.ForexType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemCategory" EntityType="Self.ItemCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemGroup" EntityType="Self.ItemGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemOrder" EntityType="Self.ItemOrder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemOrderDetail" EntityType="Self.ItemOrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemReceipt" EntityType="Self.ItemReceipt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemReceiptDetail" EntityType="Self.ItemReceiptDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemRequest" EntityType="Self.ItemRequest" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemRequestApproveLog" EntityType="Self.ItemRequestApproveLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemRequestDetail" EntityType="Self.ItemRequestDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemUnit" EntityType="Self.ItemUnit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Plant" EntityType="Self.Plant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UnitType" EntityType="Self.UnitType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserAuth" EntityType="Self.UserAuth" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserAuthType" EntityType="Self.UserAuthType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Warehouse" EntityType="Self.Warehouse" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Firm_Plant" Association="Self.FK_Firm_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Firm" EntitySet="Firm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemCategory" Association="Self.FK_Item_ItemCategory">
+            <End Role="ItemCategory" EntitySet="ItemCategory" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemGroup" Association="Self.FK_Item_ItemGroup">
+            <End Role="ItemGroup" EntitySet="ItemGroup" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Plant" Association="Self.FK_Item_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemCategory_Plant" Association="Self.FK_ItemCategory_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemCategory" EntitySet="ItemCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemGroup_ItemCategory" Association="Self.FK_ItemGroup_ItemCategory">
+            <End Role="ItemCategory" EntitySet="ItemCategory" />
+            <End Role="ItemGroup" EntitySet="ItemGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemGroup_Plant" Association="Self.FK_ItemGroup_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemGroup" EntitySet="ItemGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_Firm" Association="Self.FK_ItemOrder_Firm">
+            <End Role="Firm" EntitySet="Firm" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_ItemRequest" Association="Self.FK_ItemOrder_ItemRequest">
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_Plant" Association="Self.FK_ItemOrder_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_SyncPoint" Association="Self.FK_ItemOrder_SyncPoint">
+            <End Role="SyncPoint" EntitySet="SyncPoint" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_WarehouseIn" Association="Self.FK_ItemOrder_WarehouseIn">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_WarehouseOut" Association="Self.FK_ItemOrder_WarehouseOut">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_ForexType" Association="Self.FK_ItemOrderDetail_ForexType">
+            <End Role="ForexType" EntitySet="ForexType" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_Item" Association="Self.FK_ItemOrderDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_ItemOrder" Association="Self.FK_ItemOrderDetail_ItemOrder">
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_ItemRequestDetail" Association="Self.FK_ItemOrderDetail_ItemRequestDetail">
+            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_UnitType" Association="Self.FK_ItemOrderDetail_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_Firm" Association="Self.FK_ItemReceipt_Firm">
+            <End Role="Firm" EntitySet="Firm" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_ItemOrder" Association="Self.FK_ItemReceipt_ItemOrder">
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_Plant" Association="Self.FK_ItemReceipt_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_SyncPoint" Association="Self.FK_ItemReceipt_SyncPoint">
+            <End Role="SyncPoint" EntitySet="SyncPoint" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_WarehouseIn" Association="Self.FK_ItemReceipt_WarehouseIn">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_WarehouseOut" Association="Self.FK_ItemReceipt_WarehouseOut">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_ForexType" Association="Self.FK_ItemReceiptDetail_ForexType">
+            <End Role="ForexType" EntitySet="ForexType" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_Item" Association="Self.FK_ItemReceiptDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_ItemOrderDetail" Association="Self.FK_ItemReceiptDetail_ItemOrderDetail">
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_ItemReceipt" Association="Self.FK_ItemReceiptDetail_ItemReceipt">
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_UnitType" Association="Self.FK_ItemReceiptDetail_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequest_Plant" Association="Self.FK_ItemRequest_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestApproveLog_ItemRequest" Association="Self.FK_ItemRequestApproveLog_ItemRequest">
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+            <End Role="ItemRequestApproveLog" EntitySet="ItemRequestApproveLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestApproveLog_User" Association="Self.FK_ItemRequestApproveLog_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ItemRequestApproveLog" EntitySet="ItemRequestApproveLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestDetail_Item" Association="Self.FK_ItemRequestDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestDetail_ItemRequest" Association="Self.FK_ItemRequestDetail_ItemRequest">
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestDetail_UnitType" Association="Self.FK_ItemRequestDetail_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemUnit_Item" Association="Self.FK_ItemUnit_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemUnit" EntitySet="ItemUnit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemUnit_UnitType" Association="Self.FK_ItemUnit_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemUnit" EntitySet="ItemUnit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SyncPoint_Plant" Association="Self.FK_SyncPoint_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="SyncPoint" EntitySet="SyncPoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UnitType_Plant" Association="Self.FK_UnitType_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="UnitType" EntitySet="UnitType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Plant" Association="Self.FK_User_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_UserRole" Association="Self.FK_User_UserRole">
+            <End Role="UserRole" EntitySet="UserRole" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAuth_User" Association="Self.FK_UserAuth_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserAuth" EntitySet="UserAuth" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAuth_UserAuthType" Association="Self.FK_UserAuth_UserAuthType">
+            <End Role="UserAuthType" EntitySet="UserAuthType" />
+            <End Role="UserAuth" EntitySet="UserAuth" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAuth_UserRole" Association="Self.FK_UserAuth_UserRole">
+            <End Role="UserRole" EntitySet="UserRole" />
+            <End Role="UserAuth" EntitySet="UserAuth" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_Plant" Association="Self.FK_UserRole_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Warehouse_Plant" Association="Self.FK_Warehouse_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Warehouse" EntitySet="Warehouse" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Heka.DataAccess.Models" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Firm">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirmCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FirmName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FirmTitle" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="FirmType" Type="Int32" />
+          <Property Name="Explanation" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Gsm" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Facebook" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Twitter" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Instagram" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Author" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="TaxNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxOffice" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_Firm_Plant" FromRole="Firm" ToRole="Plant" />
+          <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrder_Firm" FromRole="Firm" ToRole="ItemOrder" />
+          <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_Firm" FromRole="Firm" ToRole="ItemReceipt" />
+        </EntityType>
+        <EntityType Name="ForexType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ForexType1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ActiveSalesRate" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ActiveBuyingRate" Type="Decimal" Precision="18" Scale="5" />
+          <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemOrderDetail_ForexType" FromRole="ForexType" ToRole="ItemOrderDetail" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_ForexType" FromRole="ForexType" ToRole="ItemReceiptDetail" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ItemType" Type="Int32" />
+          <Property Name="ItemCategoryId" Type="Int32" />
+          <Property Name="ItemGroupId" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ItemCategory" Relationship="Self.FK_Item_ItemCategory" FromRole="Item" ToRole="ItemCategory" />
+          <NavigationProperty Name="ItemGroup" Relationship="Self.FK_Item_ItemGroup" FromRole="Item" ToRole="ItemGroup" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_Item_Plant" FromRole="Item" ToRole="Plant" />
+          <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemOrderDetail_Item" FromRole="Item" ToRole="ItemOrderDetail" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_Item" FromRole="Item" ToRole="ItemReceiptDetail" />
+          <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemRequestDetail_Item" FromRole="Item" ToRole="ItemRequestDetail" />
+          <NavigationProperty Name="ItemUnit" Relationship="Self.FK_ItemUnit_Item" FromRole="Item" ToRole="ItemUnit" />
+        </EntityType>
+        <EntityType Name="ItemCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemCategoryCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ItemCategoryName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_Item_ItemCategory" FromRole="ItemCategory" ToRole="Item" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_ItemCategory_Plant" FromRole="ItemCategory" ToRole="Plant" />
+          <NavigationProperty Name="ItemGroup" Relationship="Self.FK_ItemGroup_ItemCategory" FromRole="ItemCategory" ToRole="ItemGroup" />
+        </EntityType>
+        <EntityType Name="ItemGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemGroupCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ItemGroupName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ItemCategoryId" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_Item_ItemGroup" FromRole="ItemGroup" ToRole="Item" />
+          <NavigationProperty Name="ItemCategory" Relationship="Self.FK_ItemGroup_ItemCategory" FromRole="ItemGroup" ToRole="ItemCategory" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_ItemGroup_Plant" FromRole="ItemGroup" ToRole="Plant" />
+        </EntityType>
+        <EntityType Name="ItemOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DocumentNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="OrderDate" Type="DateTime" Precision="3" />
+          <Property Name="OrderType" Type="Int32" />
+          <Property Name="DateOfNeed" Type="DateTime" Precision="3" />
+          <Property Name="FirmId" Type="Int32" />
+          <Property Name="InWarehouseId" Type="Int32" />
+          <Property Name="OutWarehouseId" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="Explanation" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="OrderStatus" Type="Int32" />
+          <Property Name="ItemRequestId" Type="Int32" />
+          <Property Name="SyncStatus" Type="Int32" />
+          <Property Name="SyncPointId" Type="Int32" />
+          <Property Name="SyncDate" Type="DateTime" Precision="3" />
+          <Property Name="SyncUserId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Firm" Relationship="Self.FK_ItemOrder_Firm" FromRole="ItemOrder" ToRole="Firm" />
+          <NavigationProperty Name="ItemRequest" Relationship="Self.FK_ItemOrder_ItemRequest" FromRole="ItemOrder" ToRole="ItemRequest" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_ItemOrder_Plant" FromRole="ItemOrder" ToRole="Plant" />
+          <NavigationProperty Name="SyncPoint" Relationship="Self.FK_ItemOrder_SyncPoint" FromRole="ItemOrder" ToRole="SyncPoint" />
+          <NavigationProperty Name="Warehouse" Relationship="Self.FK_ItemOrder_WarehouseIn" FromRole="ItemOrder" ToRole="Warehouse" />
+          <NavigationProperty Name="Warehouse1" Relationship="Self.FK_ItemOrder_WarehouseOut" FromRole="ItemOrder" ToRole="Warehouse" />
+          <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemOrderDetail_ItemOrder" FromRole="ItemOrder" ToRole="ItemOrderDetail" />
+          <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_ItemOrder" FromRole="ItemOrder" ToRole="ItemReceipt" />
+        </EntityType>
+        <EntityType Name="ItemOrderDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemOrderId" Type="Int32" />
+          <Property Name="LineNumber" Type="Int32" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="UnitId" Type="Int32" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="NetQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="GrossQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="UnitPrice" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ForexId" Type="Int32" />
+          <Property Name="ForexRate" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ForexUnitPrice" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="TaxRate" Type="Int32" />
+          <Property Name="TaxAmount" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="DiscountRate" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="DiscountAmount" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="SubTotal" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="OverallTotal" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="Explanation" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="SyncStatus" Type="Int32" />
+          <Property Name="SyncDate" Type="DateTime" Precision="3" />
+          <Property Name="ItemRequestDetailId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ForexType" Relationship="Self.FK_ItemOrderDetail_ForexType" FromRole="ItemOrderDetail" ToRole="ForexType" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_ItemOrderDetail_Item" FromRole="ItemOrderDetail" ToRole="Item" />
+          <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrderDetail_ItemOrder" FromRole="ItemOrderDetail" ToRole="ItemOrder" />
+          <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemOrderDetail_ItemRequestDetail" FromRole="ItemOrderDetail" ToRole="ItemRequestDetail" />
+          <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemOrderDetail_UnitType" FromRole="ItemOrderDetail" ToRole="UnitType" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_ItemOrderDetail" FromRole="ItemOrderDetail" ToRole="ItemReceiptDetail" />
+        </EntityType>
+        <EntityType Name="ItemReceipt">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReceiptNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DocumentNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiptDate" Type="DateTime" Precision="3" />
+          <Property Name="ReceiptType" Type="Int32" />
+          <Property Name="FirmId" Type="Int32" />
+          <Property Name="InWarehouseId" Type="Int32" />
+          <Property Name="OutWarehouseId" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="DeliveryAddress" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Explanation" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="SyncStatus" Type="Int32" />
+          <Property Name="SyncPointId" Type="Int32" />
+          <Property Name="SyncDate" Type="DateTime" Precision="3" />
+          <Property Name="SyncUserId" Type="Int32" />
+          <Property Name="ItemOrderId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Firm" Relationship="Self.FK_ItemReceipt_Firm" FromRole="ItemReceipt" ToRole="Firm" />
+          <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemReceipt_ItemOrder" FromRole="ItemReceipt" ToRole="ItemOrder" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_ItemReceipt_Plant" FromRole="ItemReceipt" ToRole="Plant" />
+          <NavigationProperty Name="SyncPoint" Relationship="Self.FK_ItemReceipt_SyncPoint" FromRole="ItemReceipt" ToRole="SyncPoint" />
+          <NavigationProperty Name="Warehouse" Relationship="Self.FK_ItemReceipt_WarehouseIn" FromRole="ItemReceipt" ToRole="Warehouse" />
+          <NavigationProperty Name="Warehouse1" Relationship="Self.FK_ItemReceipt_WarehouseOut" FromRole="ItemReceipt" ToRole="Warehouse" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_ItemReceipt" FromRole="ItemReceipt" ToRole="ItemReceiptDetail" />
+        </EntityType>
+        <EntityType Name="ItemReceiptDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemReceiptId" Type="Int32" />
+          <Property Name="LineNumber" Type="Int32" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="UnitId" Type="Int32" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="NetQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="GrossQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="UnitPrice" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ForexId" Type="Int32" />
+          <Property Name="ForexRate" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ForexUnitPrice" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="TaxRate" Type="Int32" />
+          <Property Name="TaxAmount" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="DiscountRate" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="DiscountAmount" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="SubTotal" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="OverallTotal" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="Explanation" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="SyncStatus" Type="Int32" />
+          <Property Name="SyncDate" Type="DateTime" Precision="3" />
+          <Property Name="ItemOrderDetailId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ForexType" Relationship="Self.FK_ItemReceiptDetail_ForexType" FromRole="ItemReceiptDetail" ToRole="ForexType" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_ItemReceiptDetail_Item" FromRole="ItemReceiptDetail" ToRole="Item" />
+          <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemReceiptDetail_ItemOrderDetail" FromRole="ItemReceiptDetail" ToRole="ItemOrderDetail" />
+          <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceiptDetail_ItemReceipt" FromRole="ItemReceiptDetail" ToRole="ItemReceipt" />
+          <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemReceiptDetail_UnitType" FromRole="ItemReceiptDetail" ToRole="UnitType" />
+        </EntityType>
+        <EntityType Name="ItemRequest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RequestNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RequestType" Type="Int32" />
+          <Property Name="DateOfNeed" Type="DateTime" Precision="3" />
+          <Property Name="RequestStatus" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="Explanation" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrder_ItemRequest" FromRole="ItemRequest" ToRole="ItemOrder" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_ItemRequest_Plant" FromRole="ItemRequest" ToRole="Plant" />
+          <NavigationProperty Name="ItemRequestApproveLog" Relationship="Self.FK_ItemRequestApproveLog_ItemRequest" FromRole="ItemRequest" ToRole="ItemRequestApproveLog" />
+          <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemRequestDetail_ItemRequest" FromRole="ItemRequest" ToRole="ItemRequestDetail" />
+        </EntityType>
+        <EntityType Name="ItemRequestApproveLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemRequestId" Type="Int32" />
+          <Property Name="OldRequestStatus" Type="Int32" />
+          <Property Name="NewRequestStatus" Type="Int32" />
+          <Property Name="ActorUserId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ItemRequest" Relationship="Self.FK_ItemRequestApproveLog_ItemRequest" FromRole="ItemRequestApproveLog" ToRole="ItemRequest" />
+          <NavigationProperty Name="User" Relationship="Self.FK_ItemRequestApproveLog_User" FromRole="ItemRequestApproveLog" ToRole="User" />
+        </EntityType>
+        <EntityType Name="ItemRequestDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemRequestId" Type="Int32" />
+          <Property Name="LineNumber" Type="Int32" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="UnitId" Type="Int32" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="NetQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ApprovedQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="Explanation" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="RequestStatus" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_ItemRequestDetail_Item" FromRole="ItemRequestDetail" ToRole="Item" />
+          <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemOrderDetail_ItemRequestDetail" FromRole="ItemRequestDetail" ToRole="ItemOrderDetail" />
+          <NavigationProperty Name="ItemRequest" Relationship="Self.FK_ItemRequestDetail_ItemRequest" FromRole="ItemRequestDetail" ToRole="ItemRequest" />
+          <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemRequestDetail_UnitType" FromRole="ItemRequestDetail" ToRole="UnitType" />
+        </EntityType>
+        <EntityType Name="ItemUnit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="UnitId" Type="Int32" />
+          <Property Name="IsMainUnit" Type="Boolean" />
+          <Property Name="MultiplierFactor" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="DividerFactor" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_ItemUnit_Item" FromRole="ItemUnit" ToRole="Item" />
+          <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemUnit_UnitType" FromRole="ItemUnit" ToRole="UnitType" />
+        </EntityType>
+        <EntityType Name="Plant">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PlantCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PlantName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Firm" Relationship="Self.FK_Firm_Plant" FromRole="Plant" ToRole="Firm" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_Item_Plant" FromRole="Plant" ToRole="Item" />
+          <NavigationProperty Name="ItemCategory" Relationship="Self.FK_ItemCategory_Plant" FromRole="Plant" ToRole="ItemCategory" />
+          <NavigationProperty Name="ItemGroup" Relationship="Self.FK_ItemGroup_Plant" FromRole="Plant" ToRole="ItemGroup" />
+          <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrder_Plant" FromRole="Plant" ToRole="ItemOrder" />
+          <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_Plant" FromRole="Plant" ToRole="ItemReceipt" />
+          <NavigationProperty Name="ItemRequest" Relationship="Self.FK_ItemRequest_Plant" FromRole="Plant" ToRole="ItemRequest" />
+          <NavigationProperty Name="SyncPoint" Relationship="Self.FK_SyncPoint_Plant" FromRole="Plant" ToRole="SyncPoint" />
+          <NavigationProperty Name="UnitType" Relationship="Self.FK_UnitType_Plant" FromRole="Plant" ToRole="UnitType" />
+          <NavigationProperty Name="User" Relationship="Self.FK_User_Plant" FromRole="Plant" ToRole="User" />
+          <NavigationProperty Name="UserRole" Relationship="Self.FK_UserRole_Plant" FromRole="Plant" ToRole="UserRole" />
+          <NavigationProperty Name="Warehouse" Relationship="Self.FK_Warehouse_Plant" FromRole="Plant" ToRole="Warehouse" />
+        </EntityType>
+        <EntityType Name="SyncPoint">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SyncPointCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SyncPointName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="SyncPointType" Type="Int32" />
+          <Property Name="ConnectionString" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <Property Name="EnabledOnPurchaseOrders" Type="Boolean" />
+          <Property Name="EnabledOnSalesOrders" Type="Boolean" />
+          <Property Name="EnabledOnPurchaseItemReceipts" Type="Boolean" />
+          <Property Name="EnabledOnSalesItemReceipts" Type="Boolean" />
+          <Property Name="EnabledOnConsumptionReceipts" Type="Boolean" />
+          <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrder_SyncPoint" FromRole="SyncPoint" ToRole="ItemOrder" />
+          <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_SyncPoint" FromRole="SyncPoint" ToRole="ItemReceipt" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_SyncPoint_Plant" FromRole="SyncPoint" ToRole="Plant" />
+        </EntityType>
+        <EntityType Name="UnitType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UnitCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UnitName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemOrderDetail_UnitType" FromRole="UnitType" ToRole="ItemOrderDetail" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_UnitType" FromRole="UnitType" ToRole="ItemReceiptDetail" />
+          <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemRequestDetail_UnitType" FromRole="UnitType" ToRole="ItemRequestDetail" />
+          <NavigationProperty Name="ItemUnit" Relationship="Self.FK_ItemUnit_UnitType" FromRole="UnitType" ToRole="ItemUnit" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_UnitType_Plant" FromRole="UnitType" ToRole="Plant" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="UserRoleId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ItemRequestApproveLog" Relationship="Self.FK_ItemRequestApproveLog_User" FromRole="User" ToRole="ItemRequestApproveLog" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_User_Plant" FromRole="User" ToRole="Plant" />
+          <NavigationProperty Name="UserRole" Relationship="Self.FK_User_UserRole" FromRole="User" ToRole="UserRole" />
+          <NavigationProperty Name="UserAuth" Relationship="Self.FK_UserAuth_User" FromRole="User" ToRole="UserAuth" />
+        </EntityType>
+        <EntityType Name="UserAuth">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AuthTypeId" Type="Int32" />
+          <Property Name="UserRoleId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="IsGranted" Type="Boolean" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserAuth_User" FromRole="UserAuth" ToRole="User" />
+          <NavigationProperty Name="UserAuthType" Relationship="Self.FK_UserAuth_UserAuthType" FromRole="UserAuth" ToRole="UserAuthType" />
+          <NavigationProperty Name="UserRole" Relationship="Self.FK_UserAuth_UserRole" FromRole="UserAuth" ToRole="UserRole" />
+        </EntityType>
+        <EntityType Name="UserAuthType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AuthTypeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AuthTypeName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserAuth" Relationship="Self.FK_UserAuth_UserAuthType" FromRole="UserAuthType" ToRole="UserAuth" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_UserRole_Plant" FromRole="UserRole" ToRole="Plant" />
+          <NavigationProperty Name="User" Relationship="Self.FK_User_UserRole" FromRole="UserRole" ToRole="User" />
+          <NavigationProperty Name="UserAuth" Relationship="Self.FK_UserAuth_UserRole" FromRole="UserRole" ToRole="UserAuth" />
+        </EntityType>
+        <EntityType Name="Warehouse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WarehouseCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WarehouseName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="WarehouseType" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrder_WarehouseIn" FromRole="Warehouse" ToRole="ItemOrder" />
+          <NavigationProperty Name="ItemOrder1" Relationship="Self.FK_ItemOrder_WarehouseOut" FromRole="Warehouse" ToRole="ItemOrder" />
+          <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_WarehouseIn" FromRole="Warehouse" ToRole="ItemReceipt" />
+          <NavigationProperty Name="ItemReceipt1" Relationship="Self.FK_ItemReceipt_WarehouseOut" FromRole="Warehouse" ToRole="ItemReceipt" />
+          <NavigationProperty Name="Plant" Relationship="Self.FK_Warehouse_Plant" FromRole="Warehouse" ToRole="Plant" />
+        </EntityType>
+        <Association Name="FK_Firm_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="Firm" Type="Self.Firm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Firm">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_Firm">
+          <End Role="Firm" Type="Self.Firm" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="FirmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_Firm">
+          <End Role="Firm" Type="Self.Firm" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="FirmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_ForexType">
+          <End Role="ForexType" Type="Self.ForexType" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForexType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="ForexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_ForexType">
+          <End Role="ForexType" Type="Self.ForexType" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForexType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="ForexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemCategory">
+          <End Role="ItemCategory" Type="Self.ItemCategory" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="ItemCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemGroup">
+          <End Role="ItemGroup" Type="Self.ItemGroup" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="ItemGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestDetail_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemRequestDetail" Type="Self.ItemRequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemUnit_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemUnit" Type="Self.ItemUnit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemUnit">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemCategory_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemCategory" Type="Self.ItemCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemCategory">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemGroup_ItemCategory">
+          <End Role="ItemCategory" Type="Self.ItemCategory" Multiplicity="0..1" />
+          <End Role="ItemGroup" Type="Self.ItemGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemGroup">
+              <PropertyRef Name="ItemCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemGroup_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemGroup" Type="Self.ItemGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemGroup">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_ItemRequest">
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequest">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="ItemRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_SyncPoint">
+          <End Role="SyncPoint" Type="Self.SyncPoint" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SyncPoint">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="SyncPointId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_WarehouseIn">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="InWarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrder_WarehouseOut">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrder">
+              <PropertyRef Name="OutWarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_ItemOrder">
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="ItemOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_ItemOrder">
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="ItemOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_ItemRequestDetail">
+          <End Role="ItemRequestDetail" Type="Self.ItemRequestDetail" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequestDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="ItemRequestDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_ItemOrderDetail">
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="ItemOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_SyncPoint">
+          <End Role="SyncPoint" Type="Self.SyncPoint" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SyncPoint">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="SyncPointId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_WarehouseIn">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="InWarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceipt_WarehouseOut">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceipt">
+              <PropertyRef Name="OutWarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_ItemReceipt">
+          <End Role="ItemReceipt" Type="Self.ItemReceipt" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceipt">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="ItemReceiptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequest_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequest">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestApproveLog_ItemRequest">
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="0..1" />
+          <End Role="ItemRequestApproveLog" Type="Self.ItemRequestApproveLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequest">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestApproveLog">
+              <PropertyRef Name="ItemRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestDetail_ItemRequest">
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="0..1" />
+          <End Role="ItemRequestDetail" Type="Self.ItemRequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequest">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestDetail">
+              <PropertyRef Name="ItemRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestApproveLog_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ItemRequestApproveLog" Type="Self.ItemRequestApproveLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestApproveLog">
+              <PropertyRef Name="ActorUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestDetail_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ItemRequestDetail" Type="Self.ItemRequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestDetail">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemUnit_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ItemUnit" Type="Self.ItemUnit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemUnit">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SyncPoint_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="SyncPoint" Type="Self.SyncPoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SyncPoint">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UnitType_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UnitType">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Warehouse_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Warehouse">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_UserRole">
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="0..1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAuth_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="UserAuth" Type="Self.UserAuth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAuth">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAuth_UserAuthType">
+          <End Role="UserAuthType" Type="Self.UserAuthType" Multiplicity="0..1" />
+          <End Role="UserAuth" Type="Self.UserAuth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAuthType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAuth">
+              <PropertyRef Name="AuthTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAuth_UserRole">
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="0..1" />
+          <End Role="UserAuth" Type="Self.UserAuth" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAuth">
+              <PropertyRef Name="UserRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HekaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Firm" EntityType="Self.Firm" />
+          <EntitySet Name="ForexType" EntityType="Self.ForexType" />
+          <EntitySet Name="Item" EntityType="Self.Item" />
+          <EntitySet Name="ItemCategory" EntityType="Self.ItemCategory" />
+          <EntitySet Name="ItemGroup" EntityType="Self.ItemGroup" />
+          <EntitySet Name="ItemOrder" EntityType="Self.ItemOrder" />
+          <EntitySet Name="ItemOrderDetail" EntityType="Self.ItemOrderDetail" />
+          <EntitySet Name="ItemReceipt" EntityType="Self.ItemReceipt" />
+          <EntitySet Name="ItemReceiptDetail" EntityType="Self.ItemReceiptDetail" />
+          <EntitySet Name="ItemRequest" EntityType="Self.ItemRequest" />
+          <EntitySet Name="ItemRequestApproveLog" EntityType="Self.ItemRequestApproveLog" />
+          <EntitySet Name="ItemRequestDetail" EntityType="Self.ItemRequestDetail" />
+          <EntitySet Name="ItemUnit" EntityType="Self.ItemUnit" />
+          <EntitySet Name="Plant" EntityType="Self.Plant" />
+          <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" />
+          <EntitySet Name="UnitType" EntityType="Self.UnitType" />
+          <EntitySet Name="User" EntityType="Self.User" />
+          <EntitySet Name="UserAuth" EntityType="Self.UserAuth" />
+          <EntitySet Name="UserAuthType" EntityType="Self.UserAuthType" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" />
+          <EntitySet Name="Warehouse" EntityType="Self.Warehouse" />
+          <AssociationSet Name="FK_Firm_Plant" Association="Self.FK_Firm_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Firm" EntitySet="Firm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_Firm" Association="Self.FK_ItemOrder_Firm">
+            <End Role="Firm" EntitySet="Firm" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_Firm" Association="Self.FK_ItemReceipt_Firm">
+            <End Role="Firm" EntitySet="Firm" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_ForexType" Association="Self.FK_ItemOrderDetail_ForexType">
+            <End Role="ForexType" EntitySet="ForexType" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_ForexType" Association="Self.FK_ItemReceiptDetail_ForexType">
+            <End Role="ForexType" EntitySet="ForexType" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemCategory" Association="Self.FK_Item_ItemCategory">
+            <End Role="ItemCategory" EntitySet="ItemCategory" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemGroup" Association="Self.FK_Item_ItemGroup">
+            <End Role="ItemGroup" EntitySet="ItemGroup" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Plant" Association="Self.FK_Item_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_Item" Association="Self.FK_ItemOrderDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_Item" Association="Self.FK_ItemReceiptDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestDetail_Item" Association="Self.FK_ItemRequestDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemUnit_Item" Association="Self.FK_ItemUnit_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemUnit" EntitySet="ItemUnit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemCategory_Plant" Association="Self.FK_ItemCategory_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemCategory" EntitySet="ItemCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemGroup_ItemCategory" Association="Self.FK_ItemGroup_ItemCategory">
+            <End Role="ItemCategory" EntitySet="ItemCategory" />
+            <End Role="ItemGroup" EntitySet="ItemGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemGroup_Plant" Association="Self.FK_ItemGroup_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemGroup" EntitySet="ItemGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_ItemRequest" Association="Self.FK_ItemOrder_ItemRequest">
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_Plant" Association="Self.FK_ItemOrder_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_SyncPoint" Association="Self.FK_ItemOrder_SyncPoint">
+            <End Role="SyncPoint" EntitySet="SyncPoint" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_WarehouseIn" Association="Self.FK_ItemOrder_WarehouseIn">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrder_WarehouseOut" Association="Self.FK_ItemOrder_WarehouseOut">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_ItemOrder" Association="Self.FK_ItemOrderDetail_ItemOrder">
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_ItemOrder" Association="Self.FK_ItemReceipt_ItemOrder">
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_ItemRequestDetail" Association="Self.FK_ItemOrderDetail_ItemRequestDetail">
+            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_UnitType" Association="Self.FK_ItemOrderDetail_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_ItemOrderDetail" Association="Self.FK_ItemReceiptDetail_ItemOrderDetail">
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_Plant" Association="Self.FK_ItemReceipt_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_SyncPoint" Association="Self.FK_ItemReceipt_SyncPoint">
+            <End Role="SyncPoint" EntitySet="SyncPoint" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_WarehouseIn" Association="Self.FK_ItemReceipt_WarehouseIn">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceipt_WarehouseOut" Association="Self.FK_ItemReceipt_WarehouseOut">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_ItemReceipt" Association="Self.FK_ItemReceiptDetail_ItemReceipt">
+            <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_UnitType" Association="Self.FK_ItemReceiptDetail_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequest_Plant" Association="Self.FK_ItemRequest_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestApproveLog_ItemRequest" Association="Self.FK_ItemRequestApproveLog_ItemRequest">
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+            <End Role="ItemRequestApproveLog" EntitySet="ItemRequestApproveLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestDetail_ItemRequest" Association="Self.FK_ItemRequestDetail_ItemRequest">
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestApproveLog_User" Association="Self.FK_ItemRequestApproveLog_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ItemRequestApproveLog" EntitySet="ItemRequestApproveLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestDetail_UnitType" Association="Self.FK_ItemRequestDetail_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemUnit_UnitType" Association="Self.FK_ItemUnit_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemUnit" EntitySet="ItemUnit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SyncPoint_Plant" Association="Self.FK_SyncPoint_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="SyncPoint" EntitySet="SyncPoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UnitType_Plant" Association="Self.FK_UnitType_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="UnitType" EntitySet="UnitType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Plant" Association="Self.FK_User_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_Plant" Association="Self.FK_UserRole_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Warehouse_Plant" Association="Self.FK_Warehouse_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Warehouse" EntitySet="Warehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_UserRole" Association="Self.FK_User_UserRole">
+            <End Role="UserRole" EntitySet="UserRole" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAuth_User" Association="Self.FK_UserAuth_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserAuth" EntitySet="UserAuth" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAuth_UserAuthType" Association="Self.FK_UserAuth_UserAuthType">
+            <End Role="UserAuthType" EntitySet="UserAuthType" />
+            <End Role="UserAuth" EntitySet="UserAuth" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAuth_UserRole" Association="Self.FK_UserAuth_UserRole">
+            <End Role="UserRole" EntitySet="UserRole" />
+            <End Role="UserAuth" EntitySet="UserAuth" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HekaDataAccessModelsStoreContainer" CdmEntityContainer="HekaEntities">
+          <EntitySetMapping Name="Firm">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Firm">
+              <MappingFragment StoreEntitySet="Firm">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirmCode" ColumnName="FirmCode" />
+                <ScalarProperty Name="FirmName" ColumnName="FirmName" />
+                <ScalarProperty Name="FirmTitle" ColumnName="FirmTitle" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="FirmType" ColumnName="FirmType" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Gsm" ColumnName="Gsm" />
+                <ScalarProperty Name="Facebook" ColumnName="Facebook" />
+                <ScalarProperty Name="Twitter" ColumnName="Twitter" />
+                <ScalarProperty Name="Instagram" ColumnName="Instagram" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="TaxNo" ColumnName="TaxNo" />
+                <ScalarProperty Name="TaxOffice" ColumnName="TaxOffice" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ForexType">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ForexType">
+              <MappingFragment StoreEntitySet="ForexType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ForexType1" ColumnName="ForexType" />
+                <ScalarProperty Name="ActiveSalesRate" ColumnName="ActiveSalesRate" />
+                <ScalarProperty Name="ActiveBuyingRate" ColumnName="ActiveBuyingRate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Item">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Item">
+              <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemNo" ColumnName="ItemNo" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemType" ColumnName="ItemType" />
+                <ScalarProperty Name="ItemCategoryId" ColumnName="ItemCategoryId" />
+                <ScalarProperty Name="ItemGroupId" ColumnName="ItemGroupId" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemCategory">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemCategory">
+              <MappingFragment StoreEntitySet="ItemCategory">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemCategoryCode" ColumnName="ItemCategoryCode" />
+                <ScalarProperty Name="ItemCategoryName" ColumnName="ItemCategoryName" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemGroup">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemGroup">
+              <MappingFragment StoreEntitySet="ItemGroup">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemGroupCode" ColumnName="ItemGroupCode" />
+                <ScalarProperty Name="ItemGroupName" ColumnName="ItemGroupName" />
+                <ScalarProperty Name="ItemCategoryId" ColumnName="ItemCategoryId" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemOrder">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemOrder">
+              <MappingFragment StoreEntitySet="ItemOrder">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="DocumentNo" ColumnName="DocumentNo" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="OrderType" ColumnName="OrderType" />
+                <ScalarProperty Name="DateOfNeed" ColumnName="DateOfNeed" />
+                <ScalarProperty Name="FirmId" ColumnName="FirmId" />
+                <ScalarProperty Name="InWarehouseId" ColumnName="InWarehouseId" />
+                <ScalarProperty Name="OutWarehouseId" ColumnName="OutWarehouseId" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="ItemRequestId" ColumnName="ItemRequestId" />
+                <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncPointId" ColumnName="SyncPointId" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="SyncUserId" ColumnName="SyncUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemOrderDetail">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemOrderDetail">
+              <MappingFragment StoreEntitySet="ItemOrderDetail">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemOrderId" ColumnName="ItemOrderId" />
+                <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NetQuantity" ColumnName="NetQuantity" />
+                <ScalarProperty Name="GrossQuantity" ColumnName="GrossQuantity" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="ForexId" ColumnName="ForexId" />
+                <ScalarProperty Name="ForexRate" ColumnName="ForexRate" />
+                <ScalarProperty Name="ForexUnitPrice" ColumnName="ForexUnitPrice" />
+                <ScalarProperty Name="TaxRate" ColumnName="TaxRate" />
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="DiscountRate" ColumnName="DiscountRate" />
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="OverallTotal" ColumnName="OverallTotal" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="ItemRequestDetailId" ColumnName="ItemRequestDetailId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemReceipt">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemReceipt">
+              <MappingFragment StoreEntitySet="ItemReceipt">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ReceiptNo" ColumnName="ReceiptNo" />
+                <ScalarProperty Name="DocumentNo" ColumnName="DocumentNo" />
+                <ScalarProperty Name="ReceiptDate" ColumnName="ReceiptDate" />
+                <ScalarProperty Name="ReceiptType" ColumnName="ReceiptType" />
+                <ScalarProperty Name="FirmId" ColumnName="FirmId" />
+                <ScalarProperty Name="InWarehouseId" ColumnName="InWarehouseId" />
+                <ScalarProperty Name="OutWarehouseId" ColumnName="OutWarehouseId" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncPointId" ColumnName="SyncPointId" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="SyncUserId" ColumnName="SyncUserId" />
+                <ScalarProperty Name="ItemOrderId" ColumnName="ItemOrderId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemReceiptDetail">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemReceiptDetail">
+              <MappingFragment StoreEntitySet="ItemReceiptDetail">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemReceiptId" ColumnName="ItemReceiptId" />
+                <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NetQuantity" ColumnName="NetQuantity" />
+                <ScalarProperty Name="GrossQuantity" ColumnName="GrossQuantity" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="ForexId" ColumnName="ForexId" />
+                <ScalarProperty Name="ForexRate" ColumnName="ForexRate" />
+                <ScalarProperty Name="ForexUnitPrice" ColumnName="ForexUnitPrice" />
+                <ScalarProperty Name="TaxRate" ColumnName="TaxRate" />
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="DiscountRate" ColumnName="DiscountRate" />
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="OverallTotal" ColumnName="OverallTotal" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="ItemOrderDetailId" ColumnName="ItemOrderDetailId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemRequest">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemRequest">
+              <MappingFragment StoreEntitySet="ItemRequest">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RequestNo" ColumnName="RequestNo" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="DateOfNeed" ColumnName="DateOfNeed" />
+                <ScalarProperty Name="RequestStatus" ColumnName="RequestStatus" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemRequestApproveLog">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemRequestApproveLog">
+              <MappingFragment StoreEntitySet="ItemRequestApproveLog">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemRequestId" ColumnName="ItemRequestId" />
+                <ScalarProperty Name="OldRequestStatus" ColumnName="OldRequestStatus" />
+                <ScalarProperty Name="NewRequestStatus" ColumnName="NewRequestStatus" />
+                <ScalarProperty Name="ActorUserId" ColumnName="ActorUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemRequestDetail">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemRequestDetail">
+              <MappingFragment StoreEntitySet="ItemRequestDetail">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemRequestId" ColumnName="ItemRequestId" />
+                <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NetQuantity" ColumnName="NetQuantity" />
+                <ScalarProperty Name="ApprovedQuantity" ColumnName="ApprovedQuantity" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="RequestStatus" ColumnName="RequestStatus" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemUnit">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemUnit">
+              <MappingFragment StoreEntitySet="ItemUnit">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="IsMainUnit" ColumnName="IsMainUnit" />
+                <ScalarProperty Name="MultiplierFactor" ColumnName="MultiplierFactor" />
+                <ScalarProperty Name="DividerFactor" ColumnName="DividerFactor" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Plant">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Plant">
+              <MappingFragment StoreEntitySet="Plant">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PlantCode" ColumnName="PlantCode" />
+                <ScalarProperty Name="PlantName" ColumnName="PlantName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SyncPoint">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.SyncPoint">
+              <MappingFragment StoreEntitySet="SyncPoint">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SyncPointCode" ColumnName="SyncPointCode" />
+                <ScalarProperty Name="SyncPointName" ColumnName="SyncPointName" />
+                <ScalarProperty Name="SyncPointType" ColumnName="SyncPointType" />
+                <ScalarProperty Name="ConnectionString" ColumnName="ConnectionString" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="EnabledOnPurchaseOrders" ColumnName="EnabledOnPurchaseOrders" />
+                <ScalarProperty Name="EnabledOnSalesOrders" ColumnName="EnabledOnSalesOrders" />
+                <ScalarProperty Name="EnabledOnPurchaseItemReceipts" ColumnName="EnabledOnPurchaseItemReceipts" />
+                <ScalarProperty Name="EnabledOnSalesItemReceipts" ColumnName="EnabledOnSalesItemReceipts" />
+                <ScalarProperty Name="EnabledOnConsumptionReceipts" ColumnName="EnabledOnConsumptionReceipts" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UnitType">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.UnitType">
+              <MappingFragment StoreEntitySet="UnitType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UnitCode" ColumnName="UnitCode" />
+                <ScalarProperty Name="UnitName" ColumnName="UnitName" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserCode" ColumnName="UserCode" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="UserRoleId" ColumnName="UserRoleId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAuth">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.UserAuth">
+              <MappingFragment StoreEntitySet="UserAuth">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AuthTypeId" ColumnName="AuthTypeId" />
+                <ScalarProperty Name="UserRoleId" ColumnName="UserRoleId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="IsGranted" ColumnName="IsGranted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAuthType">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.UserAuthType">
+              <MappingFragment StoreEntitySet="UserAuthType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AuthTypeCode" ColumnName="AuthTypeCode" />
+                <ScalarProperty Name="AuthTypeName" ColumnName="AuthTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRole">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.UserRole">
+              <MappingFragment StoreEntitySet="UserRole">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Warehouse">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Warehouse">
+              <MappingFragment StoreEntitySet="Warehouse">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="WarehouseCode" ColumnName="WarehouseCode" />
+                <ScalarProperty Name="WarehouseName" ColumnName="WarehouseName" />
+                <ScalarProperty Name="WarehouseType" ColumnName="WarehouseType" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

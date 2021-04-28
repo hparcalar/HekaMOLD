@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b552cb97d7914bdca30c27814841d085" Name="Diagram1">
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Firm" Width="1.5" PointX="3" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ForexType" Width="1.5" PointX="8.25" PointY="24.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Item" Width="1.5" PointX="5.25" PointY="26.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemCategory" Width="1.5" PointX="3" PointY="26.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemGroup" Width="1.5" PointX="8.25" PointY="28" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemOrder" Width="1.5" PointX="5.25" PointY="32.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemOrderDetail" Width="1.5" PointX="10.5" PointY="31.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemReceipt" Width="1.5" PointX="7.5" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemReceiptDetail" Width="1.5" PointX="15.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequest" Width="1.5" PointX="3" PointY="30.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestApproveLog" Width="1.5" PointX="8.25" PointY="32" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestDetail" Width="1.5" PointX="13.5" PointY="33" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemUnit" Width="1.5" PointX="10.5" PointY="39.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Plant" Width="1.5" PointX="0.75" PointY="29" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.SyncPoint" Width="1.5" PointX="3" PointY="35" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UnitType" Width="1.5" PointX="3" PointY="40.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.User" Width="1.5" PointX="5.25" PointY="40.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserAuth" Width="1.5" PointX="7.5" PointY="45.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserAuthType" Width="1.5" PointX="5.25" PointY="45.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserRole" Width="1.5" PointX="3" PointY="49.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Warehouse" Width="1.5" PointX="3" PointY="53.125" IsExpanded="true" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Firm_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrder_Firm" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceipt_Firm" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrderDetail_ForexType" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_ForexType" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_ItemCategory" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_ItemGroup" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrderDetail_Item" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequestDetail_Item" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemUnit_Item" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemCategory_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemGroup_ItemCategory" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemGroup_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrder_ItemRequest" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrder_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrder_SyncPoint" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrder_WarehouseIn" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrder_WarehouseOut" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrderDetail_ItemOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceipt_ItemOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrderDetail_ItemRequestDetail" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrderDetail_UnitType" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemOrderDetail" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceipt_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceipt_SyncPoint" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceipt_WarehouseIn" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceipt_WarehouseOut" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemReceipt" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_UnitType" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequest_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequestApproveLog_ItemRequest" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequestDetail_ItemRequest" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequestApproveLog_User" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequestDetail_UnitType" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemUnit_UnitType" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_SyncPoint_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_UnitType_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_User_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_UserRole_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Warehouse_Plant" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_User_UserRole" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_UserAuth_User" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_UserAuth_UserAuthType" ManuallyRouted="false" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_UserAuth_UserRole" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
