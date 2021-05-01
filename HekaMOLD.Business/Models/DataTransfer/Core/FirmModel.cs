@@ -26,5 +26,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string Email { get; set; }
         public string TaxNo { get; set; }
         public string TaxOffice { get; set; }
+
+        #region VISUAL ELEMENTS
+        public string FirmTypeStr { get; set; }
+        #endregion
     }
 }

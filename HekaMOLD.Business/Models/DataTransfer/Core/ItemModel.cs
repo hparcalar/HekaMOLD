@@ -16,5 +16,11 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? ItemCategoryId { get; set; }
         public int? ItemGroupId { get; set; }
         public int? PlantId { get; set; }
+
+        #region VISUAL ELEMENTS
+        public string ItemTypeStr { get; set; }
+        public string CategoryName { get; set; }
+        public string GroupName { get; set; }
+        #endregion
     }
 }
