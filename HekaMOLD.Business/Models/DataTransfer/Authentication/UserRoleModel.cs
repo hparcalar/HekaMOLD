@@ -12,5 +12,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Authentication
         public int Id { get; set; }
         public string RoleName { get; set; }
         public int? PlantId { get; set; }
+
+        #region VISUAL ELEMENTS
+        public UserAuthModel[] AuthTypes { get; set; }
+        #endregion
     }
 }

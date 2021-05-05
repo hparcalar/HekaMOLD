@@ -1,4 +1,4 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+﻿using HekaMOLD.Business.Models.DataTransfer.Authentication;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -11,9 +11,9 @@ using System.Web.Mvc;
 namespace HekaMOLD.Enterprise.Controllers
 {
     [UserAuthFilter]
-    public class ItemController : Controller
+    public class UserRoleController : Controller
     {
-        // GET: Item
+        // GET: UserRole
         public ActionResult Index()
         {
             return View();
@@ -25,13 +25,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetItemList()
+        public JsonResult GetAuthTypeList()
         {
-            ItemModel[] result = new ItemModel[0];
+            UserAuthTypeModel[] result = new UserAuthTypeModel[0];
 
-            using (DefinitionsBO bObj = new DefinitionsBO())
+            using (UsersBO bObj = new UsersBO())
             {
-                result = bObj.GetItemList();
+                result = bObj.GetAuthTypeList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -40,18 +40,16 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetSelectables()
+        public JsonResult GetUserRoleList()
         {
-            ItemCategoryModel[] categories = new ItemCategoryModel[0];
-            ItemGroupModel[] groups = new ItemGroupModel[0];
+            UserRoleModel[] result = new UserRoleModel[0];
 
-            using (DefinitionsBO bObj = new DefinitionsBO())
+            using (UsersBO bObj = new UsersBO())
             {
-                categories = bObj.GetItemCategoryList();
-                groups = bObj.GetItemGroupList();
+                result = bObj.GetUserRoleList();
             }
 
-            var jsonResult = Json(new { Categories=categories, Groups=groups }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -59,10 +57,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ItemModel model = null;
-            using (DefinitionsBO bObj = new DefinitionsBO())
+            UserRoleModel model = null;
+            using (UsersBO bObj = new UsersBO())
             {
-                model = bObj.GetItem(rid);
+                model = bObj.GetUserRole(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -74,9 +72,9 @@ namespace HekaMOLD.Enterprise.Controllers
             try
             {
                 BusinessResult result = null;
-                using (DefinitionsBO bObj = new DefinitionsBO())
+                using (UsersBO bObj = new UsersBO())
                 {
-                    result = bObj.DeleteItem(rid);
+                    result = bObj.DeleteUserRole(rid);
                 }
 
                 if (result.Result)
@@ -91,14 +89,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemModel model)
+        public JsonResult SaveModel(UserRoleModel model)
         {
             try
             {
                 BusinessResult result = null;
-                using (DefinitionsBO bObj = new DefinitionsBO())
+                using (UsersBO bObj = new UsersBO())
                 {
-                    result = bObj.SaveOrUpdateItem(model);
+                    result = bObj.SaveOrUpdateUserRole(model);
                 }
 
                 if (result.Result)

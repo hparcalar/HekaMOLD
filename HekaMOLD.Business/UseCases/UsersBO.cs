@@ -2,7 +2,9 @@
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Authentication;
+using HekaMOLD.Business.Models.DataTransfer.Authentication;
 using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.Operational;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +55,156 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return model;
+        }
+
+
+        #endregion
+
+        #region USER ROLE MANAGEMENT
+        public UserRoleModel[] GetUserRoleList()
+        {
+            List<UserRoleModel> data = new List<UserRoleModel>();
+
+            var repo = _unitOfWork.GetRepository<UserRole>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                UserRoleModel containerObj = new UserRoleModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateUserRole(UserRoleModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.RoleName))
+                    throw new Exception("Rol tanımı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<UserRole>();
+                var repoAuth = _unitOfWork.GetRepository<UserAuth>();
+
+                if (repo.Any(d => (d.RoleName == model.RoleName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı tanıma sahip başka bir rol mevcuttur. Lütfen farklı bir rol tanımı giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new UserRole();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE AUTH TYPES
+                if (model.AuthTypes != null)
+                {
+                    foreach (var item in model.AuthTypes)
+                    {
+                        var dbAuthObj = dbObj.UserAuth.FirstOrDefault(m => m.AuthTypeId == item.AuthTypeId);
+                        if (dbAuthObj == null)
+                        {
+                            dbAuthObj = new UserAuth
+                            {
+                                AuthTypeId = item.AuthTypeId,
+                                IsGranted = item.IsGranted,
+                                UserRole = dbObj
+                            };
+                            repoAuth.Add(dbAuthObj);
+                        }
+                        else
+                            dbAuthObj.IsGranted = item.IsGranted;
+                    }
+                }
+                #endregion
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteUserRole(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<UserRole>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public UserRoleModel GetUserRole(int id)
+        {
+            UserRoleModel model = new UserRoleModel { };
+
+            var repo = _unitOfWork.GetRepository<UserRole>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.AuthTypes = dbObj.UserAuth.Select(d => new UserAuthModel
+                {
+                    Id = d.Id,
+                    AuthTypeId = d.AuthTypeId,
+                    IsGranted = d.IsGranted,
+                    UserId = d.UserId,
+                    UserRoleId = d.UserRoleId
+                }).ToArray();
+            }
+
+            return model;
+        }
+
+        public UserAuthTypeModel[] GetAuthTypeList()
+        {
+            UserAuthTypeModel[] data = new UserAuthTypeModel[0];
+
+            var repo = _unitOfWork.GetRepository<UserAuthType>();
+            data = repo.GetAll().Select(d => new UserAuthTypeModel
+            {
+                Id=d.Id,
+                AuthTypeCode = d.AuthTypeCode,
+                AuthTypeName = d.AuthTypeName
+            }).ToArray();
+
+            return data;
         }
         #endregion
     }

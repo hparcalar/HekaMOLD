@@ -130,12 +130,17 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\Filters\UserAuthFilter.cs" />
     <Compile Include="Controllers\FirmController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Controllers\ItemGroupController.cs" />
+    <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1779,6 +1784,7 @@
     <Content Include="assets\media\logos\logo-letter-9.png" />
     <Content Include="assets\media\logos\logo-light.png" />
     <Content Include="assets\media\logos\logo.png" />
+    <Content Include="assets\media\logos\login-background.jpg" />
     <Content Include="assets\media\logos\stars.png" />
     <Content Include="assets\media\misc\bg-1.jpg" />
     <Content Include="assets\media\misc\bg-2.jpg" />
@@ -3925,8 +3931,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="FrontEndLogic\Firm\index.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
+    <Content Include="FrontEndLogic\ItemCategory\index.js" />
+    <Content Include="FrontEndLogic\ItemCategory\list.js" />
+    <Content Include="FrontEndLogic\ItemGroup\index.js" />
+    <Content Include="FrontEndLogic\ItemGroup\list.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
+    <Content Include="FrontEndLogic\UserRole\index.js" />
+    <Content Include="FrontEndLogic\UserRole\list.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\angular-mocks.js" />
@@ -4233,11 +4245,16 @@
     <Content Include="Views\Firm\Index.cshtml" />
     <Content Include="Views\Item\List.cshtml" />
     <Content Include="Views\Item\Index.cshtml" />
+    <Content Include="Views\ItemGroup\List.cshtml" />
+    <Content Include="Views\ItemGroup\Index.cshtml" />
+    <Content Include="Views\ItemCategory\List.cshtml" />
+    <Content Include="Views\ItemCategory\Index.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\UserRole\List.cshtml" />
+    <Content Include="Views\UserRole\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\Filters\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

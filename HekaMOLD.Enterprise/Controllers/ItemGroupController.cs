@@ -11,9 +11,9 @@ using System.Web.Mvc;
 namespace HekaMOLD.Enterprise.Controllers
 {
     [UserAuthFilter]
-    public class ItemController : Controller
+    public class ItemGroupController : Controller
     {
-        // GET: Item
+        // GET: ItemGroup
         public ActionResult Index()
         {
             return View();
@@ -25,13 +25,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetItemList()
+        public JsonResult GetItemGroupList()
         {
-            ItemModel[] result = new ItemModel[0];
+            ItemGroupModel[] result = new ItemGroupModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetItemList();
+                result = bObj.GetItemGroupList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -40,29 +40,12 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetSelectables()
-        {
-            ItemCategoryModel[] categories = new ItemCategoryModel[0];
-            ItemGroupModel[] groups = new ItemGroupModel[0];
-
-            using (DefinitionsBO bObj = new DefinitionsBO())
-            {
-                categories = bObj.GetItemCategoryList();
-                groups = bObj.GetItemGroupList();
-            }
-
-            var jsonResult = Json(new { Categories=categories, Groups=groups }, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-
-        [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ItemModel model = null;
+            ItemGroupModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetItem(rid);
+                model = bObj.GetItemGroup(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -76,7 +59,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteItem(rid);
+                    result = bObj.DeleteItemGroup(rid);
                 }
 
                 if (result.Result)
@@ -91,14 +74,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemModel model)
+        public JsonResult SaveModel(ItemGroupModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateItem(model);
+                    result = bObj.SaveOrUpdateItemGroup(model);
                 }
 
                 if (result.Result)
