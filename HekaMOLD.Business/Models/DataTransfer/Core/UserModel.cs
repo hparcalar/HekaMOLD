@@ -16,5 +16,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string Password { get; set; }
         public int? PlantId { get; set; }
         public int? UserRoleId { get; set; }
+
+        #region VISUAL ELEMENTS
+        public string RoleName { get; set; }
+        #endregion
     }
 }

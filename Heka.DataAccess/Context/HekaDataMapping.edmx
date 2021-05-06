@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Heka.DataAccess.Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Heka.DataAccess.Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Firm">
           <Key>
             <PropertyRef Name="Id" />
@@ -257,6 +257,19 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="NotifyType" Type="int" />
+          <Property Name="Title" Type="nvarchar" MaxLength="150" />
+          <Property Name="Message" Type="nvarchar" MaxLength="250" />
+          <Property Name="RecordId" Type="int" />
+          <Property Name="SeenStatus" Type="int" />
+          <Property Name="SeenDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="Plant">
           <Key>
             <PropertyRef Name="Id" />
@@ -285,6 +298,19 @@
           <Property Name="EnabledOnPurchaseItemReceipts" Type="bit" />
           <Property Name="EnabledOnSalesItemReceipts" Type="bit" />
           <Property Name="EnabledOnConsumptionReceipts" Type="bit" />
+        </EntityType>
+        <EntityType Name="TransactionLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionType" Type="int" />
+          <Property Name="TransactionDate" Type="datetime" />
+          <Property Name="Title" Type="nvarchar" MaxLength="150" />
+          <Property Name="Message" Type="nvarchar" MaxLength="250" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="RecordId" Type="int" />
+          <Property Name="ObjectType" Type="int" />
         </EntityType>
         <EntityType Name="UnitType">
           <Key>
@@ -803,6 +829,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Notification_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SyncPoint_Plant">
           <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
           <End Role="SyncPoint" Type="Self.SyncPoint" Multiplicity="*" />
@@ -812,6 +850,18 @@
             </Principal>
             <Dependent Role="SyncPoint">
               <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionLog_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="TransactionLog" Type="Self.TransactionLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TransactionLog">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -925,8 +975,10 @@
           <EntitySet Name="ItemRequestApproveLog" EntityType="Self.ItemRequestApproveLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemRequestDetail" EntityType="Self.ItemRequestDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemUnit" EntityType="Self.ItemUnit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Plant" EntityType="Self.Plant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionLog" EntityType="Self.TransactionLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UnitType" EntityType="Self.UnitType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserAuth" EntityType="Self.UserAuth" Schema="dbo" store:Type="Tables" />
@@ -1081,9 +1133,17 @@
             <End Role="UnitType" EntitySet="UnitType" />
             <End Role="ItemUnit" EntitySet="ItemUnit" />
           </AssociationSet>
+          <AssociationSet Name="FK_Notification_User" Association="Self.FK_Notification_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Notification" EntitySet="Notification" />
+          </AssociationSet>
           <AssociationSet Name="FK_SyncPoint_Plant" Association="Self.FK_SyncPoint_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="SyncPoint" EntitySet="SyncPoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionLog_User" Association="Self.FK_TransactionLog_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="TransactionLog" EntitySet="TransactionLog" />
           </AssociationSet>
           <AssociationSet Name="FK_UnitType_Plant" Association="Self.FK_UnitType_Plant">
             <End Role="Plant" EntitySet="Plant" />
@@ -1118,8 +1178,7 @@
             <End Role="Warehouse" EntitySet="Warehouse" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Heka.DataAccess.Models" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -1512,6 +1571,8 @@
           <NavigationProperty Name="Plant" Relationship="Self.FK_User_Plant" FromRole="User" ToRole="Plant" />
           <NavigationProperty Name="UserRole" Relationship="Self.FK_User_UserRole" FromRole="User" ToRole="UserRole" />
           <NavigationProperty Name="UserAuth" Relationship="Self.FK_UserAuth_User" FromRole="User" ToRole="UserAuth" />
+          <NavigationProperty Name="Notification" Relationship="Heka.DataAccess.Models.FK_Notification_User" FromRole="User" ToRole="Notification" />
+          <NavigationProperty Name="TransactionLog" Relationship="Heka.DataAccess.Models.FK_TransactionLog_User" FromRole="User" ToRole="TransactionLog" />
         </EntityType>
         <EntityType Name="UserAuth">
           <Key>
@@ -2327,7 +2388,69 @@
             <End Role="UserRole" EntitySet="UserRole" />
             <End Role="UserAuth" EntitySet="UserAuth" />
           </AssociationSet>
+          <EntitySet Name="Notification" EntityType="Heka.DataAccess.Models.Notification" />
+          <EntitySet Name="TransactionLog" EntityType="Heka.DataAccess.Models.TransactionLog" />
+          <AssociationSet Name="FK_Notification_User" Association="Heka.DataAccess.Models.FK_Notification_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Notification" EntitySet="Notification" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionLog_User" Association="Heka.DataAccess.Models.FK_TransactionLog_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="TransactionLog" EntitySet="TransactionLog" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="NotifyType" Type="Int32" />
+          <Property Name="Title" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="RecordId" Type="Int32" />
+          <Property Name="SeenStatus" Type="Int32" />
+          <Property Name="SeenDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="Heka.DataAccess.Models.FK_Notification_User" FromRole="Notification" ToRole="User" />
+        </EntityType>
+        <EntityType Name="TransactionLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionType" Type="Int32" />
+          <Property Name="TransactionDate" Type="DateTime" Precision="3" />
+          <Property Name="Title" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="RecordId" Type="Int32" />
+          <Property Name="ObjectType" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="Heka.DataAccess.Models.FK_TransactionLog_User" FromRole="TransactionLog" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Notification_User">
+          <End Type="Heka.DataAccess.Models.User" Role="User" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionLog_User">
+          <End Type="Heka.DataAccess.Models.User" Role="User" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.TransactionLog" Role="TransactionLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TransactionLog">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2706,6 +2829,34 @@
                 <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notification">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Notification">
+              <MappingFragment StoreEntitySet="Notification">
+                <ScalarProperty Name="SeenDate" ColumnName="SeenDate" />
+                <ScalarProperty Name="SeenStatus" ColumnName="SeenStatus" />
+                <ScalarProperty Name="RecordId" ColumnName="RecordId" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="NotifyType" ColumnName="NotifyType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionLog">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.TransactionLog">
+              <MappingFragment StoreEntitySet="TransactionLog">
+                <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
+                <ScalarProperty Name="RecordId" ColumnName="RecordId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
+                <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

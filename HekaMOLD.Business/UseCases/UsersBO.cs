@@ -57,6 +57,94 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public UserModel[] GetUserList()
+        {
+            List<UserModel> data = new List<UserModel>();
+
+            var repo = _unitOfWork.GetRepository<User>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                UserModel containerObj = new UserModel();
+                d.MapTo(containerObj);
+                containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateUser(UserModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.UserCode))
+                    throw new Exception("Kullanıcı kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.Login))
+                    throw new Exception("Giriş bilgisi girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<User>();
+
+                if (repo.Any(d => (d.Login == model.Login)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı giriş bilgisine sahip başka bir kullanıcı mevcuttur. Lütfen farklı bir giriş bilgisi giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new User();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteUser(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<User>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
 
         #endregion
 

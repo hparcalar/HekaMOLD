@@ -107,10 +107,16 @@
     <Compile Include="Context\ItemUnit.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\Notification.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\Plant.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\SyncPoint.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\TransactionLog.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\UnitType.cs">

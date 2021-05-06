@@ -46,5 +46,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<UserAuthType> UserAuthType { get; set; }
         public virtual DbSet<UserRole> UserRole { get; set; }
         public virtual DbSet<Warehouse> Warehouse { get; set; }
+        public virtual DbSet<Notification> Notification { get; set; }
+        public virtual DbSet<TransactionLog> TransactionLog { get; set; }
     }
 }

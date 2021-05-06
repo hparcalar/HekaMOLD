@@ -136,6 +136,8 @@
     <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\ItemGroupController.cs" />
+    <Compile Include="Controllers\PIRequestController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -3939,6 +3941,8 @@
     <Content Include="FrontEndLogic\Item\list.js" />
     <Content Include="FrontEndLogic\UserRole\index.js" />
     <Content Include="FrontEndLogic\UserRole\list.js" />
+    <Content Include="FrontEndLogic\User\index.js" />
+    <Content Include="FrontEndLogic\User\list.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\angular-mocks.js" />
@@ -4252,9 +4256,12 @@
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\UserRole\List.cshtml" />
     <Content Include="Views\UserRole\Index.cshtml" />
+    <Content Include="Views\User\List.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\PIRequest\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

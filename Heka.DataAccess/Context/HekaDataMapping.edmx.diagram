@@ -72,6 +72,10 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_UserAuth_User" ManuallyRouted="false" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_UserAuth_UserAuthType" ManuallyRouted="false" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_UserAuth_UserRole" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Notification" Width="1.5" PointX="7.5" PointY="48.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.TransactionLog" Width="1.5" PointX="7.5" PointY="52.125" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Notification_User" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_TransactionLog_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

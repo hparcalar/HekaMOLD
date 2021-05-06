@@ -19,6 +19,8 @@ namespace Heka.DataAccess.Context
         {
             this.ItemRequestApproveLog = new HashSet<ItemRequestApproveLog>();
             this.UserAuth = new HashSet<UserAuth>();
+            this.Notification = new HashSet<Notification>();
+            this.TransactionLog = new HashSet<TransactionLog>();
         }
     
         public int Id { get; set; }
@@ -39,5 +41,9 @@ namespace Heka.DataAccess.Context
         public virtual UserRole UserRole { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserAuth> UserAuth { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notification> Notification { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TransactionLog> TransactionLog { get; set; }
     }
 }
