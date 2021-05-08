@@ -40,6 +40,59 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+
+        public AuthenticationResult IsAuthenticated(string authType, int userId)
+        {
+            AuthenticationResult result = new AuthenticationResult { Result = false };
+
+            try
+            {
+                var repoUser = _unitOfWork.GetRepository<User>();
+                var repo = _unitOfWork.GetRepository<UserAuth>();
+
+                var dbUser = repoUser.Get(d => d.Id == userId);
+                if (dbUser == null)
+                    throw new Exception("Oturumunuz kapanmış. Lütfen tekrar giriş yapınız.");
+
+                result.Result = repo.Any(d => (d.UserRoleId == dbUser.UserRoleId || d.UserId == userId) && d.UserAuthType.AuthTypeCode == authType
+                      && d.IsGranted == true);
+
+                if (!result.Result)
+                    result.ErrorMessage = "Bu bölümde yetkiniz bulunmamaktadır.";
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
+
+        #region NOTIFICATIONS
+        public NotificationModel[] GetAwaitingNotifications(int userId, int topRecords=0)
+        {
+            List<NotificationModel> data = new List<NotificationModel>();
+
+            var repo = _unitOfWork.GetRepository<Notification>();
+
+            IQueryable<Notification> repoQuery = repo.Filter(d => d.UserId == userId && (d.IsProcessed ?? false) == false)
+                .OrderByDescending(d => d.CreatedDate);
+
+            if (topRecords > 0)
+                repoQuery = repoQuery.Take(topRecords);
+
+            repoQuery.ToList().ForEach(d =>
+            {
+                NotificationModel containerObj = new NotificationModel();
+                d.MapTo(containerObj);
+                containerObj.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
         #endregion
 
         #region USERS MANAGEMENT

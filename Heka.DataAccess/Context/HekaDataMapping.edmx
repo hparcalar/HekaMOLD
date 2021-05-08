@@ -26,6 +26,7 @@
           <Property Name="Email" Type="nvarchar" MaxLength="250" />
           <Property Name="TaxNo" Type="nvarchar" MaxLength="50" />
           <Property Name="TaxOffice" Type="nvarchar" MaxLength="150" />
+          <Property Name="IsApproved" Type="bit" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="CreatedUserId" Type="int" />
           <Property Name="UpdatedDate" Type="datetime" />
@@ -269,6 +270,9 @@
           <Property Name="RecordId" Type="int" />
           <Property Name="SeenStatus" Type="int" />
           <Property Name="SeenDate" Type="datetime" />
+          <Property Name="IsProcessed" Type="bit" />
+          <Property Name="ProcessedDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Plant">
           <Key>
@@ -1210,6 +1214,7 @@
           <NavigationProperty Name="Plant" Relationship="Self.FK_Firm_Plant" FromRole="Firm" ToRole="Plant" />
           <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrder_Firm" FromRole="Firm" ToRole="ItemOrder" />
           <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_Firm" FromRole="Firm" ToRole="ItemReceipt" />
+          <Property Name="IsApproved" Type="Boolean" />
         </EntityType>
         <EntityType Name="ForexType">
           <Key>
@@ -2412,6 +2417,9 @@
           <Property Name="SeenStatus" Type="Int32" />
           <Property Name="SeenDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="User" Relationship="Heka.DataAccess.Models.FK_Notification_User" FromRole="Notification" ToRole="User" />
+          <Property Name="IsProcessed" Type="Boolean" />
+          <Property Name="ProcessedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="TransactionLog">
           <Key>
@@ -2460,6 +2468,7 @@
           <EntitySetMapping Name="Firm">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.Firm">
               <MappingFragment StoreEntitySet="Firm">
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="FirmCode" ColumnName="FirmCode" />
                 <ScalarProperty Name="FirmName" ColumnName="FirmName" />
@@ -2835,6 +2844,9 @@
           <EntitySetMapping Name="Notification">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.Notification">
               <MappingFragment StoreEntitySet="Notification">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ProcessedDate" ColumnName="ProcessedDate" />
+                <ScalarProperty Name="IsProcessed" ColumnName="IsProcessed" />
                 <ScalarProperty Name="SeenDate" ColumnName="SeenDate" />
                 <ScalarProperty Name="SeenStatus" ColumnName="SeenStatus" />
                 <ScalarProperty Name="RecordId" ColumnName="RecordId" />

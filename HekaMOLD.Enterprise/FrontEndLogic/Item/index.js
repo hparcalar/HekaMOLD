@@ -1,5 +1,4 @@
-﻿var app = angular.module('moldApp', []);
-app.controller('itemCtrl', function ($scope, $http) {
+﻿app.controller('itemCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;

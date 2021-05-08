@@ -110,5 +110,13 @@ namespace HekaMOLD.Enterprise.Controllers
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
         }
+
+        #region NOTIFICATIONS
+        public ActionResult Notifications()
+        {
+
+            return View();
+        }
+        #endregion
     }
 }

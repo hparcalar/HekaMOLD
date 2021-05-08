@@ -1,5 +1,4 @@
-﻿var app = angular.module('moldApp', []);
-app.controller('userRoleCtrl', function ($scope, $http) {
+﻿app.controller('userRoleCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;

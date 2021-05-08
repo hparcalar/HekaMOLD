@@ -22,6 +22,9 @@ namespace Heka.DataAccess.Context
         public Nullable<int> RecordId { get; set; }
         public Nullable<int> SeenStatus { get; set; }
         public Nullable<System.DateTime> SeenDate { get; set; }
+        public Nullable<bool> IsProcessed { get; set; }
+        public Nullable<System.DateTime> ProcessedDate { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
     
         public virtual User User { get; set; }
     }

@@ -437,5 +437,23 @@ namespace HekaMOLD.Business.UseCases
         }
 
         #endregion
+
+        #region ITEM UNIT BUSINESS
+        public UnitTypeModel[] GetUnitTypeList()
+        {
+            List<UnitTypeModel> data = new List<UnitTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<UnitType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                UnitTypeModel containerObj = new UnitTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+        #endregion
     }
 }

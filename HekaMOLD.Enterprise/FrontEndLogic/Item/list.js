@@ -1,5 +1,4 @@
-﻿var app = angular.module('moldApp', []);
-app.controller('itemListCtrl', function ($scope, $http) {
+﻿app.controller('itemListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS

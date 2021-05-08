@@ -32,12 +32,6 @@ app.controller('firmListCtrl', function sidebarCtrl($scope, $http) {
             groupPanel: {
                 visible: true
             },
-            //scrolling: {
-            //    mode: "virtual",
-            //    columnRenderingMode: "virtual"
-            //},
-            //height: 550,
-            //columnWidth: 150,
             editing: {
                 allowUpdating: false,
                 allowDeleting: false
@@ -46,6 +40,7 @@ app.controller('firmListCtrl', function sidebarCtrl($scope, $http) {
                 { dataField: 'FirmCode', caption: 'Firma Kodu' },
                 { dataField: 'FirmName', caption: 'Firma Adı' },
                 { dataField: 'FirmTypeStr', caption: 'Firma Türü' },
+                { dataField: 'IsApproved', caption: 'Onaylı Tedarikçi' },
                 {
                     type: "buttons",
                     buttons: [
