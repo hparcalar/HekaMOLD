@@ -15,5 +15,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? WarehouseType { get; set; }
         public int? PlantId { get; set; }
 
+        #region VISUAL ELEMENTS
+        public string WarehouseTypeStr { get; set; }
+        #endregion
     }
 }

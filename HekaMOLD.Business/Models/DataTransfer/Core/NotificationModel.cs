@@ -22,6 +22,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
 
         #region VISUAL ELEMENTS
         public string CreatedDateStr { get; set; }
+        public string UserName { get; set; }
         #endregion
     }
 }

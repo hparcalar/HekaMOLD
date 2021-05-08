@@ -12,7 +12,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
         public static Dictionary<NotifyType, string> Values 
             = new Dictionary<NotifyType, string>()
         {
-            { NotifyType.ItemRequestWaitForApproval, "Onay Bekleyen Satınalma Talebi" }
+            { NotifyType.ItemRequestWaitForApproval, "Satınalma Talebi" }
         };
     }
 }

@@ -88,6 +88,7 @@ namespace HekaMOLD.Business.UseCases
                 NotificationModel containerObj = new NotificationModel();
                 d.MapTo(containerObj);
                 containerObj.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate);
+                containerObj.UserName = d.User != null ? d.User.UserName : "";
                 data.Add(containerObj);
             });
 

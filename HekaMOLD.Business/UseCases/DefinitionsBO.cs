@@ -1,6 +1,7 @@
 ﻿using Heka.DataAccess.Context;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
+using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.Operational;
 using System;
@@ -427,6 +428,114 @@ namespace HekaMOLD.Business.UseCases
             ItemGroupModel model = new ItemGroupModel { };
 
             var repo = _unitOfWork.GetRepository<ItemGroup>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        #endregion
+
+        #region WAREHOUSE BUSINESS
+        public WarehouseModel[] GetWarehouseList()
+        {
+            List<WarehouseModel> data = new List<WarehouseModel>();
+
+            var repo = _unitOfWork.GetRepository<Warehouse>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                WarehouseModel containerObj = new WarehouseModel();
+                d.MapTo(containerObj);
+                containerObj.WarehouseTypeStr = d.WarehouseType != null ? ((WarehouseType)d.WarehouseType.Value).ToCaption() : "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateWarehouse(WarehouseModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.WarehouseCode))
+                    throw new Exception("Depo kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.WarehouseName))
+                    throw new Exception("Depo adı girilmelidir.");
+                if ((model.WarehouseType ?? 0) == 0)
+                    throw new Exception("Depo türü seçilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Warehouse>();
+
+                if (repo.Any(d => (d.WarehouseCode == model.WarehouseCode || d.WarehouseName == model.WarehouseName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir depo mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Warehouse();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteWarehouse(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Warehouse>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public WarehouseModel GetWarehouse(int id)
+        {
+            WarehouseModel model = new WarehouseModel { };
+
+            var repo = _unitOfWork.GetRepository<Warehouse>();
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {

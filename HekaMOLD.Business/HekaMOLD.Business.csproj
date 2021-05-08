@@ -60,6 +60,7 @@
     <Compile Include="Helpers\Mapper.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
     <Compile Include="Models\Constants\RequestStatusType.cs" />
+    <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserRoleModel.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Models\DataTransfer\Request\ItemRequestApproveLogModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
+    <Compile Include="Models\Dictionaries\DictWarehouseType.cs" />
     <Compile Include="Models\Dictionaries\DictNotifyType.cs" />
     <Compile Include="Models\Dictionaries\DictRequestStatusType.cs" />
     <Compile Include="Models\Operational\AuthenticationResult.cs" />

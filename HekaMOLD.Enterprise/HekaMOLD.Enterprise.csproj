@@ -140,6 +140,7 @@
     <Compile Include="Controllers\PIRequestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
+    <Compile Include="Controllers\WarehouseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -3966,6 +3967,8 @@
     <Content Include="FrontEndLogic\User\notifications.js" />
     <Content Include="FrontEndLogic\User\index.js" />
     <Content Include="FrontEndLogic\User\list.js" />
+    <Content Include="FrontEndLogic\Warehouse\index.js" />
+    <Content Include="FrontEndLogic\Warehouse\list.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\angular-mocks.js" />
@@ -4285,6 +4288,8 @@
     <Content Include="Views\PIRequest\List.cshtml" />
     <Content Include="Views\PIRequest\Index.cshtml" />
     <Content Include="Views\User\Notifications.cshtml" />
+    <Content Include="Views\Warehouse\List.cshtml" />
+    <Content Include="Views\Warehouse\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
