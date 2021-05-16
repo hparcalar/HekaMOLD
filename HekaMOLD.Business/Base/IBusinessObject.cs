@@ -83,6 +83,22 @@ namespace HekaMOLD.Business.Base
                         item.IsProcessed = true;
                         item.ProcessedDate = DateTime.Now;
                     }
+                } 
+                else if (model.NotifyType == (int)NotifyType.ItemOrderIsApproved)
+                {
+                    var dbWaitinfNotifications = repo.Filter(d => d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval
+                        && d.RecordId == model.RecordId && (d.IsProcessed ?? false) == false).ToArray();
+                    foreach (var item in dbWaitinfNotifications)
+                    {
+                        if (item.SeenStatus == 0)
+                        {
+                            item.SeenStatus = 1;
+                            item.SeenDate = DateTime.Now;
+                        }
+
+                        item.IsProcessed = true;
+                        item.ProcessedDate = DateTime.Now;
+                    }
                 }
 
                 uof.SaveChanges();

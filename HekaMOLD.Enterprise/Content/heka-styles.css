@@ -1,0 +1,12 @@
+﻿.input-group-append button{
+    border-top-left-radius:0px;
+    border-bottom-left-radius:0px;
+}
+.label-table-dialog{
+    font-weight:bold;
+    display:block;
+    padding-left:5px;
+}
+.trow-table-dialog:hover {
+    background-color: #888888;
+}

@@ -1,4 +1,5 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -562,6 +564,201 @@ namespace HekaMOLD.Business.UseCases
             });
 
             return data.ToArray();
+        }
+        #endregion
+
+        #region FOREX BUSINESS
+        public ForexTypeModel GetForexType(int id)
+        {
+            ForexTypeModel model = new ForexTypeModel();
+
+            var repo = _unitOfWork.GetRepository<ForexType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public ForexTypeModel[] GetForexTypeList()
+        {
+            var repo = _unitOfWork.GetRepository<ForexType>();
+            var dataList = repo.GetAll();
+
+            List<ForexTypeModel> modelList = new List<ForexTypeModel>();
+            dataList.ToList().ForEach(d => {
+                var containerObj = new ForexTypeModel();
+                modelList.Add(d.MapTo(containerObj));
+            });
+
+            return modelList.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateForexType(ForexTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.ForexTypeCode))
+                    throw new Exception("Döviz kuru cinsi girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<ForexType>();
+                if (repo.Any(d => d.ForexTypeCode == model.ForexTypeCode && d.Id != model.Id))
+                    throw new Exception("Bu döviz cinsi zaten tanımlı.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ForexType();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteForexType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ForexType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj.ItemOrderDetail.Any())
+                    throw new Exception("Bu döviz cinsi malzeme hareketlerinde kullanıldığı için silinemez.");
+
+                var repoHist = _unitOfWork.GetRepository<ForexHistory>();
+                var histArr = dbObj.ForexHistory.ToArray();
+                foreach (var item in histArr)
+                {
+                    repoHist.Delete(item);
+                }
+
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ForexHistoryModel GetForexValue(string forexCode, DateTime forexDate)
+        {
+            ForexHistoryModel model = new ForexHistoryModel();
+
+            IUnitOfWork _outerWork = new EFUnitOfWork();
+
+            var repoForex = _outerWork.GetRepository<ForexType>();
+            var repo = _outerWork.GetRepository<ForexHistory>();
+
+            var dbObj = repo.Get(d => d.ForexType.ForexTypeCode == forexCode && d.HistoryDate == forexDate.Date);
+            if (dbObj == null)
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+
+                string tcmbString = "http://www.tcmb.gov.tr/kurlar/" +
+                        string.Format("{0:yyyy}", forexDate) + string.Format("{0:MM}", forexDate) + "/" +
+                        string.Format("{0:ddMMyyyy}", forexDate)
+                    //201707/26072017 tcmb formatı
+                    + ".xml";
+
+                if (forexDate.Date == DateTime.Now.Date)
+                    tcmbString = "http://www.tcmb.gov.tr/kurlar/today.xml";
+
+                bool _kurBilgisiWebdenYuklendi = false;
+                int _yuklemeSayaci = 0;
+
+                while (!_kurBilgisiWebdenYuklendi && _yuklemeSayaci < 15) // kur bilgisi yüklenene kadar döngüde kal, fakat en fazla 15 kez sorgula (sonsuz döngüde kalmaması için)
+                {
+                    try
+                    {
+                        _yuklemeSayaci++; // her yükleme denemesinde sayacı arttır
+                        xmlDoc.Load(tcmbString);
+
+                        _kurBilgisiWebdenYuklendi = true; // Load metodu patlamıyorsa aşağı devam eder ve bayrak = true olur
+                    }
+                    catch (Exception)
+                    {
+                        // kur yoksa hataya düşer ve tarihi bir gün geri çekeriz
+                        forexDate = forexDate.AddDays(-1);
+
+                        // sorgu için http url'ini güncelliyoruz
+                        tcmbString = "http://www.tcmb.gov.tr/kurlar/" +
+                        string.Format("{0:yyyy}", forexDate) + string.Format("{0:MM}", forexDate) + "/" +
+                        string.Format("{0:ddMMyyyy}", forexDate)
+                            + ".xml";
+                    }
+                }
+
+                string alisData = xmlDoc.SelectSingleNode("Tarih_Date/Currency[@Kod='" + forexCode + "']/ForexBuying").InnerXml;
+                string satisData = xmlDoc.SelectSingleNode("Tarih_Date/Currency[@Kod='" + forexCode + "']/ForexSelling").InnerXml;
+
+                if (!string.IsNullOrEmpty(satisData))
+                {
+                    decimal alisKuru = Decimal.Parse(alisData.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+                    decimal satisKuru = Decimal.Parse(satisData.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+
+                    // CHECK NEW DATE IF IT WAS DECREASED
+                    if (repo.Any(d => d.ForexType.ForexTypeCode == forexCode && d.HistoryDate == forexDate.Date))
+                    {
+                        dbObj = repo.Get(d => d.ForexType.ForexTypeCode == forexCode && d.HistoryDate == forexDate.Date);
+                        dbObj.SalesForexRate = satisKuru;
+                        dbObj.BuyForexRate = alisKuru;
+
+                        _outerWork.SaveChanges();
+                    }
+                    else
+                    {
+                        var dbForex = repoForex.Get(d => d.ForexTypeCode == forexCode);
+                        if (dbForex != null)
+                        {
+                            dbObj = new ForexHistory
+                            {
+                                ForexId = dbForex.Id,
+                                BuyForexRate = alisKuru,
+                                SalesForexRate = satisKuru,
+                                HistoryDate = forexDate.Date
+                            };
+                            repo.Add(dbObj);
+
+                            _outerWork.SaveChanges();
+                        }
+                        else
+                            throw new Exception(forexCode + " döviz cinsi sistemde tanımlı değil.");
+                    }
+                }
+            }
+
+            model.Id = dbObj.Id;
+            model.ForexId = dbObj.ForexId;
+            model.BuyForexRate = dbObj.BuyForexRate;
+            model.SalesForexRate = dbObj.SalesForexRate;
+            model.HistoryDate = dbObj.HistoryDate;
+
+            return model;
         }
         #endregion
     }

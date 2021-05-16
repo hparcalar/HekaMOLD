@@ -137,6 +137,7 @@
     <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\ItemGroupController.cs" />
+    <Compile Include="Controllers\PIOrderController.cs" />
     <Compile Include="Controllers\PIRequestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
@@ -3885,6 +3886,8 @@
     <Content Include="assets\plugins\global\fonts\socicon\socicon.svg" />
     <Content Include="assets\plugins\global\plugins.bundle.css" />
     <Content Include="assets\plugins\global\plugins.bundle.js" />
+    <Content Include="Components\Controllers\approved-itemrequest-details.js" />
+    <Content Include="Components\Views\ApprovedItemRequestDetails.html" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -3930,6 +3933,7 @@
     <Content Include="Content\dx.material.teal.light.css" />
     <Content Include="Content\dx.softblue.compact.css" />
     <Content Include="Content\dx.softblue.css" />
+    <Content Include="Content\heka-styles.css" />
     <Content Include="Content\images\close.png" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\next.png" />
@@ -3960,6 +3964,8 @@
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
+    <Content Include="FrontEndLogic\PIOrder\index.js" />
+    <Content Include="FrontEndLogic\PIOrder\list.js" />
     <Content Include="FrontEndLogic\PIRequest\index.js" />
     <Content Include="FrontEndLogic\PIRequest\list.js" />
     <Content Include="FrontEndLogic\UserRole\index.js" />
@@ -4290,6 +4296,8 @@
     <Content Include="Views\User\Notifications.cshtml" />
     <Content Include="Views\Warehouse\List.cshtml" />
     <Content Include="Views\Warehouse\Index.cshtml" />
+    <Content Include="Views\PIOrder\List.cshtml" />
+    <Content Include="Views\PIOrder\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

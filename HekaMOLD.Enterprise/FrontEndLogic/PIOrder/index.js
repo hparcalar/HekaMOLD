@@ -1,21 +1,26 @@
-﻿app.controller('requestCtrl', function ($scope, $http) {
-    $scope.modelObject = { DateOfNeed: moment().format('DD.MM.YYYY'), Details:[] };
+﻿app.controller('orderCtrl', function ($scope, $http) {
+    $scope.modelObject = { Id:0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus:0 };
+
     $scope.itemList = [];
     $scope.unitList = [];
+    $scope.firmList = [];
+    $scope.forexList = [];
+
+    $scope.selectedFirm = {};
 
     $scope.saveStatus = 0;
 
     // RECEIPT FUNCTIONS
-    $scope.getNextReceiptNo = function () {
+    $scope.getNextOrderNo = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'PIRequest/GetNextReceiptNo', {}, 'json')
+            $http.get(HOST_URL + 'PIOrder/GetNextOrderNo', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         if (resp.data.Result) {
                             resolve(resp.data.ReceiptNo);
                         }
                         else {
-                            toastr.error('Sıradaki talep numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            toastr.error('Sıradaki sipariş numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
                             resolve('');
                         }
                     }
@@ -25,11 +30,33 @@
         return prms;
     }
 
+    // SELECTABLES
+    $scope.showFirmDialog = function () {
+        $('#dial-firm').dialog({
+            position: { my: 'left top', at: 'right top', of: $('#btnSelectFirm') },
+            hide: true,
+            modal: false,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+    $scope.selectFirm = function (item) {
+        $scope.modelObject.FirmId = item.Id;
+        $scope.modelObject.FirmCode = item.FirmCode;
+        $scope.modelObject.FirmName = item.FirmName;
+
+        $('#dial-firm').dialog("close");
+    }
+
     // CRUD
     $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0, DateOfNeed: moment().format('DD.MM.YYYY'), Details:[] };
-        $scope.getNextReceiptNo().then(function (rNo) {
-            $scope.modelObject.RequestNo = rNo;
+        $scope.modelObject = { Id: 0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus: 0 };
+        $scope.selectedFirm = {};
+
+        $scope.getNextOrderNo().then(function (rNo) {
+            $scope.modelObject.OrderNo = rNo;
             $scope.$apply();
         });
         $scope.bindDetails();
@@ -37,7 +64,7 @@
 
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu talebi silmek istediğinizden emin misiniz?",
+            message: "Bu siparişi silmek istediğinizden emin misiniz?",
             closeButton:false,
             buttons: {
                 confirm: {
@@ -52,7 +79,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'PIRequest/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'PIOrder/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -74,7 +101,12 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        $http.post(HOST_URL + 'PIRequest/SaveModel', $scope.modelObject, 'json')
+        if (typeof $scope.selectedFirm != 'undefined' && $scope.selectedFirm != null)
+            $scope.modelObject.FirmId = $scope.selectedFirm.Id;
+        else
+            $scope.modelObject.FirmId = null;
+
+        $http.post(HOST_URL + 'PIOrder/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -130,11 +162,17 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'PIRequest/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'PIOrder/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
                     $scope.modelObject.DateOfNeed = $scope.modelObject.DateOfNeedStr;
+                    $scope.modelObject.OrderDate = $scope.modelObject.OrderDateStr;
+
+                    if (typeof $scope.modelObject.FirmId != 'undefined' && $scope.modelObject.FirmId != null)
+                        $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
+                    else
+                        $scope.selectedFirm = {};
 
                     $scope.bindDetails();
                 }
@@ -143,8 +181,28 @@
 
     $scope.calculateRow = function (row) {
         if (typeof row != 'undefined' && row != null) {
-            
+            try {
+                $http.post(HOST_URL + 'PIOrder/CalculateRow', row, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                            row.OverallTotal = resp.data.OverallTotal;
+                            row.UnitPrice = resp.data.UnitPrice;
+                            row.TaxAmount = resp.data.TaxAmount;
+                            row.ForexUnitPrice = resp.data.ForexUnitPrice;
+
+                            $scope.calculateHeader();
+                        }
+                    }).catch(function (err) { });
+            } catch (e) {
+
+            }
         }
+    }
+
+    $scope.calculateHeader = function () {
+        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
+        $scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
+        $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
     }
 
     $scope.bindDetails = function () {
@@ -174,6 +232,32 @@
                         }
 
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
+                        if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
+                        if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
+                        if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
+                        if (typeof values.ForexRate != 'undefined') { obj.ForexRate = values.ForexRate; calculateRowAgain = true; }
+                        if (typeof values.ForexUnitPrice != 'undefined') {
+                            obj.ForexUnitPrice = values.ForexUnitPrice;
+                            if (typeof obj.ForexId != 'undefined' && obj.ForexId != null) {
+                                obj.UnitPrice = obj.ForexUnitPrice * obj.ForexRate;
+                                calculateRowAgain = true;
+                            }
+                        }
+                        if (typeof values.ForexId != 'undefined') {
+                            obj.ForexId = values.ForexId;
+                            var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
+
+                            $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
+                                + '&forexDate=' + $scope.modelObject.OrderDate, {}, 'json')
+                                .then(function (resp) {
+                                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                                        if (typeof resp.data.SalesForexRate != 'undefined') {
+                                            obj.ForexRate = resp.data.SalesForexRate;
+                                            $scope.calculateRow(obj);
+                                        }
+                                    }
+                                }).catch(function (err) { });
+                        }
 
                         if (calculateRowAgain)
                             $scope.calculateRow(obj);
@@ -203,6 +287,12 @@
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
                         UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
                         Quantity: values.Quantity,
+                        TaxRate: values.TaxRate,
+                        TaxIncluded: values.TaxIncluded,
+                        UnitPrice: values.UnitPrice,
+                        ForexRate: values.ForexRate,
+                        ForexUnitPrice: values.ForexUnitPrice,
+                        ForexId: values.ForexId,
                         NewDetail: true
                     };
 
@@ -228,7 +318,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 420,
+            height: 400,
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
@@ -236,7 +326,8 @@
                 mode: 'cell'
             },
             onInitNewRow: function (e) {
-                
+                e.data.UnitPrice = 0;
+                e.data.TaxIncluded = 0;
             },
             columns: [
                 {
@@ -268,17 +359,44 @@
                     }
                 },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                { dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                {
+                    dataField: 'TaxIncluded', caption: 'Kdv D/H',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: [{ Id: 1, Text: 'Dahil' }, { Id: 0, Text: 'Hariç' }],
+                        valueExpr: "Id",
+                        displayExpr: "Text"
+                    },
+                    validationRules: [{ type: "required" }]
+                },
+                { dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                {
+                    dataField: 'ForexId', caption: 'Döviz Cinsi',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: $scope.forexList,
+                        valueExpr: "Id",
+                        displayExpr: "ForexTypeCode"
+                    }
+                },
+                { dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } }
             ]
         });
     }
 
     $scope.loadSelectables = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'PIRequest/GetSelectables', {}, 'json')
+            $http.get(HOST_URL + 'PIOrder/GetSelectables', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.itemList = resp.data.Items;
                         $scope.unitList = resp.data.Units;
+                        $scope.firmList = resp.data.Firms;
+                        $scope.forexList = resp.data.Forexes;
 
                         resolve();
                     }
@@ -289,9 +407,9 @@
     }
 
     // APPROVALS
-    $scope.approvePoRequest = function () {
+    $scope.approveOrderPrice = function () {
         bootbox.confirm({
-            message: "Bu talebi onaylamak istediğinizden emin misiniz? Onayınızdan sonra sipariş açılabilecektir.",
+            message: "Bu siparişin fiyatını onaylamak istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
                 confirm: {
@@ -306,7 +424,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'PIRequest/ApprovePoRequest', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'PIOrder/ApproveOrderPrice', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -325,39 +443,20 @@
         });
     }
 
-    $scope.createPurchaseOrder = function () {
-        bootbox.confirm({
-            message: "Bu talebi siparişe dönüştürmek istediğinizden emin misiniz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'PIRequest/CreatePurchaseOrder', { rid: $scope.modelObject.Id }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
+    $scope.showItemRequestList = function () {
+        // DO BROADCAST
 
-                                if (resp.data.Result) {
-                                    toastr.success('Siparişe dönüştürme işlemi başarılı.', 'Bilgilendirme');
+        // LISTEN WITH ON FOR EMIT
 
-                                    $scope.bindModel($scope.modelObject.Id);
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
+        $('#dial-requests').dialog({
+            width: window.innerWidth * 0.6,
+            height: window.innerHeight * 0.6,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
         });
     }
 
@@ -367,8 +466,8 @@
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
         else {
-            $scope.getNextReceiptNo().then(function (rNo) {
-                $scope.modelObject.RequestNo = rNo;
+            $scope.getNextOrderNo().then(function (rNo) {
+                $scope.modelObject.OrderNo = rNo;
                 $scope.$apply();
 
                 $scope.bindDetails();

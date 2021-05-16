@@ -42,6 +42,9 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public Nullable<decimal> SubTotal { get; set; }
+        public Nullable<decimal> TaxPrice { get; set; }
+        public Nullable<decimal> OverallTotal { get; set; }
     
         public virtual Firm Firm { get; set; }
         public virtual ItemRequest ItemRequest { get; set; }

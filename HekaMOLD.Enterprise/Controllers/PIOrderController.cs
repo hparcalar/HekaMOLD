@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Request;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
@@ -12,7 +13,7 @@ using System.Web.Mvc;
 namespace HekaMOLD.Enterprise.Controllers
 {
     [UserAuthFilter]
-    public class PIRequestController : Controller
+    public class PIOrderController : Controller
     {
         // GET: PIRequest
         public ActionResult Index()
@@ -26,13 +27,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetNextReceiptNo()
+        public JsonResult GetNextOrderNo()
         {
             string receiptNo = "";
 
-            using (RequestBO bObj = new RequestBO())
+            using (OrdersBO bObj = new OrdersBO())
             {
-                receiptNo = bObj.GetNextReceiptNo(Convert.ToInt32(Request.Cookies["PlantId"].Value));
+                receiptNo = bObj.GetNextOrderNo(Convert.ToInt32(Request.Cookies["PlantId"].Value));
             }
 
             var jsonResult = Json(new { Result=!string.IsNullOrEmpty(receiptNo), ReceiptNo=receiptNo }, JsonRequestBehavior.AllowGet);
@@ -45,26 +46,30 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             ItemModel[] items = new ItemModel[0];
             UnitTypeModel[] units = new UnitTypeModel[0];
+            FirmModel[] firms = new FirmModel[0];
+            ForexTypeModel[] forexes = new ForexTypeModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 items = bObj.GetItemList();
                 units = bObj.GetUnitTypeList();
+                firms = bObj.GetFirmList();
+                forexes = bObj.GetForexTypeList();
             }
 
-            var jsonResult = Json(new { Items = items, Units = units }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Items = items, Units = units, Firms = firms, Forexes=forexes }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
 
         [HttpGet]
-        public JsonResult GetItemRequestList()
+        public JsonResult GetItemOrderList()
         {
-            ItemRequestModel[] result = new ItemRequestModel[0];
+            ItemOrderModel[] result = new ItemOrderModel[0];
 
-            using (RequestBO bObj = new RequestBO())
+            using (OrdersBO bObj = new OrdersBO())
             {
-                result = bObj.GetItemRequestList();
+                result = bObj.GetItemOrderList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -75,10 +80,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ItemRequestModel model = null;
-            using (RequestBO bObj = new RequestBO())
+            ItemOrderModel model = null;
+            using (OrdersBO bObj = new OrdersBO())
             {
-                model = bObj.GetItemRequest(rid);
+                model = bObj.GetItemOrder(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -90,9 +95,9 @@ namespace HekaMOLD.Enterprise.Controllers
             try
             {
                 BusinessResult result = null;
-                using (RequestBO bObj = new RequestBO())
+                using (OrdersBO bObj = new OrdersBO())
                 {
-                    result = bObj.DeleteItemRequest(rid);
+                    result = bObj.DeleteItemOrder(rid);
                 }
 
                 if (result.Result)
@@ -107,16 +112,16 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemRequestModel model)
+        public JsonResult SaveModel(ItemOrderModel model)
         {
             try
             {
                 BusinessResult result = null;
-                using (RequestBO bObj = new RequestBO())
+                using (OrdersBO bObj = new OrdersBO())
                 {
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
 
-                    result = bObj.SaveOrUpdateItemRequest(model);
+                    result = bObj.SaveOrUpdateItemOrder(model);
                 }
 
                 if (result.Result)
@@ -133,29 +138,46 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult ApprovePoRequest(int rid)
+        public JsonResult ApproveOrderPrice(int rid)
         {
             BusinessResult result = new BusinessResult();
 
-            using (RequestBO bObj = new RequestBO())
+            using (OrdersBO bObj = new OrdersBO())
             {
-                result = bObj.ApprovePoRequest(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+                result = bObj.ApproveItemOrderPrice(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
             }
 
             return Json(result);
         }
 
+        [HttpGet]
+        public JsonResult GetApprovedRequestDetails()
+        {
+            ItemRequestDetailModel[] result = new ItemRequestDetailModel[0];
+
+            using (RequestBO bObj = new RequestBO())
+            {
+                result = bObj.GetApprovedDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        #region CALCULATIONS
         [HttpPost]
-        public JsonResult CreatePurchaseOrder(int rid)
+        public JsonResult CalculateRow(ItemOrderDetailModel model)
         {
-            BusinessResult result = new BusinessResult();
+            ItemOrderDetailModel result = new ItemOrderDetailModel();
 
-            using (RequestBO bObj = new RequestBO())
+            using (OrdersBO bObj = new OrdersBO())
             {
-                //result = bObj.ApprovePoRequest(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+                result = bObj.CalculateOrderDetail(model);
             }
 
             return Json(result);
         }
+        #endregion
     }
 }

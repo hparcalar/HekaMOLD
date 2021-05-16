@@ -315,5 +315,46 @@ namespace HekaMOLD.Business.UseCases
 
             return default;
         }
+
+        #region ITEM REQUEST PRESENTATION
+        public ItemRequestDetailModel[] GetApprovedDetails(int plantId)
+        {
+            ItemRequestDetailModel[] data = new ItemRequestDetailModel[0];
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemRequestDetail>();
+                var repoUser = _unitOfWork.GetRepository<User>();
+
+                data = repo.Filter(d => d.ItemRequest.RequestStatus == (int)RequestStatusType.Approved &&
+                    d.RequestStatus == (int)RequestStatusType.Approved)
+                    .Select(d => new ItemRequestDetailModel
+                    {
+                        Id = d.Id,
+                        ApprovedQuantity = d.ApprovedQuantity,
+                        Quantity = d.Quantity,
+                        RequestDate = d.ItemRequest.DateOfNeed,
+                        CreatedDate = d.ItemRequest.CreatedDate,
+                        CreatedUserStr = repoUser.Filter(u => u.Id == d.ItemRequest.CreatedUserId).Select(u => u.UserName).FirstOrDefault(),
+                        Explanation = d.Explanation,
+                        RequestExplanation = d.ItemRequest.Explanation,
+                        ItemNo = d.Item.ItemNo,
+                        ItemName = d.Item.ItemName,
+                        ItemId = d.ItemId,
+                        RequestNo = d.ItemRequest.RequestNo,
+                        LineNumber = d.LineNumber,
+                        ItemRequestId = d.ItemRequestId,
+                        UnitId = d.UnitId,
+                        UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
+                        UnitName = d.UnitType != null ? d.UnitType.UnitName : ""
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        #endregion
     }
 }

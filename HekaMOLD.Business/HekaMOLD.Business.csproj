@@ -59,12 +59,15 @@
     <Compile Include="Helpers\ConstantHelper.cs" />
     <Compile Include="Helpers\Mapper.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
+    <Compile Include="Models\Constants\OrderStatusType.cs" />
     <Compile Include="Models\Constants\RequestStatusType.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserRoleModel.cs" />
     <Compile Include="Models\DataTransfer\Core\FirmModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\ForexHistoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\ForexTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemModel.cs" />
@@ -75,9 +78,12 @@
     <Compile Include="Models\DataTransfer\Core\UnitTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
+    <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestApproveLogModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
+    <Compile Include="Models\Dictionaries\DictOrderStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictWarehouseType.cs" />
     <Compile Include="Models\Dictionaries\DictNotifyType.cs" />
     <Compile Include="Models\Dictionaries\DictRequestStatusType.cs" />
@@ -85,6 +91,7 @@
     <Compile Include="Models\Operational\BusinessResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UseCases\DefinitionsBO.cs" />
+    <Compile Include="UseCases\OrdersBO.cs" />
     <Compile Include="UseCases\RequestBO.cs" />
     <Compile Include="UseCases\UsersBO.cs" />
   </ItemGroup>

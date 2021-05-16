@@ -76,6 +76,8 @@
         <EntityTypeShape EntityType="Heka.DataAccess.Models.TransactionLog" Width="1.5" PointX="7.5" PointY="52.125" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_Notification_User" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_TransactionLog_User" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ForexHistory" Width="1.5" PointX="10.5" PointY="24.25" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ForexHistory_ForexType" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

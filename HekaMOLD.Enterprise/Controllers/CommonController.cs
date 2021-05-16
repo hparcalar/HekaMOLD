@@ -42,5 +42,19 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        [HttpGet]
+        public JsonResult GetForexRate(string forexCode, string forexDate)
+        {
+            ForexHistoryModel data = new ForexHistoryModel();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj
+                    .GetForexValue(forexCode, DateTime.ParseExact(forexDate, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr")));
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
     }
 }

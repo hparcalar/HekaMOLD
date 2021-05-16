@@ -46,6 +46,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public Nullable<bool> TaxIncluded { get; set; }
     
         public virtual ForexType ForexType { get; set; }
         public virtual Item Item { get; set; }

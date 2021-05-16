@@ -20,6 +20,13 @@ namespace HekaMOLD.Business.Models.DataTransfer.Request
         public string Explanation { get; set; }
         public int? RequestStatus { get; set; }
 
+        #region HEADER INFORMATION
+        public DateTime? RequestDate { get; set; }
+        public string RequestNo { get; set; }
+        public string RequestExplanation { get; set; }
+        public string CreatedUserStr { get; set; }
+        #endregion
+
         #region VISUAL ELEMENTS
         public string ItemNo { get; set; }
         public string ItemName { get; set; }

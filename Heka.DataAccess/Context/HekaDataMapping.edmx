@@ -32,12 +32,22 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="ForexHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ForexId" Type="int" />
+          <Property Name="HistoryDate" Type="datetime" />
+          <Property Name="SalesForexRate" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="BuyForexRate" Type="decimal" Precision="18" Scale="5" />
+        </EntityType>
         <EntityType Name="ForexType">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ForexType" Type="nvarchar" MaxLength="50" />
+          <Property Name="ForexTypeCode" Type="nvarchar" MaxLength="50" />
           <Property Name="ActiveSalesRate" Type="decimal" Precision="18" Scale="5" />
           <Property Name="ActiveBuyingRate" Type="decimal" Precision="18" Scale="5" />
         </EntityType>
@@ -101,6 +111,9 @@
           <Property Name="Explanation" Type="nvarchar" MaxLength="500" />
           <Property Name="OrderStatus" Type="int" />
           <Property Name="ItemRequestId" Type="int" />
+          <Property Name="SubTotal" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="TaxPrice" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="OverallTotal" Type="decimal" Precision="18" Scale="5" />
           <Property Name="SyncStatus" Type="int" />
           <Property Name="SyncPointId" Type="int" />
           <Property Name="SyncDate" Type="datetime" />
@@ -126,6 +139,7 @@
           <Property Name="ForexId" Type="int" />
           <Property Name="ForexRate" Type="decimal" Precision="18" Scale="5" />
           <Property Name="ForexUnitPrice" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="TaxIncluded" Type="bit" />
           <Property Name="TaxRate" Type="int" />
           <Property Name="TaxAmount" Type="decimal" Precision="18" Scale="5" />
           <Property Name="DiscountRate" Type="decimal" Precision="18" Scale="5" />
@@ -398,6 +412,18 @@
             </Principal>
             <Dependent Role="Firm">
               <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForexHistory_ForexType">
+          <End Role="ForexType" Type="Self.ForexType" Multiplicity="0..1" />
+          <End Role="ForexHistory" Type="Self.ForexHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForexType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ForexHistory">
+              <PropertyRef Name="ForexId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -967,6 +993,7 @@
         </Association>
         <EntityContainer Name="HekaDataAccessModelsStoreContainer">
           <EntitySet Name="Firm" EntityType="Self.Firm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ForexHistory" EntityType="Self.ForexHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ForexType" EntityType="Self.ForexType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemCategory" EntityType="Self.ItemCategory" Schema="dbo" store:Type="Tables" />
@@ -992,6 +1019,10 @@
           <AssociationSet Name="FK_Firm_Plant" Association="Self.FK_Firm_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="Firm" EntitySet="Firm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForexHistory_ForexType" Association="Self.FK_ForexHistory_ForexType">
+            <End Role="ForexType" EntitySet="ForexType" />
+            <End Role="ForexHistory" EntitySet="ForexHistory" />
           </AssociationSet>
           <AssociationSet Name="FK_Item_ItemCategory" Association="Self.FK_Item_ItemCategory">
             <End Role="ItemCategory" EntitySet="ItemCategory" />
@@ -1221,11 +1252,12 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ForexType1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ActiveSalesRate" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="ActiveBuyingRate" Type="Decimal" Precision="18" Scale="5" />
           <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemOrderDetail_ForexType" FromRole="ForexType" ToRole="ItemOrderDetail" />
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_ForexType" FromRole="ForexType" ToRole="ItemReceiptDetail" />
+          <NavigationProperty Name="ForexHistory" Relationship="Heka.DataAccess.Models.FK_ForexHistory_ForexType" FromRole="ForexType" ToRole="ForexHistory" />
+          <Property Name="ForexTypeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Item">
           <Key>
@@ -1316,6 +1348,9 @@
           <NavigationProperty Name="Warehouse1" Relationship="Self.FK_ItemOrder_WarehouseOut" FromRole="ItemOrder" ToRole="Warehouse" />
           <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemOrderDetail_ItemOrder" FromRole="ItemOrder" ToRole="ItemOrderDetail" />
           <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_ItemOrder" FromRole="ItemOrder" ToRole="ItemReceipt" />
+          <Property Name="SubTotal" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="TaxPrice" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="OverallTotal" Type="Decimal" Precision="18" Scale="5" />
         </EntityType>
         <EntityType Name="ItemOrderDetail">
           <Key>
@@ -1353,6 +1388,7 @@
           <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemOrderDetail_ItemRequestDetail" FromRole="ItemOrderDetail" ToRole="ItemRequestDetail" />
           <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemOrderDetail_UnitType" FromRole="ItemOrderDetail" ToRole="UnitType" />
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_ItemOrderDetail" FromRole="ItemOrderDetail" ToRole="ItemReceiptDetail" />
+          <Property Name="TaxIncluded" Type="Boolean" />
         </EntityType>
         <EntityType Name="ItemReceipt">
           <Key>
@@ -2403,6 +2439,11 @@
             <End Role="User" EntitySet="User" />
             <End Role="TransactionLog" EntitySet="TransactionLog" />
           </AssociationSet>
+          <EntitySet Name="ForexHistory" EntityType="Heka.DataAccess.Models.ForexHistory" />
+          <AssociationSet Name="FK_ForexHistory_ForexType" Association="Heka.DataAccess.Models.FK_ForexHistory_ForexType">
+            <End Role="ForexType" EntitySet="ForexType" />
+            <End Role="ForexHistory" EntitySet="ForexHistory" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -2459,6 +2500,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ForexHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ForexId" Type="Int32" />
+          <Property Name="HistoryDate" Type="DateTime" Precision="3" />
+          <Property Name="SalesForexRate" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="BuyForexRate" Type="Decimal" Precision="18" Scale="5" />
+          <NavigationProperty Name="ForexType" Relationship="Heka.DataAccess.Models.FK_ForexHistory_ForexType" FromRole="ForexHistory" ToRole="ForexType" />
+        </EntityType>
+        <Association Name="FK_ForexHistory_ForexType">
+          <End Type="Heka.DataAccess.Models.ForexType" Role="ForexType" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ForexHistory" Role="ForexHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForexType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ForexHistory">
+              <PropertyRef Name="ForexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2496,8 +2560,8 @@
           <EntitySetMapping Name="ForexType">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.ForexType">
               <MappingFragment StoreEntitySet="ForexType">
+                <ScalarProperty Name="ForexTypeCode" ColumnName="ForexTypeCode" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="ForexType1" ColumnName="ForexType" />
                 <ScalarProperty Name="ActiveSalesRate" ColumnName="ActiveSalesRate" />
                 <ScalarProperty Name="ActiveBuyingRate" ColumnName="ActiveBuyingRate" />
               </MappingFragment>
@@ -2552,6 +2616,9 @@
           <EntitySetMapping Name="ItemOrder">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemOrder">
               <MappingFragment StoreEntitySet="ItemOrder">
+                <ScalarProperty Name="OverallTotal" ColumnName="OverallTotal" />
+                <ScalarProperty Name="TaxPrice" ColumnName="TaxPrice" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
                 <ScalarProperty Name="DocumentNo" ColumnName="DocumentNo" />
@@ -2579,6 +2646,7 @@
           <EntitySetMapping Name="ItemOrderDetail">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemOrderDetail">
               <MappingFragment StoreEntitySet="ItemOrderDetail">
+                <ScalarProperty Name="TaxIncluded" ColumnName="TaxIncluded" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ItemOrderId" ColumnName="ItemOrderId" />
                 <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
@@ -2868,6 +2936,17 @@
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
                 <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ForexHistory">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ForexHistory">
+              <MappingFragment StoreEntitySet="ForexHistory">
+                <ScalarProperty Name="BuyForexRate" ColumnName="BuyForexRate" />
+                <ScalarProperty Name="SalesForexRate" ColumnName="SalesForexRate" />
+                <ScalarProperty Name="HistoryDate" ColumnName="HistoryDate" />
+                <ScalarProperty Name="ForexId" ColumnName="ForexId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

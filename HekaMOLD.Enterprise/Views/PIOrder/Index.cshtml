@@ -1,9 +1,9 @@
 ﻿@using HekaMOLD.Enterprise.Helpers
 @{
-    ViewBag.Title = "Satınalma Talepleri";
+    ViewBag.Title = "Satınalma Siparişleri";
 }
 
-<div ng-controller="requestCtrl">
+<div ng-controller="orderCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -32,24 +32,27 @@
             <div class="d-flex align-items-center py-1">
                 <!--begin::Wrapper-->
                 <div class="me-4">
-                    @if (Html.IsGranted("POCreate"))
-                    {
-                        <a class="btn btn-sm btn-light-success" ng-click="createPurchaseOrder()" ng-show="modelObject.RequestStatus == 1 && modelObject.Id > 0">
-                            <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
-                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                    <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
-                                        <path d="M6.26193932,17.6476484 C5.90425297,18.0684559 5.27315905,18.1196257 4.85235158,17.7619393 C4.43154411,17.404253 4.38037434,16.773159 4.73806068,16.3523516 L13.2380607,6.35235158 C13.6013618,5.92493855 14.2451015,5.87991302 14.6643638,6.25259068 L19.1643638,10.2525907 C19.5771466,10.6195087 19.6143273,11.2515811 19.2474093,11.6643638 C18.8804913,12.0771466 18.2484189,12.1143273 17.8356362,11.7474093 L14.0997854,8.42665306 L6.26193932,17.6476484 Z" id="Path-94" fill="#000000" fill-rule="nonzero" transform="translate(11.999995, 12.000002) rotate(-180.000000) translate(-11.999995, -12.000002) "></path>
-                                    </g>
-                                </svg>
-                            </span>
-                            Sipariş Oluştur
-                        </a>
-                    }
+                    <a class="btn btn-sm btn-secondary" ng-click="showItemRequestList()" ng-show="modelObject.OrderStatus == 0">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Stockholm-icons-/-General-/-Other2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                    <circle id="Oval-67" fill="#000000" cx="5" cy="12" r="2"></circle>
+                                    <circle id="Oval-67-Copy" fill="#000000" cx="12" cy="12" r="2"></circle>
+                                    <circle id="Oval-67-Copy-2" fill="#000000" cx="19" cy="12" r="2"></circle>
+                                </g>
+                            </svg>
+                        </span>
+                        Onaylı Talepler
+                    </a>
 
-                    @if (Html.IsGranted("POApproval"))
+                    <!--begin::Separator-->
+                    <span class="h-20px border-gray-200 border-start ms-3 mx-2" ng-show="modelObject.OrderStatus == 0"></span>
+                    <!--end::Separator-->
+
+                    @if (Html.IsGranted("POPriceApproval"))
                     {
-                        <a class="btn btn-sm btn-light-success" ng-click="approvePoRequest()" ng-show="modelObject.RequestStatus == 0 && modelObject.Id > 0">
+                        <a class="btn btn-sm btn-light-success" ng-click="approveOrderPrice()" ng-show="modelObject.OrderStatus == 0 && modelObject.Id > 0">
                             <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                                 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -58,15 +61,15 @@
                                     </g>
                                 </svg>
                             </span>
-                            Onayla
+                            Fiyatı Onayla
                         </a>
 
                         <!--begin::Separator-->
-                        <span class="h-20px border-gray-200 border-start ms-3 mx-2" ng-show="modelObject.RequestStatus == 0 && modelObject.Id > 0"></span>
+                        <span class="h-20px border-gray-200 border-start ms-3 mx-2" ng-show="modelObject.OrderStatus == 0 && modelObject.Id > 0"></span>
                         <!--end::Separator-->
                     }
 
-                    <a href="@Url.Action("List","PIRequest")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                    <a href="@Url.Action("List","PIOrder")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -138,20 +141,62 @@
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
                 <div class="col-xxl-6">
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Talep No</label>
-                    <span class="badge badge-light-primary" ng-cloak ng-show="modelObject.Id > 0">{{modelObject.RequestStatusStr}}</span>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" readonly="readonly" ng-model="modelObject.RequestNo" placeholder="" />
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sipariş No</label>
+                            <span class="badge badge-light-primary" ng-cloak ng-show="modelObject.Id > 0">{{modelObject.OrderStatusStr}}</span>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid" readonly="readonly" ng-model="modelObject.OrderNo" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Belge No</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.DocumentNo" placeholder="" />
+                            </div>
+                        </div>
                     </div>
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İhtiyaç Tarihi</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.DateOfNeed" placeholder="" />
+                    <div class="row">
+                        <div class="col-xxl-3">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sipariş Tarihi</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.OrderDate" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-3">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Termin Tarihi</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.DateOfNeed" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Firma</label>
+                            <!--begin::Input group-->
+                            <select class="form-select form-select-solid" data-allow-clear="true"
+                                    ng-options="item.FirmCode + ' / ' + item.FirmName for item in firmList" ng-model="selectedFirm"
+                                    data-control="select2" data-placeholder="-- Seçiniz --"></select>
+
+                            @*<div class="mb-5 input-group">
+                                    <input type="text" class="form-control form-control-solid" readonly="readonly"
+                                           ng-value="modelObject.FirmCode + ' / ' + modelObject.FirmName"
+                                           placeholder="" />
+                                    <div class="input-group-append">
+                                        <button id="btnSelectFirm" class="btn btn-primary" type="button" ng-click="showFirmDialog()">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </button>
+                                    </div>
+                                </div>*@
+                        </div>
                     </div>
+
                 </div>
                 <!--end::Col-->
+
                 <div class="col-xxl-6 d-flex flex-column">
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
                     <!--begin::Input group-->
@@ -170,6 +215,32 @@
                         <div id="dataList"></div>
                     </div>
 
+                    <div class="separator border-dark separator-dashed my-4"></div>
+
+                    <div class="row mt-2">
+                        <div class="col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ara Toplam</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control" readonly="readonly" ng-model="modelObject.SubTotal" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kdv Toplam</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control" readonly="readonly" ng-model="modelObject.TaxPrice" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Genel Toplam</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control" readonly="readonly" ng-model="modelObject.OverallTotal" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <!--end::Col-->
             </div>
@@ -179,11 +250,40 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
+    @* DIALOG FORMS *@
+    <div id="dial-firm" title="Firma Seçimi" style="display:none;">
+        <div class="mb-5 input-group">
+            <input type="text" class="form-control form-control-solid" ng-model="firmFilter" placeholder="" />
+            <div class="input-group-append">
+                <button id="btnSelectFirm" class="btn btn-primary" type="button" ng-click="showFirmDialog()">
+                    <i class="fas fa-filter"></i>
+                </button>
+            </div>
+        </div>
+
+        <table class="table table-dark table-borderless table-dialog">
+            <tbody>
+                <tr class="trow-table-dialog" ng-repeat="item in firmList | filter:firmFilter">
+                    <td class="w-75 bg-transparent"><span class="label-table-dialog pt-2">{{item.FirmName}}</span></td>
+                    <td class="w-25 bg-transparent">
+                        <button class="btn btn-sm btn-light-primary btn-block" ng-click="selectFirm(item)">
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="dial-requests" title="Onaylı Talepler" style="display:none;">
+        <ng-include src="'../Components/Views/ApprovedItemRequestDetails.html'"></ng-include>
+    </div>
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-    <script src="~/FrontEndLogic/PIRequest/index.js"></script>
+    <script src="~/FrontEndLogic/PIOrder/index.js"></script>
+    <script src="~/Components/Controllers/approved-itemrequest-details.js"></script>
 }

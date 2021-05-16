@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.Models.Constants
 {
-    public enum NotifyType
+    public enum OrderStatusType
     {
-        ItemRequestWaitForApproval=1,
-        ItemRequestIsApproved=2,
-        ItemOrderWaitForApproval=3,
-        ItemOrderIsApproved=4
+        Created = 0,
+        Approved = 1,
+        Cancelled = 2,
+        Completed = 3
     }
 }
