@@ -78,6 +78,7 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_TransactionLog_User" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ForexHistory" Width="1.5" PointX="10.5" PointY="24.25" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ForexHistory_ForexType" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequest_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

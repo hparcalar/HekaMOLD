@@ -293,6 +293,7 @@
                         ForexRate: values.ForexRate,
                         ForexUnitPrice: values.ForexUnitPrice,
                         ForexId: values.ForexId,
+                        ItemRequestDetailId:null,
                         NewDetail: true
                     };
 
@@ -445,8 +446,7 @@
 
     $scope.showItemRequestList = function () {
         // DO BROADCAST
-
-        // LISTEN WITH ON FOR EMIT
+        $scope.$broadcast('loadApprovedRequestDetails');
 
         $('#dial-requests').dialog({
             width: window.innerWidth * 0.6,
@@ -459,6 +459,40 @@
             closeText: "KAPAT"
         });
     }
+
+    $scope.$on('transferRequestDetails', function (e, d) {
+        d.forEach(x => {
+            if ($scope.modelObject.Details.filter(m => m.ItemRequestDetailId == x.Id).length > 0) {
+                toastr.warning(x.RequestNo + ' nolu talep, ' + x.ItemNo + ' / ' + x.ItemName + ', ' + x.Quantity
+                    + ' miktarlı talep detayı zaten aktarıldığı için tekrar dahil edilmedi.', 'Uyarı');
+            }
+            else {
+                var newId = 1;
+                if ($scope.modelObject.Details.length > 0) {
+                    newId = $scope.modelObject.Details.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                    newId++;
+                }
+
+                $scope.modelObject.Details.push({
+                    Id: newId,
+                    ItemId: x.ItemId,
+                    ItemNo: x.ItemNo,
+                    ItemName: x.ItemName,
+                    UnitId: x.UnitId,
+                    UnitName: x.UnitCode,
+                    Quantity: x.Quantity,
+                    UnitPrice: 0,
+                    NewDetail: true,
+                    ItemRequestDetailId: x.Id
+                });
+
+                var detailsGrid = $("#dataList").dxDataGrid("instance");
+                detailsGrid.refresh();
+            }
+        });
+
+        $('#dial-requests').dialog('close');
+    });
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');

@@ -1,14 +1,31 @@
 ﻿app.controller('requestListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
-    // LIST FUNCTIONS
-    $scope.loadReport = function () {
+    $scope.approvedRequestDetailList = [];
+
+    $scope.loadRequestDetails = function () {
+        $scope.approvedRequestDetailList = [];
+
         $('#requestList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'PIOrder/GetApprovedRequestDetails', function (data) {
+                    if ($scope.approvedRequestDetailList.length == 0)
+                        $scope.approvedRequestDetailList = $.getJSON(HOST_URL + 'PIOrder/GetApprovedRequestDetails', function (data) {
+                            data.forEach(d => {
+                                d.CreatedDate = moment(parseInt(d.CreatedDate.toString().substr(6, d.CreatedDate.toString().length - 8)));
+                                d.RequestDate = moment(parseInt(d.RequestDate.toString().substr(6, d.RequestDate.toString().length - 8)));
+                                d.IsChecked = false;
+                            }
+                            );
+                        });
 
-                    });
+                    return $scope.approvedRequestDetailList;
+                },
+                update: function (key, values) {
+                    var obj = $scope.approvedRequestDetailList.responseJSON.find(d => d.Id == key);
+                    if (obj != null) {
+                        obj.IsChecked = values.IsChecked;
+                    }
                 },
                 key: 'Id'
             },
@@ -29,40 +46,40 @@
                 pageIndex: 0
             },
             groupPanel: {
-                visible: true
+                visible: false
             },
             editing: {
-                allowUpdating: false,
-                allowDeleting: false
+                allowUpdating: true,
+                allowDeleting: false,
+                mode: 'cell'
             },
             columns: [
-                { dataField: 'RequestNo', caption: 'Talep No' },
-                { dataField: 'CreatedDateStr', caption: 'Talep Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'DateOfNeedStr', caption: 'İhtiyaç Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'RequestStatusStr', caption: 'Durum' },
-                { dataField: 'Explanation', caption: 'Açıklama' },
-                {
-                    type: "buttons",
-                    buttons: [
-                        {
-                            name: 'preview', cssClass: '', text: 'Düzenle', onClick: function (e) {
-                                var dataGrid = $("#dataList").dxDataGrid("instance");
-                                dataGrid.deselectAll();
-                                dataGrid.selectRowsByIndexes([e.row.rowIndex]);
-
-                                window.location.href = HOST_URL + 'PIRequest?rid=' + e.row.data.Id;
-                            }
-                        }
-                    ]
-                }
+                { dataField: 'RequestNo', caption: 'Talep No', allowEditing: false },
+                { dataField: 'CreatedDate', caption: 'Talep Tarihi', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
+                { dataField: 'RequestDate', caption: 'İhtiyaç Tarihi', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
+                { dataField: 'CreatedUserStr', caption: 'Talep Eden', allowEditing: false },
+                { dataField: 'ItemNo', caption: 'Stok No', allowEditing: false },
+                { dataField: 'ItemName', caption: 'Stok Adı', allowEditing: false },
+                { dataField: 'UnitCode', caption: 'Birim', allowEditing: false },
+                { dataField: 'Quantity', caption: 'Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'RequestExplanation', caption: 'Açıklama', allowEditing: false },
+                { dataField: 'IsChecked', caption: 'Seç' }
             ]
         });
     }
 
-    // LISTEN WITH ON
+    $scope.transferSelections = function () {
+        if ($scope.approvedRequestDetailList.responseJSON.filter(d => d.IsChecked == true).length == 0) {
+            alert('Aktarmak için bir veya daha fazla kayıt seçmelisiniz.');
+            return;
+        }
 
-    // DO EMIT
+        var selectedDetails = $scope.approvedRequestDetailList.responseJSON.filter(d => d.IsChecked == true);
+        $scope.$emit('transferRequestDetails', selectedDetails);
+    }
 
     // ON LOAD EVENTS
-    $scope.loadReport();
+    $scope.$on('loadApprovedRequestDetails', function (e, d) {
+        $scope.loadRequestDetails();
+    });
 });

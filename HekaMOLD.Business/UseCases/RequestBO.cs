@@ -105,6 +105,7 @@ namespace HekaMOLD.Business.UseCases
                         }
 
                         item.MapTo(dbDetail);
+                        dbDetail.RequestStatus = dbObj.RequestStatus;
                         dbDetail.ItemRequest = dbObj;
                         if (dbObj.Id > 0)
                             dbDetail.ItemRequestId = dbObj.Id;
@@ -323,7 +324,6 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemRequestDetail>();
-                var repoUser = _unitOfWork.GetRepository<User>();
 
                 data = repo.Filter(d => d.ItemRequest.RequestStatus == (int)RequestStatusType.Approved &&
                     d.RequestStatus == (int)RequestStatusType.Approved)
@@ -334,7 +334,7 @@ namespace HekaMOLD.Business.UseCases
                         Quantity = d.Quantity,
                         RequestDate = d.ItemRequest.DateOfNeed,
                         CreatedDate = d.ItemRequest.CreatedDate,
-                        CreatedUserStr = repoUser.Filter(u => u.Id == d.ItemRequest.CreatedUserId).Select(u => u.UserName).FirstOrDefault(),
+                        CreatedUserStr = d.ItemRequest.User != null ? d.ItemRequest.User.UserName : "",
                         Explanation = d.Explanation,
                         RequestExplanation = d.ItemRequest.Explanation,
                         ItemNo = d.Item.ItemNo,

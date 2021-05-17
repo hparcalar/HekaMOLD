@@ -775,6 +775,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ItemRequest_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequest">
+              <PropertyRef Name="CreatedUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ItemRequestApproveLog_ItemRequest">
           <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="0..1" />
           <End Role="ItemRequestApproveLog" Type="Self.ItemRequestApproveLog" Multiplicity="*" />
@@ -1140,6 +1152,10 @@
             <End Role="Plant" EntitySet="Plant" />
             <End Role="ItemRequest" EntitySet="ItemRequest" />
           </AssociationSet>
+          <AssociationSet Name="FK_ItemRequest_User" Association="Self.FK_ItemRequest_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+          </AssociationSet>
           <AssociationSet Name="FK_ItemRequestApproveLog_ItemRequest" Association="Self.FK_ItemRequestApproveLog_ItemRequest">
             <End Role="ItemRequest" EntitySet="ItemRequest" />
             <End Role="ItemRequestApproveLog" EntitySet="ItemRequestApproveLog" />
@@ -1477,6 +1493,7 @@
           <NavigationProperty Name="Plant" Relationship="Self.FK_ItemRequest_Plant" FromRole="ItemRequest" ToRole="Plant" />
           <NavigationProperty Name="ItemRequestApproveLog" Relationship="Self.FK_ItemRequestApproveLog_ItemRequest" FromRole="ItemRequest" ToRole="ItemRequestApproveLog" />
           <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemRequestDetail_ItemRequest" FromRole="ItemRequest" ToRole="ItemRequestDetail" />
+          <NavigationProperty Name="User" Relationship="Heka.DataAccess.Models.FK_ItemRequest_User" FromRole="ItemRequest" ToRole="User" />
         </EntityType>
         <EntityType Name="ItemRequestApproveLog">
           <Key>
@@ -1614,6 +1631,7 @@
           <NavigationProperty Name="UserAuth" Relationship="Self.FK_UserAuth_User" FromRole="User" ToRole="UserAuth" />
           <NavigationProperty Name="Notification" Relationship="Heka.DataAccess.Models.FK_Notification_User" FromRole="User" ToRole="Notification" />
           <NavigationProperty Name="TransactionLog" Relationship="Heka.DataAccess.Models.FK_TransactionLog_User" FromRole="User" ToRole="TransactionLog" />
+          <NavigationProperty Name="ItemRequest" Relationship="Heka.DataAccess.Models.FK_ItemRequest_User" FromRole="User" ToRole="ItemRequest" />
         </EntityType>
         <EntityType Name="UserAuth">
           <Key>
@@ -2444,6 +2462,10 @@
             <End Role="ForexType" EntitySet="ForexType" />
             <End Role="ForexHistory" EntitySet="ForexHistory" />
           </AssociationSet>
+          <AssociationSet Name="FK_ItemRequest_User" Association="Heka.DataAccess.Models.FK_ItemRequest_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -2520,6 +2542,18 @@
             </Principal>
             <Dependent Role="ForexHistory">
               <PropertyRef Name="ForexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequest_User">
+          <End Type="Heka.DataAccess.Models.User" Role="User" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemRequest" Role="ItemRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequest">
+              <PropertyRef Name="CreatedUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

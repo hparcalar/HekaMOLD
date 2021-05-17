@@ -46,6 +46,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ItemOrder>();
                 var repoDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+                var repoRequestDetail = _unitOfWork.GetRepository<ItemRequestDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
 
                 bool newRecord = false;
@@ -93,6 +94,14 @@ namespace HekaMOLD.Business.UseCases
                         if (item.ItemReceiptDetail.Any())
                             throw new Exception("İrsaliyesi girilmiş olan bir sipariş detayı silinemez.");
 
+                        #region SET REQUEST & DETAIL TO APPROVED
+                        if (item.ItemRequestDetail != null)
+                        {
+                            item.ItemRequestDetail.RequestStatus = (int)RequestStatusType.Approved;
+                            item.ItemRequestDetail.ItemRequest.RequestStatus = (int)RequestStatusType.Approved;
+                        }
+                        #endregion
+
                         repoDetail.Delete(item);
                     }
 
@@ -116,6 +125,23 @@ namespace HekaMOLD.Business.UseCases
                             dbDetail.ItemOrderId = dbObj.Id;
 
                         dbDetail.LineNumber = lineNo;
+
+                        #region SET REQUEST & DETAIL STATUS TO COMPLETE
+                        if (dbDetail.ItemRequestDetailId > 0)
+                        {
+                            var dbRequestDetail = repoRequestDetail.Get(d => d.Id == dbDetail.ItemRequestDetailId);
+                            if (dbRequestDetail != null)
+                            {
+                                dbRequestDetail.RequestStatus = (int)RequestStatusType.Completed;
+
+                                if (!dbRequestDetail.ItemRequest
+                                    .ItemRequestDetail.Any(d => d.RequestStatus != (int)RequestStatusType.Completed))
+                                {
+                                    dbRequestDetail.ItemRequest.RequestStatus = (int)RequestStatusType.Completed;
+                                }
+                            }
+                        }
+                        #endregion
 
                         lineNo++;
                     }
@@ -180,21 +206,29 @@ namespace HekaMOLD.Business.UseCases
                     var detailObjArr = dbObj.ItemOrderDetail.ToArray();
                     foreach (var item in detailObjArr)
                     {
+                        #region SET REQUEST & DETAIL TO APPROVED
+                        if (item.ItemRequestDetail != null)
+                        {
+                            item.ItemRequestDetail.RequestStatus = (int)RequestStatusType.Approved;
+                            item.ItemRequestDetail.ItemRequest.RequestStatus = (int)RequestStatusType.Approved;
+                        }
+                        #endregion
+
                         repoDetail.Delete(item);
                     }
                 }
 
                 // CLEAR NOTIFICATIONS
-                //if (repoNotify.Any(d => d.NotifyType == (int)NotifyType.ItemRequestWaitForApproval && d.RecordId == dbObj.Id))
-                //{
-                //    var notificationArr = repoNotify.Filter(d => d.NotifyType == (int)NotifyType.ItemRequestWaitForApproval && d.RecordId == dbObj.Id)
-                //        .ToArray();
+                if (repoNotify.Any(d => d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval && d.RecordId == dbObj.Id))
+                {
+                    var notificationArr = repoNotify.Filter(d => d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval && d.RecordId == dbObj.Id)
+                        .ToArray();
 
-                //    foreach (var item in notificationArr)
-                //    {
-                //        repoNotify.Delete(item);
-                //    }
-                //}
+                    foreach (var item in notificationArr)
+                    {
+                        repoNotify.Delete(item);
+                    }
+                }
 
                 repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
