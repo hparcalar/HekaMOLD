@@ -22,6 +22,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string Twitter { get; set; }
         public string Instagram { get; set; }
         public string Address { get; set; }
+        public string Address2 { get; set; }
         public string Author { get; set; }
         public string Email { get; set; }
         public string TaxNo { get; set; }

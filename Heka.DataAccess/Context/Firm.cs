@@ -19,6 +19,7 @@ namespace Heka.DataAccess.Context
         {
             this.ItemOrder = new HashSet<ItemOrder>();
             this.ItemReceipt = new HashSet<ItemReceipt>();
+            this.Item = new HashSet<Item>();
         }
     
         public int Id { get; set; }
@@ -43,11 +44,14 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public Nullable<bool> IsApproved { get; set; }
+        public string Address2 { get; set; }
     
         public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemOrder> ItemOrder { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Item> Item { get; set; }
     }
 }

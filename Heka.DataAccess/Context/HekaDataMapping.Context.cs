@@ -49,5 +49,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<TransactionLog> TransactionLog { get; set; }
         public virtual DbSet<ForexHistory> ForexHistory { get; set; }
+        public virtual DbSet<ItemWarehouse> ItemWarehouse { get; set; }
+        public virtual DbSet<ItemRequestCategory> ItemRequestCategory { get; set; }
     }
 }

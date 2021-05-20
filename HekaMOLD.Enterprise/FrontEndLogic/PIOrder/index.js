@@ -209,6 +209,13 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
+                    $scope.modelObject.Details.forEach(d => {
+                        if (d.TaxIncluded == true)
+                            d.TaxIncluded = 1;
+                        else if (d.TaxIncluded == false)
+                            d.TaxIncluded = 0;
+                    });
+
                     return $scope.modelObject.Details;
                 },
                 update: function (key, values) {
@@ -231,6 +238,7 @@
                             calculateRowAgain = true;
                         }
 
+                        if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation; }
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
                         if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
                         if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
@@ -293,7 +301,8 @@
                         ForexRate: values.ForexRate,
                         ForexUnitPrice: values.ForexUnitPrice,
                         ForexId: values.ForexId,
-                        ItemRequestDetailId:null,
+                        ItemRequestDetailId: null,
+                        Explanation: values.Explanation,
                         NewDetail: true
                     };
 
@@ -384,7 +393,8 @@
                 { dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } }
+                { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Explanation', caption: 'Açıklama' }
             ]
         });
     }

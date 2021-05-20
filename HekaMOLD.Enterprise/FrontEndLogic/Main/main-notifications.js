@@ -22,6 +22,9 @@ app.controller('notificationCtrl', function ($scope, $http, $interval) {
         if (notifyItem.NotifyType == 1 || notifyItem.NotifyType == 2) {
             window.location.href = HOST_URL + 'PIRequest?rid=' + notifyItem.RecordId;
         }
+        else if (notifyItem.NotifyType == 3 || notifyItem.NotifyType == 4) {
+            window.location.href = HOST_URL + 'PIOrder?rid=' + notifyItem.RecordId;
+        }
     }
 
     // ON LOAD EVENTS

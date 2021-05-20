@@ -45,6 +45,7 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             ItemModel[] items = new ItemModel[0];
             UnitTypeModel[] units = new UnitTypeModel[0];
+            ItemRequestCategoryModel[] categories = new ItemRequestCategoryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -52,7 +53,12 @@ namespace HekaMOLD.Enterprise.Controllers
                 units = bObj.GetUnitTypeList();
             }
 
-            var jsonResult = Json(new { Items = items, Units = units }, JsonRequestBehavior.AllowGet);
+            using (RequestBO bObj = new RequestBO())
+            {
+                categories = bObj.GetRequestCategoryList();
+            }
+
+            var jsonResult = Json(new { Items = items, Units = units, Categories = categories }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

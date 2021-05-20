@@ -42,6 +42,20 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(ItemCriticalBehaviourType))
+                {
+                    return DictItemCriticalBehaviourType.Values
+                        .Where(d => d.Key == (ItemCriticalBehaviourType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
+                else if (obj.GetType() == typeof(ItemType))
+                {
+                    return DictItemType.Values
+                        .Where(d => d.Key == (ItemType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception)
             {

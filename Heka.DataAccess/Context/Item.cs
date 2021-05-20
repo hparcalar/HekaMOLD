@@ -21,6 +21,7 @@ namespace Heka.DataAccess.Context
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
             this.ItemRequestDetail = new HashSet<ItemRequestDetail>();
             this.ItemUnit = new HashSet<ItemUnit>();
+            this.ItemWarehouse = new HashSet<ItemWarehouse>();
         }
     
         public int Id { get; set; }
@@ -34,6 +35,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public Nullable<int> SupplierFirmId { get; set; }
     
         public virtual ItemCategory ItemCategory { get; set; }
         public virtual ItemGroup ItemGroup { get; set; }
@@ -46,5 +48,8 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ItemRequestDetail> ItemRequestDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemUnit> ItemUnit { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemWarehouse> ItemWarehouse { get; set; }
+        public virtual Firm Firm { get; set; }
     }
 }

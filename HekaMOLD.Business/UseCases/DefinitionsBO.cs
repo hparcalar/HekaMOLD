@@ -220,13 +220,105 @@ namespace HekaMOLD.Business.UseCases
             ItemModel model = new ItemModel { };
 
             var repo = _unitOfWork.GetRepository<Item>();
+            var repoWarehouse = _unitOfWork.GetRepository<Warehouse>();
+
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+
+                #region WAREHOUSE RESTRICTIONS BY ITEM TYPE
+                var warehouseList = repoWarehouse.Filter(d =>
+                    ((model.ItemType == (int)ItemType.RawMaterials || model.ItemType == (int)ItemType.Commercial) 
+                        && d.WarehouseType == (int)WarehouseType.ItemWarehouse)
+                    ||
+                    ((model.ItemType == (int)ItemType.SemiProduct) && 
+                        (d.WarehouseType == (int)WarehouseType.ItemWarehouse || d.WarehouseType == (int)WarehouseType.ProductWarehouse))
+                    ||
+                    (model.ItemType == (int)ItemType.Product && d.WarehouseType == (int)WarehouseType.ProductWarehouse)
+                ).ToArray();
+                #endregion
+
+                #region GET WAREHOUSE PARAMETERS
+                List<ItemWarehouseModel> warehousePrmList = new List<ItemWarehouseModel>();
+
+                foreach (var item in warehouseList)
+                {
+                    ItemWarehouseModel itemWarehousePrm = new ItemWarehouseModel
+                    {
+                        ItemId = model.Id,
+                        WarehouseId = item.Id,
+                        IsAllowed=true,
+                        MaximumQuantity = null,
+                        WarehouseCode = item.WarehouseCode,
+                        WarehouseName = item.WarehouseName,
+                        MinimumQuantity = null,
+                        MinimumBehaviour = (int)ItemCriticalBehaviourType.None,
+                        MaximumBehaviour = (int)ItemCriticalBehaviourType.None
+                    };
+
+                    var dbItemWarehouse = dbObj.ItemWarehouse.FirstOrDefault(d => d.WarehouseId == item.Id);
+                    if (dbItemWarehouse != null)
+                    {
+                        dbItemWarehouse.MapTo(itemWarehousePrm);
+                    }
+
+                    warehousePrmList.Add(itemWarehousePrm);
+                }
+                #endregion
+
+                model.Warehouses = warehousePrmList.ToArray();
             }
 
             return model;
+        }
+
+        public ItemWarehouseModel[] GetProperWarehouses(ItemType itemType, int? itemId)
+        {
+            var repo = _unitOfWork.GetRepository<Item>();
+            var repoWarehouse = _unitOfWork.GetRepository<Warehouse>();
+
+            var dbObj = repo.Get(d => d.Id == itemId);
+
+            var warehouseList = repoWarehouse.Filter(d =>
+                ((itemType == ItemType.RawMaterials || itemType == ItemType.Commercial)
+                    && d.WarehouseType == (int)WarehouseType.ItemWarehouse)
+                ||
+                ((itemType == ItemType.SemiProduct) &&
+                    (d.WarehouseType == (int)WarehouseType.ItemWarehouse || d.WarehouseType == (int)WarehouseType.ProductWarehouse))
+                ||
+                (itemType == ItemType.Product && d.WarehouseType == (int)WarehouseType.ProductWarehouse)
+            ).ToArray();
+
+            List<ItemWarehouseModel> warehousePrmList = new List<ItemWarehouseModel>();
+
+            foreach (var item in warehouseList)
+            {
+                ItemWarehouseModel itemWarehousePrm = new ItemWarehouseModel
+                {
+                    WarehouseId = item.Id,
+                    IsAllowed = true,
+                    MaximumQuantity = null,
+                    MinimumQuantity = null,
+                    WarehouseCode = item.WarehouseCode,
+                    WarehouseName = item.WarehouseName,
+                    MinimumBehaviour = (int)ItemCriticalBehaviourType.None,
+                    MaximumBehaviour = (int)ItemCriticalBehaviourType.None
+                };
+
+                if (dbObj != null)
+                {
+                    var dbItemWarehouse = dbObj.ItemWarehouse.FirstOrDefault(d => d.WarehouseId == item.Id);
+                    if (dbItemWarehouse != null)
+                    {
+                        dbItemWarehouse.MapTo(itemWarehousePrm);
+                    }
+                }
+
+                warehousePrmList.Add(itemWarehousePrm);
+            }
+
+            return warehousePrmList.ToArray();
         }
 
         #endregion

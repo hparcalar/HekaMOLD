@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+﻿using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -44,14 +45,31 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             ItemCategoryModel[] categories = new ItemCategoryModel[0];
             ItemGroupModel[] groups = new ItemGroupModel[0];
+            FirmModel[] firms = new FirmModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 categories = bObj.GetItemCategoryList();
                 groups = bObj.GetItemGroupList();
+                firms = bObj.GetFirmList();
             }
 
-            var jsonResult = Json(new { Categories=categories, Groups=groups }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Categories=categories, Groups=groups, Firms=firms }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetProperWarehouses(int itemType, int itemId)
+        {
+            ItemWarehouseModel[] warehouses = new ItemWarehouseModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                warehouses = bObj.GetProperWarehouses((ItemType)itemType, itemId);
+            }
+
+            var jsonResult = Json(warehouses, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

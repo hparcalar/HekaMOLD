@@ -22,6 +22,7 @@
           <Property Name="Twitter" Type="nvarchar" MaxLength="150" />
           <Property Name="Instagram" Type="nvarchar" MaxLength="150" />
           <Property Name="Address" Type="nvarchar" MaxLength="500" />
+          <Property Name="Address2" Type="nvarchar" MaxLength="300" />
           <Property Name="Author" Type="nvarchar" MaxLength="100" />
           <Property Name="Email" Type="nvarchar" MaxLength="250" />
           <Property Name="TaxNo" Type="nvarchar" MaxLength="50" />
@@ -61,6 +62,7 @@
           <Property Name="ItemType" Type="int" />
           <Property Name="ItemCategoryId" Type="int" />
           <Property Name="ItemGroupId" Type="int" />
+          <Property Name="SupplierFirmId" Type="int" />
           <Property Name="PlantId" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="CreatedUserId" Type="int" />
@@ -218,6 +220,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RequestNo" Type="nvarchar" MaxLength="50" />
           <Property Name="RequestType" Type="int" />
+          <Property Name="RequestCategoryId" Type="int" />
           <Property Name="DateOfNeed" Type="datetime" />
           <Property Name="RequestStatus" Type="int" />
           <Property Name="PlantId" Type="int" />
@@ -237,6 +240,17 @@
           <Property Name="NewRequestStatus" Type="int" />
           <Property Name="ActorUserId" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ItemRequestCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
         <EntityType Name="ItemRequestDetail">
           <Key>
@@ -271,6 +285,19 @@
           <Property Name="CreatedUserId" Type="int" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemWarehouse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="WarehouseId" Type="int" />
+          <Property Name="IsAllowed" Type="bit" />
+          <Property Name="MinimumQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="MaximumQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="MinimumBehaviour" Type="int" />
+          <Property Name="MaximumBehaviour" Type="int" />
         </EntityType>
         <EntityType Name="Notification">
           <Key>
@@ -424,6 +451,18 @@
             </Principal>
             <Dependent Role="ForexHistory">
               <PropertyRef Name="ForexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Firm">
+          <End Role="Firm" Type="Self.Firm" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="SupplierFirmId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -763,6 +802,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ItemRequest_ItemRequestCategory">
+          <End Role="ItemRequestCategory" Type="Self.ItemRequestCategory" Multiplicity="0..1" />
+          <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequestCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequest">
+              <PropertyRef Name="RequestCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ItemRequest_Plant">
           <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
           <End Role="ItemRequest" Type="Self.ItemRequest" Multiplicity="*" />
@@ -868,6 +919,30 @@
             </Principal>
             <Dependent Role="ItemUnit">
               <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemWarehouse_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemWarehouse" Type="Self.ItemWarehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemWarehouse">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemWarehouse_Warehouse">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemWarehouse" Type="Self.ItemWarehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemWarehouse">
+              <PropertyRef Name="WarehouseId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1016,8 +1091,10 @@
           <EntitySet Name="ItemReceiptDetail" EntityType="Self.ItemReceiptDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemRequest" EntityType="Self.ItemRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemRequestApproveLog" EntityType="Self.ItemRequestApproveLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemRequestCategory" EntityType="Self.ItemRequestCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemRequestDetail" EntityType="Self.ItemRequestDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemUnit" EntityType="Self.ItemUnit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemWarehouse" EntityType="Self.ItemWarehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Plant" EntityType="Self.Plant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" Schema="dbo" store:Type="Tables" />
@@ -1035,6 +1112,10 @@
           <AssociationSet Name="FK_ForexHistory_ForexType" Association="Self.FK_ForexHistory_ForexType">
             <End Role="ForexType" EntitySet="ForexType" />
             <End Role="ForexHistory" EntitySet="ForexHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Firm" Association="Self.FK_Item_Firm">
+            <End Role="Firm" EntitySet="Firm" />
+            <End Role="Item" EntitySet="Item" />
           </AssociationSet>
           <AssociationSet Name="FK_Item_ItemCategory" Association="Self.FK_Item_ItemCategory">
             <End Role="ItemCategory" EntitySet="ItemCategory" />
@@ -1148,6 +1229,10 @@
             <End Role="UnitType" EntitySet="UnitType" />
             <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
           </AssociationSet>
+          <AssociationSet Name="FK_ItemRequest_ItemRequestCategory" Association="Self.FK_ItemRequest_ItemRequestCategory">
+            <End Role="ItemRequestCategory" EntitySet="ItemRequestCategory" />
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+          </AssociationSet>
           <AssociationSet Name="FK_ItemRequest_Plant" Association="Self.FK_ItemRequest_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="ItemRequest" EntitySet="ItemRequest" />
@@ -1183,6 +1268,14 @@
           <AssociationSet Name="FK_ItemUnit_UnitType" Association="Self.FK_ItemUnit_UnitType">
             <End Role="UnitType" EntitySet="UnitType" />
             <End Role="ItemUnit" EntitySet="ItemUnit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemWarehouse_Item" Association="Self.FK_ItemWarehouse_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemWarehouse_Warehouse" Association="Self.FK_ItemWarehouse_Warehouse">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
           </AssociationSet>
           <AssociationSet Name="FK_Notification_User" Association="Self.FK_Notification_User">
             <End Role="User" EntitySet="User" />
@@ -1262,6 +1355,8 @@
           <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrder_Firm" FromRole="Firm" ToRole="ItemOrder" />
           <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_Firm" FromRole="Firm" ToRole="ItemReceipt" />
           <Property Name="IsApproved" Type="Boolean" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_Firm" FromRole="Firm" ToRole="Item" />
+          <Property Name="Address2" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ForexType">
           <Key>
@@ -1297,6 +1392,9 @@
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_Item" FromRole="Item" ToRole="ItemReceiptDetail" />
           <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemRequestDetail_Item" FromRole="Item" ToRole="ItemRequestDetail" />
           <NavigationProperty Name="ItemUnit" Relationship="Self.FK_ItemUnit_Item" FromRole="Item" ToRole="ItemUnit" />
+          <NavigationProperty Name="ItemWarehouse" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Item" FromRole="Item" ToRole="ItemWarehouse" />
+          <Property Name="SupplierFirmId" Type="Int32" />
+          <NavigationProperty Name="Firm" Relationship="Heka.DataAccess.Models.FK_Item_Firm" FromRole="Item" ToRole="Firm" />
         </EntityType>
         <EntityType Name="ItemCategory">
           <Key>
@@ -1494,6 +1592,8 @@
           <NavigationProperty Name="ItemRequestApproveLog" Relationship="Self.FK_ItemRequestApproveLog_ItemRequest" FromRole="ItemRequest" ToRole="ItemRequestApproveLog" />
           <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemRequestDetail_ItemRequest" FromRole="ItemRequest" ToRole="ItemRequestDetail" />
           <NavigationProperty Name="User" Relationship="Heka.DataAccess.Models.FK_ItemRequest_User" FromRole="ItemRequest" ToRole="User" />
+          <Property Name="RequestCategoryId" Type="Int32" />
+          <NavigationProperty Name="ItemRequestCategory" Relationship="Heka.DataAccess.Models.FK_ItemRequest_ItemRequestCategory" FromRole="ItemRequest" ToRole="ItemRequestCategory" />
         </EntityType>
         <EntityType Name="ItemRequestApproveLog">
           <Key>
@@ -1688,6 +1788,7 @@
           <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_WarehouseIn" FromRole="Warehouse" ToRole="ItemReceipt" />
           <NavigationProperty Name="ItemReceipt1" Relationship="Self.FK_ItemReceipt_WarehouseOut" FromRole="Warehouse" ToRole="ItemReceipt" />
           <NavigationProperty Name="Plant" Relationship="Self.FK_Warehouse_Plant" FromRole="Warehouse" ToRole="Plant" />
+          <NavigationProperty Name="ItemWarehouse" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse" FromRole="Warehouse" ToRole="ItemWarehouse" />
         </EntityType>
         <Association Name="FK_Firm_Plant">
           <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
@@ -2466,6 +2567,24 @@
             <End Role="User" EntitySet="User" />
             <End Role="ItemRequest" EntitySet="ItemRequest" />
           </AssociationSet>
+          <EntitySet Name="ItemWarehouse" EntityType="Heka.DataAccess.Models.ItemWarehouse" />
+          <AssociationSet Name="FK_ItemWarehouse_Item" Association="Heka.DataAccess.Models.FK_ItemWarehouse_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemWarehouse_Warehouse" Association="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Firm" Association="Heka.DataAccess.Models.FK_Item_Firm">
+            <End Role="Firm" EntitySet="Firm" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <EntitySet Name="ItemRequestCategory" EntityType="Heka.DataAccess.Models.ItemRequestCategory" />
+          <AssociationSet Name="FK_ItemRequest_ItemRequestCategory" Association="Heka.DataAccess.Models.FK_ItemRequest_ItemRequestCategory">
+            <End Role="ItemRequestCategory" EntitySet="ItemRequestCategory" />
+            <End Role="ItemRequest" EntitySet="ItemRequest" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -2557,6 +2676,81 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ItemWarehouse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="WarehouseId" Type="Int32" />
+          <Property Name="IsAllowed" Type="Boolean" />
+          <Property Name="MinimumQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="MaximumQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="MinimumBehaviour" Type="Int32" />
+          <Property Name="MaximumBehaviour" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Item" FromRole="ItemWarehouse" ToRole="Item" />
+          <NavigationProperty Name="Warehouse" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse" FromRole="ItemWarehouse" ToRole="Warehouse" />
+        </EntityType>
+        <Association Name="FK_ItemWarehouse_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemWarehouse" Role="ItemWarehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemWarehouse">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemWarehouse_Warehouse">
+          <End Type="Heka.DataAccess.Models.Warehouse" Role="Warehouse" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemWarehouse" Role="ItemWarehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemWarehouse">
+              <PropertyRef Name="WarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Firm">
+          <End Type="Heka.DataAccess.Models.Firm" Role="Firm" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="SupplierFirmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ItemRequestCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ItemRequest" Relationship="Heka.DataAccess.Models.FK_ItemRequest_ItemRequestCategory" FromRole="ItemRequestCategory" ToRole="ItemRequest" />
+        </EntityType>
+        <Association Name="FK_ItemRequest_ItemRequestCategory">
+          <End Type="Heka.DataAccess.Models.ItemRequestCategory" Role="ItemRequestCategory" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemRequest" Role="ItemRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemRequestCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequest">
+              <PropertyRef Name="RequestCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2566,6 +2760,7 @@
           <EntitySetMapping Name="Firm">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.Firm">
               <MappingFragment StoreEntitySet="Firm">
+                <ScalarProperty Name="Address2" ColumnName="Address2" />
                 <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="FirmCode" ColumnName="FirmCode" />
@@ -2604,6 +2799,7 @@
           <EntitySetMapping Name="Item">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.Item">
               <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="SupplierFirmId" ColumnName="SupplierFirmId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ItemNo" ColumnName="ItemNo" />
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
@@ -2771,6 +2967,7 @@
           <EntitySetMapping Name="ItemRequest">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemRequest">
               <MappingFragment StoreEntitySet="ItemRequest">
+                <ScalarProperty Name="RequestCategoryId" ColumnName="RequestCategoryId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="RequestNo" ColumnName="RequestNo" />
                 <ScalarProperty Name="RequestType" ColumnName="RequestType" />
@@ -2981,6 +3178,32 @@
                 <ScalarProperty Name="SalesForexRate" ColumnName="SalesForexRate" />
                 <ScalarProperty Name="HistoryDate" ColumnName="HistoryDate" />
                 <ScalarProperty Name="ForexId" ColumnName="ForexId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemWarehouse">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemWarehouse">
+              <MappingFragment StoreEntitySet="ItemWarehouse">
+                <ScalarProperty Name="MaximumBehaviour" ColumnName="MaximumBehaviour" />
+                <ScalarProperty Name="MinimumBehaviour" ColumnName="MinimumBehaviour" />
+                <ScalarProperty Name="MaximumQuantity" ColumnName="MaximumQuantity" />
+                <ScalarProperty Name="MinimumQuantity" ColumnName="MinimumQuantity" />
+                <ScalarProperty Name="IsAllowed" ColumnName="IsAllowed" />
+                <ScalarProperty Name="WarehouseId" ColumnName="WarehouseId" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemRequestCategory">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemRequestCategory">
+              <MappingFragment StoreEntitySet="ItemRequestCategory">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

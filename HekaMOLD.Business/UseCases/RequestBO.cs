@@ -27,6 +27,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.RequestStatusStr = ((RequestStatusType)d.RequestStatus.Value).ToCaption();
                 containerObj.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate);
                 containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
+                containerObj.RequestCategoryName = d.ItemRequestCategory != null ? d.ItemRequestCategory.CategoryName : "";
                 data.Add(containerObj);
             });
 
@@ -58,6 +59,7 @@ namespace HekaMOLD.Business.UseCases
                 var crDate = dbObj.CreatedDate;
                 var donDate = dbObj.DateOfNeed;
                 var reqStats = dbObj.RequestStatus;
+                var crUserId = dbObj.CreatedUserId;
 
                 model.MapTo(dbObj);
 
@@ -67,6 +69,8 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.DateOfNeed = donDate;
                 if (dbObj.RequestStatus == null)
                     dbObj.RequestStatus = reqStats;
+                if (dbObj.CreatedUserId == null)
+                    dbObj.CreatedUserId = crUserId;
 
                 dbObj.UpdatedDate = DateTime.Now;
 
@@ -164,6 +168,7 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemRequest>();
                 var repoDetail = _unitOfWork.GetRepository<ItemRequestDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoApprLog = _unitOfWork.GetRepository<ItemRequestApproveLog>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj.ItemOrder.Any())
@@ -176,6 +181,16 @@ namespace HekaMOLD.Business.UseCases
                     foreach (var item in detailObjArr)
                     {
                         repoDetail.Delete(item);
+                    }
+                }
+
+                // CLEAR APPROVE LOGS
+                if (dbObj.ItemRequestApproveLog.Any())
+                {
+                    var approveLogArr = dbObj.ItemRequestApproveLog.ToArray();
+                    foreach (var item in approveLogArr)
+                    {
+                        repoApprLog.Delete(item);
                     }
                 }
 
@@ -216,6 +231,7 @@ namespace HekaMOLD.Business.UseCases
                 model = dbObj.MapTo(model);
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
                 model.RequestStatusStr = ((RequestStatusType)model.RequestStatus).ToCaption();
+                model.RequestCategoryName = dbObj.ItemRequestCategory != null ? dbObj.ItemRequestCategory.CategoryName : "";
 
                 List<ItemRequestDetailModel> detailContainers = new List<ItemRequestDetailModel>();
                 dbObj.ItemRequestDetail.ToList().ForEach(d =>
@@ -255,6 +271,11 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.RequestStatus = (int)RequestStatusType.Approved;
                 dbObj.UpdatedDate = DateTime.Now;
                 dbObj.UpdatedUserId = userId;
+
+                foreach (var item in dbObj.ItemRequestDetail)
+                {
+                    item.RequestStatus = dbObj.RequestStatus;
+                }
 
                 var dbLog = new ItemRequestApproveLog
                 {
@@ -316,6 +337,111 @@ namespace HekaMOLD.Business.UseCases
 
             return default;
         }
+
+        #region REQUEST CATEGORY DEFINITIONS
+        public ItemRequestCategoryModel[] GetRequestCategoryList()
+        {
+            List<ItemRequestCategoryModel> data = new List<ItemRequestCategoryModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemRequestCategory>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ItemRequestCategoryModel containerObj = new ItemRequestCategoryModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateRequestCategory(ItemRequestCategoryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.CategoryName))
+                    throw new Exception("Kategori adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<ItemRequestCategory>();
+
+                if (repo.Any(d => (d.CategoryName == model.CategoryName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı isme sahip başka bir kategori mevcuttur. Lütfen farklı bir isim giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ItemRequestCategory();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteRequestCategory(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemRequestCategory>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj.ItemRequest.Any())
+                    throw new Exception("Bu kategori geçmişte kullanılmış olduğu için silinemez.");
+
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ItemRequestCategoryModel GetRequestCategory(int id)
+        {
+            ItemRequestCategoryModel model = new ItemRequestCategoryModel { };
+
+            var repo = _unitOfWork.GetRepository<ItemRequestCategory>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
 
         #region ITEM REQUEST PRESENTATION
         public ItemRequestDetailModel[] GetApprovedDetails(int plantId)

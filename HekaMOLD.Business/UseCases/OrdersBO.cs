@@ -65,6 +65,7 @@ namespace HekaMOLD.Business.UseCases
                 var crDate = dbObj.CreatedDate;
                 var donDate = dbObj.DateOfNeed;
                 var reqStats = dbObj.OrderStatus;
+                var crUserId = dbObj.CreatedUserId;
 
                 model.MapTo(dbObj);
 
@@ -74,6 +75,8 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.DateOfNeed = donDate;
                 if (dbObj.OrderStatus == null)
                     dbObj.OrderStatus = reqStats;
+                if (dbObj.CreatedUserId == null)
+                    dbObj.CreatedUserId = crUserId;
 
                 dbObj.UpdatedDate = DateTime.Now;
 

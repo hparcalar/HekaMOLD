@@ -15,12 +15,14 @@ namespace HekaMOLD.Business.Models.DataTransfer.Request
         public DateTime? DateOfNeed { get; set; }
         public int? RequestStatus { get; set; }
         public int? PlantId { get; set; }
+        public int? RequestCategoryId { get; set; }
         public string Explanation { get; set; }
 
         #region VISUAL ELEMENTS
         public string DateOfNeedStr { get; set; }
         public string CreatedDateStr { get; set; }
         public string RequestStatusStr { get; set; }
+        public string RequestCategoryName { get; set; }
         public ItemRequestDetailModel[] Details { get; set; }
         #endregion
     }

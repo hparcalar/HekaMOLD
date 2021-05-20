@@ -3,6 +3,9 @@
     $scope.itemList = [];
     $scope.unitList = [];
 
+    $scope.requestCategoryList = [];
+    $scope.selectedCategory = {};
+
     $scope.saveStatus = 0;
 
     // RECEIPT FUNCTIONS
@@ -174,6 +177,7 @@
                         }
 
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
+                        if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation; }
 
                         if (calculateRowAgain)
                             $scope.calculateRow(obj);
@@ -203,6 +207,7 @@
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
                         UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
                         Quantity: values.Quantity,
+                        Explanation: values.Explanation,
                         NewDetail: true
                     };
 
@@ -268,6 +273,7 @@
                     }
                 },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                { dataField: 'Explanation', caption: 'Açıklama' }
             ]
         });
     }
@@ -279,6 +285,7 @@
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.itemList = resp.data.Items;
                         $scope.unitList = resp.data.Units;
+                        $scope.requestCategoryList = resp.data.Categories;
 
                         resolve();
                     }

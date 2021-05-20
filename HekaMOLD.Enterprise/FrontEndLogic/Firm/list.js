@@ -1,5 +1,4 @@
-﻿var app = angular.module('moldApp', []);
-app.controller('firmListCtrl', function sidebarCtrl($scope, $http) {
+﻿app.controller('firmListCtrl', function sidebarCtrl($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS

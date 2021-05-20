@@ -79,6 +79,12 @@
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ForexHistory" Width="1.5" PointX="10.5" PointY="24.25" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ForexHistory_ForexType" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequest_User" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemWarehouse" Width="1.5" PointX="10.5" PointY="44.25" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemWarehouse_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_Firm" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestCategory" Width="1.5" PointX="0.75" PointY="1" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequest_ItemRequestCategory" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
