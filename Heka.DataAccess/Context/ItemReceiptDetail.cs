@@ -14,6 +14,12 @@ namespace Heka.DataAccess.Context
     
     public partial class ItemReceiptDetail
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ItemReceiptDetail()
+        {
+            this.ItemSerial = new HashSet<ItemSerial>();
+        }
+    
         public int Id { get; set; }
         public Nullable<int> ItemReceiptId { get; set; }
         public Nullable<int> LineNumber { get; set; }
@@ -40,11 +46,15 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public Nullable<int> ReceiptStatus { get; set; }
+        public Nullable<bool> TaxIncluded { get; set; }
     
         public virtual ForexType ForexType { get; set; }
         public virtual Item Item { get; set; }
         public virtual ItemOrderDetail ItemOrderDetail { get; set; }
         public virtual ItemReceipt ItemReceipt { get; set; }
         public virtual UnitType UnitType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemSerial> ItemSerial { get; set; }
     }
 }

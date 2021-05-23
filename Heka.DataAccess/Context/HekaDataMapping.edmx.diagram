@@ -85,6 +85,12 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_Firm" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestCategory" Width="1.5" PointX="0.75" PointY="1" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequest_ItemRequestCategory" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemLiveStatus" Width="1.5" PointX="13.5" PointY="40.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemSerial" Width="1.5" PointX="18" PointY="31.125" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemSerial_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Warehouse" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemSerial_ItemReceiptDetail" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

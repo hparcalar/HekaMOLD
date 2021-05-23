@@ -59,6 +59,7 @@
     <Compile Include="Helpers\ConstantHelper.cs" />
     <Compile Include="Helpers\Mapper.cs" />
     <Compile Include="Models\Constants\ItemCriticalBehaviourType.cs" />
+    <Compile Include="Models\Constants\ItemReceiptType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
     <Compile Include="Models\Constants\OrderStatusType.cs" />
@@ -84,10 +85,13 @@
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
+    <Compile Include="Models\DataTransfer\Receipt\ItemReceiptDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Receipt\ItemReceiptModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestApproveLogModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
+    <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
     <Compile Include="Models\Dictionaries\DictOrderStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictItemCriticalBehaviourType.cs" />
     <Compile Include="Models\Dictionaries\DictItemType.cs" />

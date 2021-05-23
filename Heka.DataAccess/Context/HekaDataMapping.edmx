@@ -96,6 +96,17 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="ItemLiveStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="WarehouseId" Type="int" />
+          <Property Name="InQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="OutQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="LiveQuantity" Type="decimal" Precision="18" Scale="5" />
+        </EntityType>
         <EntityType Name="ItemOrder">
           <Key>
             <PropertyRef Name="Id" />
@@ -173,6 +184,7 @@
           <Property Name="PlantId" Type="int" />
           <Property Name="DeliveryAddress" Type="nvarchar" MaxLength="300" />
           <Property Name="Explanation" Type="nvarchar" MaxLength="300" />
+          <Property Name="ReceiptStatus" Type="int" />
           <Property Name="SyncStatus" Type="int" />
           <Property Name="SyncPointId" Type="int" />
           <Property Name="SyncDate" Type="datetime" />
@@ -199,6 +211,7 @@
           <Property Name="ForexId" Type="int" />
           <Property Name="ForexRate" Type="decimal" Precision="18" Scale="5" />
           <Property Name="ForexUnitPrice" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="TaxIncluded" Type="bit" />
           <Property Name="TaxRate" Type="int" />
           <Property Name="TaxAmount" Type="decimal" Precision="18" Scale="5" />
           <Property Name="DiscountRate" Type="decimal" Precision="18" Scale="5" />
@@ -206,6 +219,7 @@
           <Property Name="SubTotal" Type="decimal" Precision="18" Scale="5" />
           <Property Name="OverallTotal" Type="decimal" Precision="18" Scale="5" />
           <Property Name="Explanation" Type="nvarchar" MaxLength="300" />
+          <Property Name="ReceiptStatus" Type="int" />
           <Property Name="SyncStatus" Type="int" />
           <Property Name="SyncDate" Type="datetime" />
           <Property Name="ItemOrderDetailId" Type="int" />
@@ -267,6 +281,21 @@
           <Property Name="ApprovedQuantity" Type="decimal" Precision="18" Scale="5" />
           <Property Name="Explanation" Type="nvarchar" MaxLength="300" />
           <Property Name="RequestStatus" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemSerial">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="ItemReceiptDetailId" Type="int" />
+          <Property Name="SerialNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="ReceiptType" Type="int" />
+          <Property Name="SerialStatus" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="CreatedUserId" Type="int" />
           <Property Name="UpdatedDate" Type="datetime" />
@@ -536,6 +565,30 @@
             </Principal>
             <Dependent Role="ItemGroup">
               <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemLiveStatus_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemLiveStatus" Type="Self.ItemLiveStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemLiveStatus">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemLiveStatus_Warehouse">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ItemLiveStatus" Type="Self.ItemLiveStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemLiveStatus">
+              <PropertyRef Name="WarehouseId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -899,6 +952,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ItemSerial_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemSerial" Type="Self.ItemSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemSerial">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemSerial_ItemReceiptDetail">
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="0..1" />
+          <End Role="ItemSerial" Type="Self.ItemSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemSerial">
+              <PropertyRef Name="ItemReceiptDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ItemUnit_Item">
           <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
           <End Role="ItemUnit" Type="Self.ItemUnit" Multiplicity="*" />
@@ -1086,6 +1163,7 @@
           <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemCategory" EntityType="Self.ItemCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemGroup" EntityType="Self.ItemGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemLiveStatus" EntityType="Self.ItemLiveStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemOrder" EntityType="Self.ItemOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemOrderDetail" EntityType="Self.ItemOrderDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemReceipt" EntityType="Self.ItemReceipt" Schema="dbo" store:Type="Tables" />
@@ -1094,6 +1172,7 @@
           <EntitySet Name="ItemRequestApproveLog" EntityType="Self.ItemRequestApproveLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemRequestCategory" EntityType="Self.ItemRequestCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemRequestDetail" EntityType="Self.ItemRequestDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemSerial" EntityType="Self.ItemSerial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemUnit" EntityType="Self.ItemUnit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemWarehouse" EntityType="Self.ItemWarehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
@@ -1141,6 +1220,14 @@
           <AssociationSet Name="FK_ItemGroup_Plant" Association="Self.FK_ItemGroup_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="ItemGroup" EntitySet="ItemGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemLiveStatus_Item" Association="Self.FK_ItemLiveStatus_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemLiveStatus" EntitySet="ItemLiveStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemLiveStatus_Warehouse" Association="Self.FK_ItemLiveStatus_Warehouse">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemLiveStatus" EntitySet="ItemLiveStatus" />
           </AssociationSet>
           <AssociationSet Name="FK_ItemOrder_Firm" Association="Self.FK_ItemOrder_Firm">
             <End Role="Firm" EntitySet="Firm" />
@@ -1261,6 +1348,14 @@
           <AssociationSet Name="FK_ItemRequestDetail_UnitType" Association="Self.FK_ItemRequestDetail_UnitType">
             <End Role="UnitType" EntitySet="UnitType" />
             <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemSerial_Item" Association="Self.FK_ItemSerial_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemSerial" EntitySet="ItemSerial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemSerial_ItemReceiptDetail" Association="Self.FK_ItemSerial_ItemReceiptDetail">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="ItemSerial" EntitySet="ItemSerial" />
           </AssociationSet>
           <AssociationSet Name="FK_ItemUnit_Item" Association="Self.FK_ItemUnit_Item">
             <End Role="Item" EntitySet="Item" />
@@ -1396,6 +1491,8 @@
           <NavigationProperty Name="ItemWarehouse" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Item" FromRole="Item" ToRole="ItemWarehouse" />
           <Property Name="SupplierFirmId" Type="Int32" />
           <NavigationProperty Name="Firm" Relationship="Heka.DataAccess.Models.FK_Item_Firm" FromRole="Item" ToRole="Firm" />
+          <NavigationProperty Name="ItemLiveStatus" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" FromRole="Item" ToRole="ItemLiveStatus" />
+          <NavigationProperty Name="ItemSerial" Relationship="Heka.DataAccess.Models.FK_ItemSerial_Item" FromRole="Item" ToRole="ItemSerial" />
         </EntityType>
         <EntityType Name="ItemCategory">
           <Key>
@@ -1537,6 +1634,7 @@
           <NavigationProperty Name="Warehouse" Relationship="Self.FK_ItemReceipt_WarehouseIn" FromRole="ItemReceipt" ToRole="Warehouse" />
           <NavigationProperty Name="Warehouse1" Relationship="Self.FK_ItemReceipt_WarehouseOut" FromRole="ItemReceipt" ToRole="Warehouse" />
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_ItemReceipt" FromRole="ItemReceipt" ToRole="ItemReceiptDetail" />
+          <Property Name="ReceiptStatus" Type="Int32" />
         </EntityType>
         <EntityType Name="ItemReceiptDetail">
           <Key>
@@ -1573,6 +1671,9 @@
           <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemReceiptDetail_ItemOrderDetail" FromRole="ItemReceiptDetail" ToRole="ItemOrderDetail" />
           <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceiptDetail_ItemReceipt" FromRole="ItemReceiptDetail" ToRole="ItemReceipt" />
           <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemReceiptDetail_UnitType" FromRole="ItemReceiptDetail" ToRole="UnitType" />
+          <Property Name="ReceiptStatus" Type="Int32" />
+          <NavigationProperty Name="ItemSerial" Relationship="Heka.DataAccess.Models.FK_ItemSerial_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="ItemSerial" />
+          <Property Name="TaxIncluded" Type="Boolean" />
         </EntityType>
         <EntityType Name="ItemRequest">
           <Key>
@@ -1791,6 +1892,7 @@
           <NavigationProperty Name="ItemReceipt1" Relationship="Self.FK_ItemReceipt_WarehouseOut" FromRole="Warehouse" ToRole="ItemReceipt" />
           <NavigationProperty Name="Plant" Relationship="Self.FK_Warehouse_Plant" FromRole="Warehouse" ToRole="Plant" />
           <NavigationProperty Name="ItemWarehouse" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse" FromRole="Warehouse" ToRole="ItemWarehouse" />
+          <NavigationProperty Name="ItemLiveStatus" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Warehouse" FromRole="Warehouse" ToRole="ItemLiveStatus" />
         </EntityType>
         <Association Name="FK_Firm_Plant">
           <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
@@ -2587,6 +2689,24 @@
             <End Role="ItemRequestCategory" EntitySet="ItemRequestCategory" />
             <End Role="ItemRequest" EntitySet="ItemRequest" />
           </AssociationSet>
+          <EntitySet Name="ItemLiveStatus" EntityType="Heka.DataAccess.Models.ItemLiveStatus" />
+          <EntitySet Name="ItemSerial" EntityType="Heka.DataAccess.Models.ItemSerial" />
+          <AssociationSet Name="FK_ItemLiveStatus_Item" Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemLiveStatus" EntitySet="ItemLiveStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemSerial_Item" Association="Heka.DataAccess.Models.FK_ItemSerial_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemSerial" EntitySet="ItemSerial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemLiveStatus_Warehouse" Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Warehouse">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ItemLiveStatus" EntitySet="ItemLiveStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemSerial_ItemReceiptDetail" Association="Heka.DataAccess.Models.FK_ItemSerial_ItemReceiptDetail">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="ItemSerial" EntitySet="ItemSerial" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -2753,6 +2873,84 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ItemLiveStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="WarehouseId" Type="Int32" />
+          <Property Name="InQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="OutQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="LiveQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" FromRole="ItemLiveStatus" ToRole="Item" />
+          <NavigationProperty Name="Warehouse" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Warehouse" FromRole="ItemLiveStatus" ToRole="Warehouse" />
+        </EntityType>
+        <EntityType Name="ItemSerial">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="ItemReceiptDetailId" Type="Int32" />
+          <Property Name="SerialNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiptType" Type="Int32" />
+          <Property Name="SerialStatus" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemSerial_Item" FromRole="ItemSerial" ToRole="Item" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_ItemSerial_ItemReceiptDetail" FromRole="ItemSerial" ToRole="ItemReceiptDetail" />
+        </EntityType>
+        <Association Name="FK_ItemLiveStatus_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemLiveStatus" Role="ItemLiveStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemLiveStatus">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemSerial_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemSerial" Role="ItemSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemSerial">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemLiveStatus_Warehouse">
+          <End Type="Heka.DataAccess.Models.Warehouse" Role="Warehouse" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemLiveStatus" Role="ItemLiveStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemLiveStatus">
+              <PropertyRef Name="WarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemSerial_ItemReceiptDetail">
+          <End Type="Heka.DataAccess.Models.ItemReceiptDetail" Role="ItemReceiptDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemSerial" Role="ItemSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemSerial">
+              <PropertyRef Name="ItemReceiptDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2912,6 +3110,7 @@
           <EntitySetMapping Name="ItemReceipt">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemReceipt">
               <MappingFragment StoreEntitySet="ItemReceipt">
+                <ScalarProperty Name="ReceiptStatus" ColumnName="ReceiptStatus" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ReceiptNo" ColumnName="ReceiptNo" />
                 <ScalarProperty Name="DocumentNo" ColumnName="DocumentNo" />
@@ -2938,6 +3137,8 @@
           <EntitySetMapping Name="ItemReceiptDetail">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemReceiptDetail">
               <MappingFragment StoreEntitySet="ItemReceiptDetail">
+                <ScalarProperty Name="TaxIncluded" ColumnName="TaxIncluded" />
+                <ScalarProperty Name="ReceiptStatus" ColumnName="ReceiptStatus" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ItemReceiptId" ColumnName="ItemReceiptId" />
                 <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
@@ -3207,6 +3408,34 @@
                 <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemLiveStatus">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemLiveStatus">
+              <MappingFragment StoreEntitySet="ItemLiveStatus">
+                <ScalarProperty Name="LiveQuantity" ColumnName="LiveQuantity" />
+                <ScalarProperty Name="OutQuantity" ColumnName="OutQuantity" />
+                <ScalarProperty Name="InQuantity" ColumnName="InQuantity" />
+                <ScalarProperty Name="WarehouseId" ColumnName="WarehouseId" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemSerial">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemSerial">
+              <MappingFragment StoreEntitySet="ItemSerial">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="SerialStatus" ColumnName="SerialStatus" />
+                <ScalarProperty Name="ReceiptType" ColumnName="ReceiptType" />
+                <ScalarProperty Name="SerialNo" ColumnName="SerialNo" />
+                <ScalarProperty Name="ItemReceiptDetailId" ColumnName="ItemReceiptDetailId" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -56,6 +56,13 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(ItemReceiptType))
+                {
+                    return DictItemReceiptType.Values
+                        .Where(d => d.Key == (ItemReceiptType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception)
             {
