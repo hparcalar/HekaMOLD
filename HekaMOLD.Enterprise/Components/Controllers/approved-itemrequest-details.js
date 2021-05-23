@@ -70,7 +70,7 @@
 
     $scope.transferSelections = function () {
         if ($scope.approvedRequestDetailList.responseJSON.filter(d => d.IsChecked == true).length == 0) {
-            alert('Aktarmak için bir veya daha fazla kayıt seçmelisiniz.');
+            toastr.warning('Aktarmak için bir veya daha fazla talep seçmelisiniz.','Uyarı');
             return;
         }
 

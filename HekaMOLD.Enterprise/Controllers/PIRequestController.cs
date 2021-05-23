@@ -32,7 +32,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (RequestBO bObj = new RequestBO())
             {
-                receiptNo = bObj.GetNextReceiptNo(Convert.ToInt32(Request.Cookies["PlantId"].Value));
+                receiptNo = bObj.GetNextRequestNo(Convert.ToInt32(Request.Cookies["PlantId"].Value));
             }
 
             var jsonResult = Json(new { Result=!string.IsNullOrEmpty(receiptNo), ReceiptNo=receiptNo }, JsonRequestBehavior.AllowGet);
@@ -158,7 +158,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (RequestBO bObj = new RequestBO())
             {
-                //result = bObj.ApprovePoRequest(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+                result = bObj.CreatePurchaseOrder(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
             }
 
             return Json(result);

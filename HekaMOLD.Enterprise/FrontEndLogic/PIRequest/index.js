@@ -33,6 +33,7 @@
         $scope.modelObject = { Id: 0, DateOfNeed: moment().format('DD.MM.YYYY'), Details:[] };
         $scope.getNextReceiptNo().then(function (rNo) {
             $scope.modelObject.RequestNo = rNo;
+            $scope.selectedCategory = {};
             $scope.$apply();
         });
         $scope.bindDetails();
@@ -76,6 +77,11 @@
 
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
+
+        if (typeof $scope.selectedCategory != 'undefined' && $scope.selectedCategory != null)
+            $scope.modelObject.RequestCategoryId = $scope.selectedCategory.Id;
+        else
+            $scope.modelObject.RequestCategoryId = null;
 
         $http.post(HOST_URL + 'PIRequest/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -138,6 +144,11 @@
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
                     $scope.modelObject.DateOfNeed = $scope.modelObject.DateOfNeedStr;
+
+                    if (typeof $scope.modelObject.RequestCategoryId != 'undefined' && $scope.modelObject.RequestCategoryId != null)
+                        $scope.selectedCategory = $scope.requestCategoryList.find(d => d.Id == $scope.modelObject.RequestCategoryId);
+                    else
+                        $scope.selectedCategory = {};
 
                     $scope.bindDetails();
                 }
@@ -356,6 +367,26 @@
 
                                 if (resp.data.Result) {
                                     toastr.success('Siparişe dönüştürme işlemi başarılı.', 'Bilgilendirme');
+
+                                    bootbox.confirm({
+                                        message: "Oluşturulan siparişi görüntülemek istiyor musunuz?",
+                                        closeButton: false,
+                                        buttons: {
+                                            confirm: {
+                                                label: 'Evet',
+                                                className: 'btn-primary'
+                                            },
+                                            cancel: {
+                                                label: 'Hayır',
+                                                className: 'btn-light'
+                                            }
+                                        },
+                                        callback: function (resultOrder) {
+                                            if (resultOrder) {
+                                                window.location.href = HOST_URL + 'PIOrder?rid=' + resp.data.RecordId;
+                                            }
+                                        }
+                                    });
 
                                     $scope.bindModel($scope.modelObject.Id);
                                 }

@@ -29,6 +29,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public decimal? SubTotal { get; set; }
         public decimal? OverallTotal { get; set; }
         public string Explanation { get; set; }
+        public int? OrderStatus { get; set; }
         public int? SyncStatus { get; set; }
         public DateTime? SyncDate { get; set; }
         public int? ItemRequestDetailId { get; set; }

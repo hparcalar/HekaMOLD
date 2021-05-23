@@ -4,6 +4,7 @@ using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.UseCases.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases
 {
-    public class OrdersBO : IBusinessObject
+    public class OrdersBO : CoreReceiptsBO
     {
         public ItemOrderModel[] GetItemOrderList()
         {
@@ -81,6 +82,9 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 #region SAVE DETAILS
+                if (model.Details == null)
+                    throw new Exception("Detay bilgisi olmadan sipariş kaydedilemez.");
+
                 foreach (var item in model.Details)
                 {
                     if (item.NewDetail)
@@ -200,6 +204,9 @@ namespace HekaMOLD.Business.UseCases
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
 
                 var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj == null)
+                    throw new Exception("Silinmesi istenen sipariş kaydına ulaşılamadı.");
+
                 if (dbObj.ItemReceipt.Any())
                     throw new Exception("İrsaliyesi girilmiş olan bir sipariş silinemez.");
 
@@ -281,29 +288,6 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return model;
-        }
-
-        public string GetNextOrderNo(int plantId)
-        {
-            try
-            {
-                var repo = _unitOfWork.GetRepository<ItemOrder>();
-                string lastReceiptNo = repo.Filter(d => d.PlantId == plantId)
-                    .OrderByDescending(d => d.OrderNo)
-                    .Select(d => d.OrderNo)
-                    .FirstOrDefault();
-
-                if (string.IsNullOrEmpty(lastReceiptNo))
-                    lastReceiptNo = "0";
-
-                return string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
-            }
-            catch (Exception)
-            {
-
-            }
-
-            return default;
         }
 
         public ItemOrderDetailModel CalculateOrderDetail(ItemOrderDetailModel model)

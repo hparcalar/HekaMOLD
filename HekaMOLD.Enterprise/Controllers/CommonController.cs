@@ -1,5 +1,6 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Business.UseCases.Core;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,20 @@ namespace HekaMOLD.Enterprise.Controllers
             using (UsersBO bObj = new UsersBO())
             {
                 data = bObj.GetAwaitingNotifications(Convert.ToInt32(Request.Cookies["UserId"].Value));
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetRecordInformation(int id, string dataType)
+        {
+            RecordInformationModel data = new RecordInformationModel();
+            using (CoreRecordTracingBO bObj = new CoreRecordTracingBO())
+            {
+                data = bObj.GetRecordInformation(id, dataType);
             }
 
             var jsonResult = Json(data, JsonRequestBehavior.AllowGet);

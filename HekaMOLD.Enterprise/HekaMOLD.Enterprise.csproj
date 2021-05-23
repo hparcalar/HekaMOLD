@@ -3955,6 +3955,7 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="FrontEndLogic\Core\record-manager.js" />
     <Content Include="FrontEndLogic\Firm\index.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
     <Content Include="FrontEndLogic\ItemCategory\index.js" />

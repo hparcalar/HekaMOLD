@@ -149,6 +149,7 @@
           <Property Name="SubTotal" Type="decimal" Precision="18" Scale="5" />
           <Property Name="OverallTotal" Type="decimal" Precision="18" Scale="5" />
           <Property Name="Explanation" Type="nvarchar" MaxLength="300" />
+          <Property Name="OrderStatus" Type="int" />
           <Property Name="SyncStatus" Type="int" />
           <Property Name="SyncDate" Type="datetime" />
           <Property Name="ItemRequestDetailId" Type="int" />
@@ -1503,6 +1504,7 @@
           <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemOrderDetail_UnitType" FromRole="ItemOrderDetail" ToRole="UnitType" />
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Self.FK_ItemReceiptDetail_ItemOrderDetail" FromRole="ItemOrderDetail" ToRole="ItemReceiptDetail" />
           <Property Name="TaxIncluded" Type="Boolean" />
+          <Property Name="OrderStatus" Type="Int32" />
         </EntityType>
         <EntityType Name="ItemReceipt">
           <Key>
@@ -2876,6 +2878,7 @@
           <EntitySetMapping Name="ItemOrderDetail">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemOrderDetail">
               <MappingFragment StoreEntitySet="ItemOrderDetail">
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
                 <ScalarProperty Name="TaxIncluded" ColumnName="TaxIncluded" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ItemOrderId" ColumnName="ItemOrderId" />

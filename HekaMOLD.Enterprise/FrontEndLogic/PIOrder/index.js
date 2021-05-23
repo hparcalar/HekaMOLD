@@ -417,6 +417,15 @@
         return prms;
     }
 
+    // INFORMATIONS
+    $scope.showRecordInformation = function () {
+        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType:'ItemOrder' });
+    }
+
+    $scope.showRequestInformation = function () {
+
+    }
+
     // APPROVALS
     $scope.approveOrderPrice = function () {
         bootbox.confirm({

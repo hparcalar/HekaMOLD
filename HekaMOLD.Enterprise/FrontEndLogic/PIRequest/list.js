@@ -40,6 +40,7 @@
                 { dataField: 'CreatedDateStr', caption: 'Talep Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'DateOfNeedStr', caption: 'İhtiyaç Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'RequestStatusStr', caption: 'Durum' },
+                { dataField: 'RequestCategoryName', caption: 'Kategori' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {
                     type: "buttons",

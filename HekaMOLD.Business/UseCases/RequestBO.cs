@@ -4,6 +4,7 @@ using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Request;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.UseCases.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases
 {
-    public class RequestBO : IBusinessObject
+    public class RequestBO : CoreReceiptsBO
     {
         public ItemRequestModel[] GetItemRequestList()
         {
@@ -48,7 +49,7 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                 {
                     dbObj = new ItemRequest();
-                    dbObj.RequestNo = GetNextReceiptNo(model.PlantId.Value);
+                    dbObj.RequestNo = GetNextRequestNo(model.PlantId.Value);
                     dbObj.CreatedDate = DateTime.Now;
                     dbObj.CreatedUserId = model.CreatedUserId;
                     dbObj.RequestStatus = (int)RequestStatusType.Created;
@@ -75,6 +76,9 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 #region SAVE DETAILS
+                if (model.Details == null)
+                    throw new Exception("Detay bilgisi olmadan talep kaydedilemez.");
+
                 foreach (var item in model.Details)
                 {
                     if (item.NewDetail)
@@ -171,6 +175,9 @@ namespace HekaMOLD.Business.UseCases
                 var repoApprLog = _unitOfWork.GetRepository<ItemRequestApproveLog>();
 
                 var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj == null)
+                    throw new Exception("Silinmesi istenen talep kaydına ulaşılamadı.");
+
                 if (dbObj.ItemOrder.Any())
                     throw new Exception("Siparişe dönüştürülen bir talep silinemez.");
 
@@ -315,29 +322,6 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public string GetNextReceiptNo(int plantId)
-        {
-            try
-            {
-                var repo = _unitOfWork.GetRepository<ItemRequest>();
-                string lastReceiptNo = repo.Filter(d => d.PlantId == plantId)
-                    .OrderByDescending(d => d.RequestNo)
-                    .Select(d => d.RequestNo)
-                    .FirstOrDefault();
-
-                if (string.IsNullOrEmpty(lastReceiptNo))
-                    lastReceiptNo = "0";
-
-                return string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
-            }
-            catch (Exception)
-            {
-
-            }
-
-            return default;
-        }
-
         #region REQUEST CATEGORY DEFINITIONS
         public ItemRequestCategoryModel[] GetRequestCategoryList()
         {
@@ -480,6 +464,89 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return data;
+        }
+        #endregion
+
+        #region ORDER CONVERSION BUSINESS
+        public BusinessResult CreatePurchaseOrder(int requestId, int userId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemRequest>();
+                var repoOrder = _unitOfWork.GetRepository<ItemOrder>();
+                var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+                var repoNotify = _unitOfWork.GetRepository<Notification>();
+
+                var dbRequest = repo.Get(d => d.Id == requestId);
+                if (dbRequest == null)
+                    throw new Exception("Talep bilgisine ulaşılamadı.");
+
+                // CREATE ORDER
+                var dbOrder = new ItemOrder
+                {
+                    CreatedDate = DateTime.Now,
+                    CreatedUserId = userId,
+                    DateOfNeed = dbRequest.DateOfNeed,
+                    OrderDate = DateTime.Now,
+                    DocumentNo = "",
+                    Explanation = dbRequest.Explanation,
+                    ItemRequest = dbRequest,
+                    OrderNo = GetNextOrderNo(dbRequest.PlantId.Value),
+                    OrderStatus = (int)OrderStatusType.Created,
+                    PlantId = dbRequest.PlantId.Value,
+                    SubTotal = 0,
+                    OverallTotal = 0,
+                    TaxPrice = 0
+                };
+                repoOrder.Add(dbOrder);
+
+                // CHANGE REQUEST STATUS
+                dbRequest.RequestStatus = (int)RequestStatusType.Completed;
+                dbRequest.UpdatedDate = DateTime.Now;
+                dbRequest.UpdatedUserId = userId;
+
+                // CREATE ORDER DETAILS
+                foreach (var dbRequestDetail in dbRequest.ItemRequestDetail)
+                {
+                    var dbOrderDetail = new ItemOrderDetail
+                    {
+                        CreatedDate = DateTime.Now,
+                        CreatedUserId = userId,
+                        Explanation = dbRequestDetail.Explanation,
+                        Item = dbRequestDetail.Item,
+                        ItemOrder = dbOrder,
+                        ItemRequestDetail = dbRequestDetail,
+                        LineNumber = dbRequestDetail.LineNumber,
+                        NetQuantity = dbRequestDetail.NetQuantity,
+                        OverallTotal = 0,
+                        Quantity = dbRequestDetail.Quantity,
+                        SubTotal = 0,
+                        TaxIncluded = false, TaxRate = 0, TaxAmount = 0,
+                        UnitPrice = 0,
+                        OrderStatus = (int)OrderStatusType.Created
+                    };
+                    repoOrderDetail.Add(dbOrderDetail);
+
+                    // CHANGE REQUEST DETAIL STATUS
+                    dbRequestDetail.RequestStatus = (int)RequestStatusType.Completed;
+                    dbRequestDetail.UpdatedDate = DateTime.Now;
+                    dbRequestDetail.UpdatedUserId = userId;
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbOrder.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
         #endregion
     }
