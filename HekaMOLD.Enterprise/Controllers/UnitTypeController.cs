@@ -1,5 +1,4 @@
-﻿using HekaMOLD.Business.Models.Constants;
-using HekaMOLD.Business.Models.DataTransfer.Core;
+﻿using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -12,9 +11,9 @@ using System.Web.Mvc;
 namespace HekaMOLD.Enterprise.Controllers
 {
     [UserAuthFilter]
-    public class ItemController : Controller
+    public class UnitTypeController : Controller
     {
-        // GET: Item
+        // GET: Warehouse
         public ActionResult Index()
         {
             return View();
@@ -26,13 +25,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetItemList()
+        public JsonResult GetUnitTypeList()
         {
-            ItemModel[] result = new ItemModel[0];
+            UnitTypeModel[] result = new UnitTypeModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetItemList();
+                result = bObj.GetUnitTypeList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -41,49 +40,12 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetSelectables()
-        {
-            ItemCategoryModel[] categories = new ItemCategoryModel[0];
-            ItemGroupModel[] groups = new ItemGroupModel[0];
-            FirmModel[] firms = new FirmModel[0];
-            UnitTypeModel[] units = new UnitTypeModel[0];
-
-            using (DefinitionsBO bObj = new DefinitionsBO())
-            {
-                categories = bObj.GetItemCategoryList();
-                groups = bObj.GetItemGroupList();
-                firms = bObj.GetFirmList();
-                units = bObj.GetUnitTypeList();
-            }
-
-            var jsonResult = Json(new { Categories=categories, 
-                Groups=groups, Firms=firms, Units=units }, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-
-        [HttpGet]
-        public JsonResult GetProperWarehouses(int itemType, int itemId)
-        {
-            ItemWarehouseModel[] warehouses = new ItemWarehouseModel[0];
-
-            using (DefinitionsBO bObj = new DefinitionsBO())
-            {
-                warehouses = bObj.GetProperWarehouses((ItemType)itemType, itemId);
-            }
-
-            var jsonResult = Json(warehouses, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-
-        [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ItemModel model = null;
+            UnitTypeModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetItem(rid);
+                model = bObj.GetUnitType(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -97,7 +59,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteItem(rid);
+                    result = bObj.DeleteUnitType(rid);
                 }
 
                 if (result.Result)
@@ -112,14 +74,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemModel model)
+        public JsonResult SaveModel(UnitTypeModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateItem(model);
+                    result = bObj.SaveOrUpdateUnitType(model);
                 }
 
                 if (result.Result)

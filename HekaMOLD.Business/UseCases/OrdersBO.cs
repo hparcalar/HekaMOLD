@@ -364,5 +364,59 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+
+        #region ORDER PRESENTATION
+        public ItemOrderModel[] GetRelatedOrders(int receiptId)
+        {
+            ItemOrderModel[] data = new ItemOrderModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceipt>();
+                var repoUser = _unitOfWork.GetRepository<User>();
+
+                var dbObj = repo.GetById(receiptId);
+                if (dbObj == null)
+                    throw new Exception("İrsaliye bilgisine ulaşılamadı.");
+
+                List<ItemOrder> relatedOrders = new List<ItemOrder>();
+
+                foreach (var item in dbObj.ItemReceiptDetail)
+                {
+                    if (item.ItemOrderDetail != null
+                        && !relatedOrders.Any(d => d.Id == item.ItemOrderDetail.ItemOrderId))
+                        relatedOrders.Add(item.ItemOrderDetail.ItemOrder);
+                }
+
+                List<ItemOrderModel> sumData = new List<ItemOrderModel>();
+                relatedOrders.ForEach(d =>
+                {
+                    ItemOrderModel model = new ItemOrderModel();
+                    d.MapTo(model);
+
+                    if (d.CreatedUserId != null)
+                    {
+                        var dbUser = repoUser.GetById(d.CreatedUserId.Value);
+                        if (dbUser != null)
+                        {
+                            model.CreatedUserName = dbUser.UserName;
+                        }
+                    }
+
+                    model.CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate);
+                    model.OrderDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.OrderDate);
+                    sumData.Add(model);
+                });
+
+                data = sumData.ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        #endregion
     }
 }

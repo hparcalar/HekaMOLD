@@ -53,5 +53,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ItemRequestCategory> ItemRequestCategory { get; set; }
         public virtual DbSet<ItemLiveStatus> ItemLiveStatus { get; set; }
         public virtual DbSet<ItemSerial> ItemSerial { get; set; }
+        public virtual DbSet<FirmAuthor> FirmAuthor { get; set; }
     }
 }

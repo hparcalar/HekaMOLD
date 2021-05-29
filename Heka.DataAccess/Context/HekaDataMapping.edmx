@@ -33,6 +33,20 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="FirmAuthor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirmId" Type="int" />
+          <Property Name="AuthorName" Type="nvarchar" MaxLength="150" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" />
+          <Property Name="Email" Type="nvarchar" MaxLength="250" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="Gsm" Type="nvarchar" MaxLength="50" />
+          <Property Name="SendMailForPurchaseOrder" Type="bit" />
+          <Property Name="SendMailForProduction" Type="bit" />
+        </EntityType>
         <EntityType Name="ForexHistory">
           <Key>
             <PropertyRef Name="Id" />
@@ -469,6 +483,18 @@
             </Principal>
             <Dependent Role="Firm">
               <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FirmAuthor_Firm">
+          <End Role="Firm" Type="Self.Firm" Multiplicity="0..1" />
+          <End Role="FirmAuthor" Type="Self.FirmAuthor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FirmAuthor">
+              <PropertyRef Name="FirmId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1158,6 +1184,7 @@
         </Association>
         <EntityContainer Name="HekaDataAccessModelsStoreContainer">
           <EntitySet Name="Firm" EntityType="Self.Firm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FirmAuthor" EntityType="Self.FirmAuthor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ForexHistory" EntityType="Self.ForexHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ForexType" EntityType="Self.ForexType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
@@ -1188,6 +1215,10 @@
           <AssociationSet Name="FK_Firm_Plant" Association="Self.FK_Firm_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="Firm" EntitySet="Firm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FirmAuthor_Firm" Association="Self.FK_FirmAuthor_Firm">
+            <End Role="Firm" EntitySet="Firm" />
+            <End Role="FirmAuthor" EntitySet="FirmAuthor" />
           </AssociationSet>
           <AssociationSet Name="FK_ForexHistory_ForexType" Association="Self.FK_ForexHistory_ForexType">
             <End Role="ForexType" EntitySet="ForexType" />
@@ -1453,6 +1484,7 @@
           <Property Name="IsApproved" Type="Boolean" />
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_Firm" FromRole="Firm" ToRole="Item" />
           <Property Name="Address2" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FirmAuthor" Relationship="Heka.DataAccess.Models.FK_FirmAuthor_Firm" FromRole="Firm" ToRole="FirmAuthor" />
         </EntityType>
         <EntityType Name="ForexType">
           <Key>
@@ -2707,6 +2739,11 @@
             <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
             <End Role="ItemSerial" EntitySet="ItemSerial" />
           </AssociationSet>
+          <EntitySet Name="FirmAuthor" EntityType="Heka.DataAccess.Models.FirmAuthor" />
+          <AssociationSet Name="FK_FirmAuthor_Firm" Association="Heka.DataAccess.Models.FK_FirmAuthor_Firm">
+            <End Role="Firm" EntitySet="Firm" />
+            <End Role="FirmAuthor" EntitySet="FirmAuthor" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -2948,6 +2985,33 @@
             </Principal>
             <Dependent Role="ItemSerial">
               <PropertyRef Name="ItemReceiptDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="FirmAuthor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirmId" Type="Int32" />
+          <Property Name="AuthorName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Gsm" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SendMailForPurchaseOrder" Type="Boolean" />
+          <Property Name="SendMailForProduction" Type="Boolean" />
+          <NavigationProperty Name="Firm" Relationship="Heka.DataAccess.Models.FK_FirmAuthor_Firm" FromRole="FirmAuthor" ToRole="Firm" />
+        </EntityType>
+        <Association Name="FK_FirmAuthor_Firm">
+          <End Type="Heka.DataAccess.Models.Firm" Role="Firm" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.FirmAuthor" Role="FirmAuthor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FirmAuthor">
+              <PropertyRef Name="FirmId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3436,6 +3500,21 @@
                 <ScalarProperty Name="SerialNo" ColumnName="SerialNo" />
                 <ScalarProperty Name="ItemReceiptDetailId" ColumnName="ItemReceiptDetailId" />
                 <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FirmAuthor">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.FirmAuthor">
+              <MappingFragment StoreEntitySet="FirmAuthor">
+                <ScalarProperty Name="SendMailForProduction" ColumnName="SendMailForProduction" />
+                <ScalarProperty Name="SendMailForPurchaseOrder" ColumnName="SendMailForPurchaseOrder" />
+                <ScalarProperty Name="Gsm" ColumnName="Gsm" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
+                <ScalarProperty Name="FirmId" ColumnName="FirmId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -1,5 +1,8 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
+using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.Operational;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +57,82 @@ namespace HekaMOLD.Business.UseCases.Core
             }
 
             return default;
+        }
+
+        public string GetNextReceiptNo(int plantId, ItemReceiptType receiptType)
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceipt>();
+                string lastReceiptNo = repo.Filter(d => d.PlantId == plantId && d.ReceiptType == (int)receiptType)
+                    .OrderByDescending(d => d.ReceiptNo)
+                    .Select(d => d.ReceiptNo)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(lastReceiptNo))
+                    lastReceiptNo = "0";
+
+                return string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+
+        public BusinessResult UpdateItemStats(int[] itemId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                EFUnitOfWork _uow = new EFUnitOfWork();
+                var repoItem = _uow.GetRepository<Item>();
+                var repoDetail = _uow.GetRepository<ItemReceiptDetail>();
+                var repoWarehouse = _uow.GetRepository<Warehouse>();
+                var repoItemStatus = _uow.GetRepository<ItemLiveStatus>();
+
+                var warehouseList = repoWarehouse.GetAll().Select(d => d.Id).ToArray();
+
+                foreach (var item in itemId)
+                {
+                    foreach (var warehouseId in warehouseList)
+                    {
+                        var warehouseQuery = repoDetail.Filter(d => d.ItemReceipt.InWarehouseId == warehouseId
+                            && d.ItemId == item);
+
+                        var entryQty = warehouseQuery.Where(d => d.ItemReceipt.ReceiptType < 100).Sum(d => d.NetQuantity);
+                        var deliverQty = warehouseQuery.Where(d => d.ItemReceipt.ReceiptType > 100).Sum(d => d.NetQuantity);
+
+                        var dbWarehouseStats = repoItemStatus.Get(d => d.WarehouseId == warehouseId && d.ItemId == item);
+                        if (dbWarehouseStats == null)
+                        {
+                            dbWarehouseStats = new ItemLiveStatus
+                            {
+                                ItemId = item,
+                                WarehouseId = warehouseId
+                            };
+                            repoItemStatus.Add(dbWarehouseStats);
+                        }
+
+                        dbWarehouseStats.InQuantity = (entryQty ?? 0);
+                        dbWarehouseStats.OutQuantity = (deliverQty ?? 0);
+                        dbWarehouseStats.LiveQuantity = (entryQty ?? 0) - (deliverQty ?? 0);
+                    }
+                }
+
+                _uow.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
     }
 }

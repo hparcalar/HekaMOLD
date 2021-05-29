@@ -91,6 +91,8 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemSerial_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Warehouse" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemSerial_ItemReceiptDetail" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.FirmAuthor" Width="1.5" PointX="5.25" PointY="16.625" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_FirmAuthor_Firm" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

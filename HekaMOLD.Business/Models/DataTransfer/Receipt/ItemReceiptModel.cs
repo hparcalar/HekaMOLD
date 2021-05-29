@@ -38,6 +38,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string ReceiptStatusStr { get; set; }
         public string CreatedDateStr { get; set; }
         public string ReceiptDateStr { get; set; }
+        public string ReceiptTypeStr { get; set; }
         #endregion
     }
 }

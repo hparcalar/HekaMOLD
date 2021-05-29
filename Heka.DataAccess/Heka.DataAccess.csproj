@@ -56,6 +56,9 @@
     <Compile Include="Context\Firm.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\FirmAuthor.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\ForexHistory.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>

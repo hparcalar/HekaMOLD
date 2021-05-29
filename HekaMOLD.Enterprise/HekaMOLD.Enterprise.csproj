@@ -137,10 +137,12 @@
     <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\ItemGroupController.cs" />
+    <Compile Include="Controllers\ItemReceiptController.cs" />
     <Compile Include="Controllers\PIOrderController.cs" />
     <Compile Include="Controllers\PIRequestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
+    <Compile Include="Controllers\UnitTypeController.cs" />
     <Compile Include="Controllers\WarehouseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -3887,6 +3889,8 @@
     <Content Include="assets\plugins\global\plugins.bundle.css" />
     <Content Include="assets\plugins\global\plugins.bundle.js" />
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
+    <Content Include="Components\Controllers\related-request-list.js" />
+    <Content Include="Components\Views\RelatedRequestList.html" />
     <Content Include="Components\Views\ApprovedItemRequestDetails.html" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -3962,6 +3966,8 @@
     <Content Include="FrontEndLogic\ItemCategory\list.js" />
     <Content Include="FrontEndLogic\ItemGroup\index.js" />
     <Content Include="FrontEndLogic\ItemGroup\list.js" />
+    <Content Include="FrontEndLogic\ItemReceipt\index.js" />
+    <Content Include="FrontEndLogic\ItemReceipt\list.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
@@ -3969,6 +3975,8 @@
     <Content Include="FrontEndLogic\PIOrder\list.js" />
     <Content Include="FrontEndLogic\PIRequest\index.js" />
     <Content Include="FrontEndLogic\PIRequest\list.js" />
+    <Content Include="FrontEndLogic\UnitType\index.js" />
+    <Content Include="FrontEndLogic\UnitType\list.js" />
     <Content Include="FrontEndLogic\UserRole\index.js" />
     <Content Include="FrontEndLogic\UserRole\list.js" />
     <Content Include="FrontEndLogic\User\notifications.js" />
@@ -3978,6 +3986,7 @@
     <Content Include="FrontEndLogic\Warehouse\list.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Helpers\FrontEnd\heka-ui-helpers.js" />
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
@@ -4299,6 +4308,9 @@
     <Content Include="Views\Warehouse\Index.cshtml" />
     <Content Include="Views\PIOrder\List.cshtml" />
     <Content Include="Views\PIOrder\Index.cshtml" />
+    <Content Include="Views\UnitType\Index.cshtml" />
+    <Content Include="Views\UnitType\List.cshtml" />
+    <Content Include="Views\ItemReceipt\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

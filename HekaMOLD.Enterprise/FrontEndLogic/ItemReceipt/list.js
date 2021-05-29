@@ -1,12 +1,17 @@
-﻿app.controller('warehouseListCtrl', function ($scope, $http) {
+﻿app.controller('receiptListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
+
+    $scope.receiptCategory = 0;
+    $scope.receiptType = null;
 
     // LIST FUNCTIONS
     $scope.loadReport = function () {
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'Warehouse/GetWarehouseList', function (data) {
+                    return $.getJSON(HOST_URL
+                        + 'ItemReceipt/GetReceiptList?receiptCategory=' + $scope.receiptCategory
+                        + '&receiptType=' + $scope.receiptType, function (data) {
                             
                         });
                 },
@@ -36,9 +41,13 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'WarehouseCode', caption: 'Depo Kodu' },
-                { dataField: 'WarehouseName', caption: 'Depo Adı' },
-                { dataField: 'WarehouseTypeStr', caption: 'Depo Türü' },
+                { dataField: 'OrderNo', caption: 'Sipariş No' },
+                { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'DateOfNeedStr', caption: 'Termin Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'FirmCode', caption: 'Firma Kodu' },
+                { dataField: 'FirmName', caption: 'Firma Adı' },
+                { dataField: 'OrderStatusStr', caption: 'Durum' },
+                { dataField: 'Explanation', caption: 'Açıklama' },
                 {
                     type: "buttons",
                     buttons: [
@@ -48,7 +57,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'Warehouse?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'PIOrder?rid=' + e.row.data.Id;
                             }
                         }
                     ]

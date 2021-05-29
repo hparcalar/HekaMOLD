@@ -16,5 +16,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public decimal? MultiplierFactor { get; set; }
         public decimal? DividerFactor { get; set; }
 
+        #region VISUAL ELEMENTS
+        public string UnitCode { get; set; }
+        public string UnitName { get; set; }
+        public bool NewDetail { get; set; }
+        #endregion
     }
 }

@@ -1,6 +1,8 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+﻿using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Order;
-using HekaMOLD.Business.Models.DataTransfer.Request;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
+using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -13,7 +15,7 @@ using System.Web.Mvc;
 namespace HekaMOLD.Enterprise.Controllers
 {
     [UserAuthFilter]
-    public class PIOrderController : Controller
+    public class ItemReceiptController : Controller
     {
         // GET: PIRequest
         public ActionResult Index()
@@ -27,13 +29,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetNextOrderNo()
+        public JsonResult GetNextReceiptNo(int receiptType)
         {
             string receiptNo = "";
 
-            using (OrdersBO bObj = new OrdersBO())
+            using (ReceiptBO bObj = new ReceiptBO())
             {
-                receiptNo = bObj.GetNextOrderNo(Convert.ToInt32(Request.Cookies["PlantId"].Value));
+                receiptNo = bObj.GetNextReceiptNo(Convert.ToInt32(Request.Cookies["PlantId"].Value), (ItemReceiptType)receiptType);
             }
 
             var jsonResult = Json(new { Result=!string.IsNullOrEmpty(receiptNo), ReceiptNo=receiptNo }, JsonRequestBehavior.AllowGet);
@@ -42,7 +44,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetSelectables()
+        public JsonResult GetSelectables(int receiptCategory)
         {
             ItemModel[] items = new ItemModel[0];
             UnitTypeModel[] units = new UnitTypeModel[0];
@@ -53,23 +55,35 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 items = bObj.GetItemList();
                 units = bObj.GetUnitTypeList();
-                firms = bObj.GetApprovedSuppliers();
+                firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
             }
 
-            var jsonResult = Json(new { Items = items, Units = units, Firms = firms, Forexes=forexes }, JsonRequestBehavior.AllowGet);
+            Dictionary<int, string> receiptTypes =
+                DictItemReceiptType.GetReceiptTypes((ReceiptCategoryType)receiptCategory);
+
+            var jsonResult = Json(new { 
+                Items = items, Units = units, 
+                Firms = firms, Forexes=forexes,
+                ReceiptTypes = receiptTypes
+            }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
 
         [HttpGet]
-        public JsonResult GetItemOrderList()
+        public JsonResult GetReceiptList(int receiptCategory, int receiptType)
         {
-            ItemOrderModel[] result = new ItemOrderModel[0];
+            ItemReceiptModel[] result = new ItemReceiptModel[0];
 
-            using (OrdersBO bObj = new OrdersBO())
+            using (ReceiptBO bObj = new ReceiptBO())
             {
-                result = bObj.GetItemOrderList();
+                int? rType = receiptType == 0 ? (int?)null : receiptType;
+
+                result = bObj.GetItemReceiptList(
+                        (ReceiptCategoryType)receiptCategory,
+                        (ItemReceiptType?)rType
+                    );
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -80,10 +94,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ItemOrderModel model = null;
-            using (OrdersBO bObj = new OrdersBO())
+            ItemReceiptModel model = null;
+            using (ReceiptBO bObj = new ReceiptBO())
             {
-                model = bObj.GetItemOrder(rid);
+                model = bObj.GetItemReceipt(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -95,9 +109,9 @@ namespace HekaMOLD.Enterprise.Controllers
             try
             {
                 BusinessResult result = null;
-                using (OrdersBO bObj = new OrdersBO())
+                using (ReceiptBO bObj = new ReceiptBO())
                 {
-                    result = bObj.DeleteItemOrder(rid);
+                    result = bObj.DeleteItemReceipt(rid);
                 }
 
                 if (result.Result)
@@ -112,16 +126,16 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemOrderModel model)
+        public JsonResult SaveModel(ItemReceiptModel model)
         {
             try
             {
                 BusinessResult result = null;
-                using (OrdersBO bObj = new OrdersBO())
+                using (ReceiptBO bObj = new ReceiptBO())
                 {
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
 
-                    result = bObj.SaveOrUpdateItemOrder(model);
+                    result = bObj.SaveOrUpdateItemReceipt(model);
                 }
 
                 if (result.Result)
@@ -137,42 +151,14 @@ namespace HekaMOLD.Enterprise.Controllers
 
         }
 
-        [HttpPost]
-        public JsonResult ApproveOrderPrice(int rid)
+        [HttpGet]
+        public JsonResult GetRelatedOrderList(int receiptId)
         {
-            BusinessResult result = new BusinessResult();
+            ItemOrderModel[] result = new ItemOrderModel[0];
 
             using (OrdersBO bObj = new OrdersBO())
             {
-                result = bObj.ApproveItemOrderPrice(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
-            }
-
-            return Json(result);
-        }
-
-        [HttpGet]
-        public JsonResult GetApprovedRequestDetails()
-        {
-            ItemRequestDetailModel[] result = new ItemRequestDetailModel[0];
-
-            using (RequestBO bObj = new RequestBO())
-            {
-                result = bObj.GetApprovedDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
-            }
-
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-
-        [HttpGet]
-        public JsonResult GetRelatedRequestList(int orderId)
-        {
-            ItemRequestModel[] result = new ItemRequestModel[0];
-
-            using (RequestBO bObj = new RequestBO())
-            {
-                result = bObj.GetRelatedRequests(orderId);
+                result = bObj.GetRelatedOrders(receiptId);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -182,13 +168,13 @@ namespace HekaMOLD.Enterprise.Controllers
 
         #region CALCULATIONS
         [HttpPost]
-        public JsonResult CalculateRow(ItemOrderDetailModel model)
+        public JsonResult CalculateRow(ItemReceiptDetailModel model)
         {
-            ItemOrderDetailModel result = new ItemOrderDetailModel();
+            ItemReceiptDetailModel result = new ItemReceiptDetailModel();
 
-            using (OrdersBO bObj = new OrdersBO())
+            using (ReceiptBO bObj = new ReceiptBO())
             {
-                result = bObj.CalculateOrderDetail(model);
+                result = bObj.CalculateReceiptDetail(model);
             }
 
             return Json(result);

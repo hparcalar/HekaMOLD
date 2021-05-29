@@ -18,6 +18,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? SupplierFirmId { get; set; }
         public int? PlantId { get; set; }
         public ItemWarehouseModel[] Warehouses { get; set; }
+        public ItemUnitModel[] Units { get; set; }
+        public ItemLiveStatusModel[] LiveStatus { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemTypeStr { get; set; }

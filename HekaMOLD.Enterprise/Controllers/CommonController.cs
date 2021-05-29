@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.UseCases.Core;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -70,6 +71,19 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult SetNotifyAsSeen(int notificationId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (UsersBO bObj = new UsersBO())
+            {
+                result = bObj.SetNotifyAsSeen(Convert.ToInt32(Request.Cookies["UserId"].Value), notificationId);
+            }
+
+            return Json(result);
         }
     }
 }

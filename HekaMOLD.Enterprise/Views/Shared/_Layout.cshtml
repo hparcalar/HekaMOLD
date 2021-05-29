@@ -2,6 +2,7 @@
 @{ 
     var ctrl = this.ViewContext.RouteData.Values["controller"].ToString();
     var actn = this.ViewContext.RouteData.Values["action"].ToString();
+    var rcgr = Request.QueryString["receiptCategory"];
 }
 
 <!DOCTYPE html>
@@ -91,7 +92,7 @@
                                 </div>
                             </div>
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "PIRequest$|PIOrder$|PIReceipt$") ? "show":"")">
-                                <span class="menu-link @(Regex.IsMatch(ctrl, "PIRequest$|PIOrder$|PIReceipt$") ? "active" : "")">
+                                <span class="menu-link @(Regex.IsMatch(ctrl, "PIRequest$|PIOrder$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && rcgr == "1") ? "active" : "")">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/duetone/Ecommerce/Shopping-Cart.svg-->
                                         <span class="svg-icon svg-icon-2">
@@ -127,7 +128,7 @@
                                         </a>
                                     </div>
                                     <div class="menu-item">
-                                        <a class="menu-link @(Regex.IsMatch(ctrl, "PIReceipt$") ? "active" : "")" href="@Url.Action("List","PIReceipt")">
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "ItemReceipt$") ? "active" : "")" href="@Url.Action("List","ItemReceipt", new { @receiptCategory=1 })">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -137,7 +138,7 @@
                                 </div>
                             </div>
                             <div class="menu-item">
-                                <a class="menu-link" href="@Url.Action("Test","Test")">
+                                <a class="menu-link" href="@Url.Action("List","ItemReceipt", new { @receiptCategory=2 })">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/General/User.svg-->
                                         <span class="svg-icon svg-icon-2">
@@ -155,7 +156,7 @@
                                 </a>
                             </div>
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                                <span class="menu-link">
+                                <span class="menu-link @(Regex.IsMatch(ctrl, "SOrder$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && rcgr == "3") ? "active" : "")">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/duotone/Interface/Lock.svg-->
                                         <span class="svg-icon svg-icon-2">
@@ -180,7 +181,8 @@
                                         </a>
                                     </div>
                                     <div data-kt-menu-trigger="click" class="menu-item">
-                                        <a class="menu-link" href="@Url.Action("Waybills","Sales")">
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "ItemReceipt$") ? "active" : "")" 
+                                           href="@Url.Action("List","ItemReceipt", new { @receiptCategory=3 })">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -253,8 +255,8 @@
                                     <span class="menu-title">Firma</span>
                                 </a>
                             </div>
-                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "Item$|ItemGroup$|ItemCategory$") ? "show":"")">
-                                <span class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Item$|ItemGroup$|ItemCategory$") ? "active" : "")">
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "Item$|ItemGroup$|ItemCategory$|UnitType$") ? "show":"")">
+                                <span class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Item$|ItemGroup$|ItemCategory$|UnitType$") ? "active" : "")">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
                                         <span class="svg-icon svg-icon-2">
@@ -297,6 +299,14 @@
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
                                             <span class="menu-title">Stok Kategorileri</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "UnitType$") ? "active" : "")" href="@Url.Action("List","UnitType")">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Birimler</span>
                                         </a>
                                     </div>
                                 </div>
@@ -688,7 +698,7 @@
                                                     <!--begin::Items-->
                                                     <div class="scroll-y mh-325px my-5 px-8">
                                                         <!--begin::Item-->
-                                                        <div class="d-flex flex-stack py-4" ng-repeat="item in notificationList">
+                                                        <div class="d-flex flex-stack py-4 notification-item" data-id="{{item.Id}}" ng-repeat="item in notificationList">
                                                             <!--begin::Section-->
                                                             <div class="d-flex align-items-center">
                                                                 <!--begin::Symbol-->
@@ -4290,6 +4300,7 @@
         toastr.options.progressBar = true;
         toastr.options.preventDuplicates = true;
     </script>
+    <script src="~/Helpers/FrontEnd/heka-ui-helpers.js"></script>
     <script src="~/FrontEndLogic/Main/main-notifications.js"></script>
 
     @RenderSection("scripts", required: false)

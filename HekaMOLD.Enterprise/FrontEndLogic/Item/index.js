@@ -15,6 +15,8 @@
     $scope.selectedGroup = {};
     $scope.groupList = [];
 
+    $scope.unitList = [];
+
     // GET SELECTABLE DATA
     $scope.loadSelectables = function () {
         var prmReq = new Promise(function (resolve, reject) {
@@ -24,6 +26,7 @@
                         $scope.categoryList = resp.data.Categories;
                         $scope.groupList = resp.data.Groups;
                         $scope.firmList = resp.data.Firms;
+                        $scope.unitList = resp.data.Units;
 
                         resolve(resp.data);
                     }
@@ -142,6 +145,7 @@
                         $scope.selectedFirm = {};
 
                     $scope.bindWarehousePrm();
+                    $scope.bindUnitPrm();
                 }
             }).catch(function (err) { });
     }
@@ -231,7 +235,103 @@
         });
     }
 
+    $scope.bindUnitPrm = function () {
+        $('#unitList').dxDataGrid({
+            dataSource: {
+                load: function () {
+                    return $scope.modelObject.Units;
+                },
+                update: function (key, values) {
+                    var obj = $scope.modelObject.Units.find(d => d.Id == key);
+                    if (obj != null) {
+
+                        if (typeof values.UnitId != 'undefined') {
+                            var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
+                            obj.UnitId = unitObj.Id;
+                            obj.UnitCode = itemObj.UnitCode;
+                        }
+
+                        if (typeof values.IsMainUnit != 'undefined') { obj.IsMainUnit = values.IsMainUnit; }
+                        if (typeof values.MultiplierFactor != 'undefined') { obj.MultiplierFactor = values.MultiplierFactor; }
+                        if (typeof values.DividerFactor != 'undefined') { obj.DividerFactor = values.DividerFactor; }
+                    }
+                },
+                remove: function (key) {
+                    var obj = $scope.modelObject.Units.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.modelObject.Units.splice($scope.modelObject.Units.indexOf(obj), 1);
+                    }
+                },
+                insert: function (values) {
+                    var newId = 1;
+                    if ($scope.modelObject.Units.length > 0) {
+                        newId = $scope.modelObject.Units.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                        newId++;
+                    }
+
+                    var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
+
+                    var newObj = {
+                        Id: newId,
+                        UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
+                        UnitCode: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
+                        IsMainUnit: values.IsMainUnit,
+                        MultiplierFactor: values.MultiplierFactor,
+                        DividerFactor: values.DividerFactor,
+                        NewDetail: true
+                    };
+
+                    $scope.modelObject.Units.push(newObj);
+                },
+                key: 'Id'
+            },
+            showColumnLines: true,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: false,
+            showBorders: true,
+            onInitNewRow: function (e) {
+                e.data.IsMainUnit = false;
+            },
+            filterRow: {
+                visible: false
+            },
+            headerFilter: {
+                visible: false
+            },
+            groupPanel: {
+                visible: false
+            },
+            scrolling: {
+                mode: "virtual"
+            },
+            height: 200,
+            editing: {
+                allowUpdating: true,
+                allowDeleting: true,
+                allowAdding: true,
+                mode: 'cell'
+            },
+            columns: [
+                {
+                    dataField: 'UnitId', caption: 'Birim',
+                    validationRules: [{ type: "required" }],
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: $scope.unitList,
+                        valueExpr: "Id",
+                        displayExpr: "UnitCode"
+                    }
+                },
+                { dataField: 'IsMainUnit', caption: 'Ana Birim', dataType:'boolean' },
+                { dataField: 'MultiplierFactor', caption: 'Çarpan', dataType: 'number', format: { type: "fixedPoint", precision: 0 } },
+                { dataField: 'DividerFactor', caption: 'Bölen', dataType: 'number', format: { type: "fixedPoint", precision: 0 } }
+            ]
+        });
+    }
+
     // ON LOAD EVENTS
+    DevExpress.localization.locale('tr');
     $scope.loadSelectables().then(function (data) {
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);

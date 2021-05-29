@@ -28,6 +28,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string TaxNo { get; set; }
         public string TaxOffice { get; set; }
         public bool? IsApproved { get; set; }
+        public FirmAuthorModel[] Authors { get; set; }
 
         #region VISUAL ELEMENTS
         public string FirmTypeStr { get; set; }

@@ -18,7 +18,7 @@
 
                 <div class="card-toolbar mx-2">
                     <!--begin::Menu-->
-                    <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary" 
+                    <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
                             data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
                         <!--begin::Svg Icon | path: icons/stockholm/Layout/Layout-4-blocks-2.svg-->
                         <span class="svg-icon svg-icon-2">
@@ -310,6 +310,10 @@
     <div id="dial-requests" title="Onaylı Talepler" style="display:none;">
         <ng-include src="'../Components/Views/ApprovedItemRequestDetails.html'"></ng-include>
     </div>
+
+    <div id="dial-related-requests" title="İlgili Talepler" style="display:none;">
+        <ng-include src="'../Components/Views/RelatedRequestList.html'"></ng-include>
+    </div>
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
@@ -318,5 +322,6 @@
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/FrontEndLogic/PIOrder/index.js"></script>
     <script src="~/Components/Controllers/approved-itemrequest-details.js"></script>
+    <script src="~/Components/Controllers/related-request-list.js"></script>
     <script src="~/FrontEndLogic/Core/record-manager.js"></script>
 }

@@ -12,6 +12,7 @@ namespace HekaMOLD.Business.Models.Constants
         ItemBuyingReturn = 101,
         ItemSelling = 102,
         ItemSellingReturn = 2,
+        EntryFromProduction=4,
         Consumption = 103,
         Wastage = 104,
         WarehouseInput = 3,

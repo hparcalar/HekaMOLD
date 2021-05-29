@@ -23,6 +23,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Request
         public string CreatedDateStr { get; set; }
         public string RequestStatusStr { get; set; }
         public string RequestCategoryName { get; set; }
+        public string CreatedUserName { get; set; }
         public ItemRequestDetailModel[] Details { get; set; }
         #endregion
     }

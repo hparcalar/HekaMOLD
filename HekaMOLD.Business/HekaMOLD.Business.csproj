@@ -58,21 +58,26 @@
     <Compile Include="Base\IDataObject.cs" />
     <Compile Include="Helpers\ConstantHelper.cs" />
     <Compile Include="Helpers\Mapper.cs" />
+    <Compile Include="Models\Constants\FirmType.cs" />
     <Compile Include="Models\Constants\ItemCriticalBehaviourType.cs" />
     <Compile Include="Models\Constants\ItemReceiptType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
+    <Compile Include="Models\Constants\ReceiptCategoryType.cs" />
+    <Compile Include="Models\Constants\ReceiptStatusType.cs" />
     <Compile Include="Models\Constants\OrderStatusType.cs" />
     <Compile Include="Models\Constants\RequestStatusType.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserRoleModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\FirmAuthorModel.cs" />
     <Compile Include="Models\DataTransfer\Core\FirmModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ForexHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ForexTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemGroupModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\ItemLiveStatusModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemUnitModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemWarehouseModel.cs" />
@@ -92,6 +97,7 @@
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
+    <Compile Include="Models\Dictionaries\DictReceiptStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictOrderStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictItemCriticalBehaviourType.cs" />
     <Compile Include="Models\Dictionaries\DictItemType.cs" />
@@ -105,6 +111,7 @@
     <Compile Include="UseCases\Core\CoreRecordTracingBO.cs" />
     <Compile Include="UseCases\DefinitionsBO.cs" />
     <Compile Include="UseCases\OrdersBO.cs" />
+    <Compile Include="UseCases\ReceiptBO.cs" />
     <Compile Include="UseCases\RequestBO.cs" />
     <Compile Include="UseCases\UsersBO.cs" />
   </ItemGroup>
@@ -118,7 +125,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Notes\TriggerPoints.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

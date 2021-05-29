@@ -34,6 +34,23 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
+        public FirmModel[] GetApprovedSuppliers()
+        {
+            List<FirmModel> data = new List<FirmModel>();
+
+            var repo = _unitOfWork.GetRepository<Firm>();
+
+            repo.Filter(d => d.FirmType == (int)FirmType.Supplier && d.IsApproved == true).ToList().ForEach(d =>
+            {
+                FirmModel containerObj = new FirmModel();
+                d.MapTo(containerObj);
+                containerObj.FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
         public BusinessResult SaveOrUpdateFirm(FirmModel model)
         {
             BusinessResult result = new BusinessResult();
@@ -46,6 +63,7 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Firma adı girilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<Firm>();
+                var repoAuthors = _unitOfWork.GetRepository<FirmAuthor>();
 
                 if (repo.Any(d => (d.FirmCode == model.FirmCode || d.FirmName == model.FirmName) && d.Id != model.Id))
                     throw new Exception("Aynı koda sahip başka bir firma mevcuttur. Lütfen farklı bir kod giriniz.");
@@ -67,6 +85,37 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedDate = crDate;
 
                 dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE AUTHOR LIST
+                if (model.Authors == null)
+                    model.Authors = new FirmAuthorModel[0];
+
+                var toBeRemovedAuthors = dbObj.FirmAuthor
+                    .Where(d => !model.Authors.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedAuthors)
+                {
+                    repoAuthors.Delete(item);
+                }
+
+                foreach (var item in model.Authors)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemAu = new FirmAuthor();
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Firm = dbObj;
+                        repoAuthors.Add(dbItemAu);
+                    }
+                    else if (!toBeRemovedAuthors.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemAu = repoAuthors.GetById(item.Id);
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Firm = dbObj;
+                    }
+                }
+                #endregion
 
                 _unitOfWork.SaveChanges();
 
@@ -114,6 +163,17 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+
+                #region GET AUTHOR LIST
+                List<FirmAuthorModel> authorList = new List<FirmAuthorModel>();
+                dbObj.FirmAuthor.ToList().ForEach(d =>
+                {
+                    FirmAuthorModel authorModel = new FirmAuthorModel();
+                    d.MapTo(authorModel);
+                    authorList.Add(authorModel);
+                });
+                model.Authors = authorList.ToArray();
+                #endregion
             }
 
             return model;
@@ -155,6 +215,8 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Stok adı girilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<Item>();
+                var repoWarehouses = _unitOfWork.GetRepository<ItemWarehouse>();
+                var repoUnits = _unitOfWork.GetRepository<ItemUnit>();
 
                 if (repo.Any(d => (d.ItemNo == model.ItemNo || d.ItemName == model.ItemName) 
                     && d.Id != model.Id))
@@ -177,6 +239,68 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedDate = crDate;
 
                 dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE WAREHOUSE PRM
+                if (model.Warehouses == null)
+                    model.Warehouses = new ItemWarehouseModel[0];
+
+                var toBeRemovedWarehouses = dbObj.ItemWarehouse
+                    .Where(d => !model.Warehouses.Select(m => m.Id).ToArray().Contains(d.Id))
+                    .ToArray();
+                foreach (var item in toBeRemovedWarehouses)
+                {
+                    repoWarehouses.Delete(item);
+                }
+
+                foreach (var item in model.Warehouses
+                    .Where(d => !toBeRemovedWarehouses.Any(m => m.WarehouseId == d.WarehouseId)))
+                {
+                    var dbItemWr = repoWarehouses.GetById(item.Id);
+                    if (dbItemWr == null || item.Id == 0)
+                    {
+                        dbItemWr = new ItemWarehouse();
+                        item.MapTo(dbItemWr);
+                        dbItemWr.Item = dbObj;
+                        repoWarehouses.Add(dbItemWr);
+                    }
+                    else
+                    {
+                        item.MapTo(dbItemWr);
+                        dbItemWr.Item = dbObj;
+                    }
+                }
+                #endregion
+
+                #region SAVE ITEM UNITS PRM
+                if (model.Units == null)
+                    model.Units = new ItemUnitModel[0];
+
+                var toBeRemovedUnits = dbObj.ItemUnit
+                    .Where(d => !model.Units.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedUnits)
+                {
+                    repoUnits.Delete(item);
+                }
+
+                foreach (var item in model.Units)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemUn = new ItemUnit();
+                        item.MapTo(dbItemUn);
+                        dbItemUn.Item = dbObj;
+                        repoUnits.Add(dbItemUn);
+                    }
+                    else if (!toBeRemovedUnits.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemUn = repoUnits.GetById(item.Id);
+                        item.MapTo(dbItemUn);
+                        dbItemUn.Item = dbObj;
+                    }
+                }
+                #endregion
 
                 _unitOfWork.SaveChanges();
 
@@ -265,6 +389,20 @@ namespace HekaMOLD.Business.UseCases
 
                     warehousePrmList.Add(itemWarehousePrm);
                 }
+                #endregion
+
+                #region GET ITEM UNITS
+                List<ItemUnitModel> unitModels = new List<ItemUnitModel>();
+                dbObj.ItemUnit.ToList().ForEach(d =>
+                {
+                    ItemUnitModel unitData = new ItemUnitModel();
+                    d.MapTo(unitData);
+                    unitData.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
+                    unitData.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
+                    unitData.NewDetail = false;
+                    unitModels.Add(unitData);
+                });
+                model.Units = unitModels.ToArray();
                 #endregion
 
                 model.Warehouses = warehousePrmList.ToArray();
@@ -642,6 +780,92 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region ITEM UNIT BUSINESS
+
+        public BusinessResult SaveOrUpdateUnitType(UnitTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.UnitCode))
+                    throw new Exception("Birim kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.UnitName))
+                    throw new Exception("Birim adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<UnitType>();
+
+                if (repo.Any(d => (d.UnitCode == model.UnitCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir birim mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new UnitType();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteUnitType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<UnitType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public UnitTypeModel GetUnitType(int id)
+        {
+            UnitTypeModel model = new UnitTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<UnitType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
         public UnitTypeModel[] GetUnitTypeList()
         {
             List<UnitTypeModel> data = new List<UnitTypeModel>();

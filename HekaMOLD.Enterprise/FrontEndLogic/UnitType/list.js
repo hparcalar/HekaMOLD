@@ -1,4 +1,4 @@
-﻿app.controller('warehouseListCtrl', function ($scope, $http) {
+﻿app.controller('unitTypeListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS
@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'Warehouse/GetWarehouseList', function (data) {
+                    return $.getJSON(HOST_URL + 'UnitType/GetUnitTypeList', function (data) {
                             
                         });
                 },
@@ -36,9 +36,8 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'WarehouseCode', caption: 'Depo Kodu' },
-                { dataField: 'WarehouseName', caption: 'Depo Adı' },
-                { dataField: 'WarehouseTypeStr', caption: 'Depo Türü' },
+                { dataField: 'UnitCode', caption: 'Birim Kodu' },
+                { dataField: 'UnitName', caption: 'Birim Adı' },
                 {
                     type: "buttons",
                     buttons: [
@@ -48,7 +47,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'Warehouse?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'UnitType?rid=' + e.row.data.Id;
                             }
                         }
                     ]

@@ -94,6 +94,35 @@ namespace HekaMOLD.Business.UseCases
 
             return data.ToArray();
         }
+
+        public BusinessResult SetNotifyAsSeen(int userId, int notificationId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Notification>();
+                var dbObj = repo.GetById(notificationId);
+                if (dbObj == null)
+                    throw new Exception("Bildirim kaydı bulunamadı.");
+
+                if (dbObj.UserId != userId)
+                    throw new Exception("Bildirimin hedefi olan kullanıcı ile gören uyuşmuyor.");
+
+                dbObj.SeenStatus = 1;
+                dbObj.SeenDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         #endregion
 
         #region USERS MANAGEMENT

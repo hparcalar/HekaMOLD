@@ -7,21 +7,33 @@
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         bootbox.alert({
-                            message:'<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Oluşturan</label>'+
-                                    '<div class="mb-5">'+
-                                        '<input type="text" class="form-control form-control-sm form-control-solid" readonly="readonly" value="'+ resp.data.CreatedUserName +'" />'+
+                            message:'<div class="row">' +
+                                        '<div class="col-xxl-6">'+
+                                        '<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Oluşturan</label>' +
+                                        '<div class="mb-5">'+
+                                            '<input type="text" class="form-control form-control-sm form-control-solid" readonly="readonly" value="'+ resp.data.CreatedUserName +'" />'+
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="col-xxl-6">' +
+                                        '<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Oluşturulma Tarihi</label>' +
+                                        '<div class="mb-5">' +
+                                        '<input type="text" class="form-control form-control-sm form-control-solid" readonly="readonly" value="' + resp.data.CreatedDateStr + '" />' +
+                                        '</div>' +
+                                        '</div>' +
                                     '</div>' +
-                                    '<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Oluşturulma Tarihi</label>' +
-                                    '<div class="mb-5">' +
-                                    '<input type="text" class="form-control form-control-sm form-control-solid" readonly="readonly" value="' + resp.data.CreatedDateStr + '" />' +
+                                    '<div class="row">' +
+                                    '<div class="col-xxl-6">' +
+                                        '<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Güncelleyen</label>' +
+                                        '<div class="mb-5">' +
+                                        '<input type="text" class="form-control form-control-sm form-control-solid" readonly="readonly" value="' + resp.data.UpdatedUserName + '" />' +
+                                        '</div>' +
                                     '</div>' +
-                                    '<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Güncelleyen</label>' +
-                                    '<div class="mb-5">' +
-                                    '<input type="text" class="form-control form-control-sm form-control-solid" readonly="readonly" value="' + resp.data.UpdatedUserName + '" />' +
-                                    '</div>' +
+                                    '<div class="col-xxl-6">' +
                                     '<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Güncellenme Tarihi</label>' +
                                     '<div class="mb-5">' +
                                     '<input type="text" class="form-control form-control-sm form-control-solid" readonly="readonly" value="' + resp.data.UpdatedDateStr + '" />' +
+                                    '</div>' +
+                                    '</div>' +
                                     '</div>'
                             ,
                             closeButton: false,

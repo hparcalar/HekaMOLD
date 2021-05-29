@@ -465,6 +465,46 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
+
+        public ItemRequestModel[] GetRelatedRequests(int orderId)
+        {
+            ItemRequestModel[] data = new ItemRequestModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrder>();
+                var dbObj = repo.GetById(orderId);
+                if (dbObj == null)
+                    throw new Exception("Sipariş bilgisine ulaşılamadı.");
+
+                List<ItemRequest> relatedRequests = new List<ItemRequest>();
+
+                foreach (var item in dbObj.ItemOrderDetail)
+                {
+                    if (item.ItemRequestDetail != null 
+                        && !relatedRequests.Any(d => d.Id == item.ItemRequestDetail.ItemRequestId))
+                        relatedRequests.Add(item.ItemRequestDetail.ItemRequest);
+                }
+
+                List<ItemRequestModel> sumData = new List<ItemRequestModel>();
+                relatedRequests.ForEach(d =>
+                {
+                    ItemRequestModel model = new ItemRequestModel();
+                    d.MapTo(model);
+                    model.CreatedUserName = d.User != null ? d.User.UserName : "";
+                    model.CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate);
+                    sumData.Add(model);
+                });
+
+                data = sumData.ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         #endregion
 
         #region ORDER CONVERSION BUSINESS
