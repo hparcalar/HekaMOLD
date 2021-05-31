@@ -50,6 +50,7 @@ namespace HekaMOLD.Enterprise.Controllers
             UnitTypeModel[] units = new UnitTypeModel[0];
             FirmModel[] firms = new FirmModel[0];
             ForexTypeModel[] forexes = new ForexTypeModel[0];
+            WarehouseModel[] warehouses = new WarehouseModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -57,6 +58,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 units = bObj.GetUnitTypeList();
                 firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
+                warehouses = bObj.GetWarehouseList();
             }
 
             Dictionary<int, string> receiptTypes =
@@ -65,7 +67,28 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(new { 
                 Items = items, Units = units, 
                 Firms = firms, Forexes=forexes,
-                ReceiptTypes = receiptTypes
+                Warehouses = warehouses,
+                ReceiptTypes = receiptTypes.Select(d => new { 
+                    Id=d.Key,
+                    Text=d.Value
+                }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetReceiptTypes(int receiptCategory)
+        {
+            Dictionary<int, string> receiptTypes =
+                DictItemReceiptType.GetReceiptTypes((ReceiptCategoryType)receiptCategory);
+
+            var jsonResult = Json(new
+            {
+                ReceiptTypes = receiptTypes.Select(d => new {
+                    Id = d.Key,
+                    Text = d.Value
+                }).ToArray()
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;

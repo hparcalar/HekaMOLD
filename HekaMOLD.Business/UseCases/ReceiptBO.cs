@@ -23,6 +23,7 @@ namespace HekaMOLD.Business.UseCases
             var repo = _unitOfWork.GetRepository<ItemReceipt>();
 
             repo.Filter(d =>
+                d.ReceiptType != null &&
                 (receiptCategory == ReceiptCategoryType.All
                 ||
                 (receiptCategory == ReceiptCategoryType.Purchasing 
@@ -41,7 +42,7 @@ namespace HekaMOLD.Business.UseCases
                     && DictItemReceiptType.OutputTypes.Contains(d.ReceiptType.Value)))
                 &&
                 (
-                    receiptType == null || d.ReceiptType.Value == (int)receiptType
+                    receiptType == null || d.ReceiptType == (int?)receiptType
                 )
             )
                 .ToList().ForEach(d =>
@@ -340,6 +341,24 @@ namespace HekaMOLD.Business.UseCases
 
         public ItemReceiptDetailModel CalculateReceiptDetail(ItemReceiptDetailModel model)
         {
+            var repoItem = _unitOfWork.GetRepository<Item>();
+            var repoUnit = _unitOfWork.GetRepository<UnitType>();
+
+            decimal mFactor = 1, dFactor = 1;
+
+            var dbItem = repoItem.Get(d => d.Id == model.ItemId);
+            if (dbItem != null)
+            {
+                var selUnit = dbItem.ItemUnit.FirstOrDefault(d => d.Id == model.UnitId);
+                if (selUnit != null)
+                {
+                    mFactor = selUnit.MultiplierFactor ?? 1;
+                    dFactor = selUnit.DividerFactor ?? 1;
+                }
+            }
+
+            model.NetQuantity = model.Quantity * mFactor / dFactor;
+
             if (model.ForexId > 0 && model.ForexRate > 0)
             {
                 model.ForexUnitPrice = model.UnitPrice / model.ForexRate;

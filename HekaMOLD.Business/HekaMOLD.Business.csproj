@@ -97,6 +97,7 @@
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
+    <Compile Include="Models\Dictionaries\DictReceiptCategoryType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictOrderStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictItemCriticalBehaviourType.cs" />

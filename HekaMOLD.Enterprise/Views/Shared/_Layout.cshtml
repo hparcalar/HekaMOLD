@@ -172,7 +172,7 @@
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                    <div data-kt-menu-trigger="click" class="menu-item">
+                                    <div class="menu-item">
                                         <a class="menu-link" href="@Url.Action("Orders","Sales")">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -180,7 +180,7 @@
                                             <span class="menu-title">Sipariş</span>
                                         </a>
                                     </div>
-                                    <div data-kt-menu-trigger="click" class="menu-item">
+                                    <div class="menu-item">
                                         <a class="menu-link @(Regex.IsMatch(ctrl, "ItemReceipt$") ? "active" : "")" 
                                            href="@Url.Action("List","ItemReceipt", new { @receiptCategory=3 })">
                                             <span class="menu-bullet">

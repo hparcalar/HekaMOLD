@@ -1,19 +1,30 @@
-﻿app.controller('orderCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id:0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus:0 };
+﻿app.controller('receiptCtrl', function ($scope, $http) {
+    $scope.modelObject = {
+        Id: 0, ReceiptDate: moment().format('DD.MM.YYYY'),
+        Details: [], ReceiptStatus: 0, ReceiptType:0
+    };
 
     $scope.itemList = [];
     $scope.unitList = [];
-    $scope.firmList = [];
     $scope.forexList = [];
 
-    $scope.selectedFirm = {};
+    $scope.selectedFirm = {Id:0, FirmCode:''};
+    $scope.firmList = [];
 
+    $scope.selectedWarehouse = {Id:0, WarehouseName:''};
+    $scope.warehouseList = [];
+
+    $scope.selectedReceiptType = {};
+    $scope.receiptTypeList = [];
+
+    $scope.receiptCategory = null;
     $scope.saveStatus = 0;
 
     // RECEIPT FUNCTIONS
-    $scope.getNextOrderNo = function () {
+    $scope.getNextReceiptNo = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'PIOrder/GetNextOrderNo', {}, 'json')
+            $http.get(HOST_URL + 'ItemReceipt/GetNextReceiptNo?receiptType='
+                + $scope.modelObject.ReceiptType, {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         if (resp.data.Result) {
@@ -52,11 +63,16 @@
 
     // CRUD
     $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus: 0 };
-        $scope.selectedFirm = {};
+        $scope.modelObject = {
+            Id: 0, ReceiptDate: moment().format('DD.MM.YYYY'),
+            Details: [], ReceiptStatus: 0, ReceiptType:0
+        };
 
-        $scope.getNextOrderNo().then(function (rNo) {
-            $scope.modelObject.OrderNo = rNo;
+        $scope.selectedFirm = $scope.firmList[0];
+        $scope.selectedWarehouse = $scope.warehouseList[0];
+
+        $scope.getNextReceiptNo().then(function (rNo) {
+            $scope.modelObject.ReceiptNo = rNo;
             $scope.$apply();
         });
         $scope.bindDetails();
@@ -64,7 +80,7 @@
 
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu siparişi silmek istediğinizden emin misiniz?",
+            message: "Bu irsaliyeyi silmek istediğinizden emin misiniz?",
             closeButton:false,
             buttons: {
                 confirm: {
@@ -79,7 +95,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'PIOrder/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'ItemReceipt/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -106,7 +122,14 @@
         else
             $scope.modelObject.FirmId = null;
 
-        $http.post(HOST_URL + 'PIOrder/SaveModel', $scope.modelObject, 'json')
+        if (typeof $scope.selectedWarehouse != 'undefined' && $scope.selectedWarehouse != null)
+            $scope.modelObject.InWarehouseId = $scope.selectedWarehouse.Id;
+        else
+            $scope.modelObject.InWarehouseId = null;
+
+        $scope.setReceiptTypeFromSelected();
+
+        $http.post(HOST_URL + 'ItemReceipt/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -162,17 +185,24 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'PIOrder/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'ItemReceipt/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
-                    $scope.modelObject.DateOfNeed = $scope.modelObject.DateOfNeedStr;
-                    $scope.modelObject.OrderDate = $scope.modelObject.OrderDateStr;
+                    $scope.modelObject.ReceiptDate = $scope.modelObject.ReceiptDateStr;
 
                     if (typeof $scope.modelObject.FirmId != 'undefined' && $scope.modelObject.FirmId != null)
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
                     else
-                        $scope.selectedFirm = {};
+                        $scope.selectedFirm = $scope.firmList[0];
+
+                    if (typeof $scope.modelObject.InWarehouseId != 'undefined' && $scope.modelObject.InWarehouseId != null)
+                        $scope.selectedWarehouse = $scope.warehouseList.find(d => d.Id == $scope.modelObject.InWarehouseId);
+                    else
+                        $scope.selectedWarehouse = $scope.warehouseList[0];
+
+                    refreshArray($scope.firmList);
+                    refreshArray($scope.warehouseList);
 
                     $scope.bindDetails();
                 }
@@ -182,13 +212,14 @@
     $scope.calculateRow = function (row) {
         if (typeof row != 'undefined' && row != null) {
             try {
-                $http.post(HOST_URL + 'PIOrder/CalculateRow', row, 'json')
+                $http.post(HOST_URL + 'ItemReceipt/CalculateRow', row, 'json')
                     .then(function (resp) {
                         if (typeof resp.data != 'undefined' && resp.data != null) {
                             row.OverallTotal = resp.data.OverallTotal;
                             row.UnitPrice = resp.data.UnitPrice;
                             row.TaxAmount = resp.data.TaxAmount;
                             row.ForexUnitPrice = resp.data.ForexUnitPrice;
+                            row.NetQuantity = resp.data.NetQuantity;
 
                             $scope.calculateHeader();
                         }
@@ -301,7 +332,7 @@
                         ForexRate: values.ForexRate,
                         ForexUnitPrice: values.ForexUnitPrice,
                         ForexId: values.ForexId,
-                        ItemRequestDetailId: null,
+                        ItemOrderDetailId: null,
                         Explanation: values.Explanation,
                         NewDetail: true
                     };
@@ -399,15 +430,49 @@
         });
     }
 
+    $scope.bindParameters = function () {
+        $scope.receiptCategory = getParameterByName('receiptCategory');
+        $scope.modelObject.ReceiptType = getParameterByName('receiptType');
+        if ($scope.modelObject.ReceiptType == null)
+            $scope.modelObject.ReceiptType = 0;
+    }
+
+    $scope.onReceiptTypeChanged = function (e) {
+        $scope.setReceiptTypeFromSelected();
+        $scope.getNextReceiptNo();
+    }
+
+    $scope.setReceiptTypeFromSelected = function () {
+        if (typeof $scope.selectedReceiptType != 'undefined'
+            && $scope.selectedReceiptType != null
+            && typeof $scope.selectedReceiptType.Id != 'undefined')
+            $scope.modelObject.ReceiptType = $scope.selectedReceiptType.Id;
+        else
+            $scope.modelObject.ReceiptType = 0;
+    }
+
     $scope.loadSelectables = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'PIOrder/GetSelectables', {}, 'json')
+            $http.get(HOST_URL + 'ItemReceipt/GetSelectables?receiptCategory=' +
+                $scope.receiptCategory, {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.itemList = resp.data.Items;
                         $scope.unitList = resp.data.Units;
-                        $scope.firmList = resp.data.Firms;
                         $scope.forexList = resp.data.Forexes;
+
+                        $scope.firmList = resp.data.Firms;
+                        var emptyFirmObj = { Id: 0, FirmCode: '-- Seçiniz --' };
+                        $scope.firmList.splice(0, 0, emptyFirmObj);
+                        $scope.selectedFirm = emptyFirmObj;
+                        
+                        $scope.warehouseList = resp.data.Warehouses;
+                        var emptyWrObj = { Id: 0, WarehouseName: '-- Seçiniz --' };
+                        $scope.warehouseList.splice(0, 0, emptyWrObj);
+                        $scope.selectedWarehouse = emptyWrObj;
+
+                        $scope.receiptTypeList = resp.data.ReceiptTypes;
+                        $scope.selectedReceiptType = $scope.receiptTypeList[0];
 
                         resolve();
                     }
@@ -419,7 +484,7 @@
 
     // INFORMATIONS
     $scope.showRecordInformation = function () {
-        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType:'ItemOrder' });
+        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType:'ItemReceipt' });
     }
 
     $scope.showRequestInformation = function () {
@@ -526,12 +591,13 @@
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
+    $scope.bindParameters();
     $scope.loadSelectables().then(function () {
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
         else {
-            $scope.getNextOrderNo().then(function (rNo) {
-                $scope.modelObject.OrderNo = rNo;
+            $scope.getNextReceiptNo().then(function (rNo) {
+                $scope.modelObject.ReceiptNo = rNo;
                 $scope.$apply();
 
                 $scope.bindDetails();

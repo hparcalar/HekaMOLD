@@ -6,3 +6,12 @@
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+function refreshArray(arrObj) {
+    try {
+        arrObj.push({});
+        setTimeout(function () { arrObj.splice(arrObj.length - 1, 1); }, 150);
+    } catch (e) {
+
+    }
+}

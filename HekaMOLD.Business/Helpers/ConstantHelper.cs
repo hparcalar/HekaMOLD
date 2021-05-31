@@ -70,6 +70,13 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(ReceiptCategoryType))
+                {
+                    return DictReceiptCategoryType.Values
+                        .Where(d => d.Key == (ReceiptCategoryType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception)
             {

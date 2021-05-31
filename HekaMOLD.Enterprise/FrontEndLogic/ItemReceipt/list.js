@@ -2,7 +2,10 @@
     DevExpress.localization.locale('tr');
 
     $scope.receiptCategory = 0;
-    $scope.receiptType = null;
+    $scope.receiptType = 0;
+
+    $scope.selectedReceiptType = {Id:0,Text:'Tümü'};
+    $scope.receiptTypeList = [];
 
     // LIST FUNCTIONS
     $scope.loadReport = function () {
@@ -41,12 +44,12 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'OrderNo', caption: 'Sipariş No' },
-                { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'DateOfNeedStr', caption: 'Termin Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'ReceiptNo', caption: 'İrsaliye No' },
+                { dataField: 'DocumentNo', caption: 'Belge No' },
+                { dataField: 'ReceiptDateStr', caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'FirmCode', caption: 'Firma Kodu' },
                 { dataField: 'FirmName', caption: 'Firma Adı' },
-                { dataField: 'OrderStatusStr', caption: 'Durum' },
+                { dataField: 'ReceiptStatusStr', caption: 'Durum' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {
                     type: "buttons",
@@ -57,15 +60,63 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'PIOrder?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'ItemReceipt?rid=' + e.row.data.Id
+                                    + '&receiptCategory=' + $scope.receiptCategory;
                             }
                         }
                     ]
                 }
             ]
             });
-        }
+    }
+
+    $scope.bindParameters = function () {
+        $scope.receiptCategory = getParameterByName('receiptCategory');
+        $scope.receiptType = getParameterByName('receiptType');
+        if ($scope.receiptType == null)
+            $scope.receiptType = 0;
+    }
+
+    $scope.loadSelectables = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'ItemReceipt/GetReceiptTypes?receiptCategory='
+                + $scope.receiptCategory, {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.receiptTypeList
+                            .splice(0, $scope.receiptTypeList.length - 1);
+
+                        $scope.receiptTypeList.push({ Id: 0, Text: 'Tümü' });
+
+                        $scope.selectedReceiptType = $scope
+                            .receiptTypeList.find(d => d.Id == 0);
+
+                        resp.data.ReceiptTypes.forEach(d => {
+                            $scope.receiptTypeList.push(d);
+                        });
+
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prms;
+    }
+
+    $scope.onReceiptTypeChanged = function (e) {
+        if (typeof $scope.selectedReceiptType != 'undefined'
+            && $scope.selectedReceiptType != null
+            && typeof $scope.selectedReceiptType.Id != 'undefined')
+            $scope.receiptType = $scope.selectedReceiptType.Id;
+        else
+            $scope.receiptType = 0;
+
+        $scope.loadReport();
+    }
 
     // ON LOAD EVENTS
-    $scope.loadReport();
+    $scope.bindParameters();
+    $scope.loadSelectables().then(function () {
+        $scope.loadReport();
+    });
 });

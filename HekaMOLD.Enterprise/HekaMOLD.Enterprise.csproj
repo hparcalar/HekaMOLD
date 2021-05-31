@@ -4311,6 +4311,7 @@
     <Content Include="Views\UnitType\Index.cshtml" />
     <Content Include="Views\UnitType\List.cshtml" />
     <Content Include="Views\ItemReceipt\List.cshtml" />
+    <Content Include="Views\ItemReceipt\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
