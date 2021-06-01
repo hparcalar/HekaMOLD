@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using HekaMOLD.Enterprise.Helpers;
 
 namespace HekaMOLD.Enterprise.Controllers.Filters
 {
-    public class UserAuthFilter : FilterAttribute, IActionFilter
+    public class MobileAuthFilter : FilterAttribute, IActionFilter
     {
         public void OnActionExecuted(ActionExecutedContext filterContext)
         {
@@ -17,21 +16,13 @@ namespace HekaMOLD.Enterprise.Controllers.Filters
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (string.Equals(filterContext.ActionDescriptor.ActionName, "Login") &&
-                string.Equals(filterContext.RouteData.Values["controller"].ToString(), "Home"))
+                string.Equals(filterContext.RouteData.Values["controller"].ToString(), "Mobile"))
             {
                 if (filterContext.HttpContext.Request.Cookies.AllKeys.Contains("UserId"))
-                {
-                    string properCtrl = "Home";
-                    var userId = filterContext.HttpContext.Request.Cookies["UserId"].Value;
-                    if (HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileProductionUser")
-                        || HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileMechanicUser"))
-                        properCtrl = "Mobile";
-
                     filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(
 
-                        new { controller = properCtrl, action = "Index" }
+                        new { controller = "Mobile", action = "Index" }
                     ));
-                }
             }
             else
             {

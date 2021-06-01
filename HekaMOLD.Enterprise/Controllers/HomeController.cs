@@ -54,8 +54,14 @@ namespace HekaMOLD.Enterprise.Controllers
                 //Response.Cookies.Set(new HttpCookie("Gates", JsonConvert.SerializeObject(authResult.GateList)));
                 //Response.Cookies["Gates"].Expires = DateTime.Now.AddDays(1);
 
-                return RedirectToAction("Index", "Home");
+                RedirectToRouteResult redirectionResult = null;
+                if (authResult.UserData.IsMechanicTerminal
+                    || authResult.UserData.IsProdTerminal)
+                    redirectionResult = RedirectToAction("Index", "Mobile");
+                else
+                    redirectionResult = RedirectToAction("Index", "Home");
 
+                return redirectionResult;
             }
             catch (Exception ex)
             {

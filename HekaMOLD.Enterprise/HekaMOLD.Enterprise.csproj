@@ -17,7 +17,7 @@
     <AssemblyName>HekaMOLD.Enterprise</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -131,6 +131,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\Filters\MobileAuthFilter.cs" />
     <Compile Include="Controllers\Filters\UserAuthFilter.cs" />
     <Compile Include="Controllers\FirmController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\ItemGroupController.cs" />
     <Compile Include="Controllers\ItemReceiptController.cs" />
+    <Compile Include="Controllers\MobileController.cs" />
     <Compile Include="Controllers\PIOrderController.cs" />
     <Compile Include="Controllers\PIRequestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -4312,6 +4314,10 @@
     <Content Include="Views\UnitType\List.cshtml" />
     <Content Include="Views\ItemReceipt\List.cshtml" />
     <Content Include="Views\ItemReceipt\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutMobile.cshtml" />
+    <Content Include="Views\Mobile\Index.cshtml" />
+    <Content Include="Views\Mobile\Production.cshtml" />
+    <Content Include="Views\Mobile\Mechanic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4352,7 +4358,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56183</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56183/</IISUrl>
+          <IISUrl>http://localhost/mold</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

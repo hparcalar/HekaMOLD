@@ -30,6 +30,13 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Hatalı parola girildi.");
 
                 result.UserData = GetUser(dbUser.Id);
+                result.UserData.IsProdTerminal = dbUser.UserRole.UserAuth
+                    .Any(d => d.UserAuthType.AuthTypeCode == "MobileProductionUser"
+                    && d.IsGranted == true);
+                result.UserData.IsMechanicTerminal = dbUser.UserRole.UserAuth
+                    .Any(d => d.UserAuthType.AuthTypeCode == "MobileMechanicUser"
+                    && d.IsGranted == true);
+
                 result.Result = true;
             }
             catch (Exception ex)
