@@ -18,7 +18,15 @@ namespace HekaMOLD.Enterprise.Controllers
                 return RedirectToAction("Production");
             else if (this.IsGranted("MobileMechanicUser"))
                 return RedirectToAction("Mechanic");
+            else if (this.IsGranted("MobileWarehouseUser"))
+                return RedirectToAction("Warehouse");
 
+            return View();
+        }
+
+        #region HOME SCREENS
+        public ActionResult Warehouse()
+        {
             return View();
         }
 
@@ -31,5 +39,13 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
+        #endregion
+
+        #region ITEM ENTRY
+        public ActionResult ItemEntry()
+        {
+            return View();
+        }
+        #endregion
     }
 }

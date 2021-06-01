@@ -36,6 +36,9 @@ namespace HekaMOLD.Business.UseCases
                 result.UserData.IsMechanicTerminal = dbUser.UserRole.UserAuth
                     .Any(d => d.UserAuthType.AuthTypeCode == "MobileMechanicUser"
                     && d.IsGranted == true);
+                result.UserData.IsWarehouseTerminal = dbUser.UserRole.UserAuth
+                    .Any(d => d.UserAuthType.AuthTypeCode == "MobileWarehouseUser"
+                    && d.IsGranted == true);
 
                 result.Result = true;
             }

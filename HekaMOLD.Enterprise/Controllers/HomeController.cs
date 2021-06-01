@@ -56,7 +56,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 RedirectToRouteResult redirectionResult = null;
                 if (authResult.UserData.IsMechanicTerminal
-                    || authResult.UserData.IsProdTerminal)
+                    || authResult.UserData.IsProdTerminal || authResult.UserData.IsWarehouseTerminal)
                     redirectionResult = RedirectToAction("Index", "Mobile");
                 else
                     redirectionResult = RedirectToAction("Index", "Home");
