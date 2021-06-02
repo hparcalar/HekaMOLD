@@ -2,7 +2,8 @@
 app.controller('notificationCtrl', function ($scope, $http, $interval) {
     $scope.notificationList = [];
     $scope.unSeenNotificationExists = function () {
-        if (typeof $scope.notificationList != 'undefined' && $scope.notificationList != null)
+        if (typeof $scope.notificationList != 'undefined'
+            && $scope.notificationList != null)
             return $scope.notificationList.filter(d => d.SeenStatus == 0).length > 0;
         return false;
     }

@@ -1,5 +1,6 @@
 ﻿using HekaMOLD.Business.Models.Authentication;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using HekaMOLD.Enterprise.Models;
 using Newtonsoft.Json;
@@ -71,6 +72,7 @@ namespace HekaMOLD.Enterprise.Controllers
             return View(model);
         }
 
+        [FreeAction]
         public ActionResult Logout()
         {
             Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(-1);

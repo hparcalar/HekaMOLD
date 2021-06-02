@@ -66,6 +66,7 @@
     <Compile Include="Models\Constants\ReceiptCategoryType.cs" />
     <Compile Include="Models\Constants\ReceiptStatusType.cs" />
     <Compile Include="Models\Constants\OrderStatusType.cs" />
+    <Compile Include="Models\Constants\RecordType.cs" />
     <Compile Include="Models\Constants\RequestStatusType.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthModel.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Models\DataTransfer\Core\UnitTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
+    <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptDetailModel.cs" />
@@ -111,6 +113,7 @@
     <Compile Include="UseCases\Core\CoreReceiptsBO.cs" />
     <Compile Include="UseCases\Core\CoreRecordTracingBO.cs" />
     <Compile Include="UseCases\DefinitionsBO.cs" />
+    <Compile Include="UseCases\FilesBO.cs" />
     <Compile Include="UseCases\OrdersBO.cs" />
     <Compile Include="UseCases\ReceiptBO.cs" />
     <Compile Include="UseCases\RequestBO.cs" />

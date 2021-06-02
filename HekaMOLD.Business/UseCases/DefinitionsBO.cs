@@ -192,11 +192,16 @@ namespace HekaMOLD.Business.UseCases
             {
                 ItemModel containerObj = new ItemModel();
                 d.MapTo(containerObj);
+
                 containerObj.ItemTypeStr = 
                     d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" : 
                     d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "";
                 containerObj.CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "";
                 containerObj.GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "";
+                containerObj.TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0;
+                containerObj.TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0;
+                containerObj.TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0;
+
                 data.Add(containerObj);
             });
 

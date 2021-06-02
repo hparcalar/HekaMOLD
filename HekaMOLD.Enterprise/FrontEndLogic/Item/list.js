@@ -47,6 +47,9 @@
                 { dataField: 'ItemTypeStr', caption: 'Stok Türü' },
                 { dataField: 'CategoryName', caption: 'Kategori' },
                 { dataField: 'GroupName', caption: 'Grup' },
+                { dataField: 'TotalInQuantity', caption: 'Giriş', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'TotalOutQuantity', caption: 'Çıkış', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'TotalOverallQuantity', caption: 'Toplam', format: { type: "fixedPoint", precision: 2 } },
                 {
                     type: "buttons",
                     buttons: [

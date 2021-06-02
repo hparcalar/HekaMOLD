@@ -20,6 +20,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public ItemWarehouseModel[] Warehouses { get; set; }
         public ItemUnitModel[] Units { get; set; }
         public ItemLiveStatusModel[] LiveStatus { get; set; }
+        public decimal? TotalInQuantity { get; set; }
+        public decimal? TotalOutQuantity { get; set; }
+        public decimal? TotalOverallQuantity { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemTypeStr { get; set; }

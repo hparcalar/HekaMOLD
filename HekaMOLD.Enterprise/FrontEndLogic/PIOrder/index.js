@@ -417,7 +417,7 @@
         return prms;
     }
 
-    // INFORMATIONS
+    // INFORMATIONS & ATTACHMENTS
     $scope.showRecordInformation = function () {
         $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType:'ItemOrder' });
     }
@@ -426,6 +426,22 @@
         $scope.$broadcast('loadRelatedRequestList', $scope.modelObject.Id);
 
         $('#dial-related-requests').dialog({
+            width: 500,
+            //height: window.innerHeight * 0.6,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.showAttachmentList = function () {
+        $scope.$broadcast('showAttachmentList',
+            { RecordId: $scope.modelObject.Id, RecordType: 1 });
+
+        $('#dial-attachments').dialog({
             width: 500,
             //height: window.innerHeight * 0.6,
             hide: true,

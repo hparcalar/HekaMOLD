@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Helpers;
 
 namespace HekaMOLD.Enterprise.Controllers.Filters
@@ -16,6 +17,10 @@ namespace HekaMOLD.Enterprise.Controllers.Filters
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            if (filterContext.ActionDescriptor
+                .GetCustomAttributes(typeof(FreeAction), false).Length > 0)
+                return;
+
             if (string.Equals(filterContext.ActionDescriptor.ActionName, "Login") &&
                 string.Equals(filterContext.RouteData.Values["controller"].ToString(), "Home"))
             {
@@ -24,7 +29,8 @@ namespace HekaMOLD.Enterprise.Controllers.Filters
                     string properCtrl = "Home";
                     var userId = filterContext.HttpContext.Request.Cookies["UserId"].Value;
                     if (HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileProductionUser")
-                        || HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileMechanicUser"))
+                        || HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileMechanicUser")
+                        || HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileWarehouseUser"))
                         properCtrl = "Mobile";
 
                     filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(
@@ -39,6 +45,17 @@ namespace HekaMOLD.Enterprise.Controllers.Filters
                 {
                     filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(
                         new { controller = "Home", action = "Login" }));
+                }
+                else
+                {
+                    var userId = filterContext.HttpContext.Request.Cookies["UserId"].Value;
+                    if (HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileProductionUser")
+                        || HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileMechanicUser")
+                        || HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileWarehouseUser"))
+                    {
+                        filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(
+                        new { controller = "Mobile", action = "Index" }));
+                    }
                 }
             }
         }
