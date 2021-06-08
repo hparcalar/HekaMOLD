@@ -181,7 +181,7 @@
                                         </a>
                                     </div>
                                     <div class="menu-item">
-                                        <a class="menu-link @(Regex.IsMatch(ctrl, "ItemReceipt$") ? "active" : "")" 
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "ItemReceipt$") ? "active" : "")"
                                            href="@Url.Action("List","ItemReceipt", new { @receiptCategory=3 })">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -651,11 +651,10 @@
                                     <!--end::Menu-->
                                     <!--</div>-->
                                     <!--end::Chat-->
-
                                     <!--begin::Notifications-->
                                     <div class="d-flex align-items-center ms-1 ms-lg-3" ng-controller="notificationCtrl">
                                         <!--begin::Menu-->
-                                        <div class="btn btn-icon btn-active-light-primary position-relative w-30px h-30px w-md-40px h-md-40px" 
+                                        <div class="btn btn-icon btn-active-light-primary position-relative w-30px h-30px w-md-40px h-md-40px"
                                              ng-class="{'btn-light-primary':unSeenNotificationExists() == true}"
                                              data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
                                             <!--begin::Svg Icon | path: icons/stockholm/Code/Compiling.svg-->
@@ -723,7 +722,6 @@
                                                                             </svg>
                                                                         </span>
                                                                         <!--end::Svg Icon-->
-
                                                                         <!--begin::Svg Icon | path: icons/stockholm/Clothes/Crown.svg-->
                                                                         <span class="svg-icon svg-icon-2 svg-icon-primary" ng-show="item.NotifyType == 3 || item.NotifyType == 4">
                                                                             <svg ng-show="item.NotifyType == 3" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -759,7 +757,7 @@
                                                             <!--end::Label-->
                                                         </div>
                                                         <!--end::Item-->
-                                                        
+
                                                     </div>
                                                     <!--end::Items-->
                                                     <!--begin::View more-->
@@ -4280,17 +4278,22 @@
     <script src="~/assets/js/scripts.bundle.js"></script>
     <script src="~/Scripts/toastr.min.js"></script>
     <script src="~/Scripts/bootbox.all.min.js"></script>
-    <script src="~/Scripts/jquery-ui.min.js"></script>
+
     <!--end::Global Javascript Bundle-->
     <!--begin::Page Custom Javascript(used by this page)-->
     <script src="~/assets/js/custom/widgets.js"></script>
     <script src="~/assets/js/custom/apps/chat/chat.js"></script>
     <script src="~/assets/js/custom/modals/create-app.js"></script>
     <script src="~/assets/js/custom/modals/upgrade-plan.js"></script>
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+
     <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/ng-file-upload-shim.min.js"></script>
+    <script src="~/Scripts/ng-file-upload.min.js"></script>
 
     <script type="text/javascript">
-        var app = angular.module('moldApp', []);
+        var app = angular.module('moldApp', ['ngFileUpload']);
 
         $(function () {
             $('.datepicker').datepicker({ dateFormat: 'dd.mm.yy' });

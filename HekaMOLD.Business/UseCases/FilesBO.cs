@@ -61,6 +61,50 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        public BusinessResult AddAttachment(int recordId, RecordType recordType, AttachmentModel attachment)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Attachment>();
+               
+                var dbAttachment = new Attachment
+                {
+                    RecordId = recordId,
+                    RecordType = (int)recordType,
+                    CreatedDate = DateTime.Now
+                };
+                repo.Add(dbAttachment);
+
+                attachment.RecordId = recordId;
+                attachment.RecordType = (int)recordType;
+
+                var bContent = dbAttachment.BinaryContent;
+                var crDate = dbAttachment.CreatedDate;
+                var crUser = dbAttachment.CreatedUserId;
+
+                attachment.MapTo(dbAttachment);
+
+                if (dbAttachment.BinaryContent == null)
+                    dbAttachment.BinaryContent = bContent;
+                if (dbAttachment.CreatedDate == null)
+                    dbAttachment.CreatedDate = crDate;
+                if (dbAttachment.CreatedUserId == null)
+                    dbAttachment.CreatedUserId = crUser;
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+                result.RecordId = dbAttachment.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public BusinessResult SaveAttachments(int recordId, RecordType recordType, AttachmentModel[] attachments)
         {
             BusinessResult result = new BusinessResult();

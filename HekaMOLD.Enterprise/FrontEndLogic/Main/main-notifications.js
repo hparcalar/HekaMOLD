@@ -1,5 +1,4 @@
-﻿var app = angular.module('moldApp', []);
-app.controller('notificationCtrl', function ($scope, $http, $interval) {
+﻿app.controller('notificationCtrl', function ($scope, $http, $interval) {
     $scope.notificationList = [];
     $scope.unSeenNotificationExists = function () {
         if (typeof $scope.notificationList != 'undefined'

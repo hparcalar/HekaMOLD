@@ -4223,7 +4223,6 @@
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
-    <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.de.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.en.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.ja.js" />
@@ -4252,12 +4251,13 @@
     <Content Include="Scripts\globalize\relative-time.js" />
     <Content Include="Scripts\globalize\unit.js" />
     <Content Include="Scripts\html5-qrcode.min.js" />
-    <Content Include="Scripts\jquery-3.5.1.js" />
-    <Content Include="Scripts\jquery-3.5.1.min.js" />
-    <Content Include="Scripts\jquery-3.5.1.slim.js" />
-    <Content Include="Scripts\jquery-3.5.1.slim.min.js" />
-    <Content Include="Scripts\jquery-3.5.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.5.1.min.map" />
+    <None Include="Scripts\jquery-3.6.0.intellisense.js" />
+    <Content Include="Scripts\jquery-3.6.0.js" />
+    <Content Include="Scripts\jquery-3.6.0.min.js" />
+    <Content Include="Scripts\jquery-3.6.0.slim.js" />
+    <Content Include="Scripts\jquery-3.6.0.slim.min.js" />
+    <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
+    <Content Include="Scripts\jquery-3.6.0.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\cldr.js" />
     <Content Include="Scripts\cldr\event.js" />

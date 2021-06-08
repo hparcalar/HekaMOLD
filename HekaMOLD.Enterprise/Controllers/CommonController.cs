@@ -8,6 +8,7 @@ using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -131,6 +132,44 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return File(data.BinaryContent, data.ContentType);
+        }
+
+        [HttpPost]
+        public JsonResult AddAttachment(int recordId, int recordType, string description,
+            HttpPostedFileBase file)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (file == null || file.ContentLength == 0)
+                    throw new Exception("Yüklemek için bir dosya seçiniz.");
+
+                var byteReader = new MemoryStream();
+                file.InputStream.CopyTo(byteReader);
+
+                AttachmentModel attachmentData = new AttachmentModel
+                {
+                    BinaryContent = byteReader.ToArray(),
+                    ContentType = file.ContentType,
+                    Description = description,
+                    CreatedDate = DateTime.Now,
+                    CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value),
+                    FileName = file.FileName
+                };
+
+                using (FilesBO bObj = new FilesBO())
+                {
+                    result = bObj.AddAttachment(recordId, (RecordType)recordType, attachmentData);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
         }
 
         [HttpPost]
