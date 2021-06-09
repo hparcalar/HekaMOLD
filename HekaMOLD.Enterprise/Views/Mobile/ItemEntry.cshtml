@@ -19,7 +19,7 @@
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Belge No</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" 
+                        <input type="text" class="form-control form-control-solid"
                                ng-model="modelObject.DocumentNo" placeholder="" />
                     </div>
                 </div>
@@ -41,17 +41,12 @@
             </div>
         </div>
         <!--end::Container-->
+
+
     </div>
     <!--end::Post-->
 </div>
 
 @section scripts{
-    <script src="~/Scripts/html5-qrcode.min.js"></script>
-    <script type="text/javascript">
-        app.controller('itemEntryCtrl', function ($scope, $http) {
-            $scope.redirect = function (targetLoc) {
-                window.location.href = HOST_URL + 'Mobile/' + targetLoc;
-            }
-        });
-    </script>
+    <script src="~/FrontEndLogic/Mobile/item-entry.js"></script>
 }

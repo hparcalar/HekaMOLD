@@ -1,9 +1,9 @@
-﻿<div ng-controller="attachmentsCtrl" class="bg-light py-4 px-2">
+﻿<div ng-controller="attachmentsCtrl" class="bg-secondary py-4 px-2" style="border-radius:5px;">
     <!--begin::Form-->
     <div class="d-flex flex-row align-items-center">
         <div class="button text-dark w-200px mx-2" ngf-select ng-model="selectedFile" name="file"
              ngf-max-size="20MB">{{selectedFile != null ? selectedFile.name : 'Dosya Seçiniz'}}</div>
-        <input type="text" class="form-control form-control-sm form-control-solid"
+        <input type="text" class="form-control form-control-sm"
                ng-model="selectedDescription" placeholder="Açıklama" />
         <button type="button" class="btn btn-sm btn-primary mx-2"
                 ng-click="uploadAttachment()">
@@ -14,7 +14,7 @@
 
     <div class="separator my-2"></div>
 
-    <div class="d-flex align-items-center mb-4 px-4 py-4" ng-repeat="item in attachmentList">
+    <div class="d-flex align-items-center mb-4 px-4 py-4 bg-light" ng-repeat="item in attachmentList">
         <!--begin::Bullet-->
         <span class="bullet bullet-vertical h-40px bg-success"></span>
         <!--end::Bullet-->

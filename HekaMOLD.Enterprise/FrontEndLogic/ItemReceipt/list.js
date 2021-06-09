@@ -45,6 +45,7 @@
             },
             columns: [
                 { dataField: 'ReceiptNo', caption: 'İrsaliye No' },
+                { dataField: 'ReceiptTypeStr', caption: 'Hareket Türü' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
                 { dataField: 'ReceiptDateStr', caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'FirmCode', caption: 'Firma Kodu' },

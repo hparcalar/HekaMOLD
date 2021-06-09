@@ -201,6 +201,11 @@
                     else
                         $scope.selectedWarehouse = $scope.warehouseList[0];
 
+                    if (typeof $scope.modelObject.ReceiptType != 'undefined' && $scope.modelObject.ReceiptType != null)
+                        $scope.selectedReceiptType = $scope.receiptTypeList.find(d => d.Id == $scope.modelObject.ReceiptType);
+                    else
+                        $scope.selectedReceiptType = $scope.receiptTypeList[0];
+
                     refreshArray($scope.firmList);
                     refreshArray($scope.warehouseList);
 

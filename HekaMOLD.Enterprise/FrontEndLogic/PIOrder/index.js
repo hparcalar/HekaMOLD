@@ -443,6 +443,7 @@
 
         $('#dial-attachments').dialog({
             width: 500,
+            height: 400,
             //height: window.innerHeight * 0.6,
             hide: true,
             modal: true,

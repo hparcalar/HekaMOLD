@@ -3892,6 +3892,7 @@
     <Content Include="assets\plugins\global\fonts\socicon\socicon.svg" />
     <Content Include="assets\plugins\global\plugins.bundle.css" />
     <Content Include="assets\plugins\global\plugins.bundle.js" />
+    <Content Include="Components\Controllers\open-po-list.js" />
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
     <Content Include="Components\Controllers\attachment-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
@@ -3978,6 +3979,7 @@
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
+    <Content Include="FrontEndLogic\Mobile\item-entry.js" />
     <Content Include="FrontEndLogic\PIOrder\index.js" />
     <Content Include="FrontEndLogic\PIOrder\list.js" />
     <Content Include="FrontEndLogic\PIRequest\index.js" />
