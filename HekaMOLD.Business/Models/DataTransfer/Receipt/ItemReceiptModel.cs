@@ -28,6 +28,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public int? SyncPointId { get; set; }
         public DateTime? SyncDate { get; set; }
         public int? SyncUserId { get; set; }
+        public decimal? TotalQuantity { get; set; }
         public ItemReceiptDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS

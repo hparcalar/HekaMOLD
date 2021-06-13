@@ -120,7 +120,8 @@ namespace HekaMOLD.Business.UseCases
                         {
                             dbDetail = new ItemOrderDetail
                             {
-                                ItemOrder = dbObj
+                                ItemOrder = dbObj,
+                                OrderStatus = dbObj.OrderStatus
                             };
 
                             repoDetail.Add(dbDetail);
@@ -333,9 +334,14 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj.OrderStatus != (int)OrderStatusType.Created)
                     throw new Exception("Onay bekleyen durumunda olmayan bir sipariş onaylanamaz.");
 
-                dbObj.OrderStatus = (int)RequestStatusType.Approved;
+                dbObj.OrderStatus = (int)OrderStatusType.Approved;
                 dbObj.UpdatedDate = DateTime.Now;
                 dbObj.UpdatedUserId = userId;
+
+                foreach (var item in dbObj.ItemOrderDetail)
+                {
+                    item.OrderStatus = (int)OrderStatusType.Approved;
+                }
 
                 _unitOfWork.SaveChanges();
 
@@ -403,12 +409,58 @@ namespace HekaMOLD.Business.UseCases
                         }
                     }
 
+                    model.FirmName = d.Firm != null ? d.Firm.FirmName : "";
+                    model.FirmCode = d.Firm != null ? d.Firm.FirmCode : "";
                     model.CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate);
                     model.OrderDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.OrderDate);
                     sumData.Add(model);
                 });
 
                 data = sumData.ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ItemOrderDetailModel[] GetApprovedOrderDetails(int plantId)
+        {
+            ItemOrderDetailModel[] data = new ItemOrderDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+                data = repo.Filter(d => d.ItemOrder.PlantId == plantId &&
+                    d.OrderStatus == (int)OrderStatusType.Approved
+                    && d.ItemOrder.OrderStatus == (int)OrderStatusType.Approved)
+                    .ToList()
+                    .Select(d => new ItemOrderDetailModel
+                    {
+                        Id = d.Id,
+                        Quantity = d.Quantity,
+                        FirmId = d.ItemOrder.FirmId,
+                        FirmCode = d.ItemOrder.Firm != null ?
+                            d.ItemOrder.Firm.FirmCode : "",
+                        FirmName = d.ItemOrder.Firm != null ?
+                            d.ItemOrder.Firm.FirmName : "",
+                        OrderDate = d.ItemOrder.OrderDate,
+                        OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
+                        CreatedDate = d.ItemOrder.CreatedDate,
+                        Explanation = d.Explanation,
+                        OrderExplanation = d.ItemOrder.Explanation,
+                        ItemNo = d.Item.ItemNo,
+                        ItemName = d.Item.ItemName,
+                        ItemId = d.ItemId,
+                        OrderNo = d.ItemOrder.OrderNo,
+                        LineNumber = d.LineNumber,
+                        UnitId = d.UnitId,
+                        UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
+                        UnitName = d.UnitType != null ? d.UnitType.UnitName : ""
+                    }).ToArray();
             }
             catch (Exception)
             {

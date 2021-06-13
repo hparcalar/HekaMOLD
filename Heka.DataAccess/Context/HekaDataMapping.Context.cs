@@ -55,5 +55,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ItemSerial> ItemSerial { get; set; }
         public virtual DbSet<FirmAuthor> FirmAuthor { get; set; }
         public virtual DbSet<Attachment> Attachment { get; set; }
+        public virtual DbSet<ProductRecipe> ProductRecipe { get; set; }
+        public virtual DbSet<ProductRecipeDetail> ProductRecipeDetail { get; set; }
     }
 }

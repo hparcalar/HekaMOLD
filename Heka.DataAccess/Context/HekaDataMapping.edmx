@@ -383,6 +383,38 @@
           <Property Name="PlantCode" Type="nvarchar" MaxLength="50" />
           <Property Name="PlantName" Type="nvarchar" MaxLength="250" />
         </EntityType>
+        <EntityType Name="ProductRecipe">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductRecipeCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="300" />
+          <Property Name="ProductRecipeType" Type="int" />
+          <Property Name="ProductId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="ProductRecipeDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductRecipeId" Type="int" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="ProcessType" Type="int" />
+          <Property Name="UnitId" Type="int" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="WarehouseId" Type="int" />
+          <Property Name="WastagePercentage" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
         <EntityType Name="SyncPoint">
           <Key>
             <PropertyRef Name="Id" />
@@ -1078,6 +1110,66 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductRecipe_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ProductRecipe" Type="Self.ProductRecipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipe">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipeDetail_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ProductRecipeDetail" Type="Self.ProductRecipeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipeDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipeDetail_ProductRecipe">
+          <End Role="ProductRecipe" Type="Self.ProductRecipe" Multiplicity="0..1" />
+          <End Role="ProductRecipeDetail" Type="Self.ProductRecipeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductRecipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipeDetail">
+              <PropertyRef Name="ProductRecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipeDetail_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ProductRecipeDetail" Type="Self.ProductRecipeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipeDetail">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipeDetail_Warehouse">
+          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="0..1" />
+          <End Role="ProductRecipeDetail" Type="Self.ProductRecipeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipeDetail">
+              <PropertyRef Name="WarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SyncPoint_Plant">
           <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
           <End Role="SyncPoint" Type="Self.SyncPoint" Multiplicity="*" />
@@ -1221,6 +1313,8 @@
           <EntitySet Name="ItemWarehouse" EntityType="Self.ItemWarehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Plant" EntityType="Self.Plant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductRecipe" EntityType="Self.ProductRecipe" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductRecipeDetail" EntityType="Self.ProductRecipeDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TransactionLog" EntityType="Self.TransactionLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UnitType" EntityType="Self.UnitType" Schema="dbo" store:Type="Tables" />
@@ -1425,6 +1519,26 @@
             <End Role="User" EntitySet="User" />
             <End Role="Notification" EntitySet="Notification" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipe_Item" Association="Self.FK_ProductRecipe_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ProductRecipe" EntitySet="ProductRecipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipeDetail_Item" Association="Self.FK_ProductRecipeDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipeDetail_ProductRecipe" Association="Self.FK_ProductRecipeDetail_ProductRecipe">
+            <End Role="ProductRecipe" EntitySet="ProductRecipe" />
+            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipeDetail_UnitType" Association="Self.FK_ProductRecipeDetail_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipeDetail_Warehouse" Association="Self.FK_ProductRecipeDetail_Warehouse">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
+          </AssociationSet>
           <AssociationSet Name="FK_SyncPoint_Plant" Association="Self.FK_SyncPoint_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="SyncPoint" EntitySet="SyncPoint" />
@@ -1542,6 +1656,8 @@
           <NavigationProperty Name="Firm" Relationship="Heka.DataAccess.Models.FK_Item_Firm" FromRole="Item" ToRole="Firm" />
           <NavigationProperty Name="ItemLiveStatus" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" FromRole="Item" ToRole="ItemLiveStatus" />
           <NavigationProperty Name="ItemSerial" Relationship="Heka.DataAccess.Models.FK_ItemSerial_Item" FromRole="Item" ToRole="ItemSerial" />
+          <NavigationProperty Name="ProductRecipe" Relationship="Heka.DataAccess.Models.FK_ProductRecipe_Item" FromRole="Item" ToRole="ProductRecipe" />
+          <NavigationProperty Name="ProductRecipeDetail" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" FromRole="Item" ToRole="ProductRecipeDetail" />
         </EntityType>
         <EntityType Name="ItemCategory">
           <Key>
@@ -1861,6 +1977,7 @@
           <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemRequestDetail_UnitType" FromRole="UnitType" ToRole="ItemRequestDetail" />
           <NavigationProperty Name="ItemUnit" Relationship="Self.FK_ItemUnit_UnitType" FromRole="UnitType" ToRole="ItemUnit" />
           <NavigationProperty Name="Plant" Relationship="Self.FK_UnitType_Plant" FromRole="UnitType" ToRole="Plant" />
+          <NavigationProperty Name="ProductRecipeDetail" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_UnitType" FromRole="UnitType" ToRole="ProductRecipeDetail" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -1942,6 +2059,7 @@
           <NavigationProperty Name="Plant" Relationship="Self.FK_Warehouse_Plant" FromRole="Warehouse" ToRole="Plant" />
           <NavigationProperty Name="ItemWarehouse" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse" FromRole="Warehouse" ToRole="ItemWarehouse" />
           <NavigationProperty Name="ItemLiveStatus" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Warehouse" FromRole="Warehouse" ToRole="ItemLiveStatus" />
+          <NavigationProperty Name="ProductRecipeDetail" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_Warehouse" FromRole="Warehouse" ToRole="ProductRecipeDetail" />
         </EntityType>
         <Association Name="FK_Firm_Plant">
           <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
@@ -2762,6 +2880,28 @@
             <End Role="FirmAuthor" EntitySet="FirmAuthor" />
           </AssociationSet>
           <EntitySet Name="Attachment" EntityType="Heka.DataAccess.Models.Attachment" />
+          <EntitySet Name="ProductRecipe" EntityType="Heka.DataAccess.Models.ProductRecipe" />
+          <EntitySet Name="ProductRecipeDetail" EntityType="Heka.DataAccess.Models.ProductRecipeDetail" />
+          <AssociationSet Name="FK_ProductRecipe_Item" Association="Heka.DataAccess.Models.FK_ProductRecipe_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ProductRecipe" EntitySet="ProductRecipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipeDetail_Item" Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipeDetail_ProductRecipe" Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe">
+            <End Role="ProductRecipe" EntitySet="ProductRecipe" />
+            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipeDetail_UnitType" Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipeDetail_Warehouse" Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Warehouse">
+            <End Role="Warehouse" EntitySet="Warehouse" />
+            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -3049,6 +3189,104 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
         </EntityType>
+        <EntityType Name="ProductRecipe">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductRecipeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProductRecipeType" Type="Int32" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductRecipe_Item" FromRole="ProductRecipe" ToRole="Item" />
+          <NavigationProperty Name="ProductRecipeDetail" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe" FromRole="ProductRecipe" ToRole="ProductRecipeDetail" />
+          <Property Name="Description" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ProductRecipeDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductRecipeId" Type="Int32" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="ProcessType" Type="Int32" />
+          <Property Name="UnitId" Type="Int32" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="WarehouseId" Type="Int32" />
+          <Property Name="WastagePercentage" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" FromRole="ProductRecipeDetail" ToRole="Item" />
+          <NavigationProperty Name="ProductRecipe" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe" FromRole="ProductRecipeDetail" ToRole="ProductRecipe" />
+          <NavigationProperty Name="UnitType" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_UnitType" FromRole="ProductRecipeDetail" ToRole="UnitType" />
+          <NavigationProperty Name="Warehouse" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_Warehouse" FromRole="ProductRecipeDetail" ToRole="Warehouse" />
+        </EntityType>
+        <Association Name="FK_ProductRecipe_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductRecipe" Role="ProductRecipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipe">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipeDetail_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductRecipeDetail" Role="ProductRecipeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipeDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipeDetail_ProductRecipe">
+          <End Type="Heka.DataAccess.Models.ProductRecipe" Role="ProductRecipe" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductRecipeDetail" Role="ProductRecipeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductRecipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipeDetail">
+              <PropertyRef Name="ProductRecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipeDetail_UnitType">
+          <End Type="Heka.DataAccess.Models.UnitType" Role="UnitType" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductRecipeDetail" Role="ProductRecipeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipeDetail">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipeDetail_Warehouse">
+          <End Type="Heka.DataAccess.Models.Warehouse" Role="Warehouse" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductRecipeDetail" Role="ProductRecipeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Warehouse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipeDetail">
+              <PropertyRef Name="WarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3566,6 +3804,40 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="RecordType" ColumnName="RecordType" />
                 <ScalarProperty Name="RecordId" ColumnName="RecordId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductRecipe">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ProductRecipe">
+              <MappingFragment StoreEntitySet="ProductRecipe">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductRecipeType" ColumnName="ProductRecipeType" />
+                <ScalarProperty Name="ProductRecipeCode" ColumnName="ProductRecipeCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductRecipeDetail">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ProductRecipeDetail">
+              <MappingFragment StoreEntitySet="ProductRecipeDetail">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="WastagePercentage" ColumnName="WastagePercentage" />
+                <ScalarProperty Name="WarehouseId" ColumnName="WarehouseId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="ProcessType" ColumnName="ProcessType" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="ProductRecipeId" ColumnName="ProductRecipeId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

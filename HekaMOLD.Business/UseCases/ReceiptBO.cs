@@ -49,6 +49,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 ItemReceiptModel containerObj = new ItemReceiptModel();
                 d.MapTo(containerObj);
+                containerObj.TotalQuantity = d.ItemReceiptDetail.Sum(m => m.Quantity);
                 containerObj.ReceiptStatusStr = ((ReceiptStatusType)d.ReceiptStatus.Value).ToCaption();
                 containerObj.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate);
                 containerObj.ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ReceiptDate);
@@ -81,6 +82,7 @@ namespace HekaMOLD.Business.UseCases
                 {
                     dbObj = new ItemReceipt();
                     dbObj.ReceiptNo = GetNextReceiptNo(model.PlantId.Value, (ItemReceiptType)model.ReceiptType.Value);
+                    model.ReceiptNo = dbObj.ReceiptNo;
                     dbObj.CreatedDate = DateTime.Now;
                     dbObj.CreatedUserId = model.CreatedUserId;
                     dbObj.ReceiptStatus = (int)ReceiptStatusType.Created;
@@ -167,6 +169,16 @@ namespace HekaMOLD.Business.UseCases
                             dbDetail.ItemReceiptId = dbObj.Id;
 
                         dbDetail.LineNumber = lineNo;
+
+                        #region CALCULATE IF THERE IS NO NET QUANTITY
+                        if (dbDetail.NetQuantity == null)
+                        {
+                            ItemReceiptDetailModel detailModel = new ItemReceiptDetailModel();
+                            dbDetail.MapTo(detailModel);
+                            this.CalculateReceiptDetail(detailModel);
+                            dbDetail.NetQuantity = detailModel.NetQuantity;
+                        }
+                        #endregion
 
                         #region SET ORDER & DETAIL STATUS TO COMPLETE
                         if (dbDetail.ItemOrderDetailId > 0)

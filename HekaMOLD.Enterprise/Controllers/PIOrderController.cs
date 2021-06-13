@@ -3,6 +3,7 @@ using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Request;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -158,6 +159,22 @@ namespace HekaMOLD.Enterprise.Controllers
             using (RequestBO bObj = new RequestBO())
             {
                 result = bObj.GetApprovedDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetApprovedOrderDetails()
+        {
+            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                result = bObj.GetApprovedOrderDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

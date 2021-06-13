@@ -136,6 +136,7 @@
     <Compile Include="Controllers\Filters\UserAuthFilter.cs" />
     <Compile Include="Controllers\FirmController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProductRecipeController.cs" />
     <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\ItemGroupController.cs" />
@@ -3895,8 +3896,11 @@
     <Content Include="Components\Controllers\open-po-list.js" />
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
     <Content Include="Components\Controllers\attachment-list.js" />
+    <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
+    <Content Include="Components\Views\OpenPoList.html" />
     <Content Include="Components\Views\AttachmentList.html" />
+    <Content Include="Components\Views\RelatedOrderList.html" />
     <Content Include="Components\Views\RelatedRequestList.html" />
     <Content Include="Components\Views\ApprovedItemRequestDetails.html" />
     <Content Include="Components\VisualMechanics\camera-manager.js" />
@@ -3979,11 +3983,14 @@
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
+    <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry.js" />
     <Content Include="FrontEndLogic\PIOrder\index.js" />
     <Content Include="FrontEndLogic\PIOrder\list.js" />
     <Content Include="FrontEndLogic\PIRequest\index.js" />
     <Content Include="FrontEndLogic\PIRequest\list.js" />
+    <Content Include="FrontEndLogic\ProductRecipe\index.js" />
+    <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\UnitType\index.js" />
     <Content Include="FrontEndLogic\UnitType\list.js" />
     <Content Include="FrontEndLogic\UserRole\index.js" />
@@ -4337,6 +4344,9 @@
     <Content Include="Views\Mobile\Mechanic.cshtml" />
     <Content Include="Views\Mobile\Warehouse.cshtml" />
     <Content Include="Views\Mobile\ItemEntry.cshtml" />
+    <Content Include="Views\Mobile\ItemEntryList.cshtml" />
+    <Content Include="Views\ProductRecipe\List.cshtml" />
+    <Content Include="Views\ProductRecipe\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

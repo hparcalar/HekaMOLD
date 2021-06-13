@@ -339,6 +339,15 @@
                 e.data.UnitPrice = 0;
                 e.data.TaxIncluded = 0;
             },
+            repaintChangesOnly: true,
+            onCellPrepared: function (e) {
+                if (e.rowType === "data") {
+                    if (e.data.OrderStatus == 3) {
+                        e.cellElement.css("background-color", "#E8FFF3");
+                        //e.cellElement.css("color", "white");
+                    }
+                }
+            },
             columns: [
                 {
                     dataField: 'ItemId', caption: 'Stok Kodu',

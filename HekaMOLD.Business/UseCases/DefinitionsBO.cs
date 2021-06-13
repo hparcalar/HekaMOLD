@@ -208,6 +208,33 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
+        public ItemModel[] GetProductList()
+        {
+            List<ItemModel> data = new List<ItemModel>();
+
+            var repo = _unitOfWork.GetRepository<Item>();
+
+            repo.Filter(d => d.ItemType == (int)ItemType.Product 
+                || d.ItemType == (int)ItemType.SemiProduct).ToList().ForEach(d =>
+            {
+                ItemModel containerObj = new ItemModel();
+                d.MapTo(containerObj);
+
+                containerObj.ItemTypeStr =
+                    d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
+                    d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "";
+                containerObj.CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "";
+                containerObj.GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "";
+                containerObj.TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0;
+                containerObj.TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0;
+                containerObj.TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0;
+
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
         public BusinessResult SaveOrUpdateItem(ItemModel model)
         {
             BusinessResult result = new BusinessResult();

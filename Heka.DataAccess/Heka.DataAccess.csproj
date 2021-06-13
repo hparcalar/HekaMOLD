@@ -134,6 +134,12 @@
     <Compile Include="Context\Plant.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\ProductRecipe.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\ProductRecipeDetail.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\SyncPoint.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>

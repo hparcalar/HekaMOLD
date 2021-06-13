@@ -1,28 +1,28 @@
 ﻿app.controller('openPoListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
-    $scope.approvedRequestDetailList = [];
+    $scope.orderDetailList = [];
 
-    $scope.loadRequestDetails = function () {
-        $scope.approvedRequestDetailList = [];
+    $scope.loadOpenPoList = function () {
+        $scope.orderDetailList = [];
 
-        $('#requestList').dxDataGrid({
+        $('#openPoList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    if ($scope.approvedRequestDetailList.length == 0)
-                        $scope.approvedRequestDetailList = $.getJSON(HOST_URL + 'PIOrder/GetApprovedRequestDetails', function (data) {
+                    if ($scope.orderDetailList.length == 0)
+                        $scope.orderDetailList = $.getJSON(HOST_URL + 'PIOrder/GetApprovedOrderDetails', function (data) {
                             data.forEach(d => {
                                 d.CreatedDate = moment(parseInt(d.CreatedDate.toString().substr(6, d.CreatedDate.toString().length - 8)));
-                                d.RequestDate = moment(parseInt(d.RequestDate.toString().substr(6, d.RequestDate.toString().length - 8)));
+                                d.OrderDate = moment(parseInt(d.OrderDate.toString().substr(6, d.OrderDate.toString().length - 8)));
                                 d.IsChecked = false;
                             }
                             );
                         });
 
-                    return $scope.approvedRequestDetailList;
+                    return $scope.orderDetailList;
                 },
                 update: function (key, values) {
-                    var obj = $scope.approvedRequestDetailList.responseJSON.find(d => d.Id == key);
+                    var obj = $scope.orderDetailList.responseJSON.find(d => d.Id == key);
                     if (obj != null) {
                         obj.IsChecked = values.IsChecked;
                     }
@@ -54,32 +54,36 @@
                 mode: 'cell'
             },
             columns: [
-                { dataField: 'RequestNo', caption: 'Talep No', allowEditing: false },
-                { dataField: 'CreatedDate', caption: 'Talep Tarihi', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
-                { dataField: 'RequestDate', caption: 'İhtiyaç Tarihi', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
-                { dataField: 'CreatedUserStr', caption: 'Talep Eden', allowEditing: false },
-                { dataField: 'ItemNo', caption: 'Stok No', allowEditing: false },
+                { dataField: 'OrderNo', caption: 'Sipariş No', allowEditing: false },
+                { dataField: 'OrderDate', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
+                { dataField: 'FirmName', caption: 'Firma', allowEditing: false },
                 { dataField: 'ItemName', caption: 'Stok Adı', allowEditing: false },
                 { dataField: 'UnitCode', caption: 'Birim', allowEditing: false },
                 { dataField: 'Quantity', caption: 'Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'RequestExplanation', caption: 'Açıklama', allowEditing: false },
                 { dataField: 'IsChecked', caption: 'Seç' }
             ]
         });
     }
 
     $scope.transferSelections = function () {
-        if ($scope.approvedRequestDetailList.responseJSON.filter(d => d.IsChecked == true).length == 0) {
+        if ($scope.orderDetailList.responseJSON.filter(d => d.IsChecked == true).length == 0) {
             toastr.warning('Aktarmak için bir veya daha fazla talep seçmelisiniz.','Uyarı');
             return;
         }
 
-        var selectedDetails = $scope.approvedRequestDetailList.responseJSON.filter(d => d.IsChecked == true);
-        $scope.$emit('transferRequestDetails', selectedDetails);
+        var selectedData = $scope.orderDetailList.responseJSON.filter(d => d.IsChecked == true);
+
+        if (groupArrayOfObjects(selectedData, 'FirmId').length > 1) {
+            toastr.warning('Yalnızca tek bir firmanın siparişlerini seçmelisiniz.','Uyarı');
+            return;
+        }
+
+        var selectedDetails = selectedData;
+        $scope.$emit('transferOrderDetails', selectedDetails);
     }
 
     // ON LOAD EVENTS
-    $scope.$on('loadApprovedRequestDetails', function (e, d) {
-        $scope.loadRequestDetails();
+    $scope.$on('loadOpenPoList', function (e, d) {
+        $scope.loadOpenPoList();
     });
 });

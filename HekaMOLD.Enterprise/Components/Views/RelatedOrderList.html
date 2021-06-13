@@ -1,0 +1,16 @@
+﻿<div ng-controller="relatedOrderListCtrl" class="bg-light">
+    <div class="d-flex align-items-center mb-4 px-4 py-4" ng-repeat="item in relatedOrderList">
+        <!--begin::Bullet-->
+        <span class="bullet bullet-vertical h-40px bg-success"></span>
+        <!--end::Bullet-->
+
+        <!--begin::Description-->
+        <div class="flex-grow-1 px-3">
+            <a href="javascript:;" ng-click="goToOrder(item.Id)" class="text-gray-800 text-hover-primary fw-bolder fs-6">Sipariş No: {{item.OrderNo}}</a>
+            <span class="text-muted fw-bold d-block">{{item.CreatedDateStr}}</span>
+        </div>
+        <!--end::Description-->
+
+        <span class="badge badge-light-primary fs-8 fw-bolder">{{item.FirmName}}</span>
+    </div>
+</div>

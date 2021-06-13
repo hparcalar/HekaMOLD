@@ -492,10 +492,10 @@
         $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType:'ItemReceipt' });
     }
 
-    $scope.showRequestInformation = function () {
-        $scope.$broadcast('loadRelatedRequestList', $scope.modelObject.Id);
+    $scope.showOrderInformation = function () {
+        $scope.$broadcast('loadRelatedOrderList', $scope.modelObject.Id);
 
-        $('#dial-related-requests').dialog({
+        $('#dial-related-orders').dialog({
             width: 500,
             //height: window.innerHeight * 0.6,
             hide: true,
@@ -508,47 +508,11 @@
     }
 
     // APPROVALS
-    $scope.approveOrderPrice = function () {
-        bootbox.confirm({
-            message: "Bu siparişin fiyatını onaylamak istediğinizden emin misiniz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'PIOrder/ApproveOrderPrice', { rid: $scope.modelObject.Id }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
-
-                                if (resp.data.Result) {
-                                    toastr.success('Onay işlemi başarılı.', 'Bilgilendirme');
-
-                                    $scope.bindModel($scope.modelObject.Id);
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
-        });
-    }
-
-    $scope.showItemRequestList = function () {
+    $scope.showItemOrderList = function () {
         // DO BROADCAST
-        $scope.$broadcast('loadApprovedRequestDetails');
+        $scope.$broadcast('loadOpenPoList');
 
-        $('#dial-requests').dialog({
+        $('#dial-orderlist').dialog({
             width: window.innerWidth * 0.6,
             height: window.innerHeight * 0.6,
             hide: true,
@@ -560,11 +524,11 @@
         });
     }
 
-    $scope.$on('transferRequestDetails', function (e, d) {
+    $scope.$on('transferOrderDetails', function (e, d) {
         d.forEach(x => {
-            if ($scope.modelObject.Details.filter(m => m.ItemRequestDetailId == x.Id).length > 0) {
-                toastr.warning(x.RequestNo + ' nolu talep, ' + x.ItemNo + ' / ' + x.ItemName + ', ' + x.Quantity
-                    + ' miktarlı talep detayı zaten aktarıldığı için tekrar dahil edilmedi.', 'Uyarı');
+            if ($scope.modelObject.Details.filter(m => m.ItemOrderDetailId == x.Id).length > 0) {
+                toastr.warning(x.OrderNo + ' nolu sipariş, ' + x.ItemNo + ' / ' + x.ItemName + ', ' + x.Quantity
+                    + ' miktarlı sipariş detayı zaten aktarıldığı için tekrar dahil edilmedi.', 'Uyarı');
             }
             else {
                 var newId = 1;
@@ -581,9 +545,11 @@
                     UnitId: x.UnitId,
                     UnitName: x.UnitCode,
                     Quantity: x.Quantity,
+                    TaxIncluded: false,
+                    TaxRate:0,
                     UnitPrice: 0,
                     NewDetail: true,
-                    ItemRequestDetailId: x.Id
+                    ItemOrderDetailId: x.Id
                 });
 
                 var detailsGrid = $("#dataList").dxDataGrid("instance");
@@ -591,7 +557,7 @@
             }
         });
 
-        $('#dial-requests').dialog('close');
+        $('#dial-orderlist').dialog('close');
     });
 
     // ON LOAD EVENTS

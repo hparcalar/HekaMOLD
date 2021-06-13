@@ -1,24 +1,81 @@
-﻿app.controller('requestCtrl', function ($scope, $http) {
-    $scope.modelObject = { DateOfNeed: moment().format('DD.MM.YYYY'), Details:[] };
+﻿app.controller('productRecipeCtrl', function ($scope, $http) {
+    $scope.modelObject = { Id:0, CreatedDate: moment().format('DD.MM.YYYY'), Details:[] };
+
     $scope.itemList = [];
     $scope.unitList = [];
+    $scope.warehouseList = [];
 
-    $scope.requestCategoryList = [];
-    $scope.selectedCategory = {};
+    $scope.productList = [];
+    $scope.selectedProduct = {};
 
     $scope.saveStatus = 0;
 
-    // RECEIPT FUNCTIONS
-    $scope.getNextReceiptNo = function () {
+    // VISUAL EVENTS
+    $scope.lastProductId = 0;
+    $scope.onProductChanged = function (e) {
+        try {
+            if ($scope.lastProductId != $scope.selectedProduct.Id) {
+                $http.get(HOST_URL + 'ProductRecipe/FindRecipeByProductId?productId='
+                    + $scope.selectedProduct.Id, {}, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null
+                            && resp.data.Id > 0) {
+                            $scope.modelObject = resp.data;
+                            $scope.modelObject.CreatedDate = $scope.modelObject.CreatedDateStr;
+
+                            if (typeof $scope.modelObject.ProductId != 'undefined' && $scope.modelObject.ProductId != null)
+                                $scope.selectedProduct = $scope.productList.find(d => d.Id == $scope.modelObject.ProductId);
+                            else
+                                $scope.selectedProduct = { Id: 0 };
+
+                            $scope.lastProductId = $scope.selectedProduct.Id;
+
+                            refreshArray($scope.productList);
+
+                            $scope.bindDetails();
+                        }
+                    }).catch(function (err) { });
+            }
+        } catch (e) {
+
+        }
+    }
+
+    $scope.onIsActiveChanged = function (e) {
+        if ($scope.modelObject.IsActive != true) {
+            bootbox.confirm({
+                message: "Bu reçeteyi pasif duruma getirmek istediğinizden emin misiniz?",
+                closeButton: false,
+                buttons: {
+                    confirm: {
+                        label: 'Evet',
+                        className: 'btn-primary'
+                    },
+                    cancel: {
+                        label: 'Hayır',
+                        className: 'btn-light'
+                    }
+                },
+                callback: function (result) {
+                    if (!result) {
+                        $scope.modelObject.IsActive = true;
+                    }
+                }
+            });
+        }
+    }
+
+    // RECIPE FUNCTIONS
+    $scope.getNextRecipeNo = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'PIRequest/GetNextReceiptNo', {}, 'json')
+            $http.get(HOST_URL + 'ProductRecipe/GetNextRecipeNo', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         if (resp.data.Result) {
-                            resolve(resp.data.ReceiptNo);
+                            resolve(resp.data.RecipeNo);
                         }
                         else {
-                            toastr.error('Sıradaki talep numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            toastr.error('Sıradaki reçete numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
                             resolve('');
                         }
                     }
@@ -30,10 +87,10 @@
 
     // CRUD
     $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0, DateOfNeed: moment().format('DD.MM.YYYY'), Details:[] };
-        $scope.getNextReceiptNo().then(function (rNo) {
-            $scope.modelObject.RequestNo = rNo;
-            $scope.selectedCategory = {};
+        $scope.modelObject = { Id: 0, CreatedDate: moment().format('DD.MM.YYYY'), Details: [] };
+        $scope.getNextRecipeNo().then(function (rNo) {
+            $scope.modelObject.ProductRecipeCode = rNo;
+            $scope.selectedProduct = {};
             $scope.$apply();
         });
         $scope.bindDetails();
@@ -41,7 +98,7 @@
 
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu talebi silmek istediğinizden emin misiniz?",
+            message: "Bu reçeteyi silmek istediğinizden emin misiniz?",
             closeButton:false,
             buttons: {
                 confirm: {
@@ -56,7 +113,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'PIRequest/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'ProductRecipe/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -78,12 +135,12 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        if (typeof $scope.selectedCategory != 'undefined' && $scope.selectedCategory != null)
-            $scope.modelObject.RequestCategoryId = $scope.selectedCategory.Id;
+        if (typeof $scope.selectedProduct != 'undefined' && $scope.selectedProduct != null)
+            $scope.modelObject.ProductId = $scope.selectedProduct.Id;
         else
-            $scope.modelObject.RequestCategoryId = null;
+            $scope.modelObject.ProductId = null;
 
-        $http.post(HOST_URL + 'PIRequest/SaveModel', $scope.modelObject, 'json')
+        $http.post(HOST_URL + 'ProductRecipe/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -139,26 +196,24 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'PIRequest/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'ProductRecipe/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
-                    $scope.modelObject.DateOfNeed = $scope.modelObject.DateOfNeedStr;
+                    $scope.modelObject.CreatedDate = $scope.modelObject.CreatedDateStr;
 
-                    if (typeof $scope.modelObject.RequestCategoryId != 'undefined' && $scope.modelObject.RequestCategoryId != null)
-                        $scope.selectedCategory = $scope.requestCategoryList.find(d => d.Id == $scope.modelObject.RequestCategoryId);
+                    if (typeof $scope.modelObject.ProductId != 'undefined' && $scope.modelObject.ProductId != null)
+                        $scope.selectedProduct = $scope.productList.find(d => d.Id == $scope.modelObject.ProductId);
                     else
-                        $scope.selectedCategory = {};
+                        $scope.selectedProduct = { Id:0 };
+
+                    $scope.lastProductId = $scope.selectedProduct.Id;
+
+                    refreshArray($scope.productList);
 
                     $scope.bindDetails();
                 }
             }).catch(function (err) { });
-    }
-
-    $scope.calculateRow = function (row) {
-        if (typeof row != 'undefined' && row != null) {
-            
-        }
     }
 
     $scope.bindDetails = function () {
@@ -170,28 +225,28 @@
                 update: function (key, values) {
                     var obj = $scope.modelObject.Details.find(d => d.Id == key);
                     if (obj != null) {
-                        let calculateRowAgain = false;
-
                         if (typeof values.ItemId != 'undefined') {
                             var itemObj = $scope.itemList.find(d => d.Id == values.ItemId);
                             obj.ItemId = itemObj.Id;
                             obj.ItemNo = itemObj.ItemNo;
                             obj.ItemName = itemObj.ItemName;
-
-                            calculateRowAgain = true;
                         }
                         if (typeof values.UnitId != 'undefined') {
                             var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                             obj.UnitId = unitObj.Id;
                             obj.UnitName = unitObj.UnitCode;
-                            calculateRowAgain = true;
                         }
 
-                        if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
-                        if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation; }
+                        if (typeof values.WarehouseId != 'undefined') {
+                            var wrObj = $scope.warehouseList.find(d => d.Id == values.WarehouseId);
+                            obj.WarehouseId = wrObj.Id;
+                            obj.WarehouseCode = wrObj.WarehouseCode;
+                            obj.WarehouseName = wrObj.WarehouseName;
+                        }
 
-                        if (calculateRowAgain)
-                            $scope.calculateRow(obj);
+                        if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; }
+                        if (typeof values.ProcessType != 'undefined') { obj.ProcessType = values.ProcessType; }
+                        if (typeof values.WastagePercentage != 'undefined') { obj.WastagePercentage = values.WastagePercentage; }
                     }
                 },
                 remove: function (key) {
@@ -209,6 +264,7 @@
 
                     var itemObj = $scope.itemList.find(d => d.Id == values.ItemId);
                     var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
+                    var wrObj = $scope.warehouseList.find(d => d.Id == values.WarehouseId);
 
                     var newObj = {
                         Id: newId,
@@ -218,12 +274,15 @@
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
                         UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
                         Quantity: values.Quantity,
-                        Explanation: values.Explanation,
+                        ProcessType: values.ProcessType,
+                        WastagePercentage: values.WastagePercentage,
+                        WarehouseId: typeof wrObj != 'undefined' && wrObj != null ? wrObj.Id : null,
+                        WarehouseCode: typeof wrObj != 'undefined' && wrObj != null ? wrObj.WarehouseCode : null,
+                        WarehouseName: typeof wrObj != 'undefined' && wrObj != null ? wrObj.WarehouseName : null,
                         NewDetail: true
                     };
 
                     $scope.modelObject.Details.push(newObj);
-                    $scope.calculateRow(newObj);
                 },
                 key: 'Id'
             },
@@ -281,22 +340,43 @@
                         dataSource: $scope.unitList,
                         valueExpr: "Id",
                         displayExpr: "UnitCode"
-                    }
+                    },
+                    validationRules: [{ type: "required" }]
                 },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'Explanation', caption: 'Açıklama' }
+                {
+                    dataField: 'ProcessType', caption: 'İşlem Türü',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: [{ Id:1, Text:'Sarf Malzeme' }, {Id:2, Text:'Hurda'} ],
+                        valueExpr: "Id",
+                        displayExpr: "Text"
+                    },
+                    validationRules: [{ type: "required" }]
+                },
+                {
+                    dataField: 'WarehouseId', caption: 'Depo',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: $scope.warehouseList,
+                        valueExpr: "Id",
+                        displayExpr: "WarehouseName"
+                    }
+                },
+                { dataField: 'WastagePercentage', caption: 'Fire %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } }
             ]
         });
     }
 
     $scope.loadSelectables = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'PIRequest/GetSelectables', {}, 'json')
+            $http.get(HOST_URL + 'ProductRecipe/GetSelectables', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.itemList = resp.data.Items;
                         $scope.unitList = resp.data.Units;
-                        $scope.requestCategoryList = resp.data.Categories;
+                        $scope.warehouseList = resp.data.Warehouses;
+                        $scope.productList = resp.data.Products;
 
                         resolve();
                     }
@@ -306,107 +386,14 @@
         return prms;
     }
 
-    // APPROVALS
-    $scope.approvePoRequest = function () {
-        bootbox.confirm({
-            message: "Bu talebi onaylamak istediğinizden emin misiniz? Onayınızdan sonra sipariş açılabilecektir.",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'PIRequest/ApprovePoRequest', { rid: $scope.modelObject.Id }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
-
-                                if (resp.data.Result) {
-                                    toastr.success('Onay işlemi başarılı.', 'Bilgilendirme');
-
-                                    $scope.bindModel($scope.modelObject.Id);
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
-        });
-    }
-
-    $scope.createPurchaseOrder = function () {
-        bootbox.confirm({
-            message: "Bu talebi siparişe dönüştürmek istediğinizden emin misiniz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'PIRequest/CreatePurchaseOrder', { rid: $scope.modelObject.Id }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
-
-                                if (resp.data.Result) {
-                                    toastr.success('Siparişe dönüştürme işlemi başarılı.', 'Bilgilendirme');
-
-                                    bootbox.confirm({
-                                        message: "Oluşturulan siparişi görüntülemek istiyor musunuz?",
-                                        closeButton: false,
-                                        buttons: {
-                                            confirm: {
-                                                label: 'Evet',
-                                                className: 'btn-primary'
-                                            },
-                                            cancel: {
-                                                label: 'Hayır',
-                                                className: 'btn-light'
-                                            }
-                                        },
-                                        callback: function (resultOrder) {
-                                            if (resultOrder) {
-                                                window.location.href = HOST_URL + 'PIOrder?rid=' + resp.data.RecordId;
-                                            }
-                                        }
-                                    });
-
-                                    $scope.bindModel($scope.modelObject.Id);
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
-        });
-    }
-
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
     $scope.loadSelectables().then(function () {
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
         else {
-            $scope.getNextReceiptNo().then(function (rNo) {
-                $scope.modelObject.RequestNo = rNo;
+            $scope.getNextRecipeNo().then(function (rNo) {
+                $scope.modelObject.ProductRecipeCode = rNo;
                 $scope.$apply();
 
                 $scope.bindDetails();

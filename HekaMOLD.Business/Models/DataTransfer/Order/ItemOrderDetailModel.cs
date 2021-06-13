@@ -34,6 +34,16 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public DateTime? SyncDate { get; set; }
         public int? ItemRequestDetailId { get; set; }
 
+        #region HEADER DATA
+        public int? FirmId { get; set; }
+        public string FirmCode { get; set; }
+        public string FirmName { get; set; }
+        public string OrderNo { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public string OrderDateStr { get; set; }
+        public string OrderExplanation { get; set; }
+        #endregion
+
         #region VISUAL ELEMENTS
         public string ItemNo { get; set; }
         public string ItemName { get; set; }

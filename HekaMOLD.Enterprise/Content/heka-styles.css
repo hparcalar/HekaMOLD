@@ -10,3 +10,31 @@
 .trow-table-dialog:hover {
     background-color: #888888;
 }
+.table-scroller-md{
+    height:300px;
+    max-height:300px;
+    overflow:auto;
+}
+.table-scroller-lg {
+    height: 500px;
+    max-height: 500px;
+    overflow: auto;
+}
+.w-20{
+    width:20% !important;
+}
+.w-30{
+    width:30% !important;
+}
+.w-50{
+    width:50% !important;
+}
+.w-10{
+    width:10% !important;
+}
+.w-25{
+    width:25% !important;
+}
+.w-15{
+    width:15% !important;
+}

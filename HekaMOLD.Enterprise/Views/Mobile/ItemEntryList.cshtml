@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Girilen İrsaliyeler";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+
+<div>
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="itemEntryListCtrl">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Title-->
+            <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                @ViewBag.Title
+            </h1>
+            <!--end::Title-->
+            <!--begin::LAST 15 RECEIPT TABLE-->
+            <div class="row gy-5 mt-4 gx-xl-8 bg-white">
+                <div class="col-xxl-12 col-sm-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="w-20 px-2">Tarih</th>
+                                <th class="w-20 px-2">Firma</th>
+                                <th class="w-20 px-2">Depo</th>
+                                <th class="w-20 px-2">Toplam Miktar</th>
+                                <th class="w-20">#</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-lg">
+                        <table ng-cloak class="table table-bordered table-striped">
+                            <tbody>
+                                <tr ng-repeat="item in dataList">
+                                    <td class="w-20 px-2">{{item.ReceiptDateStr}}</td>
+                                    <td class="w-20 px-2">{{item.FirmName}}</td>
+                                    <td class="w-20 px-2">{{item.WarehouseName}}</td>
+                                    <td class="w-20 px-2">{{item.TotalQuantity}}</td>
+                                    <td class="w-20 px-2 py-1">
+                                        <button class="btn btn-sm btn-light-primary"
+                                                ng-click="showItemEntry(item.Id)">
+                                            <i class="fas fa-search"></i>
+                                            Göster
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--end::LAST 15 RECEIPT TABLE-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <script src="~/FrontEndLogic/Mobile/item-entry-list.js"></script>
+}

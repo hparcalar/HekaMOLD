@@ -94,6 +94,13 @@
         <EntityTypeShape EntityType="Heka.DataAccess.Models.FirmAuthor" Width="1.5" PointX="5.25" PointY="16.625" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_FirmAuthor_Firm" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.Attachment" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductRecipe" Width="1.5" PointX="7.5" PointY="19.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductRecipeDetail" Width="1.5" PointX="15.75" PointY="40.5" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipe_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_UnitType" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Warehouse" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
