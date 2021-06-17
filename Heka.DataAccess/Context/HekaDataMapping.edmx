@@ -21,6 +21,20 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="Dye">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DyeCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="DyeName" Type="nvarchar" MaxLength="150" />
+          <Property Name="RalCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
         <EntityType Name="Firm">
           <Key>
             <PropertyRef Name="Id" />
@@ -358,6 +372,70 @@
           <Property Name="MaximumQuantity" Type="decimal" Precision="18" Scale="5" />
           <Property Name="MinimumBehaviour" Type="int" />
           <Property Name="MaximumBehaviour" Type="int" />
+        </EntityType>
+        <EntityType Name="Machine">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MachineCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="MachineName" Type="nvarchar" MaxLength="200" />
+          <Property Name="MachineType" Type="int" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="Mold">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MoldCode" Type="nvarchar" MaxLength="100" />
+          <Property Name="MoldName" Type="nvarchar" MaxLength="300" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="MoldTest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MachineId" Type="int" />
+          <Property Name="TestDate" Type="datetime" />
+          <Property Name="ProductDescription" Type="nvarchar" MaxLength="300" />
+          <Property Name="RawMaterialId" Type="int" />
+          <Property Name="RawMaterialName" Type="nvarchar" MaxLength="300" />
+          <Property Name="RawMaterialGr" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="RawMaterialGrText" Type="nvarchar" MaxLength="50" />
+          <Property Name="RawMaterialTolerationGr" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="InflationTimeSeconds" Type="int" />
+          <Property Name="TotalTimeSeconds" Type="int" />
+          <Property Name="DyeId" Type="int" />
+          <Property Name="DyeCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="RalCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="PackageDimension" Type="nvarchar" MaxLength="50" />
+          <Property Name="InPackageQuantity" Type="int" />
+          <Property Name="NutQuantity" Type="int" />
+          <Property Name="NutCaliber" Type="nvarchar" MaxLength="50" />
+          <Property Name="InPalletPackageQuantity" Type="int" />
+          <Property Name="ProductId" Type="int" />
+          <Property Name="ProductCode" Type="nvarchar" MaxLength="100" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="300" />
+          <Property Name="MoldId" Type="int" />
+          <Property Name="MoldCode" Type="nvarchar" MaxLength="100" />
+          <Property Name="MoldName" Type="nvarchar" MaxLength="300" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
         <EntityType Name="Notification">
           <Key>
@@ -1098,6 +1176,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MoldTest_Dye">
+          <End Role="Dye" Type="Self.Dye" Multiplicity="0..1" />
+          <End Role="MoldTest" Type="Self.MoldTest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dye">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MoldTest">
+              <PropertyRef Name="DyeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MoldTest_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
+          <End Role="MoldTest" Type="Self.MoldTest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MoldTest">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MoldTest_Mold">
+          <End Role="Mold" Type="Self.Mold" Multiplicity="0..1" />
+          <End Role="MoldTest" Type="Self.MoldTest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mold">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MoldTest">
+              <PropertyRef Name="MoldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Notification_User">
           <End Role="User" Type="Self.User" Multiplicity="0..1" />
           <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
@@ -1292,6 +1406,7 @@
         </Association>
         <EntityContainer Name="HekaDataAccessModelsStoreContainer">
           <EntitySet Name="Attachment" EntityType="Self.Attachment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dye" EntityType="Self.Dye" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Firm" EntityType="Self.Firm" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmAuthor" EntityType="Self.FirmAuthor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ForexHistory" EntityType="Self.ForexHistory" Schema="dbo" store:Type="Tables" />
@@ -1311,6 +1426,9 @@
           <EntitySet Name="ItemSerial" EntityType="Self.ItemSerial" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemUnit" EntityType="Self.ItemUnit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemWarehouse" EntityType="Self.ItemWarehouse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Machine" EntityType="Self.Machine" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Mold" EntityType="Self.Mold" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MoldTest" EntityType="Self.MoldTest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Plant" EntityType="Self.Plant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductRecipe" EntityType="Self.ProductRecipe" Schema="dbo" store:Type="Tables" />
@@ -1514,6 +1632,18 @@
           <AssociationSet Name="FK_ItemWarehouse_Warehouse" Association="Self.FK_ItemWarehouse_Warehouse">
             <End Role="Warehouse" EntitySet="Warehouse" />
             <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MoldTest_Dye" Association="Self.FK_MoldTest_Dye">
+            <End Role="Dye" EntitySet="Dye" />
+            <End Role="MoldTest" EntitySet="MoldTest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MoldTest_Machine" Association="Self.FK_MoldTest_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MoldTest" EntitySet="MoldTest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MoldTest_Mold" Association="Self.FK_MoldTest_Mold">
+            <End Role="Mold" EntitySet="Mold" />
+            <End Role="MoldTest" EntitySet="MoldTest" />
           </AssociationSet>
           <AssociationSet Name="FK_Notification_User" Association="Self.FK_Notification_User">
             <End Role="User" EntitySet="User" />
@@ -2902,6 +3032,22 @@
             <End Role="Warehouse" EntitySet="Warehouse" />
             <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
           </AssociationSet>
+          <EntitySet Name="Machine" EntityType="Heka.DataAccess.Models.Machine" />
+          <EntitySet Name="Mold" EntityType="Heka.DataAccess.Models.Mold" />
+          <EntitySet Name="MoldTest" EntityType="Heka.DataAccess.Models.MoldTest" />
+          <AssociationSet Name="FK_MoldTest_Machine" Association="Heka.DataAccess.Models.FK_MoldTest_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MoldTest" EntitySet="MoldTest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MoldTest_Mold" Association="Heka.DataAccess.Models.FK_MoldTest_Mold">
+            <End Role="Mold" EntitySet="Mold" />
+            <End Role="MoldTest" EntitySet="MoldTest" />
+          </AssociationSet>
+          <EntitySet Name="Dye" EntityType="Heka.DataAccess.Models.Dye" />
+          <AssociationSet Name="FK_MoldTest_Dye" Association="Heka.DataAccess.Models.FK_MoldTest_Dye">
+            <End Role="Dye" EntitySet="Dye" />
+            <End Role="MoldTest" EntitySet="MoldTest" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -3284,6 +3430,126 @@
             </Principal>
             <Dependent Role="ProductRecipeDetail">
               <PropertyRef Name="WarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Machine">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachineCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MachineName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MachineType" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="Machine" ToRole="MoldTest" />
+        </EntityType>
+        <EntityType Name="Mold">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MoldCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MoldName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Mold" FromRole="Mold" ToRole="MoldTest" />
+        </EntityType>
+        <EntityType Name="MoldTest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachineId" Type="Int32" />
+          <Property Name="TestDate" Type="DateTime" Precision="3" />
+          <Property Name="ProductDescription" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="RawMaterialId" Type="Int32" />
+          <Property Name="RawMaterialName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="RawMaterialGr" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="RawMaterialGrText" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="InflationTimeSeconds" Type="Int32" />
+          <Property Name="TotalTimeSeconds" Type="Int32" />
+          <Property Name="DyeId" Type="Int32" />
+          <Property Name="DyeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PackageDimension" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="InPackageQuantity" Type="Int32" />
+          <Property Name="NutQuantity" Type="Int32" />
+          <Property Name="NutCaliber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="InPalletPackageQuantity" Type="Int32" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="ProductCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ProductName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="MoldId" Type="Int32" />
+          <Property Name="MoldCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MoldName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="MoldTest" ToRole="Machine" />
+          <NavigationProperty Name="Mold" Relationship="Heka.DataAccess.Models.FK_MoldTest_Mold" FromRole="MoldTest" ToRole="Mold" />
+          <Property Name="RawMaterialTolerationGr" Type="Decimal" Precision="18" Scale="5" />
+          <NavigationProperty Name="Dye" Relationship="Heka.DataAccess.Models.FK_MoldTest_Dye" FromRole="MoldTest" ToRole="Dye" />
+        </EntityType>
+        <Association Name="FK_MoldTest_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MoldTest" Role="MoldTest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MoldTest">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MoldTest_Mold">
+          <End Type="Heka.DataAccess.Models.Mold" Role="Mold" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MoldTest" Role="MoldTest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mold">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MoldTest">
+              <PropertyRef Name="MoldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Dye">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DyeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DyeName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="RalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Dye" FromRole="Dye" ToRole="MoldTest" />
+        </EntityType>
+        <Association Name="FK_MoldTest_Dye">
+          <End Type="Heka.DataAccess.Models.Dye" Role="Dye" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MoldTest" Role="MoldTest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dye">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MoldTest">
+              <PropertyRef Name="DyeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3838,6 +4104,88 @@
                 <ScalarProperty Name="ProcessType" ColumnName="ProcessType" />
                 <ScalarProperty Name="ItemId" ColumnName="ItemId" />
                 <ScalarProperty Name="ProductRecipeId" ColumnName="ProductRecipeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Machine">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Machine">
+              <MappingFragment StoreEntitySet="Machine">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="MachineType" ColumnName="MachineType" />
+                <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+                <ScalarProperty Name="MachineCode" ColumnName="MachineCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Mold">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Mold">
+              <MappingFragment StoreEntitySet="Mold">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="MoldName" ColumnName="MoldName" />
+                <ScalarProperty Name="MoldCode" ColumnName="MoldCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MoldTest">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.MoldTest">
+              <MappingFragment StoreEntitySet="MoldTest">
+                <ScalarProperty Name="RawMaterialTolerationGr" ColumnName="RawMaterialTolerationGr" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="MoldName" ColumnName="MoldName" />
+                <ScalarProperty Name="MoldCode" ColumnName="MoldCode" />
+                <ScalarProperty Name="MoldId" ColumnName="MoldId" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="InPalletPackageQuantity" ColumnName="InPalletPackageQuantity" />
+                <ScalarProperty Name="NutCaliber" ColumnName="NutCaliber" />
+                <ScalarProperty Name="NutQuantity" ColumnName="NutQuantity" />
+                <ScalarProperty Name="InPackageQuantity" ColumnName="InPackageQuantity" />
+                <ScalarProperty Name="PackageDimension" ColumnName="PackageDimension" />
+                <ScalarProperty Name="RalCode" ColumnName="RalCode" />
+                <ScalarProperty Name="DyeCode" ColumnName="DyeCode" />
+                <ScalarProperty Name="DyeId" ColumnName="DyeId" />
+                <ScalarProperty Name="TotalTimeSeconds" ColumnName="TotalTimeSeconds" />
+                <ScalarProperty Name="InflationTimeSeconds" ColumnName="InflationTimeSeconds" />
+                <ScalarProperty Name="RawMaterialGrText" ColumnName="RawMaterialGrText" />
+                <ScalarProperty Name="RawMaterialGr" ColumnName="RawMaterialGr" />
+                <ScalarProperty Name="RawMaterialName" ColumnName="RawMaterialName" />
+                <ScalarProperty Name="RawMaterialId" ColumnName="RawMaterialId" />
+                <ScalarProperty Name="ProductDescription" ColumnName="ProductDescription" />
+                <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dye">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Dye">
+              <MappingFragment StoreEntitySet="Dye">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="RalCode" ColumnName="RalCode" />
+                <ScalarProperty Name="DyeName" ColumnName="DyeName" />
+                <ScalarProperty Name="DyeCode" ColumnName="DyeCode" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

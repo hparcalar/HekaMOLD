@@ -237,6 +237,27 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+
+        public ProductRecipeModel[] GetRevisionsOfProduct(int productId)
+        {
+            List<ProductRecipeModel> revisionsData = new List<ProductRecipeModel>();
+
+            var repo = _unitOfWork.GetRepository<ProductRecipe>();
+            var historyData = repo.Filter(d => d.ProductId == productId &&
+                (d.IsActive ?? false) == false)
+                .OrderByDescending(d => d.CreatedDate)
+                .Select(d => d.Id)
+                .ToArray();
+
+            foreach (var item in historyData)
+            {
+                var revisionModel = GetProductRecipe(item);
+                if (revisionModel != null)
+                    revisionsData.Add(revisionModel);
+            }
+
+            return revisionsData.ToArray();
+        }
         #endregion
     }
 }

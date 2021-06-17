@@ -101,6 +101,13 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_UnitType" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Warehouse" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Machine" Width="1.5" PointX="0.75" PointY="7.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Mold" Width="1.5" PointX="0.75" PointY="11.25" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MoldTest" Width="1.5" PointX="3" PointY="5.125" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_MoldTest_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_MoldTest_Mold" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Dye" Width="1.5" PointX="0.75" PointY="15.375" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_MoldTest_Dye" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

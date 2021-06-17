@@ -4,6 +4,7 @@ using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using System;
 using System.Collections.Generic;
@@ -1108,6 +1109,321 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        #endregion
+
+        #region MACHINE BUSINESS
+        public MachineModel[] GetMachineList()
+        {
+            List<MachineModel> data = new List<MachineModel>();
+
+            var repo = _unitOfWork.GetRepository<Machine>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                MachineModel containerObj = new MachineModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateMachine(MachineModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.MachineCode))
+                    throw new Exception("Makine kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.MachineName))
+                    throw new Exception("Makine adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Machine>();
+
+                if (repo.Any(d => (d.MachineCode == model.MachineCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir makine mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Machine();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteMachine(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Machine>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public MachineModel GetMachine(int id)
+        {
+            MachineModel model = new MachineModel { };
+
+            var repo = _unitOfWork.GetRepository<Machine>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        #endregion
+
+        #region DYE BUSINESS
+        public DyeModel[] GetDyeList()
+        {
+            List<DyeModel> data = new List<DyeModel>();
+
+            var repo = _unitOfWork.GetRepository<Dye>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                DyeModel containerObj = new DyeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateDye(DyeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.DyeCode))
+                    throw new Exception("Renk kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.DyeName))
+                    throw new Exception("Renk adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Dye>();
+
+                if (repo.Any(d => (d.DyeCode == model.DyeCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir renk mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Dye();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteDye(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Dye>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public DyeModel GetDye(int id)
+        {
+            DyeModel model = new DyeModel { };
+
+            var repo = _unitOfWork.GetRepository<Dye>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        #endregion
+
+        #region MOLD BUSINESS
+        public MoldModel[] GetMoldList()
+        {
+            List<MoldModel> data = new List<MoldModel>();
+
+            var repo = _unitOfWork.GetRepository<Mold>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                MoldModel containerObj = new MoldModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateMold(MoldModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.MoldCode))
+                    throw new Exception("Kalıp kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.MoldName))
+                    throw new Exception("Kalıp adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Mold>();
+
+                if (repo.Any(d => (d.MoldCode == model.MoldCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir kalıp mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Mold();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteMold(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Mold>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public MoldModel GetMold(int id)
+        {
+            MoldModel model = new MoldModel { };
+
+            var repo = _unitOfWork.GetRepository<Mold>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
         #endregion
     }
 }

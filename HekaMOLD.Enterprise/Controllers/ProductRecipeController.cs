@@ -96,6 +96,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetRevisionsOfProduct(int productId)
+        {
+            ProductRecipeModel[] result = new ProductRecipeModel[0];
+
+            using (RecipeBO bObj = new RecipeBO())
+            {
+                result = bObj.GetRevisionsOfProduct(productId);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult BindModel(int rid)
         {
             ProductRecipeModel model = null;

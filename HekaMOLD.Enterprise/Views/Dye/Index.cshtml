@@ -1,9 +1,8 @@
-﻿@using HekaMOLD.Enterprise.Helpers
-@{
-    ViewBag.Title = "Üretim Reçeteleri";
+﻿@{
+    ViewBag.Title = "Renk Tanımları";
 }
 
-<div ng-controller="productRecipeCtrl">
+<div ng-controller="dyeCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -32,22 +31,7 @@
             <div class="d-flex align-items-center py-1">
                 <!--begin::Wrapper-->
                 <div class="me-4">
-                    <button type="button"
-                            ng-click="showRecipeRevisions()"
-                            class="btn btn-sm btn-flex btn-dark fw-bolder">
-                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
-                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M10.9630156,7.5 L11.0475062,7.5 C11.3043819,7.5 11.5194647,7.69464724 11.5450248,7.95024814 L12,12.5 L15.2480695,14.3560397 C15.403857,14.4450611 15.5,14.6107328 15.5,14.7901613 L15.5,15 C15.5,15.2109164 15.3290185,15.3818979 15.1181021,15.3818979 C15.0841582,15.3818979 15.0503659,15.3773725 15.0176181,15.3684413 L10.3986612,14.1087258 C10.1672824,14.0456225 10.0132986,13.8271186 10.0316926,13.5879956 L10.4644883,7.96165175 C10.4845267,7.70115317 10.7017474,7.5 10.9630156,7.5 Z" id="Path-107" fill="#000000"></path>
-                                <path d="M7.38979581,2.8349582 C8.65216735,2.29743306 10.0413491,2 11.5,2 C17.2989899,2 22,6.70101013 22,12.5 C22,18.2989899 17.2989899,23 11.5,23 C5.70101013,23 1,18.2989899 1,12.5 C1,11.5151324 1.13559454,10.5619345 1.38913364,9.65805651 L3.31481075,10.1982117 C3.10672013,10.940064 3,11.7119264 3,12.5 C3,17.1944204 6.80557963,21 11.5,21 C16.1944204,21 20,17.1944204 20,12.5 C20,7.80557963 16.1944204,4 11.5,4 C10.54876,4 9.62236069,4.15592757 8.74872191,4.45446326 L9.93948308,5.87355717 C10.0088058,5.95617272 10.0495583,6.05898805 10.05566,6.16666224 C10.0712834,6.4423623 9.86044965,6.67852665 9.5847496,6.69415008 L4.71777931,6.96995273 C4.66931162,6.97269931 4.62070229,6.96837279 4.57348157,6.95710938 C4.30487471,6.89303938 4.13906482,6.62335149 4.20313482,6.35474463 L5.33163823,1.62361064 C5.35654118,1.51920756 5.41437908,1.4255891 5.49660017,1.35659741 C5.7081375,1.17909652 6.0235153,1.2066885 6.2010162,1.41822583 L7.38979581,2.8349582 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
-                            </svg>
-                        </span>
-                        Geçmiş Revizyonlar
-                    </button>
-
-                    <!--begin::Separator-->
-                    <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
-
-                    <a href="@Url.Action("List","ProductRecipe")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                    <a href="@Url.Action("List","Dye")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -64,7 +48,7 @@
                     <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
                     <!--end::Separator-->
                     <!--begin::Button-->
-                    <a class="btn btn-sm btn-light-primary" ng-click="openNewRecord()">
+                    <a href="#" class="btn btn-sm btn-light-primary" ng-click="openNewRecord()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M3 4C3 2.34315 4.34315 1 6 1H15.7574C16.553 1 17.3161 1.31607 17.8787 1.87868L20.1213 4.12132C20.6839 4.68393 21 5.44699 21 6.24264V20C21 21.6569 19.6569 23 18 23H6C4.34315 23 3 21.6569 3 20V4Z" fill="#12131A" />
@@ -119,86 +103,35 @@
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
                 <div class="col-xxl-6">
-                    <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Reçete No</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control form-control-solid" readonly="readonly"
-                                       ng-model="modelObject.ProductRecipeCode" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ürün</label>
-                            <!--begin::Input group-->
-                            <select ng-change="onProductChanged($event)"
-                                    class="form-select form-select-solid" data-allow-clear="true"
-                                    ng-options="item.ItemNo + ' / ' + item.ItemName for item in productList" ng-model="selectedProduct"
-                                    data-control="select2" data-placeholder="-- Seçiniz --"></select>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tarih</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control form-control-solid datepicker"
-                                       ng-model="modelObject.CreatedDate" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3"></label>
-                            <label class="form-check form-check-custom
-                                   form-check-solid w-50 mt-3">
-                                <input class="form-check-input" type="checkbox"
-                                       ng-change="onIsActiveChanged($event)"
-                                       ng-model="modelObject.IsActive" />
-                                <span class="form-check-label">
-                                    Aktif Reçete
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <!--end::Col-->
-                <div class="col-xxl-6 d-flex flex-column">
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Renk Kodu</label>
                     <!--begin::Input group-->
-                    <div class="mb-5 d-flex flex-fill flex-column">
-                        <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.Description" placeholder=""></textarea>
-                    </div>
-                </div>
-            </div>
-            <!--end::Row-->
-            <!--begin::Row-->
-            <div class="row gy-5 gx-xl-8 mt-2">
-                <!--begin::Col-->
-                <div class="col-xxl-12 px-0">
-
-                    <div class="dx-viewport">
-                        <div id="dataList"></div>
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.DyeCode" placeholder="" />
                     </div>
 
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">RAL Kodu</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.RalCode" placeholder="" />
+                    </div>
                 </div>
                 <!--end::Col-->
+                <div class="col-xxl-6">
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Renk Adı</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.DyeName" placeholder="" />
+                    </div>
+                </div>
             </div>
             <!--end::Row-->
-
         </div>
         <!--end::Container-->
     </div>
     <!--end::Post-->
-
-    <div id="dial-revisions" title="Reçete Revizyonları" style="display:none;">
-        <ng-include src="'Components/Views/RecipeRevisions.html'"></ng-include>
-    </div>
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
-    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
-    <script src="~/Scripts/dx.all.js"></script>
-    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-    <script src="~/FrontEndLogic/ProductRecipe/index.js"></script>
-    <script src="~/Components/Controllers/recipe-revisions.js"></script>
+    <script src="~/FrontEndLogic/Dye/index.js"></script>
 }

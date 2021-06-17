@@ -85,6 +85,30 @@
         return prms;
     }
 
+    $scope.showRecipeRevisions = function () {
+        try {
+            if ($scope.modelObject.ProductId > 0) {
+                // DO BROADCAST
+                $scope.$broadcast('loadRecipeRevisionList');
+
+                $('#dial-revisions').dialog({
+                    width: window.innerWidth * 0.4,
+                    height: window.innerHeight * 0.4,
+                    hide: true,
+                    modal: true,
+                    resizable: false,
+                    show: true,
+                    draggable: false,
+                    closeText: "KAPAT"
+                });
+            }
+            else
+                toastr.error('Reçete geçmişini görmek için bir ürün seçiniz.', 'Uyarı');
+        } catch (e) {
+
+        }
+    }
+
     // CRUD
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, CreatedDate: moment().format('DD.MM.YYYY'), Details: [] };

@@ -351,7 +351,7 @@
                                 </a>
                             </div>
                             <div class="menu-item">
-                                <a class="menu-link" @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "ProductRecipe") ? "active" : "")" href="@Url.Action("List","ProductRecipe")">
+                                <a class="menu-link" @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "ProductRecipe") ? "active" : "") " href="@Url.Action("List","ProductRecipe")">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
                                         <span class="svg-icon svg-icon-2">
@@ -365,6 +365,47 @@
                                         <!--end::Svg Icon-->
                                     </span>
                                     <span class="menu-title">Reçete</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link" @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Dye") ? "active" : "") "
+                                   href="@Url.Action("List","Dye")">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
+                                        <span class="svg-icon svg-icon-2">
+                                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12,10.9996338 C12.8356605,10.3719448 13.8743941,10 15,10 C17.7614237,10 20,12.2385763 20,15 C20,17.7614237 17.7614237,20 15,20 C13.8743941,20 12.8356605,19.6280552 12,19.0003662 C11.1643395,19.6280552 10.1256059,20 9,20 C6.23857625,20 4,17.7614237 4,15 C4,12.2385763 6.23857625,10 9,10 C10.1256059,10 11.1643395,10.3719448 12,10.9996338 Z M13.3336047,12.504354 C13.757474,13.2388026 14,14.0910788 14,15 C14,15.9088933 13.7574889,16.761145 13.3336438,17.4955783 C13.8188886,17.8206693 14.3938466,18 15,18 C16.6568542,18 18,16.6568542 18,15 C18,13.3431458 16.6568542,12 15,12 C14.3930587,12 13.8175971,12.18044 13.3336047,12.504354 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero" opacity="0.3"></path>
+                                                <circle id="Oval-14" fill="#000000" cx="12" cy="9" r="5"></circle>
+                                            </svg>
+
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Renkler</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link" @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Machine") ? "active" : "") " href="@Url.Action("List","Machine")">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
+                                        <span class="svg-icon svg-icon-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M5 7C5 5.89543 5.89543 5 7 5H17C18.1046 5 19 5.89543 19 7V17C19 18.1046 18.1046 19 17 19H7C5.89543 19 5 18.1046 5 17V7Z" fill="#12131A" />
+                                                <path d="M10 11C10 10.4477 10.4477 10 11 10H13C13.5523 10 14 10.4477 14 11V13C14 13.5523 13.5523 14 13 14H11C10.4477 14 10 13.5523 10 13V11Z" fill="#12131A" />
+                                                <path d="M9 2C8.44772 2 8 2.44772 8 3V5H10V3C10 2.44772 9.55228 2 9 2Z" fill="#12131A" />
+                                                <path d="M10 21V19H8V21C8 21.5523 8.44772 22 9 22C9.55228 22 10 21.5523 10 21Z" fill="#12131A" />
+                                                <path d="M14 3C14 2.44772 14.4477 2 15 2C15.5523 2 16 2.44772 16 3V5H14V3Z" fill="#12131A" />
+                                                <path d="M16 21V19H14V21C14 21.5523 14.4477 22 15 22C15.5523 22 16 21.5523 16 21Z" fill="#12131A" />
+                                                <path d="M21 8C21.5523 8 22 8.44772 22 9C22 9.55229 21.5523 10 21 10H19V8H21Z" fill="#12131A" />
+                                                <path d="M3 10H5V8H3C2.44772 8 2 8.44771 2 9C2 9.55229 2.44772 10 3 10Z" fill="#12131A" />
+                                                <path d="M21 14C21.5523 14 22 14.4477 22 15C22 15.5523 21.5523 16 21 16H19V14H21Z" fill="#12131A" />
+                                                <path d="M3 16H5V14H3C2.44772 14 2 14.4477 2 15C2 15.5523 2.44772 16 3 16Z" fill="#12131A" />
+                                            </svg>
+
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Makine</span>
                                 </a>
                             </div>
 
@@ -3915,7 +3956,7 @@
     <!--end::Main-->
     <!--begin::Javascript-->
     <!--begin::Global Javascript Bundle(used by all pages)-->
-    <script>var HOST_URL = "http://192.168.1.105/mold/";</script>
+    <script>var HOST_URL = "http://localhost/mold/";</script>
 
     <script src="~/assets/plugins/global/plugins.bundle.js"></script>
     <script src="~/assets/js/scripts.bundle.js"></script>

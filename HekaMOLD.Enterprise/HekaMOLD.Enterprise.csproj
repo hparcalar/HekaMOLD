@@ -132,10 +132,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\MoldTestController.cs" />
     <Compile Include="Controllers\Filters\MobileAuthFilter.cs" />
     <Compile Include="Controllers\Filters\UserAuthFilter.cs" />
     <Compile Include="Controllers\FirmController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\DyeController.cs" />
+    <Compile Include="Controllers\MachineController.cs" />
     <Compile Include="Controllers\ProductRecipeController.cs" />
     <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
@@ -3896,10 +3899,12 @@
     <Content Include="Components\Controllers\open-po-list.js" />
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
     <Content Include="Components\Controllers\attachment-list.js" />
+    <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
     <Content Include="Components\Views\OpenPoList.html" />
     <Content Include="Components\Views\AttachmentList.html" />
+    <Content Include="Components\Views\RecipeRevisions.html" />
     <Content Include="Components\Views\RelatedOrderList.html" />
     <Content Include="Components\Views\RelatedRequestList.html" />
     <Content Include="Components\Views\ApprovedItemRequestDetails.html" />
@@ -3972,6 +3977,8 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
+    <Content Include="FrontEndLogic\Dye\index.js" />
+    <Content Include="FrontEndLogic\Dye\list.js" />
     <Content Include="FrontEndLogic\Firm\index.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
     <Content Include="FrontEndLogic\ItemCategory\index.js" />
@@ -3982,9 +3989,13 @@
     <Content Include="FrontEndLogic\ItemReceipt\list.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
+    <Content Include="FrontEndLogic\Machine\index.js" />
+    <Content Include="FrontEndLogic\Machine\list.js" />
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry.js" />
+    <Content Include="FrontEndLogic\MoldTest\index.js" />
+    <Content Include="FrontEndLogic\MoldTest\list.js" />
     <Content Include="FrontEndLogic\PIOrder\index.js" />
     <Content Include="FrontEndLogic\PIOrder\list.js" />
     <Content Include="FrontEndLogic\PIRequest\index.js" />
@@ -4347,6 +4358,11 @@
     <Content Include="Views\Mobile\ItemEntryList.cshtml" />
     <Content Include="Views\ProductRecipe\List.cshtml" />
     <Content Include="Views\ProductRecipe\Index.cshtml" />
+    <Content Include="Views\Machine\List.cshtml" />
+    <Content Include="Views\Machine\Index.cshtml" />
+    <Content Include="Views\Dye\List.cshtml" />
+    <Content Include="Views\Dye\Index.cshtml" />
+    <Content Include="Views\MoldTest\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
