@@ -77,6 +77,13 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(ItemOrderType))
+                {
+                    return DictItemOrderType.Values
+                        .Where(d => d.Key == (ItemOrderType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception)
             {

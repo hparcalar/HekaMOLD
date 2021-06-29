@@ -1,5 +1,8 @@
-﻿app.controller('dyeCtrl', function ($scope, $http) {
+﻿app.controller('moldTestCtrl', function ($scope, $http) {
     $scope.modelObject = {};
+
+    $scope.selectedMachine = { Id: 0, MachineName: '' };
+    $scope.machineList = [];
 
     $scope.saveStatus = 0;
 
@@ -9,7 +12,7 @@
 
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu rengi silmek istediğinizden emin misiniz?",
+            message: "Bu denemeyi silmek istediğinizden emin misiniz?",
             closeButton:false,
             buttons: {
                 confirm: {
@@ -24,7 +27,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'Dye/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'MoldTest/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -46,7 +49,12 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        $http.post(HOST_URL + 'Dye/SaveModel', $scope.modelObject, 'json')
+        if (typeof $scope.selectedMachine != 'undefined' && $scope.selectedMachine != null)
+            $scope.modelObject.MachineId = $scope.selectedMachine.Id;
+        else
+            $scope.modelObject.MachineId = null;
+
+        $http.post(HOST_URL + 'MoldTest/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -63,15 +71,44 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'Dye/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'MoldTest/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
+                    $scope.modelObject.TestDate = $scope.modelObject.TestDateStr;
+
+                    if (typeof $scope.modelObject.MachineId != 'undefined' && $scope.modelObject.MachineId != null)
+                        $scope.selectedMachine = $scope.machineList.find(d => d.Id == $scope.modelObject.MachineId);
+                    else
+                        $scope.selectedMachine = $scope.machineList[0];
+
+                    refreshArray($scope.machineList);
                 }
             }).catch(function (err) { });
     }
 
+    $scope.loadSelectables = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'MoldTest/GetSelectables', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.machineList = resp.data.Machines;
+
+                        var emptyMcObj = { Id: 0, MachineName: '-- Seçiniz --' };
+                        $scope.machineList.splice(0, 0, emptyMcObj);
+                        $scope.selectedMachine = emptyMcObj;
+
+                        resolve();
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prms;
+    }
+
     // ON LOAD EVENTS
-    if (PRM_ID > 0)
-        $scope.bindModel(PRM_ID);
+    $scope.loadSelectables().then(function () {
+        if (PRM_ID > 0)
+            $scope.bindModel(PRM_ID);
+    });
 });

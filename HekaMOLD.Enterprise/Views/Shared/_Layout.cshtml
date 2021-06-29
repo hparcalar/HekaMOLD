@@ -156,7 +156,7 @@
                                 </a>
                             </div>
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                                <span class="menu-link @(Regex.IsMatch(ctrl, "SOrder$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && rcgr == "3") ? "active" : "")">
+                                <span class="menu-link @(Regex.IsMatch(ctrl, "SIOrder$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && rcgr == "3") ? "active" : "")">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/duotone/Interface/Lock.svg-->
                                         <span class="svg-icon svg-icon-2">
@@ -173,7 +173,7 @@
                                 </span>
                                 <div class="menu-sub menu-sub-accordion menu-active-bg">
                                     <div class="menu-item">
-                                        <a class="menu-link" href="@Url.Action("Orders","Sales")">
+                                        <a class="menu-link" href="@Url.Action("List","SIOrder")">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>

@@ -13,12 +13,12 @@ namespace HekaMOLD.Business.UseCases.Core
 {
     public class CoreReceiptsBO : IBusinessObject
     {
-        public string GetNextOrderNo(int plantId)
+        public string GetNextOrderNo(int plantId, ItemOrderType orderType)
         {
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemOrder>();
-                string lastReceiptNo = repo.Filter(d => d.PlantId == plantId)
+                string lastReceiptNo = repo.Filter(d => d.PlantId == plantId && d.OrderType == (int)orderType)
                     .OrderByDescending(d => d.OrderNo)
                     .Select(d => d.OrderNo)
                     .FirstOrDefault();

@@ -24,6 +24,9 @@ namespace HekaMOLD.Business.UseCases
             {
                 MoldTestModel containerObj = new MoldTestModel();
                 d.MapTo(containerObj);
+                containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
+                containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
+                containerObj.TestDateStr = string.Format("{0:dd.MM.yyyy}", d.TestDate);
                 data.Add(containerObj);
             });
 
@@ -107,6 +110,7 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                model.TestDateStr = string.Format("{0:dd.MM.yyyy}", model.TestDate);
             }
 
             return model;

@@ -533,7 +533,7 @@ namespace HekaMOLD.Business.UseCases
                     DocumentNo = "",
                     Explanation = dbRequest.Explanation,
                     ItemRequest = dbRequest,
-                    OrderNo = GetNextOrderNo(dbRequest.PlantId.Value),
+                    OrderNo = GetNextOrderNo(dbRequest.PlantId.Value, ItemOrderType.Purchase),
                     OrderStatus = (int)OrderStatusType.Created,
                     PlantId = dbRequest.PlantId.Value,
                     SubTotal = 0,

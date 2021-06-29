@@ -15,9 +15,9 @@ using System.Web.Mvc;
 namespace HekaMOLD.Enterprise.Controllers
 {
     [UserAuthFilter]
-    public class PIOrderController : Controller
+    public class SIOrderController : Controller
     {
-        // GET: PIRequest
+        // GET: SIOrder
         public ActionResult Index()
         {
             return View();
@@ -35,10 +35,10 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (OrdersBO bObj = new OrdersBO())
             {
-                receiptNo = bObj.GetNextOrderNo(Convert.ToInt32(Request.Cookies["PlantId"].Value), ItemOrderType.Purchase);
+                receiptNo = bObj.GetNextOrderNo(Convert.ToInt32(Request.Cookies["PlantId"].Value), ItemOrderType.Sale);
             }
 
-            var jsonResult = Json(new { Result=!string.IsNullOrEmpty(receiptNo), ReceiptNo=receiptNo }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(receiptNo), ReceiptNo = receiptNo }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -59,7 +59,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 forexes = bObj.GetForexTypeList();
             }
 
-            var jsonResult = Json(new { Items = items, Units = units, Firms = firms, Forexes=forexes }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Items = items, Units = units, Firms = firms, Forexes = forexes }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -71,7 +71,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (OrdersBO bObj = new OrdersBO())
             {
-                result = bObj.GetItemOrderList(ItemOrderType.Purchase);
+                result = bObj.GetItemOrderList(ItemOrderType.Sale);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -151,52 +151,6 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(result);
-        }
-
-        [HttpGet]
-        public JsonResult GetApprovedRequestDetails()
-        {
-            ItemRequestDetailModel[] result = new ItemRequestDetailModel[0];
-
-            using (RequestBO bObj = new RequestBO())
-            {
-                result = bObj.GetApprovedDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
-            }
-
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-
-        [HttpGet]
-        [FreeAction]
-        public JsonResult GetApprovedOrderDetails()
-        {
-            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
-
-            using (OrdersBO bObj = new OrdersBO())
-            {
-                result = bObj.GetApprovedOrderDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
-            }
-
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-
-        [HttpGet]
-        public JsonResult GetRelatedRequestList(int orderId)
-        {
-            ItemRequestModel[] result = new ItemRequestModel[0];
-
-            using (RequestBO bObj = new RequestBO())
-            {
-                result = bObj.GetRelatedRequests(orderId);
-            }
-
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
         }
 
         #region CALCULATIONS

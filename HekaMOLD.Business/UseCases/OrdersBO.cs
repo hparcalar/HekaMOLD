@@ -15,13 +15,13 @@ namespace HekaMOLD.Business.UseCases
 {
     public class OrdersBO : CoreReceiptsBO
     {
-        public ItemOrderModel[] GetItemOrderList()
+        public ItemOrderModel[] GetItemOrderList(ItemOrderType orderType)
         {
             List<ItemOrderModel> data = new List<ItemOrderModel>();
 
             var repo = _unitOfWork.GetRepository<ItemOrder>();
 
-            repo.GetAll().ToList().ForEach(d =>
+            repo.Filter(d => d.OrderType == (int)orderType).ToList().ForEach(d =>
             {
                 ItemOrderModel containerObj = new ItemOrderModel();
                 d.MapTo(containerObj);
@@ -55,7 +55,7 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                 {
                     dbObj = new ItemOrder();
-                    dbObj.OrderNo = GetNextOrderNo(model.PlantId.Value);
+                    dbObj.OrderNo = GetNextOrderNo(model.PlantId.Value, (ItemOrderType)model.OrderType.Value);
                     dbObj.CreatedDate = DateTime.Now;
                     dbObj.CreatedUserId = model.CreatedUserId;
                     dbObj.OrderStatus = (int)OrderStatusType.Created;

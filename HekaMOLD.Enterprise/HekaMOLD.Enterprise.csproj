@@ -147,6 +147,7 @@
     <Compile Include="Controllers\MobileController.cs" />
     <Compile Include="Controllers\PIOrderController.cs" />
     <Compile Include="Controllers\PIRequestController.cs" />
+    <Compile Include="Controllers\SIOrderController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Controllers\UnitTypeController.cs" />
@@ -4002,6 +4003,8 @@
     <Content Include="FrontEndLogic\PIRequest\list.js" />
     <Content Include="FrontEndLogic\ProductRecipe\index.js" />
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
+    <Content Include="FrontEndLogic\SIOrder\index.js" />
+    <Content Include="FrontEndLogic\SIOrder\list.js" />
     <Content Include="FrontEndLogic\UnitType\index.js" />
     <Content Include="FrontEndLogic\UnitType\list.js" />
     <Content Include="FrontEndLogic\UserRole\index.js" />
@@ -4363,6 +4366,9 @@
     <Content Include="Views\Dye\List.cshtml" />
     <Content Include="Views\Dye\Index.cshtml" />
     <Content Include="Views\MoldTest\List.cshtml" />
+    <Content Include="Views\MoldTest\Index.cshtml" />
+    <Content Include="Views\SIOrder\Index.cshtml" />
+    <Content Include="Views\SIOrder\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

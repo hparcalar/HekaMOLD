@@ -61,6 +61,7 @@
     <Compile Include="Models\Constants\FirmType.cs" />
     <Compile Include="Models\Constants\ItemCriticalBehaviourType.cs" />
     <Compile Include="Models\Constants\ItemReceiptType.cs" />
+    <Compile Include="Models\Constants\ItemOrderType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
     <Compile Include="Models\Constants\ReceiptCategoryType.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
+    <Compile Include="Models\Dictionaries\DictItemOrderType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptCategoryType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictOrderStatusType.cs" />

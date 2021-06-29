@@ -41,6 +41,24 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetSelectables()
+        {
+            MachineModel[] machines = new MachineModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                machines = bObj.GetMachineList();
+            }
+
+            var jsonResult = Json(new
+            {
+                Machines = machines
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult BindModel(int rid)
         {
             MoldTestModel model = null;

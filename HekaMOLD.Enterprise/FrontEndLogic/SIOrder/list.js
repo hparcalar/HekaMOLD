@@ -1,4 +1,4 @@
-﻿app.controller('moldTestListCtrl', function ($scope, $http) {
+﻿app.controller('orderListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS
@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'MoldTest/GetMoldTestList', function (data) {
+                    return $.getJSON(HOST_URL + 'SIOrder/GetItemOrderList', function (data) {
                             
                         });
                 },
@@ -36,15 +36,13 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'TestDateStr', caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'MoldCode', caption: 'Kalıp Kodu' },
-                { dataField: 'MoldName', caption: 'Kalıp Adı' },
-                { dataField: 'ProductCode', caption: 'Ürün Kodu' },
-                { dataField: 'ProductName', caption: 'Ürün Adı' },
-                { dataField: 'ProductDescription', caption: 'Ürün Açıklama' },
-                { dataField: 'RawMaterialName', caption: 'Hammadde' },
-                { dataField: 'DyeCode', caption: 'Renk Kodu' },
-                { dataField: 'RalCode', caption: 'Ral Kodu' },
+                { dataField: 'OrderNo', caption: 'Sipariş No' },
+                { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'DateOfNeedStr', caption: 'Termin Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'FirmCode', caption: 'Firma Kodu' },
+                { dataField: 'FirmName', caption: 'Firma Adı' },
+                { dataField: 'OrderStatusStr', caption: 'Durum' },
+                { dataField: 'Explanation', caption: 'Açıklama' },
                 {
                     type: "buttons",
                     buttons: [
@@ -54,7 +52,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'MoldTest?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'SIOrder?rid=' + e.row.data.Id;
                             }
                         }
                     ]
