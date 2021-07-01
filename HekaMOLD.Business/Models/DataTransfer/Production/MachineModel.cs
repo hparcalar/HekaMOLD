@@ -16,6 +16,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? PlantId { get; set; }
         public bool? IsActive { get; set; }
 
+        public MachinePlanModel[] Plans { get; set; }
+
         #region VISUAL ELEMENTS
         public string CreatedDateStr { get; set; }
         #endregion

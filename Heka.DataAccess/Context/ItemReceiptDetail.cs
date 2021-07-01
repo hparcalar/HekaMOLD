@@ -18,6 +18,7 @@ namespace Heka.DataAccess.Context
         public ItemReceiptDetail()
         {
             this.ItemSerial = new HashSet<ItemSerial>();
+            this.WorkOrderAllocation = new HashSet<WorkOrderAllocation>();
         }
     
         public int Id { get; set; }
@@ -28,10 +29,12 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<decimal> NetQuantity { get; set; }
         public Nullable<decimal> GrossQuantity { get; set; }
+        public Nullable<decimal> UsableQuantity { get; set; }
         public Nullable<decimal> UnitPrice { get; set; }
         public Nullable<int> ForexId { get; set; }
         public Nullable<decimal> ForexRate { get; set; }
         public Nullable<decimal> ForexUnitPrice { get; set; }
+        public Nullable<bool> TaxIncluded { get; set; }
         public Nullable<int> TaxRate { get; set; }
         public Nullable<decimal> TaxAmount { get; set; }
         public Nullable<decimal> DiscountRate { get; set; }
@@ -39,6 +42,7 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> SubTotal { get; set; }
         public Nullable<decimal> OverallTotal { get; set; }
         public string Explanation { get; set; }
+        public Nullable<int> ReceiptStatus { get; set; }
         public Nullable<int> SyncStatus { get; set; }
         public Nullable<System.DateTime> SyncDate { get; set; }
         public Nullable<int> ItemOrderDetailId { get; set; }
@@ -46,8 +50,6 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-        public Nullable<int> ReceiptStatus { get; set; }
-        public Nullable<bool> TaxIncluded { get; set; }
     
         public virtual ForexType ForexType { get; set; }
         public virtual Item Item { get; set; }
@@ -56,5 +58,7 @@ namespace Heka.DataAccess.Context
         public virtual UnitType UnitType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemSerial> ItemSerial { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkOrderAllocation> WorkOrderAllocation { get; set; }
     }
 }

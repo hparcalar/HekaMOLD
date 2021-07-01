@@ -199,7 +199,7 @@
                                 </div>
                             </div>
                             <div class="menu-item">
-                                <a class="menu-link" href="@Url.Action("List","MoldTest")">
+                                <a class="menu-link @(Regex.IsMatch(ctrl, "MoldTest$") ? "active" : "")" href="@Url.Action("List","MoldTest")">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Shopping/Box2.svg-->
                                         <span class="svg-icon svg-icon-2">
@@ -220,7 +220,7 @@
                                 </a>
                             </div>
                             <div class="menu-item">
-                                <a class="menu-link" href="@Url.Action("List","WorkOrder")">
+                                <a class="menu-link @(Regex.IsMatch(ctrl, "WorkOrder$") ? "active" : "")" href="@Url.Action("List","WorkOrder")">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Shopping/Box2.svg-->
                                         <span class="svg-icon svg-icon-2">
@@ -238,7 +238,7 @@
                                 </a>
                             </div>
                             <div class="menu-item">
-                                <a class="menu-link" href="https://preview.keenthemes.com/metronic8/demo1/layout-builder.html">
+                                <a class="menu-link @(Regex.IsMatch(ctrl, "Planning$") ? "active" : "")" href="@Url.Action("List","Planning")">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/duotone/Interface/Settings-02.svg-->
                                         <span class="svg-icon svg-icon-2">

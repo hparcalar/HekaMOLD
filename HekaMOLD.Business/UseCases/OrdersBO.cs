@@ -129,6 +129,7 @@ namespace HekaMOLD.Business.UseCases
 
                         item.MapTo(dbDetail);
                         dbDetail.ItemOrder = dbObj;
+                        dbDetail.OrderStatus = dbObj.OrderStatus;
                         if (dbObj.Id > 0)
                             dbDetail.ItemOrderId = dbObj.Id;
 

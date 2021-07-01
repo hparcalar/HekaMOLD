@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.Models.Constants
 {
-    public enum OrderStatusType
+    public enum WorkOrderStatusType
     {
         Created = 0,
-        Approved = 1,
-        Cancelled = 2,
-        Completed = 3,
-        Planned = 4
+        Planned = 1,
+        OnHold = 2,
+        InProgress = 3,
+        Completed = 4,
+        Delivered = 5,
+        Cancelled = 6
     }
 }

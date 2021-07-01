@@ -123,7 +123,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 {
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
 
-                    model.OrderType = (int)ItemOrderType.Purchase;
+                    model.OrderType = (int)ItemOrderType.Sale;
                     result = bObj.SaveOrUpdateItemOrder(model);
                 }
 

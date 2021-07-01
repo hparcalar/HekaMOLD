@@ -132,6 +132,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Controllers\MoldTestController.cs" />
     <Compile Include="Controllers\Filters\MobileAuthFilter.cs" />
     <Compile Include="Controllers\Filters\UserAuthFilter.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\DyeController.cs" />
     <Compile Include="Controllers\MachineController.cs" />
+    <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\ProductRecipeController.cs" />
     <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
@@ -3973,6 +3975,7 @@
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\jquery-ui.structure.min.css" />
     <Content Include="Content\jquery-ui.theme.min.css" />
+    <Content Include="Content\planning.css" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
@@ -4001,6 +4004,7 @@
     <Content Include="FrontEndLogic\PIOrder\list.js" />
     <Content Include="FrontEndLogic\PIRequest\index.js" />
     <Content Include="FrontEndLogic\PIRequest\list.js" />
+    <Content Include="FrontEndLogic\Planning\planning.js" />
     <Content Include="FrontEndLogic\ProductRecipe\index.js" />
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
@@ -4014,6 +4018,7 @@
     <Content Include="FrontEndLogic\User\list.js" />
     <Content Include="FrontEndLogic\Warehouse\index.js" />
     <Content Include="FrontEndLogic\Warehouse\list.js" />
+    <Content Include="FrontEndLogic\WorkOrder\list.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Helpers\FrontEnd\heka-ui-helpers.js" />
@@ -4369,6 +4374,8 @@
     <Content Include="Views\MoldTest\Index.cshtml" />
     <Content Include="Views\SIOrder\Index.cshtml" />
     <Content Include="Views\SIOrder\List.cshtml" />
+    <Content Include="Views\WorkOrder\List.cshtml" />
+    <Content Include="Views\Planning\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

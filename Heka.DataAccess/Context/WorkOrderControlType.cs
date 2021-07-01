@@ -12,32 +12,25 @@ namespace Heka.DataAccess.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class Machine
+    public partial class WorkOrderControlType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Machine()
+        public WorkOrderControlType()
         {
-            this.MoldTest = new HashSet<MoldTest>();
-            this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
-            this.MachinePlan = new HashSet<MachinePlan>();
+            this.WorkOrderControl = new HashSet<WorkOrderControl>();
         }
     
         public int Id { get; set; }
-        public string MachineCode { get; set; }
-        public string MachineName { get; set; }
-        public Nullable<int> MachineType { get; set; }
-        public Nullable<int> PlantId { get; set; }
+        public string ControlCode { get; set; }
+        public string ControlName { get; set; }
+        public Nullable<int> OrderNo { get; set; }
+        public Nullable<bool> IsActive { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-        public Nullable<bool> IsActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MoldTest> MoldTest { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MachinePlan> MachinePlan { get; set; }
+        public virtual ICollection<WorkOrderControl> WorkOrderControl { get; set; }
     }
 }

@@ -32,5 +32,28 @@ namespace HekaMOLD.Business.UseCases.Core
 
             return default;
         }
+
+        public string GetNextWorkOrderNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrder>();
+                string lastWorkOrderNo = repo.GetAll()
+                    .OrderByDescending(d => d.WorkOrderNo)
+                    .Select(d => d.WorkOrderNo)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(lastWorkOrderNo))
+                    lastWorkOrderNo = "0";
+
+                return string.Format("{0:000000}", Convert.ToInt32(lastWorkOrderNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
     }
 }

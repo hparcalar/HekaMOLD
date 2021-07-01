@@ -14,6 +14,12 @@ namespace Heka.DataAccess.Context
     
     public partial class MoldTest
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public MoldTest()
+        {
+            this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
+        }
+    
         public int Id { get; set; }
         public Nullable<int> MachineId { get; set; }
         public Nullable<System.DateTime> TestDate { get; set; }
@@ -48,5 +54,7 @@ namespace Heka.DataAccess.Context
         public virtual Machine Machine { get; set; }
         public virtual Mold Mold { get; set; }
         public virtual Dye Dye { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
     }
 }
