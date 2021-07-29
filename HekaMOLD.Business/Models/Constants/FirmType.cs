@@ -10,6 +10,7 @@ namespace HekaMOLD.Business.Models.Constants
     {
         Supplier=1,
         Customer=2,
-        Contract=3
+        Contract=3,
+        All=4,
     }
 }

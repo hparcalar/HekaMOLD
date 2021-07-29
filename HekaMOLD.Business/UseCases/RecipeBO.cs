@@ -61,8 +61,8 @@ namespace HekaMOLD.Business.UseCases
             {
                 if (string.IsNullOrEmpty(model.ProductRecipeCode))
                     throw new Exception("Reçete no girilmelidir.");
-                if (string.IsNullOrEmpty(model.Description))
-                    throw new Exception("Açıklama girilmelidir.");
+                //if (string.IsNullOrEmpty(model.Description))
+                //    throw new Exception("Açıklama girilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<ProductRecipe>();
                 var repoDetails = _unitOfWork.GetRepository<ProductRecipeDetail>();
@@ -162,6 +162,36 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult AddRecipeDetail(int recipeId, ProductRecipeDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoRecipe = _unitOfWork.GetRepository<ProductRecipe>();
+                var repoRecipeDetail = _unitOfWork.GetRepository<ProductRecipeDetail>();
+
+                var dbRecipe = repoRecipe.Get(d => d.Id == recipeId);
+                if (dbRecipe == null)
+                    throw new Exception("Reçete bilgisi HEKA yazılımında bulunamadı.");
+
+                var dbNewDetail = new ProductRecipeDetail();
+                model.MapTo(dbNewDetail);
+                dbNewDetail.ProductRecipe = dbRecipe;
+                repoRecipeDetail.Add(dbNewDetail);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public BusinessResult DeleteProductRecipe(int id)
         {
             BusinessResult result = new BusinessResult();
@@ -226,6 +256,39 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public ProductRecipeModel GetProductRecipe(string recipeCode)
+        {
+            ProductRecipeModel model = new ProductRecipeModel { };
+
+            var repo = _unitOfWork.GetRepository<ProductRecipe>();
+            var dbObj = repo.Get(d => d.ProductRecipeCode == recipeCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.CreatedDate);
+
+                #region GET DETAILS
+                List<ProductRecipeDetailModel> detailList = new List<ProductRecipeDetailModel>();
+                dbObj.ProductRecipeDetail.ToList().ForEach(d =>
+                {
+                    ProductRecipeDetailModel containerObj = new ProductRecipeDetailModel();
+                    d.MapTo(containerObj);
+                    containerObj.NewDetail = false;
+                    containerObj.ItemNo = d.Item != null ? d.Item.ItemNo : "";
+                    containerObj.ItemName = d.Item != null ? d.Item.ItemName : "";
+                    containerObj.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
+                    containerObj.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
+                    containerObj.WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "";
+                    containerObj.WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "";
+                    detailList.Add(containerObj);
+                });
+                model.Details = detailList.ToArray();
+                #endregion
+            }
+
+            return model;
+        }
+
         public ProductRecipeModel FindActiveRecipeByProduct(int productId)
         {
             ProductRecipeModel model = new ProductRecipeModel();
@@ -257,6 +320,12 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return revisionsData.ToArray();
+        }
+
+        public bool HasAnyProductRecipe(string recipeCode)
+        {
+            var repo = _unitOfWork.GetRepository<ProductRecipe>();
+            return repo.Any(d => d.ProductRecipeCode == recipeCode);
         }
         #endregion
     }

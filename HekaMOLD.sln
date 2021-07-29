@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HekaMOLD.Enterprise", "Heka
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HekaMOLD.ProductionZone", "HekaMOLD.ProductionZone\HekaMOLD.ProductionZone.csproj", "{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HekaMOLD.IntegrationService", "HekaMOLD.IntegrationService\HekaMOLD.IntegrationService.csproj", "{6EA8E731-3ABC-49C9-8C60-91FD21BA3213}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EA8E731-3ABC-49C9-8C60-91FD21BA3213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EA8E731-3ABC-49C9-8C60-91FD21BA3213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EA8E731-3ABC-49C9-8C60-91FD21BA3213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EA8E731-3ABC-49C9-8C60-91FD21BA3213}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +58,7 @@ Global
 		{C0239521-ABD9-4041-BFBB-1A46C8E7FF0B} = {474F5916-2E0A-45B5-B34C-9CCF98EF3DB4}
 		{F6E7E470-E3A9-4A10-808E-FF60927EC254} = {6CED9299-E70D-46A5-BD4E-1B8ADCD10E48}
 		{E6BBBD9B-60E6-41DF-A564-ABE0F09E8E05} = {6CED9299-E70D-46A5-BD4E-1B8ADCD10E48}
+		{6EA8E731-3ABC-49C9-8C60-91FD21BA3213} = {FA05715F-214B-4F3C-9035-887F86EA846E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C16C6462-6736-4EE4-88A4-92E852F03809}

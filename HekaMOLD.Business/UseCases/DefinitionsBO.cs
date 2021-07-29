@@ -180,6 +180,11 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public bool HasAnyFirm(string firmCode)
+        {
+            var repo = _unitOfWork.GetRepository<Firm>();
+            return repo.Any(d => d.FirmCode == firmCode);
+        }
         #endregion
 
         #region ITEM BUSINESS
@@ -343,7 +348,11 @@ namespace HekaMOLD.Business.UseCases
             catch (Exception ex)
             {
                 result.Result = false;
-                result.ErrorMessage = ex.Message;
+
+                if (ex.InnerException != null)
+                    result.ErrorMessage = ex.InnerException.Message;
+                else
+                    result.ErrorMessage = ex.Message;
             }
 
             return result;
@@ -444,6 +453,78 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public ItemModel GetItem(string itemNo)
+        {
+            ItemModel model = new ItemModel { };
+
+            var repo = _unitOfWork.GetRepository<Item>();
+            var repoWarehouse = _unitOfWork.GetRepository<Warehouse>();
+
+            var dbObj = repo.Get(d => d.ItemNo == itemNo);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+                #region WAREHOUSE RESTRICTIONS BY ITEM TYPE
+                var warehouseList = repoWarehouse.Filter(d =>
+                    ((model.ItemType == (int)ItemType.RawMaterials || model.ItemType == (int)ItemType.Commercial)
+                        && d.WarehouseType == (int)WarehouseType.ItemWarehouse)
+                    ||
+                    ((model.ItemType == (int)ItemType.SemiProduct) &&
+                        (d.WarehouseType == (int)WarehouseType.ItemWarehouse || d.WarehouseType == (int)WarehouseType.ProductWarehouse))
+                    ||
+                    (model.ItemType == (int)ItemType.Product && d.WarehouseType == (int)WarehouseType.ProductWarehouse)
+                ).ToArray();
+                #endregion
+
+                #region GET WAREHOUSE PARAMETERS
+                List<ItemWarehouseModel> warehousePrmList = new List<ItemWarehouseModel>();
+
+                foreach (var item in warehouseList)
+                {
+                    ItemWarehouseModel itemWarehousePrm = new ItemWarehouseModel
+                    {
+                        ItemId = model.Id,
+                        WarehouseId = item.Id,
+                        IsAllowed = true,
+                        MaximumQuantity = null,
+                        WarehouseCode = item.WarehouseCode,
+                        WarehouseName = item.WarehouseName,
+                        MinimumQuantity = null,
+                        MinimumBehaviour = (int)ItemCriticalBehaviourType.None,
+                        MaximumBehaviour = (int)ItemCriticalBehaviourType.None
+                    };
+
+                    var dbItemWarehouse = dbObj.ItemWarehouse.FirstOrDefault(d => d.WarehouseId == item.Id);
+                    if (dbItemWarehouse != null)
+                    {
+                        dbItemWarehouse.MapTo(itemWarehousePrm);
+                    }
+
+                    warehousePrmList.Add(itemWarehousePrm);
+                }
+                #endregion
+
+                #region GET ITEM UNITS
+                List<ItemUnitModel> unitModels = new List<ItemUnitModel>();
+                dbObj.ItemUnit.ToList().ForEach(d =>
+                {
+                    ItemUnitModel unitData = new ItemUnitModel();
+                    d.MapTo(unitData);
+                    unitData.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
+                    unitData.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
+                    unitData.NewDetail = false;
+                    unitModels.Add(unitData);
+                });
+                model.Units = unitModels.ToArray();
+                #endregion
+
+                model.Warehouses = warehousePrmList.ToArray();
+            }
+
+            return model;
+        }
+
         public ItemWarehouseModel[] GetProperWarehouses(ItemType itemType, int? itemId)
         {
             var repo = _unitOfWork.GetRepository<Item>();
@@ -492,6 +573,11 @@ namespace HekaMOLD.Business.UseCases
             return warehousePrmList.ToArray();
         }
 
+        public bool HasAnyItem(string itemCode)
+        {
+            var repo = _unitOfWork.GetRepository<Item>();
+            return repo.Any(d => d.ItemNo == itemCode);
+        }
         #endregion
 
         #region ITEM CATEGORY BUSINESS
@@ -595,6 +681,26 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return model;
+        }
+
+        public ItemCategoryModel GetItemCategory(string categoryCode)
+        {
+            ItemCategoryModel model = new ItemCategoryModel { };
+
+            var repo = _unitOfWork.GetRepository<ItemCategory>();
+            var dbObj = repo.Get(d => d.ItemCategoryCode == categoryCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public bool HasAnyItemCategory(string itemCategoryCode)
+        {
+            var repo = _unitOfWork.GetRepository<ItemCategory>();
+            return repo.Any(d => d.ItemCategoryCode == itemCategoryCode);
         }
 
         #endregion
@@ -702,6 +808,25 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public ItemGroupModel GetItemGroup(string groupCode)
+        {
+            ItemGroupModel model = new ItemGroupModel { };
+
+            var repo = _unitOfWork.GetRepository<ItemGroup>();
+            var dbObj = repo.Get(d => d.ItemGroupCode == groupCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public bool HasAnyItemGroup(string itemGroupCode)
+        {
+            var repo = _unitOfWork.GetRepository<ItemGroup>();
+            return repo.Any(d => d.ItemGroupCode == itemGroupCode);
+        }
         #endregion
 
         #region WAREHOUSE BUSINESS
@@ -899,6 +1024,20 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+
+        public UnitTypeModel GetUnitType(string unitCode)
+        {
+            UnitTypeModel model = new UnitTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<UnitType>();
+            var dbObj = repo.Get(d => d.UnitCode == unitCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
         public UnitTypeModel[] GetUnitTypeList()
         {
             List<UnitTypeModel> data = new List<UnitTypeModel>();
@@ -913,6 +1052,12 @@ namespace HekaMOLD.Business.UseCases
             });
 
             return data.ToArray();
+        }
+
+        public bool HasAnyUnitType(string unitCode)
+        {
+            var repo = _unitOfWork.GetRepository<UnitType>();
+            return repo.Any(d => d.UnitCode == unitCode);
         }
         #endregion
 
@@ -1424,6 +1569,24 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        #endregion
+
+        #region SYNC POINTS
+        public SyncPointModel[] GetSyncPointList()
+        {
+            List<SyncPointModel> data = new List<SyncPointModel>();
+
+            var repo = _unitOfWork.GetRepository<SyncPoint>();
+
+            repo.Filter(d => d.IsActive == true).ToList().ForEach(d =>
+            {
+                SyncPointModel containerObj = new SyncPointModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
         #endregion
     }
 }

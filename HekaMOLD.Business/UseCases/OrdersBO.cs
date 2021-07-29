@@ -372,6 +372,12 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public bool HasAnySaleOrder(string documentNo)
+        {
+            var repo = _unitOfWork.GetRepository<ItemOrder>();
+            return repo.Any(d => d.DocumentNo == documentNo && d.OrderType == (int)ItemOrderType.Sale);
+        }
+
         #region ORDER PRESENTATION
         public ItemOrderModel[] GetRelatedOrders(int receiptId)
         {

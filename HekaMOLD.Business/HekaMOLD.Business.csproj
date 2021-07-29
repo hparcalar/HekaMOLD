@@ -130,6 +130,8 @@
     <Compile Include="UseCases\Core\CoreRecordTracingBO.cs" />
     <Compile Include="UseCases\DefinitionsBO.cs" />
     <Compile Include="UseCases\FilesBO.cs" />
+    <Compile Include="UseCases\Integrations\IntegratorBase.cs" />
+    <Compile Include="UseCases\Integrations\MikroIntegrator.cs" />
     <Compile Include="UseCases\MoldBO.cs" />
     <Compile Include="UseCases\OrdersBO.cs" />
     <Compile Include="UseCases\PlanningBO.cs" />
