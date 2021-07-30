@@ -21,25 +21,29 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemOrder>();
 
-            repo.Filter(d => d.OrderType == (int)orderType).ToList().ForEach(d =>
-            {
-                ItemOrderModel containerObj = new ItemOrderModel();
-                d.MapTo(containerObj);
-                containerObj.OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption();
-                containerObj.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate);
-                containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
-                containerObj.FirmCode = d.Firm != null ? d.Firm.FirmCode : "";
-                containerObj.FirmName = d.Firm != null ? d.Firm.FirmName : "";
-                containerObj.WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "";
-                containerObj.WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "";
-
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+            return repo.Filter(d => d.OrderType == (int)orderType).ToList()
+                .Select(d => new ItemOrderModel
+                {
+                    Id = d.Id,
+                    OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                    DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                    FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                    FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "",
+                    WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "",
+                    OrderNo = d.OrderNo,
+                    OrderDate = d.OrderDate,
+                    DocumentNo = d.DocumentNo,
+                    Explanation = d.Explanation,
+                    FirmId = d.FirmId,
+                    OrderStatus = d.OrderStatus,
+                    OrderType = d.OrderType,
+                    PlantId = d.PlantId,
+                }).ToArray();
         }
 
-        public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model)
+        public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model, bool detailCanBeNull=false)
         {
             BusinessResult result = new BusinessResult();
 
@@ -82,7 +86,7 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 #region SAVE DETAILS
-                if (model.Details == null)
+                if (model.Details == null && detailCanBeNull == false)
                     throw new Exception("Detay bilgisi olmadan sipariş kaydedilemez.");
 
                 foreach (var item in model.Details)
@@ -195,6 +199,37 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult AddOrderDetail(int orderId, ItemOrderDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoOrder = _unitOfWork.GetRepository<ItemOrder>();
+                var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+                var dbOrder = repoOrder.Get(d => d.Id == orderId);
+                if (dbOrder == null)
+                    throw new Exception("Sipariş bilgisi HEKA yazılımında bulunamadı.");
+
+                var dbNewDetail = new ItemOrderDetail();
+                model.MapTo(dbNewDetail);
+                dbNewDetail.ItemOrder = dbOrder;
+                repoOrderDetail.Add(dbNewDetail);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public BusinessResult DeleteItemOrder(int id)
         {
             BusinessResult result = new BusinessResult();
@@ -262,6 +297,42 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemOrder>();
             var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
+                model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate);
+                model.OrderStatusStr = ((OrderStatusType)model.OrderStatus).ToCaption();
+                model.FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
+                model.FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
+                model.WarehouseCode = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseCode : "";
+                model.WarehouseName = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseName : "";
+
+                List<ItemOrderDetailModel> detailContainers = new List<ItemOrderDetailModel>();
+                dbObj.ItemOrderDetail.ToList().ForEach(d =>
+                {
+                    ItemOrderDetailModel detailContainerObj = new ItemOrderDetailModel();
+                    d.MapTo(detailContainerObj);
+                    detailContainerObj.ItemNo = d.Item != null ? d.Item.ItemNo : "";
+                    detailContainerObj.ItemName = d.Item != null ? d.Item.ItemName : "";
+                    detailContainerObj.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
+                    detailContainerObj.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
+                    detailContainerObj.NewDetail = false;
+                    detailContainers.Add(detailContainerObj);
+                });
+
+                model.Details = detailContainers.ToArray();
+            }
+
+            return model;
+        }
+
+        public ItemOrderModel GetItemOrder(string documentNo, ItemOrderType orderType)
+        {
+            ItemOrderModel model = new ItemOrderModel { Details = new ItemOrderDetailModel[0] };
+
+            var repo = _unitOfWork.GetRepository<ItemOrder>();
+            var dbObj = repo.Get(d => d.DocumentNo == documentNo && d.OrderType == (int)orderType);
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
@@ -376,6 +447,12 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<ItemOrder>();
             return repo.Any(d => d.DocumentNo == documentNo && d.OrderType == (int)ItemOrderType.Sale);
+        }
+
+        public bool HasAnySaleOrderBySyncKey(string syncKey)
+        {
+            var repo = _unitOfWork.GetRepository<ItemOrder>();
+            return repo.Any(d => d.SyncKey == syncKey);
         }
 
         #region ORDER PRESENTATION

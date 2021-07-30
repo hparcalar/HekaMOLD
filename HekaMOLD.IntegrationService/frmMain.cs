@@ -1,4 +1,6 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+﻿using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.UseCases.Integrations;
 using System;
@@ -81,7 +83,9 @@ namespace HekaMOLD.IntegrationService
 
                     using (DefinitionsBO bObj = new DefinitionsBO())
                     {
-                        var syncList = bObj.GetSyncPointList();
+                        var syncList = bObj.GetSyncPointList()
+                            .Where(d => d.SyncPointType == (int)SyncPointType.WorkData)
+                            .ToArray();
                         foreach (var sync in syncList)
                         {
                             var result = entObj.PullFirms(sync);
@@ -95,6 +99,9 @@ namespace HekaMOLD.IntegrationService
 
                             result = entObj.PullRecipes(sync);
                             AddLog(result.Result ? "Reçeteler transfer edildi." : "Reçete Transferi Hata: " + result.ErrorMessage);
+
+                            result = entObj.PullSaleOrders(sync);
+                            AddLog(result.Result ? "Satış siparişleri transfer edildi." : "Satış Siparişi Transferi Hata: " + result.ErrorMessage);
                         }
                     }
                 }

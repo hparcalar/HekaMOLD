@@ -62,6 +62,10 @@ namespace HekaMOLD.Enterprise.Controllers
                 else
                     redirectionResult = RedirectToAction("Index", "Home");
 
+                // CHECK & RUN MIGRATION SCRTIPS
+                HekaBO hekaBase = new HekaBO();
+                hekaBase.RunMigrations();
+
                 return redirectionResult;
             }
             catch (Exception ex)

@@ -21,7 +21,7 @@ namespace HekaMOLD.Business.UseCases
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public BusinessResult CreateMachinePlan(WorkOrderDetailModel model)
+        public BusinessResult CreateMachinePlan(ItemOrderDetailModel model)
         {
             BusinessResult result = new BusinessResult();
 
@@ -34,7 +34,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoItem = _unitOfWork.GetRepository<Item>();
                 var repoMachinePlan = _unitOfWork.GetRepository<MachinePlan>();
 
-                var dbSaleOrderDetail = repoOrderDetail.Get(d => d.Id == model.SaleOrderDetailId);
+                var dbSaleOrderDetail = repoOrderDetail.Get(d => d.Id == model.Id);
                 if (dbSaleOrderDetail == null)
                     throw new Exception("Planlanması istenen siparişin kaydına ulaşılamadı.");
 
@@ -221,6 +221,7 @@ namespace HekaMOLD.Business.UseCases
                     d.OrderStatus == (int)OrderStatusType.Approved
                 )
             ).ToList().Select(d => new ItemOrderDetailModel { 
+                Id = d.Id,
                 OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
                 ItemNo = d.Item != null ? d.Item.ItemNo : "",
                 FirmName = d.ItemOrder.Firm != null ? 

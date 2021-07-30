@@ -69,6 +69,7 @@
     <Compile Include="Models\Constants\OrderStatusType.cs" />
     <Compile Include="Models\Constants\RecordType.cs" />
     <Compile Include="Models\Constants\RequestStatusType.cs" />
+    <Compile Include="Models\Constants\SyncPointType.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\Constants\WorkOrderStatusType.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthModel.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="UseCases\Core\CoreRecordTracingBO.cs" />
     <Compile Include="UseCases\DefinitionsBO.cs" />
     <Compile Include="UseCases\FilesBO.cs" />
+    <Compile Include="UseCases\HekaBO.cs" />
     <Compile Include="UseCases\Integrations\IntegratorBase.cs" />
     <Compile Include="UseCases\Integrations\MikroIntegrator.cs" />
     <Compile Include="UseCases\MoldBO.cs" />

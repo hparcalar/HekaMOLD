@@ -179,6 +179,7 @@
           <Property Name="CreatedUserId" Type="int" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
+          <Property Name="SyncKey" Type="nvarchar" MaxLength="75" />
         </EntityType>
         <EntityType Name="ItemOrderDetail">
           <Key>
@@ -2267,6 +2268,7 @@
           <Property Name="SubTotal" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="TaxPrice" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="OverallTotal" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="SyncKey" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ItemOrderDetail">
           <Key>
@@ -4498,6 +4500,7 @@
           <EntitySetMapping Name="ItemOrder">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemOrder">
               <MappingFragment StoreEntitySet="ItemOrder">
+                <ScalarProperty Name="SyncKey" ColumnName="SyncKey" />
                 <ScalarProperty Name="OverallTotal" ColumnName="OverallTotal" />
                 <ScalarProperty Name="TaxPrice" ColumnName="TaxPrice" />
                 <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />

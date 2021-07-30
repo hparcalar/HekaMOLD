@@ -45,6 +45,7 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> SubTotal { get; set; }
         public Nullable<decimal> TaxPrice { get; set; }
         public Nullable<decimal> OverallTotal { get; set; }
+        public string SyncKey { get; set; }
     
         public virtual Firm Firm { get; set; }
         public virtual ItemRequest ItemRequest { get; set; }

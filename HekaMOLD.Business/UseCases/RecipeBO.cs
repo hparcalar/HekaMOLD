@@ -17,40 +17,36 @@ namespace HekaMOLD.Business.UseCases
         #region PRODUCT RECIPE DEFINITON
         public ProductRecipeModel[] GetProductRecipeList()
         {
-            List<ProductRecipeModel> data = new List<ProductRecipeModel>();
-
             var repo = _unitOfWork.GetRepository<ProductRecipe>();
 
-            repo.GetAll().ToList().ForEach(d =>
+            return repo.GetAll().Select(d => new ProductRecipeModel
             {
-                ProductRecipeModel containerObj = new ProductRecipeModel();
-                d.MapTo(containerObj);
-                containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
-                containerObj.ProductName = d.Item != null ? d.Item.ItemName : "";
-                containerObj.CreatedDateStr = d.CreatedDate != null ? string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "";
-                data.Add(containerObj);
-            });
+                Id = d.Id,
+                ProductRecipeCode = d.ProductRecipeCode,
+                Description = d.Description,
+                CreatedDate = d.CreatedDate,
+                CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                ProductCode = d.Item != null ? d.Item.ItemNo : "",
+                ProductName = d.Item != null ? d.Item.ItemName : "",
 
-            return data.ToArray();
+            }).ToArray();
         }
 
         public ProductRecipeModel[] GetActiveProductRecipeList()
         {
-            List<ProductRecipeModel> data = new List<ProductRecipeModel>();
-
             var repo = _unitOfWork.GetRepository<ProductRecipe>();
 
-            repo.Filter(d => d.IsActive == true).ToList().ForEach(d =>
+            return repo.Filter(d => d.IsActive == true).ToList().Select(d => new ProductRecipeModel
             {
-                ProductRecipeModel containerObj = new ProductRecipeModel();
-                d.MapTo(containerObj);
-                containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
-                containerObj.ProductName = d.Item != null ? d.Item.ItemName : "";
-                containerObj.CreatedDateStr = d.CreatedDate != null ? string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "";
-                data.Add(containerObj);
-            });
+                Id = d.Id,
+                ProductRecipeCode = d.ProductRecipeCode,
+                Description = d.Description,
+                CreatedDate = d.CreatedDate,
+                CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                ProductCode = d.Item != null ? d.Item.ItemNo : "",
+                ProductName = d.Item != null ? d.Item.ItemName : "",
 
-            return data.ToArray();
+            }).ToArray();
         }
 
         public BusinessResult SaveOrUpdateProductRecipe(ProductRecipeModel model)
@@ -79,6 +75,7 @@ namespace HekaMOLD.Business.UseCases
                     dbObj = new ProductRecipe();
                     dbObj.ProductRecipeCode = GetNextProductRecipeNo();
                     dbObj.CreatedDate = DateTime.Now;
+                    dbObj.IsActive = true;
                     dbObj.CreatedUserId = model.CreatedUserId;
                     repo.Add(dbObj);
                 }
@@ -138,7 +135,7 @@ namespace HekaMOLD.Business.UseCases
                 {
                     #region CHECK ANOTHER ACTIVE RECIPES EXISTS, THEN MARK THEM AS REVISIONS
                     var revisionRecipes = repo
-                        .Filter(d => d.ProductId == dbObj.ProductId && d.IsActive == true && d.Id != dbObj.Id)
+                        .Filter(d => d.ProductId != null && d.ProductId == dbObj.ProductId && d.IsActive == true && d.Id != dbObj.Id)
                         .ToArray();
 
                     foreach (var revRecipe in revisionRecipes)

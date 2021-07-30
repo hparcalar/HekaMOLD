@@ -51,5 +51,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string UnitName { get; set; }
         public bool NewDetail { get; set; }
         #endregion
+
+        #region PLANNING ELEMENTS
+        public int? MachineId { get; set; }
+        #endregion
     }
 }

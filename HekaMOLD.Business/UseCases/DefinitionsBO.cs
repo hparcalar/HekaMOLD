@@ -20,36 +20,33 @@ namespace HekaMOLD.Business.UseCases
         #region FIRM BUSINESS
         public FirmModel[] GetFirmList()
         {
-            List<FirmModel> data = new List<FirmModel>();
-
             var repo = _unitOfWork.GetRepository<Firm>();
 
-            repo.GetAll().ToList().ForEach(d =>
-            {
-                FirmModel containerObj = new FirmModel();
-                d.MapTo(containerObj);
-                containerObj.FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : "";
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+            return repo.GetAll()
+                .Select(d => new FirmModel
+                {
+                    Id = d.Id,
+                    FirmCode = d.FirmCode,
+                    FirmName = d.FirmName,
+                    IsApproved = true,
+                    FirmType = d.FirmType,
+                    FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : "Tedarikçi + Müşteri",
+                }).ToArray();
         }
 
         public FirmModel[] GetApprovedSuppliers()
         {
-            List<FirmModel> data = new List<FirmModel>();
-
             var repo = _unitOfWork.GetRepository<Firm>();
 
-            repo.Filter(d => d.FirmType == (int)FirmType.Supplier && d.IsApproved == true).ToList().ForEach(d =>
+            return repo.Filter(d => d.FirmType == (int)FirmType.Supplier && d.IsApproved == true).ToList().Select(d => new FirmModel
             {
-                FirmModel containerObj = new FirmModel();
-                d.MapTo(containerObj);
-                containerObj.FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : "";
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+                Id = d.Id,
+                FirmCode = d.FirmCode,
+                FirmName = d.FirmName,
+                IsApproved = true,
+                FirmType = d.FirmType,
+                FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : "Tedarikçi + Müşteri",
+            }).ToArray();
         }
 
         public BusinessResult SaveOrUpdateFirm(FirmModel model)
@@ -180,6 +177,30 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public FirmModel GetFirm(string firmCode)
+        {
+            FirmModel model = new FirmModel { };
+
+            var repo = _unitOfWork.GetRepository<Firm>();
+            var dbObj = repo.Get(d => d.FirmCode == firmCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+                #region GET AUTHOR LIST
+                List<FirmAuthorModel> authorList = new List<FirmAuthorModel>();
+                dbObj.FirmAuthor.ToList().ForEach(d =>
+                {
+                    FirmAuthorModel authorModel = new FirmAuthorModel();
+                    d.MapTo(authorModel);
+                    authorList.Add(authorModel);
+                });
+                model.Authors = authorList.ToArray();
+                #endregion
+            }
+
+            return model;
+        }
         public bool HasAnyFirm(string firmCode)
         {
             var repo = _unitOfWork.GetRepository<Firm>();
@@ -190,55 +211,43 @@ namespace HekaMOLD.Business.UseCases
         #region ITEM BUSINESS
         public ItemModel[] GetItemList()
         {
-            List<ItemModel> data = new List<ItemModel>();
-
             var repo = _unitOfWork.GetRepository<Item>();
 
-            repo.GetAll().ToList().ForEach(d =>
+            return repo.GetAll().Select(d => new ItemModel
             {
-                ItemModel containerObj = new ItemModel();
-                d.MapTo(containerObj);
-
-                containerObj.ItemTypeStr = 
-                    d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" : 
-                    d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "";
-                containerObj.CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "";
-                containerObj.GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "";
-                containerObj.TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0;
-                containerObj.TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0;
-                containerObj.TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0;
-
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+                Id=d.Id,
+                ItemNo = d.ItemNo,
+                ItemName = d.ItemName,
+                ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
+                        d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "",
+                ItemType = d.ItemType,
+                CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
+                GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
+                TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
+                TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
+                TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
+            }).ToArray();
         }
 
         public ItemModel[] GetProductList()
         {
-            List<ItemModel> data = new List<ItemModel>();
-
             var repo = _unitOfWork.GetRepository<Item>();
 
-            repo.Filter(d => d.ItemType == (int)ItemType.Product 
-                || d.ItemType == (int)ItemType.SemiProduct).ToList().ForEach(d =>
+            return repo.Filter(d => d.ItemType == (int)ItemType.Product
+                || d.ItemType == (int)ItemType.SemiProduct).ToList().Select(d => new ItemModel
             {
-                ItemModel containerObj = new ItemModel();
-                d.MapTo(containerObj);
-
-                containerObj.ItemTypeStr =
-                    d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
-                    d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "";
-                containerObj.CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "";
-                containerObj.GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "";
-                containerObj.TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0;
-                containerObj.TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0;
-                containerObj.TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0;
-
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+                Id = d.Id,
+                ItemNo = d.ItemNo,
+                ItemName = d.ItemName,
+                ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
+                        d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "",
+                ItemType = d.ItemType,
+                CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
+                GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
+                TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
+                TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
+                TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
+            }).ToArray();
         }
 
         public BusinessResult SaveOrUpdateItem(ItemModel model)
@@ -1068,6 +1077,20 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ForexType>();
             var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public ForexTypeModel GetForexType(string forexCode)
+        {
+            ForexTypeModel model = new ForexTypeModel();
+
+            var repo = _unitOfWork.GetRepository<ForexType>();
+            var dbObj = repo.Get(d => d.ForexTypeCode == forexCode);
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);

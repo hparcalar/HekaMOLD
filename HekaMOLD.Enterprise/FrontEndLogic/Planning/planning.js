@@ -178,6 +178,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
     }
+
     $scope.saveModel = function (planObj) {
         $scope.saveStatus = 1;
 
@@ -197,6 +198,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 }
             }).catch(function (err) { });
     }
+
     $scope.reOrderPlan = function (planObj) {
         $scope.saveStatus = 1;
 
@@ -216,6 +218,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 }
             }).catch(function (err) { });
     }
+
     $scope.bindModel = function (id) {
         $http.get(HOST_URL + 'Planning/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
@@ -265,7 +268,6 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                         var machineId = $(this).attr('data-id');
 
                         if (typeof machineId != 'undefined') {
-
                             var planObj = $scope.waitingPlanList.find(d => d.Id == parseInt(planId));
                             if (typeof planObj != 'undefined') {
                                 planObj.MachineId = parseInt(machineId);

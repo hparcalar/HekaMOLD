@@ -1,5 +1,6 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
@@ -52,6 +53,32 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult ReOrderPlan(MachinePlanModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.ReOrderPlan(model);
+            }
+
+            return Json(result);
+        }
+        
+        [HttpPost]
+        public JsonResult SaveModel(ItemOrderDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.CreateMachinePlan(model);
+            }
+
+            return Json(result);
         }
     }
 }
