@@ -26,6 +26,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? SaleOrderDetailId { get; set; }
 
         #region VISUAL ELEMENTS
+        public bool NewDetail { get; set; }
         public int? MachinePlanOrderNo { get; set; }
         public string WorkOrderStatusStr { get; set; }
         public string WorkOrderDateStr { get; set; }
@@ -39,10 +40,16 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string DyeName { get; set; }
         public string MachineCode { get; set; }
         public string MachineName { get; set; }
+        public string MoldCode { get; set; }
+        public string MoldName { get; set; }
         public string SaleOrderDocumentNo { get; set; }
         public string SaleOrderReceiptNo { get; set; }
         public string SaleOrderDate { get; set; }
         public string SaleOrderDeadline { get; set; }
+        public int CompleteQuantity { get; set; }
+        public string ProductDescription { get; set; }
+        public string UnitCode { get; set; }
+        public string UnitName { get; set; }
         #endregion
     }
 }

@@ -21,6 +21,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
 
         #region VISUAL ELEMENTS
         public string WorkOrderStatusStr { get; set; }
+        public string WorkOrderDateStr { get; set; }
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
         #endregion

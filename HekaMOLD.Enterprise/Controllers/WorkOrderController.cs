@@ -26,6 +26,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetNextWorkOrderNo()
+        {
+            string workOrderNo = "";
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                workOrderNo = bObj.GetNextWorkOrderNo();
+            }
+
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(workOrderNo), WorkOrderNo = workOrderNo }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult GetWorkOrderDetailList()
         {
             WorkOrderDetailModel[] result = new WorkOrderDetailModel[0];
@@ -40,6 +55,38 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
 
+        [HttpGet]
+        public JsonResult GetSelectables()
+        {
+            ItemModel[] items = new ItemModel[0];
+            UnitTypeModel[] units = new UnitTypeModel[0];
+            FirmModel[] firms = new FirmModel[0];
+            ForexTypeModel[] forexes = new ForexTypeModel[0];
+            MoldModel[] molds = new MoldModel[0];
+            MoldTestModel[] moldTests = new MoldTestModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                items = bObj.GetItemList();
+                units = bObj.GetUnitTypeList();
+                firms = bObj.GetFirmList();
+                forexes = bObj.GetForexTypeList();
+                molds = bObj.GetMoldList();
+            }
+
+            using (MoldBO bObj = new MoldBO())
+            {
+                moldTests = bObj.GetMoldTestList();
+            }
+
+            var jsonResult = Json(new { Items = items, Units = units, 
+                Firms = firms, Forexes = forexes,
+                Molds = molds, MoldTests = moldTests,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         /// <summary>
         /// TO-DO
         /// </summary>
@@ -49,10 +96,10 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult BindModel(int rid)
         {
             WorkOrderModel model = null;
-            //using (DefinitionsBO bObj = new DefinitionsBO())
-            //{
-            //    model = bObj.GetFirm(rid);
-            //}
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                model = bObj.GetWorkOrder(rid);
+            }
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -68,10 +115,10 @@ namespace HekaMOLD.Enterprise.Controllers
             try
             {
                 BusinessResult result = null;
-                //using (DefinitionsBO bObj = new DefinitionsBO())
-                //{
-                //    result = bObj.DeleteFirm(rid);
-                //}
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.DeleteWorkOrder(rid);
+                }
 
                 if (result.Result)
                     return Json(new { Status = 1 });
@@ -90,15 +137,15 @@ namespace HekaMOLD.Enterprise.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult SaveModel(FirmModel model)
+        public JsonResult SaveModel(WorkOrderModel model)
         {
             try
             {
                 BusinessResult result = null;
-                //using (DefinitionsBO bObj = new DefinitionsBO())
-                //{
-                //    result = bObj.SaveOrUpdateFirm(model);
-                //}
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.SaveOrUpdateWorkOrder(model);
+                }
 
                 if (result.Result)
                     return Json(new { Status = 1, RecordId = result.RecordId });
@@ -109,8 +156,6 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
-
-
         }
     }
 }

@@ -132,6 +132,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\MoldController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Controllers\MoldTestController.cs" />
     <Compile Include="Controllers\Filters\MobileAuthFilter.cs" />
@@ -4000,6 +4001,8 @@
     <Content Include="FrontEndLogic\Mobile\item-entry.js" />
     <Content Include="FrontEndLogic\MoldTest\index.js" />
     <Content Include="FrontEndLogic\MoldTest\list.js" />
+    <Content Include="FrontEndLogic\Mold\index.js" />
+    <Content Include="FrontEndLogic\Mold\list.js" />
     <Content Include="FrontEndLogic\PIOrder\index.js" />
     <Content Include="FrontEndLogic\PIOrder\list.js" />
     <Content Include="FrontEndLogic\PIRequest\index.js" />
@@ -4018,6 +4021,7 @@
     <Content Include="FrontEndLogic\User\list.js" />
     <Content Include="FrontEndLogic\Warehouse\index.js" />
     <Content Include="FrontEndLogic\Warehouse\list.js" />
+    <Content Include="FrontEndLogic\WorkOrder\index.js" />
     <Content Include="FrontEndLogic\WorkOrder\list.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -4376,6 +4380,10 @@
     <Content Include="Views\SIOrder\List.cshtml" />
     <Content Include="Views\WorkOrder\List.cshtml" />
     <Content Include="Views\Planning\List.cshtml" />
+    <Content Include="Views\WorkOrder\Index.cshtml" />
+    <Content Include="Views\Mold\List.cshtml" />
+    <Content Include="Views\Mold\Index.cshtml" />
+    <Content Include="Views\Mobile\BarcodeTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

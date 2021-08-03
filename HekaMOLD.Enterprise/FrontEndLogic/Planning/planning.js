@@ -10,6 +10,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
     $scope.selectedMachineList = [];
     $scope.boardPlanList = [];
     $scope.waitingPlanList = [];
+    $scope.selectedPlan = { Id:0 };
 
     $scope.getMachinePlans = function (machine) {
         return $scope.boardPlanList.filter(d => d.MachineId == machine.Id);
@@ -17,6 +18,10 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
     $scope.toggleWaitingPlans = function () {
         $scope.waitingPlansVisible = !$scope.waitingPlansVisible;
+    }
+
+    $scope.selectPlan = function (planItem) {
+        $scope.selectedPlan = planItem;
     }
 
     // VISUAL TRIGGERS
@@ -93,7 +98,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
             var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
             if (planObj != null) {
-                if (planObj.PlanStatus != 1) {
+                if (planObj.WorkOrder.WorkOrderStatus != 1) {
                     toastr.error('Tamamlanmış bir planı değiştiremezsiniz.', 'Uyarı');
                     return false;
                 }
@@ -113,20 +118,21 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 return false;
             else {
                 var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
-                if (planObj.PlanStatus != 1) {
+                if (planObj.WorkOrder.WorkOrderStatus != 1) {
                     toastr.error('Tamamlanmış bir planın önüne üretim alamazsınız.', 'Uyarı');
                     return false;
                 }
             }
 
+            $('.plan-box').removeClass('drag-over');
             $(this).addClass('drag-over');
         });
 
         $('.plan-box').on('dragleave', function (de) {
-            refCounter--;
+            //refCounter--;
 
-            if (refCounter == 0)
-                $(this).removeClass('drag-over');
+            //if (refCounter == 0)
+                //$(this).removeClass('drag-over');
         });
 
         $('.plan-box').on('drop', function (de) {
@@ -187,7 +193,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
 
-                    if (resp.data.Status == 1) {
+                    if (resp.data.Result == true) {
                         toastr.success('İşlem başarılı.', 'Bilgilendirme');
 
                         $scope.loadMachineList();
@@ -207,11 +213,13 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
 
-                    if (resp.data.Status == 1) {
+                    if (resp.data.Result == true) {
                         toastr.success('İşlem başarılı.', 'Bilgilendirme');
 
                         $scope.loadMachineList();
                         $scope.loadWaitingPlanList();
+
+                        $scope.selectPlan(planObj);
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
@@ -229,6 +237,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
     }
 
     // WAITING PLANS GRID
+    $scope.lastProcessedPlanId = 0;
     $scope.loadWaitingPlans = function () {
         $('#waitingPlanList').dxDataGrid({
             dataSource: $scope.waitingPlanList,
@@ -265,6 +274,11 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                         event.preventDefault();
 
                         var planId = event.originalEvent.dataTransfer.getData("text/plain");
+                        if (planId == $scope.lastProcessedPlanId)
+                            return;
+                        else
+                            $scope.lastProcessedPlanId = planId;
+
                         var machineId = $(this).attr('data-id');
 
                         if (typeof machineId != 'undefined') {
@@ -367,6 +381,46 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
     toastr.options.timeOut = 2000;
     toastr.options.progressBar = true;
     toastr.options.preventDuplicates = true;
+
+    // KEYBOARD EVENTS
+    $(document).keyup(function (event) {
+        if (event.key == 'Delete') // DEL
+        {
+            if ($scope.selectedPlan != null && $scope.selectedPlan.Id > 0) {
+                bootbox.confirm({
+                    message: "Bu üretim planını silmek istediğinizden emin misiniz?",
+                    closeButton: false,
+                    buttons: {
+                        confirm: {
+                            label: 'Evet',
+                            className: 'btn-primary'
+                        },
+                        cancel: {
+                            label: 'Hayır',
+                            className: 'btn-light'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $http.post(HOST_URL + 'Planning/DeletePlan', { rid: $scope.selectedPlan.Id }, 'json')
+                                .then(function (resp) {
+                                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                                        if (resp.data.Result == true) {
+                                            toastr.success('Plan başarıyla silindi.', 'Bilgilendirme');
+
+                                            $scope.loadMachineList();
+                                            $scope.loadWaitingPlanList();
+                                        }
+                                        else
+                                            toastr.error(resp.data.ErrorMessage, 'Hata');
+                                    }
+                                }).catch(function (err) { });
+                        }
+                    }
+                });
+            }
+        }
+    });
 
     // ON LOAD EVENTS
     $scope.loadMachineList();

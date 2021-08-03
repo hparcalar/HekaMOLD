@@ -414,7 +414,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                     con.Open();
 
                     SqlDataAdapter dAdapter = new SqlDataAdapter("SELECT * FROM SIPARISLER WHERE sip_iptal=0 AND " +
-                        "sip_cins = 0 ORDER BY sip_evrakno_seri, sip_evrakno_sira, sip_satirno", con);
+                        "sip_tip = 0 ORDER BY sip_evrakno_seri, sip_evrakno_sira, sip_satirno", con);
                     dAdapter.Fill(dTable);
                     dAdapter.Dispose();
 

@@ -234,7 +234,7 @@
                         if (typeof values.UnitId != 'undefined') {
                             var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                             obj.UnitId = unitObj.Id;
-                            obj.UnitName = itemObj.UnitCode;
+                            obj.UnitName = unitObj.UnitCode;
                             calculateRowAgain = true;
                         }
 

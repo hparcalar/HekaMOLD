@@ -38,6 +38,8 @@ namespace HekaMOLD.Business.UseCases
                 if (dbSaleOrderDetail == null)
                     throw new Exception("Planlanması istenen siparişin kaydına ulaşılamadı.");
 
+                dbSaleOrderDetail.MapTo(model);
+
                 var dbObjDetail = repoDetails.Get(d => d.Id == model.Id);
                 if (dbObjDetail == null)
                 {
@@ -60,7 +62,7 @@ namespace HekaMOLD.Business.UseCases
                         Explanation = "",
                         WorkOrderStatus = (int)WorkOrderStatusType.Planned,
                         FirmId = dbSaleOrderDetail.ItemOrder.FirmId,
-                        PlantId = dbSaleOrderDetail.ItemOrder.PlantId
+                        PlantId = dbSaleOrderDetail.ItemOrder.PlantId,
                     };
                     repo.Add(dbObjDetail.WorkOrder);
                 }
@@ -77,6 +79,7 @@ namespace HekaMOLD.Business.UseCases
 
                 dbObjDetail.UpdatedDate = DateTime.Now;
                 dbObjDetail.UpdatedUserId = model.CreatedUserId;
+                dbObjDetail.SaleOrderDetailId = dbSaleOrderDetail.Id;
 
                 #region CHECK SALE ORDER REMAINING QUANTITY & STATUS
                 var saleOrderPlannedQuantity = dbSaleOrderDetail.WorkOrderDetail
@@ -230,6 +233,116 @@ namespace HekaMOLD.Business.UseCases
             }).ToArray();
 
             return data;
+        }
+
+        public MachinePlanModel[] GetProductionPlans()
+        {
+            MachinePlanModel[] data = new MachinePlanModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachinePlan>();
+                data = repo.GetAll().ToList().Select(d => new MachinePlanModel
+                {
+                    Id = d.Id,
+                    MachineId = d.MachineId,
+                    OrderNo = d.OrderNo,
+                    WorkOrderDetailId = d.WorkOrderDetailId,
+                    WorkOrder = new WorkOrderDetailModel
+                    {
+                        ProductCode = d.WorkOrderDetail.Item.ItemNo,
+                        ProductName = d.WorkOrderDetail.Item.ItemName,
+                        WorkOrderId = d.WorkOrderDetail.WorkOrderId,
+                        MoldId = d.WorkOrderDetail.MoldId,
+                        MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
+                        MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
+                        CreatedDate = d.WorkOrderDetail.CreatedDate,
+                        Quantity = d.WorkOrderDetail.Quantity,
+                        WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
+                        WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
+                        FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ? 
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                        WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
+                        WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
+                        CompleteQuantity = d.WorkOrderDetail.WorkOrderSerial.Count()
+                    }
+                }).OrderBy(d => d.OrderNo).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult DeletePlan(int machinePlanId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachinePlan>();
+                var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoWorkOrder = _unitOfWork.GetRepository<WorkOrder>();
+                var repoItemOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+                var dbObj = repo.Get(d => d.Id == machinePlanId);
+                if (dbObj == null)
+                    throw new Exception("Silmeye çalıştığınız plan kaydı bulunamadı.");
+
+                if (dbObj.WorkOrderDetail.WorkOrderStatus <= (int)WorkOrderStatusType.Planned)
+                {
+                    var dbWorkOrderDetail = dbObj.WorkOrderDetail;
+                    int saleOrderDetailId = dbWorkOrderDetail.SaleOrderDetailId ?? 0;
+
+                    repo.Delete(dbObj);
+
+                    var dbWorkOrder = dbWorkOrderDetail.WorkOrder;
+                    repoWorkOrderDetail.Delete(dbWorkOrderDetail);
+
+                    if (!dbWorkOrder.WorkOrderDetail.Any(d => d.Id != dbWorkOrderDetail.Id))
+                        repoWorkOrder.Delete(dbWorkOrder);
+
+                    // UPDATE SALE ORDER STATUS FROM PLANNED TO APPROVED
+                    var dbItemOrderDetail = repoItemOrderDetail.Get(d => d.Id == saleOrderDetailId);
+                    if (dbItemOrderDetail != null)
+                    {
+                        dbItemOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
+
+                        var dbItemOrder = dbItemOrderDetail.ItemOrder;
+                        if (!dbItemOrder.ItemOrderDetail.Any(d => d.Id != dbItemOrderDetail.Id
+                            && d.OrderStatus > (int)OrderStatusType.Approved))
+                            dbItemOrder.OrderStatus = (int)OrderStatusType.Approved;
+                    }
+
+                    // RE-ORDER MACHINE PLANS AFTER DELETION
+                    var plansOfMachine = repo.Filter(d => d.MachineId == dbObj.MachineId && d.Id != dbObj.Id)
+                        .OrderBy(d => d.OrderNo).ToArray();
+
+                    int newOrderNo = 1;
+                    foreach (var item in plansOfMachine)
+                    {
+                        item.OrderNo = newOrderNo;
+                        newOrderNo++;
+                    }
+
+                    _unitOfWork.SaveChanges();
+                }
+                else
+                    throw new Exception("İşleme başlanmış veya tamamlanmış olan bir plan kaydını silemezsiniz.");
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
         #endregion
     }

@@ -164,25 +164,28 @@ namespace HekaMOLD.Business.UseCases
                 _unitOfWork.SaveChanges();
 
                 #region CREATE NOTIFICATION
-                if (newRecord || !repoNotify.Any(d => d.RecordId == dbObj.Id && d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval))
+                if (model.OrderType == (int)ItemOrderType.Purchase)
                 {
-                    var repoUser = _unitOfWork.GetRepository<User>();
-                    var itemRequestApprovalOwners = repoUser.Filter(d => d.UserRole != null &&
-                        d.UserRole.UserAuth.Any(m => m.UserAuthType.AuthTypeCode == "POApproval" && m.IsGranted == true)).ToArray();
-
-                    foreach (var poOWNER in itemRequestApprovalOwners)
+                    if (newRecord || !repoNotify.Any(d => d.RecordId == dbObj.Id && d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval))
                     {
-                        base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                        var repoUser = _unitOfWork.GetRepository<User>();
+                        var itemRequestApprovalOwners = repoUser.Filter(d => d.UserRole != null &&
+                            d.UserRole.UserAuth.Any(m => m.UserAuthType.AuthTypeCode == "POApproval" && m.IsGranted == true)).ToArray();
+
+                        foreach (var poOWNER in itemRequestApprovalOwners)
                         {
-                            IsProcessed = false,
-                            Message = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate)
-                            + " yeni bir satınalma siparişi oluşturuldu. Onayınız bekleniyor.",
-                            Title = NotifyType.ItemOrderWaitForApproval.ToCaption(),
-                            NotifyType = (int)NotifyType.ItemOrderWaitForApproval,
-                            SeenStatus = 0,
-                            RecordId = dbObj.Id,
-                            UserId = poOWNER.Id
-                        });
+                            base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                            {
+                                IsProcessed = false,
+                                Message = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate)
+                                + " yeni bir satınalma siparişi oluşturuldu. Onayınız bekleniyor.",
+                                Title = NotifyType.ItemOrderWaitForApproval.ToCaption(),
+                                NotifyType = (int)NotifyType.ItemOrderWaitForApproval,
+                                SeenStatus = 0,
+                                RecordId = dbObj.Id,
+                                UserId = poOWNER.Id
+                            });
+                        }
                     }
                 }
                 #endregion

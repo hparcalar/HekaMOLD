@@ -50,20 +50,24 @@
                                     <div class="d-flex flex-column">
                                         <div class="plan-box" draggable="true"
                                              data-plan-id="{{plan.Id}}"
-                                             ng-class="{'plan-box-cancelled': plan.PlanStatus == 2, 'plan-box-completed': plan.PlanStatus == 3}"
+                                             ng-click="selectPlan(plan)"
+                                             ng-class="{'plan-box-cancelled': plan.PlanStatus == 2, 
+                                                'plan-box-completed': plan.PlanStatus == 3,
+                                                'plan-selected': plan.Id == selectedPlan.Id}"
                                              ng-repeat="plan in getMachinePlans(machine)">
-                                            <button class="btn btn-dark btn-sm btn-plan-details"
+                                            <a class="btn btn-primary btn-sm btn-plan-details px-1 py-1"
+                                                    href="@Url.Action("Index","WorkOrder")?rid={{plan.WorkOrder.WorkOrderId}}"
+                                                    target="_blank"
                                                     ng-click="showPlanDetails(plan, $event.currentTarget)">
                                                 <i class="fas fa-edit"></i>
-                                            </button>
+                                            </a>
 
-                                            <p>{{plan.PlanDateStr}}&nbsp;</p>
-                                            <p>{{plan.FirmName}}&nbsp;</p>
-                                            <p>{{plan.ProductCode}}&nbsp;</p>
-                                            <p>{{plan.SerialNo}}&nbsp;</p>
+                                            <p>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
+                                            <p>{{plan.WorkOrder.FirmName}}&nbsp;</p>
+                                            <p><b>{{plan.WorkOrder.ProductName}}</b>&nbsp;</p>
                                             <p>
-                                                {{plan.PlannedQuantity}} /
-                                                {{plan.CompleteQuantity}}
+                                                {{plan.WorkOrder.CompleteQuantity}} /
+                                                {{plan.WorkOrder.Quantity}}
                                             </p>
                                         </div>
                                     </div>

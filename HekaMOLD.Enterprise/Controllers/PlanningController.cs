@@ -41,6 +41,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetProductionPlans()
+        {
+            MachinePlanModel[] result = new MachinePlanModel[0];
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.GetProductionPlans();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult GetWaitingPlans()
         {
             ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
@@ -63,6 +78,19 @@ namespace HekaMOLD.Enterprise.Controllers
             using (PlanningBO bObj = new PlanningBO())
             {
                 result = bObj.ReOrderPlan(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult DeletePlan(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.DeletePlan(rid);
             }
 
             return Json(result);
