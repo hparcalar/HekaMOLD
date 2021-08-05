@@ -2,6 +2,7 @@
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core;
 using System;
@@ -401,6 +402,264 @@ namespace HekaMOLD.Business.UseCases
             });
 
             return containerList.ToArray();
+        }
+
+        public MachinePlanModel GetActiveWorkOrderOnMachine(int machineId)
+        {
+            MachinePlanModel model = new MachinePlanModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachinePlan>();
+                var dbObj = repo.Filter(d => d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
+                    .OrderBy(d => d.OrderNo).FirstOrDefault();
+                if (dbObj != null)
+                {
+                    model = new MachinePlanModel
+                    {
+                        Id = dbObj.Id,
+                        MachineId = dbObj.MachineId,
+                        OrderNo = dbObj.OrderNo,
+                        WorkOrderDetailId = dbObj.WorkOrderDetailId,
+                        WorkOrder = new WorkOrderDetailModel
+                        {
+                            Id = dbObj.WorkOrderDetail.Id,
+                            ProductCode = dbObj.WorkOrderDetail.Item.ItemNo,
+                            ProductName = dbObj.WorkOrderDetail.Item.ItemName,
+                            WorkOrderId = dbObj.WorkOrderDetail.WorkOrderId,
+                            MoldId = dbObj.WorkOrderDetail.MoldId,
+                            MoldCode = dbObj.WorkOrderDetail.Mold != null ? dbObj.WorkOrderDetail.Mold.MoldCode : "",
+                            MoldName = dbObj.WorkOrderDetail.Mold != null ? dbObj.WorkOrderDetail.Mold.MoldName : "",
+                            CreatedDate = dbObj.WorkOrderDetail.CreatedDate,
+                            Quantity = dbObj.WorkOrderDetail.Quantity,
+                            WorkOrderNo = dbObj.WorkOrderDetail.WorkOrder.WorkOrderNo,
+                            WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.WorkOrderDetail.WorkOrder.WorkOrderDate),
+                            FirmCode = dbObj.WorkOrderDetail.WorkOrder.Firm != null ?
+                            dbObj.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                            FirmName = dbObj.WorkOrderDetail.WorkOrder.Firm != null ?
+                            dbObj.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                            WorkOrderStatus = dbObj.WorkOrderDetail.WorkOrderStatus,
+                            WorkOrderStatusStr = ((WorkOrderStatusType)dbObj.WorkOrderDetail.WorkOrderStatus).ToCaption(),
+                            CompleteQuantity = Convert.ToInt32(dbObj.WorkOrderDetail.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0),
+                            CompleteQuantitySingleProduct = dbObj.WorkOrderDetail.WorkOrderSerial.Count(),
+                        }
+                    };
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return model;
+        }
+
+        public BusinessResult AddProductEntry(int workOrderDetailId, int userId, WorkOrderSerialType serialType)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                var dbObj = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbObj == null)
+                    throw new Exception("İş emri kaydına ulaşılamadı.");
+
+                if ((dbObj.InPackageQuantity ?? 0) <= 0)
+                    throw new Exception("Koli içi miktarı iş emrinde tanımlı değil!");
+
+                if (serialType == WorkOrderSerialType.ProductPackage) // BATUSAN
+                {
+                    // CHECK TARGET QUANTITY FOR CHANGING STATUS TO COMPLETE
+                    if (dbObj.Quantity - dbObj.InPackageQuantity 
+                        <= (dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0))
+                    {
+                        dbObj.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
+
+                        var dbWorkOrder = dbObj.WorkOrder;
+                        if (!dbWorkOrder.WorkOrderDetail.Any(d => d.WorkOrderStatus != (int)WorkOrderStatusType.Completed &&
+                            d.Id != dbObj.Id))
+                            dbWorkOrder.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
+                    }
+
+                    var product = new WorkOrderSerial
+                    {
+                        CreatedDate = DateTime.Now,
+                        InPackageQuantity = dbObj.InPackageQuantity,
+                        FirstQuantity = dbObj.InPackageQuantity,
+                        IsGeneratedBySignal = false,
+                        LiveQuantity = dbObj.InPackageQuantity,
+                        SerialNo = GetNextSerialNo(),
+                        SerialStatus = (int)SerialStatusType.Created,
+                        SerialType = (int)serialType,
+                        WorkOrderDetail = dbObj,
+                        WorkOrder = dbObj.WorkOrder,
+                        CreatedUserId = userId,
+                    };
+
+                    repoSerial.Add(product);
+                }
+                else if (serialType == WorkOrderSerialType.SingleProduct) // MICROMAX
+                {
+
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
+
+        #region POSTURE MANAGEMENT
+        public BusinessResult SaveOrUpdatePosture(ProductionPostureModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ProductionPosture>();
+                if (model.MachineId == null)
+                    throw new Exception("Makine bilgisi duruş için girilmelidir.");
+
+                if (model.StartDate == null)
+                    throw new Exception("Duruş başlangıç tarihi belirtilmelidir.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    model.PostureStatus = 0;
+                    model.CreatedDate = DateTime.Now;
+
+                    dbObj = new ProductionPosture
+                    {
+                        CreatedDate = DateTime.Now,
+                        PostureStatus = 0,
+                    };
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+                var stDate = dbObj.StartDate;
+                var edDate = dbObj.EndDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+                if (dbObj.StartDate == null)
+                    dbObj.StartDate = stDate;
+                if (dbObj.EndDate == null)
+                    dbObj.EndDate = edDate;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ProductionPostureModel[] GetPostureList(BasicRangeFilter filter)
+        {
+            ProductionPostureModel[] data = new ProductionPostureModel[0];
+
+            try
+            {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(filter.StartDate))
+                    filter.StartDate = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(filter.EndDate))
+                    filter.EndDate = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repo = _unitOfWork.GetRepository<ProductionPostureModel>();
+                data = repo.Filter(d => d.StartDate >= dtStart && d.StartDate <= dtEnd)
+                    .ToList()
+                    .Select(d => new ProductionPostureModel
+                    {
+                        Id = d.Id,
+                        CreatedDate = d.CreatedDate,
+                        CreatedUserId = d.CreatedUserId,
+                        EndDate = d.EndDate,
+                        Explanation = d.Explanation,
+                        MachineId = d.MachineId,
+                        PostureStatus = d.PostureStatus,
+                        Reason = d.Reason,
+                        StartDate = d.StartDate,
+                        UpdatedDate = d.UpdatedDate,
+                        UpdatedUserId = d.UpdatedUserId,
+                        WorkOrderDetailId = d.WorkOrderDetailId,
+                        PostureStatusStr = ((PostureStatusType)d.PostureStatus).ToCaption(),
+                        StartDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate),
+                        EndDateStr = d.EndDate != null ?
+                            string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ProductionPostureModel[] GetOngoingPostures()
+        {
+            ProductionPostureModel[] data = new ProductionPostureModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ProductionPostureModel>();
+                data = repo.Filter(d => d.PostureStatus == (int)PostureStatusType.Started
+                    || d.PostureStatus == (int)PostureStatusType.WorkingOn)
+                    .ToList()
+                    .Select(d => new ProductionPostureModel
+                    {
+                        Id = d.Id,
+                        CreatedDate = d.CreatedDate,
+                        CreatedUserId = d.CreatedUserId,
+                        EndDate = d.EndDate,
+                        Explanation = d.Explanation,
+                        MachineId = d.MachineId,
+                        PostureStatus = d.PostureStatus,
+                        Reason = d.Reason,
+                        StartDate = d.StartDate,
+                        UpdatedDate = d.UpdatedDate,
+                        UpdatedUserId = d.UpdatedUserId,
+                        WorkOrderDetailId = d.WorkOrderDetailId,
+                        PostureStatusStr = ((PostureStatusType)d.PostureStatus).ToCaption(),
+                        StartDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate),
+                        EndDateStr = d.EndDate != null ?
+                            string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
         }
         #endregion
     }

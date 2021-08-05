@@ -64,13 +64,16 @@
     <Compile Include="Models\Constants\ItemOrderType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
+    <Compile Include="Models\Constants\PostureStatusType.cs" />
     <Compile Include="Models\Constants\ReceiptCategoryType.cs" />
     <Compile Include="Models\Constants\ReceiptStatusType.cs" />
     <Compile Include="Models\Constants\OrderStatusType.cs" />
     <Compile Include="Models\Constants\RecordType.cs" />
     <Compile Include="Models\Constants\RequestStatusType.cs" />
+    <Compile Include="Models\Constants\SerialStatusType.cs" />
     <Compile Include="Models\Constants\SyncPointType.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
+    <Compile Include="Models\Constants\WorkOrderSerialType.cs" />
     <Compile Include="Models\Constants\WorkOrderStatusType.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthTypeModel.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldTestModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\ProductionPostureModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductRecipeDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductRecipeModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderAllocationModel.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
     <Compile Include="Models\Dictionaries\DictItemOrderType.cs" />
+    <Compile Include="Models\Dictionaries\DictPostureStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictWorkOrderStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptCategoryType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptStatusType.cs" />
@@ -123,6 +128,7 @@
     <Compile Include="Models\Dictionaries\DictWarehouseType.cs" />
     <Compile Include="Models\Dictionaries\DictNotifyType.cs" />
     <Compile Include="Models\Dictionaries\DictRequestStatusType.cs" />
+    <Compile Include="Models\Filters\BasicRangeFilter.cs" />
     <Compile Include="Models\Operational\AuthenticationResult.cs" />
     <Compile Include="Models\Operational\BusinessResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

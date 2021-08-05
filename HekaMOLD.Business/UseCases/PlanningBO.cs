@@ -344,6 +344,91 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+
+        public MachinePlanModel[] GetMachineQueue(int machineId)
+        {
+            MachinePlanModel[] data = new MachinePlanModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachinePlan>();
+                data = repo.Filter(d => 
+                    (d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Created ||
+                    d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Planned ||
+                    d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress ||
+                    d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.OnHold)
+                    &&
+                    d.MachineId == machineId
+                ).ToList().Select(d => new MachinePlanModel
+                {
+                    Id = d.Id,
+                    MachineId = d.MachineId,
+                    OrderNo = d.OrderNo,
+                    WorkOrderDetailId = d.WorkOrderDetailId,
+                    WorkOrder = new WorkOrderDetailModel
+                    {
+                        Id= d.WorkOrderDetail.Id,
+                        ProductCode = d.WorkOrderDetail.Item.ItemNo,
+                        ProductName = d.WorkOrderDetail.Item.ItemName,
+                        WorkOrderId = d.WorkOrderDetail.WorkOrderId,
+                        MoldId = d.WorkOrderDetail.MoldId,
+                        MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
+                        MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
+                        CreatedDate = d.WorkOrderDetail.CreatedDate,
+                        Quantity = d.WorkOrderDetail.Quantity,
+                        WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
+                        WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
+                        FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                        WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
+                        WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
+                        CompleteQuantity = d.WorkOrderDetail.WorkOrderSerial.Count()
+                    }
+                }).OrderBy(d => d.OrderNo).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult ToggleWorkOrderStatus(int workOrderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var dbObj = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbObj == null)
+                    throw new Exception("Durumu değiştirilmek istenen iş emri kaydına ulaşılamadı.");
+
+                if (dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Planned || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Created)
+                    dbObj.WorkOrderStatus = (int)WorkOrderStatusType.InProgress;
+                else
+                {
+                    if ((dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0) < dbObj.Quantity)
+                        dbObj.WorkOrderStatus = (int)WorkOrderStatusType.Cancelled;
+                    else
+                        dbObj.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         #endregion
     }
 }

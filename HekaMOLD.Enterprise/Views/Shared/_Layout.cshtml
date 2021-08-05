@@ -1,8 +1,10 @@
 ﻿@using System.Text.RegularExpressions
+@using System.Web.Configuration 
 @{ 
     var ctrl = this.ViewContext.RouteData.Values["controller"].ToString();
     var actn = this.ViewContext.RouteData.Values["action"].ToString();
     var rcgr = Request.QueryString["receiptCategory"];
+    var runningHost = WebConfigurationManager.AppSettings["RunningHost"];
 }
 
 <!DOCTYPE html>
@@ -133,6 +135,14 @@
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
                                             <span class="menu-title">İrsaliye</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "Firm$") ? "active" : "")" href="@Url.Action("ApprovedSuppliers","Firm")">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Onaylı Tedarikçiler</span>
                                         </a>
                                     </div>
                                 </div>
@@ -3963,7 +3973,7 @@
     <!--end::Main-->
     <!--begin::Javascript-->
     <!--begin::Global Javascript Bundle(used by all pages)-->
-    <script>var HOST_URL = "http://localhost/mold/";</script>
+    <script>var HOST_URL = "@runningHost";</script>
 
     <script src="~/assets/plugins/global/plugins.bundle.js"></script>
     <script src="~/assets/js/scripts.bundle.js"></script>

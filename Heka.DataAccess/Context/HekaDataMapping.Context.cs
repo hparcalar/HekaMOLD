@@ -68,5 +68,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
         public virtual DbSet<WorkOrderSerial> WorkOrderSerial { get; set; }
         public virtual DbSet<MachinePlan> MachinePlan { get; set; }
+        public virtual DbSet<ProductionPosture> ProductionPosture { get; set; }
+        public virtual DbSet<MachineSignal> MachineSignal { get; set; }
     }
 }

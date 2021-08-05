@@ -51,8 +51,9 @@
                                         <div class="plan-box" draggable="true"
                                              data-plan-id="{{plan.Id}}"
                                              ng-click="selectPlan(plan)"
-                                             ng-class="{'plan-box-cancelled': plan.PlanStatus == 2, 
-                                                'plan-box-completed': plan.PlanStatus == 3,
+                                             ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6, 
+                                                'plan-box-completed': plan.WorkOrder.WorkOrderStatus == 4,
+                                                'plan-box-progress': plan.WorkOrder.WorkOrderStatus == 3,
                                                 'plan-selected': plan.Id == selectedPlan.Id}"
                                              ng-repeat="plan in getMachinePlans(machine)">
                                             <a class="btn btn-primary btn-sm btn-plan-details px-1 py-1"

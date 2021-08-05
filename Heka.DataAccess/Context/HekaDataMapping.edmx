@@ -399,6 +399,18 @@
           <Property Name="WorkOrderDetailId" Type="int" />
           <Property Name="OrderNo" Type="int" />
         </EntityType>
+        <EntityType Name="MachineSignal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MachineId" Type="int" />
+          <Property Name="WorkOrderDetailId" Type="int" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="Duration" Type="int" />
+          <Property Name="SignalStatus" Type="int" />
+        </EntityType>
         <EntityType Name="Mold">
           <Key>
             <PropertyRef Name="Id" />
@@ -471,6 +483,23 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PlantCode" Type="nvarchar" MaxLength="50" />
           <Property Name="PlantName" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="ProductionPosture">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MachineId" Type="int" />
+          <Property Name="WorkOrderDetailId" Type="int" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="PostureStatus" Type="int" />
+          <Property Name="Reason" Type="nvarchar" MaxLength="300" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="400" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
         <EntityType Name="ProductRecipe">
           <Key>
@@ -1313,6 +1342,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MachineSignal_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
+          <End Role="MachineSignal" Type="Self.MachineSignal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineSignal">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachineSignal_WorkOrderDetail">
+          <End Role="WorkOrderDetail" Type="Self.WorkOrderDetail" Multiplicity="0..1" />
+          <End Role="MachineSignal" Type="Self.MachineSignal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineSignal">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MoldTest_Dye">
           <End Role="Dye" Type="Self.Dye" Multiplicity="0..1" />
           <End Role="MoldTest" Type="Self.MoldTest" Multiplicity="*" />
@@ -1358,6 +1411,30 @@
             </Principal>
             <Dependent Role="Notification">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionPosture_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
+          <End Role="ProductionPosture" Type="Self.ProductionPosture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductionPosture">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionPosture_WorkOrderDetail">
+          <End Role="WorkOrderDetail" Type="Self.WorkOrderDetail" Multiplicity="0..1" />
+          <End Role="ProductionPosture" Type="Self.ProductionPosture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductionPosture">
+              <PropertyRef Name="WorkOrderDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1757,10 +1834,12 @@
           <EntitySet Name="ItemWarehouse" EntityType="Self.ItemWarehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Machine" EntityType="Self.Machine" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MachinePlan" EntityType="Self.MachinePlan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MachineSignal" EntityType="Self.MachineSignal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Mold" EntityType="Self.Mold" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MoldTest" EntityType="Self.MoldTest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Plant" EntityType="Self.Plant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductionPosture" EntityType="Self.ProductionPosture" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductRecipe" EntityType="Self.ProductRecipe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductRecipeDetail" EntityType="Self.ProductRecipeDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" Schema="dbo" store:Type="Tables" />
@@ -1977,6 +2056,14 @@
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
             <End Role="MachinePlan" EntitySet="MachinePlan" />
           </AssociationSet>
+          <AssociationSet Name="FK_MachineSignal_Machine" Association="Self.FK_MachineSignal_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachineSignal" EntitySet="MachineSignal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachineSignal_WorkOrderDetail" Association="Self.FK_MachineSignal_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="MachineSignal" EntitySet="MachineSignal" />
+          </AssociationSet>
           <AssociationSet Name="FK_MoldTest_Dye" Association="Self.FK_MoldTest_Dye">
             <End Role="Dye" EntitySet="Dye" />
             <End Role="MoldTest" EntitySet="MoldTest" />
@@ -1992,6 +2079,14 @@
           <AssociationSet Name="FK_Notification_User" Association="Self.FK_Notification_User">
             <End Role="User" EntitySet="User" />
             <End Role="Notification" EntitySet="Notification" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionPosture_Machine" Association="Self.FK_ProductionPosture_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionPosture_WorkOrderDetail" Association="Self.FK_ProductionPosture_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductRecipe_Item" Association="Self.FK_ProductRecipe_Item">
             <End Role="Item" EntitySet="Item" />
@@ -3441,6 +3536,24 @@
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
             <End Role="MachinePlan" EntitySet="MachinePlan" />
           </AssociationSet>
+          <EntitySet Name="ProductionPosture" EntityType="Heka.DataAccess.Models.ProductionPosture" />
+          <AssociationSet Name="FK_ProductionPosture_Machine" Association="Heka.DataAccess.Models.FK_ProductionPosture_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionPosture_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_ProductionPosture_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
+          </AssociationSet>
+          <EntitySet Name="MachineSignal" EntityType="Heka.DataAccess.Models.MachineSignal" />
+          <AssociationSet Name="FK_MachineSignal_Machine" Association="Heka.DataAccess.Models.FK_MachineSignal_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachineSignal" EntitySet="MachineSignal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachineSignal_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="MachineSignal" EntitySet="MachineSignal" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -3831,6 +3944,8 @@
           <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="Machine" ToRole="MoldTest" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="Machine" ToRole="WorkOrderDetail" />
           <NavigationProperty Name="MachinePlan" Relationship="Heka.DataAccess.Models.FK_MachinePlan_Machine" FromRole="Machine" ToRole="MachinePlan" />
+          <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Machine" FromRole="Machine" ToRole="ProductionPosture" />
+          <NavigationProperty Name="MachineSignal" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Machine" FromRole="Machine" ToRole="MachineSignal" />
         </EntityType>
         <EntityType Name="Mold">
           <Key>
@@ -4084,6 +4199,8 @@
           <NavigationProperty Name="WorkOrderControl" Relationship="Heka.DataAccess.Models.FK_WorkOrderControl_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderControl" />
           <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderSerial" />
           <NavigationProperty Name="MachinePlan" Relationship="Heka.DataAccess.Models.FK_MachinePlan_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="MachinePlan" />
+          <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="ProductionPosture" />
+          <NavigationProperty Name="MachineSignal" Relationship="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="MachineSignal" />
         </EntityType>
         <EntityType Name="WorkOrderSerial">
           <Key>
@@ -4401,6 +4518,87 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="MachinePlan">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductionPosture">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachineId" Type="Int32" />
+          <Property Name="WorkOrderDetailId" Type="Int32" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="PostureStatus" Type="Int32" />
+          <Property Name="Reason" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Explanation" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Machine" FromRole="ProductionPosture" ToRole="Machine" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_WorkOrderDetail" FromRole="ProductionPosture" ToRole="WorkOrderDetail" />
+        </EntityType>
+        <Association Name="FK_ProductionPosture_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductionPosture" Role="ProductionPosture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductionPosture">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionPosture_WorkOrderDetail">
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductionPosture" Role="ProductionPosture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductionPosture">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MachineSignal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachineId" Type="Int32" />
+          <Property Name="WorkOrderDetailId" Type="Int32" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="Duration" Type="Int32" />
+          <Property Name="SignalStatus" Type="Int32" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Machine" FromRole="MachineSignal" ToRole="Machine" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail" FromRole="MachineSignal" ToRole="WorkOrderDetail" />
+        </EntityType>
+        <Association Name="FK_MachineSignal_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachineSignal" Role="MachineSignal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineSignal">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachineSignal_WorkOrderDetail">
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachineSignal" Role="MachineSignal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineSignal">
               <PropertyRef Name="WorkOrderDetailId" />
             </Dependent>
           </ReferentialConstraint>
@@ -5156,6 +5354,37 @@
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.MachinePlan">
               <MappingFragment StoreEntitySet="MachinePlan">
                 <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductionPosture">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ProductionPosture">
+              <MappingFragment StoreEntitySet="ProductionPosture">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="PostureStatus" ColumnName="PostureStatus" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MachineSignal">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.MachineSignal">
+              <MappingFragment StoreEntitySet="MachineSignal">
+                <ScalarProperty Name="SignalStatus" ColumnName="SignalStatus" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
                 <ScalarProperty Name="MachineId" ColumnName="MachineId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

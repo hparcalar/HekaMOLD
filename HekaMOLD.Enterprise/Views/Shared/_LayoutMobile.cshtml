@@ -1,7 +1,10 @@
 ﻿@using System.Text.RegularExpressions
+@using System.Web.Configuration
 @{ var ctrl = this.ViewContext.RouteData.Values["controller"].ToString();
-                var actn = this.ViewContext.RouteData.Values["action"].ToString();
-                var rcgr = Request.QueryString["receiptCategory"]; }
+    var actn = this.ViewContext.RouteData.Values["action"].ToString();
+    var rcgr = Request.QueryString["receiptCategory"];
+    var runningHost = WebConfigurationManager.AppSettings["RunningHost"];
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -603,13 +606,13 @@
                                             <!--end::Menu item-->
                                             <!--begin::Menu item-->
                                             @*<div class="menu-item px-5">
-                                <a href="pages/projects/list.html" class="menu-link px-5">
-                                    <span class="menu-text">My Projects</span>
-                                    <span class="menu-badge">
-                                        <span class="badge badge-light-danger badge-circle fw-bolder fs-7">3</span>
-                                    </span>
-                                </a>
-                            </div>*@
+                                                    <a href="pages/projects/list.html" class="menu-link px-5">
+                                                        <span class="menu-text">My Projects</span>
+                                                        <span class="menu-badge">
+                                                            <span class="badge badge-light-danger badge-circle fw-bolder fs-7">3</span>
+                                                        </span>
+                                                    </a>
+                                                </div>*@
                                             <!--end::Menu item-->
                                             <!--begin::Menu separator-->
                                             <div class="separator my-2"></div>
@@ -675,7 +678,6 @@
     </div>
     <!--end::Root-->
     <!--begin::Drawers-->
-
     <!--begin::Exolore drawer toggle-->
     @*<button id="kt_explore_toggle" class="btn btn-sm btn-white btn-active-primary shadow-sm position-fixed px-5 fw-bolder zindex-2 top-50 mt-10 end-0 transform-90 fs-6" title="Explore Metronic" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-trigger="hover">
             <span id="kt_explore_toggle_label">Explore</span>
@@ -960,7 +962,6 @@
     </div>
     <!--end::Exolore drawer-->
     <!--end::Drawers-->
-
     <!--begin::Scrolltop-->
     <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
         <!--begin::Svg Icon | path: icons/stockholm/Navigation/Up-2.svg-->
@@ -979,7 +980,7 @@
     <!--end::Main-->
     <!--begin::Javascript-->
     <!--begin::Global Javascript Bundle(used by all pages)-->
-    <script>var HOST_URL = "http://192.168.1.105/mold/";</script>
+    <script>var HOST_URL = "@runningHost";</script>
 
     <script src="~/assets/plugins/global/plugins.bundle.js"></script>
     <script src="~/assets/js/scripts.bundle.js"></script>
@@ -994,7 +995,8 @@
     <script src="~/assets/js/custom/modals/upgrade-plan.js"></script>
     <script src="~/Scripts/angular.min.js"></script>
 
-    <script type="text/javascript">var app = angular.module('moldApp', []);
+    <script type="text/javascript">
+    var app = angular.module('moldApp', []);
 
         $(function () {
             $('.datepicker').datepicker({ dateFormat: 'dd.mm.yy' });

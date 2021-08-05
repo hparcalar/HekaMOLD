@@ -10,6 +10,7 @@ using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.Constants;
+using System.Web.Configuration;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -149,6 +150,76 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
+        }
+        #endregion
+
+        #region PRODUCTION
+        public ActionResult ProductionStatus()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult ToggleWorkOrderStatus(int workOrderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.ToggleWorkOrderStatus(workOrderDetailId);
+            }
+
+            return Json(result);
+        }
+
+        public ActionResult ProductEntry()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult SaveProductEntry(int workOrderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+            string serialTypeConfig = WebConfigurationManager.AppSettings["WorkOrderSerialType"];
+
+            WorkOrderSerialType serialType = WorkOrderSerialType.SingleProduct;
+            if (serialTypeConfig == "ProductPackage")
+                serialType = WorkOrderSerialType.ProductPackage;
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.AddProductEntry(workOrderDetailId, userId, serialType);
+            }
+
+            return Json(result);
+        }
+
+        public ActionResult PostureEntry()
+        {
+            return View();
+        }
+
+        public ActionResult OngoingPostures()
+        {
+            return View();
+        }
+
+        public ActionResult ProductEntryList()
+        {
+            return View();
+        }
+
+        public ActionResult FaultEntry()
+        {
+            return View();
+        }
+
+        public ActionResult OngoingFaults()
+        {
+            return View();
         }
         #endregion
     }

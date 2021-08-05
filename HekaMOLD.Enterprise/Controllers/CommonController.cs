@@ -1,6 +1,7 @@
 ﻿using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Files;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.UseCases.Core;
@@ -183,6 +184,53 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(result);
+        }
+        #endregion
+
+        #region LIST OF SELECTIONS
+        [FreeAction]
+        public JsonResult GetMachineList()
+        {
+            MachineModel[] data = new MachineModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetMachineList();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [FreeAction]
+        public JsonResult GetMachineQueue(int machineId)
+        {
+            MachinePlanModel[] data = new MachinePlanModel[0];
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                data = bObj.GetMachineQueue(machineId);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
+
+        #region PRODUCTION DATA
+        [FreeAction]
+        public JsonResult GetActiveWorkOrderOnMachine(int machineId)
+        {
+            MachinePlanModel data = new MachinePlanModel();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetActiveWorkOrderOnMachine(machineId);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
         #endregion
     }

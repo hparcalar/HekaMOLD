@@ -55,5 +55,28 @@ namespace HekaMOLD.Business.UseCases.Core
 
             return default;
         }
+
+        public string GetNextSerialNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                string lastSerialNo = repo.GetAll()
+                    .OrderByDescending(d => d.SerialNo)
+                    .Select(d => d.SerialNo)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(lastSerialNo))
+                    lastSerialNo = "0";
+
+                return string.Format("{0:00000000}", Convert.ToInt64(lastSerialNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
     }
 }

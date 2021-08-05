@@ -3900,12 +3900,14 @@
     <Content Include="assets\plugins\global\fonts\socicon\socicon.svg" />
     <Content Include="assets\plugins\global\plugins.bundle.css" />
     <Content Include="assets\plugins\global\plugins.bundle.js" />
+    <Content Include="Components\Controllers\machine-selection.js" />
     <Content Include="Components\Controllers\open-po-list.js" />
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
     <Content Include="Components\Controllers\attachment-list.js" />
     <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
+    <Content Include="Components\Views\MachineSelection.html" />
     <Content Include="Components\Views\OpenPoList.html" />
     <Content Include="Components\Views\AttachmentList.html" />
     <Content Include="Components\Views\RecipeRevisions.html" />
@@ -3985,6 +3987,7 @@
     <Content Include="FrontEndLogic\Dye\index.js" />
     <Content Include="FrontEndLogic\Dye\list.js" />
     <Content Include="FrontEndLogic\Firm\index.js" />
+    <Content Include="FrontEndLogic\Firm\approved-suppliers.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
     <Content Include="FrontEndLogic\ItemCategory\index.js" />
     <Content Include="FrontEndLogic\ItemCategory\list.js" />
@@ -3999,6 +4002,8 @@
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry.js" />
+    <Content Include="FrontEndLogic\Mobile\production-status.js" />
+    <Content Include="FrontEndLogic\Mobile\product-entry.js" />
     <Content Include="FrontEndLogic\MoldTest\index.js" />
     <Content Include="FrontEndLogic\MoldTest\list.js" />
     <Content Include="FrontEndLogic\Mold\index.js" />
@@ -4384,6 +4389,9 @@
     <Content Include="Views\Mold\List.cshtml" />
     <Content Include="Views\Mold\Index.cshtml" />
     <Content Include="Views\Mobile\BarcodeTest.cshtml" />
+    <Content Include="Views\Firm\ApprovedSuppliers.cshtml" />
+    <Content Include="Views\Mobile\ProductEntry.cshtml" />
+    <Content Include="Views\Mobile\ProductionStatus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -56,6 +56,14 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b4e391', endColorstr='#b4e391',GradientType=0 ); /* IE6-9 */
 }
 
+.plan-box-progress {
+    background: rgb(255 216 0); /* Old browsers */
+    background: -moz-linear-gradient(top, rgb(255 216 0) 0%, rgb(255 216 0) 50%, rgb(255 216 0) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgb(255 216 0) 0%,rgb(255 216 0) 50%,rgb(255 216 0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgb(255 216 0) 0%,rgb(255 216 0) 50%,rgb(255 216 0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(255 216 0)', endColorstr='rgb(255 216 0)',GradientType=0 ); /* IE6-9 */
+}
+
 .btn-plan-details {
     position: absolute;
     top: 0px;

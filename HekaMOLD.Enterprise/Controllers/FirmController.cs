@@ -24,6 +24,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult ApprovedSuppliers()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetFirmList()
         {
@@ -32,6 +37,21 @@ namespace HekaMOLD.Enterprise.Controllers
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 result = bObj.GetFirmList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetApprovedSuppliers()
+        {
+            FirmModel[] result = new FirmModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.GetApprovedSuppliers();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

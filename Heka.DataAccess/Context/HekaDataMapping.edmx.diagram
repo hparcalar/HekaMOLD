@@ -133,6 +133,12 @@
         <EntityTypeShape EntityType="Heka.DataAccess.Models.MachinePlan" Width="1.5" PointX="15" PointY="15.375" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachinePlan_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachinePlan_WorkOrderDetail" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductionPosture" Width="1.5" PointX="18" PointY="14.75" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductionPosture_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductionPosture_WorkOrderDetail" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineSignal" Width="1.5" PointX="15" PointY="11.25" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
