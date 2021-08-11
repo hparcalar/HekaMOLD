@@ -112,6 +112,7 @@
           <Property Name="CreatedUserId" Type="int" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
+          <Property Name="MoldId" Type="int" />
         </EntityType>
         <EntityType Name="ItemCategory">
           <Key>
@@ -723,6 +724,18 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="WorkOrderItemNeeds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkOrderDetailId" Type="int" />
+          <Property Name="WorkOrderId" Type="int" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="RemainingNeedsQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="CalculatedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="WorkOrderSerial">
           <Key>
             <PropertyRef Name="Id" />
@@ -811,6 +824,18 @@
             </Principal>
             <Dependent Role="Item">
               <PropertyRef Name="ItemGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Mold">
+          <End Role="Mold" Type="Self.Mold" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mold">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="MoldId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1786,6 +1811,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WorkOrderItemNeeds_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="WorkOrderItemNeeds" Type="Self.WorkOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderItemNeeds">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderItemNeeds_WorkOrder">
+          <End Role="WorkOrder" Type="Self.WorkOrder" Multiplicity="0..1" />
+          <End Role="WorkOrderItemNeeds" Type="Self.WorkOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderItemNeeds">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderItemNeeds_WorkOrderDetail">
+          <End Role="WorkOrderDetail" Type="Self.WorkOrderDetail" Multiplicity="0..1" />
+          <End Role="WorkOrderItemNeeds" Type="Self.WorkOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderItemNeeds">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_WorkOrderSerial_WorkOrder">
           <End Role="WorkOrder" Type="Self.WorkOrder" Multiplicity="0..1" />
           <End Role="WorkOrderSerial" Type="Self.WorkOrderSerial" Multiplicity="*" />
@@ -1855,6 +1916,7 @@
           <EntitySet Name="WorkOrderControl" EntityType="Self.WorkOrderControl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderControlType" EntityType="Self.WorkOrderControlType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderDetail" EntityType="Self.WorkOrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkOrderItemNeeds" EntityType="Self.WorkOrderItemNeeds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderSerial" EntityType="Self.WorkOrderSerial" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Firm_Plant" Association="Self.FK_Firm_Plant">
             <End Role="Plant" EntitySet="Plant" />
@@ -1878,6 +1940,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Item_ItemGroup" Association="Self.FK_Item_ItemGroup">
             <End Role="ItemGroup" EntitySet="ItemGroup" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Mold" Association="Self.FK_Item_Mold">
+            <End Role="Mold" EntitySet="Mold" />
             <End Role="Item" EntitySet="Item" />
           </AssociationSet>
           <AssociationSet Name="FK_Item_Plant" Association="Self.FK_Item_Plant">
@@ -2204,6 +2270,18 @@
             <End Role="WorkOrder" EntitySet="WorkOrder" />
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
           </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderItemNeeds_Item" Association="Self.FK_WorkOrderItemNeeds_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="WorkOrderItemNeeds" EntitySet="WorkOrderItemNeeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderItemNeeds_WorkOrder" Association="Self.FK_WorkOrderItemNeeds_WorkOrder">
+            <End Role="WorkOrder" EntitySet="WorkOrder" />
+            <End Role="WorkOrderItemNeeds" EntitySet="WorkOrderItemNeeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderItemNeeds_WorkOrderDetail" Association="Self.FK_WorkOrderItemNeeds_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="WorkOrderItemNeeds" EntitySet="WorkOrderItemNeeds" />
+          </AssociationSet>
           <AssociationSet Name="FK_WorkOrderSerial_WorkOrder" Association="Self.FK_WorkOrderSerial_WorkOrder">
             <End Role="WorkOrder" EntitySet="WorkOrder" />
             <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
@@ -2246,10 +2324,10 @@
           <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrder_Firm" FromRole="Firm" ToRole="ItemOrder" />
           <NavigationProperty Name="ItemReceipt" Relationship="Self.FK_ItemReceipt_Firm" FromRole="Firm" ToRole="ItemReceipt" />
           <Property Name="IsApproved" Type="Boolean" />
-          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_Firm" FromRole="Firm" ToRole="Item" />
           <Property Name="Address2" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="FirmAuthor" Relationship="Heka.DataAccess.Models.FK_FirmAuthor_Firm" FromRole="Firm" ToRole="FirmAuthor" />
           <NavigationProperty Name="WorkOrder" Relationship="Heka.DataAccess.Models.FK_WorkOrder_Firm" FromRole="Firm" ToRole="WorkOrder" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_Firm" FromRole="Firm" ToRole="Item" />
         </EntityType>
         <EntityType Name="ForexType">
           <Key>
@@ -2263,37 +2341,6 @@
           <Property Name="ForexTypeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_ForexType" FromRole="ForexType" ToRole="ItemReceiptDetail" />
         </EntityType>
-        <EntityType Name="Item">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ItemNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ItemName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="ItemType" Type="Int32" />
-          <Property Name="ItemCategoryId" Type="Int32" />
-          <Property Name="ItemGroupId" Type="Int32" />
-          <Property Name="PlantId" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="CreatedUserId" Type="Int32" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedUserId" Type="Int32" />
-          <NavigationProperty Name="ItemCategory" Relationship="Self.FK_Item_ItemCategory" FromRole="Item" ToRole="ItemCategory" />
-          <NavigationProperty Name="ItemGroup" Relationship="Self.FK_Item_ItemGroup" FromRole="Item" ToRole="ItemGroup" />
-          <NavigationProperty Name="Plant" Relationship="Self.FK_Item_Plant" FromRole="Item" ToRole="Plant" />
-          <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemOrderDetail_Item" FromRole="Item" ToRole="ItemOrderDetail" />
-          <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemRequestDetail_Item" FromRole="Item" ToRole="ItemRequestDetail" />
-          <NavigationProperty Name="ItemUnit" Relationship="Self.FK_ItemUnit_Item" FromRole="Item" ToRole="ItemUnit" />
-          <NavigationProperty Name="ItemWarehouse" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Item" FromRole="Item" ToRole="ItemWarehouse" />
-          <Property Name="SupplierFirmId" Type="Int32" />
-          <NavigationProperty Name="Firm" Relationship="Heka.DataAccess.Models.FK_Item_Firm" FromRole="Item" ToRole="Firm" />
-          <NavigationProperty Name="ItemLiveStatus" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" FromRole="Item" ToRole="ItemLiveStatus" />
-          <NavigationProperty Name="ItemSerial" Relationship="Heka.DataAccess.Models.FK_ItemSerial_Item" FromRole="Item" ToRole="ItemSerial" />
-          <NavigationProperty Name="ProductRecipe" Relationship="Heka.DataAccess.Models.FK_ProductRecipe_Item" FromRole="Item" ToRole="ProductRecipe" />
-          <NavigationProperty Name="ProductRecipeDetail" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" FromRole="Item" ToRole="ProductRecipeDetail" />
-          <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item" FromRole="Item" ToRole="ItemReceiptDetail" />
-          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Item" FromRole="Item" ToRole="WorkOrderDetail" />
-        </EntityType>
         <EntityType Name="ItemCategory">
           <Key>
             <PropertyRef Name="Id" />
@@ -2306,9 +2353,9 @@
           <Property Name="CreatedUserId" Type="Int32" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
-          <NavigationProperty Name="Item" Relationship="Self.FK_Item_ItemCategory" FromRole="ItemCategory" ToRole="Item" />
           <NavigationProperty Name="Plant" Relationship="Self.FK_ItemCategory_Plant" FromRole="ItemCategory" ToRole="Plant" />
           <NavigationProperty Name="ItemGroup" Relationship="Self.FK_ItemGroup_ItemCategory" FromRole="ItemCategory" ToRole="ItemGroup" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_ItemCategory" FromRole="ItemCategory" ToRole="Item" />
         </EntityType>
         <EntityType Name="ItemGroup">
           <Key>
@@ -2323,9 +2370,9 @@
           <Property Name="CreatedUserId" Type="Int32" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
-          <NavigationProperty Name="Item" Relationship="Self.FK_Item_ItemGroup" FromRole="ItemGroup" ToRole="Item" />
           <NavigationProperty Name="ItemCategory" Relationship="Self.FK_ItemGroup_ItemCategory" FromRole="ItemGroup" ToRole="ItemCategory" />
           <NavigationProperty Name="Plant" Relationship="Self.FK_ItemGroup_Plant" FromRole="ItemGroup" ToRole="Plant" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_ItemGroup" FromRole="ItemGroup" ToRole="Item" />
         </EntityType>
         <EntityType Name="ItemOrder">
           <Key>
@@ -2396,7 +2443,6 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
           <NavigationProperty Name="ForexType" Relationship="Self.FK_ItemOrderDetail_ForexType" FromRole="ItemOrderDetail" ToRole="ForexType" />
-          <NavigationProperty Name="Item" Relationship="Self.FK_ItemOrderDetail_Item" FromRole="ItemOrderDetail" ToRole="Item" />
           <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrderDetail_ItemOrder" FromRole="ItemOrderDetail" ToRole="ItemOrder" />
           <NavigationProperty Name="ItemRequestDetail" Relationship="Self.FK_ItemOrderDetail_ItemRequestDetail" FromRole="ItemOrderDetail" ToRole="ItemRequestDetail" />
           <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemOrderDetail_UnitType" FromRole="ItemOrderDetail" ToRole="UnitType" />
@@ -2404,6 +2450,7 @@
           <Property Name="OrderStatus" Type="Int32" />
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemOrderDetail" FromRole="ItemOrderDetail" ToRole="ItemReceiptDetail" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_ItemOrderDetail" FromRole="ItemOrderDetail" ToRole="WorkOrderDetail" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemOrderDetail_Item" FromRole="ItemOrderDetail" ToRole="Item" />
         </EntityType>
         <EntityType Name="ItemReceipt">
           <Key>
@@ -2492,10 +2539,10 @@
           <Property Name="CreatedUserId" Type="Int32" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
-          <NavigationProperty Name="Item" Relationship="Self.FK_ItemRequestDetail_Item" FromRole="ItemRequestDetail" ToRole="Item" />
           <NavigationProperty Name="ItemOrderDetail" Relationship="Self.FK_ItemOrderDetail_ItemRequestDetail" FromRole="ItemRequestDetail" ToRole="ItemOrderDetail" />
           <NavigationProperty Name="ItemRequest" Relationship="Self.FK_ItemRequestDetail_ItemRequest" FromRole="ItemRequestDetail" ToRole="ItemRequest" />
           <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemRequestDetail_UnitType" FromRole="ItemRequestDetail" ToRole="UnitType" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemRequestDetail_Item" FromRole="ItemRequestDetail" ToRole="Item" />
         </EntityType>
         <EntityType Name="ItemUnit">
           <Key>
@@ -2511,8 +2558,8 @@
           <Property Name="CreatedUserId" Type="Int32" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
-          <NavigationProperty Name="Item" Relationship="Self.FK_ItemUnit_Item" FromRole="ItemUnit" ToRole="Item" />
           <NavigationProperty Name="UnitType" Relationship="Self.FK_ItemUnit_UnitType" FromRole="ItemUnit" ToRole="UnitType" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemUnit_Item" FromRole="ItemUnit" ToRole="Item" />
         </EntityType>
         <EntityType Name="Plant">
           <Key>
@@ -2522,7 +2569,6 @@
           <Property Name="PlantCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PlantName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Firm" Relationship="Self.FK_Firm_Plant" FromRole="Plant" ToRole="Firm" />
-          <NavigationProperty Name="Item" Relationship="Self.FK_Item_Plant" FromRole="Plant" ToRole="Item" />
           <NavigationProperty Name="ItemCategory" Relationship="Self.FK_ItemCategory_Plant" FromRole="Plant" ToRole="ItemCategory" />
           <NavigationProperty Name="ItemGroup" Relationship="Self.FK_ItemGroup_Plant" FromRole="Plant" ToRole="ItemGroup" />
           <NavigationProperty Name="ItemOrder" Relationship="Self.FK_ItemOrder_Plant" FromRole="Plant" ToRole="ItemOrder" />
@@ -2534,6 +2580,7 @@
           <NavigationProperty Name="UserRole" Relationship="Self.FK_UserRole_Plant" FromRole="Plant" ToRole="UserRole" />
           <NavigationProperty Name="Warehouse" Relationship="Self.FK_Warehouse_Plant" FromRole="Plant" ToRole="Warehouse" />
           <NavigationProperty Name="WorkOrder" Relationship="Heka.DataAccess.Models.FK_WorkOrder_Plant" FromRole="Plant" ToRole="WorkOrder" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_Plant" FromRole="Plant" ToRole="Item" />
         </EntityType>
         <EntityType Name="SyncPoint">
           <Key>
@@ -2705,78 +2752,6 @@
             </Principal>
             <Dependent Role="ItemOrderDetail">
               <PropertyRef Name="ForexId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Item_ItemCategory">
-          <End Role="ItemCategory" Type="Self.ItemCategory" Multiplicity="0..1" />
-          <End Role="Item" Type="Self.Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ItemCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="ItemCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Item_ItemGroup">
-          <End Role="ItemGroup" Type="Self.ItemGroup" Multiplicity="0..1" />
-          <End Role="Item" Type="Self.Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ItemGroup">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="ItemGroupId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Item_Plant">
-          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
-          <End Role="Item" Type="Self.Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Plant">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="PlantId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ItemOrderDetail_Item">
-          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
-          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ItemOrderDetail">
-              <PropertyRef Name="ItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ItemRequestDetail_Item">
-          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
-          <End Role="ItemRequestDetail" Type="Self.ItemRequestDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ItemRequestDetail">
-              <PropertyRef Name="ItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ItemUnit_Item">
-          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
-          <End Role="ItemUnit" Type="Self.ItemUnit" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ItemUnit">
-              <PropertyRef Name="ItemId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3155,7 +3130,6 @@
         <EntityContainer Name="HekaEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Firm" EntityType="Self.Firm" />
           <EntitySet Name="ForexType" EntityType="Self.ForexType" />
-          <EntitySet Name="Item" EntityType="Self.Item" />
           <EntitySet Name="ItemCategory" EntityType="Self.ItemCategory" />
           <EntitySet Name="ItemGroup" EntityType="Self.ItemGroup" />
           <EntitySet Name="ItemOrder" EntityType="Self.ItemOrder" />
@@ -3188,30 +3162,6 @@
           <AssociationSet Name="FK_ItemOrderDetail_ForexType" Association="Self.FK_ItemOrderDetail_ForexType">
             <End Role="ForexType" EntitySet="ForexType" />
             <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Item_ItemCategory" Association="Self.FK_Item_ItemCategory">
-            <End Role="ItemCategory" EntitySet="ItemCategory" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Item_ItemGroup" Association="Self.FK_Item_ItemGroup">
-            <End Role="ItemGroup" EntitySet="ItemGroup" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Item_Plant" Association="Self.FK_Item_Plant">
-            <End Role="Plant" EntitySet="Plant" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ItemOrderDetail_Item" Association="Self.FK_ItemOrderDetail_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ItemRequestDetail_Item" Association="Self.FK_ItemRequestDetail_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ItemUnit_Item" Association="Self.FK_ItemUnit_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="ItemUnit" EntitySet="ItemUnit" />
           </AssociationSet>
           <AssociationSet Name="FK_ItemCategory_Plant" Association="Self.FK_ItemCategory_Plant">
             <End Role="Plant" EntitySet="Plant" />
@@ -3357,17 +3307,9 @@
             <End Role="ItemRequest" EntitySet="ItemRequest" />
           </AssociationSet>
           <EntitySet Name="ItemWarehouse" EntityType="Heka.DataAccess.Models.ItemWarehouse" />
-          <AssociationSet Name="FK_ItemWarehouse_Item" Association="Heka.DataAccess.Models.FK_ItemWarehouse_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
-          </AssociationSet>
           <AssociationSet Name="FK_ItemWarehouse_Warehouse" Association="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse">
             <End Role="Warehouse" EntitySet="Warehouse" />
             <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Item_Firm" Association="Heka.DataAccess.Models.FK_Item_Firm">
-            <End Role="Firm" EntitySet="Firm" />
-            <End Role="Item" EntitySet="Item" />
           </AssociationSet>
           <EntitySet Name="ItemRequestCategory" EntityType="Heka.DataAccess.Models.ItemRequestCategory" />
           <AssociationSet Name="FK_ItemRequest_ItemRequestCategory" Association="Heka.DataAccess.Models.FK_ItemRequest_ItemRequestCategory">
@@ -3376,14 +3318,6 @@
           </AssociationSet>
           <EntitySet Name="ItemLiveStatus" EntityType="Heka.DataAccess.Models.ItemLiveStatus" />
           <EntitySet Name="ItemSerial" EntityType="Heka.DataAccess.Models.ItemSerial" />
-          <AssociationSet Name="FK_ItemLiveStatus_Item" Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="ItemLiveStatus" EntitySet="ItemLiveStatus" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ItemSerial_Item" Association="Heka.DataAccess.Models.FK_ItemSerial_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="ItemSerial" EntitySet="ItemSerial" />
-          </AssociationSet>
           <AssociationSet Name="FK_ItemLiveStatus_Warehouse" Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Warehouse">
             <End Role="Warehouse" EntitySet="Warehouse" />
             <End Role="ItemLiveStatus" EntitySet="ItemLiveStatus" />
@@ -3396,14 +3330,6 @@
           <EntitySet Name="Attachment" EntityType="Heka.DataAccess.Models.Attachment" />
           <EntitySet Name="ProductRecipe" EntityType="Heka.DataAccess.Models.ProductRecipe" />
           <EntitySet Name="ProductRecipeDetail" EntityType="Heka.DataAccess.Models.ProductRecipeDetail" />
-          <AssociationSet Name="FK_ProductRecipe_Item" Association="Heka.DataAccess.Models.FK_ProductRecipe_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="ProductRecipe" EntitySet="ProductRecipe" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductRecipeDetail_Item" Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProductRecipeDetail_ProductRecipe" Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe">
             <End Role="ProductRecipe" EntitySet="ProductRecipe" />
             <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
@@ -3450,14 +3376,6 @@
           <AssociationSet Name="FK_ItemReceiptDetail_ForexType" Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_ForexType">
             <End Role="ForexType" EntitySet="ForexType" />
             <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ItemReceiptDetail_Item" Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WorkOrderDetail_Item" Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Item">
-            <End Role="Item" EntitySet="Item" />
-            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_ItemReceiptDetail_ItemOrderDetail" Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemOrderDetail">
             <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
@@ -3553,6 +3471,80 @@
           <AssociationSet Name="FK_MachineSignal_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail">
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
             <End Role="MachineSignal" EntitySet="MachineSignal" />
+          </AssociationSet>
+          <EntitySet Name="Item" EntityType="Heka.DataAccess.Models.Item" />
+          <AssociationSet Name="FK_Item_Firm" Association="Heka.DataAccess.Models.FK_Item_Firm">
+            <End Role="Firm" EntitySet="Firm" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemCategory" Association="Heka.DataAccess.Models.FK_Item_ItemCategory">
+            <End Role="ItemCategory" EntitySet="ItemCategory" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemGroup" Association="Heka.DataAccess.Models.FK_Item_ItemGroup">
+            <End Role="ItemGroup" EntitySet="ItemGroup" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Mold" Association="Heka.DataAccess.Models.FK_Item_Mold">
+            <End Role="Mold" EntitySet="Mold" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Plant" Association="Heka.DataAccess.Models.FK_Item_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemLiveStatus_Item" Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemLiveStatus" EntitySet="ItemLiveStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderDetail_Item" Association="Heka.DataAccess.Models.FK_ItemOrderDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptDetail_Item" Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemRequestDetail_Item" Association="Heka.DataAccess.Models.FK_ItemRequestDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemRequestDetail" EntitySet="ItemRequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemSerial_Item" Association="Heka.DataAccess.Models.FK_ItemSerial_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemSerial" EntitySet="ItemSerial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemUnit_Item" Association="Heka.DataAccess.Models.FK_ItemUnit_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemUnit" EntitySet="ItemUnit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemWarehouse_Item" Association="Heka.DataAccess.Models.FK_ItemWarehouse_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipe_Item" Association="Heka.DataAccess.Models.FK_ProductRecipe_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ProductRecipe" EntitySet="ProductRecipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductRecipeDetail_Item" Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderDetail_Item" Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+          </AssociationSet>
+          <EntitySet Name="WorkOrderItemNeeds" EntityType="Heka.DataAccess.Models.WorkOrderItemNeeds" />
+          <AssociationSet Name="FK_WorkOrderItemNeeds_Item" Association="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="WorkOrderItemNeeds" EntitySet="WorkOrderItemNeeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderItemNeeds_WorkOrder" Association="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrder">
+            <End Role="WorkOrder" EntitySet="WorkOrder" />
+            <End Role="WorkOrderItemNeeds" EntitySet="WorkOrderItemNeeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderItemNeeds_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="WorkOrderItemNeeds" EntitySet="WorkOrderItemNeeds" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
@@ -3657,21 +3649,9 @@
           <Property Name="MaximumQuantity" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="MinimumBehaviour" Type="Int32" />
           <Property Name="MaximumBehaviour" Type="Int32" />
-          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Item" FromRole="ItemWarehouse" ToRole="Item" />
           <NavigationProperty Name="Warehouse" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse" FromRole="ItemWarehouse" ToRole="Warehouse" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Item" FromRole="ItemWarehouse" ToRole="Item" />
         </EntityType>
-        <Association Name="FK_ItemWarehouse_Item">
-          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ItemWarehouse" Role="ItemWarehouse" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ItemWarehouse">
-              <PropertyRef Name="ItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ItemWarehouse_Warehouse">
           <End Type="Heka.DataAccess.Models.Warehouse" Role="Warehouse" Multiplicity="0..1" />
           <End Type="Heka.DataAccess.Models.ItemWarehouse" Role="ItemWarehouse" Multiplicity="*" />
@@ -3681,18 +3661,6 @@
             </Principal>
             <Dependent Role="ItemWarehouse">
               <PropertyRef Name="WarehouseId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Item_Firm">
-          <End Type="Heka.DataAccess.Models.Firm" Role="Firm" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Firm">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="SupplierFirmId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3730,8 +3698,8 @@
           <Property Name="InQuantity" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="OutQuantity" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="LiveQuantity" Type="Decimal" Precision="18" Scale="5" />
-          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" FromRole="ItemLiveStatus" ToRole="Item" />
           <NavigationProperty Name="Warehouse" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Warehouse" FromRole="ItemLiveStatus" ToRole="Warehouse" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" FromRole="ItemLiveStatus" ToRole="Item" />
         </EntityType>
         <EntityType Name="ItemSerial">
           <Key>
@@ -3747,33 +3715,9 @@
           <Property Name="CreatedUserId" Type="Int32" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
-          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemSerial_Item" FromRole="ItemSerial" ToRole="Item" />
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_ItemSerial_ItemReceiptDetail" FromRole="ItemSerial" ToRole="ItemReceiptDetail" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemSerial_Item" FromRole="ItemSerial" ToRole="Item" />
         </EntityType>
-        <Association Name="FK_ItemLiveStatus_Item">
-          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ItemLiveStatus" Role="ItemLiveStatus" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ItemLiveStatus">
-              <PropertyRef Name="ItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ItemSerial_Item">
-          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ItemSerial" Role="ItemSerial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ItemSerial">
-              <PropertyRef Name="ItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ItemLiveStatus_Warehouse">
           <End Type="Heka.DataAccess.Models.Warehouse" Role="Warehouse" Multiplicity="0..1" />
           <End Type="Heka.DataAccess.Models.ItemLiveStatus" Role="ItemLiveStatus" Multiplicity="*" />
@@ -3842,9 +3786,9 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductRecipe_Item" FromRole="ProductRecipe" ToRole="Item" />
           <NavigationProperty Name="ProductRecipeDetail" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe" FromRole="ProductRecipe" ToRole="ProductRecipeDetail" />
           <Property Name="Description" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductRecipe_Item" FromRole="ProductRecipe" ToRole="Item" />
         </EntityType>
         <EntityType Name="ProductRecipeDetail">
           <Key>
@@ -3862,35 +3806,11 @@
           <Property Name="CreatedUserId" Type="Int32" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
-          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" FromRole="ProductRecipeDetail" ToRole="Item" />
           <NavigationProperty Name="ProductRecipe" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe" FromRole="ProductRecipeDetail" ToRole="ProductRecipe" />
           <NavigationProperty Name="UnitType" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_UnitType" FromRole="ProductRecipeDetail" ToRole="UnitType" />
           <NavigationProperty Name="Warehouse" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_Warehouse" FromRole="ProductRecipeDetail" ToRole="Warehouse" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" FromRole="ProductRecipeDetail" ToRole="Item" />
         </EntityType>
-        <Association Name="FK_ProductRecipe_Item">
-          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ProductRecipe" Role="ProductRecipe" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductRecipe">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductRecipeDetail_Item">
-          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ProductRecipeDetail" Role="ProductRecipeDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductRecipeDetail">
-              <PropertyRef Name="ItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductRecipeDetail_ProductRecipe">
           <End Type="Heka.DataAccess.Models.ProductRecipe" Role="ProductRecipe" Multiplicity="0..1" />
           <End Type="Heka.DataAccess.Models.ProductRecipeDetail" Role="ProductRecipeDetail" Multiplicity="*" />
@@ -3962,6 +3882,7 @@
           <Property Name="IsActive" Type="Boolean" />
           <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Mold" FromRole="Mold" ToRole="MoldTest" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Mold" FromRole="Mold" ToRole="WorkOrderDetail" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_Mold" FromRole="Mold" ToRole="Item" />
         </EntityType>
         <EntityType Name="MoldTest">
           <Key>
@@ -4088,12 +4009,12 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
           <NavigationProperty Name="ForexType" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_ForexType" FromRole="ItemReceiptDetail" ToRole="ForexType" />
-          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item" FromRole="ItemReceiptDetail" ToRole="Item" />
           <NavigationProperty Name="ItemOrderDetail" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemOrderDetail" FromRole="ItemReceiptDetail" ToRole="ItemOrderDetail" />
           <NavigationProperty Name="ItemReceipt" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemReceipt" FromRole="ItemReceiptDetail" ToRole="ItemReceipt" />
           <NavigationProperty Name="UnitType" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_UnitType" FromRole="ItemReceiptDetail" ToRole="UnitType" />
           <NavigationProperty Name="ItemSerial" Relationship="Heka.DataAccess.Models.FK_ItemSerial_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="ItemSerial" />
           <NavigationProperty Name="WorkOrderAllocation" Relationship="Heka.DataAccess.Models.FK_WorkOrderAllocation_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="WorkOrderAllocation" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item" FromRole="ItemReceiptDetail" ToRole="Item" />
         </EntityType>
         <EntityType Name="WorkOrder">
           <Key>
@@ -4116,6 +4037,7 @@
           <NavigationProperty Name="WorkOrderControl" Relationship="Heka.DataAccess.Models.FK_WorkOrderControl_WorkOrder" FromRole="WorkOrder" ToRole="WorkOrderControl" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_WorkOrder" FromRole="WorkOrder" ToRole="WorkOrderDetail" />
           <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrder" FromRole="WorkOrder" ToRole="WorkOrderSerial" />
+          <NavigationProperty Name="WorkOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrder" FromRole="WorkOrder" ToRole="WorkOrderItemNeeds" />
         </EntityType>
         <EntityType Name="WorkOrderAllocation">
           <Key>
@@ -4189,7 +4111,6 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
           <NavigationProperty Name="Dye" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Dye" FromRole="WorkOrderDetail" ToRole="Dye" />
-          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Item" FromRole="WorkOrderDetail" ToRole="Item" />
           <NavigationProperty Name="ItemOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_ItemOrderDetail" FromRole="WorkOrderDetail" ToRole="ItemOrderDetail" />
           <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="WorkOrderDetail" ToRole="Machine" />
           <NavigationProperty Name="Mold" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Mold" FromRole="WorkOrderDetail" ToRole="Mold" />
@@ -4201,6 +4122,8 @@
           <NavigationProperty Name="MachinePlan" Relationship="Heka.DataAccess.Models.FK_MachinePlan_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="MachinePlan" />
           <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="ProductionPosture" />
           <NavigationProperty Name="MachineSignal" Relationship="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="MachineSignal" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Item" FromRole="WorkOrderDetail" ToRole="Item" />
+          <NavigationProperty Name="WorkOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderItemNeeds" />
         </EntityType>
         <EntityType Name="WorkOrderSerial">
           <Key>
@@ -4256,30 +4179,6 @@
             </Principal>
             <Dependent Role="ItemReceiptDetail">
               <PropertyRef Name="ForexId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ItemReceiptDetail_Item">
-          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ItemReceiptDetail" Role="ItemReceiptDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ItemReceiptDetail">
-              <PropertyRef Name="ItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WorkOrderDetail_Item">
-          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WorkOrderDetail">
-              <PropertyRef Name="ItemId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4603,6 +4502,271 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ItemType" Type="Int32" />
+          <Property Name="ItemCategoryId" Type="Int32" />
+          <Property Name="ItemGroupId" Type="Int32" />
+          <Property Name="SupplierFirmId" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <Property Name="MoldId" Type="Int32" />
+          <NavigationProperty Name="Firm" Relationship="Heka.DataAccess.Models.FK_Item_Firm" FromRole="Item" ToRole="Firm" />
+          <NavigationProperty Name="ItemCategory" Relationship="Heka.DataAccess.Models.FK_Item_ItemCategory" FromRole="Item" ToRole="ItemCategory" />
+          <NavigationProperty Name="ItemGroup" Relationship="Heka.DataAccess.Models.FK_Item_ItemGroup" FromRole="Item" ToRole="ItemGroup" />
+          <NavigationProperty Name="Mold" Relationship="Heka.DataAccess.Models.FK_Item_Mold" FromRole="Item" ToRole="Mold" />
+          <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_Item_Plant" FromRole="Item" ToRole="Plant" />
+          <NavigationProperty Name="ItemLiveStatus" Relationship="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" FromRole="Item" ToRole="ItemLiveStatus" />
+          <NavigationProperty Name="ItemOrderDetail" Relationship="Heka.DataAccess.Models.FK_ItemOrderDetail_Item" FromRole="Item" ToRole="ItemOrderDetail" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item" FromRole="Item" ToRole="ItemReceiptDetail" />
+          <NavigationProperty Name="ItemRequestDetail" Relationship="Heka.DataAccess.Models.FK_ItemRequestDetail_Item" FromRole="Item" ToRole="ItemRequestDetail" />
+          <NavigationProperty Name="ItemSerial" Relationship="Heka.DataAccess.Models.FK_ItemSerial_Item" FromRole="Item" ToRole="ItemSerial" />
+          <NavigationProperty Name="ItemUnit" Relationship="Heka.DataAccess.Models.FK_ItemUnit_Item" FromRole="Item" ToRole="ItemUnit" />
+          <NavigationProperty Name="ItemWarehouse" Relationship="Heka.DataAccess.Models.FK_ItemWarehouse_Item" FromRole="Item" ToRole="ItemWarehouse" />
+          <NavigationProperty Name="ProductRecipe" Relationship="Heka.DataAccess.Models.FK_ProductRecipe_Item" FromRole="Item" ToRole="ProductRecipe" />
+          <NavigationProperty Name="ProductRecipeDetail" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" FromRole="Item" ToRole="ProductRecipeDetail" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Item" FromRole="Item" ToRole="WorkOrderDetail" />
+          <NavigationProperty Name="WorkOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_Item" FromRole="Item" ToRole="WorkOrderItemNeeds" />
+        </EntityType>
+        <Association Name="FK_Item_Firm">
+          <End Type="Heka.DataAccess.Models.Firm" Role="Firm" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="SupplierFirmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemCategory">
+          <End Type="Heka.DataAccess.Models.ItemCategory" Role="ItemCategory" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="ItemCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemGroup">
+          <End Type="Heka.DataAccess.Models.ItemGroup" Role="ItemGroup" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="ItemGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Mold">
+          <End Type="Heka.DataAccess.Models.Mold" Role="Mold" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mold">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="MoldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Plant">
+          <End Type="Heka.DataAccess.Models.Plant" Role="Plant" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemLiveStatus_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemLiveStatus" Role="ItemLiveStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemLiveStatus">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderDetail_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemOrderDetail" Role="ItemOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptDetail_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemReceiptDetail" Role="ItemReceiptDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemRequestDetail_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemRequestDetail" Role="ItemRequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemRequestDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemSerial_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemSerial" Role="ItemSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemSerial">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemUnit_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemUnit" Role="ItemUnit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemUnit">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemWarehouse_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemWarehouse" Role="ItemWarehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemWarehouse">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipe_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductRecipe" Role="ProductRecipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipe">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductRecipeDetail_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductRecipeDetail" Role="ProductRecipeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductRecipeDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderDetail_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderDetail">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="WorkOrderItemNeeds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderDetailId" Type="Int32" />
+          <Property Name="WorkOrderId" Type="Int32" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="RemainingNeedsQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="CalculatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_Item" FromRole="WorkOrderItemNeeds" ToRole="Item" />
+          <NavigationProperty Name="WorkOrder" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrder" FromRole="WorkOrderItemNeeds" ToRole="WorkOrder" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrderDetail" FromRole="WorkOrderItemNeeds" ToRole="WorkOrderDetail" />
+        </EntityType>
+        <Association Name="FK_WorkOrderItemNeeds_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderItemNeeds" Role="WorkOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderItemNeeds">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderItemNeeds_WorkOrder">
+          <End Type="Heka.DataAccess.Models.WorkOrder" Role="WorkOrder" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderItemNeeds" Role="WorkOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderItemNeeds">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderItemNeeds_WorkOrderDetail">
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderItemNeeds" Role="WorkOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderItemNeeds">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4645,24 +4809,6 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ActiveSalesRate" ColumnName="ActiveSalesRate" />
                 <ScalarProperty Name="ActiveBuyingRate" ColumnName="ActiveBuyingRate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Item">
-            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Item">
-              <MappingFragment StoreEntitySet="Item">
-                <ScalarProperty Name="SupplierFirmId" ColumnName="SupplierFirmId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="ItemNo" ColumnName="ItemNo" />
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
-                <ScalarProperty Name="ItemType" ColumnName="ItemType" />
-                <ScalarProperty Name="ItemCategoryId" ColumnName="ItemCategoryId" />
-                <ScalarProperty Name="ItemGroupId" ColumnName="ItemGroupId" />
-                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5387,6 +5533,38 @@
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
                 <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Item">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Item">
+              <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="MoldId" ColumnName="MoldId" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="SupplierFirmId" ColumnName="SupplierFirmId" />
+                <ScalarProperty Name="ItemGroupId" ColumnName="ItemGroupId" />
+                <ScalarProperty Name="ItemCategoryId" ColumnName="ItemCategoryId" />
+                <ScalarProperty Name="ItemType" ColumnName="ItemType" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemNo" ColumnName="ItemNo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkOrderItemNeeds">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.WorkOrderItemNeeds">
+              <MappingFragment StoreEntitySet="WorkOrderItemNeeds">
+                <ScalarProperty Name="CalculatedDate" ColumnName="CalculatedDate" />
+                <ScalarProperty Name="RemainingNeedsQuantity" ColumnName="RemainingNeedsQuantity" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+                <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

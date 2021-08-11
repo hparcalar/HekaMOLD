@@ -52,7 +52,6 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UpdatedUserId { get; set; }
     
         public virtual ForexType ForexType { get; set; }
-        public virtual Item Item { get; set; }
         public virtual ItemOrderDetail ItemOrderDetail { get; set; }
         public virtual ItemReceipt ItemReceipt { get; set; }
         public virtual UnitType UnitType { get; set; }
@@ -60,5 +59,6 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ItemSerial> ItemSerial { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderAllocation> WorkOrderAllocation { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

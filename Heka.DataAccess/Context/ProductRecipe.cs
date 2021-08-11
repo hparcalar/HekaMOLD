@@ -31,8 +31,8 @@ namespace Heka.DataAccess.Context
         public Nullable<bool> IsActive { get; set; }
         public string Description { get; set; }
     
-        public virtual Item Item { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductRecipeDetail> ProductRecipeDetail { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

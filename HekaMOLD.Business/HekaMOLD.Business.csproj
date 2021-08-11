@@ -108,6 +108,7 @@
     <Compile Include="Models\DataTransfer\Production\ProductRecipeModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderAllocationModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\WorkOrderItemNeedsModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderSerialModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptDetailModel.cs" />

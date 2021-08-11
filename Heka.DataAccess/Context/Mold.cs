@@ -19,6 +19,7 @@ namespace Heka.DataAccess.Context
         {
             this.MoldTest = new HashSet<MoldTest>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
+            this.Item = new HashSet<Item>();
         }
     
         public int Id { get; set; }
@@ -35,5 +36,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<MoldTest> MoldTest { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Item> Item { get; set; }
     }
 }

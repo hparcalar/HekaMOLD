@@ -12,20 +12,18 @@ namespace Heka.DataAccess.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class ItemSerial
+    public partial class WorkOrderItemNeeds
     {
         public int Id { get; set; }
+        public Nullable<int> WorkOrderDetailId { get; set; }
+        public Nullable<int> WorkOrderId { get; set; }
         public Nullable<int> ItemId { get; set; }
-        public Nullable<int> ItemReceiptDetailId { get; set; }
-        public string SerialNo { get; set; }
-        public Nullable<int> ReceiptType { get; set; }
-        public Nullable<int> SerialStatus { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<int> CreatedUserId { get; set; }
-        public Nullable<System.DateTime> UpdatedDate { get; set; }
-        public Nullable<int> UpdatedUserId { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
+        public Nullable<decimal> RemainingNeedsQuantity { get; set; }
+        public Nullable<System.DateTime> CalculatedDate { get; set; }
     
-        public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
         public virtual Item Item { get; set; }
+        public virtual WorkOrder WorkOrder { get; set; }
+        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
     }
 }

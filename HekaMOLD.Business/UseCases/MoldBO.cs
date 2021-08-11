@@ -1,5 +1,6 @@
 ﻿using Heka.DataAccess.Context;
 using HekaMOLD.Business.Helpers;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core;
@@ -13,6 +14,33 @@ namespace HekaMOLD.Business.UseCases
 {
     public class MoldBO : CoreProductionBO
     {
+        #region MOLD BUSINESS
+        public ItemModel[] GetItemsOfMold(int moldId)
+        {
+            ItemModel[] data = new ItemModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Item>();
+                data = repo.Filter(d => d.MoldId == moldId)
+                    .Select(d => new ItemModel
+                    {
+                        Id = d.Id,
+                        ItemNo = d.ItemNo,
+                        ItemName = d.ItemName,
+                        GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
+                        CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        #endregion
+
         #region MOLD TEST BUSINESS
         public MoldTestModel[] GetMoldTestList()
         {

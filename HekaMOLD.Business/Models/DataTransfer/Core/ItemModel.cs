@@ -17,6 +17,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? ItemGroupId { get; set; }
         public int? SupplierFirmId { get; set; }
         public int? PlantId { get; set; }
+        public int? MoldId { get; set; }
         public ItemWarehouseModel[] Warehouses { get; set; }
         public ItemUnitModel[] Units { get; set; }
         public ItemLiveStatusModel[] LiveStatus { get; set; }

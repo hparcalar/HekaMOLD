@@ -4,10 +4,9 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="b552cb97d7914bdca30c27814841d085" Name="Diagram1" ZoomLevel="98">
+      <Diagram DiagramId="b552cb97d7914bdca30c27814841d085" Name="Diagram1" ZoomLevel="89">
         <EntityTypeShape EntityType="Heka.DataAccess.Models.Firm" Width="1.5" PointX="3" PointY="14.875" IsExpanded="true" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ForexType" Width="1.5" PointX="8.25" PointY="24.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Item" Width="1.5" PointX="5.25" PointY="26.375" IsExpanded="true" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemCategory" Width="1.5" PointX="3" PointY="26.5" IsExpanded="true" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemGroup" Width="1.5" PointX="8.25" PointY="28" IsExpanded="true" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemOrder" Width="1.5" PointX="5.25" PointY="32.5" IsExpanded="true" />
@@ -29,12 +28,6 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrder_Firm" ManuallyRouted="false" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceipt_Firm" ManuallyRouted="false" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrderDetail_ForexType" ManuallyRouted="false" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_ItemCategory" ManuallyRouted="false" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_ItemGroup" ManuallyRouted="false" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_Plant" ManuallyRouted="false" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrderDetail_Item" ManuallyRouted="false" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequestDetail_Item" ManuallyRouted="false" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemUnit_Item" ManuallyRouted="false" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemCategory_Plant" ManuallyRouted="false" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemGroup_ItemCategory" ManuallyRouted="false" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemGroup_Plant" ManuallyRouted="false" />
@@ -74,23 +67,17 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ForexHistory_ForexType" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequest_User" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemWarehouse" Width="1.5" PointX="10.5" PointY="44.25" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemWarehouse_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_Firm" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestCategory" Width="1.5" PointX="0.75" PointY="1" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequest_ItemRequestCategory" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemLiveStatus" Width="1.5" PointX="13.5" PointY="40.5" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemSerial" Width="1.5" PointX="18" PointY="31.125" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemSerial_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Warehouse" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.FirmAuthor" Width="1.5" PointX="5.25" PointY="16.625" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_FirmAuthor_Firm" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.Attachment" Width="1.5" PointX="3.375" PointY="0.75" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductRecipe" Width="1.5" PointX="7.5" PointY="19.75" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductRecipeDetail" Width="1.5" PointX="15.75" PointY="40.5" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipe_Item" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_UnitType" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Warehouse" />
@@ -111,8 +98,6 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Dye" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrder_Firm" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_ForexType" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemOrderDetail" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderDetail_ItemOrderDetail" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemReceipt" />
@@ -139,6 +124,26 @@
         <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineSignal" Width="1.5" PointX="15" PointY="11.25" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Item" Width="1.5" PointX="10.5" PointY="17" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_Firm" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_ItemCategory" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_ItemGroup" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_Mold" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Item_Plant" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemLiveStatus_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemOrderDetail_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequestDetail_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemSerial_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemUnit_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemWarehouse_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipe_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Item" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderItemNeeds" Width="1.5" PointX="15" PointY="25.25" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_Item" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrder" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrderDetail" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

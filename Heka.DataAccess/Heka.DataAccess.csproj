@@ -201,6 +201,9 @@
     <Compile Include="Context\WorkOrderDetail.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\WorkOrderItemNeeds.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\WorkOrderSerial.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -234,6 +237,7 @@
       <DependentUpon>HekaDataMapping.edmx</DependentUpon>
       <LastGenOutput>HekaDataMapping.cs</LastGenOutput>
     </Content>
+    <EmbeddedResource Include="Migration\Versions\1.0.0.3.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.1.sql" />
   </ItemGroup>

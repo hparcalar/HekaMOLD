@@ -21,7 +21,7 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> OutQuantity { get; set; }
         public Nullable<decimal> LiveQuantity { get; set; }
     
-        public virtual Item Item { get; set; }
         public virtual Warehouse Warehouse { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

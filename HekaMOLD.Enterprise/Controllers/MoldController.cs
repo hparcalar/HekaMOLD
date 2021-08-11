@@ -52,6 +52,21 @@ namespace HekaMOLD.Enterprise.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult GetProductsOfMold(int moldId)
+        {
+            ItemModel[] data = new ItemModel[0];
+
+            using (MoldBO bObj = new MoldBO())
+            {
+                data = bObj.GetItemsOfMold(moldId);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         [HttpPost]
         public JsonResult DeleteModel(int rid)
         {

@@ -30,9 +30,9 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Item> Item { get; set; }
         public virtual ItemCategory ItemCategory { get; set; }
         public virtual Plant Plant { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Item> Item { get; set; }
     }
 }

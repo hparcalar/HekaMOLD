@@ -6,6 +6,7 @@ using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -660,6 +661,139 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return data;
+        }
+        #endregion
+
+        #region PRODUCTION ITEM NEEDS MANAGEMENET
+        public WorkOrderItemNeedsModel[] GetWorkOrderItemNeeds(BasicRangeFilter filter)
+        {
+            WorkOrderItemNeedsModel[] data = new WorkOrderItemNeedsModel[0];
+
+            try
+            {
+                //DateTime dtStart, dtEnd;
+
+                //if (string.IsNullOrEmpty(filter.StartDate))
+                //    filter.StartDate = "01.01." + DateTime.Now.Year;
+                //if (string.IsNullOrEmpty(filter.EndDate))
+                //    filter.EndDate = "31.12." + DateTime.Now.Year;
+
+                //dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                //        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                //dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy",
+                //        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repo = _unitOfWork.GetRepository<WorkOrderItemNeeds>();
+                data = repo.Filter(d => d.RemainingNeedsQuantity > 0)
+                .ToList()    
+                .Select(d => new WorkOrderItemNeedsModel
+                {
+                    CalculatedDate = d.CalculatedDate,
+                    CalculatedDateStr = d.CalculatedDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", d.CalculatedDate) : "",
+                    Id = d.Id,
+                    ItemId = d.ItemId,
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                    ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : "",
+                    NeedsDateStr = d.WorkOrder.WorkOrderDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", d.WorkOrder.WorkOrderDate) : "",
+                    Quantity = d.Quantity,
+                    RemainingQuantity = d.RemainingNeedsQuantity,
+                    WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", d.WorkOrder.WorkOrderDate) : "",
+                    WorkOrderNo = d.WorkOrder.WorkOrderNo,
+                    WorkOrderDetailId = d.WorkOrderDetailId,
+                    WorkOrderId = d.WorkOrderId,
+                }).ToArray();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return data;
+        }
+        public BusinessResult CalculateWorkOrderNeeds()
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoRecipe = _unitOfWork.GetRepository<ProductRecipe>();
+                var repoNeeds = _unitOfWork.GetRepository<WorkOrderItemNeeds>();
+
+                var openWorkOrders = repoWorkOrderDetail
+                    .Filter(d => d.WorkOrderStatus == (int)WorkOrderStatusType.Created
+                        || d.WorkOrderStatus == (int)WorkOrderStatusType.Planned)
+                    .OrderBy(d => new { d.WorkOrder.WorkOrderDate, d.Id })
+                    .ToArray();
+
+                foreach (var item in openWorkOrders)
+                {
+                    // CLEAR CURRENT NEEDS
+                    var currentNeeds = repoNeeds.Filter(d => d.WorkOrderDetailId == item.Id).ToArray();
+                    foreach (var needsItem in currentNeeds)
+                        repoNeeds.Delete(needsItem);
+
+                    // WRITE NEW NEEDS
+                    Hashtable itemStatusList = new Hashtable();
+
+                    var dbRecipe = repoRecipe.Get(d => d.IsActive == true && d.ProductId == item.ItemId);
+                    if (dbRecipe != null)
+                    {
+                        foreach (var recipeItem in dbRecipe.ProductRecipeDetail)
+                        {
+                            // GET ITEM USABLE QUANTITY FROM WAREHOUSES
+                            decimal? itemStatus = null;
+                            if (itemStatusList.ContainsKey(recipeItem.ItemId.Value))
+                                itemStatus = (decimal?)itemStatusList[recipeItem.ItemId.Value];
+                            else
+                            {
+                                itemStatus = recipeItem.Item.ItemLiveStatus.Sum(d => d.LiveQuantity ?? 0);
+                                itemStatusList[recipeItem.ItemId.Value] = itemStatus;
+                            }
+
+                            // CALCULATE NEEDS QTY
+                            var pureNeedsQty = recipeItem.Quantity * item.Quantity;
+                            var usableQty = itemStatus >= pureNeedsQty ? pureNeedsQty : itemStatus;
+                            if (usableQty < 0)
+                                usableQty = 0;
+                            var finalNeedsQty = pureNeedsQty - usableQty;
+
+                            // UPDATE TOTAL ITEM STATUS HASHTABLE
+                            itemStatusList[recipeItem.ItemId.Value] = itemStatus - usableQty;
+
+                            if (finalNeedsQty > 0)
+                            {
+                                var newItemNeeds = new WorkOrderItemNeeds
+                                {
+                                    CalculatedDate = DateTime.Now,
+                                    ItemId = recipeItem.ItemId,
+                                    Quantity = finalNeedsQty,
+                                    RemainingNeedsQuantity = finalNeedsQty,
+                                    WorkOrderDetail = item,
+                                    WorkOrder = item.WorkOrder,
+                                };
+                                repoNeeds.Add(newItemNeeds);
+                            }
+                        }
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
         #endregion
     }

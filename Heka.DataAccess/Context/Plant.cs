@@ -18,7 +18,6 @@ namespace Heka.DataAccess.Context
         public Plant()
         {
             this.Firm = new HashSet<Firm>();
-            this.Item = new HashSet<Item>();
             this.ItemCategory = new HashSet<ItemCategory>();
             this.ItemGroup = new HashSet<ItemGroup>();
             this.ItemOrder = new HashSet<ItemOrder>();
@@ -30,6 +29,7 @@ namespace Heka.DataAccess.Context
             this.UserRole = new HashSet<UserRole>();
             this.Warehouse = new HashSet<Warehouse>();
             this.WorkOrder = new HashSet<WorkOrder>();
+            this.Item = new HashSet<Item>();
         }
     
         public int Id { get; set; }
@@ -38,8 +38,6 @@ namespace Heka.DataAccess.Context
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Firm> Firm { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Item> Item { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemCategory> ItemCategory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -62,5 +60,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<Warehouse> Warehouse { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrder> WorkOrder { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Item> Item { get; set; }
     }
 }

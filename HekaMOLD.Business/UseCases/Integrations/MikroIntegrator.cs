@@ -321,6 +321,17 @@ namespace HekaMOLD.Business.UseCases.Integrations
                         {
                             lastRecipeId = 0;
 
+                            int productId = 0;
+                            using (DefinitionsBO defObj = new DefinitionsBO())
+                            {
+                                var dbProduct = defObj.GetItem(row["rec_anakod"].ToString());
+                                if (dbProduct != null)
+                                    productId = dbProduct.Id;
+                            }
+
+                            if (productId == 0)
+                                continue;
+
                             using (RecipeBO subObj = new RecipeBO())
                             {
                                 if (!subObj.HasAnyProductRecipe(row["rec_anakod"].ToString()))
@@ -331,6 +342,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         CreatedDate = DateTime.Now,
                                         Description = row["rec_aciklama"].ToString(),
                                         IsActive = true,
+                                        ProductId = productId,
                                         ProductRecipeType = 1,
                                         Details = new ProductRecipeDetailModel[0]
                                     });
@@ -350,6 +362,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         // MEVCUT REÇETE İSE GÜNCELLE VE TÜM DETAYLARINI SİL, AŞAĞIDA YENİDEN EKLENECEK
                                         dbRecipe.Description = row["rec_aciklama"].ToString();
                                         dbRecipe.Details = new ProductRecipeDetailModel[0];
+                                        dbRecipe.ProductId = productId;
                                         subObj.SaveOrUpdateProductRecipe(dbRecipe);
                                     }
                                 }

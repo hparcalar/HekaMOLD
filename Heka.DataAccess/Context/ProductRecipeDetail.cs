@@ -27,9 +27,9 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
     
-        public virtual Item Item { get; set; }
         public virtual ProductRecipe ProductRecipe { get; set; }
         public virtual UnitType UnitType { get; set; }
         public virtual Warehouse Warehouse { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

@@ -227,6 +227,7 @@ namespace HekaMOLD.Business.UseCases
                 Id = d.Id,
                 OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
                 ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                ItemName = d.Item != null ? d.Item.ItemName : "",
                 FirmName = d.ItemOrder.Firm != null ? 
                     d.ItemOrder.Firm.FirmName : "",
                 Quantity = d.Quantity

@@ -27,7 +27,6 @@ namespace Heka.DataAccess.Context
     
         public virtual DbSet<Firm> Firm { get; set; }
         public virtual DbSet<ForexType> ForexType { get; set; }
-        public virtual DbSet<Item> Item { get; set; }
         public virtual DbSet<ItemCategory> ItemCategory { get; set; }
         public virtual DbSet<ItemGroup> ItemGroup { get; set; }
         public virtual DbSet<ItemOrder> ItemOrder { get; set; }
@@ -70,5 +69,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<MachinePlan> MachinePlan { get; set; }
         public virtual DbSet<ProductionPosture> ProductionPosture { get; set; }
         public virtual DbSet<MachineSignal> MachineSignal { get; set; }
+        public virtual DbSet<Item> Item { get; set; }
+        public virtual DbSet<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
     }
 }

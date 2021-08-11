@@ -306,6 +306,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                         "<td>" + data.OrderDateStr + "</td>" +
                         "<td>" + data.FirmName + "</td>" +
                         "<td>" + data.ItemNo + "</td>" +
+                        "<td>" + data.ItemName + "</td>" +
                         "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
                         "</tr>";
 
@@ -318,6 +319,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 },
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'ItemNo', caption: 'Ürün Kodu' },
+                { dataField: 'ItemName', caption: 'Ürün Adı' },
                 {
                     dataField: 'Quantity', caption: 'Miktar',
                     dataType: 'number', format: { type: "fixedPoint", precision: 2 }
