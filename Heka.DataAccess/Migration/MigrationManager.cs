@@ -39,7 +39,7 @@ namespace Heka.DataAccess.Migration
                     foreach (var script in versionScripts)
                     {
                         StreamReader sReader = new StreamReader(assembly.GetManifestResourceStream(script));
-                        string[] sqlSections = Regex.Split(sReader.ReadToEnd(), "GO\\n");
+                        string[] sqlSections = Regex.Split(sReader.ReadToEnd(), "\\bGO\\b");
 
                         // EXECUTE SECTIONS
                         foreach (var sqlScript in sqlSections)
@@ -53,6 +53,9 @@ namespace Heka.DataAccess.Migration
                         SqlCommand vCmd = new SqlCommand("INSERT INTO DbMigration(Version, UpdateDate) VALUES('"+
                             script.Replace("Heka.DataAccess.Migration.Versions.","").Replace(".sql","") +"', GETDATE())", con);
                         vCmd.ExecuteNonQuery();
+
+                        sReader.Close();
+                        sReader.Dispose();
                     }
 
                     con.Close();
