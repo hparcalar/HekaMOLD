@@ -15,6 +15,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? MachineType { get; set; }
         public int? PlantId { get; set; }
         public bool? IsActive { get; set; }
+        public bool? IsWatched { get; set; }
+        public string WatchCycleStartCondition { get; set; }
+        public string DeviceIp { get; set; }
 
         public MachinePlanModel[] Plans { get; set; }
 

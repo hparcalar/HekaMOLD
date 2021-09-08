@@ -12,14 +12,21 @@ namespace Heka.DataAccess.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class MachinePlan
+    public partial class Incident
     {
         public int Id { get; set; }
         public Nullable<int> MachineId { get; set; }
-        public Nullable<int> WorkOrderDetailId { get; set; }
-        public Nullable<int> OrderNo { get; set; }
+        public Nullable<int> IncidentCategoryId { get; set; }
+        public Nullable<int> IncidentStatus { get; set; }
+        public string Description { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> StartDate { get; set; }
+        public Nullable<System.DateTime> EndDate { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
+        public Nullable<int> StartedUserId { get; set; }
+        public Nullable<int> EndUserId { get; set; }
     
-        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual IncidentCategory IncidentCategory { get; set; }
         public virtual Machine Machine { get; set; }
     }
 }

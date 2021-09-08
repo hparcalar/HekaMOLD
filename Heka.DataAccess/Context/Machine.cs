@@ -17,11 +17,12 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Machine()
         {
-            this.MoldTest = new HashSet<MoldTest>();
-            this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
+            this.Incident = new HashSet<Incident>();
             this.MachinePlan = new HashSet<MachinePlan>();
-            this.ProductionPosture = new HashSet<ProductionPosture>();
             this.MachineSignal = new HashSet<MachineSignal>();
+            this.MoldTest = new HashSet<MoldTest>();
+            this.ProductionPosture = new HashSet<ProductionPosture>();
+            this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
         }
     
         public int Id { get; set; }
@@ -34,16 +35,21 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public Nullable<bool> IsWatched { get; set; }
+        public string WatchCycleStartCondition { get; set; }
+        public string DeviceIp { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MoldTest> MoldTest { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+        public virtual ICollection<Incident> Incident { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MachinePlan> MachinePlan { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MachineSignal> MachineSignal { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MoldTest> MoldTest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionPosture> ProductionPosture { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MachineSignal> MachineSignal { get; set; }
+        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
     }
 }

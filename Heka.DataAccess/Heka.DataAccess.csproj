@@ -87,6 +87,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>HekaDataMapping.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Context\Incident.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\IncidentCategory.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\Item.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -151,6 +157,9 @@
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\Plant.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\PostureCategory.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\ProductionPosture.cs">
@@ -237,6 +246,7 @@
       <DependentUpon>HekaDataMapping.edmx</DependentUpon>
       <LastGenOutput>HekaDataMapping.cs</LastGenOutput>
     </Content>
+    <EmbeddedResource Include="Migration\Versions\1.0.0.6.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.3.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.1.sql" />

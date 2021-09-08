@@ -519,9 +519,196 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+
+        public BusinessResult StartMachineCycle(int machineId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoMachine = _unitOfWork.GetRepository<Machine>();
+                var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
+
+                var dbMachine = repoMachine.Get(d => d.Id == machineId);
+                if (dbMachine == null)
+                    throw new Exception("Makine tanımı bulunamadı.");
+
+                MachineSignal newSignal = new MachineSignal
+                {
+                    StartDate = DateTime.Now,
+                    MachineId = machineId,
+                    SignalStatus = 0,
+                    Duration = null,
+                    EndDate = null,
+                };
+                repoSignal.Add(newSignal);
+
+                var activePlan = GetActiveWorkOrderOnMachine(machineId);
+                if (activePlan != null)
+                {
+                    newSignal.WorkOrderDetailId = activePlan.WorkOrderDetailId;
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = newSignal.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult StopMachineCycle(int machineId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoMachine = _unitOfWork.GetRepository<Machine>();
+                var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
+
+                var dbMachine = repoMachine.Get(d => d.Id == machineId);
+                if (dbMachine == null)
+                    throw new Exception("Makine tanımı bulunamadı.");
+
+                var lastActiveSignal = repoSignal.Filter(d => d.MachineId == machineId && d.SignalStatus == 0)
+                    .OrderByDescending(d => d.Id)
+                    .FirstOrDefault();
+
+                if (lastActiveSignal == null)
+                    throw new Exception("Aktif başlanmış bir cycle bilgisi bu makine için bulunamadı.");
+
+                lastActiveSignal.SignalStatus = 1;
+                lastActiveSignal.EndDate = DateTime.Now;
+                lastActiveSignal.Duration = Convert.ToInt32((lastActiveSignal.EndDate - lastActiveSignal.StartDate).Value.TotalSeconds);
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = lastActiveSignal.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         #endregion
 
         #region POSTURE MANAGEMENT
+        public PostureCategoryModel[] GetPostureCategoryList()
+        {
+            List<PostureCategoryModel> data = new List<PostureCategoryModel>();
+
+            var repo = _unitOfWork.GetRepository<PostureCategory>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                PostureCategoryModel containerObj = new PostureCategoryModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdatePostureCategory(PostureCategoryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.PostureCategoryCode))
+                    throw new Exception("Duruş kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.PostureCategoryName))
+                    throw new Exception("Duruş adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<PostureCategory>();
+
+                if (repo.Any(d => (d.PostureCategoryCode == model.PostureCategoryCode || d.PostureCategoryName == model.PostureCategoryName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir duruş tipi mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new PostureCategory();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePostureCategory(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<PostureCategory>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public PostureCategoryModel GetPostureCategory(int id)
+        {
+            PostureCategoryModel model = new PostureCategoryModel { };
+
+            var repo = _unitOfWork.GetRepository<PostureCategory>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public ProductionPostureModel GetPosture(int id)
+        {
+            ProductionPostureModel model = new ProductionPostureModel { };
+
+            var repo = _unitOfWork.GetRepository<ProductionPosture>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
         public BusinessResult SaveOrUpdatePosture(ProductionPostureModel model)
         {
             BusinessResult result = new BusinessResult();
@@ -576,6 +763,29 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult DeletePosture(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ProductionPosture>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public ProductionPostureModel[] GetPostureList(BasicRangeFilter filter)
         {
             ProductionPostureModel[] data = new ProductionPostureModel[0];
@@ -594,7 +804,7 @@ namespace HekaMOLD.Business.UseCases
                 dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
-                var repo = _unitOfWork.GetRepository<ProductionPostureModel>();
+                var repo = _unitOfWork.GetRepository<ProductionPosture>();
                 data = repo.Filter(d => d.StartDate >= dtStart && d.StartDate <= dtEnd)
                     .ToList()
                     .Select(d => new ProductionPostureModel
@@ -631,7 +841,7 @@ namespace HekaMOLD.Business.UseCases
 
             try
             {
-                var repo = _unitOfWork.GetRepository<ProductionPostureModel>();
+                var repo = _unitOfWork.GetRepository<ProductionPosture>();
                 data = repo.Filter(d => d.PostureStatus == (int)PostureStatusType.Started
                     || d.PostureStatus == (int)PostureStatusType.WorkingOn)
                     .ToList()
@@ -794,6 +1004,284 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return result;
+        }
+        #endregion
+
+        #region INCIDENT MANAGEMENT
+        public IncidentCategoryModel[] GetIncidentCategoryList()
+        {
+            List<IncidentCategoryModel> data = new List<IncidentCategoryModel>();
+
+            var repo = _unitOfWork.GetRepository<IncidentCategory>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                IncidentCategoryModel containerObj = new IncidentCategoryModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateIncidentCategory(IncidentCategoryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.IncidentCategoryCode))
+                    throw new Exception("Arıza kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.IncidentCategoryName))
+                    throw new Exception("Arıza adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<IncidentCategory>();
+
+                if (repo.Any(d => (d.IncidentCategoryCode == model.IncidentCategoryCode || d.IncidentCategoryName == model.IncidentCategoryName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir arıza tipi mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new IncidentCategory();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteIncidentCategory(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<IncidentCategory>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public IncidentCategoryModel GetIncidentCategory(int id)
+        {
+            IncidentCategoryModel model = new IncidentCategoryModel { };
+
+            var repo = _unitOfWork.GetRepository<IncidentCategory>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public IncidentModel GetIncident(int id)
+        {
+            IncidentModel model = new IncidentModel { };
+
+            var repo = _unitOfWork.GetRepository<Incident>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public BusinessResult SaveOrUpdateIncident(IncidentModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Incident>();
+                if (model.MachineId == null)
+                    throw new Exception("Makine bilgisi arıza için girilmelidir.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    model.IncidentStatus = 0;
+                    model.CreatedDate = DateTime.Now;
+
+                    dbObj = new Incident
+                    {
+                        CreatedDate = DateTime.Now,
+                        IncidentStatus = 0,
+                    };
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+                var stDate = dbObj.StartDate;
+                var edDate = dbObj.EndDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+                if (dbObj.StartDate == null)
+                    dbObj.StartDate = stDate;
+                if (dbObj.EndDate == null)
+                    dbObj.EndDate = edDate;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteIncident(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Incident>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public IncidentModel[] GetIncidentList(BasicRangeFilter filter)
+        {
+            IncidentModel[] data = new IncidentModel[0];
+
+            try
+            {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(filter.StartDate))
+                    filter.StartDate = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(filter.EndDate))
+                    filter.EndDate = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repo = _unitOfWork.GetRepository<Incident>();
+                data = repo.Filter(d => d.StartDate >= dtStart && d.StartDate <= dtEnd)
+                    .ToList()
+                    .Select(d => new IncidentModel
+                    {
+                        Id = d.Id,
+                        CreatedDate = d.CreatedDate,
+                        CreatedUserId = d.CreatedUserId,
+                        EndDate = d.EndDate,
+                        MachineId = d.MachineId,
+                        IncidentStatus = d.IncidentStatus,
+                        StartDate = d.StartDate,
+                        Description = d.Description,
+                        MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                        MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                        IncidentCategoryId = d.IncidentCategoryId,
+                        IncidentCategoryCode = d.IncidentCategory != null ? d.IncidentCategory.IncidentCategoryCode : "",
+                        IncidentCategoryName = d.IncidentCategory != null ? d.IncidentCategory.IncidentCategoryName : "",
+                        StartedUserId = d.StartedUserId,
+                        EndUserId = d.EndUserId,
+                        IncidentStatusStr = ((PostureStatusType)d.IncidentStatus).ToCaption(),
+                        CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate),
+                        StartDateStr = d.StartDate != null ? string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate) : "",
+                        EndDateStr = d.EndDate != null ?
+                            string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public IncidentModel[] GetOngoingIncidents()
+        {
+            IncidentModel[] data = new IncidentModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Incident>();
+                data = repo.Filter(d => d.IncidentStatus == (int)PostureStatusType.Started
+                    || d.IncidentStatus == (int)PostureStatusType.WorkingOn)
+                    .ToList()
+                    .Select(d => new IncidentModel
+                    {
+                        Id = d.Id,
+                        CreatedDate = d.CreatedDate,
+                        CreatedUserId = d.CreatedUserId,
+                        EndDate = d.EndDate,
+                        MachineId = d.MachineId,
+                        IncidentStatus = d.IncidentStatus,
+                        StartDate = d.StartDate,
+                        Description = d.Description,
+                        MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                        MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                        IncidentCategoryId = d.IncidentCategoryId,
+                        IncidentCategoryCode = d.IncidentCategory != null ? d.IncidentCategory.IncidentCategoryCode : "",
+                        IncidentCategoryName = d.IncidentCategory != null ? d.IncidentCategory.IncidentCategoryName : "",
+                        StartedUserId = d.StartedUserId,
+                        EndUserId = d.EndUserId,
+                        IncidentStatusStr = ((PostureStatusType)d.IncidentStatus).ToCaption(),
+                        CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate),
+                        StartDateStr = d.StartDate != null ? string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate) : "",
+                        EndDateStr = d.EndDate != null ?
+                            string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
         }
         #endregion
     }

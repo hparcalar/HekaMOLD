@@ -15,11 +15,14 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? PostureStatus { get; set; }
+        public int? PostureCategoryId { get; set; }
         public string Reason { get; set; }
         public string Explanation { get; set; }
 
         #region VISUAL ELEMENTS
         public string PostureStatusStr { get; set; }
+        public string PostureCategoryCode { get; set; }
+        public string PostureCategoryName { get; set; }
         public string StartDateStr { get; set; }
         public string EndDateStr { get; set; }
         #endregion

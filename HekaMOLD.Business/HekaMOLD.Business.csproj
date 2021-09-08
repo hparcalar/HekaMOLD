@@ -99,10 +99,13 @@
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Production\DyeModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\IncidentCategoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\IncidentModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldTestModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\PostureCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductionPostureModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductRecipeDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductRecipeModel.cs" />

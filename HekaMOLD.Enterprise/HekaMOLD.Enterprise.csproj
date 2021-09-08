@@ -132,6 +132,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
     <Compile Include="Controllers\ProductionNeedsController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
@@ -3990,6 +3991,8 @@
     <Content Include="FrontEndLogic\Firm\index.js" />
     <Content Include="FrontEndLogic\Firm\approved-suppliers.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
+    <Content Include="FrontEndLogic\IncidentCategory\index.js" />
+    <Content Include="FrontEndLogic\IncidentCategory\list.js" />
     <Content Include="FrontEndLogic\ItemCategory\index.js" />
     <Content Include="FrontEndLogic\ItemCategory\list.js" />
     <Content Include="FrontEndLogic\ItemGroup\index.js" />
@@ -4014,6 +4017,8 @@
     <Content Include="FrontEndLogic\PIRequest\index.js" />
     <Content Include="FrontEndLogic\PIRequest\list.js" />
     <Content Include="FrontEndLogic\Planning\planning.js" />
+    <Content Include="FrontEndLogic\PostureCategory\index.js" />
+    <Content Include="FrontEndLogic\PostureCategory\list.js" />
     <Content Include="FrontEndLogic\ProductionNeeds\list.js" />
     <Content Include="FrontEndLogic\ProductRecipe\index.js" />
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
@@ -4395,6 +4400,10 @@
     <Content Include="Views\Mobile\ProductEntry.cshtml" />
     <Content Include="Views\Mobile\ProductionStatus.cshtml" />
     <Content Include="Views\ProductionNeeds\List.cshtml" />
+    <Content Include="Views\Maintenance\ListIncidentCategory.cshtml" />
+    <Content Include="Views\Maintenance\IncidentCategory.cshtml" />
+    <Content Include="Views\Maintenance\ListPostureCategory.cshtml" />
+    <Content Include="Views\Maintenance\PostureCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

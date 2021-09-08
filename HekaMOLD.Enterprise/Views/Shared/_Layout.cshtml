@@ -285,6 +285,71 @@
                                     <span class="menu-title">Malzeme İhtiyaçları</span>
                                 </a>
                             </div>
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "Maintenance$") ? "show":"")">
+                                <span class="menu-link @(Regex.IsMatch(ctrl, "Maintenance$") ? "active" : "")">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/duetone/Ecommerce/Shopping-Cart.svg-->
+                                        <span class="svg-icon svg-icon-2">
+                                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <g id="Stockholm-icons-/-General-/-Settings-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                    <path d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z" id="Combined-Shape" fill="#000000"></path>
+                                                </g>
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Arıza / Bakım</span>
+                                    <span class="menu-arrow"></span>
+                                </span>
+                                <div class="menu-sub menu-sub-accordion menu-active-bg">
+                                    <div class="menu-item">
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "Maintenance$") && Regex.IsMatch(actn, "IncidentCategory") ? "active" : "")"
+                                           href="@Url.Action("ListIncidentCategory","Maintenance")">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Arıza Kodları</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "Maintenance$") && Regex.IsMatch(actn, "PostureCategory") ? "active" : "")"
+                                           href="@Url.Action("ListPostureCategory","Maintenance")">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Duruş Kodları</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "Maintenance$") && Regex.IsMatch(actn, "Incident$") ? "active" : "")"
+                                           href="@Url.Action("ListIncident","Maintenance")">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Arıza Listesi</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "Maintenance$") && Regex.IsMatch(actn, "Posture$") ? "active" : "")"
+                                           href="@Url.Action("ListPosture", "Maintenance")">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Duruş Listesi</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link @(Regex.IsMatch(ctrl, "Maintenance$") && Regex.IsMatch(actn, "ReportMaintenance$") ? "active" : "")"
+                                           href="@Url.Action("ReportMaintenance$", "Maintenance")">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Bakım Raporu</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
 
                             @* TANIMLAR *@
                             <div class="menu-item">
