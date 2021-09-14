@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Base;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
 
         #region VISUAL ELEMENTS
         public string CreatedDateStr { get; set; }
+        public MachineStatsModel MachineStats { get; set; }
         #endregion
     }
 }

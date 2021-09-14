@@ -1296,6 +1296,41 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
+        public MachineModel[] GetMachineStats(string startDate, string endDate)
+        {
+            List<MachineModel> data = new List<MachineModel>();
+
+            if (string.IsNullOrEmpty(startDate))
+                startDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now.AddMonths(-1));
+            if (string.IsNullOrEmpty(endDate))
+                endDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now);
+
+            DateTime dt1 = DateTime.ParseExact(startDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+            DateTime dt2 = DateTime.ParseExact(endDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+            var repo = _unitOfWork.GetRepository<Machine>();
+            var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                MachineModel containerObj = new MachineModel();
+                d.MapTo(containerObj);
+
+                var signalData = repoSignal.Filter(m => m.MachineId == d.Id &&
+                    dt1 <= m.StartDate && dt2 >= m.StartDate);
+
+                containerObj.MachineStats = new Models.DataTransfer.Summary.MachineStatsModel
+                {
+                    AvgInflationTime = Convert.ToDecimal(signalData.Average(m => m.Duration) ?? 0),
+                    AvgProductionCount = signalData.Count(),
+                };
+
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
         public BusinessResult SaveOrUpdateMachine(MachineModel model)
         {
             BusinessResult result = new BusinessResult();

@@ -3993,6 +3993,8 @@
     <Content Include="FrontEndLogic\Firm\list.js" />
     <Content Include="FrontEndLogic\IncidentCategory\index.js" />
     <Content Include="FrontEndLogic\IncidentCategory\list.js" />
+    <Content Include="FrontEndLogic\Incident\index.js" />
+    <Content Include="FrontEndLogic\Incident\list.js" />
     <Content Include="FrontEndLogic\ItemCategory\index.js" />
     <Content Include="FrontEndLogic\ItemCategory\list.js" />
     <Content Include="FrontEndLogic\ItemGroup\index.js" />
@@ -4001,6 +4003,7 @@
     <Content Include="FrontEndLogic\ItemReceipt\list.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
+    <Content Include="FrontEndLogic\MachineOnline\online.js" />
     <Content Include="FrontEndLogic\Machine\index.js" />
     <Content Include="FrontEndLogic\Machine\list.js" />
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
@@ -4404,6 +4407,8 @@
     <Content Include="Views\Maintenance\IncidentCategory.cshtml" />
     <Content Include="Views\Maintenance\ListPostureCategory.cshtml" />
     <Content Include="Views\Maintenance\PostureCategory.cshtml" />
+    <Content Include="Views\Maintenance\ListIncident.cshtml" />
+    <Content Include="Views\Machine\Online.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

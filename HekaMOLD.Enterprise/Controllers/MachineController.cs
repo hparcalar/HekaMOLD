@@ -25,6 +25,12 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult Online()
+        {
+
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetMachineList()
         {
@@ -33,6 +39,21 @@ namespace HekaMOLD.Enterprise.Controllers
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 result = bObj.GetMachineList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetMachineStats(string t1, string t2)
+        {
+            MachineModel[] result = new MachineModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.GetMachineStats(t1, t2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

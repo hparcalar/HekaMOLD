@@ -23,6 +23,7 @@ namespace HekaMOLD.MachineService.Services
 
         public DeviceListener(MachineModel machine)
         {
+            _machine = machine;
             // http://192.168.127.254/api/
             _apiDevice = new ApiHelper(machine.DeviceIp);
             _apiDevice.AddHeader("Accept", "vdn.dac.v1");
@@ -132,12 +133,14 @@ namespace HekaMOLD.MachineService.Services
                                     Console.WriteLine(string.Format("{0:[HH:mm:ss]}", DateTime.Now) +
                                         " " + _machine.MachineCode + ": HATA= " + bResult.ErrorMessage);
                             }
+
+                            _lastResult = resultSatisfied;
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    Console.WriteLine(ex.Message);
                 }
 
                 await Task.Delay(100);
