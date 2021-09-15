@@ -11,6 +11,8 @@ using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.Constants;
 using System.Web.Configuration;
+using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -202,14 +204,158 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        [HttpGet]
+        public JsonResult GetPostureList(int machineId)
+        {
+            ProductionPostureModel[] dataList = new ProductionPostureModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                dataList = bObj.GetPostureList(new Business.Models.Filters.BasicRangeFilter
+                {
+                    StartDate = "01.01.1998",
+                    EndDate = "01.01.2099",
+                    MachineId = machineId,
+                }).OrderByDescending(d => d.Id).ToArray();
+            }
+
+            var jsonResult = Json(dataList, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult SavePosture(ProductionPostureModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                if (model.Id == 0)
+                {
+                    model.CreatedUserId = userId;
+                }
+
+                result = bObj.SaveOrUpdatePosture(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult FinishPosture(EndPostureParam model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                model.UserId = userId;
+
+                result = bObj.FinishPosture(model);
+            }
+
+            return Json(result);
+        }
+
         public ActionResult OngoingPostures()
         {
             return View();
         }
 
+        [HttpGet]
+        public JsonResult GetOngoingPostureList()
+        {
+            ProductionPostureModel[] dataList = new ProductionPostureModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                dataList = bObj.GetOngoingPostures().OrderByDescending(d => d.Id).ToArray();
+            }
+
+            var jsonResult = Json(dataList, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         public ActionResult ProductEntryList()
         {
             return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetIncidentList(int machineId)
+        {
+            IncidentModel[] dataList = new IncidentModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                dataList = bObj.GetIncidentList(new Business.Models.Filters.BasicRangeFilter
+                {
+                    StartDate = "01.01.1998",
+                    EndDate = "01.01.2099",
+                    MachineId = machineId,
+                }).OrderByDescending(d => d.Id).ToArray();
+            }
+
+            var jsonResult = Json(dataList, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult SaveIncident(IncidentModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                if (model.Id == 0)
+                    model.CreatedUserId = userId;
+
+                result = bObj.SaveOrUpdateIncident(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult StartIncident(IncidentStatusParam model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                model.UserId = userId;
+
+                result = bObj.StartIncident(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult FinishIncident(IncidentStatusParam model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                model.UserId = userId;
+
+                result = bObj.FinishIncident(model);
+            }
+
+            return Json(result);
         }
 
         public ActionResult FaultEntry()
@@ -220,6 +366,21 @@ namespace HekaMOLD.Enterprise.Controllers
         public ActionResult OngoingFaults()
         {
             return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetOngoingFaultList()
+        {
+            IncidentModel[] dataList = new IncidentModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                dataList = bObj.GetOngoingIncidents().OrderByDescending(d => d.Id).ToArray();
+            }
+
+            var jsonResult = Json(dataList, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
         #endregion
     }

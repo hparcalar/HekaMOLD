@@ -1,6 +1,7 @@
 ﻿using Heka.DataAccess.Context;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
@@ -701,10 +702,18 @@ namespace HekaMOLD.Business.UseCases
             ProductionPostureModel model = new ProductionPostureModel { };
 
             var repo = _unitOfWork.GetRepository<ProductionPosture>();
+            var repoUser = _unitOfWork.GetRepository<User>();
+
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+
+                model.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", model.CreatedDate);
+                model.StartDateStr = model.StartDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", model.StartDateStr) : "";
+                model.EndDateStr = model.EndDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", model.EndDate) : "";
             }
 
             return model;
@@ -719,9 +728,6 @@ namespace HekaMOLD.Business.UseCases
                 if (model.MachineId == null)
                     throw new Exception("Makine bilgisi duruş için girilmelidir.");
 
-                if (model.StartDate == null)
-                    throw new Exception("Duruş başlangıç tarihi belirtilmelidir.");
-
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
@@ -733,6 +739,9 @@ namespace HekaMOLD.Business.UseCases
                         CreatedDate = DateTime.Now,
                         PostureStatus = 0,
                     };
+
+                    dbObj.StartDate = dbObj.CreatedDate;
+
                     repo.Add(dbObj);
                 }
 
@@ -763,6 +772,34 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult FinishPosture(EndPostureParam model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ProductionPosture>();
+                var dbPosture = repo.Get(d => d.Id == model.PostureId);
+                if (dbPosture == null)
+                    throw new Exception("Duruş kaydı bulunamadı.");
+
+                dbPosture.PostureStatus = (int)PostureStatusType.Resolved;
+                dbPosture.EndDate = DateTime.Now;
+                dbPosture.Explanation = model.Description;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbPosture.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public BusinessResult DeletePosture(int id)
         {
             BusinessResult result = new BusinessResult();
@@ -801,11 +838,13 @@ namespace HekaMOLD.Business.UseCases
 
                 dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy",
+                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
                 var repo = _unitOfWork.GetRepository<ProductionPosture>();
-                data = repo.Filter(d => d.StartDate >= dtStart && d.StartDate <= dtEnd)
+                data = repo.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd
+                        && (filter.MachineId == 0 || d.MachineId == filter.MachineId)
+                    )   
                     .ToList()
                     .Select(d => new ProductionPostureModel
                     {
@@ -816,7 +855,12 @@ namespace HekaMOLD.Business.UseCases
                         Explanation = d.Explanation,
                         MachineId = d.MachineId,
                         PostureStatus = d.PostureStatus,
+                        MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                        MachineName = d.Machine != null ? d.Machine.MachineName : "",
                         Reason = d.Reason,
+                        PostureCategoryId = d.PostureCategoryId,
+                        PostureCategoryCode = d.PostureCategory != null ? d.PostureCategory.PostureCategoryCode : "",
+                        PostureCategoryName = d.PostureCategory != null ? d.PostureCategory.PostureCategoryName : "",
                         StartDate = d.StartDate,
                         UpdatedDate = d.UpdatedDate,
                         UpdatedUserId = d.UpdatedUserId,
@@ -854,6 +898,11 @@ namespace HekaMOLD.Business.UseCases
                         Explanation = d.Explanation,
                         MachineId = d.MachineId,
                         PostureStatus = d.PostureStatus,
+                        MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                        MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                        PostureCategoryCode = d.PostureCategory != null ? d.PostureCategory.PostureCategoryCode : "",
+                        PostureCategoryName = d.PostureCategory != null ? d.PostureCategory.PostureCategoryName : "",
+                        PostureCategoryId = d.PostureCategoryId,
                         Reason = d.Reason,
                         StartDate = d.StartDate,
                         UpdatedDate = d.UpdatedDate,
@@ -1106,10 +1155,29 @@ namespace HekaMOLD.Business.UseCases
             IncidentModel model = new IncidentModel { };
 
             var repo = _unitOfWork.GetRepository<Incident>();
+            var repoUser = _unitOfWork.GetRepository<User>();
+
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                model.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", model.CreatedDate);
+                model.StartDateStr = model.StartDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", model.StartDateStr) : "";
+                model.EndDateStr = model.EndDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", model.EndDate) : "";
+
+                var dbUser = repoUser.Get(d => d.Id == (dbObj.CreatedUserId ?? 0));
+                if (dbUser != null)
+                    model.CreatedUserName = dbUser.UserName;
+
+                dbUser = repoUser.Get(d => d.Id == (dbObj.StartedUserId ?? 0));
+                if (dbUser != null)
+                    model.StartedUserName = dbUser.UserName;
+
+                dbUser = repoUser.Get(d => d.Id == (dbObj.EndUserId ?? 0));
+                if (dbUser != null)
+                    model.EndUserName = dbUser.UserName;
             }
 
             return model;
@@ -1166,6 +1234,65 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult StartIncident(IncidentStatusParam model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Incident>();
+                var dbIncident = repo.Get(d => d.Id == model.IncidentId);
+                if (dbIncident == null)
+                    throw new Exception("Arıza kaydı bulunamadı.");
+
+                dbIncident.IncidentStatus = (int)PostureStatusType.WorkingOn;
+                dbIncident.StartDate = DateTime.Now;
+                dbIncident.StartedUserId = model.UserId;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbIncident.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult FinishIncident(IncidentStatusParam model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Incident>();
+                var dbIncident = repo.Get(d => d.Id == model.IncidentId);
+                if (dbIncident == null)
+                    throw new Exception("Arıza kaydı bulunamadı.");
+
+                dbIncident.IncidentStatus = (int)PostureStatusType.Resolved;
+                dbIncident.EndDate = DateTime.Now;
+                dbIncident.EndUserId = model.UserId;
+                dbIncident.Description = model.Description;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbIncident.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public BusinessResult DeleteIncident(int id)
         {
             BusinessResult result = new BusinessResult();
@@ -1204,11 +1331,14 @@ namespace HekaMOLD.Business.UseCases
 
                 dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy",
+                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
                 var repo = _unitOfWork.GetRepository<Incident>();
-                data = repo.Filter(d => d.StartDate >= dtStart && d.StartDate <= dtEnd)
+
+                data = repo.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd
+                        && (filter.MachineId == 0 || d.MachineId == filter.MachineId)
+                    )
                     .ToList()
                     .Select(d => new IncidentModel
                     {

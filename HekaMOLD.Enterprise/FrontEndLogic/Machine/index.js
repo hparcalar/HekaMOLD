@@ -71,7 +71,82 @@
             }).catch(function (err) { });
     }
 
+    $scope.bindAuthorList = function () {
+        $('#instructionList').dxDataGrid({
+            dataSource: {
+                load: function () {
+                    return $scope.modelObject.Instructions;
+                },
+                update: function (key, values) {
+                    var obj = $scope.modelObject.Instructions.find(d => d.Id == key);
+                    if (obj != null) {
+                        if (typeof values.UnitName != 'undefined') { obj.UnitName = values.UnitName; }
+                        if (typeof values.PeriodType != 'undefined') { obj.PeriodType = values.PeriodType; }
+                        if (typeof values.ToDoList != 'undefined') { obj.ToDoList = values.ToDoList; }
+                        if (typeof values.Responsible != 'undefined') { obj.Responsible = values.Responsible; }
+                    }
+                },
+                remove: function (key) {
+                    var obj = $scope.modelObject.Instructions.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.modelObject.Instructions.splice($scope.modelObject.Instructions.indexOf(obj), 1);
+                    }
+                },
+                insert: function (values) {
+                    var newId = 1;
+                    if ($scope.modelObject.Instructions.length > 0) {
+                        newId = $scope.modelObject.Instructions.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                        newId++;
+                    }
+
+                    var newObj = {
+                        Id: newId,
+                        UnitName: values.UnitName,
+                        PeriodType: values.PeriodType,
+                        ToDoList: values.ToDoList,
+                        Responsible: values.Responsible,
+                        NewDetail: true
+                    };
+
+                    $scope.modelObject.Instructions.push(newObj);
+                },
+                key: 'Id'
+            },
+            showColumnLines: true,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: false,
+            showBorders: true,
+            filterRow: {
+                visible: false
+            },
+            headerFilter: {
+                visible: false
+            },
+            groupPanel: {
+                visible: false
+            },
+            scrolling: {
+                mode: "virtual"
+            },
+            height: 200,
+            editing: {
+                allowUpdating: true,
+                allowDeleting: true,
+                allowAdding: true,
+                mode: 'cell'
+            },
+            columns: [
+                { dataField: 'UnitName', caption: 'Ünite İsmi', validationRules: [{ type: "required" }] },
+                { dataField: 'PeriodType', caption: 'Bakım Periyodu' },
+                { dataField: 'ToDoList', caption: 'Yapılacak İşlemler' },
+                { dataField: 'Responsible', caption: 'Sorumlusu' },
+            ]
+        });
+    }
+
     // ON LOAD EVENTS
+    DevExpress.localization.locale('tr');
     if (PRM_ID > 0)
         $scope.bindModel(PRM_ID);
 });

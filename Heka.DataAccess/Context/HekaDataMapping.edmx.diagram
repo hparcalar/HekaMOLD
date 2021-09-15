@@ -150,6 +150,10 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MoldTest_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductionPosture_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineMaintenanceInstruction" Width="1.5" PointX="3" PointY="61.375" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineMaintenanceInstructionEntry" Width="1.5" PointX="5.25" PointY="61.625" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -202,6 +202,32 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [FreeAction]
+        public JsonResult GetIncidentCategoryList()
+        {
+            IncidentCategoryModel[] data = new IncidentCategoryModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetIncidentCategoryList();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [FreeAction]
+        public JsonResult GetPostureCategoryList()
+        {
+            PostureCategoryModel[] data = new PostureCategoryModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetPostureCategoryList();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [FreeAction]
         public JsonResult GetMachineQueue(int machineId)
         {
             MachinePlanModel[] data = new MachinePlanModel[0];

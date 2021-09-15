@@ -11,5 +11,6 @@ namespace HekaMOLD.Business.Models.Filters
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         public string Search { get; set; }
+        public int MachineId { get; set; }
     }
 }

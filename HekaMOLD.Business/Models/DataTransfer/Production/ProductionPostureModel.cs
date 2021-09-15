@@ -23,6 +23,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string PostureStatusStr { get; set; }
         public string PostureCategoryCode { get; set; }
         public string PostureCategoryName { get; set; }
+        public string MachineCode { get; set; }
+        public string MachineName { get; set; }
+        public string CreatedDateStr { get; set; }
         public string StartDateStr { get; set; }
         public string EndDateStr { get; set; }
         #endregion

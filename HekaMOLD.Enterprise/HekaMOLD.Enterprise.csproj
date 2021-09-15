@@ -3902,6 +3902,8 @@
     <Content Include="assets\plugins\global\fonts\socicon\socicon.svg" />
     <Content Include="assets\plugins\global\plugins.bundle.css" />
     <Content Include="assets\plugins\global\plugins.bundle.js" />
+    <Content Include="Components\Controllers\posture-category-selection.js" />
+    <Content Include="Components\Controllers\incident-category-selection.js" />
     <Content Include="Components\Controllers\machine-selection.js" />
     <Content Include="Components\Controllers\open-po-list.js" />
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
@@ -3909,6 +3911,8 @@
     <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
+    <Content Include="Components\Views\PostureCategorySelection.html" />
+    <Content Include="Components\Views\IncidentCategorySelection.html" />
     <Content Include="Components\Views\MachineSelection.html" />
     <Content Include="Components\Views\OpenPoList.html" />
     <Content Include="Components\Views\AttachmentList.html" />
@@ -4007,8 +4011,12 @@
     <Content Include="FrontEndLogic\Machine\index.js" />
     <Content Include="FrontEndLogic\Machine\list.js" />
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
+    <Content Include="FrontEndLogic\Mobile\fault-entry.js" />
+    <Content Include="FrontEndLogic\Mobile\incident-list.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry.js" />
+    <Content Include="FrontEndLogic\Mobile\posture-list.js" />
+    <Content Include="FrontEndLogic\Mobile\posture-entry.js" />
     <Content Include="FrontEndLogic\Mobile\production-status.js" />
     <Content Include="FrontEndLogic\Mobile\product-entry.js" />
     <Content Include="FrontEndLogic\MoldTest\index.js" />
@@ -4409,6 +4417,11 @@
     <Content Include="Views\Maintenance\PostureCategory.cshtml" />
     <Content Include="Views\Maintenance\ListIncident.cshtml" />
     <Content Include="Views\Machine\Online.cshtml" />
+    <Content Include="Views\Maintenance\Incident.cshtml" />
+    <Content Include="Views\Mobile\FaultEntry.cshtml" />
+    <Content Include="Views\Mobile\PostureEntry.cshtml" />
+    <Content Include="Views\Mobile\OngoingPostures.cshtml" />
+    <Content Include="Views\Mobile\OngoingFaults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

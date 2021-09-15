@@ -418,6 +418,29 @@
           <Property Name="WatchCycleStartCondition" Type="nvarchar" MaxLength="300" />
           <Property Name="DeviceIp" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="MachineMaintenanceInstruction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MachineId" Type="int" />
+          <Property Name="UnitName" Type="nvarchar" MaxLength="75" />
+          <Property Name="PeriodType" Type="nvarchar" MaxLength="5" />
+          <Property Name="ToDoList" Type="nvarchar(max)" />
+          <Property Name="Responsible" Type="nvarchar" MaxLength="150" />
+          <Property Name="LineNumber" Type="int" />
+        </EntityType>
+        <EntityType Name="MachineMaintenanceInstructionEntry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InstructionId" Type="int" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="IsChecked" Type="bit" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="250" />
+        </EntityType>
         <EntityType Name="MachinePlan">
           <Key>
             <PropertyRef Name="Id" />
@@ -1403,6 +1426,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MachineMaintenanceInstruction_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
+          <End Role="MachineMaintenanceInstruction" Type="Self.MachineMaintenanceInstruction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineMaintenanceInstruction">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction">
+          <End Role="MachineMaintenanceInstruction" Type="Self.MachineMaintenanceInstruction" Multiplicity="0..1" />
+          <End Role="MachineMaintenanceInstructionEntry" Type="Self.MachineMaintenanceInstructionEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachineMaintenanceInstruction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineMaintenanceInstructionEntry">
+              <PropertyRef Name="InstructionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MachinePlan_Machine">
           <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
           <End Role="MachinePlan" Type="Self.MachinePlan" Multiplicity="*" />
@@ -1968,6 +2015,8 @@
           <EntitySet Name="ItemUnit" EntityType="Self.ItemUnit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemWarehouse" EntityType="Self.ItemWarehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Machine" EntityType="Self.Machine" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MachineMaintenanceInstruction" EntityType="Self.MachineMaintenanceInstruction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MachineMaintenanceInstructionEntry" EntityType="Self.MachineMaintenanceInstructionEntry" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MachinePlan" EntityType="Self.MachinePlan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MachineSignal" EntityType="Self.MachineSignal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Mold" EntityType="Self.Mold" Schema="dbo" store:Type="Tables" />
@@ -2196,6 +2245,14 @@
           <AssociationSet Name="FK_ItemWarehouse_Warehouse" Association="Self.FK_ItemWarehouse_Warehouse">
             <End Role="Warehouse" EntitySet="Warehouse" />
             <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachineMaintenanceInstruction_Machine" Association="Self.FK_MachineMaintenanceInstruction_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachineMaintenanceInstruction" EntitySet="MachineMaintenanceInstruction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" Association="Self.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction">
+            <End Role="MachineMaintenanceInstruction" EntitySet="MachineMaintenanceInstruction" />
+            <End Role="MachineMaintenanceInstructionEntry" EntitySet="MachineMaintenanceInstructionEntry" />
           </AssociationSet>
           <AssociationSet Name="FK_MachinePlan_Machine" Association="Self.FK_MachinePlan_Machine">
             <End Role="Machine" EntitySet="Machine" />
@@ -3648,6 +3705,16 @@
             <End Role="Machine" EntitySet="Machine" />
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
           </AssociationSet>
+          <EntitySet Name="MachineMaintenanceInstruction" EntityType="Heka.DataAccess.Models.MachineMaintenanceInstruction" />
+          <EntitySet Name="MachineMaintenanceInstructionEntry" EntityType="Heka.DataAccess.Models.MachineMaintenanceInstructionEntry" />
+          <AssociationSet Name="FK_MachineMaintenanceInstruction_Machine" Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachineMaintenanceInstruction" EntitySet="MachineMaintenanceInstruction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction">
+            <End Role="MachineMaintenanceInstruction" EntitySet="MachineMaintenanceInstruction" />
+            <End Role="MachineMaintenanceInstructionEntry" EntitySet="MachineMaintenanceInstructionEntry" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -4874,6 +4941,7 @@
           <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="Machine" ToRole="MoldTest" />
           <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Machine" FromRole="Machine" ToRole="ProductionPosture" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="Machine" ToRole="WorkOrderDetail" />
+          <NavigationProperty Name="MachineMaintenanceInstruction" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="Machine" ToRole="MachineMaintenanceInstruction" />
         </EntityType>
         <Association Name="FK_Incident_Machine">
           <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
@@ -4944,6 +5012,56 @@
             </Principal>
             <Dependent Role="WorkOrderDetail">
               <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MachineMaintenanceInstruction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachineId" Type="Int32" />
+          <Property Name="UnitName" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
+          <Property Name="PeriodType" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="ToDoList" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Responsible" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="LineNumber" Type="Int32" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="MachineMaintenanceInstruction" ToRole="Machine" />
+          <NavigationProperty Name="MachineMaintenanceInstructionEntry" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" FromRole="MachineMaintenanceInstruction" ToRole="MachineMaintenanceInstructionEntry" />
+        </EntityType>
+        <EntityType Name="MachineMaintenanceInstructionEntry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InstructionId" Type="Int32" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsChecked" Type="Boolean" />
+          <Property Name="Explanation" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MachineMaintenanceInstruction" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" FromRole="MachineMaintenanceInstructionEntry" ToRole="MachineMaintenanceInstruction" />
+        </EntityType>
+        <Association Name="FK_MachineMaintenanceInstruction_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachineMaintenanceInstruction" Role="MachineMaintenanceInstruction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineMaintenanceInstruction">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction">
+          <End Type="Heka.DataAccess.Models.MachineMaintenanceInstruction" Role="MachineMaintenanceInstruction" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachineMaintenanceInstructionEntry" Role="MachineMaintenanceInstructionEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachineMaintenanceInstruction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineMaintenanceInstructionEntry">
+              <PropertyRef Name="InstructionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5784,6 +5902,31 @@
                 <ScalarProperty Name="MachineType" ColumnName="MachineType" />
                 <ScalarProperty Name="MachineName" ColumnName="MachineName" />
                 <ScalarProperty Name="MachineCode" ColumnName="MachineCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MachineMaintenanceInstruction">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.MachineMaintenanceInstruction">
+              <MappingFragment StoreEntitySet="MachineMaintenanceInstruction">
+                <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
+                <ScalarProperty Name="Responsible" ColumnName="Responsible" />
+                <ScalarProperty Name="ToDoList" ColumnName="ToDoList" />
+                <ScalarProperty Name="PeriodType" ColumnName="PeriodType" />
+                <ScalarProperty Name="UnitName" ColumnName="UnitName" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MachineMaintenanceInstructionEntry">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.MachineMaintenanceInstructionEntry">
+              <MappingFragment StoreEntitySet="MachineMaintenanceInstructionEntry">
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="IsChecked" ColumnName="IsChecked" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="InstructionId" ColumnName="InstructionId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

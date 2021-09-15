@@ -74,5 +74,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<PostureCategory> PostureCategory { get; set; }
         public virtual DbSet<ProductionPosture> ProductionPosture { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
+        public virtual DbSet<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
+        public virtual DbSet<MachineMaintenanceInstructionEntry> MachineMaintenanceInstructionEntry { get; set; }
     }
 }

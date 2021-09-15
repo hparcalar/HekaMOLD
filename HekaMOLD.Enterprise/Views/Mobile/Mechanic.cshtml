@@ -1,12 +1,11 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Bakım Terminali";
     Layout = "~/Views/Shared/_LayoutMobile.cshtml";
 }
 
 <div>
     <!--begin::Post-->
-    <div class="post d-flex flex-column-fluid" id="kt_post">
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="mechCtrl">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
             <!--begin::Title-->
@@ -14,9 +13,138 @@
                 @ViewBag.Title
             </h1>
             <!--end::Title-->
+
+            <div class="row mt-4">
+                <div class="col-sm-6 col-xxl-6">
+                    <div class="col bg-danger border border-danger border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                         ng-click="redirect('PostureEntry')">
+                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                        <span class="svg-icon svg-icon-3x svg-icon-light d-block my-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24"></rect>
+                                    <rect fill="#000000" opacity="0.3" x="13" y="4" width="3" height="16" rx="1.5"></rect>
+                                    <rect fill="#000000" x="8" y="9" width="3" height="11" rx="1.5"></rect>
+                                    <rect fill="#000000" x="18" y="11" width="3" height="9" rx="1.5"></rect>
+                                    <rect fill="#000000" x="3" y="13" width="3" height="7" rx="1.5"></rect>
+                                </g>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <span href="#" class="text-light fw-bold fs-6">Duruş Girişi</span>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xxl-6">
+                    <div class="col bg-warning border border-warning border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                         ng-click="redirect('FaultEntry')">
+                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                        <span class="svg-icon svg-icon-3x svg-icon-light d-block my-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24"></rect>
+                                    <rect fill="#000000" opacity="0.3" x="13" y="4" width="3" height="16" rx="1.5"></rect>
+                                    <rect fill="#000000" x="8" y="9" width="3" height="11" rx="1.5"></rect>
+                                    <rect fill="#000000" x="18" y="11" width="3" height="9" rx="1.5"></rect>
+                                    <rect fill="#000000" x="3" y="13" width="3" height="7" rx="1.5"></rect>
+                                </g>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <span href="#" class="text-light fw-bold fs-6">Arıza Bildirimi</span>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-xxl-6">
+                    <div class="col bg-light-danger border border-danger border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                         ng-click="redirect('OngoingPostures')">
+                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                        <span class="svg-icon svg-icon-3x svg-icon-danger d-block my-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24"></rect>
+                                    <rect fill="#000000" opacity="0.3" x="13" y="4" width="3" height="16" rx="1.5"></rect>
+                                    <rect fill="#000000" x="8" y="9" width="3" height="11" rx="1.5"></rect>
+                                    <rect fill="#000000" x="18" y="11" width="3" height="9" rx="1.5"></rect>
+                                    <rect fill="#000000" x="3" y="13" width="3" height="7" rx="1.5"></rect>
+                                </g>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <span href="#" class="text-danger fw-bold fs-6">Devam Eden Duruşlar</span>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xxl-6">
+                    <div class="col bg-light-warning border border-warning border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                         ng-click="redirect('OngoingFaults')">
+                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                        <span class="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24"></rect>
+                                    <rect fill="#000000" opacity="0.3" x="13" y="4" width="3" height="16" rx="1.5"></rect>
+                                    <rect fill="#000000" x="8" y="9" width="3" height="11" rx="1.5"></rect>
+                                    <rect fill="#000000" x="18" y="11" width="3" height="9" rx="1.5"></rect>
+                                    <rect fill="#000000" x="3" y="13" width="3" height="7" rx="1.5"></rect>
+                                </g>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <span href="#" class="text-warning fw-bold fs-6">Devam Eden Arızalar</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <!--end::Container-->
     </div>
     <!--end::Post-->
 </div>
 
+@section scripts{
+    <script src="~/Scripts/html5-qrcode.min.js"></script>
+    <script type="text/javascript">
+        app.controller('mechCtrl', function ($scope, $http) {
+            $scope.redirect = function (targetLoc) {
+                window.location.href = HOST_URL + 'Mobile/' + targetLoc;
+            }
+
+            $scope.readBarcode = function () {
+                bootbox.alert({
+                    message:'<div style="width: 500px" id="reader"></div>',
+                    locale:'tr'
+                });
+
+                // TO REQUEST WEB CAM ACCESS
+                Html5Qrcode.getCameras().then(devices => {
+                    /**
+                     * devices would be an array of objects of type:
+                     * { id: "id", label: "label" }
+                     */
+                    if (devices && devices.length) {
+                        var cameraId = devices[0].id;
+                        // .. use this to start scanning.
+                    }
+                }).catch(err => {});
+
+                // WEB CAM READER OBJECT
+                let qrScanner = new Html5Qrcode(
+                    "reader");
+
+                qrScanner.start(
+                    { facingMode: "environment" }, // prefers back, for the front camera use 'user'
+                    {
+                        fps: 10,    // sets the framerate to 10 frame per second
+                        qrbox: 250  // sets only 250 X 250 region of viewfinder to
+                        // scannable, rest shaded.
+                    },
+                    qrCodeMessage => {
+                        console.log(`QR Code detected: ${qrCodeMessage}`);
+                        qrScanner.stop();
+                    },
+                    errorMessage => {
+                    })
+                    .catch(err => {
+                    });
+            }
+        });
+    </script>
+}

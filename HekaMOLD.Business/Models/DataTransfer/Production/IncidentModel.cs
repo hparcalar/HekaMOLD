@@ -29,6 +29,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string CreatedDateStr { get; set; }
         public string StartDateStr { get; set; }
         public string EndDateStr { get; set; }
+        public string CreatedUserName { get; set; }
+        public string StartedUserName { get; set; }
+        public string EndUserName { get; set; }
         #endregion
     }
 }
