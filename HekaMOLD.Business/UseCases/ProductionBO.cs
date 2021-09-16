@@ -275,6 +275,9 @@ namespace HekaMOLD.Business.UseCases
                                 dbDetail.InflationTimeSeconds = dbMoldTest.InflationTimeSeconds;
                                 dbDetail.RawGr = dbMoldTest.RawMaterialGr;
                                 dbDetail.RawGrToleration = dbMoldTest.RawMaterialTolerationGr;
+                                dbDetail.InPackageQuantity = dbMoldTest.InPackageQuantity;
+                                dbDetail.InPalletPackageQuantity = dbMoldTest.InPalletPackageQuantity;
+                                dbDetail.MoldId = dbMoldTest.MoldId;
                             }
                         }
                         #endregion
@@ -413,7 +416,10 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<MachinePlan>();
-                var dbObj = repo.Filter(d => d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
+                var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                var dbObj = repo.Filter(d => d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
+                    && d.MachineId == machineId)
                     .OrderBy(d => d.OrderNo).FirstOrDefault();
                 if (dbObj != null)
                 {
@@ -435,6 +441,8 @@ namespace HekaMOLD.Business.UseCases
                             CreatedDate = dbObj.WorkOrderDetail.CreatedDate,
                             Quantity = dbObj.WorkOrderDetail.Quantity,
                             WorkOrderNo = dbObj.WorkOrderDetail.WorkOrder.WorkOrderNo,
+                            InPackageQuantity = dbObj.WorkOrderDetail.InPackageQuantity,
+                            InPalletPackageQuantity = dbObj.WorkOrderDetail.InPalletPackageQuantity,
                             WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.WorkOrderDetail.WorkOrder.WorkOrderDate),
                             FirmCode = dbObj.WorkOrderDetail.WorkOrder.Firm != null ?
                             dbObj.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
@@ -444,7 +452,20 @@ namespace HekaMOLD.Business.UseCases
                             WorkOrderStatusStr = ((WorkOrderStatusType)dbObj.WorkOrderDetail.WorkOrderStatus).ToCaption(),
                             CompleteQuantity = Convert.ToInt32(dbObj.WorkOrderDetail.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0),
                             CompleteQuantitySingleProduct = dbObj.WorkOrderDetail.WorkOrderSerial.Count(),
-                        }
+                        },
+                        Serials = repoSerial.Filter(d => d.WorkOrderDetail != null &&
+                            d.WorkOrderDetail.MachineId == machineId)
+                            .OrderByDescending(d => d.Id)
+                            .Take(30).ToList()
+                            .Select(d => new WorkOrderSerialModel
+                            {
+                                Id = d.Id,
+                                ItemName = d.WorkOrderDetail.Item.ItemName,
+                                CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate),
+                                FirstQuantity = d.FirstQuantity,
+                                LiveQuantity = d.LiveQuantity,
+                                InPackageQuantity = d.InPackageQuantity,
+                            }).ToArray()
                     };
                 }
             }
@@ -456,7 +477,7 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
-        public BusinessResult AddProductEntry(int workOrderDetailId, int userId, WorkOrderSerialType serialType)
+        public BusinessResult AddProductEntry(int workOrderDetailId, int userId, WorkOrderSerialType serialType, int inPackageQuantity)
         {
             BusinessResult result = new BusinessResult();
 
@@ -475,24 +496,24 @@ namespace HekaMOLD.Business.UseCases
                 if (serialType == WorkOrderSerialType.ProductPackage) // BATUSAN
                 {
                     // CHECK TARGET QUANTITY FOR CHANGING STATUS TO COMPLETE
-                    if (dbObj.Quantity - dbObj.InPackageQuantity 
-                        <= (dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0))
-                    {
-                        dbObj.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
+                    //if (dbObj.Quantity - dbObj.InPackageQuantity 
+                    //    <= (dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0))
+                    //{
+                    //    dbObj.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
 
-                        var dbWorkOrder = dbObj.WorkOrder;
-                        if (!dbWorkOrder.WorkOrderDetail.Any(d => d.WorkOrderStatus != (int)WorkOrderStatusType.Completed &&
-                            d.Id != dbObj.Id))
-                            dbWorkOrder.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
-                    }
+                    //    var dbWorkOrder = dbObj.WorkOrder;
+                    //    if (!dbWorkOrder.WorkOrderDetail.Any(d => d.WorkOrderStatus != (int)WorkOrderStatusType.Completed &&
+                    //        d.Id != dbObj.Id))
+                    //        dbWorkOrder.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
+                    //}
 
                     var product = new WorkOrderSerial
                     {
                         CreatedDate = DateTime.Now,
-                        InPackageQuantity = dbObj.InPackageQuantity,
-                        FirstQuantity = dbObj.InPackageQuantity,
+                        InPackageQuantity = inPackageQuantity > 0 ? inPackageQuantity : dbObj.InPackageQuantity,
+                        FirstQuantity = inPackageQuantity > 0 ? inPackageQuantity : dbObj.InPackageQuantity,
                         IsGeneratedBySignal = false,
-                        LiveQuantity = dbObj.InPackageQuantity,
+                        LiveQuantity = inPackageQuantity > 0 ? inPackageQuantity : dbObj.InPackageQuantity,
                         SerialNo = GetNextSerialNo(),
                         SerialStatus = (int)SerialStatusType.Created,
                         SerialType = (int)serialType,
@@ -508,6 +529,31 @@ namespace HekaMOLD.Business.UseCases
 
                 }
 
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteProductEntry(int serialId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var dbSerial = repo.Get(d => d.Id == serialId);
+                if (dbSerial == null)
+                    throw new Exception("Seri bilgisine ulaşılamadı.");
+
+                repo.Delete(dbSerial);
                 _unitOfWork.SaveChanges();
 
                 result.Result = true;
@@ -923,7 +969,7 @@ namespace HekaMOLD.Business.UseCases
         }
         #endregion
 
-        #region PRODUCTION ITEM NEEDS MANAGEMENET
+        #region PRODUCTION ITEM NEEDS MANAGEMENT
         public WorkOrderItemNeedsModel[] GetWorkOrderItemNeeds(BasicRangeFilter filter)
         {
             WorkOrderItemNeedsModel[] data = new WorkOrderItemNeedsModel[0];

@@ -13,5 +13,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? WorkOrderDetailId { get; set; }
         public int? OrderNo { get; set; }
         public WorkOrderDetailModel WorkOrder { get; set; }
+        public WorkOrderSerialModel[] Serials { get; set; }
     }
 }

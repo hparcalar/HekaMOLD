@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Base;
+using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public bool? IsWatched { get; set; }
         public string WatchCycleStartCondition { get; set; }
         public string DeviceIp { get; set; }
-
+        public MachinePlanModel ActivePlan { get; set; }
         public MachinePlanModel[] Plans { get; set; }
+        public MachineMaintenanceInstructionModel[] Instructions { get; set; }
 
         #region VISUAL ELEMENTS
         public string CreatedDateStr { get; set; }

@@ -102,14 +102,14 @@
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
-                <div class="col-xxl-4">
+                <div class="col-xxl-3">
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine</label>
                     <!--begin::Input group-->
                     <select class="form-select" data-allow-clear="true"
                             ng-options="item.MachineName for item in machineList" ng-model="selectedMachine"
                             data-control="select2" data-placeholder="-- Seçiniz --"></select>
                 </div>
-                <div class="col-xxl-4">
+                <div class="col-xxl-3">
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tarih</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
@@ -118,11 +118,19 @@
                     </div>
                 </div>
                 <!--end::Col-->
-                <div class="col-xxl-4">
+                <div class="col-xxl-3">
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ürün Açıklama</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
                         <input type="text" class="form-control" ng-model="modelObject.ProductDescription" placeholder="" />
+                    </div>
+                </div>
+                <!--end::Col-->
+                <div class="col-xxl-3">
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kafa Ölçüsü</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control" ng-model="modelObject.HeadSize" placeholder="" />
                     </div>
                 </div>
             </div>

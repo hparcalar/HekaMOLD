@@ -56,7 +56,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ProductRecipe> ProductRecipe { get; set; }
         public virtual DbSet<ProductRecipeDetail> ProductRecipeDetail { get; set; }
         public virtual DbSet<Mold> Mold { get; set; }
-        public virtual DbSet<MoldTest> MoldTest { get; set; }
         public virtual DbSet<Dye> Dye { get; set; }
         public virtual DbSet<ItemReceiptDetail> ItemReceiptDetail { get; set; }
         public virtual DbSet<WorkOrder> WorkOrder { get; set; }
@@ -76,5 +75,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         public virtual DbSet<MachineMaintenanceInstructionEntry> MachineMaintenanceInstructionEntry { get; set; }
+        public virtual DbSet<MoldTest> MoldTest { get; set; }
     }
 }

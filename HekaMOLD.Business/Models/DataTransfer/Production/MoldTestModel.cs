@@ -35,6 +35,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string MoldCode { get; set; }
         public string MoldName { get; set; }
         public int? PlantId { get; set; }
+        public string HeadSize { get; set; }
 
         #region VISUAL ELEMENTS
         public string TestDateStr { get; set; }

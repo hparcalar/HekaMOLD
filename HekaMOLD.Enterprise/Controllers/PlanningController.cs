@@ -108,5 +108,20 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        public JsonResult CopyPlan(int fromPlanId, int quantity,
+            int firmId, int targetMachineId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.CopyFromWorkOrder(fromPlanId,
+                    quantity, firmId, targetMachineId);
+            }
+
+            return Json(result);
+        }
     }
 }

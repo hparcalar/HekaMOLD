@@ -13,8 +13,13 @@
     }
 
     $scope.getFixed = function (arg, point) {
-        console.log(arg);
-        return arg.toFixed(point);
+        try {
+            return arg.toFixed(point);
+        } catch (e) {
+
+        }
+
+        return arg;
     }
 
     // ON LOAD EVENTS

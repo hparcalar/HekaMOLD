@@ -46,24 +46,36 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     firmType = (int)FirmType.Supplier;
 
                                 string addr1 = "", addr2 = "";
+
                                 SqlCommand cmd = new SqlCommand("SELECT * FROM CARI_HESAP_ADRESLERI WHERE adr_cari_kod='"
                                     + row["cari_kod"] + "'", con);
                                 SqlDataReader rdr = cmd.ExecuteReader();
-
-                                // FETCH ADDRESSES
-                                int subDataIndex = 0;
-                                while (rdr.Read())
+                                try
                                 {
-                                    string intAddr = rdr["adr_cadde"] + " "
-                                        + rdr["adr_sokak"] + " " + rdr["adr_ilce"] + " / " + rdr["adr_il"];
+                                    // FETCH ADDRESSES
+                                    int subDataIndex = 0;
+                                    while (rdr.Read())
+                                    {
+                                        string intAddr = rdr["adr_cadde"] + " "
+                                            + rdr["adr_sokak"] + " " + rdr["adr_ilce"] + " / " + rdr["adr_il"];
 
-                                    if (subDataIndex == 0)
-                                        addr1 = intAddr;
-                                    else if (subDataIndex == 1)
-                                        addr2 = intAddr;
+                                        if (subDataIndex == 0)
+                                            addr1 = intAddr;
+                                        else if (subDataIndex == 1)
+                                            addr2 = intAddr;
+                                    }
                                 }
-                                rdr.Close();
-                                cmd.Dispose();
+                                catch (Exception)
+                                {
+
+                                }
+                                finally
+                                {
+                                    if (rdr != null)
+                                        rdr.Close();
+                                    if (cmd != null)
+                                        cmd.Dispose();
+                                }
 
                                 // FETCH AUTHORS
                                 List<FirmAuthorModel> firmAuthors = new List<FirmAuthorModel>();
@@ -71,38 +83,61 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     row["cari_kod"] + "'", con);
                                 rdr = cmd.ExecuteReader();
 
-                                while (rdr.Read())
+                                try
                                 {
-                                    firmAuthors.Add(new FirmAuthorModel
+                                    while (rdr.Read())
                                     {
-                                        AuthorName = rdr["mye_isim"] + " " + rdr["mye_soyisim"],
-                                        Email = rdr["mye_email_adres"].ToString(),
-                                        Phone = rdr["mye_cep_telno"].ToString(),
-                                        NewDetail = true,
-                                        Title = "",
-                                        SendMailForProduction = false,
-                                        SendMailForPurchaseOrder = false,
-                                    });
+                                        firmAuthors.Add(new FirmAuthorModel
+                                        {
+                                            AuthorName = rdr["mye_isim"] + " " + rdr["mye_soyisim"],
+                                            Email = rdr["mye_email_adres"].ToString(),
+                                            Phone = rdr["mye_cep_telno"].ToString(),
+                                            NewDetail = true,
+                                            Title = "",
+                                            SendMailForProduction = false,
+                                            SendMailForPurchaseOrder = false,
+                                        });
+                                    }
                                 }
-                                rdr.Close();
-                                cmd.Dispose();
+                                catch (Exception)
+                                {
 
-                                bObj.SaveOrUpdateFirm(new FirmModel
+                                }
+                                finally
+                                {
+                                    rdr.Close();
+                                    cmd.Dispose();
+                                }
+
+                                var firmModel = new FirmModel
                                 {
                                     FirmCode = (string)row["cari_kod"],
                                     FirmName = (string)row["cari_unvan1"],
-                                    FirmTitle = (string)row["cari_unvan1"],
                                     PlantId = syncPoint.PlantId,
                                     CreatedDate = DateTime.Now,
                                     FirmType = firmType,
-                                    TaxNo = (string)row["cari_vdaire_no"],
-                                    TaxOffice = (string)row["cari_vdaire_adi"],
-                                    Address = addr1,
-                                    Address2 = addr2,
-                                    Phone = (string)row["cari_CepTel"],
-                                    Email = (string)row["cari_EMail"],
-                                    Authors = firmAuthors.ToArray()
-                                });
+                                };
+
+                                if (firmModel.FirmType == 0)
+                                    firmModel.FirmType = 1;
+
+                                try
+                                {
+                                    firmModel.FirmTitle = (string)row["cari_unvan1"];
+                                    firmModel.TaxNo = (string)row["cari_vdaire_no"];
+                                    firmModel.TaxOffice = (string)row["cari_vdaire_adi"];
+                                    firmModel.Address = addr1;
+                                    firmModel.Address2 = addr2;
+                                    firmModel.Phone = (string)row["cari_CepTel"];
+                                    firmModel.Email = (string)row["cari_EMail"];
+                                    firmModel.Authors = firmAuthors.ToArray();
+                                }
+                                catch (Exception)
+                                {
+
+                                }
+                                    
+                                bObj.SaveOrUpdateFirm(firmModel);
                             }
                         }
                     }
@@ -426,7 +461,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                 {
                     con.Open();
 
-                    SqlDataAdapter dAdapter = new SqlDataAdapter("SELECT * FROM SIPARISLER WHERE sip_iptal=0 AND " +
+                    SqlDataAdapter dAdapter = new SqlDataAdapter("SELECT * FROM SIPARISLER WHERE sip_iptal=0 AND sip_miktar > sip_planlananmiktar AND " +
                         "sip_tip = 0 ORDER BY sip_evrakno_seri, sip_evrakno_sira, sip_satirno", con);
                     dAdapter.Fill(dTable);
                     dAdapter.Dispose();
@@ -554,7 +589,8 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         LineNumber = lineNumber,
                                         OrderStatus = (int)OrderStatusType.Created,
                                         UnitPrice = Decimal.Parse(row["sip_b_fiyat"].ToString(), System.Globalization.NumberStyles.Float),
-                                        Quantity = Decimal.Parse(row["sip_miktar"].ToString(), System.Globalization.NumberStyles.Float),
+                                        Quantity = Decimal.Parse(row["sip_miktar"].ToString(), System.Globalization.NumberStyles.Float)
+                                            - Decimal.Parse(row["sip_planlananmiktar"].ToString(), System.Globalization.NumberStyles.Float),
                                         SubTotal = Decimal.Parse(row["sip_tutar"].ToString(), System.Globalization.NumberStyles.Float),
                                         TaxAmount = Decimal.Parse(row["sip_vergi"].ToString(), System.Globalization.NumberStyles.Float),
                                         TaxIncluded = false,

@@ -20,10 +20,10 @@ namespace Heka.DataAccess.Context
             this.Incident = new HashSet<Incident>();
             this.MachinePlan = new HashSet<MachinePlan>();
             this.MachineSignal = new HashSet<MachineSignal>();
-            this.MoldTest = new HashSet<MoldTest>();
             this.ProductionPosture = new HashSet<ProductionPosture>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.MachineMaintenanceInstruction = new HashSet<MachineMaintenanceInstruction>();
+            this.MoldTest = new HashSet<MoldTest>();
         }
     
         public int Id { get; set; }
@@ -47,12 +47,12 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MachineSignal> MachineSignal { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MoldTest> MoldTest { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionPosture> ProductionPosture { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MoldTest> MoldTest { get; set; }
     }
 }

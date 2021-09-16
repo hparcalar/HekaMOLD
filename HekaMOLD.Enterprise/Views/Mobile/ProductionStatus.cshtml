@@ -31,14 +31,14 @@
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ürün</label>
                             <!--begin::Input group-->
                             <input type="text" class="form-control form-control-solid"
-                                   ng-model="activeWorkOrder.ProductName" readonly="readonly" placeholder="" />
+                                   ng-model="activeWorkOrder.WorkOrder.ProductName" readonly="readonly" placeholder="" />
                         </div>
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Koli İçi Adet</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
                                 <input type="text" class="form-control form-control-solid"
-                                       ng-model="activeWorkOrder.InPackageQuantity" readonly="readonly" placeholder="" />
+                                       ng-model="activeWorkOrder.WorkOrder.InPackageQuantity" readonly="readonly" placeholder="" />
                             </div>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                                     >
                                     <td class="w-10 px-2">{{item.OrderNo}}</td>
                                     <td class="w-40 px-2">{{item.WorkOrder.ProductName}}</td>
-                                    <td class="w-10 px-2 py-1">{{item.WorkOrder.Quantity}}</td>
+                                    <td class="w-10 px-2">{{item.WorkOrder.Quantity}}</td>
                                     <td class="w-40 px-2">{{item.WorkOrder.FirmName}}</td>
                                 </tr>
                             </tbody>

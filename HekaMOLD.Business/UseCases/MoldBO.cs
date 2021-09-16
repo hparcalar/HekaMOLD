@@ -73,6 +73,7 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Kalıp bilgisi girilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<MoldTest>();
+                var repoMold = _unitOfWork.GetRepository<Mold>();
 
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
@@ -84,11 +85,28 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 var crDate = dbObj.CreatedDate;
+                var tsDate = dbObj.TestDate;
 
                 model.MapTo(dbObj);
 
                 if (dbObj.CreatedDate == null)
                     dbObj.CreatedDate = crDate;
+                if (dbObj.TestDate == null)
+                    dbObj.TestDate = tsDate;
+
+                #region GENERATE MOLD DEFINITION IF NOT EXISTS
+                var dbMold = repoMold.Get(d => d.MoldCode == dbObj.MoldCode);
+                if (dbMold == null && !string.IsNullOrEmpty(dbObj.MoldCode))
+                {
+                    dbMold = new Mold
+                    {
+                        IsActive=true,
+                        MoldCode=dbObj.MoldCode,
+                        MoldName = dbObj.MoldName,
+                    };
+                    repoMold.Add(dbMold);
+                }
+                #endregion
 
                 dbObj.UpdatedDate = DateTime.Now;
 

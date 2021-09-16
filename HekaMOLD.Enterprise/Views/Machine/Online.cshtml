@@ -18,15 +18,14 @@
             </div>
             <!--end::Page title-->
             <!--begin::Wrapper-->
-            <div class="me-4">
+            <div>
                 <div class="d-flex flex-row">
-                    <input type="text" class="form-control form-control-solid datepicker" ng-model="filterModel.startDate" placeholder="Başlangıç Tarihi" />
-                    <input type="text" class="form-control form-control-solid datepicker" ng-model="filterModel.endDate" placeholder="Bitiş Tarihi" />
+                    <input type="text" class="form-control datepicker" ng-model="filterModel.startDate" placeholder="Başlangıç Tarihi" />
+                    <input type="text" class="form-control datepicker mx-2" ng-model="filterModel.endDate" placeholder="Bitiş Tarihi" />
 
-                    <!--begin::Separator-->
-                    <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
-                    <!--end::Separator-->
-                    <button href="@Url.Action("List","Machine")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                    <button href="@Url.Action("List","Machine")" 
+                            ng-click="bindModel()"
+                            class="btn btn-sm btn-flex btn-light-primary btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -53,12 +52,32 @@
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
-                <div class="col-xxl-4" ng-repeat="item in machineList">
-                    <div class="m-2 border-1 rounded-1">
-                        <h4>{{item.MachineName}}</h4>
-                        <p>Ort Şişirme: {{getFixed(item.MachineStats.AvgInflationTime,2)}} sn</p>
-                        <p>Üretim: {{item.MachineStats.AvgProductionCount}} adet</p>
-                    </div>                   
+                <div class="col-xxl-4 px-2 py-0" ng-repeat="item in machineList">
+                    <div class="rounded-1 py-1 bg-light-dark">
+                        <div class="m-2 border-1 rounded-1">
+                            <h4 class="text-center bg-secondary rounded px-2 py-2 border-1 border-dark">{{item.MachineName}}</h4>
+                            <div class="active-plan bg-light-success text-center py-1">
+                                <h6 class="text-success">Aktif Üretim</h6>
+                                <hr class="my-1" />
+                                <p class="py-0 my-0" ng-show="item.ActivePlan.Id > 0">
+                                    Firma: {{item.ActivePlan.WorkOrder.FirmName}}
+                                </p>
+                                <p class="py-0 my-0" ng-show="item.ActivePlan.Id > 0">
+                                    Ürün: {{item.ActivePlan.WorkOrder.ProductName}}
+                                </p>
+                                <p class="py-0 my-0" ng-show="item.ActivePlan.Id > 0">
+                                    Üretilen: <b>{{getFixed(item.ActivePlan.WorkOrder.CompleteQuantity,0)}}</b> /
+                                    {{item.ActivePlan.WorkOrder.Quantity}}
+                                </p>
+                            </div>
+                            <div class="general-avg bg-light-primary text-center py-1">
+                                <h6 class="text-primary">Genel Ortalama</h6>
+                                <hr class="my-1" />
+                                <p class="py-0 my-0">Ort Şişirme: {{getFixed(item.MachineStats.AvgInflationTime,2)}} sn</p>
+                                <p class="py-0 my-0">Üretim: {{item.MachineStats.AvgProductionCount}} adet</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!--end::Col-->
             </div>

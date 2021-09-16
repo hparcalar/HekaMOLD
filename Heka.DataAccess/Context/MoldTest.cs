@@ -28,6 +28,7 @@ namespace Heka.DataAccess.Context
         public string RawMaterialName { get; set; }
         public Nullable<decimal> RawMaterialGr { get; set; }
         public string RawMaterialGrText { get; set; }
+        public Nullable<decimal> RawMaterialTolerationGr { get; set; }
         public Nullable<int> InflationTimeSeconds { get; set; }
         public Nullable<int> TotalTimeSeconds { get; set; }
         public Nullable<int> DyeId { get; set; }
@@ -49,12 +50,12 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-        public Nullable<decimal> RawMaterialTolerationGr { get; set; }
+        public string HeadSize { get; set; }
     
-        public virtual Mold Mold { get; set; }
         public virtual Dye Dye { get; set; }
+        public virtual Machine Machine { get; set; }
+        public virtual Mold Mold { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
-        public virtual Machine Machine { get; set; }
     }
 }

@@ -40,3 +40,8 @@ BEGIN
 
 	ALTER TABLE [dbo].[MachineMaintenanceInstructionEntry] CHECK CONSTRAINT [FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction]
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='MoldTest' AND COLUMN_NAME='HeadSize')
+BEGIN
+	ALTER TABLE MoldTest ADD HeadSize NVARCHAR(50) NULL
+END

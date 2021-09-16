@@ -15,6 +15,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Maintenance
         public string ToDoList { get; set; }
         public string Responsible { get; set; }
         public int? LineNumber { get; set; }
+        public bool NewDetail { get; set; }
 
         #region VISUAL ELEMENTS
         public string MachineCode { get; set; }

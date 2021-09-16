@@ -67,11 +67,13 @@
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
+
+                    $scope.bindInstructionList();
                 }
             }).catch(function (err) { });
     }
 
-    $scope.bindAuthorList = function () {
+    $scope.bindInstructionList = function () {
         $('#instructionList').dxDataGrid({
             dataSource: {
                 load: function () {
@@ -137,10 +139,19 @@
                 mode: 'cell'
             },
             columns: [
-                { dataField: 'UnitName', caption: 'Ünite İsmi', validationRules: [{ type: "required" }] },
-                { dataField: 'PeriodType', caption: 'Bakım Periyodu' },
-                { dataField: 'ToDoList', caption: 'Yapılacak İşlemler' },
-                { dataField: 'Responsible', caption: 'Sorumlusu' },
+                { dataField: 'UnitName', caption: 'Ünite İsmi', width:100, validationRules: [{ type: "required" }] },
+                {
+                    width: 100,
+                    dataField: 'PeriodType', caption: 'Bakım Periyodu',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: [{ Text: 'G' }, { Text: 'H' }, { Text: 'A' }, {Text: 'AA'}],
+                        valueExpr: "Text",
+                        displayExpr: "Text"
+                    },
+                },
+                { dataField: 'ToDoList', caption: 'Yapılacak İşlemler', editorType: 'dxTextArea' },
+                { dataField: 'Responsible', width: 150, caption: 'Sorumlusu' },
             ]
         });
     }

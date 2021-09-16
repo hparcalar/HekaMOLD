@@ -44,22 +44,25 @@
                             </div>
                             <div class="d-flex flex-row flex-fill mt-2">
                                 <div class="d-flex flex-column flex-fill machine-box mr-1 alert-secondary"
-                                     style="border: 1px solid #009EF7;" data-id="{{machine.Id}}"
+                                     style="border: 1px solid #009EF7;"
+                                     ng-class="{'bg-light-primary': selectedSource.Id == machine.Id}"
+                                     ng-click="selectSource(machine.Id)"
+                                     data-id="{{machine.Id}}"
                                      ng-repeat="machine in selectedMachineList">
                                     <h5>{{machine.MachineName}}</h5>
                                     <div class="d-flex flex-column">
                                         <div class="plan-box" draggable="true"
                                              data-plan-id="{{plan.Id}}"
                                              ng-click="selectPlan(plan)"
-                                             ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6, 
+                                             ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6,
                                                 'plan-box-completed': plan.WorkOrder.WorkOrderStatus == 4,
                                                 'plan-box-progress': plan.WorkOrder.WorkOrderStatus == 3,
                                                 'plan-selected': plan.Id == selectedPlan.Id}"
                                              ng-repeat="plan in getMachinePlans(machine)">
                                             <a class="btn btn-primary btn-sm btn-plan-details px-1 py-1"
-                                                    href="@Url.Action("Index","WorkOrder")?rid={{plan.WorkOrder.WorkOrderId}}"
-                                                    target="_blank"
-                                                    ng-click="showPlanDetails(plan, $event.currentTarget)">
+                                               href="@Url.Action("Index","WorkOrder")?rid={{plan.WorkOrder.WorkOrderId}}"
+                                               target="_blank"
+                                               ng-click="showPlanDetails(plan, $event.currentTarget)">
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
@@ -111,6 +114,10 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
+
+    <div id="dial-copy-plan" title="İş Emri Kopyalama" style="display:none;">
+        <ng-include src="'../Components/Views/PlanningWorkCopy.html'"></ng-include>
+    </div>
 </div>
 
 @section scripts{
@@ -120,4 +127,5 @@
 
     <link href="~/Content/planning.css" rel="stylesheet" />
     <script src="~/FrontEndLogic/Planning/planning.js"></script>
+    <script src="~/Components/Controllers/planning-work-copy.js"></script>
 }

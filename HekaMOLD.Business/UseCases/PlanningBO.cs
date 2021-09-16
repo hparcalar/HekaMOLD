@@ -33,6 +33,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoItem = _unitOfWork.GetRepository<Item>();
                 var repoMachinePlan = _unitOfWork.GetRepository<MachinePlan>();
+                var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
 
                 var dbSaleOrderDetail = repoOrderDetail.Get(d => d.Id == model.Id);
                 if (dbSaleOrderDetail == null)
@@ -80,6 +81,26 @@ namespace HekaMOLD.Business.UseCases
                 dbObjDetail.UpdatedDate = DateTime.Now;
                 dbObjDetail.UpdatedUserId = model.CreatedUserId;
                 dbObjDetail.SaleOrderDetailId = dbSaleOrderDetail.Id;
+                dbObjDetail.MachineId = model.MachineId;
+
+                #region ASSIGN PROPER MOLD TEST DATA TO WORK ORDER
+                var dbProduct = repoItem.Get(d => d.Id == (dbObjDetail.ItemId ?? 0));
+                if (dbProduct != null)
+                {
+                    var dbMoldTest = repoMoldTest.Filter(d => d.ProductCode == dbProduct.ItemNo)
+                        .OrderByDescending(d => d.Id).FirstOrDefault();
+                    if (dbMoldTest != null)
+                    {
+                        dbObjDetail.MoldTestId = dbMoldTest.Id;
+                        dbObjDetail.RawGr = dbMoldTest.RawMaterialGr;
+                        dbObjDetail.RawGrToleration = dbMoldTest.RawMaterialTolerationGr;
+                        dbObjDetail.InPackageQuantity = dbMoldTest.InPackageQuantity;
+                        dbObjDetail.InPalletPackageQuantity = dbMoldTest.InPalletPackageQuantity;
+                        dbObjDetail.InflationTimeSeconds = dbMoldTest.InflationTimeSeconds;
+                        dbObjDetail.MoldId = dbMoldTest.MoldId;
+                    }
+                }
+                #endregion
 
                 #region CHECK SALE ORDER REMAINING QUANTITY & STATUS
                 var saleOrderPlannedQuantity = dbSaleOrderDetail.WorkOrderDetail
@@ -125,6 +146,89 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult CopyFromWorkOrder(int fromPlanId, int quantity,
+            int firmId, int targetMachineId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachinePlan>();
+                var repoWorkOrder = _unitOfWork.GetRepository<WorkOrder>();
+                var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+
+                var dbExistingPlan = repo.Get(d => d.Id == fromPlanId);
+                if (dbExistingPlan == null)
+                    throw new Exception("Kopyalanması istenen plan bilgisine ulaşılamadı.");
+                
+                // CREATE WORK ORDER
+                var newWorkOrder = new WorkOrder
+                {
+                    FirmId = firmId,
+                    CreatedDate = DateTime.Now,
+                    WorkOrderDate = DateTime.Now,
+                    DocumentNo = "",
+                    WorkOrderNo = GetNextWorkOrderNo(),
+                    Explanation = dbExistingPlan.WorkOrderDetail.WorkOrder.Explanation,
+                    WorkOrderStatus = (int)WorkOrderStatusType.Planned,
+                    PlantId = dbExistingPlan.WorkOrderDetail.WorkOrder.PlantId,
+                };
+                repoWorkOrder.Add(newWorkOrder);
+
+                // CREATE WORK ORDER DETAIL
+                var newWorkOrderDetail = new WorkOrderDetail
+                {
+                    WorkOrder = newWorkOrder,
+                    CreatedDate = DateTime.Now,
+                    Dye = dbExistingPlan.WorkOrderDetail.Dye,
+                    InflationTimeSeconds = dbExistingPlan.WorkOrderDetail.InflationTimeSeconds,
+                    InPackageQuantity = dbExistingPlan.WorkOrderDetail.InPackageQuantity,
+                    InPalletPackageQuantity = dbExistingPlan.WorkOrderDetail.InPalletPackageQuantity,
+                    ItemId = dbExistingPlan.WorkOrderDetail.ItemId,
+                    MachineId = targetMachineId,
+                    MoldId = dbExistingPlan.WorkOrderDetail.MoldId,
+                    MoldTestId = dbExistingPlan.WorkOrderDetail.MoldTestId,
+                    Quantity = quantity,
+                    RawGr = dbExistingPlan.WorkOrderDetail.RawGr,
+                    RawGrToleration = dbExistingPlan.WorkOrderDetail.RawGrToleration,
+                    WorkOrderStatus = (int)WorkOrderStatusType.Planned,
+                };
+                repoWorkOrderDetail.Add(newWorkOrderDetail);
+
+                // CREATE MACHINE PLAN
+                var dbMachinePlan = repo.Get(d => d.WorkOrderDetailId == newWorkOrderDetail.Id);
+                if (dbMachinePlan == null)
+                {
+                    int? lastOrderNo = repo.Filter(d => d.MachineId == targetMachineId)
+                        .Max(d => d.OrderNo);
+                    if ((lastOrderNo ?? 0) == 0)
+                        lastOrderNo = 0;
+
+                    lastOrderNo++;
+
+                    dbMachinePlan = new MachinePlan
+                    {
+                        WorkOrderDetail = newWorkOrderDetail,
+                        MachineId = targetMachineId,
+                        OrderNo = lastOrderNo
+                    };
+                    repo.Add(dbMachinePlan);
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbMachinePlan.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public BusinessResult ReOrderPlan(MachinePlanModel model)
         {
             BusinessResult result = new BusinessResult();
@@ -157,6 +261,8 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 dbObj.MachineId = model.MachineId;
+                dbObj.WorkOrderDetail.MachineId = model.MachineId;
+
                 var activePlans = repo.Filter(d => d.MachineId == dbObj.MachineId &&
                     (
                         d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Planned

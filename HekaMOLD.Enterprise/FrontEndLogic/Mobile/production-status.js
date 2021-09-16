@@ -84,61 +84,30 @@
         });
     }
 
+    $scope.loadActiveWorkOrder = function () {
+        try {
+            $http.get(HOST_URL + 'Common/GetActiveWorkOrderOnMachine?machineId=' + $scope.selectedMachine.Id, {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.activeWorkOrder = resp.data;
+                        if ($scope.lastPackageQty > 0)
+                            $scope.activeWorkOrder.WorkOrder.InPackageQuantity = $scope.lastPackageQty;
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
     // EMIT SELECTED MACHINE DATA
     $scope.$on('machineSelected', function (e, d) {
         $scope.selectedMachine = d;
         $scope.selectedWorkOrder = { Id: 0 };
         $scope.loadMachineQueue();
+        $scope.loadActiveWorkOrder();
 
         $('#dial-machinelist').dialog('close');
     });
-
-    $scope.approveProductEntry = function () {
-        bootbox.confirm({
-            message: "Bu ürün girişini onaylıyor musunuz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-
-                    $scope.modelObject.CreatedDate = moment().format('DD.MM.YYYY');
-
-                    if (typeof $scope.selectedMachine != 'undefined'
-                        && $scope.selectedMachine != null)
-                        $scope.modelObject.MachineId = $scope.selectedMachine.Id;
-                    else
-                        $scope.modelObject.MachineId = null;
-
-                    $http.post(HOST_URL + 'Mobile/SaveProductEntry', $scope.modelObject, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
-
-                                if (resp.data.Status == 1) {
-                                    toastr.success('Kayıt başarılı.', 'Bilgilendirme');
-
-                                    $scope.modelObject = {
-                                        MachineId: 0,
-                                    };
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
-        });
-    }
 
     // LOAD EVENTS
     setTimeout($scope.showMachineList, 500);

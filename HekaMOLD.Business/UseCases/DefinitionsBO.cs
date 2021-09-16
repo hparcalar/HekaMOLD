@@ -5,6 +5,7 @@ using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.Operational;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<Firm>();
                 var repoAuthors = _unitOfWork.GetRepository<FirmAuthor>();
 
-                if (repo.Any(d => (d.FirmCode == model.FirmCode || d.FirmName == model.FirmName) && d.Id != model.Id))
+                if (repo.Any(d => (d.FirmCode == model.FirmCode) && d.Id != model.Id))
                     throw new Exception("Aynı koda sahip başka bir firma mevcuttur. Lütfen farklı bir kod giriniz.");
 
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -1311,10 +1312,15 @@ namespace HekaMOLD.Business.UseCases
             var repo = _unitOfWork.GetRepository<Machine>();
             var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
 
+            // PROD BO FOR ACTIVE WORK ORDERS ON MACHINES
+            ProductionBO prodBO = new ProductionBO();
+
             repo.GetAll().ToList().ForEach(d =>
             {
                 MachineModel containerObj = new MachineModel();
                 d.MapTo(containerObj);
+
+                containerObj.ActivePlan = prodBO.GetActiveWorkOrderOnMachine(d.Id);
 
                 var signalData = repoSignal.Filter(m => m.MachineId == d.Id &&
                     dt1 <= m.StartDate && dt2 >= m.StartDate);
@@ -1327,6 +1333,8 @@ namespace HekaMOLD.Business.UseCases
 
                 data.Add(containerObj);
             });
+
+            prodBO.Dispose();
 
             return data.ToArray();
         }
@@ -1343,6 +1351,7 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Makine adı girilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<Machine>();
+                var repoInstructions = _unitOfWork.GetRepository<MachineMaintenanceInstruction>();
 
                 if (repo.Any(d => (d.MachineCode == model.MachineCode)
                     && d.Id != model.Id))
@@ -1365,6 +1374,37 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedDate = crDate;
 
                 dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE INSTRUCTIONS
+                if (model.Instructions == null)
+                    model.Instructions = new MachineMaintenanceInstructionModel[0];
+
+                var toBeRemovedInstructions = dbObj.MachineMaintenanceInstruction
+                    .Where(d => !model.Instructions.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedInstructions)
+                {
+                    repoInstructions.Delete(item);
+                }
+
+                foreach (var item in model.Instructions)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemAu = new MachineMaintenanceInstruction();
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Machine = dbObj;
+                        repoInstructions.Add(dbItemAu);
+                    }
+                    else if (!toBeRemovedInstructions.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemAu = repoInstructions.GetById(item.Id);
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Machine = dbObj;
+                    }
+                }
+                #endregion
 
                 _unitOfWork.SaveChanges();
 
@@ -1405,18 +1445,57 @@ namespace HekaMOLD.Business.UseCases
 
         public MachineModel GetMachine(int id)
         {
-            MachineModel model = new MachineModel { };
+            MachineModel model = new MachineModel { Instructions = new MachineMaintenanceInstructionModel[0] };
 
             var repo = _unitOfWork.GetRepository<Machine>();
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                model.Instructions = dbObj.MachineMaintenanceInstruction.
+                    Select(d => new MachineMaintenanceInstructionModel
+                    {
+                        Id = d.Id,
+                        LineNumber = d.LineNumber,
+                        MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                        MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                        MachineId = d.MachineId,
+                        PeriodType = d.PeriodType,
+                        Responsible = d.Responsible,
+                        ToDoList = d.ToDoList,
+                        UnitName = d.UnitName,
+                    }).OrderBy(d => d.Id).ToArray();
             }
 
             return model;
         }
 
+        public MachineModel GetMachine(string machineCode)
+        {
+            MachineModel model = new MachineModel { Instructions = new MachineMaintenanceInstructionModel[0] };
+
+            var repo = _unitOfWork.GetRepository<Machine>();
+            var dbObj = repo.Get(d => d.MachineCode == machineCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.Instructions = dbObj.MachineMaintenanceInstruction.
+                    Select(d => new MachineMaintenanceInstructionModel
+                    {
+                        Id = d.Id,
+                        LineNumber = d.LineNumber,
+                        MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                        MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                        MachineId = d.MachineId,
+                        PeriodType = d.PeriodType,
+                        Responsible = d.Responsible,
+                        ToDoList = d.ToDoList,
+                        UnitName = d.UnitName,
+                    }).OrderBy(d => d.Id).ToArray();
+            }
+
+            return model;
+        }
         #endregion
 
         #region DYE BUSINESS

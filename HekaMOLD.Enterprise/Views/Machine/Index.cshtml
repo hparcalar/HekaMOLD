@@ -115,17 +115,6 @@
                     <div class="mb-5">
                         <input type="text" class="form-control form-control-solid" ng-model="modelObject.MachineName" placeholder="" />
                     </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title">Talimatlar</h6>
-                        </div>
-                        <div class="card-body py-0 mb-4">
-                            <div class="dx-viewport">
-                                <div id="instructionList"></div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <!--end::Col-->
                 <div class="col-xxl-6">
@@ -150,6 +139,20 @@
                     <!--begin::Input group-->
                     <div class="mb-5">
                         <input type="text" class="form-control form-control-solid" ng-model="modelObject.DeviceIp" placeholder="" />
+                    </div>
+                </div>
+
+                @* INSTRUCTIONS GRID *@
+                <div class="col-xxl-12 mt-0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Talimatlar</h6>
+                        </div>
+                        <div class="card-body py-0 mb-4">
+                            <div class="dx-viewport">
+                                <div id="instructionList"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

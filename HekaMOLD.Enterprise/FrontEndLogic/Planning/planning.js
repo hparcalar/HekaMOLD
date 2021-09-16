@@ -10,7 +10,9 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
     $scope.selectedMachineList = [];
     $scope.boardPlanList = [];
     $scope.waitingPlanList = [];
-    $scope.selectedPlan = { Id:0 };
+    $scope.selectedPlan = { Id: 0 };
+    $scope.copiedPlan = { Id: 0 };
+    $scope.selectedSource = { Id:0 }; // Plan queue of a selected machine for highlighting
 
     $scope.getMachinePlans = function (machine) {
         return $scope.boardPlanList.filter(d => d.MachineId == machine.Id);
@@ -22,6 +24,11 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
     $scope.selectPlan = function (planItem) {
         $scope.selectedPlan = planItem;
+        $scope.selectedSource = $scope.machineList.find(d => d.Id == planItem.MachineId);
+    }
+
+    $scope.selectSource = function (machineId) {
+        $scope.selectedSource = $scope.machineList.find(d => d.Id == machineId);
     }
 
     // VISUAL TRIGGERS
@@ -385,6 +392,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
     toastr.options.preventDuplicates = true;
 
     // KEYBOARD EVENTS
+    $scope.ctrlDown = false;
     $(document).keyup(function (event) {
         if (event.key == 'Delete') // DEL
         {
@@ -422,6 +430,69 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 });
             }
         }
+        else if (event.key == 'Control') {
+            $scope.ctrlDown = false;
+        }
+    });
+
+    $(document).keydown(function (event) {
+        if (event.key == 'Control')
+            $scope.ctrlDown = true;
+        else if (event.key == 'c' && $scope.ctrlDown) {
+            if ($scope.selectedPlan.Id > 0) {
+                $scope.copiedPlan = $scope.selectedPlan;
+                toastr.success($scope.selectedPlan.WorkOrder.ProductName
+                    + ' iş emri kopyalandı. Makine seçip CTRL + V ile yapıştırabilirsiniz.', 'Kopyalama');
+            }
+        }
+        else if (event.key == 'v' && $scope.ctrlDown) {
+            if ($scope.copiedPlan.Id > 0) {
+                // DO BROADCAST
+                $scope.$broadcast('loadPlanCopy');
+
+                $('#dial-copy-plan').dialog({
+                    width: window.innerWidth * 0.5,
+                    height: window.innerHeight * 0.5,
+                    hide: true,
+                    modal: true,
+                    resizable: false,
+                    show: true,
+                    draggable: false,
+                    closeText: "KAPAT"
+                });
+            }
+            else
+                toastr.error('Yapıştırabilmek için önce bir iş emri kopyalamalısınız.', 'Uyarı');
+        }
+    });
+
+    // EMIT ORDER DETAIL DATA
+    $scope.$on('confirmCopy', function (e, d) {
+        $scope.saveStatus = 1;
+
+        $http.post(HOST_URL + 'Planning/CopyPlan', {
+            fromPlanId: $scope.copiedPlan.Id,
+            targetMachineId: $scope.selectedSource.Id,
+            quantity: d.quantity,
+            firmId: d.firmId,
+        }, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.saveStatus = 0;
+
+                    if (resp.data.Result == true) {
+                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                        $scope.loadMachineList();
+                        $scope.loadWaitingPlanList();
+                    }
+                    else
+                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                }
+            }).catch(function (err) { });
+
+        $scope.copiedPlan = { Id: 0 };
+        $('#dial-copy-plan').dialog('close');
     });
 
     // ON LOAD EVENTS

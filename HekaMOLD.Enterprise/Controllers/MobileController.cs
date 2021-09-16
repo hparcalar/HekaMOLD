@@ -180,7 +180,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveProductEntry(int workOrderDetailId)
+        public JsonResult SaveProductEntry(int workOrderDetailId, int inPackageQuantity)
         {
             BusinessResult result = new BusinessResult();
 
@@ -193,7 +193,20 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (ProductionBO bObj = new ProductionBO())
             {
-                result = bObj.AddProductEntry(workOrderDetailId, userId, serialType);
+                result = bObj.AddProductEntry(workOrderDetailId, userId, serialType, inPackageQuantity);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteProductEntry(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.DeleteProductEntry(id);
             }
 
             return Json(result);

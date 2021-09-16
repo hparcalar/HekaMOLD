@@ -3902,6 +3902,7 @@
     <Content Include="assets\plugins\global\fonts\socicon\socicon.svg" />
     <Content Include="assets\plugins\global\plugins.bundle.css" />
     <Content Include="assets\plugins\global\plugins.bundle.js" />
+    <Content Include="Components\Controllers\planning-work-copy.js" />
     <Content Include="Components\Controllers\posture-category-selection.js" />
     <Content Include="Components\Controllers\incident-category-selection.js" />
     <Content Include="Components\Controllers\machine-selection.js" />
@@ -3911,6 +3912,7 @@
     <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
+    <Content Include="Components\Views\PlanningWorkCopy.html" />
     <Content Include="Components\Views\PostureCategorySelection.html" />
     <Content Include="Components\Views\IncidentCategorySelection.html" />
     <Content Include="Components\Views\MachineSelection.html" />

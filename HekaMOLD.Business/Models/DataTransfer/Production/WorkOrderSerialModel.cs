@@ -21,7 +21,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? InPackageQuantity { get; set; }
 
         #region VISUAL ELEMENTS
-
+        public string ItemNo { get; set; }
+        public string ItemName { get; set; }
+        public string CreatedDateStr { get; set; }
         #endregion
     }
 }

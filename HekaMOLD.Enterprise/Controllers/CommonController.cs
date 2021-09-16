@@ -202,6 +202,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [FreeAction]
+        public JsonResult GetFirmList()
+        {
+            FirmModel[] data = new FirmModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetFirmList();
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [FreeAction]
         public JsonResult GetIncidentCategoryList()
         {
             IncidentCategoryModel[] data = new IncidentCategoryModel[0];
