@@ -462,7 +462,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                     con.Open();
 
                     SqlDataAdapter dAdapter = new SqlDataAdapter("SELECT * FROM SIPARISLER WHERE sip_iptal=0 AND sip_miktar > sip_planlananmiktar AND " +
-                        "sip_tip = 0 ORDER BY sip_evrakno_seri, sip_evrakno_sira, sip_satirno", con);
+                        "sip_tip = 0 AND sip_kapat_fl = 0 AND sip_miktar > sip_teslim_miktar ORDER BY sip_evrakno_seri, sip_evrakno_sira, sip_satirno", con);
                     dAdapter.Fill(dTable);
                     dAdapter.Dispose();
 
