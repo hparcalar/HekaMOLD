@@ -70,6 +70,21 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
 
+        [HttpGet]
+        public JsonResult GetPlanDetail(int workOrderDetailId)
+        {
+            WorkOrderDetailModel result = new WorkOrderDetailModel();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.GetWorkOrderDetail(workOrderDetailId);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         [HttpPost]
         public JsonResult ReOrderPlan(MachinePlanModel model)
         {
@@ -95,7 +110,33 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(result);
         }
-        
+
+        [HttpPost]
+        public JsonResult EditPlan(WorkOrderDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.EditWorkOrder(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult CompletePlan(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.CompleteWorkOrder(id);
+            }
+
+            return Json(result);
+        }
+
         [HttpPost]
         public JsonResult SaveModel(ItemOrderDetailModel model)
         {

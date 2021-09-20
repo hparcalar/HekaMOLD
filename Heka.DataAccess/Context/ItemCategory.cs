@@ -19,6 +19,7 @@ namespace Heka.DataAccess.Context
         {
             this.ItemGroup = new HashSet<ItemGroup>();
             this.Item = new HashSet<Item>();
+            this.EntryQualityPlan = new HashSet<EntryQualityPlan>();
         }
     
         public int Id { get; set; }
@@ -35,5 +36,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ItemGroup> ItemGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Item> Item { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EntryQualityPlan> EntryQualityPlan { get; set; }
     }
 }

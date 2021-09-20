@@ -41,3 +41,22 @@
 .w-15{
     width:15% !important;
 }
+.aside-blue {
+    /*background-color: #58abdb;*/
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7ecbf7+0,53cbf1+40,5cb8ed+100 */
+    background: #7ecbf7; /* Old browsers */
+    background: -moz-linear-gradient(left, #7ecbf7 0%, #53cbf1 40%, #5cb8ed 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #7ecbf7 0%,#53cbf1 40%,#5cb8ed 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #7ecbf7 0%,#53cbf1 40%,#5cb8ed 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7ecbf7', endColorstr='#5cb8ed',GradientType=1 ); /* IE6-9 */
+}
+.menu-link{
+    font-weight:bold;
+}
+.bullet-dot{
+    color:black;
+}
+.separator {
+    border-color: black;
+}
+.plan-label{ width:100px !important; font-weight:bold; }

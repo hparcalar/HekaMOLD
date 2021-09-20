@@ -12,30 +12,33 @@ namespace Heka.DataAccess.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class ItemGroup
+    public partial class EntryQualityPlan
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ItemGroup()
+        public EntryQualityPlan()
         {
-            this.Item = new HashSet<Item>();
-            this.EntryQualityPlan = new HashSet<EntryQualityPlan>();
+            this.EntryQualityData = new HashSet<EntryQualityData>();
+            this.EntryQualityPlanDetail = new HashSet<EntryQualityPlanDetail>();
         }
     
         public int Id { get; set; }
-        public string ItemGroupCode { get; set; }
-        public string ItemGroupName { get; set; }
+        public string QualityControlCode { get; set; }
+        public Nullable<int> OrderNo { get; set; }
+        public Nullable<int> ItemGroupId { get; set; }
         public Nullable<int> ItemCategoryId { get; set; }
-        public Nullable<int> PlantId { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<int> CreatedUserId { get; set; }
-        public Nullable<System.DateTime> UpdatedDate { get; set; }
-        public Nullable<int> UpdatedUserId { get; set; }
+        public string ItemGroupText { get; set; }
+        public string PeriodType { get; set; }
+        public string AcceptanceCriteria { get; set; }
+        public string ControlDevice { get; set; }
+        public string Method { get; set; }
+        public string Responsible { get; set; }
+        public string RecordType { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
         public virtual ItemCategory ItemCategory { get; set; }
-        public virtual Plant Plant { get; set; }
+        public virtual ItemGroup ItemGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Item> Item { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EntryQualityPlan> EntryQualityPlan { get; set; }
+        public virtual ICollection<EntryQualityPlanDetail> EntryQualityPlanDetail { get; set; }
     }
 }

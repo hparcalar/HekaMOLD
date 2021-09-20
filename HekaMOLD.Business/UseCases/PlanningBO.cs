@@ -332,11 +332,14 @@ namespace HekaMOLD.Business.UseCases
             ).ToList().Select(d => new ItemOrderDetailModel { 
                 Id = d.Id,
                 OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
+                
                 ItemNo = d.Item != null ? d.Item.ItemNo : "",
                 ItemName = d.Item != null ? d.Item.ItemName : "",
                 FirmName = d.ItemOrder.Firm != null ? 
                     d.ItemOrder.Firm.FirmName : "",
-                Quantity = d.Quantity
+                Quantity = d.Quantity,
+                DeadlineDateStr = d.ItemOrder.DateOfNeed != null ?
+                    string.Format("{0:dd.MM.yyyy}", d.ItemOrder.DateOfNeed) : "",
             }).ToArray();
 
             return data;
@@ -503,6 +506,139 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        public WorkOrderDetailModel GetWorkOrderDetail(int workOrderDetailId)
+        {
+            WorkOrderDetailModel data = new WorkOrderDetailModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var dbObj = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbObj != null)
+                {
+                    data.Id = workOrderDetailId;
+                    data.WorkOrderNo = dbObj.WorkOrder.WorkOrderNo;
+                    data.FirmCode = dbObj.WorkOrder.Firm.FirmCode;
+                    data.FirmName = dbObj.WorkOrder.Firm.FirmName;
+                    data.ItemOrderDocumentNo = dbObj.ItemOrderDetail != null ? dbObj.ItemOrderDetail.ItemOrder.DocumentNo : "";
+                    data.ProductCode = dbObj.Item.ItemNo;
+                    data.Explanation = dbObj.WorkOrder.Explanation;
+                    data.ProductName = dbObj.Item.ItemName;
+                    data.Quantity = dbObj.Quantity;
+                    data.CompleteQuantity = dbObj.WorkOrderSerial.Count();
+                    data.MoldCode = dbObj.Mold != null ? dbObj.Mold.MoldCode : "";
+                    data.MoldName = dbObj.Mold != null ? dbObj.Mold.MoldName : "";
+                    data.OrderDeadline = dbObj.ItemOrderDetail != null &&
+                            dbObj.ItemOrderDetail.ItemOrder.DateOfNeed != null ?
+                                string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrderDetail.ItemOrder.DateOfNeed) : "";
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult EditWorkOrder(WorkOrderDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                    throw new Exception("Düzenlenecek iş emri bilgisi bulunamadı.");
+
+                // SET DESCRIPTION
+                dbObj.WorkOrder.Explanation = model.Explanation;
+
+                // SET TARGET COUNT
+                dbObj.Quantity = model.Quantity;
+
+                // UPDATE PRODUCED SERIALS
+                int exComplete = dbObj.WorkOrderSerial.Sum(d => Convert.ToInt32(d.FirstQuantity ?? 0));
+                if (exComplete < model.CompleteQuantity)
+                {
+                    int diffQty = model.CompleteQuantity - exComplete;
+                    for (int i = 0; i < diffQty; i++)
+                    {
+                        WorkOrderSerial newSerial = new WorkOrderSerial();
+                        newSerial.SerialNo = "";
+                        newSerial.FirstQuantity = 1;
+                        newSerial.LiveQuantity = 1;
+                        newSerial.CreatedDate = DateTime.Now;
+                        newSerial.IsGeneratedBySignal = false;
+                        newSerial.SerialType = (int)WorkOrderSerialType.ProductPackage;
+                        newSerial.SerialStatus = (int)SerialStatusType.Created;
+                        newSerial.WorkOrderDetail = dbObj;
+                        repoSerial.Add(newSerial);
+                    }
+                }
+                else if (exComplete > 0 && model.CompleteQuantity > -1 && exComplete > model.CompleteQuantity)
+                {
+                    var oldSerials = dbObj.WorkOrderSerial.ToArray();
+
+                    int diffQty = exComplete - model.CompleteQuantity;
+                    for (int i = 0; i < diffQty; i++)
+                    {
+                        if (oldSerials.Length > i)
+                            repoSerial.Delete(oldSerials[i]);
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult CompleteWorkOrder(int workOrderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoPlan = _unitOfWork.GetRepository<MachinePlan>();
+
+                var dbObj = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbObj == null)
+                    throw new Exception("İş emri kaydı bulunamadı.");
+
+                dbObj.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
+
+                if (dbObj.MachinePlan.Any())
+                {
+                    var plans = dbObj.MachinePlan.ToArray();
+
+                    foreach (var plan in plans)
+                    {
+                        repoPlan.Delete(plan);
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public BusinessResult ToggleWorkOrderStatus(int workOrderDetailId)
         {
             BusinessResult result = new BusinessResult();

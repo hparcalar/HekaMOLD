@@ -396,5 +396,12 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
         #endregion
+
+        #region PRODUCT PICK UP TO CONFIRMATION
+        public ActionResult ProductPickup()
+        {
+            return View();
+        }
+        #endregion
     }
 }

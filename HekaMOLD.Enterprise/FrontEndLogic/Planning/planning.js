@@ -33,16 +33,12 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
     // VISUAL TRIGGERS
     $scope.showPlanDetails = function (plan, uiElement) {
-        $scope.editPlanId = plan.Id;
-        $scope.$broadcast('bindPlan');
+        $scope.$broadcast('loadEditPlan', { id: plan.WorkOrderDetailId });
 
         $('#dial-plan').dialog({
             hide: true,
             modal: true,
             resizable: false,
-            open: function (event, ui) {
-                $('#txtCompletedQuantity').focus();
-            },
             width: 600,
             show: true,
             draggable: false,
@@ -311,6 +307,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     markup =
                         "<tr draggable=\"true\" class=\"dx-row dx-data-row dx-row-lines waiting-plan-row\" data-id=\"" + data.Id + "\">" +
                         "<td>" + data.OrderDateStr + "</td>" +
+                        "<td>" + data.DeadlineDateStr + "</td>" +
                         "<td>" + data.FirmName + "</td>" +
                         "<td>" + data.ItemNo + "</td>" +
                         "<td>" + data.ItemName + "</td>" +
@@ -323,6 +320,10 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 {
                     dataField: 'OrderDateStr',
                     caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy'
+                },
+                {
+                    dataField: 'DeadlineDateStr',
+                    caption: 'Termin', dataType: 'date', format: 'dd.MM.yyyy'
                 },
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'ItemNo', caption: 'Ürün Kodu' },
@@ -493,6 +494,12 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
         $scope.copiedPlan = { Id: 0 };
         $('#dial-copy-plan').dialog('close');
+    });
+    $scope.$on('editPlanEnd', function (e, d) {
+        $('#dial-plan').dialog('close');
+
+        $scope.loadMachineList();
+        $scope.loadWaitingPlanList();
     });
 
     // ON LOAD EVENTS

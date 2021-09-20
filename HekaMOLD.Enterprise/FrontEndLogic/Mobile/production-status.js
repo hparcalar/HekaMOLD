@@ -56,6 +56,7 @@
                                         toastr.error(resp.data.ErrorMessage, 'Hata');
 
                                     $scope.loadMachineQueue();
+                                    $scope.loadActiveWorkOrder();
                                 }
                             }).catch(function (err) { });
                     }

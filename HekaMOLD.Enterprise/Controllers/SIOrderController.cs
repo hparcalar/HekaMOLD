@@ -55,7 +55,7 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 items = bObj.GetItemList();
                 units = bObj.GetUnitTypeList();
-                firms = bObj.GetApprovedSuppliers();
+                firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
             }
 

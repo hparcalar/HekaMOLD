@@ -35,6 +35,51 @@
           <Property Name="UpdatedUserId" Type="int" />
           <Property Name="IsActive" Type="bit" />
         </EntityType>
+        <EntityType Name="EntryQualityData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QualityPlanId" Type="int" />
+          <Property Name="QualityPlanDetailId" Type="int" />
+          <Property Name="IsOk" Type="bit" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="200" />
+          <Property Name="ItemEntryDetailId" Type="int" />
+          <Property Name="ItemLot" Type="nvarchar" MaxLength="50" />
+          <Property Name="ItemNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="150" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="EntryQualityPlan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QualityControlCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="OrderNo" Type="int" />
+          <Property Name="ItemGroupId" Type="int" />
+          <Property Name="ItemCategoryId" Type="int" />
+          <Property Name="ItemGroupText" Type="nvarchar" MaxLength="200" />
+          <Property Name="PeriodType" Type="nvarchar" MaxLength="50" />
+          <Property Name="AcceptanceCriteria" Type="nvarchar" MaxLength="250" />
+          <Property Name="ControlDevice" Type="nvarchar" MaxLength="150" />
+          <Property Name="Method" Type="nvarchar" MaxLength="150" />
+          <Property Name="Responsible" Type="nvarchar" MaxLength="100" />
+          <Property Name="RecordType" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="EntryQualityPlanDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EntryQualityPlanId" Type="int" />
+          <Property Name="CheckProperty" Type="nvarchar" MaxLength="250" />
+          <Property Name="IsRequired" Type="bit" />
+          <Property Name="OrderNo" Type="int" />
+        </EntityType>
         <EntityType Name="Firm">
           <Key>
             <PropertyRef Name="Id" />
@@ -815,6 +860,78 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <Association Name="FK_EntryQualityData_EntryQualityPlan">
+          <End Role="EntryQualityPlan" Type="Self.EntryQualityPlan" Multiplicity="0..1" />
+          <End Role="EntryQualityData" Type="Self.EntryQualityData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntryQualityPlan">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityData">
+              <PropertyRef Name="QualityPlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityData_EntryQualityPlanDetail">
+          <End Role="EntryQualityPlanDetail" Type="Self.EntryQualityPlanDetail" Multiplicity="0..1" />
+          <End Role="EntryQualityData" Type="Self.EntryQualityData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntryQualityPlanDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityData">
+              <PropertyRef Name="QualityPlanDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityData_ItemReceiptDetail">
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="0..1" />
+          <End Role="EntryQualityData" Type="Self.EntryQualityData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityData">
+              <PropertyRef Name="ItemEntryDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityPlan_ItemCategory">
+          <End Role="ItemCategory" Type="Self.ItemCategory" Multiplicity="0..1" />
+          <End Role="EntryQualityPlan" Type="Self.EntryQualityPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityPlan">
+              <PropertyRef Name="ItemCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityPlan_ItemGroup">
+          <End Role="ItemGroup" Type="Self.ItemGroup" Multiplicity="0..1" />
+          <End Role="EntryQualityPlan" Type="Self.EntryQualityPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityPlan">
+              <PropertyRef Name="ItemGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityPlanDetail_EntryQualityPlan">
+          <End Role="EntryQualityPlan" Type="Self.EntryQualityPlan" Multiplicity="0..1" />
+          <End Role="EntryQualityPlanDetail" Type="Self.EntryQualityPlanDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntryQualityPlan">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityPlanDetail">
+              <PropertyRef Name="EntryQualityPlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Firm_Plant">
           <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
           <End Role="Firm" Type="Self.Firm" Multiplicity="*" />
@@ -1994,6 +2111,9 @@
         <EntityContainer Name="HekaDataAccessModelsStoreContainer">
           <EntitySet Name="Attachment" EntityType="Self.Attachment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dye" EntityType="Self.Dye" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EntryQualityData" EntityType="Self.EntryQualityData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EntryQualityPlan" EntityType="Self.EntryQualityPlan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EntryQualityPlanDetail" EntityType="Self.EntryQualityPlanDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Firm" EntityType="Self.Firm" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmAuthor" EntityType="Self.FirmAuthor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ForexHistory" EntityType="Self.ForexHistory" Schema="dbo" store:Type="Tables" />
@@ -2043,6 +2163,30 @@
           <EntitySet Name="WorkOrderDetail" EntityType="Self.WorkOrderDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderItemNeeds" EntityType="Self.WorkOrderItemNeeds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderSerial" EntityType="Self.WorkOrderSerial" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_EntryQualityData_EntryQualityPlan" Association="Self.FK_EntryQualityData_EntryQualityPlan">
+            <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
+            <End Role="EntryQualityData" EntitySet="EntryQualityData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityData_EntryQualityPlanDetail" Association="Self.FK_EntryQualityData_EntryQualityPlanDetail">
+            <End Role="EntryQualityPlanDetail" EntitySet="EntryQualityPlanDetail" />
+            <End Role="EntryQualityData" EntitySet="EntryQualityData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityData_ItemReceiptDetail" Association="Self.FK_EntryQualityData_ItemReceiptDetail">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="EntryQualityData" EntitySet="EntryQualityData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityPlan_ItemCategory" Association="Self.FK_EntryQualityPlan_ItemCategory">
+            <End Role="ItemCategory" EntitySet="ItemCategory" />
+            <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityPlan_ItemGroup" Association="Self.FK_EntryQualityPlan_ItemGroup">
+            <End Role="ItemGroup" EntitySet="ItemGroup" />
+            <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityPlanDetail_EntryQualityPlan" Association="Self.FK_EntryQualityPlanDetail_EntryQualityPlan">
+            <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
+            <End Role="EntryQualityPlanDetail" EntitySet="EntryQualityPlanDetail" />
+          </AssociationSet>
           <AssociationSet Name="FK_Firm_Plant" Association="Self.FK_Firm_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="Firm" EntitySet="Firm" />
@@ -2501,6 +2645,7 @@
           <NavigationProperty Name="Plant" Relationship="Self.FK_ItemCategory_Plant" FromRole="ItemCategory" ToRole="Plant" />
           <NavigationProperty Name="ItemGroup" Relationship="Self.FK_ItemGroup_ItemCategory" FromRole="ItemCategory" ToRole="ItemGroup" />
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_ItemCategory" FromRole="ItemCategory" ToRole="Item" />
+          <NavigationProperty Name="EntryQualityPlan" Relationship="Heka.DataAccess.Models.FK_EntryQualityPlan_ItemCategory" FromRole="ItemCategory" ToRole="EntryQualityPlan" />
         </EntityType>
         <EntityType Name="ItemGroup">
           <Key>
@@ -2518,6 +2663,7 @@
           <NavigationProperty Name="ItemCategory" Relationship="Self.FK_ItemGroup_ItemCategory" FromRole="ItemGroup" ToRole="ItemCategory" />
           <NavigationProperty Name="Plant" Relationship="Self.FK_ItemGroup_Plant" FromRole="ItemGroup" ToRole="Plant" />
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_ItemGroup" FromRole="ItemGroup" ToRole="Item" />
+          <NavigationProperty Name="EntryQualityPlan" Relationship="Heka.DataAccess.Models.FK_EntryQualityPlan_ItemGroup" FromRole="ItemGroup" ToRole="EntryQualityPlan" />
         </EntityType>
         <EntityType Name="ItemOrder">
           <Key>
@@ -3716,6 +3862,33 @@
             <End Role="MoldTest" EntitySet="MoldTest" />
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
           </AssociationSet>
+          <EntitySet Name="EntryQualityData" EntityType="Heka.DataAccess.Models.EntryQualityData" />
+          <EntitySet Name="EntryQualityPlan" EntityType="Heka.DataAccess.Models.EntryQualityPlan" />
+          <EntitySet Name="EntryQualityPlanDetail" EntityType="Heka.DataAccess.Models.EntryQualityPlanDetail" />
+          <AssociationSet Name="FK_EntryQualityData_EntryQualityPlan" Association="Heka.DataAccess.Models.FK_EntryQualityData_EntryQualityPlan">
+            <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
+            <End Role="EntryQualityData" EntitySet="EntryQualityData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityData_EntryQualityPlanDetail" Association="Heka.DataAccess.Models.FK_EntryQualityData_EntryQualityPlanDetail">
+            <End Role="EntryQualityPlanDetail" EntitySet="EntryQualityPlanDetail" />
+            <End Role="EntryQualityData" EntitySet="EntryQualityData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityData_ItemReceiptDetail" Association="Heka.DataAccess.Models.FK_EntryQualityData_ItemReceiptDetail">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="EntryQualityData" EntitySet="EntryQualityData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityPlan_ItemCategory" Association="Heka.DataAccess.Models.FK_EntryQualityPlan_ItemCategory">
+            <End Role="ItemCategory" EntitySet="ItemCategory" />
+            <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityPlan_ItemGroup" Association="Heka.DataAccess.Models.FK_EntryQualityPlan_ItemGroup">
+            <End Role="ItemGroup" EntitySet="ItemGroup" />
+            <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntryQualityPlanDetail_EntryQualityPlan" Association="Heka.DataAccess.Models.FK_EntryQualityPlanDetail_EntryQualityPlan">
+            <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
+            <End Role="EntryQualityPlanDetail" EntitySet="EntryQualityPlanDetail" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -4090,6 +4263,7 @@
           <NavigationProperty Name="ItemSerial" Relationship="Heka.DataAccess.Models.FK_ItemSerial_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="ItemSerial" />
           <NavigationProperty Name="WorkOrderAllocation" Relationship="Heka.DataAccess.Models.FK_WorkOrderAllocation_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="WorkOrderAllocation" />
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item" FromRole="ItemReceiptDetail" ToRole="Item" />
+          <NavigationProperty Name="EntryQualityData" Relationship="Heka.DataAccess.Models.FK_EntryQualityData_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="EntryQualityData" />
         </EntityType>
         <EntityType Name="WorkOrder">
           <Key>
@@ -5067,6 +5241,132 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="EntryQualityData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QualityPlanId" Type="Int32" />
+          <Property Name="QualityPlanDetailId" Type="Int32" />
+          <Property Name="IsOk" Type="Boolean" />
+          <Property Name="Explanation" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ItemEntryDetailId" Type="Int32" />
+          <Property Name="ItemLot" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ItemNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="EntryQualityPlan" Relationship="Heka.DataAccess.Models.FK_EntryQualityData_EntryQualityPlan" FromRole="EntryQualityData" ToRole="EntryQualityPlan" />
+          <NavigationProperty Name="EntryQualityPlanDetail" Relationship="Heka.DataAccess.Models.FK_EntryQualityData_EntryQualityPlanDetail" FromRole="EntryQualityData" ToRole="EntryQualityPlanDetail" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_EntryQualityData_ItemReceiptDetail" FromRole="EntryQualityData" ToRole="ItemReceiptDetail" />
+        </EntityType>
+        <EntityType Name="EntryQualityPlan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QualityControlCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OrderNo" Type="Int32" />
+          <Property Name="ItemGroupId" Type="Int32" />
+          <Property Name="ItemCategoryId" Type="Int32" />
+          <Property Name="ItemGroupText" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PeriodType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AcceptanceCriteria" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ControlDevice" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Method" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Responsible" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RecordType" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="EntryQualityData" Relationship="Heka.DataAccess.Models.FK_EntryQualityData_EntryQualityPlan" FromRole="EntryQualityPlan" ToRole="EntryQualityData" />
+          <NavigationProperty Name="ItemCategory" Relationship="Heka.DataAccess.Models.FK_EntryQualityPlan_ItemCategory" FromRole="EntryQualityPlan" ToRole="ItemCategory" />
+          <NavigationProperty Name="ItemGroup" Relationship="Heka.DataAccess.Models.FK_EntryQualityPlan_ItemGroup" FromRole="EntryQualityPlan" ToRole="ItemGroup" />
+          <NavigationProperty Name="EntryQualityPlanDetail" Relationship="Heka.DataAccess.Models.FK_EntryQualityPlanDetail_EntryQualityPlan" FromRole="EntryQualityPlan" ToRole="EntryQualityPlanDetail" />
+        </EntityType>
+        <EntityType Name="EntryQualityPlanDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EntryQualityPlanId" Type="Int32" />
+          <Property Name="CheckProperty" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="IsRequired" Type="Boolean" />
+          <Property Name="OrderNo" Type="Int32" />
+          <NavigationProperty Name="EntryQualityData" Relationship="Heka.DataAccess.Models.FK_EntryQualityData_EntryQualityPlanDetail" FromRole="EntryQualityPlanDetail" ToRole="EntryQualityData" />
+          <NavigationProperty Name="EntryQualityPlan" Relationship="Heka.DataAccess.Models.FK_EntryQualityPlanDetail_EntryQualityPlan" FromRole="EntryQualityPlanDetail" ToRole="EntryQualityPlan" />
+        </EntityType>
+        <Association Name="FK_EntryQualityData_EntryQualityPlan">
+          <End Type="Heka.DataAccess.Models.EntryQualityPlan" Role="EntryQualityPlan" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.EntryQualityData" Role="EntryQualityData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntryQualityPlan">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityData">
+              <PropertyRef Name="QualityPlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityData_EntryQualityPlanDetail">
+          <End Type="Heka.DataAccess.Models.EntryQualityPlanDetail" Role="EntryQualityPlanDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.EntryQualityData" Role="EntryQualityData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntryQualityPlanDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityData">
+              <PropertyRef Name="QualityPlanDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityData_ItemReceiptDetail">
+          <End Type="Heka.DataAccess.Models.ItemReceiptDetail" Role="ItemReceiptDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.EntryQualityData" Role="EntryQualityData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityData">
+              <PropertyRef Name="ItemEntryDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityPlan_ItemCategory">
+          <End Type="Heka.DataAccess.Models.ItemCategory" Role="ItemCategory" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.EntryQualityPlan" Role="EntryQualityPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityPlan">
+              <PropertyRef Name="ItemCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityPlan_ItemGroup">
+          <End Type="Heka.DataAccess.Models.ItemGroup" Role="ItemGroup" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.EntryQualityPlan" Role="EntryQualityPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityPlan">
+              <PropertyRef Name="ItemGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntryQualityPlanDetail_EntryQualityPlan">
+          <End Type="Heka.DataAccess.Models.EntryQualityPlan" Role="EntryQualityPlan" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.EntryQualityPlanDetail" Role="EntryQualityPlanDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntryQualityPlan">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EntryQualityPlanDetail">
+              <PropertyRef Name="EntryQualityPlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5930,6 +6230,54 @@
                 <ScalarProperty Name="ProductDescription" ColumnName="ProductDescription" />
                 <ScalarProperty Name="TestDate" ColumnName="TestDate" />
                 <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EntryQualityData">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.EntryQualityData">
+              <MappingFragment StoreEntitySet="EntryQualityData">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemNo" ColumnName="ItemNo" />
+                <ScalarProperty Name="ItemLot" ColumnName="ItemLot" />
+                <ScalarProperty Name="ItemEntryDetailId" ColumnName="ItemEntryDetailId" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="IsOk" ColumnName="IsOk" />
+                <ScalarProperty Name="QualityPlanDetailId" ColumnName="QualityPlanDetailId" />
+                <ScalarProperty Name="QualityPlanId" ColumnName="QualityPlanId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EntryQualityPlan">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.EntryQualityPlan">
+              <MappingFragment StoreEntitySet="EntryQualityPlan">
+                <ScalarProperty Name="RecordType" ColumnName="RecordType" />
+                <ScalarProperty Name="Responsible" ColumnName="Responsible" />
+                <ScalarProperty Name="Method" ColumnName="Method" />
+                <ScalarProperty Name="ControlDevice" ColumnName="ControlDevice" />
+                <ScalarProperty Name="AcceptanceCriteria" ColumnName="AcceptanceCriteria" />
+                <ScalarProperty Name="PeriodType" ColumnName="PeriodType" />
+                <ScalarProperty Name="ItemGroupText" ColumnName="ItemGroupText" />
+                <ScalarProperty Name="ItemCategoryId" ColumnName="ItemCategoryId" />
+                <ScalarProperty Name="ItemGroupId" ColumnName="ItemGroupId" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="QualityControlCode" ColumnName="QualityControlCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EntryQualityPlanDetail">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.EntryQualityPlanDetail">
+              <MappingFragment StoreEntitySet="EntryQualityPlanDetail">
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="CheckProperty" ColumnName="CheckProperty" />
+                <ScalarProperty Name="EntryQualityPlanId" ColumnName="EntryQualityPlanId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

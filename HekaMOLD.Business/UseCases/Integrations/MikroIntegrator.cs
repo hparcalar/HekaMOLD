@@ -430,7 +430,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         ItemId = itemId,
                                         ProcessType = Convert.ToInt32(row["rec_uretim_tuketim"]) == 0 ? 1 : 2, // 0: Tüketim, 1: Üretim
                                         UnitId = unitTypeId,
-                                        Quantity = Convert.ToDecimal(row["rec_tuketim_miktar"].ToString().Replace(",",".")),
+                                        Quantity = Decimal.Parse(row["rec_tuketim_miktar"].ToString(), System.Globalization.NumberStyles.Float),
                                         CreatedDate = DateTime.Now,
                                     });
                                 }

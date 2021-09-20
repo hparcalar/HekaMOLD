@@ -40,11 +40,13 @@
 /*                { dataField: 'WorkOrderNo', caption: 'İş Emri No' },*/
                 { dataField: 'ProductCode', caption: 'Ürün Kodu' },
                 { dataField: 'ProductName', caption: 'Ürün Adı' },
+                { dataField: 'ItemOrderNo', caption: 'Sipariş No' },
                 /*{ dataField: 'DyeCode', caption: 'Renk Kodu' },*/
                 { dataField: 'ItemNo', caption: 'Malzeme No' },
                 { dataField: 'ItemName', caption: 'Malzeme Adı' },
                 /*{ dataField: 'SaleOrderDeadline', caption: 'Sipariş Termin' },*/
-                { dataField: 'Quantity', caption: 'Miktar' },
+                { dataField: 'TargetQuantity', caption: 'Sipariş Miktar', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Quantity', caption: 'İhtiyaç Miktar', format: { type: "fixedPoint", precision: 2 } },
                 //{
                 //    type: "buttons",
                 //    buttons: [

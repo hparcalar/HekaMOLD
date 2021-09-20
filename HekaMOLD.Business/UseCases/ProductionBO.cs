@@ -490,7 +490,7 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                     throw new Exception("İş emri kaydına ulaşılamadı.");
 
-                if ((dbObj.InPackageQuantity ?? 0) <= 0)
+                if (inPackageQuantity <= 0 && (dbObj.InPackageQuantity ?? 0) <= 0)
                     throw new Exception("Koli içi miktarı iş emrinde tanımlı değil!");
 
                 if (serialType == WorkOrderSerialType.ProductPackage) // BATUSAN
@@ -1005,6 +1005,9 @@ namespace HekaMOLD.Business.UseCases
                     NeedsDateStr = d.WorkOrder.WorkOrderDate != null ?
                         string.Format("{0:dd.MM.yyyy HH:mm}", d.WorkOrder.WorkOrderDate) : "",
                     Quantity = d.Quantity,
+                    TargetQuantity = d.WorkOrderDetail.Quantity,
+                    ItemOrderNo = d.WorkOrderDetail.ItemOrderDetail != null ?
+                        d.WorkOrderDetail.ItemOrderDetail.ItemOrder.DocumentNo : "",
                     RemainingQuantity = d.RemainingNeedsQuantity,
                     WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
                         string.Format("{0:dd.MM.yyyy HH:mm}", d.WorkOrder.WorkOrderDate) : "",
@@ -1062,7 +1065,7 @@ namespace HekaMOLD.Business.UseCases
                             }
 
                             // CALCULATE NEEDS QTY
-                            var pureNeedsQty = recipeItem.Quantity * item.Quantity;
+                            var pureNeedsQty = recipeItem.Quantity * (item.Quantity);
                             var usableQty = itemStatus >= pureNeedsQty ? pureNeedsQty : itemStatus;
                             if (usableQty < 0)
                                 usableQty = 0;
@@ -1451,6 +1454,25 @@ namespace HekaMOLD.Business.UseCases
                         EndDateStr = d.EndDate != null ?
                             string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
                     }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        #endregion
+
+        #region WAREHOUSE PRODUCT ENTRY & CONFIRMATION
+        public WorkOrderSerialModel[] GetSerialsWaitingForPickup()
+        {
+            WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                //data = repo.Filter(d => d.Id)
             }
             catch (Exception)
             {

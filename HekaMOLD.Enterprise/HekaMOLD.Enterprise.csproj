@@ -3902,6 +3902,7 @@
     <Content Include="assets\plugins\global\fonts\socicon\socicon.svg" />
     <Content Include="assets\plugins\global\plugins.bundle.css" />
     <Content Include="assets\plugins\global\plugins.bundle.js" />
+    <Content Include="Components\Controllers\edit-plan.js" />
     <Content Include="Components\Controllers\planning-work-copy.js" />
     <Content Include="Components\Controllers\posture-category-selection.js" />
     <Content Include="Components\Controllers\incident-category-selection.js" />
@@ -3912,6 +3913,7 @@
     <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
+    <Content Include="Components\Views\EditPlan.html" />
     <Content Include="Components\Views\PlanningWorkCopy.html" />
     <Content Include="Components\Views\PostureCategorySelection.html" />
     <Content Include="Components\Views\IncidentCategorySelection.html" />
@@ -3973,18 +3975,35 @@
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\next.png" />
     <Content Include="Content\images\prev.png" />
+    <Content Include="Content\images\ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
+    <Content Include="Content\images\ui-bg_glass_100_e4f1fb_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_50_3baae3_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_80_d7ebf9_1x400.png" />
+    <Content Include="Content\images\ui-bg_highlight-hard_100_f2f5f7_1x100.png" />
+    <Content Include="Content\images\ui-bg_highlight-hard_70_000000_1x100.png" />
+    <Content Include="Content\images\ui-bg_highlight-soft_100_deedf7_1x100.png" />
+    <Content Include="Content\images\ui-bg_highlight-soft_25_ffef8f_1x100.png" />
     <Content Include="Content\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\images\ui-icons_2694e8_256x240.png" />
+    <Content Include="Content\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\images\ui-icons_3d80b3_256x240.png" />
     <Content Include="Content\images\ui-icons_444444_256x240.png" />
     <Content Include="Content\images\ui-icons_4b8e0b_256x240.png" />
     <Content Include="Content\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\images\ui-icons_72a7cf_256x240.png" />
     <Content Include="Content\images\ui-icons_777620_256x240.png" />
     <Content Include="Content\images\ui-icons_777777_256x240.png" />
     <Content Include="Content\images\ui-icons_a83300_256x240.png" />
     <Content Include="Content\images\ui-icons_cc0000_256x240.png" />
     <Content Include="Content\images\ui-icons_cccccc_256x240.png" />
     <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.js" />
     <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\jquery-ui.min.js" />
+    <Content Include="Content\jquery-ui.structure.css" />
     <Content Include="Content\jquery-ui.structure.min.css" />
+    <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\planning.css" />
     <Content Include="Content\toastr.css" />
@@ -4015,6 +4034,7 @@
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
     <Content Include="FrontEndLogic\Mobile\fault-entry.js" />
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
+    <Content Include="FrontEndLogic\Mobile\product-pickup.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry.js" />
     <Content Include="FrontEndLogic\Mobile\posture-list.js" />
@@ -4424,6 +4444,7 @@
     <Content Include="Views\Mobile\PostureEntry.cshtml" />
     <Content Include="Views\Mobile\OngoingPostures.cshtml" />
     <Content Include="Views\Mobile\OngoingFaults.cshtml" />
+    <Content Include="Views\Mobile\ProductPickup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
