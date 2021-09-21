@@ -12,27 +12,22 @@ namespace Heka.DataAccess.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class EntryQualityPlanDetail
+    public partial class Shift
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public EntryQualityPlanDetail()
+        public Shift()
         {
-            this.EntryQualityData = new HashSet<EntryQualityData>();
+            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
         }
     
         public int Id { get; set; }
-        public Nullable<int> EntryQualityPlanId { get; set; }
-        public string CheckProperty { get; set; }
-        public Nullable<bool> IsRequired { get; set; }
-        public Nullable<int> OrderNo { get; set; }
-        public string PeriodType { get; set; }
-        public string AcceptanceCriteria { get; set; }
-        public string ControlDevice { get; set; }
-        public string Method { get; set; }
-        public string Responsible { get; set; }
+        public string ShiftCode { get; set; }
+        public string ShiftName { get; set; }
+        public Nullable<System.TimeSpan> StartTime { get; set; }
+        public Nullable<System.TimeSpan> EndTime { get; set; }
+        public Nullable<bool> IsActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
-        public virtual EntryQualityPlan EntryQualityPlan { get; set; }
+        public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
     }
 }

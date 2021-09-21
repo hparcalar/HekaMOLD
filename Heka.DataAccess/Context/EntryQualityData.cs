@@ -29,7 +29,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UpdatedUserId { get; set; }
     
         public virtual EntryQualityPlan EntryQualityPlan { get; set; }
-        public virtual EntryQualityPlanDetail EntryQualityPlanDetail { get; set; }
         public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
+        public virtual EntryQualityPlanDetail EntryQualityPlanDetail { get; set; }
     }
 }

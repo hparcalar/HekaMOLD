@@ -39,6 +39,21 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
 
+        [HttpGet]
+        public JsonResult GetProductionNeedsSummary()
+        {
+            WorkOrderItemNeedsModel[] result = new WorkOrderItemNeedsModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.GetWorkOrderItemNeedsSummary(new Business.Models.Filters.BasicRangeFilter());
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         [HttpPost]
         public JsonResult CalculateProductionNeeds()
         {

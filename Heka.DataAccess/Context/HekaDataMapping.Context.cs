@@ -63,7 +63,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<WorkOrderControl> WorkOrderControl { get; set; }
         public virtual DbSet<WorkOrderControlType> WorkOrderControlType { get; set; }
         public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
-        public virtual DbSet<WorkOrderSerial> WorkOrderSerial { get; set; }
         public virtual DbSet<MachinePlan> MachinePlan { get; set; }
         public virtual DbSet<MachineSignal> MachineSignal { get; set; }
         public virtual DbSet<Item> Item { get; set; }
@@ -78,6 +77,9 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<MoldTest> MoldTest { get; set; }
         public virtual DbSet<EntryQualityData> EntryQualityData { get; set; }
         public virtual DbSet<EntryQualityPlan> EntryQualityPlan { get; set; }
+        public virtual DbSet<Shift> Shift { get; set; }
+        public virtual DbSet<WorkOrderSerial> WorkOrderSerial { get; set; }
         public virtual DbSet<EntryQualityPlanDetail> EntryQualityPlanDetail { get; set; }
+        public virtual DbSet<ProductQualityPlan> ProductQualityPlan { get; set; }
     }
 }

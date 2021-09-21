@@ -1023,6 +1023,71 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
+
+        public WorkOrderItemNeedsModel[] GetWorkOrderItemNeedsSummary(BasicRangeFilter filter)
+        {
+            WorkOrderItemNeedsModel[] data = new WorkOrderItemNeedsModel[0];
+
+            try
+            {
+                //DateTime dtStart, dtEnd;
+
+                //if (string.IsNullOrEmpty(filter.StartDate))
+                //    filter.StartDate = "01.01." + DateTime.Now.Year;
+                //if (string.IsNullOrEmpty(filter.EndDate))
+                //    filter.EndDate = "31.12." + DateTime.Now.Year;
+
+                //dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                //        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                //dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy",
+                //        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repo = _unitOfWork.GetRepository<WorkOrderItemNeeds>();
+                data = repo.Filter(d => d.RemainingNeedsQuantity > 0)
+                .ToList()
+                .Select(d => new WorkOrderItemNeedsModel
+                {
+                    CalculatedDate = d.CalculatedDate,
+                    CalculatedDateStr = d.CalculatedDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", d.CalculatedDate) : "",
+                    Id = d.Id,
+                    ItemId = d.ItemId,
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                    ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : "",
+                    NeedsDateStr = d.WorkOrder.WorkOrderDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", d.WorkOrder.WorkOrderDate) : "",
+                    Quantity = d.Quantity,
+                    TargetQuantity = d.WorkOrderDetail.Quantity,
+                    ItemOrderNo = d.WorkOrderDetail.ItemOrderDetail != null ?
+                        d.WorkOrderDetail.ItemOrderDetail.ItemOrder.DocumentNo : "",
+                    RemainingQuantity = d.RemainingNeedsQuantity,
+                    WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
+                        string.Format("{0:dd.MM.yyyy HH:mm}", d.WorkOrder.WorkOrderDate) : "",
+                    WorkOrderNo = d.WorkOrder.WorkOrderNo,
+                    WorkOrderDetailId = d.WorkOrderDetailId,
+                    WorkOrderId = d.WorkOrderId,
+                })
+                .GroupBy(d => new { 
+                    ItemNo= d.ItemNo,
+                    ItemName = d.ItemName,
+                })
+                .Select(d => new WorkOrderItemNeedsModel
+                {
+                    ItemNo = d.Key.ItemNo,
+                    ItemName = d.Key.ItemName,
+                    Quantity = d.Sum(m => m.Quantity),
+                })
+                .ToArray();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return data;
+        }
         public BusinessResult CalculateWorkOrderNeeds()
         {
             BusinessResult result = new BusinessResult();

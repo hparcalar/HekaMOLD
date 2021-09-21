@@ -25,6 +25,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult PrintTemplate()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetMachineList()
         {

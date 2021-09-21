@@ -132,9 +132,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\EntryQualityController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
     <Compile Include="Controllers\ProductionNeedsController.cs" />
+    <Compile Include="Controllers\ProductQualityController.cs" />
+    <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Controllers\MoldTestController.cs" />
     <Compile Include="Controllers\Filters\MobileAuthFilter.cs" />
@@ -1778,6 +1781,7 @@
     <Content Include="assets\media\icons\stockholm\Weather\Thunder.svg" />
     <Content Include="assets\media\icons\stockholm\Weather\Umbrella.svg" />
     <Content Include="assets\media\icons\stockholm\Weather\Wind.svg" />
+    <Content Include="assets\media\logos\batusan-logo-org.png" />
     <Content Include="assets\media\logos\favicon.ico" />
     <Content Include="assets\media\logos\batusan-logo.png" />
     <Content Include="assets\media\logos\favicon-ex.ico" />
@@ -4013,6 +4017,9 @@
     <Content Include="FrontEndLogic\Core\record-manager.js" />
     <Content Include="FrontEndLogic\Dye\index.js" />
     <Content Include="FrontEndLogic\Dye\list.js" />
+    <Content Include="FrontEndLogic\EntryQuality\index.js" />
+    <Content Include="FrontEndLogic\EntryQuality\list.js" />
+    <Content Include="FrontEndLogic\EntryQuality\print-entry-plans.js" />
     <Content Include="FrontEndLogic\Firm\index.js" />
     <Content Include="FrontEndLogic\Firm\approved-suppliers.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
@@ -4049,12 +4056,18 @@
     <Content Include="FrontEndLogic\PIOrder\list.js" />
     <Content Include="FrontEndLogic\PIRequest\index.js" />
     <Content Include="FrontEndLogic\PIRequest\list.js" />
+    <Content Include="FrontEndLogic\Planning\print-template.js" />
     <Content Include="FrontEndLogic\Planning\planning.js" />
     <Content Include="FrontEndLogic\PostureCategory\index.js" />
     <Content Include="FrontEndLogic\PostureCategory\list.js" />
     <Content Include="FrontEndLogic\ProductionNeeds\list.js" />
+    <Content Include="FrontEndLogic\ProductQuality\index.js" />
+    <Content Include="FrontEndLogic\ProductQuality\list.js" />
+    <Content Include="FrontEndLogic\ProductQuality\print-product-plans.js" />
     <Content Include="FrontEndLogic\ProductRecipe\index.js" />
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
+    <Content Include="FrontEndLogic\Shift\index.js" />
+    <Content Include="FrontEndLogic\Shift\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
     <Content Include="FrontEndLogic\SIOrder\list.js" />
     <Content Include="FrontEndLogic\UnitType\index.js" />
@@ -4354,6 +4367,7 @@
     <Content Include="Scripts\ng-file-upload-shim.min.js" />
     <Content Include="Scripts\ng-file-upload.js" />
     <Content Include="Scripts\ng-file-upload.min.js" />
+    <Content Include="Scripts\printElement.js" />
     <Content Include="Scripts\toastr.js" />
     <Content Include="Scripts\toastr.min.js" />
     <Content Include="Scripts\vectormap-data\africa.js" />
@@ -4445,10 +4459,17 @@
     <Content Include="Views\Mobile\OngoingPostures.cshtml" />
     <Content Include="Views\Mobile\OngoingFaults.cshtml" />
     <Content Include="Views\Mobile\ProductPickup.cshtml" />
+    <Content Include="Views\Planning\PrintTemplate.cshtml" />
+    <Content Include="Views\Shift\List.cshtml" />
+    <Content Include="Views\Shift\Index.cshtml" />
+    <Content Include="Views\EntryQuality\List.cshtml" />
+    <Content Include="Views\EntryQuality\Index.cshtml" />
+    <Content Include="Views\EntryQuality\PrintEntryPlan.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Common\" />
+    <Folder Include="Views\ProductQuality\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

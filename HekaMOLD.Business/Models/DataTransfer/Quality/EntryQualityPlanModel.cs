@@ -17,5 +17,16 @@ namespace HekaMOLD.Business.Models.DataTransfer.Quality
         public string PeriodType { get; set; }
         public string AcceptanceCriteria { get; set; }
         public string ControlDevice { get; set; }
+        public string Method { get; set; }
+        public string Responsible { get; set; }
+        public EntryQualityPlanDetailModel[] Details { get; set; }
+
+        #region VISUAL ELEMENTS
+        public string ItemGroupCode { get; set; }
+        public string ItemGroupName { get; set; }
+        public string ItemCategoryCode { get; set; }
+        public string ItemCategoryName { get; set; }
+        public string CheckPropertyList { get; set; }
+        #endregion
     }
 }

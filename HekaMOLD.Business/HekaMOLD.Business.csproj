@@ -113,12 +113,15 @@
     <Compile Include="Models\DataTransfer\Production\ProductionPostureModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductRecipeDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductRecipeModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\ShiftModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderAllocationModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderItemNeedsModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderSerialModel.cs" />
+    <Compile Include="Models\DataTransfer\Quality\EntryQualityPlanDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\EntryQualityPlanModel.cs" />
+    <Compile Include="Models\DataTransfer\Quality\ProductQualityPlanModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestApproveLogModel.cs" />
@@ -154,6 +157,7 @@
     <Compile Include="UseCases\OrdersBO.cs" />
     <Compile Include="UseCases\PlanningBO.cs" />
     <Compile Include="UseCases\ProductionBO.cs" />
+    <Compile Include="UseCases\QualityBO.cs" />
     <Compile Include="UseCases\ReceiptBO.cs" />
     <Compile Include="UseCases\RecipeBO.cs" />
     <Compile Include="UseCases\RequestBO.cs" />

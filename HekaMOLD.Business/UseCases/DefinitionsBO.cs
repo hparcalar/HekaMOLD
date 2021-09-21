@@ -1725,5 +1725,112 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
         #endregion
+
+        #region SHIFT BUSINESS
+        public ShiftModel[] GetShiftList()
+        {
+            List<ShiftModel> data = new List<ShiftModel>();
+
+            var repo = _unitOfWork.GetRepository<Shift>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ShiftModel containerObj = new ShiftModel();
+                d.MapTo(containerObj);
+                containerObj.StartTimeStr = d.StartTime != null ?
+                    string.Format("{0:hh\\:mm}", d.StartTime) : "";
+                containerObj.EndTimeStr = d.EndTime != null ?
+                    string.Format("{0:hh\\:mm}", d.EndTime) : "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateShift(ShiftModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.ShiftCode))
+                    throw new Exception("Vardiya kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.ShiftName))
+                    throw new Exception("Vardiya adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Shift>();
+
+                if (repo.Any(d => (d.ShiftCode == model.ShiftCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir vardiya mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Shift();
+                    dbObj.IsActive = true;
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                dbObj.IsActive = true;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteShift(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Shift>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ShiftModel GetShift(int id)
+        {
+            ShiftModel model = new ShiftModel { };
+
+            var repo = _unitOfWork.GetRepository<Shift>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.StartTimeStr = model.StartTime != null ?
+                    string.Format("{0:hh\\:mm}", model.StartTime) : "";
+                model.EndTimeStr = model.EndTime != null ?
+                    string.Format("{0:hh\\:mm}", model.EndTime) : "";
+            }
+
+            return model;
+        }
+
+        #endregion
     }
 }

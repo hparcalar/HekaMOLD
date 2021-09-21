@@ -19,11 +19,14 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public decimal? FirstQuantity { get; set; }
         public decimal? LiveQuantity { get; set; }
         public int? InPackageQuantity { get; set; }
+        public int? ShiftId { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
         public string CreatedDateStr { get; set; }
+        public string ShiftCode { get; set; }
+        public string ShiftName { get; set; }
         #endregion
     }
 }

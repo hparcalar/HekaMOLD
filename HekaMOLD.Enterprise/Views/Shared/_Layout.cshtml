@@ -28,6 +28,11 @@
     <link href="~/Content/heka-styles.css" rel="stylesheet" />
     <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
     <link href="~/Content/jquery-ui.theme.min.css" rel="stylesheet" />
+    <style type="text/css" media="print">
+        .no-print {
+            display: none;
+        }
+    </style>
     <!--end::Global Stylesheets Bundle-->
 </head>
 <!--end::Head-->
@@ -39,7 +44,7 @@
         <!--begin::Page-->
         <div class="page d-flex flex-row flex-column-fluid">
             <!--begin::Aside-->
-            <div id="kt_aside" class="aside aside-blue aside-hoverable" data-kt-drawer="true" data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
+            <div id="kt_aside" class="aside aside-blue aside-hoverable no-print" data-kt-drawer="true" data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
                 <!--begin::Brand-->
                 <div class="aside-logo flex-column-auto" id="kt_aside_logo">
                     <!--begin::Logo-->
@@ -373,6 +378,110 @@
                                 </div>
                             </div>
 
+                            @* KALİTE *@
+                            <div class="menu-item">
+                                <div class="menu-content pt-8 pb-0">
+                                    <span class="menu-section text-dark text-uppercase fs-8 ls-1">Kalite</span>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link @(Regex.IsMatch(ctrl, "EntryQuality$") && Regex.IsMatch(actn, "List$|Index$") ? "active" : "")"
+                                   href="@Url.Action("List","EntryQuality")">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Shopping/Box2.svg-->
+                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M3 6C3 3.79086 4.79086 2 7 2H17C19.2091 2 21 3.79086 21 6V19C21 21.2091 19.2091 23 17 23H7C4.79086 23 3 21.2091 3 19V6Z" fill="#12131A" />
+                                                <path d="M8 10C8.55228 10 9 9.55228 9 9C9 8.44772 8.55228 8 8 8C7.44772 8 7 8.44772 7 9C7 9.55228 7.44772 10 8 10Z" fill="#12131A" />
+                                                <path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10H16C16.5523 10 17 9.55228 17 9C17 8.44772 16.5523 8 16 8H12Z" fill="#12131A" />
+                                                <path d="M12 12C11.4477 12 11 12.4477 11 13C11 13.5523 11.4477 14 12 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H12Z" fill="#12131A" />
+                                                <path d="M11 17C11 16.4477 11.4477 16 12 16H14C14.5523 16 15 16.4477 15 17C15 17.5523 14.5523 18 14 18H12C11.4477 18 11 17.5523 11 17Z" fill="#12131A" />
+                                                <path d="M9 13C9 13.5523 8.55228 14 8 14C7.44772 14 7 13.5523 7 13C7 12.4477 7.44772 12 8 12C8.55228 12 9 12.4477 9 13Z" fill="#12131A" />
+                                                <path d="M8 18C8.55228 18 9 17.5523 9 17C9 16.4477 8.55228 16 8 16C7.44772 16 7 16.4477 7 17C7 17.5523 7.44772 18 8 18Z" fill="#12131A" />
+                                                <path d="M8.25 1H15.75C16.4404 1 17 1.44772 17 2C17 2.55228 16.4404 3 15.75 3H8.25C7.55964 3 7 2.55228 7 2C7 1.44772 7.55964 1 8.25 1Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Giriş Kalite Planı</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link @(Regex.IsMatch(ctrl, "EntryQuality$") && Regex.IsMatch(actn, "ListData$|IndexData$") ? "active" : "")"
+                                   href="@Url.Action("ListData","EntryQuality")">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Shopping/Box2.svg-->
+                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M3 6C3 3.79086 4.79086 2 7 2H17C19.2091 2 21 3.79086 21 6V19C21 21.2091 19.2091 23 17 23H7C4.79086 23 3 21.2091 3 19V6Z" fill="#12131A" />
+                                                <path d="M8 10C8.55228 10 9 9.55228 9 9C9 8.44772 8.55228 8 8 8C7.44772 8 7 8.44772 7 9C7 9.55228 7.44772 10 8 10Z" fill="#12131A" />
+                                                <path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10H16C16.5523 10 17 9.55228 17 9C17 8.44772 16.5523 8 16 8H12Z" fill="#12131A" />
+                                                <path d="M12 12C11.4477 12 11 12.4477 11 13C11 13.5523 11.4477 14 12 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H12Z" fill="#12131A" />
+                                                <path d="M11 17C11 16.4477 11.4477 16 12 16H14C14.5523 16 15 16.4477 15 17C15 17.5523 14.5523 18 14 18H12C11.4477 18 11 17.5523 11 17Z" fill="#12131A" />
+                                                <path d="M9 13C9 13.5523 8.55228 14 8 14C7.44772 14 7 13.5523 7 13C7 12.4477 7.44772 12 8 12C8.55228 12 9 12.4477 9 13Z" fill="#12131A" />
+                                                <path d="M8 18C8.55228 18 9 17.5523 9 17C9 16.4477 8.55228 16 8 16C7.44772 16 7 16.4477 7 17C7 17.5523 7.44772 18 8 18Z" fill="#12131A" />
+                                                <path d="M8.25 1H15.75C16.4404 1 17 1.44772 17 2C17 2.55228 16.4404 3 15.75 3H8.25C7.55964 3 7 2.55228 7 2C7 1.44772 7.55964 1 8.25 1Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Giriş Kalite Verileri</span>
+                                </a>
+                            </div>
+
+                            @* SEPERATOR *@
+                            <div class="menu-item">
+                                <div class="menu-content">
+                                    <div class="separator mx-1 my-4"></div>
+                                </div>
+                            </div>
+
+                            <div class="menu-item">
+                                <a class="menu-link @(Regex.IsMatch(ctrl, "ProductQuality$") && Regex.IsMatch(actn, "List$|Index$") ? "active" : "")"
+                                   href="@Url.Action("List","ProductQuality")">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Shopping/Box2.svg-->
+                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M3 6C3 3.79086 4.79086 2 7 2H17C19.2091 2 21 3.79086 21 6V19C21 21.2091 19.2091 23 17 23H7C4.79086 23 3 21.2091 3 19V6Z" fill="#12131A" />
+                                                <path d="M8 10C8.55228 10 9 9.55228 9 9C9 8.44772 8.55228 8 8 8C7.44772 8 7 8.44772 7 9C7 9.55228 7.44772 10 8 10Z" fill="#12131A" />
+                                                <path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10H16C16.5523 10 17 9.55228 17 9C17 8.44772 16.5523 8 16 8H12Z" fill="#12131A" />
+                                                <path d="M12 12C11.4477 12 11 12.4477 11 13C11 13.5523 11.4477 14 12 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H12Z" fill="#12131A" />
+                                                <path d="M11 17C11 16.4477 11.4477 16 12 16H14C14.5523 16 15 16.4477 15 17C15 17.5523 14.5523 18 14 18H12C11.4477 18 11 17.5523 11 17Z" fill="#12131A" />
+                                                <path d="M9 13C9 13.5523 8.55228 14 8 14C7.44772 14 7 13.5523 7 13C7 12.4477 7.44772 12 8 12C8.55228 12 9 12.4477 9 13Z" fill="#12131A" />
+                                                <path d="M8 18C8.55228 18 9 17.5523 9 17C9 16.4477 8.55228 16 8 16C7.44772 16 7 16.4477 7 17C7 17.5523 7.44772 18 8 18Z" fill="#12131A" />
+                                                <path d="M8.25 1H15.75C16.4404 1 17 1.44772 17 2C17 2.55228 16.4404 3 15.75 3H8.25C7.55964 3 7 2.55228 7 2C7 1.44772 7.55964 1 8.25 1Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Kalite Proses Planı</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link @(Regex.IsMatch(ctrl, "ProductQuality$") && Regex.IsMatch(actn, "ListData$|IndexData$") ? "active" : "")"
+                                   href="@Url.Action("ListData","ProductQuality")">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Shopping/Box2.svg-->
+                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M3 6C3 3.79086 4.79086 2 7 2H17C19.2091 2 21 3.79086 21 6V19C21 21.2091 19.2091 23 17 23H7C4.79086 23 3 21.2091 3 19V6Z" fill="#12131A" />
+                                                <path d="M8 10C8.55228 10 9 9.55228 9 9C9 8.44772 8.55228 8 8 8C7.44772 8 7 8.44772 7 9C7 9.55228 7.44772 10 8 10Z" fill="#12131A" />
+                                                <path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10H16C16.5523 10 17 9.55228 17 9C17 8.44772 16.5523 8 16 8H12Z" fill="#12131A" />
+                                                <path d="M12 12C11.4477 12 11 12.4477 11 13C11 13.5523 11.4477 14 12 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H12Z" fill="#12131A" />
+                                                <path d="M11 17C11 16.4477 11.4477 16 12 16H14C14.5523 16 15 16.4477 15 17C15 17.5523 14.5523 18 14 18H12C11.4477 18 11 17.5523 11 17Z" fill="#12131A" />
+                                                <path d="M9 13C9 13.5523 8.55228 14 8 14C7.44772 14 7 13.5523 7 13C7 12.4477 7.44772 12 8 12C8.55228 12 9 12.4477 9 13Z" fill="#12131A" />
+                                                <path d="M8 18C8.55228 18 9 17.5523 9 17C9 16.4477 8.55228 16 8 16C7.44772 16 7 16.4477 7 17C7 17.5523 7.44772 18 8 18Z" fill="#12131A" />
+                                                <path d="M8.25 1H15.75C16.4404 1 17 1.44772 17 2C17 2.55228 16.4404 3 15.75 3H8.25C7.55964 3 7 2.55228 7 2C7 1.44772 7.55964 1 8.25 1Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Kalite Proses Verileri</span>
+                                </a>
+                            </div>
+
+
                             @* TANIMLAR *@
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
@@ -533,6 +642,21 @@
                                     <span class="menu-title">Kalıp</span>
                                 </a>
                             </div>
+                            <div class="menu-item">
+                                <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Shift") ? "active" : "")" href="@Url.Action("List","Shift")">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
+                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M10.9630156,7.5 L11.0475062,7.5 C11.3043819,7.5 11.5194647,7.69464724 11.5450248,7.95024814 L12,12.5 L15.2480695,14.3560397 C15.403857,14.4450611 15.5,14.6107328 15.5,14.7901613 L15.5,15 C15.5,15.2109164 15.3290185,15.3818979 15.1181021,15.3818979 C15.0841582,15.3818979 15.0503659,15.3773725 15.0176181,15.3684413 L10.3986612,14.1087258 C10.1672824,14.0456225 10.0132986,13.8271186 10.0316926,13.5879956 L10.4644883,7.96165175 C10.4845267,7.70115317 10.7017474,7.5 10.9630156,7.5 Z" id="Path-107" fill="#000000"></path>
+                                                <path d="M7.38979581,2.8349582 C8.65216735,2.29743306 10.0413491,2 11.5,2 C17.2989899,2 22,6.70101013 22,12.5 C22,18.2989899 17.2989899,23 11.5,23 C5.70101013,23 1,18.2989899 1,12.5 C1,11.5151324 1.13559454,10.5619345 1.38913364,9.65805651 L3.31481075,10.1982117 C3.10672013,10.940064 3,11.7119264 3,12.5 C3,17.1944204 6.80557963,21 11.5,21 C16.1944204,21 20,17.1944204 20,12.5 C20,7.80557963 16.1944204,4 11.5,4 C10.54876,4 9.62236069,4.15592757 8.74872191,4.45446326 L9.93948308,5.87355717 C10.0088058,5.95617272 10.0495583,6.05898805 10.05566,6.16666224 C10.0712834,6.4423623 9.86044965,6.67852665 9.5847496,6.69415008 L4.71777931,6.96995273 C4.66931162,6.97269931 4.62070229,6.96837279 4.57348157,6.95710938 C4.30487471,6.89303938 4.13906482,6.62335149 4.20313482,6.35474463 L5.33163823,1.62361064 C5.35654118,1.51920756 5.41437908,1.4255891 5.49660017,1.35659741 C5.7081375,1.17909652 6.0235153,1.2066885 6.2010162,1.41822583 L7.38979581,2.8349582 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Vardiya</span>
+                                </a>
+                            </div>
 
                             @* SEPERATOR *@
                             <div class="menu-item">
@@ -630,7 +754,7 @@
             <!--begin::Wrapper-->
             <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
                 <!--begin::Header-->
-                <div id="kt_header" style="" class="header align-items-stretch">
+                <div id="kt_header" style="" class="header align-items-stretch no-print">
                     <!--begin::Container-->
                     <div class="container-fluid d-flex align-items-stretch justify-content-between">
                         <!--begin::Aside mobile toggle-->
@@ -1329,7 +1453,7 @@
     <!--end::Root-->
     <!--begin::Drawers-->
     <!--begin::Activities drawer-->
-    <div id="kt_activities" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="activities" data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'lg': '500px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_activities_toggle" data-kt-drawer-close="#kt_activities_close">
+    <div id="kt_activities" class="bg-white no-print" data-kt-drawer="true" data-kt-drawer-name="activities" data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'lg': '500px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_activities_toggle" data-kt-drawer-close="#kt_activities_close">
         <div class="card shadow-none">
             <!--begin::Header-->
             <div class="card-header" id="kt_activities_header">

@@ -1,0 +1,170 @@
+﻿@{
+    ViewBag.Title = "Üretim Planlama Çizelgesi";
+}
+
+<div ng-controller="printTemplateCtrl">
+    <!--begin::Toolbar-->
+    <div class="toolbar no-print" id="kt_toolbar">
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+            <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+                 class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
+                <!--begin::Title-->
+                <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                    @ViewBag.Title
+                </h1>
+                <!--end::Title-->
+            </div>
+            <!--end::Page title-->
+            <!--begin::Actions-->
+            <div class="d-flex align-items-center py-1">
+                <button class="btn btn-sm btn-primary" ng-click="printPlanning()">
+                    Yazdır
+                </button>
+            </div>
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Row-->
+            <div class="row gy-5 gx-xl-8">
+                <div class="col-xxl-12">
+                    <h5 class="text-center my-0" style="border: 1px solid black;border-bottom:0px;">@string.Format("{0:yyyy}", DateTime.Now) HAFTALIK ÜRETİM PLANI</h5>
+                    <h5 class="text-center my-0" style="border: 1px solid black;">
+                            @System.Globalization.CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now,
+    System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday) . HAFTA PLANLANAN ÜRETİM
+                    </h5>
+
+                    <table border="1" class="planning-table table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>MAKİNE ADI</th>
+                                <th class="w-200px">ÜRÜN ADI</th>
+                                <th>SİPARİŞ (Ad.)</th>
+                                <th>PAZARTESİ</th>
+                                <th>SALI</th>
+                                <th>ÇARŞAMBA</th>
+                                <th>PERŞEMBE</th>
+                                <th>CUMA</th>
+                                <th>HEDEF ÜRETİM</th>
+                                <th>ÜRETİLEN</th>
+                                <th>KALAN</th>
+                                <th>NOT</th>
+                                <th>DEVAM EDECEK OLAN ÜRETİM</th>
+                                <th>SİPARİŞ (Ad.)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in machineList">
+                                <td style="font-size:small;">{{item.MachineName}}</td>
+                                <td class="py-0">
+                                    <p class="py-0 my-0" style="font-size:x-small;" ng-repeat="plan in getMachinePlans(item)">
+                                        {{plan.WorkOrder.ProductName}}
+                                    </p>
+                                </td>
+                                <td>
+                                    {{getMachineTotalPlanned(item)}}
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td> <!-- HEDEF ÜRETİM -->
+                                <td>{{getMachineTotalComplete(item)}}</td> <!-- ÜRETİLEN ADET -->
+                                <td>{{getMachineTotalPlanned(item) - getMachineTotalComplete(item)}}</td> <!-- KALAN ADET -->
+                                <td>
+                                    <p class="py-1 my-0" ng-repeat="plan in getMachinePlans(item)">
+                                        {{plan.WorkOrder.Explanation}}
+                                    </p>
+                                </td> <!-- NOT -->
+                                <td></td> <!-- DEVAM EDECEK OLAN ÜRETİM -->
+                                <td></td> <!-- DEVAM EDECEK SİP AD. -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                @* GÜNLÜK ÇALIŞAN BİLGİLERİ *@
+                <div class="col-xxl-3">
+                    <table border="1" class="planning-table table table-responsive table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="color:black;font-weight:bold;">@(string.Format("{0:dd.MM.yyyy}", DateTime.Now))</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td contenteditable="true">GÜNDÜZ ÜRETİM ÇALIŞAN: </td>
+                            </tr>
+                            <tr>
+                                <td contenteditable="true">GECE ÜRETİM ÇALIŞAN: </td>
+                            </tr>
+                            <tr>
+                                <td contenteditable="true">SABİT GÜNDÜZ: </td>
+                            </tr>
+                            <tr>
+                                <td contenteditable="true">İDARİ PERSONEL: </td>
+                            </tr>
+                            <tr>
+                                <td contenteditable="true" style="font-weight:bold;">TOPLAM: </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                @* ALT ORTA BÖLÜM *@
+                <div class="col-xxl-4"></div>
+
+                @* MAKİNE DURUŞ VE FİRE BİLGİLERİ *@
+                <div class="col-xxl-5">
+                    <table border="1" class="planning-table table table-responsive table-bordered">
+                        <tbody>
+                            <tr ng-repeat="item in machineList">
+                                <td class="w-125px">
+                                    {{item.MachineName}}
+                                </td>
+                                <td>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--end::Row-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+
+    <style type="text/css">
+        .planning-table th {
+            color: red;
+            border: 1px solid black !important;
+            font-weight: normal;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .planning-table td {
+            border: 1px solid black;
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
+
+    <link href="~/Content/planning.css" rel="stylesheet" />
+    <script src="~/FrontEndLogic/Planning/print-template.js"></script>
+}

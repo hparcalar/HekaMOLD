@@ -63,6 +63,45 @@
                 //}
             ]
         });
+
+        $('#dataListSummary').dxDataGrid({
+            dataSource: {
+                load: function () {
+                    return $.getJSON(HOST_URL + 'ProductionNeeds/GetProductionNeedsSummary', function (data) {
+
+                    });
+                },
+                key: 'Id'
+            },
+            showColumnLines: false,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: true,
+            showBorders: true,
+            filterRow: {
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+            paging: {
+                enabled: true,
+                pageSize: 13,
+                pageIndex: 0
+            },
+            groupPanel: {
+                visible: true
+            },
+            editing: {
+                allowUpdating: false,
+                allowDeleting: false
+            },
+            columns: [
+                { dataField: 'ItemNo', caption: 'Malzeme No' },
+                { dataField: 'ItemName', caption: 'Malzeme Adı' },
+                { dataField: 'Quantity', caption: 'İhtiyaç Miktar', format: { type: "fixedPoint", precision: 2 } },
+            ]
+        });
     }
 
     // VISUAL TRIGGERS
