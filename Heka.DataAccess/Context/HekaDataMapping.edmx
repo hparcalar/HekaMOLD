@@ -766,6 +766,18 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="UsageDocument">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DocumentTitle" Type="nvarchar" MaxLength="300" />
+          <Property Name="DocumentData" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
@@ -2345,6 +2357,7 @@
           <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TransactionLog" EntityType="Self.TransactionLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UnitType" EntityType="Self.UnitType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsageDocument" EntityType="Self.UsageDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserAuth" EntityType="Self.UserAuth" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserAuthType" EntityType="Self.UserAuthType" Schema="dbo" store:Type="Tables" />
@@ -4161,6 +4174,7 @@
             <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
             <End Role="EntryQualityPlanDetail" EntitySet="EntryQualityPlanDetail" />
           </AssociationSet>
+          <EntitySet Name="UsageDocument" EntityType="Heka.DataAccess.Models.UsageDocument" />
         </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -5845,6 +5859,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="UsageDocument">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocumentTitle" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="DocumentData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6842,6 +6868,19 @@
                 <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
                 <ScalarProperty Name="CheckProperty" ColumnName="CheckProperty" />
                 <ScalarProperty Name="EntryQualityPlanId" ColumnName="EntryQualityPlanId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsageDocument">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.UsageDocument">
+              <MappingFragment StoreEntitySet="UsageDocument">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="DocumentData" ColumnName="DocumentData" />
+                <ScalarProperty Name="DocumentTitle" ColumnName="DocumentTitle" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

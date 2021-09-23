@@ -177,6 +177,7 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_EntryQualityData_EntryQualityPlanDetail" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_EntryQualityDataDetail_EntryQualityPlanDetail" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_EntryQualityPlanDetail_EntryQualityPlan" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UsageDocument" Width="1.5" PointX="8.375" PointY="5.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

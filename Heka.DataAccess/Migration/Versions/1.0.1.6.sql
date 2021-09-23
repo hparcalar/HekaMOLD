@@ -342,3 +342,20 @@ BEGIN
 
 	ALTER TABLE [dbo].[EntryQualityDataDetail] CHECK CONSTRAINT [FK_EntryQualityDataDetail_EntryQualityPlanDetail]
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='UsageDocument')
+BEGIN
+	CREATE TABLE [dbo].[UsageDocument](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[DocumentTitle] [nvarchar](300) NULL,
+		[DocumentData] [nvarchar](max) NULL,
+		[CreatedDate] [datetime] NULL,
+		[CreatedUserId] [int] NULL,
+		[UpdatedDate] [datetime] NULL,
+		[UpdatedUserId] [int] NULL,
+	 CONSTRAINT [PK_UsageDocument] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END

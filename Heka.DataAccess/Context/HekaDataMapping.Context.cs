@@ -84,5 +84,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<EntryQualityDataDetail> EntryQualityDataDetail { get; set; }
         public virtual DbSet<EntryQualityData> EntryQualityData { get; set; }
         public virtual DbSet<EntryQualityPlanDetail> EntryQualityPlanDetail { get; set; }
+        public virtual DbSet<UsageDocument> UsageDocument { get; set; }
     }
 }

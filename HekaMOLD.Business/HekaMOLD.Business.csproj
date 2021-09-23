@@ -93,6 +93,7 @@
     <Compile Include="Models\DataTransfer\Core\RecordInformationModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SyncPointModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UnitTypeModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\UsageDocumentModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="UseCases\Core\CoreReceiptsBO.cs" />
     <Compile Include="UseCases\Core\CoreRecordTracingBO.cs" />
     <Compile Include="UseCases\DefinitionsBO.cs" />
+    <Compile Include="UseCases\DocumentBO.cs" />
     <Compile Include="UseCases\FilesBO.cs" />
     <Compile Include="UseCases\HekaBO.cs" />
     <Compile Include="UseCases\Integrations\IntegratorBase.cs" />
