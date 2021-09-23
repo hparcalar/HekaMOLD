@@ -17,5 +17,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Quality
         public string Method { get; set; }
         public string Responsible { get; set; }
         public int? OrderNo { get; set; }
+        public int CheckType { get; set; } // 1: checkbox, 2: input by tolerance (number)
+        public decimal? ToleranceMin { get; set; }
+        public decimal? ToleranceMax { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿DevExpress.localization.locale('tr');
 
-app.controller('printEntryPlansCtrl', function printTemplateCtrl($scope, $http) {
+app.controller('printProductPlansCtrl', function printTemplateCtrl($scope, $http) {
     $scope.modelObject = { Id: 0 };
     $scope.saveStatus = 0;
 
@@ -12,7 +12,7 @@ app.controller('printEntryPlansCtrl', function printTemplateCtrl($scope, $http) 
 
     // DATA GET METHODS
     $scope.loadPlans = function () {
-        $http.get(HOST_URL + 'EntryQuality/GetEntryPlanView', {}, 'json')
+        $http.get(HOST_URL + 'ProductQuality/GetProductPlanView', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.planList = resp.data;

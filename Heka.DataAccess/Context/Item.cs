@@ -28,6 +28,8 @@ namespace Heka.DataAccess.Context
             this.ProductRecipeDetail = new HashSet<ProductRecipeDetail>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.WorkOrderItemNeeds = new HashSet<WorkOrderItemNeeds>();
+            this.ProductQualityData = new HashSet<ProductQualityData>();
+            this.EntryQualityData = new HashSet<EntryQualityData>();
         }
     
         public int Id { get; set; }
@@ -71,5 +73,9 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductQualityData> ProductQualityData { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
     }
 }

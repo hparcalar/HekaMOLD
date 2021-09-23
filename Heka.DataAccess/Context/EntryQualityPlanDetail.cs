@@ -18,6 +18,7 @@ namespace Heka.DataAccess.Context
         public EntryQualityPlanDetail()
         {
             this.EntryQualityData = new HashSet<EntryQualityData>();
+            this.EntryQualityDataDetail = new HashSet<EntryQualityDataDetail>();
         }
     
         public int Id { get; set; }
@@ -33,6 +34,8 @@ namespace Heka.DataAccess.Context
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EntryQualityDataDetail> EntryQualityDataDetail { get; set; }
         public virtual EntryQualityPlan EntryQualityPlan { get; set; }
     }
 }

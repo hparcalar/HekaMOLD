@@ -1,4 +1,4 @@
-﻿app.controller('productQualityPlanListCtrl', function sidebarCtrl($scope, $http) {
+﻿app.controller('entryQualityPlanFormListCtrl', function sidebarCtrl($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS
@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'ProductQuality/GetPlanList', function (data) {
+                    return $.getJSON(HOST_URL + 'EntryQuality/GetPlanFormList', function (data) {
                             
                         });
                 },
@@ -37,14 +37,14 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'OrderNo', caption: 'Sıra No', width:100 },
-                { dataField: 'ProductQualityCode', caption: 'Faaliyet' },
-                { dataField: 'CheckProperties', caption: 'Kontrol Edilecek Özellikler' },
-                { dataField: 'PeriodType', caption: 'Periyot' },
-                { dataField: 'AcceptanceCriteria', caption: 'Kabul / Red Kriteri' },
-                { dataField: 'ControlDevice', caption: 'Cihaz' },
-                { dataField: 'Method', caption: 'Yöntem' },
-                { dataField: 'Responsible', caption: 'Sorumlu' },
+                { dataField: 'ControlDateStr', caption: 'Kontrol Tarihi' },
+                { dataField: 'FirmName', caption: 'Firma' },
+                { dataField: 'ItemNo', caption: 'Malzeme Kodu' },
+                { dataField: 'ItemName', caption: 'Malzeme Adı' },
+                { dataField: 'ItemName', caption: 'Malzeme Adı' },
+                { dataField: 'WaybillNo', caption: 'İrsaliye No' },
+                { dataField: 'EntryQuantity', caption: 'Gelen Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'CheckedQuantity', caption: 'Kontrol Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
                     type: "buttons",
                     buttons: [
@@ -54,7 +54,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'ProductQuality?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'EntryQuality/IndexData?rid=' + e.row.data.Id;
                             }
                         }
                     ]

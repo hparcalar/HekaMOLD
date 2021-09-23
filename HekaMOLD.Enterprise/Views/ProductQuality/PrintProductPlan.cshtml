@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "Proses Kalite Planı Çizelgesi";
+}
+
+<div ng-controller="printProductPlansCtrl">
+    <!--begin::Toolbar-->
+    <div class="toolbar no-print" id="kt_toolbar">
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+            <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+                 class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
+                <!--begin::Title-->
+                <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                    @ViewBag.Title
+                </h1>
+                <!--end::Title-->
+            </div>
+            <!--end::Page title-->
+            <!--begin::Actions-->
+            <div class="d-flex align-items-center py-1">
+                <button class="btn btn-sm btn-primary" ng-click="printPlans()">
+                    Yazdır
+                </button>
+            </div>
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Row-->
+            <div class="row gy-5 gx-xl-8">
+                <div class="col-xxl-12">
+                    <div class="d-flex flex-row">
+                        <img alt="Logo" src="~/assets/media/logos/batusan-logo-org.png" style="border: 1px solid black;border-bottom:0px;"
+                             class="h-50px logo py-1 px-1" />
+                        <h5 class="text-center my-0 flex-fill pt-5"
+                            style="border: 1px solid black;border-bottom:0px; vertical-align:middle;">
+                            PROSES ve SON KONTROL KALİTE PLANI
+                        </h5>
+                        <div class="text-right" style="border: 1px solid black;border-bottom:0px;">
+                            <p class="my-0 py-0 px-3 pt-5 text-right" style="font-size:xx-small;">
+                                Yayın Tarihi: @string.Format("{0:dd.MM.yyyy}", DateTime.Now)
+                            </p>
+                        </div>
+                    </div>
+
+                    <table border="1" class="planning-table table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Sıra No</th>
+                                <th>Faaliyet</th>
+                                <th>Kontrol Edilecek Özellikler</th>
+                                <th>Periyot</th>
+                                <th>Kabul / Red Kriteri</th>
+                                <th>Cihaz</th>
+                                <th>Yöntem</th>
+                                <th>Sorumlu</th>
+                                <th>Kayıt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in planList">
+                                <td><b>{{item.OrderNo}}</b></td>
+                                <td><b>{{item.ProductQualityCode}}</b></td>
+                                <td>
+                                    {{item.CheckProperties}}
+                                </td>
+                                <td>
+                                    {{item.PeriodType}}
+                                </td>
+                                <td>
+                                    {{item.AcceptanceCriteria}}
+                                </td>
+                                <td>
+                                    {{item.ControlDevice}}
+                                </td>
+                                <td>
+                                    {{item.Method}}
+                                </td>
+                                <td>
+                                    {{item.Responsible}}
+                                </td>
+                                <td>
+                                    Üretim Bilgi ve Proses Kontrol Formu
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--end::Row-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+
+    <style type="text/css">
+        .planning-table th {
+            color: red;
+            border: 1px solid black !important;
+            font-weight: normal;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .planning-table td {
+            border: 1px solid black;
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
+
+    <script src="~/FrontEndLogic/ProductQuality/print-product-plans.js"></script>
+}

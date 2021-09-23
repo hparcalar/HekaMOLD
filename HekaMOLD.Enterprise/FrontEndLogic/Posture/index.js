@@ -1,18 +1,32 @@
-﻿app.controller('productQualityPlanCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id:0 };
+﻿app.controller('postureCtrl', function ($scope, $http) {
+    $scope.modelObject = {};
+    $scope.categoryList = [];
+    $scope.selectedCategory = {};
 
-    $scope.selectedCheckType = { };
-    $scope.checkTypeList = [{ Id: 1, Text: 'Check' }, { Id:2, Text:'Sayısal' }];
     $scope.saveStatus = 0;
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
-        $scope.bindDetails();
+    }
+
+    // GET SELECTABLE DATA
+    $scope.loadSelectables = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Maintenance/GetPostureCategoryList', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.categoryList = resp.data;
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prmReq;
     }
 
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu proses kalite planını silmek istediğinizden emin misiniz?",
+            message: "Bu duruş kaydını silmek istediğinizden emin misiniz?",
             closeButton:false,
             buttons: {
                 confirm: {
@@ -27,7 +41,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'ProductQuality/DeletePlanModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'Maintenance/DeletePosture', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -49,13 +63,12 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        if (typeof $scope.selectedCheckType != 'undefined' && $scope.selectedCheckType != null) {
-            $scope.modelObject.CheckType = $scope.selectedCheckType.Id;
-        }
+        if (typeof $scope.selectedCategory != 'undefined' && $scope.selectedCategory != null)
+            $scope.modelObject.PostureCategoryId = $scope.selectedCategory.Id;
         else
-            $scope.modelObject.CheckType = 1;
+            $scope.modelObject.PostureCategoryId = null;
 
-        $http.post(HOST_URL + 'ProductQuality/SavePlanModel', $scope.modelObject, 'json')
+        $http.post(HOST_URL + 'Maintenance/SavePosture', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -72,23 +85,24 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'ProductQuality/BindPlanModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'Maintenance/BindPosture?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
 
-                    // BIND EXTERNAL CHECK TYPE
-                    if ($scope.modelObject.CheckType > 0) {
-                        $scope.selectedCheckType = $scope.checkTypeList.find(d => d.Id == $scope.modelObject.CheckType);
-                    }
-                    else {
-                        $scope.selectedCheckType = {};
-                    }
+                    if ($scope.modelObject.PostureCategoryId > 0)
+                        $scope.selectedCategory = $scope.categoryList.find(d => d.Id == $scope.modelObject.PostureCategoryId);
+                    else
+                        $scope.selectedCategory = {};
                 }
             }).catch(function (err) { });
     }
 
     // ON LOAD EVENTS
-    if (PRM_ID > 0)
-        $scope.bindModel(PRM_ID);
+    $scope.loadSelectables().then(function (data) {
+        if (PRM_ID > 0)
+            $scope.bindModel(PRM_ID);
+        else
+            $scope.bindModel(0);
+    });
 });

@@ -197,11 +197,148 @@ BEGIN
 	 CONSTRAINT [PK_ProductQualityPlan] PRIMARY KEY CLUSTERED 
 	(
 		[Id] ASC
-	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 	) ON [PRIMARY]
 END
 GO
 IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ProductQualityPlan' AND COLUMN_NAME='OrderNo')
 BEGIN
 	ALTER TABLE ProductQualityPlan ADD OrderNo INT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ProductQualityPlan' AND COLUMN_NAME='CheckType')
+BEGIN
+	ALTER TABLE ProductQualityPlan ADD CheckType INT NOT NULL DEFAULT 1
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ProductQualityPlan' AND COLUMN_NAME='ToleranceMin')
+BEGIN
+	ALTER TABLE ProductQualityPlan ADD ToleranceMin DECIMAL(18,5) NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ProductQualityPlan' AND COLUMN_NAME='ToleranceMax')
+BEGIN
+	ALTER TABLE ProductQualityPlan ADD ToleranceMax DECIMAL(18,5) NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='ProductQualityData')
+BEGIN
+	CREATE TABLE [dbo].[ProductQualityData](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[MachineId] [int] NULL,
+	[ProductId] [int] NULL,
+	[ControlDate] [datetime] NULL,
+	[CreatedDate] [datetime] NULL,
+	[CreatedUserId] [int] NULL,
+	[UpdatedDate] [datetime] NULL,
+	[UpdatedUserId] [int] NULL,
+	 CONSTRAINT [PK_ProductQualityData] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[ProductQualityData]  WITH CHECK ADD  CONSTRAINT [FK_ProductQualityData_Item] FOREIGN KEY([ProductId])
+	REFERENCES [dbo].[Item] ([Id])
+
+	ALTER TABLE [dbo].[ProductQualityData] CHECK CONSTRAINT [FK_ProductQualityData_Item]
+
+	ALTER TABLE [dbo].[ProductQualityData]  WITH CHECK ADD  CONSTRAINT [FK_ProductQualityData_Machine] FOREIGN KEY([MachineId])
+	REFERENCES [dbo].[Machine] ([Id])
+
+	ALTER TABLE [dbo].[ProductQualityData] CHECK CONSTRAINT [FK_ProductQualityData_Machine]
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='ProductQualityDataDetail')
+BEGIN
+	CREATE TABLE [dbo].[ProductQualityDataDetail](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ProductQualityDataId] [int] NULL,
+	[ProductQualityPlanId] [int] NULL,
+	[OrderNo] [int] NULL,
+	[CheckResult] [bit] NULL,
+	[NumericResult] [decimal](18, 5) NULL,
+	[IsOk] [bit] NULL,
+	[CreatedDate] [datetime] NULL,
+	[CreatedUserId] [int] NULL,
+	 CONSTRAINT [PK_ProductQualityDataDetail] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[ProductQualityDataDetail]  WITH CHECK ADD  CONSTRAINT [FK_ProductQualityDataDetail_ProductQualityData] FOREIGN KEY([ProductQualityDataId])
+	REFERENCES [dbo].[ProductQualityData] ([Id])
+
+	ALTER TABLE [dbo].[ProductQualityDataDetail] CHECK CONSTRAINT [FK_ProductQualityDataDetail_ProductQualityData]
+
+	ALTER TABLE [dbo].[ProductQualityDataDetail]  WITH CHECK ADD  CONSTRAINT [FK_ProductQualityDataDetail_ProductQualityPlan] FOREIGN KEY([ProductQualityPlanId])
+	REFERENCES [dbo].[ProductQualityPlan] ([Id])
+
+	ALTER TABLE [dbo].[ProductQualityDataDetail] CHECK CONSTRAINT [FK_ProductQualityDataDetail_ProductQualityPlan]
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='EntryQualityData' AND COLUMN_NAME='FirmId')
+BEGIN
+	ALTER TABLE EntryQualityData ADD FirmId INT NULL
+	ALTER TABLE EntryQualityData ADD CONSTRAINT FK_EntryQualityData_Firm FOREIGN KEY(FirmId) REFERENCES Firm(Id)
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='EntryQualityData' AND COLUMN_NAME='ItemId')
+BEGIN
+	ALTER TABLE EntryQualityData ADD ItemId INT NULL
+	ALTER TABLE EntryQualityData ADD CONSTRAINT FK_EntryQualityData_Item FOREIGN KEY(ItemId) REFERENCES Item(Id)
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='EntryQualityData' AND COLUMN_NAME='WaybillNo')
+BEGIN
+	ALTER TABLE EntryQualityData ADD WaybillNo NVARCHAR(150) NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='EntryQualityData' AND COLUMN_NAME='EntryQuantity')
+BEGIN
+	ALTER TABLE EntryQualityData ADD EntryQuantity DECIMAL(18,5) NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='EntryQualityData' AND COLUMN_NAME='CheckedQuantity')
+BEGIN
+	ALTER TABLE EntryQualityData ADD CheckedQuantity DECIMAL(18,5) NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='EntryQualityData' AND COLUMN_NAME='LotNumbers')
+BEGIN
+	ALTER TABLE EntryQualityData ADD LotNumbers NVARCHAR(300) NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='EntryQualityData' AND COLUMN_NAME='SampleQuantity')
+BEGIN
+	ALTER TABLE EntryQualityData ADD SampleQuantity DECIMAL(18,5) NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='EntryQualityDataDetail')
+BEGIN
+	CREATE TABLE [dbo].[EntryQualityDataDetail](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[EntryQualityDataId] [int] NULL,
+	[EntryQualityPlanDetailId] [int] NULL,
+	[OrderNo] [int] NULL,
+	[FaultExplanation] [nvarchar](300) NULL,
+	[SampleQuantity] [decimal](18,5) NULL,
+	[CreatedDate] [datetime] NULL,
+	[CreatedUserId] [int] NULL,
+	 CONSTRAINT [PK_EntryQualityDataDetail] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[EntryQualityDataDetail]  WITH CHECK ADD  CONSTRAINT [FK_EntryQualityDataDetail_EntryQualityData] FOREIGN KEY([EntryQualityDataId])
+	REFERENCES [dbo].[EntryQualityData] ([Id])
+
+	ALTER TABLE [dbo].[EntryQualityDataDetail] CHECK CONSTRAINT [FK_EntryQualityDataDetail_EntryQualityData]
+
+	ALTER TABLE [dbo].[EntryQualityDataDetail]  WITH CHECK ADD  CONSTRAINT [FK_EntryQualityDataDetail_EntryQualityPlanDetail] FOREIGN KEY([EntryQualityPlanDetailId])
+	REFERENCES [dbo].[EntryQualityPlanDetail] ([Id])
+
+	ALTER TABLE [dbo].[EntryQualityDataDetail] CHECK CONSTRAINT [FK_EntryQualityDataDetail_EntryQualityPlanDetail]
 END

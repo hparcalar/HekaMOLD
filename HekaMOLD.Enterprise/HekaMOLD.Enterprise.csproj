@@ -4017,7 +4017,9 @@
     <Content Include="FrontEndLogic\Core\record-manager.js" />
     <Content Include="FrontEndLogic\Dye\index.js" />
     <Content Include="FrontEndLogic\Dye\list.js" />
+    <Content Include="FrontEndLogic\EntryQuality\index-data.js" />
     <Content Include="FrontEndLogic\EntryQuality\index.js" />
+    <Content Include="FrontEndLogic\EntryQuality\list-data.js" />
     <Content Include="FrontEndLogic\EntryQuality\list.js" />
     <Content Include="FrontEndLogic\EntryQuality\print-entry-plans.js" />
     <Content Include="FrontEndLogic\Firm\index.js" />
@@ -4060,8 +4062,12 @@
     <Content Include="FrontEndLogic\Planning\planning.js" />
     <Content Include="FrontEndLogic\PostureCategory\index.js" />
     <Content Include="FrontEndLogic\PostureCategory\list.js" />
+    <Content Include="FrontEndLogic\Posture\index.js" />
+    <Content Include="FrontEndLogic\Posture\list.js" />
     <Content Include="FrontEndLogic\ProductionNeeds\list.js" />
+    <Content Include="FrontEndLogic\ProductQuality\index-data.js" />
     <Content Include="FrontEndLogic\ProductQuality\index.js" />
+    <Content Include="FrontEndLogic\ProductQuality\list-data.js" />
     <Content Include="FrontEndLogic\ProductQuality\list.js" />
     <Content Include="FrontEndLogic\ProductQuality\print-product-plans.js" />
     <Content Include="FrontEndLogic\ProductRecipe\index.js" />
@@ -4465,11 +4471,19 @@
     <Content Include="Views\EntryQuality\List.cshtml" />
     <Content Include="Views\EntryQuality\Index.cshtml" />
     <Content Include="Views\EntryQuality\PrintEntryPlan.cshtml" />
+    <Content Include="Views\ProductQuality\List.cshtml" />
+    <Content Include="Views\ProductQuality\Index.cshtml" />
+    <Content Include="Views\ProductQuality\PrintProductPlan.cshtml" />
+    <Content Include="Views\ProductQuality\ListData.cshtml" />
+    <Content Include="Views\ProductQuality\IndexData.cshtml" />
+    <Content Include="Views\Maintenance\ListPosture.cshtml" />
+    <Content Include="Views\Maintenance\Posture.cshtml" />
+    <Content Include="Views\EntryQuality\ListData.cshtml" />
+    <Content Include="Views\EntryQuality\IndexData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Common\" />
-    <Folder Include="Views\ProductQuality\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

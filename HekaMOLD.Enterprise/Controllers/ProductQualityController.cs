@@ -119,5 +119,111 @@ namespace HekaMOLD.Enterprise.Controllers
 
         }
         #endregion
+
+        #region DATA WORKS
+        public ActionResult IndexData()
+        {
+            return View();
+        }
+
+        public ActionResult ListData()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetSelectablesOfData()
+        {
+            ItemModel[] items = new ItemModel[0];
+            MachineModel[] machines = new MachineModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                items = bObj.GetItemList();
+                machines = bObj.GetMachineList();
+            }
+
+            var jsonResult = Json(new
+            {
+                Items = items,
+                Machines = machines,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetPlanFormList()
+        {
+            ProductQualityDataModel[] result = new ProductQualityDataModel[0];
+
+            using (QualityBO bObj = new QualityBO())
+            {
+                result = bObj.GetProductFormList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult BindPlanFormModel(int rid)
+        {
+            ProductQualityDataModel model = null;
+            ProductQualityPlanModel[] plans = null;
+            using (QualityBO bObj = new QualityBO())
+            {
+                model = bObj.GetProductForm(rid);
+                plans = bObj.GetProductPlanList();
+            }
+
+            return Json(new { Model=model, Plans = plans }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeletePlanFormModel(int rid)
+        {
+            try
+            {
+                BusinessResult result = null;
+                using (QualityBO bObj = new QualityBO())
+                {
+                    result = bObj.DeleteProductForm(rid);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1 });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult SavePlanFormModel(ProductQualityDataModel model)
+        {
+            try
+            {
+                BusinessResult result = null;
+                using (QualityBO bObj = new QualityBO())
+                {
+                    result = bObj.SaveOrUpdateProductForm(model);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+        #endregion
     }
 }

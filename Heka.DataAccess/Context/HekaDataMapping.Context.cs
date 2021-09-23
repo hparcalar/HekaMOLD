@@ -75,11 +75,14 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         public virtual DbSet<MachineMaintenanceInstructionEntry> MachineMaintenanceInstructionEntry { get; set; }
         public virtual DbSet<MoldTest> MoldTest { get; set; }
-        public virtual DbSet<EntryQualityData> EntryQualityData { get; set; }
         public virtual DbSet<EntryQualityPlan> EntryQualityPlan { get; set; }
         public virtual DbSet<Shift> Shift { get; set; }
         public virtual DbSet<WorkOrderSerial> WorkOrderSerial { get; set; }
-        public virtual DbSet<EntryQualityPlanDetail> EntryQualityPlanDetail { get; set; }
+        public virtual DbSet<ProductQualityData> ProductQualityData { get; set; }
+        public virtual DbSet<ProductQualityDataDetail> ProductQualityDataDetail { get; set; }
         public virtual DbSet<ProductQualityPlan> ProductQualityPlan { get; set; }
+        public virtual DbSet<EntryQualityDataDetail> EntryQualityDataDetail { get; set; }
+        public virtual DbSet<EntryQualityData> EntryQualityData { get; set; }
+        public virtual DbSet<EntryQualityPlanDetail> EntryQualityPlanDetail { get; set; }
     }
 }

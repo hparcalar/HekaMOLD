@@ -18,6 +18,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Quality
         public string ControlDevice { get; set; }
         public string Method { get; set; }
         public string Responsible { get; set; }
+        public decimal? SampleQuantity { get; set; }
         public bool NewDetail { get; set; }
     }
 }

@@ -24,6 +24,7 @@ namespace Heka.DataAccess.Context
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.MachineMaintenanceInstruction = new HashSet<MachineMaintenanceInstruction>();
             this.MoldTest = new HashSet<MoldTest>();
+            this.ProductQualityData = new HashSet<ProductQualityData>();
         }
     
         public int Id { get; set; }
@@ -54,5 +55,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MoldTest> MoldTest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductQualityData> ProductQualityData { get; set; }
     }
 }

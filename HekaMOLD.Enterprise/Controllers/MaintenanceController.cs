@@ -342,5 +342,12 @@ namespace HekaMOLD.Enterprise.Controllers
             }
         }
         #endregion
+
+        #region REPORTS
+        public ActionResult ReportMaintenance()
+        {
+            return View();
+        }
+        #endregion
     }
 }

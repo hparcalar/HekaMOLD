@@ -22,6 +22,7 @@ namespace Heka.DataAccess.Context
             this.FirmAuthor = new HashSet<FirmAuthor>();
             this.WorkOrder = new HashSet<WorkOrder>();
             this.Item = new HashSet<Item>();
+            this.EntryQualityData = new HashSet<EntryQualityData>();
         }
     
         public int Id { get; set; }
@@ -59,5 +60,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<WorkOrder> WorkOrder { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Item> Item { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
     }
 }

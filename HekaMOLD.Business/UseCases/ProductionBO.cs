@@ -757,9 +757,13 @@ namespace HekaMOLD.Business.UseCases
 
                 model.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", model.CreatedDate);
                 model.StartDateStr = model.StartDate != null ?
-                        string.Format("{0:dd.MM.yyyy HH:mm}", model.StartDateStr) : "";
+                        string.Format("{0:dd.MM.yyyy HH:mm}", model.StartDate) : "";
                 model.EndDateStr = model.EndDate != null ?
                         string.Format("{0:dd.MM.yyyy HH:mm}", model.EndDate) : "";
+
+                var dbUser = repoUser.Get(d => d.Id == (dbObj.CreatedUserId ?? 0));
+                if (dbUser != null)
+                    model.CreatedUserName = dbUser.UserName;
             }
 
             return model;

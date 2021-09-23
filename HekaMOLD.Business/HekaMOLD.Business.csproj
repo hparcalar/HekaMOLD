@@ -119,8 +119,12 @@
     <Compile Include="Models\DataTransfer\Production\WorkOrderItemNeedsModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderSerialModel.cs" />
+    <Compile Include="Models\DataTransfer\Quality\EntryQualityDataDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Quality\EntryQualityDataModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\EntryQualityPlanDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\EntryQualityPlanModel.cs" />
+    <Compile Include="Models\DataTransfer\Quality\ProductQualityDataDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Quality\ProductQualityDataModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\ProductQualityPlanModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptModel.cs" />

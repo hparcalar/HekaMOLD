@@ -29,6 +29,45 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.ItemGroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "";
                 containerObj.ItemCategoryCode = d.ItemCategory != null ? d.ItemCategory.ItemCategoryCode : "";
                 containerObj.ItemCategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "";
+                containerObj.Details = d.EntryQualityPlanDetail.Select(m => new EntryQualityPlanDetailModel
+                {
+                    Id = m.Id,
+                    CheckProperty = m.CheckProperty
+                }).ToArray();
+
+                string checkList = "";
+                foreach (var checkItem in d.EntryQualityPlanDetail)
+                {
+                    checkList += checkItem.CheckProperty + "/";
+                }
+
+                containerObj.CheckPropertyList = checkList;
+
+                data.Add(containerObj);
+            });
+
+            return data.OrderBy(d => d.OrderNo).ToArray();
+        }
+
+        public EntryQualityPlanModel[] GetEntryPlanListByItemGroup(int itemGroupId)
+        {
+            List<EntryQualityPlanModel> data = new List<EntryQualityPlanModel>();
+
+            var repo = _unitOfWork.GetRepository<EntryQualityPlan>();
+
+            repo.Filter(d => d.ItemGroupId == itemGroupId).ToList().ForEach(d =>
+            {
+                EntryQualityPlanModel containerObj = new EntryQualityPlanModel();
+                d.MapTo(containerObj);
+                containerObj.ItemGroupCode = d.ItemGroup != null ? d.ItemGroup.ItemGroupCode : "";
+                containerObj.ItemGroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "";
+                containerObj.ItemCategoryCode = d.ItemCategory != null ? d.ItemCategory.ItemCategoryCode : "";
+                containerObj.ItemCategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "";
+                containerObj.Details = d.EntryQualityPlanDetail.Select(m => new EntryQualityPlanDetailModel
+                {
+                    Id = m.Id,
+                    CheckProperty = m.CheckProperty
+                }).ToArray();
 
                 string checkList = "";
                 foreach (var checkItem in d.EntryQualityPlanDetail)
@@ -205,8 +244,179 @@ namespace HekaMOLD.Business.UseCases
         }
         // END -- ENTRY QUALITY PLANS
 
-        // ENTRY QUALITY DATA
+        // ENTRY QUALITY DATA FORM WORKS
+        public EntryQualityDataModel[] GetEntryFormList()
+        {
+            EntryQualityDataModel[] data = new EntryQualityDataModel[0];
 
+            try
+            {
+                var repo = _unitOfWork.GetRepository<EntryQualityData>();
+                data = repo.GetAll().ToList().Select(d => new EntryQualityDataModel
+                {
+                    Id = d.Id,
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                    ItemLot = d.ItemLot,
+                    WaybillNo = d.WaybillNo,
+                    EntryQuantity = d.EntryQuantity,
+                    CheckedQuantity = d.CheckedQuantity,
+                    LotNumbers = d.LotNumbers,
+                    SampleQuantity = d.SampleQuantity,
+                    FirmId = d.FirmId,
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    CreatedDate = d.CreatedDate,
+                    CreatedUserId = d.CreatedUserId,
+                    UpdatedDate = d.UpdatedDate,
+                    UpdatedUserId = d.UpdatedUserId,
+                }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public EntryQualityDataModel GetEntryForm(int id)
+        {
+            EntryQualityDataModel model = new EntryQualityDataModel { };
+
+            var repo = _unitOfWork.GetRepository<EntryQualityData>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+                model.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", model.CreatedDate);
+
+                #region GET DETAILS
+                List<EntryQualityDataDetailModel> detailList = new List<EntryQualityDataDetailModel>();
+                dbObj.EntryQualityDataDetail.ToList().ForEach(d =>
+                {
+                    EntryQualityDataDetailModel detailModel = new EntryQualityDataDetailModel();
+                    d.MapTo(detailModel);
+                    detailList.Add(detailModel);
+                });
+                model.Details = detailList.ToArray();
+                #endregion
+            }
+
+            return model;
+        }
+
+        public BusinessResult SaveOrUpdateEntryForm(EntryQualityDataModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (model.ItemId == null)
+                    throw new Exception("Malzeme seçilmelidir.");
+
+                if (model.FirmId == null)
+                    throw new Exception("Firma seçilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<EntryQualityData>();
+                var repoDetails = _unitOfWork.GetRepository<EntryQualityDataDetail>();
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new EntryQualityData();
+                    repo.Add(dbObj);
+                }
+
+                if (!string.IsNullOrEmpty(model.CreatedDateStr))
+                    model.CreatedDate = DateTime.ParseExact(model.CreatedDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var cntDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = cntDate;
+
+                #region SAVE DETAILS
+                if (model.Details == null)
+                    model.Details = new EntryQualityDataDetailModel[0];
+
+                var toBeRemovedDetails = dbObj.EntryQualityDataDetail
+                    .Where(d => !model.Details.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedDetails)
+                {
+                    repoDetails.Delete(item);
+                }
+
+                foreach (var item in model.Details)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemAu = new EntryQualityDataDetail();
+                        item.MapTo(dbItemAu);
+                        dbItemAu.EntryQualityData = dbObj;
+                        repoDetails.Add(dbItemAu);
+                    }
+                    else if (!toBeRemovedDetails.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemAu = repoDetails.GetById(item.Id);
+                        item.MapTo(dbItemAu);
+                        dbItemAu.EntryQualityData = dbObj;
+                    }
+                }
+                #endregion
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteEntryForm(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<EntryQualityData>();
+                var repoDetail = _unitOfWork.GetRepository<EntryQualityDataDetail>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj != null)
+                {
+                    var details = dbObj.EntryQualityDataDetail.ToArray();
+                    foreach (var item in details)
+                    {
+                        repoDetail.Delete(item);
+                    }
+                }
+
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         // END -- ENTRY QUALITY DATA
         #endregion
 
@@ -331,6 +541,174 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return model;
+        }
+
+        // PRODUCT QUALITY FORM WORKS
+        public ProductQualityDataModel[] GetProductFormList()
+        {
+            ProductQualityDataModel[] data = new ProductQualityDataModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ProductQualityData>();
+                data = repo.GetAll().ToList().Select(d => new ProductQualityDataModel
+                {
+                    Id = d.Id,
+                    ControlDate = d.ControlDate,
+                    ControlDateStr = string.Format("{0:dd.MM.yyyy}", d.ControlDate),
+                    MachineId = d.MachineId,
+                    ProductId = d.ProductId,
+                    MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                    MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                    ProductCode = d.Item != null ? d.Item.ItemNo : "",
+                    ProductName = d.Item != null ? d.Item.ItemName : "",
+                    CreatedDate = d.CreatedDate,
+                    CreatedUserId = d.CreatedUserId,
+                    UpdatedDate = d.UpdatedDate,
+                    UpdatedUserId = d.UpdatedUserId,
+                }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ProductQualityDataModel GetProductForm(int id)
+        {
+            ProductQualityDataModel model = new ProductQualityDataModel { };
+
+            var repo = _unitOfWork.GetRepository<ProductQualityData>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+                model.ControlDateStr = string.Format("{0:dd.MM.yyyy}", model.ControlDate);
+
+                #region GET DETAILS
+                List<ProductQualityDataDetailModel> detailList = new List<ProductQualityDataDetailModel>();
+                dbObj.ProductQualityDataDetail.ToList().ForEach(d =>
+                {
+                    ProductQualityDataDetailModel detailModel = new ProductQualityDataDetailModel();
+                    d.MapTo(detailModel);
+                    detailList.Add(detailModel);
+                });
+                model.Details = detailList.ToArray();
+                #endregion
+            }
+
+            return model;
+        }
+
+        public BusinessResult SaveOrUpdateProductForm(ProductQualityDataModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (model.MachineId == null)
+                    throw new Exception("Makine seçilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<ProductQualityData>();
+                var repoDetails = _unitOfWork.GetRepository<ProductQualityDataDetail>();
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ProductQualityData();
+                    repo.Add(dbObj);
+                }
+
+                if (!string.IsNullOrEmpty(model.ControlDateStr))
+                    model.ControlDate = DateTime.ParseExact(model.ControlDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var cntDate = dbObj.ControlDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.ControlDate == null)
+                    dbObj.ControlDate = cntDate;
+
+                #region SAVE DETAILS
+                if (model.Details == null)
+                    model.Details = new ProductQualityDataDetailModel[0];
+
+                var toBeRemovedDetails = dbObj.ProductQualityDataDetail
+                    .Where(d => !model.Details.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedDetails)
+                {
+                    repoDetails.Delete(item);
+                }
+
+                foreach (var item in model.Details)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemAu = new ProductQualityDataDetail();
+                        item.MapTo(dbItemAu);
+                        dbItemAu.ProductQualityData = dbObj;
+                        repoDetails.Add(dbItemAu);
+                    }
+                    else if (!toBeRemovedDetails.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemAu = repoDetails.GetById(item.Id);
+                        item.MapTo(dbItemAu);
+                        dbItemAu.ProductQualityData = dbObj;
+                    }
+                }
+                #endregion
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteProductForm(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ProductQualityData>();
+                var repoDetail = _unitOfWork.GetRepository<ProductQualityDataDetail>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj != null)
+                {
+                    var details = dbObj.ProductQualityDataDetail.ToArray();
+                    foreach (var item in details)
+                    {
+                        repoDetail.Delete(item);
+                    }
+                }
+
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
         #endregion
     }

@@ -12,27 +12,25 @@ namespace Heka.DataAccess.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductQualityPlan
+    public partial class ProductQualityData
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ProductQualityPlan()
+        public ProductQualityData()
         {
             this.ProductQualityDataDetail = new HashSet<ProductQualityDataDetail>();
         }
     
         public int Id { get; set; }
-        public string ProductQualityCode { get; set; }
-        public string CheckProperties { get; set; }
-        public string PeriodType { get; set; }
-        public string AcceptanceCriteria { get; set; }
-        public string ControlDevice { get; set; }
-        public string Method { get; set; }
-        public string Responsible { get; set; }
-        public Nullable<int> OrderNo { get; set; }
-        public int CheckType { get; set; }
-        public Nullable<decimal> ToleranceMin { get; set; }
-        public Nullable<decimal> ToleranceMax { get; set; }
+        public Nullable<int> MachineId { get; set; }
+        public Nullable<int> ProductId { get; set; }
+        public Nullable<System.DateTime> ControlDate { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
+        public Nullable<int> UpdatedUserId { get; set; }
     
+        public virtual Item Item { get; set; }
+        public virtual Machine Machine { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductQualityDataDetail> ProductQualityDataDetail { get; set; }
     }
