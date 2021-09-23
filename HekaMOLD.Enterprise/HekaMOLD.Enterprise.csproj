@@ -132,6 +132,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
@@ -4015,6 +4016,9 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
+    <Content Include="FrontEndLogic\Document\index.js" />
+    <Content Include="FrontEndLogic\Document\list.js" />
+    <Content Include="FrontEndLogic\Document\preview.js" />
     <Content Include="FrontEndLogic\Dye\index.js" />
     <Content Include="FrontEndLogic\Dye\list.js" />
     <Content Include="FrontEndLogic\EntryQuality\index-data.js" />
@@ -4319,6 +4323,7 @@
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
+    <Content Include="Scripts\ckeditor.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.de.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.en.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.ja.js" />
@@ -4347,6 +4352,7 @@
     <Content Include="Scripts\globalize\relative-time.js" />
     <Content Include="Scripts\globalize\unit.js" />
     <Content Include="Scripts\html5-qrcode.min.js" />
+    <Content Include="Scripts\ckeditor.js.map" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -4480,6 +4486,9 @@
     <Content Include="Views\Maintenance\Posture.cshtml" />
     <Content Include="Views\EntryQuality\ListData.cshtml" />
     <Content Include="Views\EntryQuality\IndexData.cshtml" />
+    <Content Include="Views\Document\List.cshtml" />
+    <Content Include="Views\Document\Index.cshtml" />
+    <Content Include="Views\Document\Preview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

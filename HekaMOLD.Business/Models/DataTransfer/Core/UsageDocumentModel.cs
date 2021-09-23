@@ -12,5 +12,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int Id { get; set; }
         public string DocumentTitle { get; set; }
         public string DocumentData { get; set; }
+
+        #region VISUAL ELEMENTS
+        public string CreatedDateStr { get; set; }
+        public string UpdatedDateStr { get; set; }
+        #endregion
     }
 }

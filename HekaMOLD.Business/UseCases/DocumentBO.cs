@@ -25,6 +25,13 @@ namespace HekaMOLD.Business.UseCases
             {
                 UsageDocumentModel containerObj = new UsageDocumentModel();
                 d.MapTo(containerObj);
+
+                containerObj.CreatedDateStr = d.CreatedDate != null ?
+                    string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "";
+
+                containerObj.UpdatedDateStr = d.UpdatedDate != null ?
+                    string.Format("{0:dd.MM.yyyy}", d.UpdatedDate) : "";
+
                 data.Add(containerObj);
             });
 
