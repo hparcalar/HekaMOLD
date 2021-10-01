@@ -63,6 +63,7 @@
     <Compile Include="Models\Constants\ItemReceiptType.cs" />
     <Compile Include="Models\Constants\ItemOrderType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
+    <Compile Include="Models\Constants\MoldStatus.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
     <Compile Include="Models\Constants\PostureStatusType.cs" />
     <Compile Include="Models\Constants\ReceiptCategoryType.cs" />
@@ -91,16 +92,19 @@
     <Compile Include="Models\DataTransfer\Core\NotificationModel.cs" />
     <Compile Include="Models\DataTransfer\Core\PlantModel.cs" />
     <Compile Include="Models\DataTransfer\Core\RecordInformationModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\SectionSettingModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SyncPointModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UnitTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UsageDocumentModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
+    <Compile Include="Models\DataTransfer\Finance\InvoiceModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EndPostureParam.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionEntryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionModel.cs" />
+    <Compile Include="Models\DataTransfer\MoldTrace\MoldMoveHistory.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Production\DyeModel.cs" />
@@ -109,6 +113,7 @@
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MoldProductModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldTestModel.cs" />
     <Compile Include="Models\DataTransfer\Production\PostureCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductionPostureModel.cs" />
@@ -136,6 +141,7 @@
     <Compile Include="Models\DataTransfer\Summary\MachineStatsModel.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
     <Compile Include="Models\Dictionaries\DictItemOrderType.cs" />
+    <Compile Include="Models\Dictionaries\DictMoldStatus.cs" />
     <Compile Include="Models\Dictionaries\DictPostureStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictWorkOrderStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptCategoryType.cs" />

@@ -25,7 +25,7 @@
             },
             paging: {
                 enabled:true,
-                pageSize: 13,
+                pageSize: 10,
                 pageIndex:0
             },
             groupPanel: {
@@ -38,6 +38,10 @@
             columns: [
                 { dataField: 'MoldCode', caption: 'Kalıp Kodu' },
                 { dataField: 'MoldName', caption: 'Kalıp Adı' },
+                { dataField: 'FirmName', caption: 'Sahibi' },
+                { dataField: 'OwnedDateStr', caption: 'Giriş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'LifeTimeTicks', caption: 'Kalıp Ömrü' },
+                { dataField: 'CurrentTicks', caption: 'Mevcut Baskı' },
                 {
                     type: "buttons",
                     buttons: [

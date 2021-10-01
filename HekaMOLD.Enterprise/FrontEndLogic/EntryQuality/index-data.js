@@ -28,7 +28,7 @@
                         $scope.productList = resp.data.Items;
                         $scope.firmList = resp.data.Firms;
 
-                        var emptyFirmObj = { Id: 0, MachineCode: '-- Seçiniz --' };
+                        var emptyFirmObj = { Id: 0, FirmCode: '-- Seçiniz --' };
                         $scope.firmList.splice(0, 0, emptyFirmObj);
                         $scope.selectedFirm = emptyFirmObj;
 

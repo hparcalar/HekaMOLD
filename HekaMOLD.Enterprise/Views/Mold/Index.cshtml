@@ -124,18 +124,73 @@
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kalıp Kodu</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.MoldCode" placeholder="" />
+                        <input type="text" class="form-control form-control-sm form-control-solid" ng-model="modelObject.MoldCode" placeholder="" />
                     </div>
 
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kalıp Adı</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.MoldName" placeholder="" />
+                        <input type="text" class="form-control form-control-sm form-control-solid" ng-model="modelObject.MoldName" placeholder="" />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kalıp Ömrü (Baskı Adedi)</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-sm form-control-solid" ng-model="modelObject.LifeTimeTicks"
+                                       placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Mevcut Baskı</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-sm form-control-solid bg-light-primary"
+                                       readonly="readonly"
+                                       ng-model="modelObject.CurrentTicks"
+                                       placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çıkan Ürünler</label>
+                    <div class="dx-viewport mb-2">
+                        <div id="productList"></div>
                     </div>
                 </div>
                 <!--end::Col-->
-                <div class="col-xxl-6">
 
+                <div class="col-xxl-6">
+                    <label class="form-label fs-8 fw-bolder text-gray-700 mb-2">Sahibi</label>
+                    <div class="mb-5">
+                        <select class="form-select form-control-sm form-control-solid" data-allow-clear="true"
+                                ng-options="item.FirmName for item in firmList" ng-model="selectedFirm"
+                                data-control="select2" data-placeholder="-- Seçiniz --"></select>
+                    </div>
+
+                    <label class="form-label fs-8 fw-bolder text-gray-700 mb-3">Giriş Tarihi</label>
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-sm form-control-solid datepicker fs-8"
+                               ng-model="modelObject.OwnedDateStr" placeholder="" />
+                    </div>
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Durumu</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-sm form-control-solid bg-light-primary"
+                               readonly="readonly"
+                               ng-model="modelObject.MoldStatusText"
+                               placeholder="" />
+                    </div>
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <textarea type="text" rows="5" class="form-control form-control-sm form-control-solid"
+                               ng-model="modelObject.Explanation"
+                               placeholder=""></textarea>
+                    </div>
                 </div>
             </div>
             <!--end::Row-->
@@ -146,5 +201,8 @@
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/FrontEndLogic/Mold/index.js"></script>
 }

@@ -14,9 +14,23 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string MoldName { get; set; }
         public int? PlantId { get; set; }
         public bool? IsActive { get; set; }
+        public int? FirmId { get; set; }
+        public int? LifeTimeTicks { get; set; }
+        public int? CurrentTicks { get; set; }
+        public int? MoldItemId { get; set; }
+        public DateTime? OwnedDate { get; set; }
+        public int? MoldStatus { get; set; }
+        public string Explanation { get; set; }
+        public MoldProductModel[] Products { get; set; }
 
         #region VISUAL ELEMENTS
         public string CreatedDateStr { get; set; }
+        public string OwnedDateStr { get; set; }
+        public string FirmCode { get; set; }
+        public string FirmName { get; set; }
+        public string ItemNo { get; set; }
+        public string ItemName { get; set; }
+        public string MoldStatusText { get; set; }
         #endregion
     }
 }

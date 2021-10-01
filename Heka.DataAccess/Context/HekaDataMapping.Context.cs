@@ -31,7 +31,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ItemGroup> ItemGroup { get; set; }
         public virtual DbSet<ItemOrder> ItemOrder { get; set; }
         public virtual DbSet<ItemOrderDetail> ItemOrderDetail { get; set; }
-        public virtual DbSet<ItemReceipt> ItemReceipt { get; set; }
         public virtual DbSet<ItemRequest> ItemRequest { get; set; }
         public virtual DbSet<ItemRequestApproveLog> ItemRequestApproveLog { get; set; }
         public virtual DbSet<ItemRequestDetail> ItemRequestDetail { get; set; }
@@ -55,7 +54,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<Attachment> Attachment { get; set; }
         public virtual DbSet<ProductRecipe> ProductRecipe { get; set; }
         public virtual DbSet<ProductRecipeDetail> ProductRecipeDetail { get; set; }
-        public virtual DbSet<Mold> Mold { get; set; }
         public virtual DbSet<Dye> Dye { get; set; }
         public virtual DbSet<ItemReceiptDetail> ItemReceiptDetail { get; set; }
         public virtual DbSet<WorkOrder> WorkOrder { get; set; }
@@ -85,5 +83,10 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<EntryQualityData> EntryQualityData { get; set; }
         public virtual DbSet<EntryQualityPlanDetail> EntryQualityPlanDetail { get; set; }
         public virtual DbSet<UsageDocument> UsageDocument { get; set; }
+        public virtual DbSet<SectionSetting> SectionSetting { get; set; }
+        public virtual DbSet<MoldProduct> MoldProduct { get; set; }
+        public virtual DbSet<Mold> Mold { get; set; }
+        public virtual DbSet<Invoice> Invoice { get; set; }
+        public virtual DbSet<ItemReceipt> ItemReceipt { get; set; }
     }
 }

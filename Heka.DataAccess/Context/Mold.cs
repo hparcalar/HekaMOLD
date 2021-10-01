@@ -17,9 +17,10 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Mold()
         {
-            this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.Item = new HashSet<Item>();
+            this.MoldProduct = new HashSet<MoldProduct>();
             this.MoldTest = new HashSet<MoldTest>();
+            this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
         }
     
         public int Id { get; set; }
@@ -31,12 +32,23 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public Nullable<int> FirmId { get; set; }
+        public Nullable<int> LifeTimeTicks { get; set; }
+        public Nullable<int> CurrentTicks { get; set; }
+        public Nullable<int> MoldItemId { get; set; }
+        public Nullable<System.DateTime> OwnedDate { get; set; }
+        public Nullable<int> MoldStatus { get; set; }
+        public string Explanation { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+        public virtual Firm Firm { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Item> Item { get; set; }
+        public virtual Item Item1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MoldProduct> MoldProduct { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MoldTest> MoldTest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
     }
 }

@@ -98,6 +98,13 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(MoldStatus))
+                {
+                    return DictMoldStatus.Values
+                        .Where(d => d.Key == (MoldStatus)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception)
             {

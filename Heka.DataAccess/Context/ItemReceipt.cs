@@ -31,6 +31,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> PlantId { get; set; }
         public string DeliveryAddress { get; set; }
         public string Explanation { get; set; }
+        public Nullable<int> ReceiptStatus { get; set; }
         public Nullable<int> SyncStatus { get; set; }
         public Nullable<int> SyncPointId { get; set; }
         public Nullable<System.DateTime> SyncDate { get; set; }
@@ -40,9 +41,10 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-        public Nullable<int> ReceiptStatus { get; set; }
+        public Nullable<int> InvoiceId { get; set; }
     
         public virtual Firm Firm { get; set; }
+        public virtual Invoice Invoice { get; set; }
         public virtual ItemOrder ItemOrder { get; set; }
         public virtual Plant Plant { get; set; }
         public virtual SyncPoint SyncPoint { get; set; }

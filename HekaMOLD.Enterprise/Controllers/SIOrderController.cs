@@ -72,6 +72,12 @@ namespace HekaMOLD.Enterprise.Controllers
             using (OrdersBO bObj = new OrdersBO())
             {
                 result = bObj.GetItemOrderList(ItemOrderType.Sale);
+
+                foreach (var item in result)
+                {
+                    if (item.OrderStatus == (int)OrderStatusType.Approved || item.OrderStatus == (int)OrderStatusType.Created)
+                        item.OrderStatusStr = "Planlanması bekleniyor";
+                }
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.MoldTrace;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
@@ -41,6 +42,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetMoldMovementHistory(int moldId)
+        {
+            MoldMoveHistory[] result = new MoldMoveHistory[0];
+
+            using (MoldBO bObj = new MoldBO())
+            {
+                result = bObj.GetMoldMovementHistory(moldId);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult BindModel(int rid)
         {
             MoldModel model = null;
@@ -50,6 +66,27 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetSelectables()
+        {
+            ItemModel[] items = new ItemModel[0];
+            FirmModel[] firms = new FirmModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                items = bObj.GetItemList();
+                firms = bObj.GetFirmList();
+            }
+
+            var jsonResult = Json(new
+            {
+                Items = items,
+                Firms = firms,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
         [HttpGet]

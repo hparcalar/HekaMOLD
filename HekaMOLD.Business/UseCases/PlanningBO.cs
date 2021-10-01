@@ -106,9 +106,15 @@ namespace HekaMOLD.Business.UseCases
                 var saleOrderPlannedQuantity = dbSaleOrderDetail.WorkOrderDetail
                     .Sum(d => d.Quantity);
                 if (dbSaleOrderDetail.Quantity <= saleOrderPlannedQuantity)
+                {
                     dbSaleOrderDetail.OrderStatus = (int)OrderStatusType.Planned;
+                    dbSaleOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Planned;
+                }
                 else
+                {
                     dbSaleOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
+                    dbSaleOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
+                }
                 #endregion
 
                 #region CHECK/ADD MACHINE PLAN QUEUE

@@ -18,6 +18,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public int? InWarehouseId { get; set; }
         public int? OutWarehouseId { get; set; }
         public int? PlantId { get; set; }
+        public int? InvoiceId { get; set; }
         public string Explanation { get; set; }
         public int? ReceiptStatus { get; set; }
         public int? ItemOrderId { get; set; }
@@ -40,6 +41,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string CreatedDateStr { get; set; }
         public string ReceiptDateStr { get; set; }
         public string ReceiptTypeStr { get; set; }
+        public string InvoiceNo { get; set; }
+        public string InvoiceDateStr { get; set; }
+        public string InvoiceDocumentNo { get; set; }
         #endregion
     }
 }

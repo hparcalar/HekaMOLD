@@ -1606,18 +1606,24 @@ namespace HekaMOLD.Business.UseCases
         #region MOLD BUSINESS
         public MoldModel[] GetMoldList()
         {
-            List<MoldModel> data = new List<MoldModel>();
+            MoldModel[] data = new MoldModel[0];
 
             var repo = _unitOfWork.GetRepository<Mold>();
 
-            repo.GetAll().ToList().ForEach(d =>
+            data = repo.GetAll().ToList().Select(d => new MoldModel
             {
-                MoldModel containerObj = new MoldModel();
-                d.MapTo(containerObj);
-                data.Add(containerObj);
-            });
+                Id = d.Id,
+                MoldCode = d.MoldCode,
+                MoldName = d.MoldName,
+                FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                OwnedDateStr = d.OwnedDate != null ? 
+                    string.Format("{0:dd.MM.yyyy}", d.OwnedDate) : "",
+                LifeTimeTicks = d.LifeTimeTicks,
+                CurrentTicks = d.CurrentTicks,
+            }).ToArray();
 
-            return data.ToArray();
+            return data;
         }
 
         public BusinessResult SaveOrUpdateMold(MoldModel model)
@@ -1631,7 +1637,17 @@ namespace HekaMOLD.Business.UseCases
                 if (string.IsNullOrEmpty(model.MoldName))
                     throw new Exception("Kalıp adı girilmelidir.");
 
+                if (!string.IsNullOrEmpty(model.CreatedDateStr))
+                    model.CreatedDate = DateTime.ParseExact(model.CreatedDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                if (!string.IsNullOrEmpty(model.OwnedDateStr))
+                    model.OwnedDate = DateTime.ParseExact(model.OwnedDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                 var repo = _unitOfWork.GetRepository<Mold>();
+                var repoMoldProducts = _unitOfWork.GetRepository<MoldProduct>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
 
                 if (repo.Any(d => (d.MoldCode == model.MoldCode)
                     && d.Id != model.Id))
@@ -1647,13 +1663,65 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 var crDate = dbObj.CreatedDate;
+                var owDate = dbObj.OwnedDate;
 
                 model.MapTo(dbObj);
 
                 if (dbObj.CreatedDate == null)
                     dbObj.CreatedDate = crDate;
+                if (dbObj.OwnedDate == null)
+                    dbObj.OwnedDate = owDate;
 
                 dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE PRODUCTS
+                if (model.Products == null)
+                    model.Products = new MoldProductModel[0];
+
+                var toBeRemovedAuthors = dbObj.MoldProduct
+                    .Where(d => !model.Products.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedAuthors)
+                {
+                    repoMoldProducts.Delete(item);
+                }
+
+                foreach (var item in model.Products)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemAu = new MoldProduct();
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Mold = dbObj;
+                        repoMoldProducts.Add(dbItemAu);
+                    }
+                    else if (!toBeRemovedAuthors.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemAu = repoMoldProducts.GetById(item.Id);
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Mold = dbObj;
+                    }
+                }
+                #endregion
+
+                #region MOLD ITEM RECORD CHECK
+                var dbMoldItem = repoItem.Get(d => d.ItemNo == dbObj.MoldCode && dbObj.PlantId == d.PlantId);
+                if (dbMoldItem == null)
+                {
+                    dbMoldItem = new Item
+                    {
+                        PlantId = dbObj.PlantId,
+                        ItemType = (int)ItemType.Commercial,
+                        CreatedDate = DateTime.Now,
+                    };
+                    repoItem.Add(dbMoldItem);
+                }
+
+                dbMoldItem.ItemNo = dbObj.MoldCode;
+                dbMoldItem.ItemName = dbObj.MoldName;
+                dbMoldItem.SupplierFirmId = dbObj.FirmId;
+                #endregion
 
                 _unitOfWork.SaveChanges();
 
@@ -1676,8 +1744,18 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<Mold>();
+                var repoProducts = _unitOfWork.GetRepository<MoldProduct>();
 
                 var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj.MoldProduct.Any())
+                {
+                    var toBeRemoved = dbObj.MoldProduct.ToArray();
+                    foreach (var item in toBeRemoved)
+                    {
+                        repoProducts.Delete(item);
+                    }
+                }
+
                 repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
 
@@ -1694,13 +1772,27 @@ namespace HekaMOLD.Business.UseCases
 
         public MoldModel GetMold(int id)
         {
-            MoldModel model = new MoldModel { };
+            MoldModel model = new MoldModel { Products = new MoldProductModel[0] };
 
             var repo = _unitOfWork.GetRepository<Mold>();
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                model.MoldStatusText = ((MoldStatus)(model.MoldStatus ?? 1)).ToCaption();
+                model.CreatedDateStr = model.CreatedDate != null ?
+                    string.Format("{0:dd.MM.yyyy}", model.CreatedDate) : "";
+                model.OwnedDateStr = model.OwnedDate != null ?
+                    string.Format("{0:dd.MM.yyyy}", model.OwnedDate) : "";
+                model.Products = dbObj.MoldProduct.Select(m => new MoldProductModel
+                {
+                    Id = m.Id,
+                    LineNumber = m.LineNumber,
+                    MoldId = m.MoldId,
+                    ProductId = m.ProductId,
+                    ProductCode = m.Item != null ? m.Item.ItemNo : "",
+                    ProductName = m.Item != null ? m.Item.ItemName : "",
+                }).ToArray();
             }
 
             return model;
@@ -1831,6 +1923,113 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        #endregion
+
+        #region SECTION SETTINGS BUSINESS
+        public SectionSettingModel[] GetSectionSettingList()
+        {
+            List<SectionSettingModel> data = new List<SectionSettingModel>();
+
+            var repo = _unitOfWork.GetRepository<SectionSetting>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                SectionSettingModel containerObj = new SectionSettingModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateSectionSetting(SectionSettingModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.SectionGroupCode))
+                    throw new Exception("Bölüm bilgisi girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<SectionSetting>();
+
+                if (repo.Any(d => (d.SectionGroupCode == model.SectionGroupCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir bölüm ayarı mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new SectionSetting();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteSectionSetting(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SectionSetting>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public SectionSettingModel GetSectionSetting(int id)
+        {
+            SectionSettingModel model = new SectionSettingModel { };
+
+            var repo = _unitOfWork.GetRepository<SectionSetting>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public SectionSettingModel GetSectionSetting(string sectionCode)
+        {
+            SectionSettingModel model = new SectionSettingModel { };
+
+            var repo = _unitOfWork.GetRepository<SectionSetting>();
+            var dbObj = repo.Get(d => d.SectionGroupCode == sectionCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
         #endregion
     }
 }

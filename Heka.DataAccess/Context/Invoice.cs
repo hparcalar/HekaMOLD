@@ -12,34 +12,33 @@ namespace Heka.DataAccess.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class SyncPoint
+    public partial class Invoice
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public SyncPoint()
+        public Invoice()
         {
-            this.ItemOrder = new HashSet<ItemOrder>();
             this.ItemReceipt = new HashSet<ItemReceipt>();
         }
     
         public int Id { get; set; }
-        public string SyncPointCode { get; set; }
-        public string SyncPointName { get; set; }
-        public Nullable<int> SyncPointType { get; set; }
-        public string ConnectionString { get; set; }
+        public Nullable<int> InvoiceType { get; set; }
+        public string InvoiceNo { get; set; }
+        public Nullable<int> InvoiceStatus { get; set; }
+        public string DocumentNo { get; set; }
+        public Nullable<System.DateTime> InvoiceDate { get; set; }
+        public Nullable<int> FirmId { get; set; }
         public Nullable<int> PlantId { get; set; }
-        public Nullable<bool> IsActive { get; set; }
+        public string Explanation { get; set; }
+        public Nullable<decimal> SubTotal { get; set; }
+        public Nullable<decimal> DiscountTotal { get; set; }
+        public Nullable<decimal> TaxTotal { get; set; }
+        public Nullable<decimal> GrandTotal { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-        public Nullable<bool> EnabledOnPurchaseOrders { get; set; }
-        public Nullable<bool> EnabledOnSalesOrders { get; set; }
-        public Nullable<bool> EnabledOnPurchaseItemReceipts { get; set; }
-        public Nullable<bool> EnabledOnSalesItemReceipts { get; set; }
-        public Nullable<bool> EnabledOnConsumptionReceipts { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemOrder> ItemOrder { get; set; }
+        public virtual Firm Firm { get; set; }
         public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
