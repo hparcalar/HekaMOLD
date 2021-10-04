@@ -132,6 +132,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
@@ -1106,6 +1107,7 @@
     <Content Include="assets\media\icons\duotone\Medicine\Toilet-Paper.svg" />
     <Content Include="assets\media\icons\duotone\Medicine\Toothbrush.svg" />
     <Content Include="assets\media\icons\duotone\Medicine\Virus.svg" />
+    <Content Include="assets\media\icons\duotone\Mold\mold.svg" />
     <Content Include="assets\media\icons\duotone\Sport\Baseball-Ball.svg" />
     <Content Include="assets\media\icons\duotone\Sport\Basketball-Ball.svg" />
     <Content Include="assets\media\icons\duotone\Sport\Basketball-Hoop.svg" />
@@ -1783,6 +1785,7 @@
     <Content Include="assets\media\icons\stockholm\Weather\Umbrella.svg" />
     <Content Include="assets\media\icons\stockholm\Weather\Wind.svg" />
     <Content Include="assets\media\logos\batusan-logo-org.png" />
+    <Content Include="assets\media\logos\logo-3.svg" />
     <Content Include="assets\media\logos\favicon.ico" />
     <Content Include="assets\media\logos\batusan-logo.png" />
     <Content Include="assets\media\logos\favicon-ex.ico" />
@@ -1791,7 +1794,7 @@
     <Content Include="assets\media\logos\logo-1.svg" />
     <Content Include="assets\media\logos\logo-2-dark.svg" />
     <Content Include="assets\media\logos\logo-2.svg" />
-    <Content Include="assets\media\logos\logo-3.svg" />
+    <Content Include="assets\media\logos\logo-3-ex.svg" />
     <Content Include="assets\media\logos\logo-4.png" />
     <Content Include="assets\media\logos\logo-dark.png" />
     <Content Include="assets\media\logos\logo-default-inverse.png" />
@@ -4016,6 +4019,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
+    <Content Include="FrontEndLogic\Delivery\planning.js" />
     <Content Include="FrontEndLogic\Document\index.js" />
     <Content Include="FrontEndLogic\Document\list.js" />
     <Content Include="FrontEndLogic\Document\preview.js" />
@@ -4047,6 +4051,7 @@
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
     <Content Include="FrontEndLogic\Mobile\fault-entry.js" />
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
+    <Content Include="FrontEndLogic\Mobile\wastage-entry.js" />
     <Content Include="FrontEndLogic\Mobile\product-pickup.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry.js" />
@@ -4489,6 +4494,8 @@
     <Content Include="Views\Document\List.cshtml" />
     <Content Include="Views\Document\Index.cshtml" />
     <Content Include="Views\Document\Preview.cshtml" />
+    <Content Include="Views\Mobile\WastageEntry.cshtml" />
+    <Content Include="Views\Delivery\Planning.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

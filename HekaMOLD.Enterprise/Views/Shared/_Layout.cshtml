@@ -48,8 +48,8 @@
                 <!--begin::Brand-->
                 <div class="aside-logo flex-column-auto" id="kt_aside_logo">
                     <!--begin::Logo-->
-                    <a href="index.html">
-                        <img alt="Logo" src="~/assets/media/logos/batusan-logo.png" class="h-30px logo" />
+                    <a href="@runningHost">
+                        <img alt="Logo" src="~/assets/media/logos/batusan-logo-org.png" class="h-40px logo" />
                     </a>
                     <!--end::Logo-->
                     <!--begin::Aside toggler-->
@@ -288,6 +288,23 @@
                                         <!--end::Svg Icon-->
                                     </span>
                                     <span class="menu-title">Malzeme İhtiyaçları</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link @(Regex.IsMatch(ctrl, "Delivery$") ? "active" : "")" href="@Url.Action("Planning","Delivery")">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/duotone/Interface/Settings-02.svg-->
+                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M13 5H2C0.895431 5 0 5.89543 0 7V15C0 16.1046 0.895431 17 2 17H3H7H14.5C14.7761 17 15 16.7761 15 16.5V7.00057C15 5.896 14.1046 5 13 5Z" fill="#12131A" />
+                                                <path d="M15.5 8C15.2239 8 15 8.22386 15 8.5V16.5C15 16.7761 15.2239 17 15.5 17H18H21H23C23.5523 17 24 16.5523 24 16V12.6637C24 12.0249 23.6948 11.4244 23.1786 11.0479L19.5267 8.38417C19.1844 8.13452 18.7717 8 18.3481 8H15.5Z" fill="#12131A" />
+                                                <path d="M5 19C6.10457 19 7 18.1046 7 17C7 15.8954 6.10457 15 5 15C3.89543 15 3 15.8954 3 17C3 18.1046 3.89543 19 5 19Z" fill="#12131A" />
+                                                <path d="M19 19C20.1046 19 21 18.1046 21 17C21 15.8954 20.1046 15 19 15C17.8954 15 17 15.8954 17 17C17 18.1046 17.8954 19 19 19Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Sevkiyat Planlama</span>
                                 </a>
                             </div>
                             <div class="menu-item">
@@ -623,18 +640,7 @@
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
                                         <span class="svg-icon svg-icon-dark svg-icon-2">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path opacity="0.25" d="M5 7C5 5.89543 5.89543 5 7 5H17C18.1046 5 19 5.89543 19 7V17C19 18.1046 18.1046 19 17 19H7C5.89543 19 5 18.1046 5 17V7Z" fill="#12131A" />
-                                                <path d="M10 11C10 10.4477 10.4477 10 11 10H13C13.5523 10 14 10.4477 14 11V13C14 13.5523 13.5523 14 13 14H11C10.4477 14 10 13.5523 10 13V11Z" fill="#12131A" />
-                                                <path d="M9 2C8.44772 2 8 2.44772 8 3V5H10V3C10 2.44772 9.55228 2 9 2Z" fill="#12131A" />
-                                                <path d="M10 21V19H8V21C8 21.5523 8.44772 22 9 22C9.55228 22 10 21.5523 10 21Z" fill="#12131A" />
-                                                <path d="M14 3C14 2.44772 14.4477 2 15 2C15.5523 2 16 2.44772 16 3V5H14V3Z" fill="#12131A" />
-                                                <path d="M16 21V19H14V21C14 21.5523 14.4477 22 15 22C15.5523 22 16 21.5523 16 21Z" fill="#12131A" />
-                                                <path d="M21 8C21.5523 8 22 8.44772 22 9C22 9.55229 21.5523 10 21 10H19V8H21Z" fill="#12131A" />
-                                                <path d="M3 10H5V8H3C2.44772 8 2 8.44771 2 9C2 9.55229 2.44772 10 3 10Z" fill="#12131A" />
-                                                <path d="M21 14C21.5523 14 22 14.4477 22 15C22 15.5523 21.5523 16 21 16H19V14H21Z" fill="#12131A" />
-                                                <path d="M3 16H5V14H3C2.44772 14 2 14.4477 2 15C2 15.5523 2.44772 16 3 16Z" fill="#12131A" />
-                                            </svg>
+                                            <svg id="Icons" style="enable-background:new 0 0 32 32;" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M26,13c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S27.7,13,26,13z M26,17c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S26.6,17,26,17z" /><path d="M16,9c1.7,0,3-1.3,3-3s-1.3-3-3-3s-3,1.3-3,3S14.3,9,16,9z M16,5c0.6,0,1,0.4,1,1s-0.4,1-1,1s-1-0.4-1-1S15.4,5,16,5z" /><path d="M16,23c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S17.7,23,16,23z M16,27c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S16.6,27,16,27z" /><path d="M26,23c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S27.7,23,26,23z M26,27c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S26.6,27,26,27z" /><path d="M24.7,8.7C25.1,8.9,25.5,9,26,9c1.7,0,3-1.3,3-3s-1.3-3-3-3s-3,1.3-3,3c0,0.5,0.1,0.9,0.3,1.3l-6,6   C16.9,13.1,16.5,13,16,13c-1.7,0-3,1.3-3,3c0,0.5,0.1,0.9,0.3,1.3l-6,6c-0.1,0-0.2-0.1-0.3-0.1v-4.4c1.2-0.4,2-1.5,2-2.8   s-0.8-2.4-2-2.8V8.8C8.2,8.4,9,7.3,9,6c0-1.7-1.3-3-3-3S3,4.3,3,6c0,1.3,0.8,2.4,2,2.8v4.4c-1.2,0.4-2,1.5-2,2.8s0.8,2.4,2,2.8v4.4   c-1.2,0.4-2,1.5-2,2.8c0,1.7,1.3,3,3,3s3-1.3,3-3c0-0.5-0.1-0.9-0.3-1.3l6-6c0.4,0.2,0.8,0.3,1.3,0.3c1.7,0,3-1.3,3-3   c0-0.5-0.1-0.9-0.3-1.3L24.7,8.7z" /></g></svg>
 
                                         </span>
                                         <!--end::Svg Icon-->
@@ -706,7 +712,7 @@
 
                             <div class="menu-item">
                                 <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Document") ? "active" : "")"
-                                    href="@Url.Action("List","Document")">
+                                   href="@Url.Action("List","Document")">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
                                         <span class="svg-icon svg-icon-dark svg-icon-2">

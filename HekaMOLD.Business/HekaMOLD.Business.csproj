@@ -98,6 +98,7 @@
     <Compile Include="Models\DataTransfer\Core\UsageDocumentModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
+    <Compile Include="Models\DataTransfer\EmployeeStats\UserWorkOrderHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
     <Compile Include="Models\DataTransfer\Finance\InvoiceModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
@@ -107,11 +108,14 @@
     <Compile Include="Models\DataTransfer\MoldTrace\MoldMoveHistory.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\DeliveryPlanModel.cs" />
     <Compile Include="Models\DataTransfer\Production\DyeModel.cs" />
     <Compile Include="Models\DataTransfer\Production\IncidentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\IncidentModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\ItemOrderItemNeedsModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachineSignalModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldProductModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldTestModel.cs" />
@@ -119,6 +123,7 @@
     <Compile Include="Models\DataTransfer\Production\ProductionPostureModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductRecipeDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductRecipeModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\ProductWastageModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ShiftModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderAllocationModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderDetailModel.cs" />
@@ -160,6 +165,7 @@
     <Compile Include="UseCases\Core\CoreReceiptsBO.cs" />
     <Compile Include="UseCases\Core\CoreRecordTracingBO.cs" />
     <Compile Include="UseCases\DefinitionsBO.cs" />
+    <Compile Include="UseCases\DeliveryBO.cs" />
     <Compile Include="UseCases\DocumentBO.cs" />
     <Compile Include="UseCases\FilesBO.cs" />
     <Compile Include="UseCases\HekaBO.cs" />

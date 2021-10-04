@@ -6,18 +6,14 @@
         Details: []
     };
 
-    $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'Mobile/GetItemEntryData?rid=' + id, {}, 'json')
+    $scope.pickupList = [];
+    $scope.selectedProducts = [];
+
+    $scope.bindModel = function () {
+        $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.modelObject = resp.data;
-
-                    if (typeof $scope.modelObject.InWarehouseId != 'undefined' && $scope.modelObject.InWarehouseId != null)
-                        $scope.selectedWarehouse = $scope.warehouseList.find(d => d.Id == $scope.modelObject.InWarehouseId);
-                    else
-                        $scope.selectedWarehouse = $scope.warehouseList[0];
-
-                    refreshArray($scope.warehouseList);
+                    $scope.pickupList = resp.data;
                 }
             }).catch(function (err) { });
     }
@@ -25,20 +21,61 @@
     $scope.selectedWarehouse = { Id: 0, WarehouseName: '' };
     $scope.warehouseList = [];
 
-    $scope.showOrderList = function () {
-        // DO BROADCAST
-        $scope.$broadcast('loadOpenPoList');
+    $scope.selectProduct = function (item) {
+        if ($scope.selectedProducts.some(d => d.Id == item.Id))
+            $scope.selectedProducts.splice($scope.selectedProducts.indexOf(item), 1);
+        else
+            $scope.selectedProducts.push(item);
+    }
 
-        $('#dial-orderlist').dialog({
-            width: window.innerWidth * 0.95,
-            height: window.innerHeight * 0.95,
-            hide: true,
-            modal: true,
-            resizable: false,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
+    $scope.isSelectedProduct = function (item) {
+        return $scope.selectedProducts.some(d => d.Id == item.Id);
+    }
+
+    $scope.processBarcodeResult = function (barcode) {
+        var product = $scope.pickupList.find(d => d.SerialNo == barcode);
+        if (product != null && typeof product != 'undefined')
+            $scope.selectedProducts(product);
+    }
+
+    $scope.readBarcode = function () {
+        bootbox.alert({
+            message: '<div style="width: 500px" id="reader"></div>',
+            locale: 'tr'
         });
+
+        // TO REQUEST WEB CAM ACCESS
+        Html5Qrcode.getCameras().then(devices => {
+            /**
+             * devices would be an array of objects of type:
+             * { id: "id", label: "label" }
+             */
+            if (devices && devices.length) {
+                var cameraId = devices[0].id;
+                // .. use this to start scanning.
+            }
+        }).catch(err => { });
+
+        // WEB CAM READER OBJECT
+        let qrScanner = new Html5Qrcode(
+            "reader");
+
+        qrScanner.start(
+            { facingMode: "environment" }, // prefers back, for the front camera use 'user'
+            {
+                fps: 10,    // sets the framerate to 10 frame per second
+                qrbox: 250  // sets only 250 X 250 region of viewfinder to
+                // scannable, rest shaded.
+            },
+            qrCodeMessage => {
+                bootbox.hideAll();
+                qrScanner.stop();
+                $scope.processBarcodeResult(qrCodeMessage);
+            },
+            errorMessage => {
+            })
+            .catch(err => {
+            });
     }
 
     $scope.loadSelectables = function () {
@@ -62,7 +99,7 @@
 
     $scope.approveItemEntry = function () {
         bootbox.confirm({
-            message: "Bu irsaliye girişini onaylıyor musunuz?",
+            message: "Bu ürün teslimatını onaylıyor musunuz?",
             closeButton: false,
             buttons: {
                 confirm: {
@@ -109,59 +146,9 @@
         });
     }
 
-    // EMIT ORDER DETAIL DATA
-    $scope.$on('transferOrderDetails', function (e, d) {
-        var firstOrderRecord = null;
-
-        d.forEach(x => {
-            if (firstOrderRecord == null)
-                firstOrderRecord = x;
-
-            if ($scope.modelObject.Details.filter(m => m.ItemOrderDetailId == x.Id).length > 0) {
-                toastr.warning(x.OrderNo + ' nolu sipariş, ' + x.ItemNo + ' / ' + x.ItemName + ', ' + x.Quantity
-                    + ' miktarlı sipariş detayı zaten aktarıldığı için tekrar dahil edilmedi.', 'Uyarı');
-            }
-            else {
-                var newId = 1;
-                if ($scope.modelObject.Details.length > 0) {
-                    newId = $scope.modelObject.Details.map(d => d.Id).reduce((max, n) => n > max ? n : max)
-                    newId++;
-                }
-
-                $scope.modelObject.Details.push({
-                    Id: newId,
-                    FirmName:x.FirmName,
-                    ItemId: x.ItemId,
-                    ItemNo: x.ItemNo,
-                    ItemName: x.ItemName,
-                    UnitId: x.UnitId,
-                    UnitCode: x.UnitCode,
-                    UnitName: x.UnitCode,
-                    Quantity: x.Quantity,
-                    UnitPrice: 0,
-                    NewDetail: true,
-                    ItemOrderDetailId: x.Id
-                });
-            }
-        });
-
-        if (firstOrderRecord != null) {
-            $scope.modelObject.FirmId = firstOrderRecord.FirmId;
-            $scope.modelObject.FirmCode = firstOrderRecord.FirmCode;
-            $scope.modelObject.FirmName = firstOrderRecord.FirmName;
-        }
-
-        $('#dial-orderlist').dialog('close');
-    });
-
     // LOAD EVENTS
     $scope.loadSelectables().then(function () {
         refreshArray($scope.warehouseList);
-
-        var recordId = getParameterByName('rid');
-        if (typeof recordId != 'undefined' &&
-            recordId != null && recordId.length > 0) {
-            $scope.bindModel(parseInt(recordId));
-        }
+        $scope.bindModel();
     });
 });

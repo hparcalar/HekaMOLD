@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.Models.DataTransfer.Production
 {
-    public class MachinePlanModel
+    public class MachineSignalModel
     {
         public int Id { get; set; }
         public int? MachineId { get; set; }
         public int? WorkOrderDetailId { get; set; }
-        public int? OrderNo { get; set; }
-        public WorkOrderDetailModel WorkOrder { get; set; }
-        public WorkOrderSerialModel[] Serials { get; set; }
-        public ProductWastageModel[] Wastages { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int? Duration { get; set; }
+        public int? SignalStatus { get; set; }
     }
 }

@@ -27,6 +27,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string CreatedDateStr { get; set; }
         public string ShiftCode { get; set; }
         public string ShiftName { get; set; }
+        public string FirmCode { get; set; }
+        public string FirmName { get; set; }
         #endregion
     }
 }

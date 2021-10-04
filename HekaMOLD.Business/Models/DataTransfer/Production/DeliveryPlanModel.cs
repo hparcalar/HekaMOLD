@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HekaMOLD.Business.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,14 +7,17 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.Models.DataTransfer.Production
 {
-    public class MachinePlanModel
+    public class DeliveryPlanModel : IDataObject
     {
         public int Id { get; set; }
-        public int? MachineId { get; set; }
         public int? WorkOrderDetailId { get; set; }
+        public DateTime? PlanDate { get; set; }
         public int? OrderNo { get; set; }
+        public int? PlanStatus { get; set; }
         public WorkOrderDetailModel WorkOrder { get; set; }
-        public WorkOrderSerialModel[] Serials { get; set; }
-        public ProductWastageModel[] Wastages { get; set; }
+
+        #region VISUAL ELEMENTS
+        public string PlanDateStr { get; set; }
+        #endregion
     }
 }

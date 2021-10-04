@@ -168,7 +168,8 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (PlanningBO bObj = new PlanningBO())
             {
-                result = bObj.ToggleWorkOrderStatus(workOrderDetailId);
+                int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+                result = bObj.ToggleWorkOrderStatus(workOrderDetailId, userId);
             }
 
             return Json(result);
@@ -194,6 +195,13 @@ namespace HekaMOLD.Enterprise.Controllers
             using (ProductionBO bObj = new ProductionBO())
             {
                 result = bObj.AddProductEntry(workOrderDetailId, userId, serialType, inPackageQuantity);
+            }
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                int? machineId = bObj.GetMachineByWorkOrderDetail(workOrderDetailId);
+                if (machineId != null)
+                    bObj.UpdateUserHistory(machineId ?? 0, userId);
             }
 
             return Json(result);
@@ -401,6 +409,59 @@ namespace HekaMOLD.Enterprise.Controllers
         public ActionResult ProductPickup()
         {
             return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetProductsForPickup()
+        {
+            WorkOrderSerialModel[] result = new WorkOrderSerialModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.GetSerialsWaitingForPickup();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
+
+        #region PRODUCT WASTAGE
+        public ActionResult WastageEntry()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult SaveWastageEntry(ProductWastageModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+ 
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                if (model.Id <= 0)
+                    model.CreatedUserId = userId;
+
+                result = bObj.SaveOrUpdateWastage(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteWastageEntry(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.DeleteWastage(id);
+            }
+
+            return Json(result);
         }
         #endregion
     }

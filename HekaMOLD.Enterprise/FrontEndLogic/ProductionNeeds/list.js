@@ -36,7 +36,8 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'WorkOrderDateStr', caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'ItemOrderDateStr', caption: 'Sip. Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'NeedsDateStr', caption: 'İhtiyaç Tar.', dataType: 'date', format: 'dd.MM.yyyy' },
 /*                { dataField: 'WorkOrderNo', caption: 'İş Emri No' },*/
                 { dataField: 'ProductCode', caption: 'Ürün Kodu' },
                 { dataField: 'ProductName', caption: 'Ürün Adı' },

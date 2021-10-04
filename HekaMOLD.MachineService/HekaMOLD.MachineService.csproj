@@ -67,6 +67,7 @@
     <Compile Include="Models\DigitalIODataINPUT.cs" />
     <Compile Include="Models\DigitalIODataOUTPUT.cs" />
     <Compile Include="Models\DigitalIOResult.cs" />
+    <Compile Include="Models\MachineStatus.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DeviceListener.cs" />

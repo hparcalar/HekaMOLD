@@ -69,7 +69,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<IncidentCategory> IncidentCategory { get; set; }
         public virtual DbSet<PostureCategory> PostureCategory { get; set; }
         public virtual DbSet<ProductionPosture> ProductionPosture { get; set; }
-        public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         public virtual DbSet<MachineMaintenanceInstructionEntry> MachineMaintenanceInstructionEntry { get; set; }
         public virtual DbSet<MoldTest> MoldTest { get; set; }
@@ -88,5 +87,10 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<Mold> Mold { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<ItemReceipt> ItemReceipt { get; set; }
+        public virtual DbSet<ProductWastage> ProductWastage { get; set; }
+        public virtual DbSet<Machine> Machine { get; set; }
+        public virtual DbSet<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
+        public virtual DbSet<DeliveryPlan> DeliveryPlan { get; set; }
+        public virtual DbSet<ItemOrderItemNeeds> ItemOrderItemNeeds { get; set; }
     }
 }

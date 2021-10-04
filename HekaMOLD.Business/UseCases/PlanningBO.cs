@@ -645,13 +645,15 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
-        public BusinessResult ToggleWorkOrderStatus(int workOrderDetailId)
+        public BusinessResult ToggleWorkOrderStatus(int workOrderDetailId, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
 
             try
             {
                 var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoUserHistory = _unitOfWork.GetRepository<UserWorkOrderHistory>();
+
                 var dbObj = repo.Get(d => d.Id == workOrderDetailId);
                 if (dbObj == null)
                     throw new Exception("Durumu değiştirilmek istenen iş emri kaydına ulaşılamadı.");
@@ -667,6 +669,11 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 _unitOfWork.SaveChanges();
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    bObj.UpdateUserHistory(dbObj.MachineId ?? 0, userId ?? 0);
+                }
 
                 result.Result = true;
             }

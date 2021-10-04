@@ -476,3 +476,139 @@ BEGIN
 	ALTER TABLE ItemReceipt ADD InvoiceId INT NULL
 	ALTER TABLE ItemReceipt ADD CONSTRAINT FK_ItemReceipt_Invoice FOREIGN KEY(InvoiceId) REFERENCES Invoice(Id)
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='ProductWastage')
+BEGIN
+	CREATE TABLE [dbo].[ProductWastage](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[WorkOrderDetailId] [int] NULL,
+	[ProductId] [int] NULL,
+	[MachineId] [int] NULL,
+	[EntryDate] [datetime] NULL,
+	[Quantity] [decimal](18, 5) NULL,
+	[WastageStatus] [int] NULL,
+	[CreatedDate] [datetime] NULL,
+	[CreatedUserId] [int] NULL,
+	[UpdatedDate] [datetime] NULL,
+	[UpdatedUserId] [int] NULL,
+	 CONSTRAINT [PK_ProductWastage] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[ProductWastage]  WITH CHECK ADD  CONSTRAINT [FK_ProductWastage_Item] FOREIGN KEY([ProductId])
+	REFERENCES [dbo].[Item] ([Id])
+
+	ALTER TABLE [dbo].[ProductWastage] CHECK CONSTRAINT [FK_ProductWastage_Item]
+
+	ALTER TABLE [dbo].[ProductWastage]  WITH CHECK ADD  CONSTRAINT [FK_ProductWastage_Machine] FOREIGN KEY([MachineId])
+	REFERENCES [dbo].[Machine] ([Id])
+
+	ALTER TABLE [dbo].[ProductWastage] CHECK CONSTRAINT [FK_ProductWastage_Machine]
+
+	ALTER TABLE [dbo].[ProductWastage]  WITH CHECK ADD  CONSTRAINT [FK_ProductWastage_WorkOrderDetail] FOREIGN KEY([WorkOrderDetailId])
+	REFERENCES [dbo].[WorkOrderDetail] ([Id])
+
+	ALTER TABLE [dbo].[ProductWastage] CHECK CONSTRAINT [FK_ProductWastage_WorkOrderDetail]
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Machine' AND COLUMN_NAME='PostureExpirationCycleCount')
+BEGIN
+	ALTER TABLE Machine ADD PostureExpirationCycleCount INT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Machine' AND COLUMN_NAME='IsUpToPostureEntry')
+BEGIN
+	ALTER TABLE Machine ADD IsUpToPostureEntry BIT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Machine' AND COLUMN_NAME='WorkingUserId')
+BEGIN
+	ALTER TABLE Machine ADD WorkingUserId INT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='UserWorkOrderHistory')
+BEGIN
+	CREATE TABLE [dbo].[UserWorkOrderHistory](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NULL,
+	[WorkOrderDetailId] [int] NULL,
+	[MachineId] [int] NULL,
+	[StartQuantity] [decimal](18, 5) NULL,
+	[EndQuantity] [decimal](18, 5) NULL,
+	[FinishedQuantity] [decimal](18, 5) NULL,
+	[StartDate] [datetime] NULL,
+	[EndDate] [datetime] NULL,
+	 CONSTRAINT [PK_UserWorkOrderHistory] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[UserWorkOrderHistory]  WITH CHECK ADD  CONSTRAINT [FK_UserWorkOrderHistory_Machine] FOREIGN KEY([MachineId])
+	REFERENCES [dbo].[Machine] ([Id])
+
+	ALTER TABLE [dbo].[UserWorkOrderHistory] CHECK CONSTRAINT [FK_UserWorkOrderHistory_Machine]
+
+	ALTER TABLE [dbo].[UserWorkOrderHistory]  WITH CHECK ADD  CONSTRAINT [FK_UserWorkOrderHistory_WorkOrderDetail] FOREIGN KEY([WorkOrderDetailId])
+	REFERENCES [dbo].[WorkOrderDetail] ([Id])
+
+	ALTER TABLE [dbo].[UserWorkOrderHistory] CHECK CONSTRAINT [FK_UserWorkOrderHistory_WorkOrderDetail]
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='DeliveryPlan')
+BEGIN
+	CREATE TABLE [dbo].[DeliveryPlan](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[WorkOrderDetailId] [int] NULL,
+	[PlanDate] [datetime] NULL,
+	[OrderNo] [int] NULL,
+	[PlanStatus] [int] NULL,
+	[CreatedDate] [datetime] NULL,
+	[CreatedUserId] [int] NULL,
+	[UpdatedDate] [datetime] NULL,
+	[UpdatedUserId] [int] NULL,
+	 CONSTRAINT [PK_DeliveryPlan] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[DeliveryPlan]  WITH CHECK ADD  CONSTRAINT [FK_DeliveryPlan_WorkOrderDetail] FOREIGN KEY([WorkOrderDetailId])
+	REFERENCES [dbo].[WorkOrderDetail] ([Id])
+
+	ALTER TABLE [dbo].[DeliveryPlan] CHECK CONSTRAINT [FK_DeliveryPlan_WorkOrderDetail]
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='ItemOrderItemNeeds')
+BEGIN
+	CREATE TABLE [dbo].[ItemOrderItemNeeds](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ItemOrderDetailId] [int] NULL,
+	[ItemOrderId] [int] NULL,
+	[ItemId] [int] NULL,
+	[Quantity] [decimal](18, 5) NULL,
+	[RemainingNeedsQuantity] [decimal](18, 5) NULL,
+	[CalculatedDate] [datetime] NULL,
+	 CONSTRAINT [PK_ItemOrderItemNeeds] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[ItemOrderItemNeeds]  WITH CHECK ADD  CONSTRAINT [FK_ItemOrderItemNeeds_Item] FOREIGN KEY([ItemId])
+	REFERENCES [dbo].[Item] ([Id])
+
+	ALTER TABLE [dbo].[ItemOrderItemNeeds] CHECK CONSTRAINT [FK_ItemOrderItemNeeds_Item]
+
+	ALTER TABLE [dbo].[ItemOrderItemNeeds]  WITH CHECK ADD  CONSTRAINT [FK_ItemOrderItemNeeds_ItemOrder] FOREIGN KEY([ItemOrderId])
+	REFERENCES [dbo].[ItemOrder] ([Id])
+
+	ALTER TABLE [dbo].[ItemOrderItemNeeds] CHECK CONSTRAINT [FK_ItemOrderItemNeeds_ItemOrder]
+
+	ALTER TABLE [dbo].[ItemOrderItemNeeds]  WITH CHECK ADD  CONSTRAINT [FK_ItemOrderItemNeeds_ItemOrderDetail] FOREIGN KEY([ItemOrderDetailId])
+	REFERENCES [dbo].[ItemOrderDetail] ([Id])
+
+	ALTER TABLE [dbo].[ItemOrderItemNeeds] CHECK CONSTRAINT [FK_ItemOrderItemNeeds_ItemOrderDetail]
+END

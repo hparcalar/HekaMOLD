@@ -17,13 +17,23 @@ namespace HekaMOLD.MachineService.Services
     {
         ApiHelper _apiDevice;
         MachineModel _machine;
+        MachineStatus _status;
         bool _isRunning = false;
+        bool _isPostureCheckRunning = false;
         bool _lastResult = false;
         Task _tListen;
+        Task _tPostureCheck;
 
         public DeviceListener(MachineModel machine)
         {
             _machine = machine;
+            _status = new MachineStatus
+            {
+                MachineId = machine.Id,
+                LastCycleEnd = null,
+                PostureExpirationCycleCount = machine.PostureExpirationCycleCount,
+                PostureRequestSent = false,
+            };
             // http://192.168.127.254/api/
             _apiDevice = new ApiHelper(machine.DeviceIp);
             _apiDevice.AddHeader("Accept", "vdn.dac.v1");
@@ -38,15 +48,30 @@ namespace HekaMOLD.MachineService.Services
         {
             _isRunning = true;
             _tListen = Task.Run(DoListen);
+
+            _isPostureCheckRunning = true;
+            _tPostureCheck = Task.Run(DoPostureCheck);
         }
 
         public void Stop()
         {
             _isRunning = false;
+            _isPostureCheckRunning = false;
+
             try
             {
                 if (_tListen != null)
                     _tListen.Dispose();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
+                if (_tPostureCheck != null)
+                    _tPostureCheck.Dispose();
             }
             catch (Exception)
             {
@@ -135,6 +160,8 @@ namespace HekaMOLD.MachineService.Services
                             }
 
                             _lastResult = resultSatisfied;
+                            _status.PostureRequestSent = false;
+                            _status.LastCycleEnd = null;
                         }
                     }
                 }
@@ -144,6 +171,58 @@ namespace HekaMOLD.MachineService.Services
                 }
 
                 await Task.Delay(100);
+            }
+        }
+
+        private async Task DoPostureCheck()
+        {
+            while (_isPostureCheckRunning)
+            {
+                try
+                {
+                    if (_status.PostureExpirationCycleCount > 0 && _status.PostureRequestSent != true)
+                    {
+                        if (_status.LastCycleEnd == null)
+                        {
+                            using (ProductionBO bObj = new ProductionBO())
+                            {
+                                var lastSignal = bObj.GetLastMachineSignal(_status.MachineId);
+                                if (lastSignal != null)
+                                {
+                                    _status.LastCycleEnd = lastSignal.EndDate != null ?
+                                        lastSignal.EndDate : DateTime.Now;
+                                }
+                                else
+                                    _status.LastCycleEnd = DateTime.Now;
+                            }
+                        }
+
+                        if (_status.LastCycleEnd != null)
+                        {
+                            using (ProductionBO bObj = new ProductionBO())
+                            {
+                                var activeWork = bObj.GetActiveWorkOrderOnMachine(_status.MachineId);
+                                if (activeWork != null
+                                    && activeWork.WorkOrder != null && (activeWork.WorkOrder.MoldTestCycle ?? 0) > 0)
+                                {
+                                    var maxDiffSeconds = activeWork.WorkOrder.MoldTestCycle.Value *
+                                        _status.PostureExpirationCycleCount.Value;
+                                    if ((DateTime.Now - _status.LastCycleEnd).Value.TotalSeconds > maxDiffSeconds)
+                                    {
+                                        bObj.SetMachineAsIsUpForPosture(_status.MachineId, true);
+                                        _status.PostureRequestSent = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+
+                await Task.Delay(7500);
             }
         }
     }

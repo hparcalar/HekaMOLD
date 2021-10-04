@@ -21,6 +21,20 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="DeliveryPlan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkOrderDetailId" Type="int" />
+          <Property Name="PlanDate" Type="datetime" />
+          <Property Name="OrderNo" Type="int" />
+          <Property Name="PlanStatus" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
         <EntityType Name="Dye">
           <Key>
             <PropertyRef Name="Id" />
@@ -331,6 +345,18 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="ItemOrderItemNeeds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemOrderDetailId" Type="int" />
+          <Property Name="ItemOrderId" Type="int" />
+          <Property Name="ItemId" Type="int" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="RemainingNeedsQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="CalculatedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="ItemReceipt">
           <Key>
             <PropertyRef Name="Id" />
@@ -510,6 +536,9 @@
           <Property Name="IsWatched" Type="bit" />
           <Property Name="WatchCycleStartCondition" Type="nvarchar" MaxLength="300" />
           <Property Name="DeviceIp" Type="nvarchar" MaxLength="100" />
+          <Property Name="PostureExpirationCycleCount" Type="int" />
+          <Property Name="IsUpToPostureEntry" Type="bit" />
+          <Property Name="WorkingUserId" Type="int" />
         </EntityType>
         <EntityType Name="MachineMaintenanceInstruction">
           <Key>
@@ -747,6 +776,22 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
         </EntityType>
+        <EntityType Name="ProductWastage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkOrderDetailId" Type="int" />
+          <Property Name="ProductId" Type="int" />
+          <Property Name="MachineId" Type="int" />
+          <Property Name="EntryDate" Type="datetime" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="WastageStatus" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
         <EntityType Name="SectionSetting">
           <Key>
             <PropertyRef Name="Id" />
@@ -870,6 +915,20 @@
           <Property Name="CreatedUserId" Type="int" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="UserWorkOrderHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="WorkOrderDetailId" Type="int" />
+          <Property Name="MachineId" Type="int" />
+          <Property Name="StartQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="EndQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="FinishedQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Warehouse">
           <Key>
@@ -1000,6 +1059,18 @@
           <Property Name="UpdatedUserId" Type="int" />
           <Property Name="ShiftId" Type="int" />
         </EntityType>
+        <Association Name="FK_DeliveryPlan_WorkOrderDetail">
+          <End Role="WorkOrderDetail" Type="Self.WorkOrderDetail" Multiplicity="0..1" />
+          <End Role="DeliveryPlan" Type="Self.DeliveryPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeliveryPlan">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_EntryQualityData_EntryQualityPlan">
           <End Role="EntryQualityPlan" Type="Self.EntryQualityPlan" Multiplicity="0..1" />
           <End Role="EntryQualityData" Type="Self.EntryQualityData" Multiplicity="*" />
@@ -1453,6 +1524,42 @@
             </Principal>
             <Dependent Role="ItemOrderDetail">
               <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderItemNeeds_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ItemOrderItemNeeds" Type="Self.ItemOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderItemNeeds">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderItemNeeds_ItemOrder">
+          <End Role="ItemOrder" Type="Self.ItemOrder" Multiplicity="0..1" />
+          <End Role="ItemOrderItemNeeds" Type="Self.ItemOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderItemNeeds">
+              <PropertyRef Name="ItemOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderItemNeeds_ItemOrderDetail">
+          <End Role="ItemOrderDetail" Type="Self.ItemOrderDetail" Multiplicity="0..1" />
+          <End Role="ItemOrderItemNeeds" Type="Self.ItemOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderItemNeeds">
+              <PropertyRef Name="ItemOrderDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2080,6 +2187,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductWastage_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="ProductWastage" Type="Self.ProductWastage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductWastage">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductWastage_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
+          <End Role="ProductWastage" Type="Self.ProductWastage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductWastage">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductWastage_WorkOrderDetail">
+          <End Role="WorkOrderDetail" Type="Self.WorkOrderDetail" Multiplicity="0..1" />
+          <End Role="ProductWastage" Type="Self.ProductWastage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductWastage">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SyncPoint_Plant">
           <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
           <End Role="SyncPoint" Type="Self.SyncPoint" Multiplicity="*" />
@@ -2185,6 +2328,30 @@
             </Principal>
             <Dependent Role="UserRole">
               <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserWorkOrderHistory_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
+          <End Role="UserWorkOrderHistory" Type="Self.UserWorkOrderHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserWorkOrderHistory">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserWorkOrderHistory_WorkOrderDetail">
+          <End Role="WorkOrderDetail" Type="Self.WorkOrderDetail" Multiplicity="0..1" />
+          <End Role="UserWorkOrderHistory" Type="Self.UserWorkOrderHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserWorkOrderHistory">
+              <PropertyRef Name="WorkOrderDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2442,6 +2609,7 @@
         </Association>
         <EntityContainer Name="HekaDataAccessModelsStoreContainer">
           <EntitySet Name="Attachment" EntityType="Self.Attachment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeliveryPlan" EntityType="Self.DeliveryPlan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dye" EntityType="Self.Dye" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntryQualityData" EntityType="Self.EntryQualityData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntryQualityDataDetail" EntityType="Self.EntryQualityDataDetail" Schema="dbo" store:Type="Tables" />
@@ -2460,6 +2628,7 @@
           <EntitySet Name="ItemLiveStatus" EntityType="Self.ItemLiveStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemOrder" EntityType="Self.ItemOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemOrderDetail" EntityType="Self.ItemOrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemOrderItemNeeds" EntityType="Self.ItemOrderItemNeeds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemReceipt" EntityType="Self.ItemReceipt" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemReceiptDetail" EntityType="Self.ItemReceiptDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemRequest" EntityType="Self.ItemRequest" Schema="dbo" store:Type="Tables" />
@@ -2486,6 +2655,7 @@
           <EntitySet Name="ProductQualityPlan" EntityType="Self.ProductQualityPlan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductRecipe" EntityType="Self.ProductRecipe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductRecipeDetail" EntityType="Self.ProductRecipeDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductWastage" EntityType="Self.ProductWastage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SectionSetting" EntityType="Self.SectionSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shift" EntityType="Self.Shift" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" Schema="dbo" store:Type="Tables" />
@@ -2496,6 +2666,7 @@
           <EntitySet Name="UserAuth" EntityType="Self.UserAuth" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserAuthType" EntityType="Self.UserAuthType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserWorkOrderHistory" EntityType="Self.UserWorkOrderHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Warehouse" EntityType="Self.Warehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrder" EntityType="Self.WorkOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderAllocation" EntityType="Self.WorkOrderAllocation" Schema="dbo" store:Type="Tables" />
@@ -2504,6 +2675,10 @@
           <EntitySet Name="WorkOrderDetail" EntityType="Self.WorkOrderDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderItemNeeds" EntityType="Self.WorkOrderItemNeeds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderSerial" EntityType="Self.WorkOrderSerial" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_DeliveryPlan_WorkOrderDetail" Association="Self.FK_DeliveryPlan_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="DeliveryPlan" EntitySet="DeliveryPlan" />
+          </AssociationSet>
           <AssociationSet Name="FK_EntryQualityData_EntryQualityPlan" Association="Self.FK_EntryQualityData_EntryQualityPlan">
             <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
             <End Role="EntryQualityData" EntitySet="EntryQualityData" />
@@ -2655,6 +2830,18 @@
           <AssociationSet Name="FK_ItemOrderDetail_UnitType" Association="Self.FK_ItemOrderDetail_UnitType">
             <End Role="UnitType" EntitySet="UnitType" />
             <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderItemNeeds_Item" Association="Self.FK_ItemOrderItemNeeds_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemOrderItemNeeds" EntitySet="ItemOrderItemNeeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderItemNeeds_ItemOrder" Association="Self.FK_ItemOrderItemNeeds_ItemOrder">
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+            <End Role="ItemOrderItemNeeds" EntitySet="ItemOrderItemNeeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderItemNeeds_ItemOrderDetail" Association="Self.FK_ItemOrderItemNeeds_ItemOrderDetail">
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+            <End Role="ItemOrderItemNeeds" EntitySet="ItemOrderItemNeeds" />
           </AssociationSet>
           <AssociationSet Name="FK_ItemReceipt_Firm" Association="Self.FK_ItemReceipt_Firm">
             <End Role="Firm" EntitySet="Firm" />
@@ -2864,6 +3051,18 @@
             <End Role="Warehouse" EntitySet="Warehouse" />
             <End Role="ProductRecipeDetail" EntitySet="ProductRecipeDetail" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProductWastage_Item" Association="Self.FK_ProductWastage_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ProductWastage" EntitySet="ProductWastage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductWastage_Machine" Association="Self.FK_ProductWastage_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ProductWastage" EntitySet="ProductWastage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductWastage_WorkOrderDetail" Association="Self.FK_ProductWastage_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="ProductWastage" EntitySet="ProductWastage" />
+          </AssociationSet>
           <AssociationSet Name="FK_SyncPoint_Plant" Association="Self.FK_SyncPoint_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="SyncPoint" EntitySet="SyncPoint" />
@@ -2899,6 +3098,14 @@
           <AssociationSet Name="FK_UserRole_Plant" Association="Self.FK_UserRole_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserWorkOrderHistory_Machine" Association="Self.FK_UserWorkOrderHistory_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="UserWorkOrderHistory" EntitySet="UserWorkOrderHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserWorkOrderHistory_WorkOrderDetail" Association="Self.FK_UserWorkOrderHistory_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="UserWorkOrderHistory" EntitySet="UserWorkOrderHistory" />
           </AssociationSet>
           <AssociationSet Name="FK_Warehouse_Plant" Association="Self.FK_Warehouse_Plant">
             <End Role="Plant" EntitySet="Plant" />
@@ -3110,6 +3317,7 @@
           <Property Name="OverallTotal" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="SyncKey" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ItemReceipt" Relationship="Heka.DataAccess.Models.FK_ItemReceipt_ItemOrder" FromRole="ItemOrder" ToRole="ItemReceipt" />
+          <NavigationProperty Name="ItemOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_ItemOrder" FromRole="ItemOrder" ToRole="ItemOrderItemNeeds" />
         </EntityType>
         <EntityType Name="ItemOrderDetail">
           <Key>
@@ -3150,6 +3358,7 @@
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemOrderDetail" FromRole="ItemOrderDetail" ToRole="ItemReceiptDetail" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_ItemOrderDetail" FromRole="ItemOrderDetail" ToRole="WorkOrderDetail" />
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemOrderDetail_Item" FromRole="ItemOrderDetail" ToRole="Item" />
+          <NavigationProperty Name="ItemOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_ItemOrderDetail" FromRole="ItemOrderDetail" ToRole="ItemOrderItemNeeds" />
         </EntityType>
         <EntityType Name="ItemRequest">
           <Key>
@@ -4071,33 +4280,8 @@
             <End Role="PostureCategory" EntitySet="PostureCategory" />
             <End Role="ProductionPosture" EntitySet="ProductionPosture" />
           </AssociationSet>
-          <EntitySet Name="Machine" EntityType="Heka.DataAccess.Models.Machine" />
-          <AssociationSet Name="FK_Incident_Machine" Association="Heka.DataAccess.Models.FK_Incident_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="Incident" EntitySet="Incident" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MachinePlan_Machine" Association="Heka.DataAccess.Models.FK_MachinePlan_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="MachinePlan" EntitySet="MachinePlan" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MachineSignal_Machine" Association="Heka.DataAccess.Models.FK_MachineSignal_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="MachineSignal" EntitySet="MachineSignal" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductionPosture_Machine" Association="Heka.DataAccess.Models.FK_ProductionPosture_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WorkOrderDetail_Machine" Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
-          </AssociationSet>
           <EntitySet Name="MachineMaintenanceInstruction" EntityType="Heka.DataAccess.Models.MachineMaintenanceInstruction" />
           <EntitySet Name="MachineMaintenanceInstructionEntry" EntityType="Heka.DataAccess.Models.MachineMaintenanceInstructionEntry" />
-          <AssociationSet Name="FK_MachineMaintenanceInstruction_Machine" Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="MachineMaintenanceInstruction" EntitySet="MachineMaintenanceInstruction" />
-          </AssociationSet>
           <AssociationSet Name="FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction">
             <End Role="MachineMaintenanceInstruction" EntitySet="MachineMaintenanceInstruction" />
             <End Role="MachineMaintenanceInstructionEntry" EntitySet="MachineMaintenanceInstructionEntry" />
@@ -4105,10 +4289,6 @@
           <EntitySet Name="MoldTest" EntityType="Heka.DataAccess.Models.MoldTest" />
           <AssociationSet Name="FK_MoldTest_Dye" Association="Heka.DataAccess.Models.FK_MoldTest_Dye">
             <End Role="Dye" EntitySet="Dye" />
-            <End Role="MoldTest" EntitySet="MoldTest" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MoldTest_Machine" Association="Heka.DataAccess.Models.FK_MoldTest_Machine">
-            <End Role="Machine" EntitySet="Machine" />
             <End Role="MoldTest" EntitySet="MoldTest" />
           </AssociationSet>
           <AssociationSet Name="FK_WorkOrderDetail_MoldTest" Association="Heka.DataAccess.Models.FK_WorkOrderDetail_MoldTest">
@@ -4142,10 +4322,6 @@
           <EntitySet Name="ProductQualityDataDetail" EntityType="Heka.DataAccess.Models.ProductQualityDataDetail" />
           <AssociationSet Name="FK_ProductQualityData_Item" Association="Heka.DataAccess.Models.FK_ProductQualityData_Item">
             <End Role="Item" EntitySet="Item" />
-            <End Role="ProductQualityData" EntitySet="ProductQualityData" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductQualityData_Machine" Association="Heka.DataAccess.Models.FK_ProductQualityData_Machine">
-            <End Role="Machine" EntitySet="Machine" />
             <End Role="ProductQualityData" EntitySet="ProductQualityData" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductQualityDataDetail_ProductQualityData" Association="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityData">
@@ -4265,6 +4441,79 @@
           <AssociationSet Name="FK_ItemReceiptDetail_ItemReceipt" Association="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemReceipt">
             <End Role="ItemReceipt" EntitySet="ItemReceipt" />
             <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+          </AssociationSet>
+          <EntitySet Name="ProductWastage" EntityType="Heka.DataAccess.Models.ProductWastage" />
+          <AssociationSet Name="FK_ProductWastage_Item" Association="Heka.DataAccess.Models.FK_ProductWastage_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ProductWastage" EntitySet="ProductWastage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductWastage_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_ProductWastage_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="ProductWastage" EntitySet="ProductWastage" />
+          </AssociationSet>
+          <EntitySet Name="Machine" EntityType="Heka.DataAccess.Models.Machine" />
+          <EntitySet Name="UserWorkOrderHistory" EntityType="Heka.DataAccess.Models.UserWorkOrderHistory" />
+          <AssociationSet Name="FK_Incident_Machine" Association="Heka.DataAccess.Models.FK_Incident_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="Incident" EntitySet="Incident" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachineMaintenanceInstruction_Machine" Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachineMaintenanceInstruction" EntitySet="MachineMaintenanceInstruction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePlan_Machine" Association="Heka.DataAccess.Models.FK_MachinePlan_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachinePlan" EntitySet="MachinePlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachineSignal_Machine" Association="Heka.DataAccess.Models.FK_MachineSignal_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachineSignal" EntitySet="MachineSignal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MoldTest_Machine" Association="Heka.DataAccess.Models.FK_MoldTest_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MoldTest" EntitySet="MoldTest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionPosture_Machine" Association="Heka.DataAccess.Models.FK_ProductionPosture_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductQualityData_Machine" Association="Heka.DataAccess.Models.FK_ProductQualityData_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ProductQualityData" EntitySet="ProductQualityData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductWastage_Machine" Association="Heka.DataAccess.Models.FK_ProductWastage_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ProductWastage" EntitySet="ProductWastage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserWorkOrderHistory_Machine" Association="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="UserWorkOrderHistory" EntitySet="UserWorkOrderHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderDetail_Machine" Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserWorkOrderHistory_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_UserWorkOrderHistory_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="UserWorkOrderHistory" EntitySet="UserWorkOrderHistory" />
+          </AssociationSet>
+          <EntitySet Name="DeliveryPlan" EntityType="Heka.DataAccess.Models.DeliveryPlan" />
+          <AssociationSet Name="FK_DeliveryPlan_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_DeliveryPlan_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="DeliveryPlan" EntitySet="DeliveryPlan" />
+          </AssociationSet>
+          <EntitySet Name="ItemOrderItemNeeds" EntityType="Heka.DataAccess.Models.ItemOrderItemNeeds" />
+          <AssociationSet Name="FK_ItemOrderItemNeeds_Item" Association="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ItemOrderItemNeeds" EntitySet="ItemOrderItemNeeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderItemNeeds_ItemOrder" Association="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_ItemOrder">
+            <End Role="ItemOrder" EntitySet="ItemOrder" />
+            <End Role="ItemOrderItemNeeds" EntitySet="ItemOrderItemNeeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemOrderItemNeeds_ItemOrderDetail" Association="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_ItemOrderDetail">
+            <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
+            <End Role="ItemOrderItemNeeds" EntitySet="ItemOrderItemNeeds" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Notification">
@@ -4729,10 +4978,13 @@
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Item" FromRole="WorkOrderDetail" ToRole="Item" />
           <NavigationProperty Name="WorkOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderItemNeeds" />
           <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="ProductionPosture" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="WorkOrderDetail" ToRole="Machine" />
           <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_MoldTest" FromRole="WorkOrderDetail" ToRole="MoldTest" />
           <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderSerial" />
           <NavigationProperty Name="Mold" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Mold" FromRole="WorkOrderDetail" ToRole="Mold" />
+          <NavigationProperty Name="ProductWastage" Relationship="Heka.DataAccess.Models.FK_ProductWastage_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="ProductWastage" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="WorkOrderDetail" ToRole="Machine" />
+          <NavigationProperty Name="UserWorkOrderHistory" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="UserWorkOrderHistory" />
+          <NavigationProperty Name="DeliveryPlan" Relationship="Heka.DataAccess.Models.FK_DeliveryPlan_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="DeliveryPlan" />
         </EntityType>
         <Association Name="FK_WorkOrderDetail_Dye">
           <End Type="Heka.DataAccess.Models.Dye" Role="Dye" Multiplicity="0..1" />
@@ -4988,6 +5240,8 @@
           <NavigationProperty Name="MoldProduct" Relationship="Heka.DataAccess.Models.FK_MoldProduct_Item" FromRole="Item" ToRole="MoldProduct" />
           <NavigationProperty Name="Mold" Relationship="Heka.DataAccess.Models.FK_Item_Mold" FromRole="Item" ToRole="Mold" />
           <NavigationProperty Name="Mold1" Relationship="Heka.DataAccess.Models.FK_Mold_MoldItem" FromRole="Item" ToRole="Mold" />
+          <NavigationProperty Name="ProductWastage" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Item" FromRole="Item" ToRole="ProductWastage" />
+          <NavigationProperty Name="ItemOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_Item" FromRole="Item" ToRole="ItemOrderItemNeeds" />
         </EntityType>
         <Association Name="FK_Item_Firm">
           <End Type="Heka.DataAccess.Models.Firm" Role="Firm" Multiplicity="0..1" />
@@ -5301,92 +5555,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Machine">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MachineCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="MachineName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="MachineType" Type="Int32" />
-          <Property Name="PlantId" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="CreatedUserId" Type="Int32" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedUserId" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="IsWatched" Type="Boolean" />
-          <Property Name="WatchCycleStartCondition" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="DeviceIp" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Incident" Relationship="Heka.DataAccess.Models.FK_Incident_Machine" FromRole="Machine" ToRole="Incident" />
-          <NavigationProperty Name="MachinePlan" Relationship="Heka.DataAccess.Models.FK_MachinePlan_Machine" FromRole="Machine" ToRole="MachinePlan" />
-          <NavigationProperty Name="MachineSignal" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Machine" FromRole="Machine" ToRole="MachineSignal" />
-          <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Machine" FromRole="Machine" ToRole="ProductionPosture" />
-          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="Machine" ToRole="WorkOrderDetail" />
-          <NavigationProperty Name="MachineMaintenanceInstruction" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="Machine" ToRole="MachineMaintenanceInstruction" />
-          <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="Machine" ToRole="MoldTest" />
-          <NavigationProperty Name="ProductQualityData" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Machine" FromRole="Machine" ToRole="ProductQualityData" />
-        </EntityType>
-        <Association Name="FK_Incident_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.Incident" Role="Incident" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Incident">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MachinePlan_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.MachinePlan" Role="MachinePlan" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MachinePlan">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MachineSignal_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.MachineSignal" Role="MachineSignal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MachineSignal">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductionPosture_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ProductionPosture" Role="ProductionPosture" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductionPosture">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WorkOrderDetail_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WorkOrderDetail">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="MachineMaintenanceInstruction">
           <Key>
             <PropertyRef Name="Id" />
@@ -5398,8 +5566,8 @@
           <Property Name="ToDoList" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Responsible" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="LineNumber" Type="Int32" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="MachineMaintenanceInstruction" ToRole="Machine" />
           <NavigationProperty Name="MachineMaintenanceInstructionEntry" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" FromRole="MachineMaintenanceInstruction" ToRole="MachineMaintenanceInstructionEntry" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="MachineMaintenanceInstruction" ToRole="Machine" />
         </EntityType>
         <EntityType Name="MachineMaintenanceInstructionEntry">
           <Key>
@@ -5413,18 +5581,6 @@
           <Property Name="Explanation" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MachineMaintenanceInstruction" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" FromRole="MachineMaintenanceInstructionEntry" ToRole="MachineMaintenanceInstruction" />
         </EntityType>
-        <Association Name="FK_MachineMaintenanceInstruction_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.MachineMaintenanceInstruction" Role="MachineMaintenanceInstruction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MachineMaintenanceInstruction">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction">
           <End Type="Heka.DataAccess.Models.MachineMaintenanceInstruction" Role="MachineMaintenanceInstruction" Multiplicity="0..1" />
           <End Type="Heka.DataAccess.Models.MachineMaintenanceInstructionEntry" Role="MachineMaintenanceInstructionEntry" Multiplicity="*" />
@@ -5473,9 +5629,9 @@
           <Property Name="UpdatedUserId" Type="Int32" />
           <Property Name="HeadSize" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Dye" Relationship="Heka.DataAccess.Models.FK_MoldTest_Dye" FromRole="MoldTest" ToRole="Dye" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="MoldTest" ToRole="Machine" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_MoldTest" FromRole="MoldTest" ToRole="WorkOrderDetail" />
           <NavigationProperty Name="Mold" Relationship="Heka.DataAccess.Models.FK_MoldTest_Mold" FromRole="MoldTest" ToRole="Mold" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="MoldTest" ToRole="Machine" />
         </EntityType>
         <Association Name="FK_MoldTest_Dye">
           <End Type="Heka.DataAccess.Models.Dye" Role="Dye" Multiplicity="0..1" />
@@ -5486,18 +5642,6 @@
             </Principal>
             <Dependent Role="MoldTest">
               <PropertyRef Name="DyeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MoldTest_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.MoldTest" Role="MoldTest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MoldTest">
-              <PropertyRef Name="MachineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5642,8 +5786,8 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedUserId" Type="Int32" />
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Item" FromRole="ProductQualityData" ToRole="Item" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Machine" FromRole="ProductQualityData" ToRole="Machine" />
           <NavigationProperty Name="ProductQualityDataDetail" Relationship="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityData" FromRole="ProductQualityData" ToRole="ProductQualityDataDetail" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Machine" FromRole="ProductQualityData" ToRole="Machine" />
         </EntityType>
         <EntityType Name="ProductQualityDataDetail">
           <Key>
@@ -5670,18 +5814,6 @@
             </Principal>
             <Dependent Role="ProductQualityData">
               <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductQualityData_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ProductQualityData" Role="ProductQualityData" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductQualityData">
-              <PropertyRef Name="MachineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6206,6 +6338,306 @@
             </Principal>
             <Dependent Role="ItemReceiptDetail">
               <PropertyRef Name="ItemReceiptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductWastage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderDetailId" Type="Int32" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="MachineId" Type="Int32" />
+          <Property Name="EntryDate" Type="DateTime" Precision="3" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="WastageStatus" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Item" FromRole="ProductWastage" ToRole="Item" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_ProductWastage_WorkOrderDetail" FromRole="ProductWastage" ToRole="WorkOrderDetail" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Machine" FromRole="ProductWastage" ToRole="Machine" />
+        </EntityType>
+        <Association Name="FK_ProductWastage_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductWastage" Role="ProductWastage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductWastage">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductWastage_WorkOrderDetail">
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductWastage" Role="ProductWastage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductWastage">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Machine">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachineCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MachineName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MachineType" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="IsWatched" Type="Boolean" />
+          <Property Name="WatchCycleStartCondition" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="DeviceIp" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PostureExpirationCycleCount" Type="Int32" />
+          <Property Name="IsUpToPostureEntry" Type="Boolean" />
+          <Property Name="WorkingUserId" Type="Int32" />
+          <NavigationProperty Name="Incident" Relationship="Heka.DataAccess.Models.FK_Incident_Machine" FromRole="Machine" ToRole="Incident" />
+          <NavigationProperty Name="MachineMaintenanceInstruction" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="Machine" ToRole="MachineMaintenanceInstruction" />
+          <NavigationProperty Name="MachinePlan" Relationship="Heka.DataAccess.Models.FK_MachinePlan_Machine" FromRole="Machine" ToRole="MachinePlan" />
+          <NavigationProperty Name="MachineSignal" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Machine" FromRole="Machine" ToRole="MachineSignal" />
+          <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="Machine" ToRole="MoldTest" />
+          <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Machine" FromRole="Machine" ToRole="ProductionPosture" />
+          <NavigationProperty Name="ProductQualityData" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Machine" FromRole="Machine" ToRole="ProductQualityData" />
+          <NavigationProperty Name="ProductWastage" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Machine" FromRole="Machine" ToRole="ProductWastage" />
+          <NavigationProperty Name="UserWorkOrderHistory" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" FromRole="Machine" ToRole="UserWorkOrderHistory" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="Machine" ToRole="WorkOrderDetail" />
+        </EntityType>
+        <EntityType Name="UserWorkOrderHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="WorkOrderDetailId" Type="Int32" />
+          <Property Name="MachineId" Type="Int32" />
+          <Property Name="StartQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="EndQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="FinishedQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" FromRole="UserWorkOrderHistory" ToRole="Machine" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_WorkOrderDetail" FromRole="UserWorkOrderHistory" ToRole="WorkOrderDetail" />
+        </EntityType>
+        <Association Name="FK_Incident_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Incident" Role="Incident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Incident">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachineMaintenanceInstruction_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachineMaintenanceInstruction" Role="MachineMaintenanceInstruction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineMaintenanceInstruction">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePlan_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachinePlan" Role="MachinePlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePlan">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachineSignal_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachineSignal" Role="MachineSignal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineSignal">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MoldTest_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MoldTest" Role="MoldTest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MoldTest">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionPosture_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductionPosture" Role="ProductionPosture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductionPosture">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductQualityData_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductQualityData" Role="ProductQualityData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductQualityData">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductWastage_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductWastage" Role="ProductWastage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductWastage">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserWorkOrderHistory_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.UserWorkOrderHistory" Role="UserWorkOrderHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserWorkOrderHistory">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderDetail_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderDetail">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserWorkOrderHistory_WorkOrderDetail">
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.UserWorkOrderHistory" Role="UserWorkOrderHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserWorkOrderHistory">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DeliveryPlan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderDetailId" Type="Int32" />
+          <Property Name="PlanDate" Type="DateTime" Precision="3" />
+          <Property Name="OrderNo" Type="Int32" />
+          <Property Name="PlanStatus" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_DeliveryPlan_WorkOrderDetail" FromRole="DeliveryPlan" ToRole="WorkOrderDetail" />
+        </EntityType>
+        <Association Name="FK_DeliveryPlan_WorkOrderDetail">
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.DeliveryPlan" Role="DeliveryPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DeliveryPlan">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ItemOrderItemNeeds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemOrderDetailId" Type="Int32" />
+          <Property Name="ItemOrderId" Type="Int32" />
+          <Property Name="ItemId" Type="Int32" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="RemainingNeedsQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="CalculatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_Item" FromRole="ItemOrderItemNeeds" ToRole="Item" />
+          <NavigationProperty Name="ItemOrder" Relationship="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_ItemOrder" FromRole="ItemOrderItemNeeds" ToRole="ItemOrder" />
+          <NavigationProperty Name="ItemOrderDetail" Relationship="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_ItemOrderDetail" FromRole="ItemOrderItemNeeds" ToRole="ItemOrderDetail" />
+        </EntityType>
+        <Association Name="FK_ItemOrderItemNeeds_Item">
+          <End Type="Heka.DataAccess.Models.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemOrderItemNeeds" Role="ItemOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderItemNeeds">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderItemNeeds_ItemOrder">
+          <End Type="Heka.DataAccess.Models.ItemOrder" Role="ItemOrder" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemOrderItemNeeds" Role="ItemOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderItemNeeds">
+              <PropertyRef Name="ItemOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemOrderItemNeeds_ItemOrderDetail">
+          <End Type="Heka.DataAccess.Models.ItemOrderDetail" Role="ItemOrderDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemOrderItemNeeds" Role="ItemOrderItemNeeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemOrderItemNeeds">
+              <PropertyRef Name="ItemOrderDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6933,25 +7365,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Machine">
-            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Machine">
-              <MappingFragment StoreEntitySet="Machine">
-                <ScalarProperty Name="DeviceIp" ColumnName="DeviceIp" />
-                <ScalarProperty Name="WatchCycleStartCondition" ColumnName="WatchCycleStartCondition" />
-                <ScalarProperty Name="IsWatched" ColumnName="IsWatched" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
-                <ScalarProperty Name="MachineType" ColumnName="MachineType" />
-                <ScalarProperty Name="MachineName" ColumnName="MachineName" />
-                <ScalarProperty Name="MachineCode" ColumnName="MachineCode" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="MachineMaintenanceInstruction">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.MachineMaintenanceInstruction">
               <MappingFragment StoreEntitySet="MachineMaintenanceInstruction">
@@ -7269,6 +7682,88 @@
                 <ScalarProperty Name="ReceiptDate" ColumnName="ReceiptDate" />
                 <ScalarProperty Name="DocumentNo" ColumnName="DocumentNo" />
                 <ScalarProperty Name="ReceiptNo" ColumnName="ReceiptNo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductWastage">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ProductWastage">
+              <MappingFragment StoreEntitySet="ProductWastage">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="WastageStatus" ColumnName="WastageStatus" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Machine">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Machine">
+              <MappingFragment StoreEntitySet="Machine">
+                <ScalarProperty Name="WorkingUserId" ColumnName="WorkingUserId" />
+                <ScalarProperty Name="IsUpToPostureEntry" ColumnName="IsUpToPostureEntry" />
+                <ScalarProperty Name="PostureExpirationCycleCount" ColumnName="PostureExpirationCycleCount" />
+                <ScalarProperty Name="DeviceIp" ColumnName="DeviceIp" />
+                <ScalarProperty Name="WatchCycleStartCondition" ColumnName="WatchCycleStartCondition" />
+                <ScalarProperty Name="IsWatched" ColumnName="IsWatched" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="MachineType" ColumnName="MachineType" />
+                <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+                <ScalarProperty Name="MachineCode" ColumnName="MachineCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserWorkOrderHistory">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.UserWorkOrderHistory">
+              <MappingFragment StoreEntitySet="UserWorkOrderHistory">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="FinishedQuantity" ColumnName="FinishedQuantity" />
+                <ScalarProperty Name="EndQuantity" ColumnName="EndQuantity" />
+                <ScalarProperty Name="StartQuantity" ColumnName="StartQuantity" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DeliveryPlan">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.DeliveryPlan">
+              <MappingFragment StoreEntitySet="DeliveryPlan">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PlanStatus" ColumnName="PlanStatus" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="PlanDate" ColumnName="PlanDate" />
+                <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemOrderItemNeeds">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemOrderItemNeeds">
+              <MappingFragment StoreEntitySet="ItemOrderItemNeeds">
+                <ScalarProperty Name="CalculatedDate" ColumnName="CalculatedDate" />
+                <ScalarProperty Name="RemainingNeedsQuantity" ColumnName="RemainingNeedsQuantity" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="ItemOrderId" ColumnName="ItemOrderId" />
+                <ScalarProperty Name="ItemOrderDetailId" ColumnName="ItemOrderDetailId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -27,7 +27,7 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult GetProductionNeeds()
         {
-            WorkOrderItemNeedsModel[] result = new WorkOrderItemNeedsModel[0];
+            ItemOrderItemNeedsModel[] result = new ItemOrderItemNeedsModel[0];
 
             using (ProductionBO bObj = new ProductionBO())
             {
@@ -42,7 +42,7 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult GetProductionNeedsSummary()
         {
-            WorkOrderItemNeedsModel[] result = new WorkOrderItemNeedsModel[0];
+            ItemOrderItemNeedsModel[] result = new ItemOrderItemNeedsModel[0];
 
             using (ProductionBO bObj = new ProductionBO())
             {

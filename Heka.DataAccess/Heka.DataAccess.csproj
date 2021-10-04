@@ -57,6 +57,9 @@
     <Compile Include="Context\Attachment.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\DeliveryPlan.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\Dye.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -124,6 +127,9 @@
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\ItemOrderDetail.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\ItemOrderItemNeeds.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\ItemReceipt.cs">
@@ -204,6 +210,9 @@
     <Compile Include="Context\ProductRecipeDetail.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\ProductWastage.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\SectionSetting.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -232,6 +241,9 @@
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\UserRole.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\UserWorkOrderHistory.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\Warehouse.cs">
@@ -288,7 +300,7 @@
       <DependentUpon>HekaDataMapping.edmx</DependentUpon>
       <LastGenOutput>HekaDataMapping.cs</LastGenOutput>
     </Content>
-    <EmbeddedResource Include="Migration\Versions\1.0.1.8.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.1.9.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.6.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.3.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.2.sql" />

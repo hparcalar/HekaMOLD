@@ -32,6 +32,8 @@ namespace Heka.DataAccess.Context
             this.EntryQualityData = new HashSet<EntryQualityData>();
             this.MoldProduct = new HashSet<MoldProduct>();
             this.Mold1 = new HashSet<Mold>();
+            this.ProductWastage = new HashSet<ProductWastage>();
+            this.ItemOrderItemNeeds = new HashSet<ItemOrderItemNeeds>();
         }
     
         public int Id { get; set; }
@@ -83,5 +85,9 @@ namespace Heka.DataAccess.Context
         public virtual Mold Mold { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Mold> Mold1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductWastage> ProductWastage { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemOrderItemNeeds> ItemOrderItemNeeds { get; set; }
     }
 }

@@ -24,6 +24,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? InPalletPackageQuantity { get; set; }
         public int? InPackageQuantity { get; set; }
         public int? SaleOrderDetailId { get; set; }
+        public int? MoldTestCycle { get; set; }
+        public DateTime? DeliveryPlanDate { get; set; }
+        public string DeliveryPlanDateStr { get; set; }
 
         #region VISUAL ELEMENTS
         public bool NewDetail { get; set; }

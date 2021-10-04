@@ -35,36 +35,25 @@
                                     ng-options="item.WarehouseName for item in warehouseList" ng-model="selectedWarehouse"
                                     data-control="select2" data-placeholder="-- Seçiniz --"></select>
                         </div>
+
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Firma</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control form-control-solid"
-                                       ng-model="modelObject.FirmName" readonly="readonly" placeholder="" />
-                            </div>
+                            <button type="button"
+                                    ng-click="readBarcode()"
+                                    class="btn btn-sm btn-primary btn-block h-75 mt-2">
+                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5,7 L19,7 C20.1045695,7 21,7.8954305 21,9 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,9 C3,7.8954305 3.8954305,7 5,7 Z M12,17 C14.209139,17 16,15.209139 16,13 C16,10.790861 14.209139,9 12,9 C9.790861,9 8,10.790861 8,13 C8,15.209139 9.790861,17 12,17 Z" id="Combined-Shape" fill="#000000"></path>
+                                    <rect id="Rectangle" fill="#000000" opacity="0.3" x="9" y="4" width="6" height="2" rx="1"></rect>
+                                    <circle id="Oval-2" fill="#000000" opacity="0.3" cx="12" cy="13" r="2"></circle>
+                                </svg>
+                                Barkod Okut
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    <a ng-hide="modelObject.Id > 0"
-                       class="btn btn-sm btn-block w-100 h-75 mt-2 btn-light-primary" ng-click="showOrderList()">
-                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
-                                <path d="M6 5C5.44772 5 5 5.44772 5 6C5 6.55228 5.44771 7 6 7H16C16.5523 7 17 6.55228 17 6C17 5.44772 16.5523 5 16 5H6Z" fill="#12131A" />
-                                <path d="M6 9C5.44772 9 5 9.44771 5 10C5 10.5523 5.44772 11 6 11H10C10.5523 11 11 10.5523 11 10C11 9.44771 10.5523 9 10 9H6Z" fill="#12131A" />
-                                <path d="M6 13C5.44772 13 5 13.4477 5 14C5 14.5523 5.44772 15 6 15H18C18.5523 15 19 14.5523 19 14C19 13.4477 18.5523 13 18 13H6Z" fill="#12131A" />
-                                <path d="M5 18C5 17.4477 5.44772 17 6 17H14C14.5523 17 15 17.4477 15 18C15 18.5523 14.5523 19 14 19H6C5.44772 19 5 18.5523 5 18Z" fill="#12131A" />
-                            </svg>
-                        </span>
-                        <br />
-                        <span style="display:block;margin-top:10px;">Siparişler</span>
-                    </a>
-                </div>
-                <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    <a ng-hide="modelObject.Id > 0"
-                       class="btn btn-sm btn-block w-100 h-75 mt-2 btn-light-success" ng-click="approveItemEntry()">
+                <div class="col-sm-4 col-xs-4 col-xxl-4">
+                    <a
+                       class="btn btn-sm btn-block w-100 h-75 mt-2 btn-success" ng-click="approveItemEntry()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -74,7 +63,7 @@
                             </svg>
                         </span>
                         <br />
-                        <span style="display:block;margin-top:10px;">Onayla</span>
+                        <span style="display:block;margin-top:10px;">Teslim Al</span>
                     </a>
                 </div>
             </div>
@@ -85,26 +74,29 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th class="w-20 px-2">Koli No</th>
                                 <th class="w-20 px-2">Stok No</th>
                                 <th class="w-20 px-2">Stok Adı</th>
-                                <th class="w-20 px-2">Miktar</th>
-                                <th class="w-10 px-2">Birim</th>
+                                <th class="w-20 px-2">Firma</th>
+                                <th class="w-10 px-2">Miktar</th>
+                                <th class="w-10 px-2">#</th>
                             </tr>
                         </thead>
                     </table>
                     <div class="table-scroller-md">
                         <table ng-cloak class="table table-bordered table-striped">
                             <tbody>
-                                <tr ng-repeat="item in modelObject.Details">
+                                <tr ng-repeat="item in pickupList"
+                                    ng-class="{'bg-warning': isSelectedProduct(item)}">
+                                    <td class="w-20 px-2">{{item.SerialNo}}</td>
                                     <td class="w-20 px-2">{{item.ItemNo}}</td>
                                     <td class="w-20 px-2">{{item.ItemName}}</td>
-                                    <td class="w-20 px-2 py-1">
-                                        <input type="number"
-                                               ng-disabled="modelObject.Id > 0"
-                                               class="form-control form-control-sm"
-                                               ng-model="item.Quantity" />
+                                    <td class="w-20 px-2">{{item.FirmName}}</td>
+                                    <td class="w-10 px-2">{{item.FirstQuantity}}</td>
+                                    <td class="w-10 px-2">
+                                        <button type="button" ng-click="selectProduct(item)"
+                                                class="btn btn-sm btn-primary">{{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}</button>
                                     </td>
-                                    <td class="w-10 px-2">{{item.UnitCode}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -122,6 +114,6 @@
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-
+    <script src="~/Scripts/html5-qrcode.min.js"></script>
     <script src="~/FrontEndLogic/Mobile/product-pickup.js"></script>
 }
