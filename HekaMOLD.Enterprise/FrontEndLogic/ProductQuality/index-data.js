@@ -7,6 +7,7 @@
     $scope.productList = [];
     $scope.selectedMachine = {};
     $scope.selectedProduct = {};
+    $scope.activeWorkOrder = {};
 
     $scope.saveStatus = 0;
 
@@ -72,6 +73,37 @@
                 }
             }
         });
+    }
+
+    $scope.onMachineChanged = function () {
+        $http.get(HOST_URL + 'Common/GetActiveWorkOrderOnMachine?machineId=' + $scope.selectedMachine.Id, {}, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.activeWorkOrder = resp.data;
+                    if ($scope.activeWorkOrder != null && $scope.activeWorkOrder.WorkOrder != null)
+                        $scope.selectedProduct = $scope.productList.find(d => d.Id == $scope.activeWorkOrder.WorkOrder.ItemId);
+                    else
+                        $scope.selectedProduct = {};
+
+                    refreshArray($scope.productList);
+                }
+            }
+        );
+    }
+
+    $scope.getDefaultValuesByMoldTest = function () {
+        // first, find mold test by product
+        $http.get(HOST_URL + 'Common/FindMoldTestByProduct?productCode=' + $scope.selectedProduct.ItemName, {}, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    var moldData = resp.data;
+                    if (moldData.Id > 0) {
+                        // get default values
+
+                    }
+                }
+            }
+        );
     }
 
     $scope.getQualityValue = function (planId, hourNo, checkType) {

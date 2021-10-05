@@ -104,6 +104,27 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
+        public MoldTestModel FindMoldTestByProduct(string productCode)
+        {
+            MoldTestModel model = new MoldTestModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MoldTest>();
+                var dbObj = repo.Get(d => d.ProductCode == productCode);
+                if (dbObj != null)
+                {
+                    dbObj.MapTo(model);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return model;
+        }
+
         public BusinessResult SaveOrUpdateMoldTest(MoldTestModel model)
         {
             BusinessResult result = new BusinessResult();

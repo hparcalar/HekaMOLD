@@ -20,6 +20,7 @@ namespace Heka.DataAccess.Context
             this.ItemSerial = new HashSet<ItemSerial>();
             this.WorkOrderAllocation = new HashSet<WorkOrderAllocation>();
             this.EntryQualityData = new HashSet<EntryQualityData>();
+            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
         }
     
         public int Id { get; set; }
@@ -63,5 +64,7 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
         public virtual ItemReceipt ItemReceipt { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
     }
 }

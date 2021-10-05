@@ -274,5 +274,22 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
         #endregion
+
+        #region QUALITY
+        [FreeAction]
+        public JsonResult FindMoldTestByProduct(string productCode)
+        {
+            MoldTestModel data = new MoldTestModel();
+
+            using (MoldBO bObj = new MoldBO())
+            {
+                data = bObj.FindMoldTestByProduct(productCode);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
     }
 }

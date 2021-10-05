@@ -75,6 +75,10 @@ namespace HekaMOLD.Business.UseCases
                 var repoDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
                 var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                if (model.FirmId == 0)
+                    model.FirmId = null;
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -169,6 +173,35 @@ namespace HekaMOLD.Business.UseCases
                             dbDetail.ItemReceiptId = dbObj.Id;
 
                         dbDetail.LineNumber = lineNo;
+
+                        #region UPDATE SERIALS
+                        if (item.UpdateSerials)
+                        {
+                            var newSerialIdList = item.Serials.Select(d => d.Id).ToArray();
+                            var deletedSerials = dbDetail.WorkOrderSerial.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
+                            foreach (var serialItem in deletedSerials)
+                            {
+                                if (serialItem.WorkOrderDetail != null)
+                                {
+                                    serialItem.SerialStatus = (int)SerialStatusType.Created;
+                                    serialItem.ItemReceiptDetailId = null;
+                                }
+                                else
+                                {
+                                    repoSerial.Delete(serialItem);
+                                }
+                            }
+
+                            foreach (var serialItem in item.Serials)
+                            {
+                                var dbSerial = repoSerial.Get(d => d.Id == serialItem.Id);
+                                if (dbSerial != null)
+                                {
+                                    dbSerial.ItemReceiptDetail = dbDetail;
+                                }
+                            }
+                        }
+                        #endregion
 
                         #region CALCULATE IF THERE IS NO NET QUANTITY
                         if (dbDetail.NetQuantity == null)
@@ -395,6 +428,38 @@ namespace HekaMOLD.Business.UseCases
             model.TaxAmount = overallTotal * model.TaxRate / 100.0m;
 
             return model;
+        }
+
+        public ItemReceiptDetailModel[] GetItemExtract(int itemId)
+        {
+            ItemReceiptDetailModel[] extract = new ItemReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                extract = repo.Filter(d => d.ItemId == itemId).ToList()
+                    .Select(d => new ItemReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        ItemReceiptId = d.ItemReceiptId,
+                        FirmCode = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        WarehouseCode = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseCode : "",
+                        WarehouseName = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseName : "",
+                        Quantity = d.Quantity,
+                        InQuantity = d.ItemReceipt.ReceiptType < 100 ? d.Quantity : (decimal?)null,
+                        OutQuantity = d.ItemReceipt.ReceiptType > 100 ? d.Quantity : (decimal?)null,
+                        ReceiptDateStr = d.ItemReceipt.ReceiptDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
+                        ReceiptTypeStr = ((ItemReceiptType)d.ItemReceipt.ReceiptType).ToCaption(),
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return extract;
         }
     }
 }

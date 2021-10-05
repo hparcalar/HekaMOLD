@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.DataTransfer.Quality;
 using Heka.DataAccess.Context;
@@ -709,6 +710,39 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return result;
+        }
+
+        public string GetMoldTestValueForProductPlan(int planId, int moldTestId)
+        {
+            string testValue = "";
+
+            try
+            {
+                var repoPlan = _unitOfWork.GetRepository<ProductQualityPlan>();
+                var repoTest = _unitOfWork.GetRepository<MoldTest>();
+
+                var dbPlan = repoPlan.Get(d => d.Id == planId);
+                if (dbPlan != null && !string.IsNullOrEmpty(dbPlan.MoldTestFieldName))
+                {
+                    var dbTest = repoTest.Get(d => d.Id == moldTestId);
+                    if (dbTest != null)
+                    {
+                        PropertyInfo pInfo = dbTest.GetType().GetProperty(dbPlan.MoldTestFieldName);
+                        if (pInfo != null)
+                        {
+                            var testValueObj = pInfo.GetValue(dbTest, new object[] { });
+                            if (testValueObj != null)
+                                testValue = testValueObj.ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return testValue;
         }
         #endregion
     }

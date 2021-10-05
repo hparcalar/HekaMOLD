@@ -330,6 +330,23 @@
         });
     }
 
+    $scope.showAttachmentList = function () {
+        $scope.$broadcast('showAttachmentList',
+            { RecordId: $scope.modelObject.Id, RecordType: 2 });
+
+        $('#dial-attachments').dialog({
+            width: 500,
+            height: 400,
+            //height: window.innerHeight * 0.6,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
     $scope.loadSelectables().then(function (data) {

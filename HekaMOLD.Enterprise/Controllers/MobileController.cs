@@ -181,7 +181,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveProductEntry(int workOrderDetailId, int inPackageQuantity)
+        public JsonResult SaveProductEntry(int workOrderDetailId, int inPackageQuantity, string barcode)
         {
             BusinessResult result = new BusinessResult();
 
@@ -194,7 +194,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (ProductionBO bObj = new ProductionBO())
             {
-                result = bObj.AddProductEntry(workOrderDetailId, userId, serialType, inPackageQuantity);
+                result = bObj.AddProductEntry(workOrderDetailId, userId, serialType, inPackageQuantity, barcode);
             }
 
             using (ProductionBO bObj = new ProductionBO())
@@ -424,6 +424,36 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult SaveProductPickup(ItemReceiptModel receiptModel, WorkOrderSerialModel[] model)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                receiptModel.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                if (receiptModel.Id == 0)
+                {
+                    receiptModel.CreatedDate = DateTime.Now;
+                    receiptModel.CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+                }
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.MakeSerialPickupForProductWarehouse(receiptModel, model);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
         }
         #endregion
 

@@ -743,6 +743,7 @@
           <Property Name="CheckType" Type="int" Nullable="false" />
           <Property Name="ToleranceMin" Type="decimal" Precision="18" Scale="5" />
           <Property Name="ToleranceMax" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="MoldTestFieldName" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="ProductRecipe">
           <Key>
@@ -1058,6 +1059,7 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
           <Property Name="ShiftId" Type="int" />
+          <Property Name="ItemReceiptDetailId" Type="int" />
         </EntityType>
         <Association Name="FK_DeliveryPlan_WorkOrderDetail">
           <End Role="WorkOrderDetail" Type="Self.WorkOrderDetail" Multiplicity="0..1" />
@@ -2571,6 +2573,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WorkOrderSerial_ItemReceiptDetail">
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="0..1" />
+          <End Role="WorkOrderSerial" Type="Self.WorkOrderSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderSerial">
+              <PropertyRef Name="ItemReceiptDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_WorkOrderSerial_Shift">
           <End Role="Shift" Type="Self.Shift" Multiplicity="0..1" />
           <End Role="WorkOrderSerial" Type="Self.WorkOrderSerial" Multiplicity="*" />
@@ -3178,6 +3192,10 @@
           <AssociationSet Name="FK_WorkOrderItemNeeds_WorkOrderDetail" Association="Self.FK_WorkOrderItemNeeds_WorkOrderDetail">
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
             <End Role="WorkOrderItemNeeds" EntitySet="WorkOrderItemNeeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderSerial_ItemReceiptDetail" Association="Self.FK_WorkOrderSerial_ItemReceiptDetail">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
           </AssociationSet>
           <AssociationSet Name="FK_WorkOrderSerial_Shift" Association="Self.FK_WorkOrderSerial_Shift">
             <End Role="Shift" EntitySet="Shift" />
@@ -4305,19 +4323,6 @@
             <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
           </AssociationSet>
           <EntitySet Name="Shift" EntityType="Heka.DataAccess.Models.Shift" />
-          <EntitySet Name="WorkOrderSerial" EntityType="Heka.DataAccess.Models.WorkOrderSerial" />
-          <AssociationSet Name="FK_WorkOrderSerial_Shift" Association="Heka.DataAccess.Models.FK_WorkOrderSerial_Shift">
-            <End Role="Shift" EntitySet="Shift" />
-            <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WorkOrderSerial_WorkOrder" Association="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrder">
-            <End Role="WorkOrder" EntitySet="WorkOrder" />
-            <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WorkOrderSerial_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail">
-            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
-            <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
-          </AssociationSet>
           <EntitySet Name="ProductQualityData" EntityType="Heka.DataAccess.Models.ProductQualityData" />
           <EntitySet Name="ProductQualityDataDetail" EntityType="Heka.DataAccess.Models.ProductQualityDataDetail" />
           <AssociationSet Name="FK_ProductQualityData_Item" Association="Heka.DataAccess.Models.FK_ProductQualityData_Item">
@@ -4326,11 +4331,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_ProductQualityDataDetail_ProductQualityData" Association="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityData">
             <End Role="ProductQualityData" EntitySet="ProductQualityData" />
-            <End Role="ProductQualityDataDetail" EntitySet="ProductQualityDataDetail" />
-          </AssociationSet>
-          <EntitySet Name="ProductQualityPlan" EntityType="Heka.DataAccess.Models.ProductQualityPlan" />
-          <AssociationSet Name="FK_ProductQualityDataDetail_ProductQualityPlan" Association="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityPlan">
-            <End Role="ProductQualityPlan" EntitySet="ProductQualityPlan" />
             <End Role="ProductQualityDataDetail" EntitySet="ProductQualityDataDetail" />
           </AssociationSet>
           <EntitySet Name="EntryQualityDataDetail" EntityType="Heka.DataAccess.Models.EntryQualityDataDetail" />
@@ -4514,6 +4514,28 @@
           <AssociationSet Name="FK_ItemOrderItemNeeds_ItemOrderDetail" Association="Heka.DataAccess.Models.FK_ItemOrderItemNeeds_ItemOrderDetail">
             <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
             <End Role="ItemOrderItemNeeds" EntitySet="ItemOrderItemNeeds" />
+          </AssociationSet>
+          <EntitySet Name="WorkOrderSerial" EntityType="Heka.DataAccess.Models.WorkOrderSerial" />
+          <AssociationSet Name="FK_WorkOrderSerial_ItemReceiptDetail" Association="Heka.DataAccess.Models.FK_WorkOrderSerial_ItemReceiptDetail">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderSerial_Shift" Association="Heka.DataAccess.Models.FK_WorkOrderSerial_Shift">
+            <End Role="Shift" EntitySet="Shift" />
+            <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderSerial_WorkOrder" Association="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrder">
+            <End Role="WorkOrder" EntitySet="WorkOrder" />
+            <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderSerial_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
+          </AssociationSet>
+          <EntitySet Name="ProductQualityPlan" EntityType="Heka.DataAccess.Models.ProductQualityPlan" />
+          <AssociationSet Name="FK_ProductQualityDataDetail_ProductQualityPlan" Association="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityPlan">
+            <End Role="ProductQualityPlan" EntitySet="ProductQualityPlan" />
+            <End Role="ProductQualityDataDetail" EntitySet="ProductQualityDataDetail" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Notification">
@@ -4873,6 +4895,7 @@
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_Item" FromRole="ItemReceiptDetail" ToRole="Item" />
           <NavigationProperty Name="EntryQualityData" Relationship="Heka.DataAccess.Models.FK_EntryQualityData_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="EntryQualityData" />
           <NavigationProperty Name="ItemReceipt" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemReceipt" FromRole="ItemReceiptDetail" ToRole="ItemReceipt" />
+          <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="WorkOrderSerial" />
         </EntityType>
         <EntityType Name="WorkOrder">
           <Key>
@@ -4979,12 +5002,12 @@
           <NavigationProperty Name="WorkOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderItemNeeds" />
           <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="ProductionPosture" />
           <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_MoldTest" FromRole="WorkOrderDetail" ToRole="MoldTest" />
-          <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderSerial" />
           <NavigationProperty Name="Mold" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Mold" FromRole="WorkOrderDetail" ToRole="Mold" />
           <NavigationProperty Name="ProductWastage" Relationship="Heka.DataAccess.Models.FK_ProductWastage_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="ProductWastage" />
           <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="WorkOrderDetail" ToRole="Machine" />
           <NavigationProperty Name="UserWorkOrderHistory" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="UserWorkOrderHistory" />
           <NavigationProperty Name="DeliveryPlan" Relationship="Heka.DataAccess.Models.FK_DeliveryPlan_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="DeliveryPlan" />
+          <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderSerial" />
         </EntityType>
         <Association Name="FK_WorkOrderDetail_Dye">
           <End Type="Heka.DataAccess.Models.Dye" Role="Dye" Multiplicity="0..1" />
@@ -5714,65 +5737,6 @@
           <Property Name="IsActive" Type="Boolean" />
           <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_Shift" FromRole="Shift" ToRole="WorkOrderSerial" />
         </EntityType>
-        <EntityType Name="WorkOrderSerial">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="WorkOrderDetailId" Type="Int32" />
-          <Property Name="WorkOrderId" Type="Int32" />
-          <Property Name="SerialNo" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="SerialType" Type="Int32" />
-          <Property Name="IsGeneratedBySignal" Type="Boolean" />
-          <Property Name="SerialStatus" Type="Int32" />
-          <Property Name="FirstQuantity" Type="Decimal" Precision="18" Scale="5" />
-          <Property Name="LiveQuantity" Type="Decimal" Precision="18" Scale="5" />
-          <Property Name="InPackageQuantity" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="CreatedUserId" Type="Int32" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedUserId" Type="Int32" />
-          <Property Name="ShiftId" Type="Int32" />
-          <NavigationProperty Name="Shift" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_Shift" FromRole="WorkOrderSerial" ToRole="Shift" />
-          <NavigationProperty Name="WorkOrder" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrder" FromRole="WorkOrderSerial" ToRole="WorkOrder" />
-          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail" FromRole="WorkOrderSerial" ToRole="WorkOrderDetail" />
-        </EntityType>
-        <Association Name="FK_WorkOrderSerial_Shift">
-          <End Type="Heka.DataAccess.Models.Shift" Role="Shift" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.WorkOrderSerial" Role="WorkOrderSerial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Shift">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WorkOrderSerial">
-              <PropertyRef Name="ShiftId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WorkOrderSerial_WorkOrder">
-          <End Type="Heka.DataAccess.Models.WorkOrder" Role="WorkOrder" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.WorkOrderSerial" Role="WorkOrderSerial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="WorkOrder">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WorkOrderSerial">
-              <PropertyRef Name="WorkOrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WorkOrderSerial_WorkOrderDetail">
-          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.WorkOrderSerial" Role="WorkOrderSerial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="WorkOrderDetail">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WorkOrderSerial">
-              <PropertyRef Name="WorkOrderDetailId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ProductQualityData">
           <Key>
             <PropertyRef Name="Id" />
@@ -5826,36 +5790,6 @@
             </Principal>
             <Dependent Role="ProductQualityDataDetail">
               <PropertyRef Name="ProductQualityDataId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="ProductQualityPlan">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductQualityCode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="CheckProperties" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="PeriodType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AcceptanceCriteria" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="ControlDevice" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Method" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="Responsible" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="OrderNo" Type="Int32" />
-          <Property Name="CheckType" Type="Int32" Nullable="false" />
-          <Property Name="ToleranceMin" Type="Decimal" Precision="18" Scale="5" />
-          <Property Name="ToleranceMax" Type="Decimal" Precision="18" Scale="5" />
-          <NavigationProperty Name="ProductQualityDataDetail" Relationship="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityPlan" FromRole="ProductQualityPlan" ToRole="ProductQualityDataDetail" />
-        </EntityType>
-        <Association Name="FK_ProductQualityDataDetail_ProductQualityPlan">
-          <End Type="Heka.DataAccess.Models.ProductQualityPlan" Role="ProductQualityPlan" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ProductQualityDataDetail" Role="ProductQualityDataDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductQualityPlan">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductQualityDataDetail">
-              <PropertyRef Name="ProductQualityPlanId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6638,6 +6572,110 @@
             </Principal>
             <Dependent Role="ItemOrderItemNeeds">
               <PropertyRef Name="ItemOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="WorkOrderSerial">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderDetailId" Type="Int32" />
+          <Property Name="WorkOrderId" Type="Int32" />
+          <Property Name="SerialNo" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="SerialType" Type="Int32" />
+          <Property Name="IsGeneratedBySignal" Type="Boolean" />
+          <Property Name="SerialStatus" Type="Int32" />
+          <Property Name="FirstQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="LiveQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="InPackageQuantity" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <Property Name="ShiftId" Type="Int32" />
+          <Property Name="ItemReceiptDetailId" Type="Int32" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_ItemReceiptDetail" FromRole="WorkOrderSerial" ToRole="ItemReceiptDetail" />
+          <NavigationProperty Name="Shift" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_Shift" FromRole="WorkOrderSerial" ToRole="Shift" />
+          <NavigationProperty Name="WorkOrder" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrder" FromRole="WorkOrderSerial" ToRole="WorkOrder" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail" FromRole="WorkOrderSerial" ToRole="WorkOrderDetail" />
+        </EntityType>
+        <Association Name="FK_WorkOrderSerial_ItemReceiptDetail">
+          <End Type="Heka.DataAccess.Models.ItemReceiptDetail" Role="ItemReceiptDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderSerial" Role="WorkOrderSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderSerial">
+              <PropertyRef Name="ItemReceiptDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderSerial_Shift">
+          <End Type="Heka.DataAccess.Models.Shift" Role="Shift" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderSerial" Role="WorkOrderSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shift">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderSerial">
+              <PropertyRef Name="ShiftId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderSerial_WorkOrder">
+          <End Type="Heka.DataAccess.Models.WorkOrder" Role="WorkOrder" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderSerial" Role="WorkOrderSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrder">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderSerial">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderSerial_WorkOrderDetail">
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderSerial" Role="WorkOrderSerial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderSerial">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductQualityPlan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductQualityCode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CheckProperties" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PeriodType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AcceptanceCriteria" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ControlDevice" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Method" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Responsible" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="OrderNo" Type="Int32" />
+          <Property Name="CheckType" Type="Int32" Nullable="false" />
+          <Property Name="ToleranceMin" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ToleranceMax" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="MoldTestFieldName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ProductQualityDataDetail" Relationship="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityPlan" FromRole="ProductQualityPlan" ToRole="ProductQualityDataDetail" />
+        </EntityType>
+        <Association Name="FK_ProductQualityDataDetail_ProductQualityPlan">
+          <End Type="Heka.DataAccess.Models.ProductQualityPlan" Role="ProductQualityPlan" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductQualityDataDetail" Role="ProductQualityDataDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductQualityPlan">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductQualityDataDetail">
+              <PropertyRef Name="ProductQualityPlanId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7457,27 +7495,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="WorkOrderSerial">
-            <EntityTypeMapping TypeName="Heka.DataAccess.Models.WorkOrderSerial">
-              <MappingFragment StoreEntitySet="WorkOrderSerial">
-                <ScalarProperty Name="ShiftId" ColumnName="ShiftId" />
-                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="InPackageQuantity" ColumnName="InPackageQuantity" />
-                <ScalarProperty Name="LiveQuantity" ColumnName="LiveQuantity" />
-                <ScalarProperty Name="FirstQuantity" ColumnName="FirstQuantity" />
-                <ScalarProperty Name="SerialStatus" ColumnName="SerialStatus" />
-                <ScalarProperty Name="IsGeneratedBySignal" ColumnName="IsGeneratedBySignal" />
-                <ScalarProperty Name="SerialType" ColumnName="SerialType" />
-                <ScalarProperty Name="SerialNo" ColumnName="SerialNo" />
-                <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
-                <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ProductQualityData">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.ProductQualityData">
               <MappingFragment StoreEntitySet="ProductQualityData">
@@ -7503,24 +7520,6 @@
                 <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
                 <ScalarProperty Name="ProductQualityPlanId" ColumnName="ProductQualityPlanId" />
                 <ScalarProperty Name="ProductQualityDataId" ColumnName="ProductQualityDataId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProductQualityPlan">
-            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ProductQualityPlan">
-              <MappingFragment StoreEntitySet="ProductQualityPlan">
-                <ScalarProperty Name="ToleranceMax" ColumnName="ToleranceMax" />
-                <ScalarProperty Name="ToleranceMin" ColumnName="ToleranceMin" />
-                <ScalarProperty Name="CheckType" ColumnName="CheckType" />
-                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
-                <ScalarProperty Name="Responsible" ColumnName="Responsible" />
-                <ScalarProperty Name="Method" ColumnName="Method" />
-                <ScalarProperty Name="ControlDevice" ColumnName="ControlDevice" />
-                <ScalarProperty Name="AcceptanceCriteria" ColumnName="AcceptanceCriteria" />
-                <ScalarProperty Name="PeriodType" ColumnName="PeriodType" />
-                <ScalarProperty Name="CheckProperties" ColumnName="CheckProperties" />
-                <ScalarProperty Name="ProductQualityCode" ColumnName="ProductQualityCode" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -7764,6 +7763,47 @@
                 <ScalarProperty Name="ItemId" ColumnName="ItemId" />
                 <ScalarProperty Name="ItemOrderId" ColumnName="ItemOrderId" />
                 <ScalarProperty Name="ItemOrderDetailId" ColumnName="ItemOrderDetailId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkOrderSerial">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.WorkOrderSerial">
+              <MappingFragment StoreEntitySet="WorkOrderSerial">
+                <ScalarProperty Name="ItemReceiptDetailId" ColumnName="ItemReceiptDetailId" />
+                <ScalarProperty Name="ShiftId" ColumnName="ShiftId" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="InPackageQuantity" ColumnName="InPackageQuantity" />
+                <ScalarProperty Name="LiveQuantity" ColumnName="LiveQuantity" />
+                <ScalarProperty Name="FirstQuantity" ColumnName="FirstQuantity" />
+                <ScalarProperty Name="SerialStatus" ColumnName="SerialStatus" />
+                <ScalarProperty Name="IsGeneratedBySignal" ColumnName="IsGeneratedBySignal" />
+                <ScalarProperty Name="SerialType" ColumnName="SerialType" />
+                <ScalarProperty Name="SerialNo" ColumnName="SerialNo" />
+                <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+                <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductQualityPlan">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ProductQualityPlan">
+              <MappingFragment StoreEntitySet="ProductQualityPlan">
+                <ScalarProperty Name="MoldTestFieldName" ColumnName="MoldTestFieldName" />
+                <ScalarProperty Name="ToleranceMax" ColumnName="ToleranceMax" />
+                <ScalarProperty Name="ToleranceMin" ColumnName="ToleranceMin" />
+                <ScalarProperty Name="CheckType" ColumnName="CheckType" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="Responsible" ColumnName="Responsible" />
+                <ScalarProperty Name="Method" ColumnName="Method" />
+                <ScalarProperty Name="ControlDevice" ColumnName="ControlDevice" />
+                <ScalarProperty Name="AcceptanceCriteria" ColumnName="AcceptanceCriteria" />
+                <ScalarProperty Name="PeriodType" ColumnName="PeriodType" />
+                <ScalarProperty Name="CheckProperties" ColumnName="CheckProperties" />
+                <ScalarProperty Name="ProductQualityCode" ColumnName="ProductQualityCode" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

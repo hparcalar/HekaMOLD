@@ -5,6 +5,7 @@
 
     $scope.itemList = [];
     $scope.firmList = [];
+    $scope.movementList = [];
     $scope.selectedFirm = {};
 
     // CRUD
@@ -90,6 +91,52 @@
                         toastr.error(resp.data.ErrorMessage, 'Hata');
                 }
             }).catch(function (err) { });
+    }
+
+    $scope.showMoldHistory = function () {
+        try {
+            $http.get(HOST_URL + 'Mold/GetMoldMovementHistory?moldId=' + $scope.modelObject.Id, {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.movementList = resp.data;
+                    }
+
+                    $('#dial-history').dialog({
+                        width: 700,
+                        height: window.innerHeight * 0.6,
+                        hide: true,
+                        modal: true,
+                        resizable: false,
+                        show: true,
+                        draggable: false,
+                        closeText: "KAPAT"
+                    });
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
+    $scope.printLabel = function () {
+        $('#dial-print-label').dialog({
+            width: 520,
+            height: 520,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.printMoldLabel = function () {
+        var printContents = document.getElementById('mold-label').innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload();
     }
 
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {

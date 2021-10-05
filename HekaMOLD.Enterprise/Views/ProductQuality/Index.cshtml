@@ -100,7 +100,7 @@
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
             <!--begin::Row-->
-            <div class="row gy-5 gx-xl-8 bg-white">
+            <div class="row gy-5 gx-xl-8 py-3 bg-white">
                 <!--begin::Col-->
                 <div class="col-xxl-3">
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sıra No</label>
@@ -141,6 +141,12 @@
                     <!--begin::Input group-->
                     <div class="mb-5">
                         <input type="text" class="form-control form-control-solid" ng-model="modelObject.Method" placeholder="" />
+                    </div>
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kalıp Deneme Alanı</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.MoldTestFieldName" placeholder="" />
                     </div>
                 </div>
                 <!--end::Col-->

@@ -612,3 +612,14 @@ BEGIN
 
 	ALTER TABLE [dbo].[ItemOrderItemNeeds] CHECK CONSTRAINT [FK_ItemOrderItemNeeds_ItemOrderDetail]
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='WorkOrderSerial' AND COLUMN_NAME='ItemReceiptDetailId')
+BEGIN
+	ALTER TABLE WorkOrderSerial ADD ItemReceiptDetailId INT NULL
+	ALTER TABLE WorkOrderSerial ADD CONSTRAINT FK_WorkOrderSerial_ItemReceiptDetail FOREIGN KEY(ItemReceiptDetailId) REFERENCES ItemReceiptDetail(Id)
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ProductQualityPlan' AND COLUMN_NAME='MoldTestFieldName')
+BEGIN
+	ALTER TABLE ProductQualityPlan ADD MoldTestFieldName NVARCHAR(100) NULL
+END

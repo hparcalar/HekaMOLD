@@ -10,6 +10,23 @@
         $scope.modelObject = { Id: 0 };
     }
 
+    $scope.showAttachmentList = function () {
+        $scope.$broadcast('showAttachmentList',
+            { RecordId: $scope.modelObject.Id, RecordType: 3 });
+
+        $('#dial-attachments').dialog({
+            width: 500,
+            height: 400,
+            //height: window.innerHeight * 0.6,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
     $scope.performDelete = function () {
         bootbox.confirm({
             message: "Bu denemeyi silmek istediğinizden emin misiniz?",

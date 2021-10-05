@@ -32,6 +32,7 @@ namespace Heka.DataAccess.Context
         public int CheckType { get; set; }
         public Nullable<decimal> ToleranceMin { get; set; }
         public Nullable<decimal> ToleranceMax { get; set; }
+        public string MoldTestFieldName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductQualityDataDetail> ProductQualityDataDetail { get; set; }

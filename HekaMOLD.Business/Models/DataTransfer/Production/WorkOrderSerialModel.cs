@@ -20,6 +20,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public decimal? LiveQuantity { get; set; }
         public int? InPackageQuantity { get; set; }
         public int? ShiftId { get; set; }
+        public int? ItemReceiptDetailId { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemNo { get; set; }

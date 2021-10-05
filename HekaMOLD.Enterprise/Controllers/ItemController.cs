@@ -1,5 +1,6 @@
 ﻿using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -25,6 +26,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult Extract()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetItemList()
         {
@@ -33,6 +39,21 @@ namespace HekaMOLD.Enterprise.Controllers
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 result = bObj.GetItemList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetItemExtract(int itemId)
+        {
+            ItemReceiptDetailModel[] result = new ItemReceiptDetailModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.GetItemExtract(itemId);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

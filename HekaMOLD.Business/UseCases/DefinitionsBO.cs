@@ -457,6 +457,10 @@ namespace HekaMOLD.Business.UseCases
                 model.Units = unitModels.ToArray();
                 #endregion
 
+                model.TotalInQuantity = dbObj.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0;
+                model.TotalOutQuantity = dbObj.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0;
+                model.TotalOverallQuantity = dbObj.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0;
+
                 model.Warehouses = warehousePrmList.ToArray();
             }
 
@@ -1721,6 +1725,7 @@ namespace HekaMOLD.Business.UseCases
                 dbMoldItem.ItemNo = dbObj.MoldCode;
                 dbMoldItem.ItemName = dbObj.MoldName;
                 dbMoldItem.SupplierFirmId = dbObj.FirmId;
+                dbObj.Item1 = dbMoldItem;
                 #endregion
 
                 _unitOfWork.SaveChanges();
@@ -1784,6 +1789,8 @@ namespace HekaMOLD.Business.UseCases
                     string.Format("{0:dd.MM.yyyy}", model.CreatedDate) : "";
                 model.OwnedDateStr = model.OwnedDate != null ?
                     string.Format("{0:dd.MM.yyyy}", model.OwnedDate) : "";
+                model.FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
+                model.FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
                 model.Products = dbObj.MoldProduct.Select(m => new MoldProductModel
                 {
                     Id = m.Id,

@@ -13,7 +13,6 @@
                 @ViewBag.Title
             </h1>
             <!--end::Title-->
-
             <!--begin::TOP FORM-->
             <div class="row gy-5 mt-4 gx-xl-8 bg-white">
                 <div class="col-sm-8 col-xs-8 col-xxl-8">
@@ -43,24 +42,31 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6 col-xs-6 col-xxl-6">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Hedef</label>
                             <!--begin::Input group-->
                             <input type="text" class="form-control bg-light-primary"
                                    ng-model="activeWorkOrder.WorkOrder.Quantity" readonly="readonly" placeholder="" />
                         </div>
-                        <div class="col-sm-6 col-xs-6 col-xxl-6">
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gerçekleşen</label>
                             <!--begin::Input group-->
                             <input type="text" class="form-control bg-light-success"
                                    ng-model="activeWorkOrder.WorkOrder.CompleteQuantity" readonly="readonly" placeholder="" />
                         </div>
+
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Barkod</label>
+                            <!--begin::Input group-->
+                            <input type="text" class="form-control"
+                                   ng-model="modelObject.Barcode" placeholder="" />
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-light-primary" ng-click="showMachineList()">
+                    <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-primary" style="padding-top:35px;" ng-click="showMachineList()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -76,7 +82,7 @@
                 </div>
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
                     <a ng-hide="modelObject.Id > 0"
-                       class="btn btn-sm btn-block w-100 h-75 mt-2 btn-light-success" ng-click="approveProductEntry()">
+                       class="btn btn-sm btn-block w-100 h-75 mt-2 btn-success" style="padding-top:35px;" ng-click="readBarcode()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -91,18 +97,17 @@
                 </div>
             </div>
             <!--end::TOP FORM -->
-
             <!--begin::HISTORY TABLE-->
             <div class="row gy-5 mt-4 gx-xl-8 bg-white">
                 <div class="col-xxl-12 col-sm-12">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th class="w-20 px-2 text-center"><b>Barkod</b></th>
                                 <th class="w-20 px-2 text-center"><b>Tarih</b></th>
                                 <th class="w-20 px-2 text-center"><b>Saat</b></th>
                                 <th class="w-20 px-2 text-center"><b>Ürün</b></th>
                                 <th class="w-20 px-2 text-center"><b>Miktar</b></th>
-                                <th class="w-20 px-2 text-center"></th>
                             </tr>
                         </thead>
                     </table>
@@ -110,12 +115,12 @@
                         <table ng-cloak class="table table-bordered table-striped">
                             <tbody>
                                 <tr ng-repeat="item in activeWorkOrder.Serials">
+                                    <td class="w-20 px-2 text-center">{{item.SerialNo}}</td>
                                     <td class="w-20 px-2 text-center">{{getDatePart(item.CreatedDateStr)}}</td>
                                     <td class="w-20 px-2 text-center">{{getHourPart(item.CreatedDateStr)}}</td>
                                     <td class="w-20 px-2 text-center">{{item.ItemName}}</td>
-                                    <td class="w-20 px-2 text-center">{{item.FirstQuantity}}</td>
-                                    <td class="w-20 px-2 text-center">
-                                        <button class="btn btn-danger" ng-click="deleteSerial(item)">
+                                    <td class="w-20 px-2 text-center">{{item.FirstQuantity}}
+                                        <button class="btn btn-danger btn-sm" style="float:right;" ng-click="deleteSerial(item)">
                                             Geri Al
                                         </button>
                                     </td>
@@ -140,7 +145,7 @@
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-
+    <script src="~/Scripts/html5-qrcode.min.js"></script>
     <script src="~/FrontEndLogic/Mobile/product-entry.js"></script>
     <script src="~/Components/Controllers/machine-selection.js"></script>
 }

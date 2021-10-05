@@ -4044,6 +4044,7 @@
     <Content Include="FrontEndLogic\ItemReceipt\index.js" />
     <Content Include="FrontEndLogic\ItemReceipt\list.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
+    <Content Include="FrontEndLogic\Item\extract.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
     <Content Include="FrontEndLogic\MachineOnline\online.js" />
     <Content Include="FrontEndLogic\Machine\index.js" />
@@ -4496,6 +4497,7 @@
     <Content Include="Views\Document\Preview.cshtml" />
     <Content Include="Views\Mobile\WastageEntry.cshtml" />
     <Content Include="Views\Delivery\Planning.cshtml" />
+    <Content Include="Views\Item\Extract.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

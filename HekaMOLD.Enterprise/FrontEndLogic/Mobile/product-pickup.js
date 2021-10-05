@@ -34,11 +34,21 @@
 
     $scope.processBarcodeResult = function (barcode) {
         var product = $scope.pickupList.find(d => d.SerialNo == barcode);
-        if (product != null && typeof product != 'undefined')
-            $scope.selectedProducts(product);
+        if (product != null && typeof product != 'undefined') {
+            $scope.selectProduct(product);
+            $scope.isBarcodeRead = true;
+            try {
+                $scope.$apply();
+            } catch (e) {
+
+            }
+        }
     }
 
+    $scope.isBarcodeRead = false;
+
     $scope.readBarcode = function () {
+        $scope.isBarcodeRead = false;
         bootbox.alert({
             message: '<div style="width: 500px" id="reader"></div>',
             locale: 'tr'
@@ -69,8 +79,10 @@
             },
             qrCodeMessage => {
                 bootbox.hideAll();
-                qrScanner.stop();
-                $scope.processBarcodeResult(qrCodeMessage);
+                if (!$scope.isBarcodeRead)
+                    $scope.processBarcodeResult(qrCodeMessage);
+                //qrScanner.stop();
+                Html5Qrcode.stop();
             },
             errorMessage => {
             })
@@ -123,7 +135,17 @@
                     else
                         $scope.modelObject.InWarehouseId = null;
 
-                    $http.post(HOST_URL + 'Mobile/SaveItemEntry', $scope.modelObject, 'json')
+                    if ($scope.modelObject.InWarehouseId == null) {
+                        toastr.error('Depo seçmelisiniz.');
+                        return;
+                    }
+
+                    if ($scope.selectedWarehouse.WarehouseType != 2) {
+                        toastr.error('Ürün deposu seçmelisiniz.');
+                        return;
+                    }
+
+                    $http.post(HOST_URL + 'Mobile/SaveProductPickup', { receiptModel: $scope.modelObject, model: $scope.selectedProducts }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -136,6 +158,8 @@
                                         FirmCode: '', FirmName: '',
                                         Details: []
                                     };
+
+                                    $scope.bindModel();
                                 }
                                 else
                                     toastr.error(resp.data.ErrorMessage, 'Hata');

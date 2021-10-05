@@ -60,6 +60,40 @@
             });
         }
 
+    $scope.moldList = [];
+    $scope.showPrintDialog = function () {
+        try {
+            $http.get(HOST_URL + 'Mold/GetMoldList', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.moldList = resp.data;
+                    }
+
+                    $('#dial-print-label').dialog({
+                        width: 1100,
+                        height: window.innerHeight * 0.6,
+                        hide: true,
+                        modal: true,
+                        resizable: false,
+                        show: true,
+                        draggable: false,
+                        closeText: "KAPAT"
+                    });
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
+    $scope.printLabel = function () {
+        var printContents = document.getElementById('mold-label').innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+    }
+
     // ON LOAD EVENTS
     $scope.loadReport();
 });

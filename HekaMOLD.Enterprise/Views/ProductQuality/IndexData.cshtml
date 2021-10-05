@@ -124,6 +124,7 @@
                                 <th class="w-20">
                                     <select class="form-select form-select-solid" data-allow-clear="true"
                                             ng-options="item.MachineCode for item in machineList" ng-model="selectedMachine"
+                                            ng-change="onMachineChanged()"
                                             data-control="select2" data-placeholder="-- Seçiniz --"></select>
                                 </th>
                                 <th class="w-10">Tarih</th>

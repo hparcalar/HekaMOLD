@@ -8,6 +8,8 @@ namespace HekaMOLD.Business.Models.Constants
 {
     public enum RecordType
     {
-        Order=1
+        Order=1,
+        Item=2,
+        MoldTest=3,
     }
 }
