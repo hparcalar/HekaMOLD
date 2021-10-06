@@ -46,6 +46,11 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
+        $scope.modelObject.BackColor = $("#back-color").spectrum("get") != null ?
+            $("#back-color").spectrum("get").toHexString() : "";
+        $scope.modelObject.ForeColor = $("#fore-color").spectrum("get") != null ?
+            $("#fore-color").spectrum("get").toHexString() : "";
+
         $http.post(HOST_URL + 'Machine/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -67,6 +72,9 @@
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
+
+                    $("#back-color").spectrum("set", $scope.modelObject.BackColor);
+                    $("#fore-color").spectrum("set", $scope.modelObject.ForeColor);
 
                     $scope.bindInstructionList();
                 }
@@ -160,4 +168,18 @@
     DevExpress.localization.locale('tr');
     if (PRM_ID > 0)
         $scope.bindModel(PRM_ID);
+    else
+        $scope.bindModel(0);
+
+    $('#back-color').spectrum({
+        type: 'component',
+        cancelText: 'Vazgeç',
+        chooseText: 'Seç',
+    });
+
+    $('#fore-color').spectrum({
+        type: 'component',
+        cancelText: 'Vazgeç',
+        chooseText: 'Seç',
+    });
 });

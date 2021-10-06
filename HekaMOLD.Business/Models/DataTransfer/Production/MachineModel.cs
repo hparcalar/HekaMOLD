@@ -23,6 +23,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? PostureExpirationCycleCount { get; set; }
         public bool? IsUpToPostureEntry { get; set; }
         public int? WorkingUserId { get; set; }
+        public string BackColor { get; set; }
+        public string ForeColor { get; set; }
         public MachinePlanModel ActivePlan { get; set; }
         public MachinePlanModel[] Plans { get; set; }
         public MachineMaintenanceInstructionModel[] Instructions { get; set; }

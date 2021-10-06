@@ -291,5 +291,19 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
         #endregion
+
+        #region PRINTING
+        [HttpPost]
+        [FreeAction]
+        public JsonResult PrintSerial(int id)
+        {
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                bObj.PrintProductLabel(id, "Argox CP-2140EX PPLB");
+            }
+
+            return Json(new { Status = 1 });
+        }
+        #endregion
     }
 }

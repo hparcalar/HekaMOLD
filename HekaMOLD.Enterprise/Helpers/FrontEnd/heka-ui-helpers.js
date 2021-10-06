@@ -16,6 +16,10 @@ function refreshArray(arrObj) {
     }
 }
 
+function getSumOf(list, key) {
+    return list.reduce(function (acc, obj) { return acc + obj[key]; }, 0);
+}
+
 function groupArrayOfObjects(list, key) {
     return list.reduce(function (rv, x) {
         (rv[x[key]] = rv[x[key]] || []).push(x);

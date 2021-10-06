@@ -115,6 +115,26 @@
                     <div class="mb-5">
                         <input type="text" class="form-control form-control-solid" ng-model="modelObject.MachineName" placeholder="" />
                     </div>
+
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Arkaplan Rengi</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" id="back-color"
+                                       class="form-control form-control-solid" ng-model="modelObject.BackColor" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yazı Rengi</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" id="fore-color"
+                                       class="form-control form-control-solid" ng-model="modelObject.ForeColor" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
                 <!--end::Col-->
                 <div class="col-xxl-6">
@@ -171,7 +191,9 @@
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <link href="~/Content/spectrum.min.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/Scripts/spectrum.min.js"></script>
     <script src="~/FrontEndLogic/Machine/index.js"></script>
 }

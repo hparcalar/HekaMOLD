@@ -18,6 +18,7 @@ namespace Heka.DataAccess.Context
         public Shift()
         {
             this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
+            this.MachineSignal = new HashSet<MachineSignal>();
         }
     
         public int Id { get; set; }
@@ -29,5 +30,7 @@ namespace Heka.DataAccess.Context
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MachineSignal> MachineSignal { get; set; }
     }
 }

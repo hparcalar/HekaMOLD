@@ -69,9 +69,27 @@
         }
     }
 
+    $scope.printSerial = function (item) {
+        try {
+            $http.post(HOST_URL + 'Common/PrintSerial', { id: item.Id }, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
     $scope.isBarcodeRead = false;
 
     $scope.readBarcode = function () {
+        if ($scope.modelObject.Barcode != null && $scope.modelObject.Barcode.length > 0) {
+            $scope.approveProductEntry();
+            return;
+        }
+
         $scope.isBarcodeRead = false;
         bootbox.alert({
             message: '<div style="width: 500px" id="reader"></div>',

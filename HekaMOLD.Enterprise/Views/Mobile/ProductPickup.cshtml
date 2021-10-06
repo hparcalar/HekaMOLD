@@ -70,41 +70,83 @@
 
             <!--begin::DETAIL TABLE-->
             <div class="row gy-5 mt-4 gx-xl-8 bg-white">
-                <div class="col-xxl-12 col-sm-12">
-                    <table class="table table-bordered">
+                @* KOLİ TABLOSU *@
+                <div class="col-xxl-8 col-sm-8">
+                    <h5 class="hk-title-mobile">Koli Listesi</h5>
+                    <table class="table table-bordered table-hk-sm">
                         <thead>
                             <tr>
-                                <th class="w-20 px-2">Koli No</th>
-                                <th class="w-20 px-2">Stok No</th>
-                                <th class="w-20 px-2">Stok Adı</th>
-                                <th class="w-20 px-2">Firma</th>
-                                <th class="w-10 px-2">Miktar</th>
-                                <th class="w-10 px-2">#</th>
+                                <th class="w-15 px-2">Tarih</th>
+                                <th class="w-15 px-2">Makine</th>
+                                <th class="w-15 px-2">Koli No</th>
+                                <th class="w-15 px-2">Stok No</th>
+                                <th class="w-15 px-2">Stok Adı</th>
+                                <th class="w-15 px-2">Firma</th>
+                                <th class="w-15 px-2">Koli İçi Adet</th>
+                                <th class="w-15 px-2">#</th>
                             </tr>
                         </thead>
                     </table>
                     <div class="table-scroller-md">
-                        <table ng-cloak class="table table-bordered table-striped">
+                        <table ng-cloak class="table table-bordered table-striped table-hk-sm">
                             <tbody>
                                 <tr ng-repeat="item in pickupList"
                                     ng-class="{'bg-warning': isSelectedProduct(item)}">
-                                    <td class="w-20 px-2">{{item.SerialNo}}</td>
-                                    <td class="w-20 px-2">{{item.ItemNo}}</td>
-                                    <td class="w-20 px-2">{{item.ItemName}}</td>
-                                    <td class="w-20 px-2">{{item.FirmName}}</td>
-                                    <td class="w-10 px-2">
+                                    <td class="w-15 px-2">{{item.CreatedDateStr}}</td>
+                                    <td class="w-15 px-2">{{item.MachineCode}}</td>
+                                    <td class="w-15 px-2">{{item.SerialNo}}</td>
+                                    <td class="w-15 px-2">{{item.ItemNo}}</td>
+                                    <td class="w-15 px-2">{{item.ItemName}}</td>
+                                    <td class="w-15 px-2">{{item.FirmName}}</td>
+                                    <td class="w-15 px-2">
                                         <input type="number"
                                                class="form-control form-control-sm"
                                                ng-model="item.FirstQuantity" />
                                     </td>
-                                    <td class="w-10 px-2">
+                                    <td class="w-15 px-2">
                                         <button type="button" ng-click="selectProduct(item)"
-                                                class="btn btn-sm btn-primary">{{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}</button>
+                                                class="btn btn-sm btn-primary">
+                                            {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                @* STOK ÖZET & TOPLAM TABLOSU *@
+                <div class="col-xxl-4 col-sm-4">
+                    <h5 class="hk-title-mobile">Ürün Toplamları</h5>
+                    <table class="table table-bordered table-hk-sm">
+                        <thead>
+                            <tr>
+                                <th class="w-50 px-2">Ürün</th>
+                                <th class="w-25 px-2">Koli Adedi</th>
+                                <th class="w-25 px-2">Ürün Adedi</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-md">
+                        <table ng-cloak class="table table-bordered table-striped table-hk-sm">
+                            <tbody>
+                                <tr ng-repeat="item in summaryList">
+                                    <td class="w-50 px-2">{{item.ItemName}}</td>
+                                    <td class="w-25 px-2">{{item.SerialCount}}</td>
+                                    <td class="w-25 px-2">{{item.SerialSum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <table class="table table-bordered">
+                        <tfoot>
+                            <tr class="bg-primary text-white">
+                                <th class="w-50 px-2"><b>TOPLAM: </b></th>
+                                <th class="w-25 px-2"><b>{{ getListSum(summaryList, 'SerialCount') }} KOLİ</b></th>
+                                <th class="w-25 px-2"><b>{{ getListSum(summaryList, 'SerialSum') }} ADET</b></th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
             <!--end::DETAIL TABLE-->

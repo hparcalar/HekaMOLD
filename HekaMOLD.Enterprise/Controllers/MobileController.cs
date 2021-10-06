@@ -13,6 +13,7 @@ using HekaMOLD.Business.Models.Constants;
 using System.Web.Configuration;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Maintenance;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -415,13 +416,18 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult GetProductsForPickup()
         {
             WorkOrderSerialModel[] result = new WorkOrderSerialModel[0];
+            WorkOrderSerialSummary[] resultSum = new WorkOrderSerialSummary[0];
 
             using (ProductionBO bObj = new ProductionBO())
             {
                 result = bObj.GetSerialsWaitingForPickup();
+                resultSum = bObj.GetSerialsWaitingForPickupSummary();
             }
 
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { 
+                Serials = result,
+                Summaries = resultSum,
+            }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

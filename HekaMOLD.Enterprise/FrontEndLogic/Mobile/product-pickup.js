@@ -7,15 +7,24 @@
     };
 
     $scope.pickupList = [];
+    $scope.summaryList = [];
     $scope.selectedProducts = [];
 
     $scope.bindModel = function () {
         $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data;
+                    $scope.pickupList = resp.data.Serials;
+                    $scope.summaryList = resp.data.Summaries;
                 }
             }).catch(function (err) { });
+    }
+
+    $scope.getListSum = function (list, key) {
+        if (list != null && list.length > 0)
+            return getSumOf(list, key);
+
+        return '';
     }
 
     $scope.selectedWarehouse = { Id: 0, WarehouseName: '' };

@@ -13,6 +13,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? WorkOrderDetailId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int? ShiftId { get; set; }
         public int? Duration { get; set; }
         public int? SignalStatus { get; set; }
     }
