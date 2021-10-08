@@ -182,7 +182,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveProductEntry(int workOrderDetailId, int inPackageQuantity, string barcode)
+        public JsonResult SaveProductEntry(int workOrderDetailId, int inPackageQuantity, string barcode, bool printLabel, int printerId)
         {
             BusinessResult result = new BusinessResult();
 
@@ -203,6 +203,20 @@ namespace HekaMOLD.Enterprise.Controllers
                 int? machineId = bObj.GetMachineByWorkOrderDetail(workOrderDetailId);
                 if (machineId != null)
                     bObj.UpdateUserHistory(machineId ?? 0, userId);
+            }
+
+            if (printLabel == true)
+            {
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    var pqResult = bObj.AddToPrintQueue(new PrinterQueueModel
+                    {
+                        PrinterId = printerId,
+                        RecordType = (int)RecordType.SerialItem,
+                        RecordId = result.RecordId,
+                        CreatedDate = DateTime.Now,
+                    });
+                }
             }
 
             return Json(result);

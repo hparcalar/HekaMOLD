@@ -2,7 +2,9 @@
     $scope.modelObject = {
         Id: 0,
         MachineId: 0,
-        Barcode:'',
+        Barcode: '',
+        PrinterId: 0,
+        PrintLabel: false,
     };
 
     $scope.bindModel = function (id) {
@@ -69,6 +71,20 @@
         }
     }
 
+    $scope.getDefaultSerialPrinter = function () {
+        try {
+            $http.get(HOST_URL + 'Common/GetDefaultSerialPrinter', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.modelObject.PrinterId = resp.data;
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
+    // will be deleted
     $scope.printSerial = function (item) {
         try {
             $http.post(HOST_URL + 'Common/PrintSerial', { id: item.Id }, 'json')
@@ -86,6 +102,16 @@
 
     $scope.readBarcode = function () {
         if ($scope.modelObject.Barcode != null && $scope.modelObject.Barcode.length > 0) {
+            $scope.approveProductEntry();
+            return;
+        }
+
+        if ($scope.modelObject.PrintLabel == true) {
+            if ($scope.modelObject.PrinterId <= 0) {
+                toastr.error('Varsayılan üretim yazıcısı ayarlanmamış.', 'Uyarı');
+                return;
+            }
+
             $scope.approveProductEntry();
             return;
         }
@@ -167,6 +193,8 @@
                         workOrderDetailId: $scope.activeWorkOrder.WorkOrder.Id,
                         inPackageQuantity: $scope.activeWorkOrder.WorkOrder.InPackageQuantity,
                         barcode: $scope.modelObject.Barcode,
+                        printLabel: $scope.modelObject.PrintLabel,
+                        printerId: $scope.modelObject.PrinterId,
                     }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -227,5 +255,6 @@
     }
 
     // LOAD EVENTS
+    $scope.getDefaultSerialPrinter();
     setTimeout($scope.showMachineList, 500);
 });

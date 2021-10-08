@@ -92,5 +92,9 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ProductQualityPlan> ProductQualityPlan { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MachineSignal> MachineSignal { get; set; }
+        public virtual DbSet<SystemParameter> SystemParameter { get; set; }
+        public virtual DbSet<AllocatedCode> AllocatedCode { get; set; }
+        public virtual DbSet<PrinterQueue> PrinterQueue { get; set; }
+        public virtual DbSet<SystemPrinter> SystemPrinter { get; set; }
     }
 }

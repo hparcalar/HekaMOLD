@@ -54,6 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\AllocatedCode.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\Attachment.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -192,6 +195,9 @@
     <Compile Include="Context\PostureCategory.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\PrinterQueue.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\ProductionPosture.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -220,6 +226,12 @@
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\SyncPoint.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\SystemParameter.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\SystemPrinter.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\TransactionLog.cs">
@@ -300,7 +312,7 @@
       <DependentUpon>HekaDataMapping.edmx</DependentUpon>
       <LastGenOutput>HekaDataMapping.cs</LastGenOutput>
     </Content>
-    <EmbeddedResource Include="Migration\Versions\1.0.1.9.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.2.1.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.6.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.3.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.2.sql" />

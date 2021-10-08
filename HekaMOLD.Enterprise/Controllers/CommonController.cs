@@ -304,6 +304,45 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(new { Status = 1 });
         }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetDefaultSerialPrinter()
+        {
+            int printerId = 0;
+
+            try
+            {
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    printerId =
+                        Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter", 
+                            Convert.ToInt32(Request.Cookies["PlantId"].Value)).PrmValue);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return Json(printerId, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetPrinterList()
+        {
+            SystemPrinterModel[] data = new SystemPrinterModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetPrinterList();
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         #endregion
     }
 }

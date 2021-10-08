@@ -3,6 +3,7 @@ using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.UseCases.Core.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases.Core
 {
-    public class CoreReceiptsBO : IBusinessObject
+    public class CoreReceiptsBO : CoreSystemBO
     {
         public string GetNextOrderNo(int plantId, ItemOrderType orderType)
         {

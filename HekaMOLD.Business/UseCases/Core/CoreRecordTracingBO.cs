@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using Heka.DataAccess.Context;
+using HekaMOLD.Business.UseCases.Core.Base;
 
 namespace HekaMOLD.Business.UseCases.Core
 {
-    public class CoreRecordTracingBO : IBusinessObject
+    public class CoreRecordTracingBO : CoreSystemBO
     {
         public RecordInformationModel GetRecordInformation(int id, string dataType)
         {

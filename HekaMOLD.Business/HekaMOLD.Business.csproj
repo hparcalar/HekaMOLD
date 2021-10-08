@@ -99,6 +99,7 @@
     <Compile Include="Models\DataTransfer\Authentication\UserAuthModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserRoleModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\AllocatedCodeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\FirmAuthorModel.cs" />
     <Compile Include="Models\DataTransfer\Core\FirmModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ForexHistoryModel.cs" />
@@ -111,9 +112,12 @@
     <Compile Include="Models\DataTransfer\Core\ItemWarehouseModel.cs" />
     <Compile Include="Models\DataTransfer\Core\NotificationModel.cs" />
     <Compile Include="Models\DataTransfer\Core\PlantModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\PrinterQueueModel.cs" />
     <Compile Include="Models\DataTransfer\Core\RecordInformationModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SectionSettingModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SyncPointModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\SystemParameterModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\SystemPrinterModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UnitTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UsageDocumentModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
@@ -182,7 +186,9 @@
     <Compile Include="Models\Filters\BasicRangeFilter.cs" />
     <Compile Include="Models\Operational\AuthenticationResult.cs" />
     <Compile Include="Models\Operational\BusinessResult.cs" />
+    <Compile Include="Models\Virtual\AllocatedPrintDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UseCases\Core\Base\CoreSystemBO.cs" />
     <Compile Include="UseCases\Core\CoreProductionBO.cs" />
     <Compile Include="UseCases\Core\CoreReceiptsBO.cs" />
     <Compile Include="UseCases\Core\CoreRecordTracingBO.cs" />

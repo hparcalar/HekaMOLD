@@ -203,6 +203,11 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_Shift" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.SystemParameter" Width="1.5" PointX="5.375" PointY="3.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.AllocatedCode" Width="1.5" PointX="10.375" PointY="6.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.PrinterQueue" Width="1.5" PointX="12.625" PointY="3.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.SystemPrinter" Width="1.5" PointX="10.375" PointY="14.5" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_PrinterQueue_SystemPrinter" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

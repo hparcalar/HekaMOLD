@@ -31,7 +31,7 @@
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
-        <div id="kt_content_container" class="container-fluid">
+        <div id="kt_content_container" class="container-fluid dx-viewport">
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8">
                 <!--begin::Col-->
@@ -40,7 +40,7 @@
                     <div class="d-flex flex-row flex-fill">
                         <div class="d-flex flex-column flex-fill">
                             <div class="flex-row">
-                                <div class="dx-viewport mr-1">
+                                <div class="mr-1">
                                     <div id="machineSelection"></div>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                                     </button>
                                 </div>
                                 <div class="card-body p-0" style="height:500px;">
-                                    <div class="dx-viewport" ng-show="waitingPlansVisible">
+                                    <div class="" ng-show="waitingPlansVisible">
                                         <div id="waitingPlanList"></div>
                                     </div>
                                 </div>
@@ -132,5 +132,6 @@
     <link href="~/Content/planning.css" rel="stylesheet" />
     <script src="~/FrontEndLogic/Planning/planning.js"></script>
     <script src="~/Components/Controllers/planning-work-copy.js"></script>
+    <script src="~/Components/Controllers/print-options.js"></script>
     <script src="~/Components/Controllers/edit-plan.js"></script>
 }

@@ -242,6 +242,17 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
     // WAITING PLANS GRID
     $scope.lastProcessedPlanId = 0;
     $scope.loadWaitingPlans = function () {
+        var cFilter = null;
+
+        try {
+            var dataGrid = $("#waitingPlanList").dxDataGrid("instance");
+            if (dataGrid != null) {
+                cFilter = dataGrid.getCombinedFilter(true);
+            }
+        } catch (e) {
+
+        }
+        
         $('#waitingPlanList').dxDataGrid({
             dataSource: $scope.waitingPlanList,
             keyExpr: 'Id',
@@ -334,6 +345,10 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 }
             ]
         });
+
+        var dGrid = $("#waitingPlanList").dxDataGrid("instance");
+        if (cFilter != null)
+            dGrid.filter(cFilter);
     }
     $scope.refreshList = function () {
         var dataGrid = $("#waitingPlanList").dxDataGrid("instance");

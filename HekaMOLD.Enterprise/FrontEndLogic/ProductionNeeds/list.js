@@ -47,6 +47,7 @@
                 { dataField: 'ItemName', caption: 'Malzeme Adı' },
                 /*{ dataField: 'SaleOrderDeadline', caption: 'Sipariş Termin' },*/
                 { dataField: 'TargetQuantity', caption: 'Sipariş Miktar', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'WarehouseQuantity', caption: 'Depo Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Quantity', caption: 'İhtiyaç Miktar', format: { type: "fixedPoint", precision: 2 } },
                 //{
                 //    type: "buttons",
@@ -100,6 +101,8 @@
             columns: [
                 { dataField: 'ItemNo', caption: 'Malzeme No' },
                 { dataField: 'ItemName', caption: 'Malzeme Adı' },
+                { dataField: 'TargetQuantity', caption: 'Sipariş Miktar', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'WarehouseQuantity', caption: 'Depo Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Quantity', caption: 'İhtiyaç Miktar', format: { type: "fixedPoint", precision: 2 } },
             ]
         });

@@ -11,5 +11,6 @@ namespace HekaMOLD.Business.Models.Constants
         Order=1,
         Item=2,
         MoldTest=3,
+        SerialItem=4,
     }
 }

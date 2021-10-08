@@ -17,7 +17,7 @@
     <AssemblyName>HekaMOLD.Enterprise</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -158,6 +158,8 @@
     <Compile Include="Controllers\ProductionNeedsController.cs" />
     <Compile Include="Controllers\ProductQualityController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
+    <Compile Include="Controllers\SystemPrinterController.cs" />
+    <Compile Include="Controllers\SystemSettingsController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Controllers\MoldTestController.cs" />
     <Compile Include="Controllers\Filters\MobileAuthFilter.cs" />
@@ -3936,6 +3938,7 @@
     <Content Include="Components\Controllers\open-po-list.js" />
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
     <Content Include="Components\Controllers\attachment-list.js" />
+    <Content Include="Components\Controllers\print-options.js" />
     <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
@@ -3946,6 +3949,7 @@
     <Content Include="Components\Views\MachineSelection.html" />
     <Content Include="Components\Views\OpenPoList.html" />
     <Content Include="Components\Views\AttachmentList.html" />
+    <Content Include="Components\Views\PrintOptions.html" />
     <Content Include="Components\Views\RecipeRevisions.html" />
     <Content Include="Components\Views\RelatedOrderList.html" />
     <Content Include="Components\Views\RelatedRequestList.html" />
@@ -4105,6 +4109,9 @@
     <Content Include="FrontEndLogic\Shift\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
     <Content Include="FrontEndLogic\SIOrder\list.js" />
+    <Content Include="FrontEndLogic\SystemPrinter\index.js" />
+    <Content Include="FrontEndLogic\SystemPrinter\list.js" />
+    <Content Include="FrontEndLogic\SystemSettings\index.js" />
     <Content Include="FrontEndLogic\UnitType\index.js" />
     <Content Include="FrontEndLogic\UnitType\list.js" />
     <Content Include="FrontEndLogic\UserRole\index.js" />
@@ -4518,6 +4525,9 @@
     <Content Include="Views\Mobile\WastageEntry.cshtml" />
     <Content Include="Views\Delivery\Planning.cshtml" />
     <Content Include="Views\Item\Extract.cshtml" />
+    <Content Include="Views\SystemPrinter\List.cshtml" />
+    <Content Include="Views\SystemPrinter\Index.cshtml" />
+    <Content Include="Views\SystemSettings\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4561,7 +4571,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56183</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/mold</IISUrl>
+          <IISUrl>http://localhost:56183/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

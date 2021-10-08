@@ -15,6 +15,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public decimal? Quantity { get; set; }
         public decimal? RemainingQuantity { get; set; }
         public decimal? TargetQuantity { get; set; }
+        public decimal? WarehouseQuantity { get; set; }
         public DateTime? CalculatedDate { get; set; }
 
         #region VISUAL ELEMENTS

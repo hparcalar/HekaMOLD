@@ -1,4 +1,6 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Order;
+﻿using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
@@ -98,6 +100,38 @@ namespace HekaMOLD.Enterprise.Controllers
             using (PlanningBO bObj = new PlanningBO())
             {
                 result = bObj.ReOrderPlan(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult AllocateAndPrintLabel(PrinterQueueModel model, int labelCount, int workOrderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            for (int i = 0; i < labelCount; i++)
+            {
+                string allocatedCode = "";
+                using (PlanningBO bObj = new PlanningBO())
+                {
+                    var allocResult = bObj.AllocateCode((int)RecordType.SerialItem);
+                    if (allocResult.Result)
+                        allocatedCode = allocResult.Code;
+                }
+
+                if (!string.IsNullOrEmpty(allocatedCode))
+                {
+                    using (PlanningBO bObj = new PlanningBO())
+                    {
+                        model.AllocatedPrintData = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                        {
+                            WorkOrderDetailId = workOrderDetailId,
+                            Code = allocatedCode,
+                        });
+                        result = bObj.AddToPrintQueue(model);
+                    }
+                }
             }
 
             return Json(result);

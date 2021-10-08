@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-primary" style="padding-top:35px;" ng-click="showMachineList()">
+                    <a class="btn btn-sm btn-block w-100 h-50 mt-14 btn-primary" style="padding-top:20px;" ng-click="showMachineList()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -81,8 +81,14 @@
                     </a>
                 </div>
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
+                    <div style="text-align:center; border:1px solid #ffd800; border-radius:3px;" class="bg-light-warning py-2" 
+                         ng-click="modelObject.PrintLabel = !modelObject.PrintLabel">
+                        <input type="checkbox" style="margin-top:7px !important;" ng-model="modelObject.PrintLabel" />
+                        <span 
+                              style="cursor:default !important;">Etiket Yazdır</span>
+                    </div>
                     <a ng-hide="modelObject.Id > 0"
-                       class="btn btn-sm btn-block w-100 h-75 mt-2 btn-success" style="padding-top:35px;" ng-click="readBarcode()">
+                       class="btn btn-sm btn-block w-100 h-50 mt-2 btn-success" style="padding-top:20px;" ng-click="readBarcode()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -124,9 +130,9 @@
                                         <button class="btn btn-danger btn-sm" style="float:right;" ng-click="deleteSerial(item)">
                                             Geri Al
                                         </button>
-                                        <button class="btn btn-danger btn-sm" style="float:right;" ng-click="printSerial(item)">
+                                        @*<button class="btn btn-danger btn-sm" style="float:right;" ng-click="printSerial(item)">
                                             Yazdır
-                                        </button>
+                                        </button>*@
                                     </td>
                                 </tr>
                             </tbody>

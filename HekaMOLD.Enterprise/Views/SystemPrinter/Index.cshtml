@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "Yazıcı Tanımları";
+}
+
+<div ng-controller="systemPrinterCtrl">
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar">
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+            <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+                 class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
+                <!--begin::Title-->
+                <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                    @ViewBag.Title
+                </h1>
+
+                <!-- Progress enabled state -->
+                <button type="button" class="btn btn-sm btn-dark mx-2" ng-show="saveStatus==1" data-kt-indicator="on">
+                    <span class="indicator-label">
+                        Submit
+                    </span>
+                    <span class="indicator-progress">
+                        Lütfen bekleyiniz... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
+                <!--end::Title-->
+            </div>
+            <!--end::Page title-->
+            <!--begin::Actions-->
+            <div class="d-flex align-items-center py-1">
+                <!--begin::Wrapper-->
+                <div class="me-4">
+                    <a href="@Url.Action("List","SystemPrinter")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
+                                <path d="M6 5C5.44772 5 5 5.44772 5 6C5 6.55228 5.44771 7 6 7H16C16.5523 7 17 6.55228 17 6C17 5.44772 16.5523 5 16 5H6Z" fill="#12131A" />
+                                <path d="M6 9C5.44772 9 5 9.44771 5 10C5 10.5523 5.44772 11 6 11H10C10.5523 11 11 10.5523 11 10C11 9.44771 10.5523 9 10 9H6Z" fill="#12131A" />
+                                <path d="M6 13C5.44772 13 5 13.4477 5 14C5 14.5523 5.44772 15 6 15H18C18.5523 15 19 14.5523 19 14C19 13.4477 18.5523 13 18 13H6Z" fill="#12131A" />
+                                <path d="M5 18C5 17.4477 5.44772 17 6 17H14C14.5523 17 15 17.4477 15 18C15 18.5523 14.5523 19 14 19H6C5.44772 19 5 18.5523 5 18Z" fill="#12131A" />
+                            </svg>
+                        </span>
+                        Liste
+                    </a>
+
+                    <!--begin::Separator-->
+                    <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
+                    <!--end::Separator-->
+                    <!--begin::Button-->
+                    <a href="#" class="btn btn-sm btn-light-primary" ng-click="openNewRecord()">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.25" d="M3 4C3 2.34315 4.34315 1 6 1H15.7574C16.553 1 17.3161 1.31607 17.8787 1.87868L20.1213 4.12132C20.6839 4.68393 21 5.44699 21 6.24264V20C21 21.6569 19.6569 23 18 23H6C4.34315 23 3 21.6569 3 20V4Z" fill="#12131A" />
+                                <path d="M15 1.89181C15 1.39927 15.3993 1 15.8918 1V1C16.6014 1 17.2819 1.28187 17.7836 1.78361L20.2164 4.21639C20.7181 4.71813 21 5.39863 21 6.10819V6.10819C21 6.60073 20.6007 7 20.1082 7H16C15.4477 7 15 6.55228 15 6V1.89181Z" fill="#12131A" />
+                                <path d="M13 11C13 10.4477 12.5523 10 12 10C11.4477 10 11 10.4477 11 11V13H9C8.44771 13 8 13.4477 8 14C8 14.5523 8.44771 15 9 15H11V17C11 17.5523 11.4477 18 12 18C12.5523 18 13 17.5523 13 17V15H15C15.5523 15 16 14.5523 16 14C16 13.4477 15.5523 13 15 13H13V11Z" fill="#12131A" />
+                            </svg>
+                        </span>
+                        Yeni
+                    </a>
+                    <!--end::Button-->
+                    <!--begin::Button-->
+                    <a class="btn btn-sm btn-primary" ng-click="saveModel()">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Stockholm-icons-/-General-/-Save" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+                                    <path d="M17,4 L6,4 C4.79111111,4 4,4.7 4,6 L4,18 C4,19.3 4.79111111,20 6,20 L18,20 C19.2,20 20,19.3 20,18 L20,7.20710678 C20,7.07449854 19.9473216,6.94732158 19.8535534,6.85355339 L17,4 Z M17,11 L7,11 L7,4 L17,4 L17,11 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                                    <rect id="Rectangle-16" fill="#000000" opacity="0.3" x="12" y="4" width="3" height="5" rx="0.5"></rect>
+                                </g>
+                            </svg>
+                        </span>
+                        Kaydet
+                    </a>
+                    <!--end::Button-->
+                    <!--begin::Button-->
+                    <a class="btn btn-sm btn-light-primary" ng-click="performDelete()">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Stockholm-icons-/-General-/-Trash" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                    <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" id="round" fill="#000000" fill-rule="nonzero"></path>
+                                    <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" id="Shape" fill="#000000" opacity="0.3"></path>
+                                </g>
+                            </svg>
+                        </span>
+                        Sil
+                    </a>
+                    <!--end::Button-->
+                </div>
+                <!--end::Wrapper-->
+            </div>
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Row-->
+            <div class="row gy-5 gx-xl-8 bg-white">
+                <!--begin::Col-->
+                <div class="col-xxl-6">
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yazıcı Kodu</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.PrinterCode" placeholder="" />
+                    </div>
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yazıcı Adı</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.PrinterName" placeholder="" />
+                    </div>
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Erişim Yolu</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.AccessPath" placeholder="" />
+                    </div>
+                </div>
+                <!--end::Col-->
+                <div class="col-xxl-6">
+
+                </div>
+            </div>
+            <!--end::Row-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+@section scripts{
+    <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
+    <script src="~/FrontEndLogic/SystemPrinter/index.js"></script>
+}

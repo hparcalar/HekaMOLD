@@ -113,6 +113,126 @@ namespace HekaMOLD.Business.Base
 
             return result;
         }
+
+        public SystemParameterModel GetParameter(string prmCode, int plantId)
+        {
+            var repo = _unitOfWork.GetRepository<SystemParameter>();
+            var dbObj = repo.Get(d => d.PrmCode == prmCode && d.PlantId == plantId);
+            if (dbObj != null)
+            {
+                return new SystemParameterModel
+                {
+                    Id = dbObj.Id,
+                    PlantId = dbObj.PlantId,
+                    PrmCode = dbObj.PrmCode,
+                    PrmValue = dbObj.PrmValue,
+                };
+            }
+
+            return null;
+        }
+
+        protected BusinessResult CreateDefaultParams(int plantId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var uof = new EFUnitOfWork();
+                var repo = uof.GetRepository<SystemParameter>();
+
+                string[] defParams = new string[] { "DefaultProductPrinter" };
+
+                foreach (var prm in defParams)
+                {
+                    var dbObj = repo.Get(d => d.PrmCode == prm && d.PlantId == plantId);
+                    if (dbObj == null)
+                    {
+                        dbObj = new SystemParameter
+                        {
+                            PlantId = plantId,
+                            PrmCode = prm,
+                            PrmValue = "",
+                        };
+                        repo.Add(dbObj);
+                    }
+                }
+
+                uof.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public SystemParameterModel[] GetAllParameters(int plantId)
+        {
+            SystemParameterModel[] data = new SystemParameterModel[0];
+
+            try
+            {
+                // CREATE DEFAULT SYSTEM PARAMETERS IF NOT EXISTS
+                CreateDefaultParams(plantId);
+
+                var repo = _unitOfWork.GetRepository<SystemParameter>();
+                data = repo.Filter(d => d.PlantId == plantId)
+                    .Select(d => new SystemParameterModel
+                    {
+                        Id = d.Id,
+                        PrmCode = d.PrmCode,
+                        PrmValue = d.PrmValue,
+                        PlantId = d.PlantId,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult SetParameters(SystemParameterModel[] model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SystemParameter>();
+
+                foreach (var item in model)
+                {
+                    var dbPrm = repo.Get(d => d.PrmCode == item.PrmCode && d.PlantId == item.PlantId);
+                    if (dbPrm == null)
+                    {
+                        dbPrm = new SystemParameter
+                        {
+                            PrmCode = item.PrmCode,
+                            PlantId = item.PlantId,
+                        };
+                        repo.Add(dbPrm);
+                    }
+
+                    dbPrm.PrmValue = item.PrmValue;
+                }
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         #endregion
     }
 }

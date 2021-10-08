@@ -55,7 +55,7 @@ BEGIN
 	) ON [PRIMARY]
 END
 GO
-IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ProductionPostrue' AND COLUMN_NAME='PostureCategoryId')
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ProductionPosture' AND COLUMN_NAME='PostureCategoryId')
 BEGIN
 	ALTER TABLE ProductionPosture ADD PostureCategoryId INT NULL
 	ALTER TABLE ProductionPosture ADD CONSTRAINT FK_ProductionPosture_PostureCategory FOREIGN KEY(PostureCategoryId) REFERENCES PostureCategory(Id)

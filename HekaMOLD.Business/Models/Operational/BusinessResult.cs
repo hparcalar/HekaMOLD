@@ -12,6 +12,7 @@ namespace HekaMOLD.Business.Models.Operational
         public string ErrorMessage { get; set; }
 
         public int RecordId { get; set; }
+        public string Code { get; set; }
         public int SubOrderNo { get; set; }
     }
 }

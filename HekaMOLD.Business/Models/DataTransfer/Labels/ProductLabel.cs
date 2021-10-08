@@ -15,6 +15,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Labels
         public string InPackageQuantity { get; set; }
         public string Weight { get; set; }
         public string FirmName { get; set; }
+        public string BarcodeContent { get; set; }
         public byte[] BarcodeImage { get; set; }
     }
 }

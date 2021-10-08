@@ -1,5 +1,6 @@
 ﻿using Heka.DataAccess.Context;
 using HekaMOLD.Business.Base;
+using HekaMOLD.Business.UseCases.Core.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases.Core
 {
-    public class CoreProductionBO : IBusinessObject
+    public class CoreProductionBO : CoreSystemBO
     {
         public string GetNextProductRecipeNo()
         {

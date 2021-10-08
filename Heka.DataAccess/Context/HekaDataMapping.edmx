@@ -5,6 +5,15 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Heka.DataAccess.Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AllocatedCode">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AllocatedCode" Type="nvarchar" MaxLength="100" />
+          <Property Name="ObjectType" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="Attachment">
           <Key>
             <PropertyRef Name="Id" />
@@ -685,6 +694,18 @@
           <Property Name="PostureCategoryCode" Type="nvarchar" MaxLength="50" />
           <Property Name="PostureCategoryName" Type="nvarchar" MaxLength="250" />
         </EntityType>
+        <EntityType Name="PrinterQueue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PrinterId" Type="int" />
+          <Property Name="RecordType" Type="int" />
+          <Property Name="RecordId" Type="int" />
+          <Property Name="OrderNo" Type="int" />
+          <Property Name="AllocatedPrintData" Type="nvarchar" MaxLength="250" />
+          <Property Name="CreatedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="ProductionPosture">
           <Key>
             <PropertyRef Name="Id" />
@@ -835,6 +856,28 @@
           <Property Name="EnabledOnPurchaseItemReceipts" Type="bit" />
           <Property Name="EnabledOnSalesItemReceipts" Type="bit" />
           <Property Name="EnabledOnConsumptionReceipts" Type="bit" />
+        </EntityType>
+        <EntityType Name="SystemParameter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PrmCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="PrmValue" Type="nvarchar" MaxLength="300" />
+          <Property Name="PlantId" Type="int" />
+        </EntityType>
+        <EntityType Name="SystemPrinter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PrinterCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="PrinterName" Type="nvarchar" MaxLength="250" />
+          <Property Name="AccessPath" Type="nvarchar" MaxLength="300" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="PageWidth" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="PageHeight" Type="decimal" Precision="18" Scale="5" />
         </EntityType>
         <EntityType Name="TransactionLog">
           <Key>
@@ -2060,6 +2103,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PrinterQueue_SystemPrinter">
+          <End Role="SystemPrinter" Type="Self.SystemPrinter" Multiplicity="0..1" />
+          <End Role="PrinterQueue" Type="Self.PrinterQueue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SystemPrinter">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrinterQueue">
+              <PropertyRef Name="PrinterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductionPosture_Machine">
           <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
           <End Role="ProductionPosture" Type="Self.ProductionPosture" Multiplicity="*" />
@@ -2637,6 +2692,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="HekaDataAccessModelsStoreContainer">
+          <EntitySet Name="AllocatedCode" EntityType="Self.AllocatedCode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Attachment" EntityType="Self.Attachment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeliveryPlan" EntityType="Self.DeliveryPlan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dye" EntityType="Self.Dye" Schema="dbo" store:Type="Tables" />
@@ -2678,6 +2734,7 @@
           <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Plant" EntityType="Self.Plant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostureCategory" EntityType="Self.PostureCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PrinterQueue" EntityType="Self.PrinterQueue" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionPosture" EntityType="Self.ProductionPosture" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductQualityData" EntityType="Self.ProductQualityData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductQualityDataDetail" EntityType="Self.ProductQualityDataDetail" Schema="dbo" store:Type="Tables" />
@@ -2688,6 +2745,8 @@
           <EntitySet Name="SectionSetting" EntityType="Self.SectionSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shift" EntityType="Self.Shift" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SystemParameter" EntityType="Self.SystemParameter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SystemPrinter" EntityType="Self.SystemPrinter" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TransactionLog" EntityType="Self.TransactionLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UnitType" EntityType="Self.UnitType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UsageDocument" EntityType="Self.UsageDocument" Schema="dbo" store:Type="Tables" />
@@ -3035,6 +3094,10 @@
           <AssociationSet Name="FK_Notification_User" Association="Self.FK_Notification_User">
             <End Role="User" EntitySet="User" />
             <End Role="Notification" EntitySet="Notification" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PrinterQueue_SystemPrinter" Association="Self.FK_PrinterQueue_SystemPrinter">
+            <End Role="SystemPrinter" EntitySet="SystemPrinter" />
+            <End Role="PrinterQueue" EntitySet="PrinterQueue" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductionPosture_Machine" Association="Self.FK_ProductionPosture_Machine">
             <End Role="Machine" EntitySet="Machine" />
@@ -4559,6 +4622,14 @@
           <AssociationSet Name="FK_MachineSignal_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail">
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
             <End Role="MachineSignal" EntitySet="MachineSignal" />
+          </AssociationSet>
+          <EntitySet Name="SystemParameter" EntityType="Heka.DataAccess.Models.SystemParameter" />
+          <EntitySet Name="AllocatedCode" EntityType="Heka.DataAccess.Models.AllocatedCode" />
+          <EntitySet Name="PrinterQueue" EntityType="Heka.DataAccess.Models.PrinterQueue" />
+          <EntitySet Name="SystemPrinter" EntityType="Heka.DataAccess.Models.SystemPrinter" />
+          <AssociationSet Name="FK_PrinterQueue_SystemPrinter" Association="Heka.DataAccess.Models.FK_PrinterQueue_SystemPrinter">
+            <End Role="SystemPrinter" EntitySet="SystemPrinter" />
+            <End Role="PrinterQueue" EntitySet="PrinterQueue" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Notification">
@@ -6719,6 +6790,63 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SystemParameter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PrmCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PrmValue" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="AllocatedCode">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AllocatedCode1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ObjectType" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="PrinterQueue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PrinterId" Type="Int32" />
+          <Property Name="RecordType" Type="Int32" />
+          <Property Name="RecordId" Type="Int32" />
+          <Property Name="OrderNo" Type="Int32" />
+          <Property Name="AllocatedPrintData" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="SystemPrinter" Relationship="Heka.DataAccess.Models.FK_PrinterQueue_SystemPrinter" FromRole="PrinterQueue" ToRole="SystemPrinter" />
+        </EntityType>
+        <EntityType Name="SystemPrinter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PrinterCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PrinterName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AccessPath" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="PageWidth" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="PageHeight" Type="Decimal" Precision="18" Scale="5" />
+          <NavigationProperty Name="PrinterQueue" Relationship="Heka.DataAccess.Models.FK_PrinterQueue_SystemPrinter" FromRole="SystemPrinter" ToRole="PrinterQueue" />
+        </EntityType>
+        <Association Name="FK_PrinterQueue_SystemPrinter">
+          <End Type="Heka.DataAccess.Models.SystemPrinter" Role="SystemPrinter" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.PrinterQueue" Role="PrinterQueue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SystemPrinter">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrinterQueue">
+              <PropertyRef Name="PrinterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7847,6 +7975,53 @@
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
                 <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SystemParameter">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.SystemParameter">
+              <MappingFragment StoreEntitySet="SystemParameter">
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="PrmValue" ColumnName="PrmValue" />
+                <ScalarProperty Name="PrmCode" ColumnName="PrmCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AllocatedCode">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.AllocatedCode">
+              <MappingFragment StoreEntitySet="AllocatedCode">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
+                <ScalarProperty Name="AllocatedCode1" ColumnName="AllocatedCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PrinterQueue">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.PrinterQueue">
+              <MappingFragment StoreEntitySet="PrinterQueue">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="AllocatedPrintData" ColumnName="AllocatedPrintData" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="RecordId" ColumnName="RecordId" />
+                <ScalarProperty Name="RecordType" ColumnName="RecordType" />
+                <ScalarProperty Name="PrinterId" ColumnName="PrinterId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SystemPrinter">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.SystemPrinter">
+              <MappingFragment StoreEntitySet="SystemPrinter">
+                <ScalarProperty Name="PageHeight" ColumnName="PageHeight" />
+                <ScalarProperty Name="PageWidth" ColumnName="PageWidth" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="AccessPath" ColumnName="AccessPath" />
+                <ScalarProperty Name="PrinterName" ColumnName="PrinterName" />
+                <ScalarProperty Name="PrinterCode" ColumnName="PrinterCode" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
