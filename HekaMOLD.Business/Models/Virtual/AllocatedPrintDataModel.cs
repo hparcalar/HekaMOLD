@@ -10,5 +10,6 @@ namespace HekaMOLD.Business.Models.Virtual
     {
         public int? WorkOrderDetailId { get; set; }
         public string Code { get; set; }
+        public int? ReportTemplateId { get; set; }
     }
 }

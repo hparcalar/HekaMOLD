@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases.Core
 {
-    public class CoreProductionBO : CoreSystemBO
+    public class CoreProductionBO : CoreReceiptsBO
     {
         public string GetNextProductRecipeNo()
         {

@@ -293,13 +293,35 @@ namespace HekaMOLD.Enterprise.Controllers
         #endregion
 
         #region PRINTING
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetReportTemplateList(string reportTypes)
+        {
+            ReportTemplateModel[] data = new ReportTemplateModel[0];
+
+            int[] templateTypes = reportTypes.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetReportTemplateList()
+                    .Where(d => templateTypes.Contains(d.ReportType.Value)).ToArray();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         [FreeAction]
         public JsonResult PrintSerial(int id)
         {
             using (ProductionBO bObj = new ProductionBO())
             {
-                bObj.PrintProductLabel(id, "Argox CP-2140EX PPLB");
+                var printerId =
+                        Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter",
+                            Convert.ToInt32(Request.Cookies["PlantId"].Value)).PrmValue);
+                var dbPrinter = bObj.GetPrinter(printerId);
+
+                bObj.PrintProductLabel(id,printerId, dbPrinter.AccessPath);
             }
 
             return Json(new { Status = 1 });

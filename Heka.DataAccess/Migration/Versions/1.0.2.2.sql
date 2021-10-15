@@ -721,3 +721,50 @@ IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='SystemP
 BEGIN
 	ALTER TABLE SystemPrinter ADD PageHeight DECIMAL(18,5) NULL
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='ItemReceiptConsume')
+BEGIN
+	CREATE TABLE [dbo].[ItemReceiptConsume](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ConsumedReceiptDetailId] [int] NULL,
+	[ConsumerReceiptDetailId] [int] NULL,
+	[UsedQuantity] [decimal](18, 5) NULL,
+	[UsedGrossQuantity] [decimal](18, 5) NULL,
+	[UnitId] [int] NULL,
+	 CONSTRAINT [PK_ItemReceiptConsume] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[ItemReceiptConsume]  WITH CHECK ADD  CONSTRAINT [FK_ItemReceiptConsume_ItemReceiptDetailConsumed] FOREIGN KEY([ConsumedReceiptDetailId])
+	REFERENCES [dbo].[ItemReceiptDetail] ([Id])
+
+	ALTER TABLE [dbo].[ItemReceiptConsume] CHECK CONSTRAINT [FK_ItemReceiptConsume_ItemReceiptDetailConsumed]
+
+	ALTER TABLE [dbo].[ItemReceiptConsume]  WITH CHECK ADD  CONSTRAINT [FK_ItemReceiptConsume_ItemReceiptDetailConsumer] FOREIGN KEY([ConsumerReceiptDetailId])
+	REFERENCES [dbo].[ItemReceiptDetail] ([Id])
+
+	ALTER TABLE [dbo].[ItemReceiptConsume] CHECK CONSTRAINT [FK_ItemReceiptConsume_ItemReceiptDetailConsumer]
+
+	ALTER TABLE [dbo].[ItemReceiptConsume]  WITH CHECK ADD  CONSTRAINT [FK_ItemReceiptConsume_UnitType] FOREIGN KEY([UnitId])
+	REFERENCES [dbo].[UnitType] ([Id])
+
+	ALTER TABLE [dbo].[ItemReceiptConsume] CHECK CONSTRAINT [FK_ItemReceiptConsume_UnitType]
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='ReportTemplate')
+BEGIN
+	CREATE TABLE [dbo].[ReportTemplate](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ReportType] [int] NULL,
+	[ReportCode] [nvarchar](100) NULL,
+	[ReportName] [nvarchar](150) NULL,
+	[FileName] [nvarchar](300) NULL,
+	[IsActive] [bit] NULL,
+	 CONSTRAINT [PK_ReportTemplate] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+END

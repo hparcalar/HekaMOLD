@@ -208,6 +208,11 @@
         <EntityTypeShape EntityType="Heka.DataAccess.Models.PrinterQueue" Width="1.5" PointX="12.625" PointY="3.625" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.SystemPrinter" Width="1.5" PointX="10.375" PointY="14.5" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_PrinterQueue_SystemPrinter" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemReceiptConsume" Width="1.5" PointX="18" PointY="36" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptConsume_ItemReceiptDetailConsumed" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptConsume_ItemReceiptDetailConsumer" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptConsume_UnitType" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ReportTemplate" Width="1.5" PointX="5.375" PointY="11.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

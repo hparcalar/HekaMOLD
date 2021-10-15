@@ -55,6 +55,9 @@
 .menu-link{
     font-weight:bold;
 }
+.menu-item .active, .menu-link:hover{
+    background-color:#ff5c5c;
+}
 .bullet-dot{
     color:black;
 }

@@ -199,6 +199,13 @@ namespace HekaMOLD.Business.UseCases
                                 {
                                     dbSerial.ItemReceiptDetail = dbDetail;
                                 }
+                                else
+                                {
+                                    dbSerial = new WorkOrderSerial();
+                                    dbSerial.ItemReceiptDetail = dbDetail;
+                                    serialItem.MapTo(dbSerial);
+                                    repoSerial.Add(dbSerial);
+                                }
                             }
                         }
                         #endregion

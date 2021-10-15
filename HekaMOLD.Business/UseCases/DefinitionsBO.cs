@@ -2038,5 +2038,102 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
         #endregion
+
+        #region REPORT TEMPLATE BUSINESS
+        public ReportTemplateModel[] GetReportTemplateList()
+        {
+            List<ReportTemplateModel> data = new List<ReportTemplateModel>();
+
+            var repo = _unitOfWork.GetRepository<ReportTemplate>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ReportTemplateModel containerObj = new ReportTemplateModel();
+                d.MapTo(containerObj);
+                containerObj.ReportTypeStr = ((ReportType)d.ReportType.Value).ToCaption();
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateReportTemplate(ReportTemplateModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.ReportCode))
+                    throw new Exception("Rapor şablon kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.ReportName))
+                    throw new Exception("Rapor şablon adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<ReportTemplate>();
+
+                if (repo.Any(d => (d.ReportCode == model.ReportCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir rapor mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ReportTemplate();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteReportTemplate(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ReportTemplate>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ReportTemplateModel GetReportTemplate(int id)
+        {
+            ReportTemplateModel model = new ReportTemplateModel { };
+
+            var repo = _unitOfWork.GetRepository<ReportTemplate>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.ReportTypeStr = ((ReportType)dbObj.ReportType.Value).ToCaption();
+            }
+
+            return model;
+        }
+        #endregion
     }
 }

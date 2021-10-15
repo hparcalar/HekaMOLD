@@ -23,6 +23,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? ItemReceiptDetailId { get; set; }
 
         #region VISUAL ELEMENTS
+        public int? ItemId { get; set; }
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
         public string CreatedDateStr { get; set; }

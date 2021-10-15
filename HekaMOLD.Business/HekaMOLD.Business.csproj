@@ -90,6 +90,7 @@
     <Compile Include="Models\Constants\ReceiptStatusType.cs" />
     <Compile Include="Models\Constants\OrderStatusType.cs" />
     <Compile Include="Models\Constants\RecordType.cs" />
+    <Compile Include="Models\Constants\ReportType.cs" />
     <Compile Include="Models\Constants\RequestStatusType.cs" />
     <Compile Include="Models\Constants\SerialStatusType.cs" />
     <Compile Include="Models\Constants\SyncPointType.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Models\DataTransfer\Core\PlantModel.cs" />
     <Compile Include="Models\DataTransfer\Core\PrinterQueueModel.cs" />
     <Compile Include="Models\DataTransfer\Core\RecordInformationModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\ReportTemplateModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SectionSettingModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SyncPointModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SystemParameterModel.cs" />
@@ -162,18 +164,22 @@
     <Compile Include="Models\DataTransfer\Quality\ProductQualityDataDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\ProductQualityDataModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\ProductQualityPlanModel.cs" />
+    <Compile Include="Models\DataTransfer\Receipt\ItemReceiptConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptModel.cs" />
+    <Compile Include="Models\DataTransfer\Reporting\DeliverySerialListModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestApproveLogModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\MachineStatsModel.cs" />
+    <Compile Include="Models\DataTransfer\Summary\ReceiptConsumeSummary.cs" />
     <Compile Include="Models\DataTransfer\Summary\WorkOrderSerialSummary.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
     <Compile Include="Models\Dictionaries\DictItemOrderType.cs" />
     <Compile Include="Models\Dictionaries\DictMoldStatus.cs" />
     <Compile Include="Models\Dictionaries\DictPostureStatusType.cs" />
+    <Compile Include="Models\Dictionaries\DictReportType.cs" />
     <Compile Include="Models\Dictionaries\DictWorkOrderStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptCategoryType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptStatusType.cs" />
@@ -206,6 +212,7 @@
     <Compile Include="UseCases\QualityBO.cs" />
     <Compile Include="UseCases\ReceiptBO.cs" />
     <Compile Include="UseCases\RecipeBO.cs" />
+    <Compile Include="UseCases\ReportingBO.cs" />
     <Compile Include="UseCases\RequestBO.cs" />
     <Compile Include="UseCases\UsersBO.cs" />
   </ItemGroup>
@@ -223,6 +230,7 @@
     <Content Include="Notes\TriggerPoints.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ReportDesign\DeliverySerialList.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

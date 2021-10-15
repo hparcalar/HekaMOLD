@@ -178,6 +178,7 @@ namespace HekaMOLD.Business.UseCases
                 {
                     Id = d.Id,
                     PlanDate = d.PlanDate,
+                    PlanStatus = d.PlanStatus,
                     PlanDateStr = string.Format("{0:dd.MM.yyyy}", d.PlanDate),
                     OrderNo = d.OrderNo,
                     WorkOrderDetailId = d.WorkOrderDetailId,
@@ -210,7 +211,57 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
+        public DeliveryPlanModel[] GetOpenDeliveryPlans(DateTime planDate)
+        {
+            DeliveryPlanModel[] data = new DeliveryPlanModel[0];
 
+            try
+            {
+                var repo = _unitOfWork.GetRepository<DeliveryPlan>();
+                data = repo.Filter(d => (d.PlanStatus ?? 0) == 0 && d.PlanDate == planDate).ToList().Select(d => new DeliveryPlanModel
+                {
+                    Id = d.Id,
+                    PlanDate = d.PlanDate,
+                    PlanStatus = d.PlanStatus,
+                    PlanDateStr = string.Format("{0:dd.MM.yyyy}", d.PlanDate),
+                    OrderNo = d.OrderNo,
+                    WorkOrderDetailId = d.WorkOrderDetailId,
+                    ProductCode = d.WorkOrderDetail.Item.ItemNo,
+                    ProductName = d.WorkOrderDetail.Item.ItemName,
+                    FirmId = d.WorkOrderDetail.WorkOrder.FirmId,
+                    FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                    Quantity = d.WorkOrderDetail.Quantity,
+                    WorkOrder = new WorkOrderDetailModel
+                    {
+                        ItemId = d.WorkOrderDetail.ItemId,
+                        ProductCode = d.WorkOrderDetail.Item.ItemNo,
+                        ProductName = d.WorkOrderDetail.Item.ItemName,
+                        WorkOrderId = d.WorkOrderDetail.WorkOrderId,
+                        MoldId = d.WorkOrderDetail.MoldId,
+                        MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
+                        MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
+                        CreatedDate = d.WorkOrderDetail.CreatedDate,
+                        Quantity = d.WorkOrderDetail.Quantity,
+                        WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
+                        WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
+                        FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                        WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
+                        WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
+                        CompleteQuantity = d.WorkOrderDetail.WorkOrderSerial.Count()
+                    }
+                }).OrderBy(d => d.OrderNo).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         public BusinessResult DeletePlan(int deliveryPlanId)
         {
             BusinessResult result = new BusinessResult();

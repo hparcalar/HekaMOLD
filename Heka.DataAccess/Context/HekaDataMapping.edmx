@@ -91,8 +91,8 @@
           <Property Name="EntryQualityDataId" Type="int" />
           <Property Name="EntryQualityPlanDetailId" Type="int" />
           <Property Name="OrderNo" Type="int" />
-          <Property Name="SampleQuantity" Type="decimal" Precision="18" Scale="5" />
           <Property Name="FaultExplanation" Type="nvarchar" MaxLength="300" />
+          <Property Name="SampleQuantity" Type="decimal" Precision="18" Scale="5" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="CreatedUserId" Type="int" />
         </EntityType>
@@ -392,6 +392,17 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
           <Property Name="InvoiceId" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemReceiptConsume">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ConsumedReceiptDetailId" Type="int" />
+          <Property Name="ConsumerReceiptDetailId" Type="int" />
+          <Property Name="UsedQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="UsedGrossQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="UnitId" Type="int" />
         </EntityType>
         <EntityType Name="ItemReceiptDetail">
           <Key>
@@ -816,6 +827,17 @@
           <Property Name="CreatedUserId" Type="int" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ReportTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReportType" Type="int" />
+          <Property Name="ReportCode" Type="nvarchar" MaxLength="100" />
+          <Property Name="ReportName" Type="nvarchar" MaxLength="150" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="300" />
+          <Property Name="IsActive" Type="bit" />
         </EntityType>
         <EntityType Name="SectionSetting">
           <Key>
@@ -1692,6 +1714,42 @@
             </Principal>
             <Dependent Role="ItemReceipt">
               <PropertyRef Name="OutWarehouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptConsume_ItemReceiptDetailConsumed">
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="0..1" />
+          <End Role="ItemReceiptConsume" Type="Self.ItemReceiptConsume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptConsume">
+              <PropertyRef Name="ConsumedReceiptDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptConsume_ItemReceiptDetailConsumer">
+          <End Role="ItemReceiptDetail" Type="Self.ItemReceiptDetail" Multiplicity="0..1" />
+          <End Role="ItemReceiptConsume" Type="Self.ItemReceiptConsume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptConsume">
+              <PropertyRef Name="ConsumerReceiptDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptConsume_UnitType">
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="ItemReceiptConsume" Type="Self.ItemReceiptConsume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptConsume">
+              <PropertyRef Name="UnitId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2655,18 +2713,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_WorkOrderSerial_Shift">
-          <End Role="Shift" Type="Self.Shift" Multiplicity="0..1" />
-          <End Role="WorkOrderSerial" Type="Self.WorkOrderSerial" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Shift">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WorkOrderSerial">
-              <PropertyRef Name="ShiftId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_WorkOrderSerial_WorkOrder">
           <End Role="WorkOrder" Type="Self.WorkOrder" Multiplicity="0..1" />
           <End Role="WorkOrderSerial" Type="Self.WorkOrderSerial" Multiplicity="*" />
@@ -2715,6 +2761,7 @@
           <EntitySet Name="ItemOrderDetail" EntityType="Self.ItemOrderDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemOrderItemNeeds" EntityType="Self.ItemOrderItemNeeds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemReceipt" EntityType="Self.ItemReceipt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemReceiptConsume" EntityType="Self.ItemReceiptConsume" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemReceiptDetail" EntityType="Self.ItemReceiptDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemRequest" EntityType="Self.ItemRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemRequestApproveLog" EntityType="Self.ItemRequestApproveLog" Schema="dbo" store:Type="Tables" />
@@ -2742,6 +2789,7 @@
           <EntitySet Name="ProductRecipe" EntityType="Self.ProductRecipe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductRecipeDetail" EntityType="Self.ProductRecipeDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductWastage" EntityType="Self.ProductWastage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportTemplate" EntityType="Self.ReportTemplate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SectionSetting" EntityType="Self.SectionSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shift" EntityType="Self.Shift" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SyncPoint" EntityType="Self.SyncPoint" Schema="dbo" store:Type="Tables" />
@@ -2958,6 +3006,18 @@
           <AssociationSet Name="FK_ItemReceipt_WarehouseOut" Association="Self.FK_ItemReceipt_WarehouseOut">
             <End Role="Warehouse" EntitySet="Warehouse" />
             <End Role="ItemReceipt" EntitySet="ItemReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptConsume_ItemReceiptDetailConsumed" Association="Self.FK_ItemReceiptConsume_ItemReceiptDetailConsumed">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="ItemReceiptConsume" EntitySet="ItemReceiptConsume" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptConsume_ItemReceiptDetailConsumer" Association="Self.FK_ItemReceiptConsume_ItemReceiptDetailConsumer">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="ItemReceiptConsume" EntitySet="ItemReceiptConsume" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptConsume_UnitType" Association="Self.FK_ItemReceiptConsume_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemReceiptConsume" EntitySet="ItemReceiptConsume" />
           </AssociationSet>
           <AssociationSet Name="FK_ItemReceiptDetail_ForexType" Association="Self.FK_ItemReceiptDetail_ForexType">
             <End Role="ForexType" EntitySet="ForexType" />
@@ -3279,10 +3339,6 @@
             <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
             <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
           </AssociationSet>
-          <AssociationSet Name="FK_WorkOrderSerial_Shift" Association="Self.FK_WorkOrderSerial_Shift">
-            <End Role="Shift" EntitySet="Shift" />
-            <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
-          </AssociationSet>
           <AssociationSet Name="FK_WorkOrderSerial_WorkOrder" Association="Self.FK_WorkOrderSerial_WorkOrder">
             <End Role="WorkOrder" EntitySet="WorkOrder" />
             <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
@@ -3600,6 +3656,7 @@
           <NavigationProperty Name="Plant" Relationship="Self.FK_UnitType_Plant" FromRole="UnitType" ToRole="Plant" />
           <NavigationProperty Name="ProductRecipeDetail" Relationship="Heka.DataAccess.Models.FK_ProductRecipeDetail_UnitType" FromRole="UnitType" ToRole="ProductRecipeDetail" />
           <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_UnitType" FromRole="UnitType" ToRole="ItemReceiptDetail" />
+          <NavigationProperty Name="ItemReceiptConsume" Relationship="Heka.DataAccess.Models.FK_ItemReceiptConsume_UnitType" FromRole="UnitType" ToRole="ItemReceiptConsume" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -4631,6 +4688,20 @@
             <End Role="SystemPrinter" EntitySet="SystemPrinter" />
             <End Role="PrinterQueue" EntitySet="PrinterQueue" />
           </AssociationSet>
+          <EntitySet Name="ItemReceiptConsume" EntityType="Heka.DataAccess.Models.ItemReceiptConsume" />
+          <AssociationSet Name="FK_ItemReceiptConsume_ItemReceiptDetailConsumed" Association="Heka.DataAccess.Models.FK_ItemReceiptConsume_ItemReceiptDetailConsumed">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="ItemReceiptConsume" EntitySet="ItemReceiptConsume" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptConsume_ItemReceiptDetailConsumer" Association="Heka.DataAccess.Models.FK_ItemReceiptConsume_ItemReceiptDetailConsumer">
+            <End Role="ItemReceiptDetail" EntitySet="ItemReceiptDetail" />
+            <End Role="ItemReceiptConsume" EntitySet="ItemReceiptConsume" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ItemReceiptConsume_UnitType" Association="Heka.DataAccess.Models.FK_ItemReceiptConsume_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="ItemReceiptConsume" EntitySet="ItemReceiptConsume" />
+          </AssociationSet>
+          <EntitySet Name="ReportTemplate" EntityType="Heka.DataAccess.Models.ReportTemplate" />
           </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -4990,6 +5061,8 @@
           <NavigationProperty Name="EntryQualityData" Relationship="Heka.DataAccess.Models.FK_EntryQualityData_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="EntryQualityData" />
           <NavigationProperty Name="ItemReceipt" Relationship="Heka.DataAccess.Models.FK_ItemReceiptDetail_ItemReceipt" FromRole="ItemReceiptDetail" ToRole="ItemReceipt" />
           <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_ItemReceiptDetail" FromRole="ItemReceiptDetail" ToRole="WorkOrderSerial" />
+          <NavigationProperty Name="ItemReceiptConsume" Relationship="Heka.DataAccess.Models.FK_ItemReceiptConsume_ItemReceiptDetailConsumed" FromRole="ItemReceiptDetail" ToRole="ItemReceiptConsume" />
+          <NavigationProperty Name="ItemReceiptConsume1" Relationship="Heka.DataAccess.Models.FK_ItemReceiptConsume_ItemReceiptDetailConsumer" FromRole="ItemReceiptDetail" ToRole="ItemReceiptConsume" />
         </EntityType>
         <EntityType Name="WorkOrder">
           <Key>
@@ -6847,6 +6920,67 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ItemReceiptConsume">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ConsumedReceiptDetailId" Type="Int32" />
+          <Property Name="ConsumerReceiptDetailId" Type="Int32" />
+          <Property Name="UsedQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="UsedGrossQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="UnitId" Type="Int32" />
+          <NavigationProperty Name="ItemReceiptDetail" Relationship="Heka.DataAccess.Models.FK_ItemReceiptConsume_ItemReceiptDetailConsumed" FromRole="ItemReceiptConsume" ToRole="ItemReceiptDetail" />
+          <NavigationProperty Name="ItemReceiptDetail1" Relationship="Heka.DataAccess.Models.FK_ItemReceiptConsume_ItemReceiptDetailConsumer" FromRole="ItemReceiptConsume" ToRole="ItemReceiptDetail" />
+          <NavigationProperty Name="UnitType" Relationship="Heka.DataAccess.Models.FK_ItemReceiptConsume_UnitType" FromRole="ItemReceiptConsume" ToRole="UnitType" />
+        </EntityType>
+        <Association Name="FK_ItemReceiptConsume_ItemReceiptDetailConsumed">
+          <End Type="Heka.DataAccess.Models.ItemReceiptDetail" Role="ItemReceiptDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemReceiptConsume" Role="ItemReceiptConsume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptConsume">
+              <PropertyRef Name="ConsumedReceiptDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptConsume_ItemReceiptDetailConsumer">
+          <End Type="Heka.DataAccess.Models.ItemReceiptDetail" Role="ItemReceiptDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemReceiptConsume" Role="ItemReceiptConsume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReceiptDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptConsume">
+              <PropertyRef Name="ConsumerReceiptDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ItemReceiptConsume_UnitType">
+          <End Type="Heka.DataAccess.Models.UnitType" Role="UnitType" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ItemReceiptConsume" Role="ItemReceiptConsume" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ItemReceiptConsume">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ReportTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReportType" Type="Int32" />
+          <Property Name="ReportCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ReportName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8022,6 +8156,30 @@
                 <ScalarProperty Name="AccessPath" ColumnName="AccessPath" />
                 <ScalarProperty Name="PrinterName" ColumnName="PrinterName" />
                 <ScalarProperty Name="PrinterCode" ColumnName="PrinterCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemReceiptConsume">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ItemReceiptConsume">
+              <MappingFragment StoreEntitySet="ItemReceiptConsume">
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="UsedGrossQuantity" ColumnName="UsedGrossQuantity" />
+                <ScalarProperty Name="UsedQuantity" ColumnName="UsedQuantity" />
+                <ScalarProperty Name="ConsumerReceiptDetailId" ColumnName="ConsumerReceiptDetailId" />
+                <ScalarProperty Name="ConsumedReceiptDetailId" ColumnName="ConsumedReceiptDetailId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportTemplate">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ReportTemplate">
+              <MappingFragment StoreEntitySet="ReportTemplate">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ReportName" ColumnName="ReportName" />
+                <ScalarProperty Name="ReportCode" ColumnName="ReportCode" />
+                <ScalarProperty Name="ReportType" ColumnName="ReportType" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

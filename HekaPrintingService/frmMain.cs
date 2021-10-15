@@ -13,6 +13,7 @@ using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.Virtual;
+using HekaMOLD.Business.Models.DataTransfer.Reporting;
 
 namespace HekaPrintingService
 {
@@ -119,18 +120,34 @@ namespace HekaPrintingService
                                                     ProductName = dbWorkOrder.ProductName,
                                                     Weight = "",
                                                     Id = 0,
-                                                }, _printerNames[printerIndex]);
+                                                }, printerId, _printerNames[printerIndex]);
                                             }
                                         }
                                     }
                                     else
-                                        printResult = prodBo.PrintProductLabel(queueModel.RecordId.Value, _printerNames[printerIndex]);
+                                        printResult = prodBo.PrintProductLabel(queueModel.RecordId.Value, printerId,
+                                            _printerNames[printerIndex]);
                                 }
 
                                 //if (printResult.Result)
                                 bObj.SetElementAsPrinted(queueModel.Id);
 
                                 //AddLog(_printerNames[printerId] + " yazıcısına gönderildi.");
+                            }
+                            else if (queueModel.RecordType == (int)RecordType.DeliveryList)
+                            {
+                                using (ReportingBO rObj = new ReportingBO())
+                                {
+                                    var allocData = Newtonsoft.Json
+                                        .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
+
+                                    var reportData = (List<DeliverySerialListModel>)rObj
+                                        .PrepareReportData(queueModel.RecordId.Value, ReportType.DeliverySerialList);
+                                    rObj.PrintReport<List<DeliverySerialListModel>>(allocData.ReportTemplateId.Value, 
+                                        printerId, reportData);
+                                }
+
+                                bObj.SetElementAsPrinted(queueModel.Id);
                             }
                         }
                     }

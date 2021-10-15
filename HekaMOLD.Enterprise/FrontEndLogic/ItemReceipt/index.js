@@ -114,6 +114,15 @@
         });
     }
 
+    $scope.printTemplate = function () {
+        $http.post(HOST_URL + 'ItemReceipt/TestPrintDelivery', { receiptId: $scope.modelObject.Id }, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    window.open(HOST_URL + 'Outputs/' + resp.data.Path);
+                }
+            }).catch(function (err) { });
+    }
+
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 

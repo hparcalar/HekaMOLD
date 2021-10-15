@@ -1,0 +1,25 @@
+﻿<div ng-controller="reportTemplateListCtrl" class="bg-light">
+    <div class="d-flex flex-row mb-4">
+        <button type="button" class="btn btn-primary mx-2" ng-click="exportAs(1)">
+            PDF
+        </button>
+        <button type="button" class="btn btn-success mx-2" ng-click="exportAs(2)">
+            YAZICI
+        </button>
+    </div>
+    <div class="d-flex align-items-center mb-4 px-4 py-4" 
+         ng-repeat="item in templateList"
+         ng-class="{'bg-light-success': selectedTemplateId == item.Id}">
+        <!--begin::Bullet-->
+        <span class="bullet bullet-vertical h-40px bg-success"></span>
+        <!--end::Bullet-->
+        <!--begin::Description-->
+        <div class="flex-grow-1 px-3">
+            <a href="javascript:;" ng-click="selectTemplate(item.Id)" class="text-gray-800 text-hover-primary fw-bolder fs-6">Seç</a>
+            <span class="text-muted fw-bold d-block">{{item.ReportName}}</span>
+        </div>
+        <!--end::Description-->
+
+        <span class="badge badge-light-primary fs-8 fw-bolder">{{item.ReportCode}}</span>
+    </div>
+</div>

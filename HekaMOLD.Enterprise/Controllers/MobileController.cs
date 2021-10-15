@@ -14,6 +14,7 @@ using System.Web.Configuration;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -37,15 +38,18 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult GetSelectables(string action)
         {
             WarehouseModel[] warehouses = new WarehouseModel[0];
+            FirmModel[] firms = new FirmModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 warehouses = bObj.GetWarehouseList();
+                firms = bObj.GetFirmList();
             }
 
             var jsonResult = Json(new
             {
-                Warehouses = warehouses
+                Warehouses = warehouses,
+                Firms = firms,
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
@@ -512,6 +516,101 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(result);
+        }
+        #endregion
+
+        #region PRODUCT DELIVERY
+        public ActionResult ProductDelivery()
+        {
+            return View();
+        }
+
+        public ActionResult ProductDeliveryHistory()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetProductsForDelivery()
+        {
+            WorkOrderSerialModel[] result = new WorkOrderSerialModel[0];
+            WorkOrderSerialSummary[] resultSum = new WorkOrderSerialSummary[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.GetSerialsWaitingForDelivery();
+                resultSum = bObj.GetSerialsWaitingForDeliverySummary();
+            }
+
+            var jsonResult = Json(new
+            {
+                Serials = result,
+                Summaries = resultSum,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetProductDeliveryHistory()
+        {
+            ItemReceiptModel[] result = new ItemReceiptModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.GetItemReceiptList(ReceiptCategoryType.Sales, ItemReceiptType.ItemSelling);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult SaveProductDelivery(ItemReceiptModel receiptModel, WorkOrderSerialModel[] model)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                receiptModel.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                if (receiptModel.Id == 0)
+                {
+                    receiptModel.CreatedDate = DateTime.Now;
+                    receiptModel.CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+                }
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.CreateSerialDelivery(receiptModel, model);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetDeliveryPlanList(int cursor)
+        {
+            DeliveryPlanModel[] result = new DeliveryPlanModel[0];
+            DateTime planDate = DateTime.Now.Date.AddDays(cursor);
+
+            using (DeliveryBO bObj = new DeliveryBO())
+            {
+                result = bObj.GetOpenDeliveryPlans(planDate);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
         #endregion
     }

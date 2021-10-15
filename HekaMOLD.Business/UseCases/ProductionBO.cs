@@ -520,10 +520,11 @@ namespace HekaMOLD.Business.UseCases
                             MoldTestCycle = dbObj.WorkOrderDetail.MoldTest != null ?
                                 dbObj.WorkOrderDetail.MoldTest.TotalTimeSeconds ?? 0 : 0,
                         },
-                        Serials = repoSerial.Filter(d => d.WorkOrderDetail != null &&
+                        Serials = repoSerial.Filter(d => d.WorkOrderDetail != null
+                            && d.SerialNo != null && d.SerialNo.Length > 0 &&
                             d.WorkOrderDetail.MachineId == machineId)
                             .OrderByDescending(d => d.Id)
-                            .Take(30).ToList()
+                            .ToList()
                             .Select(d => new WorkOrderSerialModel
                             {
                                 Id = d.Id,
@@ -1928,6 +1929,258 @@ namespace HekaMOLD.Business.UseCases
         }
         #endregion
 
+        #region WAREHOUSE PRODUCT DELIVERY
+        public WorkOrderSerialModel[] GetSerialsWaitingForDelivery()
+        {
+            WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                data = repo.Filter(d => d.SerialStatus == (int)SerialStatusType.Placed
+                    && d.ItemReceiptDetailId != null
+                    && d.SerialNo != null && d.SerialNo.Length > 0
+                    && (d.IsGeneratedBySignal ?? false) == false)
+                    .ToList()
+                    .Select(d => new WorkOrderSerialModel
+                    {
+                        Id = d.Id,
+                        ItemId = d.ItemReceiptDetail != null ? d.ItemReceiptDetail.ItemId : (int?)null,
+                        ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                        ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
+                        CreatedDate = d.CreatedDate,
+                        CreatedDateStr = d.CreatedDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "",
+                        MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineCode : "",
+                        MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineName : "",
+                        FirstQuantity = d.FirstQuantity,
+                        InPackageQuantity = d.InPackageQuantity,
+                        IsGeneratedBySignal = d.IsGeneratedBySignal,
+                        LiveQuantity = d.LiveQuantity,
+                        SerialNo = d.SerialNo,
+                        FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        public WorkOrderSerialSummary[] GetSerialsWaitingForDeliverySummary()
+        {
+            WorkOrderSerialSummary[] data = new WorkOrderSerialSummary[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                data = repo.Filter(d => d.SerialStatus == (int)SerialStatusType.Placed
+                    && d.ItemReceiptDetailId != null
+                    && d.SerialNo != null && d.SerialNo.Length > 0
+                    && (d.IsGeneratedBySignal ?? false) == false)
+                    .ToList()
+                    .Select(d => new WorkOrderSerialModel
+                    {
+                        Id = d.Id,
+                        ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                        ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
+                        CreatedDate = d.CreatedDate,
+                        CreatedDateStr = d.CreatedDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "",
+                        MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineCode : "",
+                        MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineName : "",
+                        FirstQuantity = d.FirstQuantity,
+                        InPackageQuantity = d.InPackageQuantity,
+                        IsGeneratedBySignal = d.IsGeneratedBySignal,
+                        LiveQuantity = d.LiveQuantity,
+                        SerialNo = d.SerialNo,
+                        FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                    })
+                    .GroupBy(d => d.ItemName)
+                    .Select(d => new WorkOrderSerialSummary
+                    {
+                        ItemName = d.Key,
+                        SerialCount = d.Count(),
+                        SerialSum = d.Sum(m => m.FirstQuantity),
+                    })
+                    .ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult CreateSerialDelivery(
+            ItemReceiptModel receiptModel,
+            WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var repoReceipt = _unitOfWork.GetRepository<ItemReceipt>();
+                var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoWr = _unitOfWork.GetRepository<Warehouse>();
+
+                if (!repoWr.Any(d => d.Id == receiptModel.InWarehouseId))
+                    throw new Exception("Depo seçmelisiniz.");
+
+                if (receiptModel.FirmId == null)
+                    throw new Exception("Firma seçmelisiniz.");
+
+                receiptModel.CreatedDate = DateTime.Now;
+                receiptModel.ReceiptDate = DateTime.Now;
+                receiptModel.ReceiptType = (int)ItemReceiptType.ItemSelling;
+                receiptModel.ReceiptStatus = (int)ReceiptStatusType.Created;
+                receiptModel.SubTotal = 0;
+
+                List<ReceiptConsumeSummary> consumedList = new List<ReceiptConsumeSummary>();
+                List<ItemReceiptDetailModel> receiptDetails = new List<ItemReceiptDetailModel>();
+                int receiptLineNumber = 1;
+
+                foreach (var item in model)
+                {
+                    var dbSerial = repo.Get(d => d.Id == item.Id);
+                    if (dbSerial != null)
+                    {
+                        var relatedDetail = receiptDetails.FirstOrDefault(d => d.ItemId == dbSerial.ItemReceiptDetail.ItemId);
+                        if (relatedDetail == null)
+                        {
+                            relatedDetail = new ItemReceiptDetailModel
+                            {
+                                ItemId = dbSerial.ItemReceiptDetail.ItemId,
+                                Quantity = 0,
+                                GrossQuantity = 0,
+                                NetQuantity = 0,
+                                UnitId = 1,
+                                CreatedDate = DateTime.Now,
+                                LineNumber = receiptLineNumber,
+                                NewDetail = true,
+                                TaxIncluded = false,
+                                TaxAmount = 0,
+                                SubTotal = 0,
+                                OverallTotal = 0,
+                                TaxRate = 0,
+                                UpdateSerials = true,
+                                Serials = new List<WorkOrderSerialModel>(),
+                            };
+                            receiptDetails.Add(relatedDetail);
+                            receiptLineNumber++;
+                        }
+
+                        relatedDetail.Quantity += dbSerial.FirstQuantity;
+
+                        #region UPDATE CONSUMED LIST
+                        var consumedObj = consumedList.FirstOrDefault(d => d.ConsumedReceiptDetailId == dbSerial.ItemReceiptDetailId);
+                        if (consumedObj == null)
+                        {
+                            consumedObj = new ReceiptConsumeSummary
+                            {
+                                ConsumedReceiptDetailId = dbSerial.ItemReceiptDetailId ?? 0,
+                                ConsumerLineNumber = relatedDetail.LineNumber ?? 0,
+                                UsedQuantity = dbSerial.FirstQuantity,
+                            };
+                            consumedList.Add(consumedObj);
+                        }
+                        else
+                            consumedObj.UsedQuantity += dbSerial.FirstQuantity;
+                        #endregion
+
+                        WorkOrderSerialModel deliverySerial = new WorkOrderSerialModel
+                        {
+                            CreatedDate = DateTime.Now,
+                            FirstQuantity = dbSerial.FirstQuantity,
+                            LiveQuantity = dbSerial.LiveQuantity,
+                            InPackageQuantity = dbSerial.InPackageQuantity,
+                            IsGeneratedBySignal = false,
+                            SerialNo = dbSerial.SerialNo,
+                            SerialStatus = (int)SerialStatusType.Used,
+                            SerialType = dbSerial.SerialType,
+                            ShiftId = dbSerial.ShiftId,
+                        };
+
+                        relatedDetail.Serials.Add(deliverySerial);
+
+                        // UPDATE SERIAL STATUS TO PLACED
+                        dbSerial.SerialStatus = (int)SerialStatusType.Used;
+                        dbSerial.FirstQuantity = item.FirstQuantity;
+                        dbSerial.LiveQuantity = item.FirstQuantity;
+                        dbSerial.InPackageQuantity = Convert.ToInt32(item.FirstQuantity);
+                    }
+                }
+
+                receiptModel.Details = receiptDetails.ToArray();
+
+                _unitOfWork.SaveChanges();
+
+                // CREATE DELIVERY RECEIPT
+                BusinessResult receiptResult = new BusinessResult();
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    receiptResult = bObj.SaveOrUpdateItemReceipt(receiptModel);
+                }
+
+                // CREATE RECEIPT CONSUMPTIONS
+                foreach (var item in consumedList)
+                {
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        var deliveryReceipt = bObj.GetItemReceipt(receiptResult.RecordId);
+                        var relatedDeliveryDetail = deliveryReceipt.Details.FirstOrDefault(d => d.LineNumber == item.ConsumerLineNumber);
+                        if (relatedDeliveryDetail != null)
+                            bObj.UpdateConsume(item.ConsumedReceiptDetailId, relatedDeliveryDetail.Id, item.UsedQuantity ?? 0);
+                    }
+                }
+
+                #region ROLLBACK: IF RECEIPT SAVE PROCESS HAS FAILED THEN ROLLBACK SERIAL FROM PLACED STATUS
+                if (!receiptResult.Result)
+                {
+                    var newUof = new EFUnitOfWork();
+                    var newRepoSerial = newUof.GetRepository<WorkOrderSerial>();
+                    foreach (var item in model)
+                    {
+                        var dbSerial = newRepoSerial.Get(d => d.Id == item.Id);
+                        dbSerial.SerialStatus = (int)SerialStatusType.Created;
+                    }
+
+                    newUof.SaveChanges();
+
+                    foreach (var item in consumedList)
+                    {
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.DeleteConsume(item.ConsumedReceiptDetailId, receiptResult.RecordId);
+                        }
+                    }
+
+                    throw new Exception(receiptResult.ErrorMessage);
+                }
+                #endregion
+
+                result.Result = true;
+                result.RecordId = receiptResult.RecordId;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
+
         #region WASTAGE MANAGEMENT
         public ProductWastageModel GetWastage(int id)
         {
@@ -2192,13 +2445,16 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region PRODUCT LABEL PRINTING
-        public BusinessResult PrintProductLabel(ProductLabel model, string printerName)
+        public BusinessResult PrintProductLabel(ProductLabel model, int printerId, string printerName)
         {
             BusinessResult result = new BusinessResult();
 
             try
             {
                 var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                var repoPrinter = _unitOfWork.GetRepository<SystemPrinter>();
+                var dbPrinter = repoPrinter.Get(d => d.Id == printerId);
 
                 // GENERATE BARCODE IMAGE
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -2226,7 +2482,7 @@ namespace HekaMOLD.Business.UseCases
                 report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\ProductLabel.rdlc";
 
                 report.DataSources.Add(new ReportDataSource("DS1", dataList));
-                Export(report, 9.7m, 8);
+                Export(report, dbPrinter.PageWidth ?? 0, dbPrinter.PageHeight ?? 0);
                 Print(printerName);
 
                 result.Result = true;
@@ -2239,13 +2495,17 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
-        public BusinessResult PrintProductLabel(int id, string printerName)
+        public BusinessResult PrintProductLabel(int id, int printerId, string printerName)
         {
             BusinessResult result = new BusinessResult();
 
             try
             {
                 var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                var repoPrinter = _unitOfWork.GetRepository<SystemPrinter>();
+                var dbPrinter = repoPrinter.Get(d => d.Id == printerId);
+
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
                     throw new Exception("Ürün giriş kaydına erişilemedi.");
@@ -2277,7 +2537,7 @@ namespace HekaMOLD.Business.UseCases
                 report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\ProductLabel.rdlc";
 
                 report.DataSources.Add(new ReportDataSource("DS1", dataList));
-                Export(report, 9.7m, 8);
+                Export(report, dbPrinter.PageWidth ?? 0, dbPrinter.PageHeight ?? 0); // (9.7m, 8)
                 Print(printerName);
 
                 result.Result = true;

@@ -2,6 +2,7 @@
 using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
+using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
@@ -172,6 +173,22 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
 
+        }
+
+        [HttpPost]
+        public JsonResult TestPrintDelivery(int receiptId)
+        {
+            string outputFile = Session.SessionID + ".pdf";
+
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                var reportData = (List<DeliverySerialListModel>)bObj.PrepareReportData(receiptId, ReportType.DeliverySerialList);
+
+                bObj.ExportReportAsPdf<List<DeliverySerialListModel>>(1, reportData, Server.MapPath("~/Outputs") + "/",
+                    Session.SessionID + ".pdf");
+            }
+
+            return Json(new { Status = 1, Path = outputFile });
         }
 
         [HttpGet]

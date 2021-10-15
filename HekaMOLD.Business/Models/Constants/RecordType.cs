@@ -12,5 +12,6 @@ namespace HekaMOLD.Business.Models.Constants
         Item=2,
         MoldTest=3,
         SerialItem=4,
+        DeliveryList=5,
     }
 }

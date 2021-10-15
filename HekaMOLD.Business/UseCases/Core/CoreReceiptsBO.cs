@@ -83,6 +83,96 @@ namespace HekaMOLD.Business.UseCases.Core
             return default;
         }
 
+        public BusinessResult UpdateConsume(int? consumedId, int? consumerId, decimal usedQuantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptConsume>();
+                var existingConsume = repo.Get(d => d.ConsumedReceiptDetailId == consumedId
+                    && d.ConsumerReceiptDetailId == consumerId);
+                if (existingConsume == null)
+                {
+                    existingConsume = new ItemReceiptConsume
+                    {
+                        ConsumedReceiptDetailId = consumedId,
+                        ConsumerReceiptDetailId = consumerId,
+                        UsedQuantity = usedQuantity,
+                    };
+                    repo.Add(existingConsume);
+                }
+
+                existingConsume.UsedQuantity = usedQuantity;
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public BusinessResult DeleteConsume(int? consumedId, int? consumerId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptConsume>();
+                var existingConsume = repo.Get(d => d.ConsumedReceiptDetailId == consumedId
+                    && d.ConsumerReceiptDetailId == consumerId);
+                if (existingConsume != null)
+                {
+                    repo.Delete(existingConsume);
+                }
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        protected BusinessResult UpdateConsume(ItemReceiptDetail consumed, ItemReceiptDetail consumer, decimal usedQuantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptConsume>();
+                var existingConsume = repo.Get(d => d.ItemReceiptDetail == consumed && d.ItemReceiptDetail1 == consumer);
+                if (existingConsume == null)
+                {
+                    existingConsume = new ItemReceiptConsume
+                    {
+                        ItemReceiptDetail = consumed,
+                        ItemReceiptDetail1 = consumer,
+                        UsedQuantity = usedQuantity,
+                    };
+                    repo.Add(existingConsume);
+                }
+
+                existingConsume.UsedQuantity = usedQuantity;
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public BusinessResult UpdateItemStats(int[] itemId)
         {
             BusinessResult result = new BusinessResult();
