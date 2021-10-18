@@ -31,6 +31,8 @@ namespace Heka.DataAccess.Context
             this.Item = new HashSet<Item>();
             this.Invoice = new HashSet<Invoice>();
             this.ItemReceipt = new HashSet<ItemReceipt>();
+            this.Equipment = new HashSet<Equipment>();
+            this.EquipmentCategory = new HashSet<EquipmentCategory>();
         }
     
         public int Id { get; set; }
@@ -65,5 +67,9 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<Invoice> Invoice { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Equipment> Equipment { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EquipmentCategory> EquipmentCategory { get; set; }
     }
 }

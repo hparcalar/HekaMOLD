@@ -22,6 +22,7 @@ namespace Heka.DataAccess.Context
             this.Notification = new HashSet<Notification>();
             this.TransactionLog = new HashSet<TransactionLog>();
             this.ItemRequest = new HashSet<ItemRequest>();
+            this.Equipment = new HashSet<Equipment>();
         }
     
         public int Id { get; set; }
@@ -48,5 +49,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<TransactionLog> TransactionLog { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemRequest> ItemRequest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Equipment> Equipment { get; set; }
     }
 }

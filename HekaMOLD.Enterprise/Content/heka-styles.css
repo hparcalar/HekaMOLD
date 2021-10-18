@@ -44,6 +44,13 @@
 .w-16 {
     width: 16% !important;
 }
+
+.ellipsis-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .aside-blue {
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#febbbb+0,fe9090+45,ff5c5c+100;Red+3D+%231 */
     background: #febbbb; /* Old browsers */

@@ -28,6 +28,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public MachinePlanModel ActivePlan { get; set; }
         public MachinePlanModel[] Plans { get; set; }
         public MachineMaintenanceInstructionModel[] Instructions { get; set; }
+        public EquipmentModel[] Equipments { get; set; }
 
         #region VISUAL ELEMENTS
         public string CreatedDateStr { get; set; }

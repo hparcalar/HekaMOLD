@@ -213,6 +213,13 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptConsume_ItemReceiptDetailConsumer" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemReceiptConsume_UnitType" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ReportTemplate" Width="1.5" PointX="5.375" PointY="11.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Equipment" Width="1.5" PointX="18.5" PointY="40.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.EquipmentCategory" Width="1.5" PointX="3" PointY="23.125" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Equipment_EquipmentCategory" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Equipment_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Equipment_Plant" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Equipment_User" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_EquipmentCategory_Plant" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

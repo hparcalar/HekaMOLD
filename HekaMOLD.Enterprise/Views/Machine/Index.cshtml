@@ -98,7 +98,7 @@
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
-        <div id="kt_content_container" class="container-fluid">
+        <div id="kt_content_container" class="container-fluid dx-viewport">
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
@@ -134,7 +134,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 <!--end::Col-->
                 <div class="col-xxl-6">
@@ -169,15 +169,25 @@
                 </div>
 
                 @* INSTRUCTIONS GRID *@
-                <div class="col-xxl-12 mt-0">
+                <div class="col-xxl-6 mt-0">
                     <div class="card">
                         <div class="card-header">
                             <h6 class="card-title">Talimatlar</h6>
                         </div>
                         <div class="card-body py-0 mb-4">
-                            <div class="dx-viewport">
-                                <div id="instructionList"></div>
-                            </div>
+                            <div id="instructionList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                @* EQUIPMENTS GRID *@
+                <div class="col-xxl-6 mt-0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Ekipmanlar</h6>
+                        </div>
+                        <div class="card-body py-0 mb-4">
+                            <div id="equipmentsList"></div>
                         </div>
                     </div>
                 </div>

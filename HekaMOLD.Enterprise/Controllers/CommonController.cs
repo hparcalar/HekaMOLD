@@ -1,6 +1,7 @@
 ﻿using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Files;
+using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
@@ -196,6 +197,19 @@ namespace HekaMOLD.Enterprise.Controllers
             using (ProductionBO bObj = new ProductionBO())
             {
                 data = bObj.GetMachineList();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [FreeAction]
+        public JsonResult GetEquipmentCategoryList()
+        {
+            EquipmentCategoryModel[] data = new EquipmentCategoryModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetEquipmentCategoryList(true);
             }
 
             return Json(data, JsonRequestBehavior.AllowGet);

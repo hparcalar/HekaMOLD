@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -1315,8 +1316,11 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<Machine>();
             var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
+            var repoShift = _unitOfWork.GetRepository<Shift>();
 
-            // PROD BO FOR ACTIVE WORK ORDERS ON MACHINES
+            var shiftList = repoShift.GetAll().ToArray();
+
+            // PRODUCTION BO FOR ACTIVE WORK ORDERS ON MACHINES
             ProductionBO prodBO = new ProductionBO();
 
             repo.GetAll().ToList().ForEach(d =>
@@ -1334,6 +1338,41 @@ namespace HekaMOLD.Business.UseCases
                     AvgInflationTime = Convert.ToDecimal(signalData.Average(m => m.Duration) ?? 0),
                     AvgProductionCount = signalData.Count(),
                 };
+
+                // RESOLVE SHIFT STATS OF THAT MACHINE
+                List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
+                foreach (var shift in shiftList)
+                {
+                    //DateTime cDate = dt1.Date;
+                    //decimal shAvgInflation = 0;
+                    //int shAvgProdCount = 0;
+
+                    //while (cDate <= dt2.Date)
+                    //{
+                    //    DateTime startTime = cDate.Add(shift.StartTime.Value);
+                    //    DateTime endTime = cDate.Add(shift.EndTime.Value);
+
+                    //    if (shift.StartTime > shift.EndTime)
+                    //        endTime = cDate.AddDays(1).Add(shift.EndTime.Value);
+
+                    //    var shiftSignals = signalData.Where(m => m.StartDate >= startTime && m.StartDate <= endTime);
+                        
+                    //    shAvgInflation += Convert.ToDecimal(shiftSignals.Average(m => m.Duration) ?? 0);
+                    //    shAvgProdCount += shiftSignals.Count();
+
+                    //    cDate = cDate.AddDays(1);
+                    //}
+
+                    shiftStats.Add(new ShiftStatsModel
+                    {
+                        ShiftId = shift.Id,
+                        ShiftCode = shift.ShiftCode,
+                        AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
+                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count(),
+                    });
+                }
+
+                containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
 
                 data.Add(containerObj);
             });
@@ -1356,6 +1395,7 @@ namespace HekaMOLD.Business.UseCases
 
                 var repo = _unitOfWork.GetRepository<Machine>();
                 var repoInstructions = _unitOfWork.GetRepository<MachineMaintenanceInstruction>();
+                var repoEquipments = _unitOfWork.GetRepository<Equipment>();
 
                 if (repo.Any(d => (d.MachineCode == model.MachineCode)
                     && d.Id != model.Id))
@@ -1404,6 +1444,37 @@ namespace HekaMOLD.Business.UseCases
                     else if (!toBeRemovedInstructions.Any(d => d.Id == item.Id))
                     {
                         var dbItemAu = repoInstructions.GetById(item.Id);
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Machine = dbObj;
+                    }
+                }
+                #endregion
+
+                #region SAVE EQUIPMENTS
+                if (model.Equipments == null)
+                    model.Equipments = new EquipmentModel[0];
+
+                var toBeRemovedEquipments = dbObj.Equipment
+                    .Where(d => !model.Equipments.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedEquipments)
+                {
+                    repoEquipments.Delete(item);
+                }
+
+                foreach (var item in model.Equipments)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemAu = new Equipment();
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Machine = dbObj;
+                        repoEquipments.Add(dbItemAu);
+                    }
+                    else if (!toBeRemovedEquipments.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemAu = repoEquipments.GetById(item.Id);
                         item.MapTo(dbItemAu);
                         dbItemAu.Machine = dbObj;
                     }
@@ -1469,6 +1540,25 @@ namespace HekaMOLD.Business.UseCases
                         ToDoList = d.ToDoList,
                         UnitName = d.UnitName,
                     }).OrderBy(d => d.Id).ToArray();
+                model.Equipments = dbObj.Equipment
+                    .Select(d => new EquipmentModel
+                    {
+                        Id = d.Id,
+                        EquipmentCode = d.EquipmentCode,
+                        EquipmentName = d.EquipmentName,
+                        Location = d.Location,
+                        MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                        MachineId = d.MachineId,
+                        MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                        Manufacturer = d.Manufacturer,
+                        ModelNo = d.ModelNo,
+                        NewDetail = false,
+                        PlantId = d.PlantId,
+                        ResponsibleUserId = d.ResponsibleUserId,
+                        SerialNo = d.SerialNo,
+                        UserCode = d.User != null ? d.User.UserCode : "",
+                        UserName = d.User != null ? d.User.UserName : "",
+                    }).ToArray();
             }
 
             return model;
@@ -2134,6 +2224,205 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        #endregion
+
+        #region EQUIPMENT BUSINESS
+        public EquipmentModel[] GetEquipmentList()
+        {
+            List<EquipmentModel> data = new List<EquipmentModel>();
+
+            var repo = _unitOfWork.GetRepository<Equipment>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                EquipmentModel containerObj = new EquipmentModel();
+                d.MapTo(containerObj);
+                containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
+                containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
+                containerObj.UserCode = d.User != null ? d.User.UserCode : "";
+                containerObj.UserName = d.User != null ? d.User.UserName : "";
+                
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateEquipment(EquipmentModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.EquipmentCode))
+                    throw new Exception("Ekipman kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.EquipmentName))
+                    throw new Exception("Ekipman adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Equipment>();
+
+                if (repo.Any(d => (d.EquipmentCode == model.EquipmentCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir ekipman mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Equipment();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteEquipment(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Equipment>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public EquipmentModel GetEquipment(int id)
+        {
+            EquipmentModel model = new EquipmentModel { };
+
+            var repo = _unitOfWork.GetRepository<Equipment>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.MachineCode = dbObj.Machine != null ? dbObj.Machine.MachineCode : "";
+                model.MachineName = dbObj.Machine != null ? dbObj.Machine.MachineName : "";
+                model.UserCode = dbObj.User != null ? dbObj.User.UserCode : "";
+                model.UserName = dbObj.User != null ? dbObj.User.UserName : "";
+            }
+
+            return model;
+        }
+
+        #endregion
+
+        #region EQUIPMENT CATEGORY BUSINESS
+        public EquipmentCategoryModel[] GetEquipmentCategoryList(bool isCritical = false)
+        {
+            List<EquipmentCategoryModel> data = new List<EquipmentCategoryModel>();
+
+            var repo = _unitOfWork.GetRepository<EquipmentCategory>();
+
+            repo.Filter(d => isCritical == false || (isCritical == true && d.IsCritical == true)).ToList().ForEach(d =>
+            {
+                EquipmentCategoryModel containerObj = new EquipmentCategoryModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateEquipmentCategory(EquipmentCategoryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.EquipmentCategoryCode))
+                    throw new Exception("Ekipman kategori kodu girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<EquipmentCategory>();
+
+                if (repo.Any(d => (d.EquipmentCategoryCode == model.EquipmentCategoryCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir ekipman kategorisi mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new EquipmentCategory();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteEquipmentCategory(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<EquipmentCategory>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public EquipmentCategoryModel GetEquipmentCategory(int id)
+        {
+            EquipmentCategoryModel model = new EquipmentCategoryModel { };
+
+            var repo = _unitOfWork.GetRepository<EquipmentCategory>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
         #endregion
     }
 }

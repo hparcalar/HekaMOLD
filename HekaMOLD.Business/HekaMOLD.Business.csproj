@@ -128,6 +128,8 @@
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
     <Compile Include="Models\DataTransfer\Finance\InvoiceModel.cs" />
     <Compile Include="Models\DataTransfer\Labels\ProductLabel.cs" />
+    <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Maintenance\EquipmentModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EndPostureParam.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionEntryModel.cs" />

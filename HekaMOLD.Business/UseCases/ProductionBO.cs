@@ -592,7 +592,12 @@ namespace HekaMOLD.Business.UseCases
                     DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
 
                     if (shift.StartTime > shift.EndTime)
-                        endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
+                    {
+                        if (DateTime.Now.Hour >= shift.StartTime.Value.Hours)
+                            endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
+                        else
+                            startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
+                    }
 
                     if (entryTime >= startTime && entryTime <= endTime)
                     {
@@ -716,7 +721,12 @@ namespace HekaMOLD.Business.UseCases
                     DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
 
                     if (shift.StartTime > shift.EndTime)
-                        endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
+                    {
+                        if (DateTime.Now.Hour >= shift.StartTime.Value.Hours)
+                            endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
+                        else
+                            startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
+                    }
 
                     if (entryTime >= startTime && entryTime <= endTime)
                     {

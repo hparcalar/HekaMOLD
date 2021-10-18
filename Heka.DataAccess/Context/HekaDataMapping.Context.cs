@@ -98,5 +98,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<SystemPrinter> SystemPrinter { get; set; }
         public virtual DbSet<ItemReceiptConsume> ItemReceiptConsume { get; set; }
         public virtual DbSet<ReportTemplate> ReportTemplate { get; set; }
+        public virtual DbSet<Equipment> Equipment { get; set; }
+        public virtual DbSet<EquipmentCategory> EquipmentCategory { get; set; }
     }
 }

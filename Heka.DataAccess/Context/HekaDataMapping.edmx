@@ -128,6 +128,33 @@
           <Property Name="Method" Type="nvarchar" MaxLength="150" />
           <Property Name="Responsible" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="Equipment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EquipmentCode" Type="nvarchar" MaxLength="150" />
+          <Property Name="EquipmentName" Type="nvarchar" MaxLength="250" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="MachineId" Type="int" />
+          <Property Name="Manufacturer" Type="nvarchar" MaxLength="250" />
+          <Property Name="ModelNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="SerialNo" Type="nvarchar" MaxLength="150" />
+          <Property Name="Location" Type="nvarchar" MaxLength="150" />
+          <Property Name="ResponsibleUserId" Type="int" />
+          <Property Name="IsCritical" Type="bit" />
+          <Property Name="EquipmentCategoryId" Type="int" />
+        </EntityType>
+        <EntityType Name="EquipmentCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EquipmentCategoryCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="EquipmentCategoryName" Type="nvarchar" MaxLength="150" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="IsCritical" Type="bit" />
+        </EntityType>
         <EntityType Name="Firm">
           <Key>
             <PropertyRef Name="Id" />
@@ -1258,6 +1285,66 @@
             </Principal>
             <Dependent Role="EntryQualityPlanDetail">
               <PropertyRef Name="EntryQualityPlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Equipment_EquipmentCategory">
+          <End Role="EquipmentCategory" Type="Self.EquipmentCategory" Multiplicity="0..1" />
+          <End Role="Equipment" Type="Self.Equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EquipmentCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="EquipmentCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Equipment_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
+          <End Role="Equipment" Type="Self.Equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Equipment_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="Equipment" Type="Self.Equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Equipment_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Equipment" Type="Self.Equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="ResponsibleUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EquipmentCategory_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="EquipmentCategory" Type="Self.EquipmentCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EquipmentCategory">
+              <PropertyRef Name="PlantId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2746,6 +2833,8 @@
           <EntitySet Name="EntryQualityDataDetail" EntityType="Self.EntryQualityDataDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntryQualityPlan" EntityType="Self.EntryQualityPlan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntryQualityPlanDetail" EntityType="Self.EntryQualityPlanDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Equipment" EntityType="Self.Equipment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EquipmentCategory" EntityType="Self.EquipmentCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Firm" EntityType="Self.Firm" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmAuthor" EntityType="Self.FirmAuthor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ForexHistory" EntityType="Self.ForexHistory" Schema="dbo" store:Type="Tables" />
@@ -2854,6 +2943,26 @@
           <AssociationSet Name="FK_EntryQualityPlanDetail_EntryQualityPlan" Association="Self.FK_EntryQualityPlanDetail_EntryQualityPlan">
             <End Role="EntryQualityPlan" EntitySet="EntryQualityPlan" />
             <End Role="EntryQualityPlanDetail" EntitySet="EntryQualityPlanDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Equipment_EquipmentCategory" Association="Self.FK_Equipment_EquipmentCategory">
+            <End Role="EquipmentCategory" EntitySet="EquipmentCategory" />
+            <End Role="Equipment" EntitySet="Equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Equipment_Machine" Association="Self.FK_Equipment_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="Equipment" EntitySet="Equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Equipment_Plant" Association="Self.FK_Equipment_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Equipment" EntitySet="Equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Equipment_User" Association="Self.FK_Equipment_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Equipment" EntitySet="Equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EquipmentCategory_Plant" Association="Self.FK_EquipmentCategory_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="EquipmentCategory" EntitySet="EquipmentCategory" />
           </AssociationSet>
           <AssociationSet Name="FK_Firm_Plant" Association="Self.FK_Firm_Plant">
             <End Role="Plant" EntitySet="Plant" />
@@ -3613,6 +3722,8 @@
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_Item_Plant" FromRole="Plant" ToRole="Item" />
           <NavigationProperty Name="Invoice" Relationship="Heka.DataAccess.Models.FK_Invoice_Plant" FromRole="Plant" ToRole="Invoice" />
           <NavigationProperty Name="ItemReceipt" Relationship="Heka.DataAccess.Models.FK_ItemReceipt_Plant" FromRole="Plant" ToRole="ItemReceipt" />
+          <NavigationProperty Name="Equipment" Relationship="Heka.DataAccess.Models.FK_Equipment_Plant" FromRole="Plant" ToRole="Equipment" />
+          <NavigationProperty Name="EquipmentCategory" Relationship="Heka.DataAccess.Models.FK_EquipmentCategory_Plant" FromRole="Plant" ToRole="EquipmentCategory" />
         </EntityType>
         <EntityType Name="SyncPoint">
           <Key>
@@ -3680,6 +3791,7 @@
           <NavigationProperty Name="Notification" Relationship="Heka.DataAccess.Models.FK_Notification_User" FromRole="User" ToRole="Notification" />
           <NavigationProperty Name="TransactionLog" Relationship="Heka.DataAccess.Models.FK_TransactionLog_User" FromRole="User" ToRole="TransactionLog" />
           <NavigationProperty Name="ItemRequest" Relationship="Heka.DataAccess.Models.FK_ItemRequest_User" FromRole="User" ToRole="ItemRequest" />
+          <NavigationProperty Name="Equipment" Relationship="Heka.DataAccess.Models.FK_Equipment_User" FromRole="User" ToRole="Equipment" />
         </EntityType>
         <EntityType Name="UserAuth">
           <Key>
@@ -4702,6 +4814,28 @@
             <End Role="ItemReceiptConsume" EntitySet="ItemReceiptConsume" />
           </AssociationSet>
           <EntitySet Name="ReportTemplate" EntityType="Heka.DataAccess.Models.ReportTemplate" />
+          <EntitySet Name="Equipment" EntityType="Heka.DataAccess.Models.Equipment" />
+          <EntitySet Name="EquipmentCategory" EntityType="Heka.DataAccess.Models.EquipmentCategory" />
+          <AssociationSet Name="FK_Equipment_EquipmentCategory" Association="Heka.DataAccess.Models.FK_Equipment_EquipmentCategory">
+            <End Role="EquipmentCategory" EntitySet="EquipmentCategory" />
+            <End Role="Equipment" EntitySet="Equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Equipment_Machine" Association="Heka.DataAccess.Models.FK_Equipment_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="Equipment" EntitySet="Equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Equipment_Plant" Association="Heka.DataAccess.Models.FK_Equipment_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Equipment" EntitySet="Equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Equipment_User" Association="Heka.DataAccess.Models.FK_Equipment_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Equipment" EntitySet="Equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EquipmentCategory_Plant" Association="Heka.DataAccess.Models.FK_EquipmentCategory_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="EquipmentCategory" EntitySet="EquipmentCategory" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Notification">
           <Key>
@@ -6702,6 +6836,7 @@
           <NavigationProperty Name="UserWorkOrderHistory" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" FromRole="Machine" ToRole="UserWorkOrderHistory" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="Machine" ToRole="WorkOrderDetail" />
           <NavigationProperty Name="MachineSignal" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Machine" FromRole="Machine" ToRole="MachineSignal" />
+          <NavigationProperty Name="Equipment" Relationship="Heka.DataAccess.Models.FK_Equipment_Machine" FromRole="Machine" ToRole="Equipment" />
         </EntityType>
         <Association Name="FK_Incident_Machine">
           <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
@@ -6981,6 +7116,99 @@
           <Property Name="FileName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" />
         </EntityType>
+        <EntityType Name="Equipment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EquipmentCode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="EquipmentName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="MachineId" Type="Int32" />
+          <Property Name="Manufacturer" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ModelNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SerialNo" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Location" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ResponsibleUserId" Type="Int32" />
+          <Property Name="IsCritical" Type="Boolean" />
+          <Property Name="EquipmentCategoryId" Type="Int32" />
+          <NavigationProperty Name="EquipmentCategory" Relationship="Heka.DataAccess.Models.FK_Equipment_EquipmentCategory" FromRole="Equipment" ToRole="EquipmentCategory" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_Equipment_Machine" FromRole="Equipment" ToRole="Machine" />
+          <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_Equipment_Plant" FromRole="Equipment" ToRole="Plant" />
+          <NavigationProperty Name="User" Relationship="Heka.DataAccess.Models.FK_Equipment_User" FromRole="Equipment" ToRole="User" />
+        </EntityType>
+        <EntityType Name="EquipmentCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EquipmentCategoryCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EquipmentCategoryName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="IsCritical" Type="Boolean" />
+          <NavigationProperty Name="Equipment" Relationship="Heka.DataAccess.Models.FK_Equipment_EquipmentCategory" FromRole="EquipmentCategory" ToRole="Equipment" />
+          <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_EquipmentCategory_Plant" FromRole="EquipmentCategory" ToRole="Plant" />
+        </EntityType>
+        <Association Name="FK_Equipment_EquipmentCategory">
+          <End Type="Heka.DataAccess.Models.EquipmentCategory" Role="EquipmentCategory" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Equipment" Role="Equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EquipmentCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="EquipmentCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Equipment_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Equipment" Role="Equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Equipment_Plant">
+          <End Type="Heka.DataAccess.Models.Plant" Role="Plant" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Equipment" Role="Equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Equipment_User">
+          <End Type="Heka.DataAccess.Models.User" Role="User" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Equipment" Role="Equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="ResponsibleUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EquipmentCategory_Plant">
+          <End Type="Heka.DataAccess.Models.Plant" Role="Plant" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.EquipmentCategory" Role="EquipmentCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EquipmentCategory">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8180,6 +8408,35 @@
                 <ScalarProperty Name="ReportName" ColumnName="ReportName" />
                 <ScalarProperty Name="ReportCode" ColumnName="ReportCode" />
                 <ScalarProperty Name="ReportType" ColumnName="ReportType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Equipment">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Equipment">
+              <MappingFragment StoreEntitySet="Equipment">
+                <ScalarProperty Name="EquipmentCategoryId" ColumnName="EquipmentCategoryId" />
+                <ScalarProperty Name="IsCritical" ColumnName="IsCritical" />
+                <ScalarProperty Name="ResponsibleUserId" ColumnName="ResponsibleUserId" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="SerialNo" ColumnName="SerialNo" />
+                <ScalarProperty Name="ModelNo" ColumnName="ModelNo" />
+                <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="EquipmentName" ColumnName="EquipmentName" />
+                <ScalarProperty Name="EquipmentCode" ColumnName="EquipmentCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EquipmentCategory">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.EquipmentCategory">
+              <MappingFragment StoreEntitySet="EquipmentCategory">
+                <ScalarProperty Name="IsCritical" ColumnName="IsCritical" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="EquipmentCategoryName" ColumnName="EquipmentCategoryName" />
+                <ScalarProperty Name="EquipmentCategoryCode" ColumnName="EquipmentCategoryCode" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

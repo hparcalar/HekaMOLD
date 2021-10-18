@@ -4081,6 +4081,7 @@
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
     <Content Include="FrontEndLogic\Mobile\fault-entry.js" />
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
+    <Content Include="FrontEndLogic\Mobile\machine-equipments.js" />
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\wastage-entry.js" />
     <Content Include="FrontEndLogic\Mobile\product-pickup.js" />
@@ -4543,6 +4544,7 @@
     <Content Include="Views\Mobile\ProductDelivery.cshtml" />
     <Content Include="Views\ReportTemplate\List.cshtml" />
     <Content Include="Views\ReportTemplate\Index.cshtml" />
+    <Content Include="Views\Mobile\MachineEquipments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -768,3 +768,67 @@ BEGIN
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 	) ON [PRIMARY]
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='Equipment')
+BEGIN
+	CREATE TABLE [dbo].[Equipment](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[EquipmentCode] [nvarchar](150) NULL,
+	[EquipmentName] [nvarchar](250) NULL,
+	[PlantId] [int] NULL,
+	[MachineId] [int] NULL,
+	[Manufacturer] [nvarchar](250) NULL,
+	[ModelNo] [nvarchar](50) NULL,
+	[SerialNo] [nvarchar](150) NULL,
+	[Location] [nvarchar](150) NULL,
+	[ResponsibleUserId] [int] NULL,
+	 CONSTRAINT [PK_Equipment] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[Equipment]  WITH CHECK ADD  CONSTRAINT [FK_Equipment_Machine] FOREIGN KEY([MachineId])
+	REFERENCES [dbo].[Machine] ([Id])
+
+	ALTER TABLE [dbo].[Equipment] CHECK CONSTRAINT [FK_Equipment_Machine]
+
+	ALTER TABLE [dbo].[Equipment]  WITH CHECK ADD  CONSTRAINT [FK_Equipment_Plant] FOREIGN KEY([PlantId])
+	REFERENCES [dbo].[Plant] ([Id])
+
+	ALTER TABLE [dbo].[Equipment] CHECK CONSTRAINT [FK_Equipment_Plant]
+
+	ALTER TABLE [dbo].[Equipment]  WITH CHECK ADD  CONSTRAINT [FK_Equipment_User] FOREIGN KEY([ResponsibleUserId])
+	REFERENCES [dbo].[User] ([Id])
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Equipment' AND COLUMN_NAME='IsCritical')
+BEGIN
+	ALTER TABLE Equipment ADD IsCritical BIT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='EquipmentCategory')
+BEGIN
+	CREATE TABLE [dbo].[EquipmentCategory](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[EquipmentCategoryCode] [nvarchar](50) NULL,
+		[EquipmentCategoryName] [nvarchar](150) NULL,
+		[PlantId] [int] NULL,
+		[IsCritical] [bit] NULL,
+	 CONSTRAINT [PK_EquipmentCategory] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[EquipmentCategory]  WITH CHECK ADD  CONSTRAINT [FK_EquipmentCategory_Plant] FOREIGN KEY([PlantId])
+	REFERENCES [dbo].[Plant] ([Id])
+
+	ALTER TABLE [dbo].[EquipmentCategory] CHECK CONSTRAINT [FK_EquipmentCategory_Plant]
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Equipment' AND COLUMN_NAME='EquipmentCategoryId')
+BEGIN
+	ALTER TABLE Equipment ADD EquipmentCategoryId INT NULL
+	ALTER TABLE Equipment ADD CONSTRAINT FK_Equipment_EquipmentCategory FOREIGN KEY(EquipmentCategoryId) REFERENCES EquipmentCategory(Id)
+END

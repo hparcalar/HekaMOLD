@@ -1,6 +1,6 @@
 ﻿app.controller('machineOnlineCtrl', function ($scope, $http) {
     $scope.machineList = [];
-    $scope.filterModel = { startDate: moment().subtract('months', 1).format('DD.MM.YYYY'), endDate: moment().format('DD.MM.YYYY') };
+    $scope.filterModel = { startDate: moment().format('DD.MM.YYYY'), endDate: moment().format('DD.MM.YYYY') };
 
     $scope.bindModel = function () {
         $http.get(HOST_URL + 'Machine/GetMachineStats?t1=' + $scope.filterModel.startDate + '&t2='

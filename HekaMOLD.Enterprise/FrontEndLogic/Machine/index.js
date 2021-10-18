@@ -77,6 +77,7 @@
                     $("#fore-color").spectrum("set", $scope.modelObject.ForeColor);
 
                     $scope.bindInstructionList();
+                    $scope.bindEquipmentList();
                 }
             }).catch(function (err) { });
     }
@@ -160,6 +161,89 @@
                 },
                 { dataField: 'ToDoList', caption: 'Yapılacak İşlemler', editorType: 'dxTextArea' },
                 { dataField: 'Responsible', width: 150, caption: 'Sorumlusu' },
+            ]
+        });
+    }
+
+    $scope.bindEquipmentList = function () {
+        $('#equipmentsList').dxDataGrid({
+            dataSource: {
+                load: function () {
+                    return $scope.modelObject.Equipments;
+                },
+                update: function (key, values) {
+                    var obj = $scope.modelObject.Equipments.find(d => d.Id == key);
+                    if (obj != null) {
+                        if (typeof values.EquipmentCode != 'undefined') { obj.EquipmentCode = values.EquipmentCode; }
+                        if (typeof values.EquipmentName != 'undefined') { obj.EquipmentName = values.EquipmentName; }
+                        if (typeof values.Manufacturer != 'undefined') { obj.Manufacturer = values.Manufacturer; }
+                        if (typeof values.ModelNo != 'undefined') { obj.ModelNo = values.ModelNo; }
+                        if (typeof values.SerialNo != 'undefined') { obj.SerialNo = values.SerialNo; }
+                        if (typeof values.Location != 'undefined') { obj.Location = values.Location; }
+                        if (typeof values.ResponsibleUserId != 'undefined') { obj.ResponsibleUserId = values.ResponsibleUserId; }
+                    }
+                },
+                remove: function (key) {
+                    var obj = $scope.modelObject.Equipments.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.modelObject.Equipments.splice($scope.modelObject.Equipments.indexOf(obj), 1);
+                    }
+                },
+                insert: function (values) {
+                    var newId = 1;
+                    if ($scope.modelObject.Equipments.length > 0) {
+                        newId = $scope.modelObject.Equipments.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                        newId++;
+                    }
+
+                    var newObj = {
+                        Id: newId,
+                        EquipmentCode: values.EquipmentCode,
+                        EquipmentName: values.EquipmentName,
+                        Manufacturer: values.Manufacturer,
+                        ModelNo: values.ModelNo,
+                        SerialNo: values.SerialNo,
+                        Location: values.Location,
+                        ResponsibleUserId: values.ResponsibleUserId,
+                        NewDetail: true
+                    };
+
+                    $scope.modelObject.Equipments.push(newObj);
+                },
+                key: 'Id'
+            },
+            showColumnLines: true,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: false,
+            showBorders: true,
+            filterRow: {
+                visible: false
+            },
+            headerFilter: {
+                visible: false
+            },
+            groupPanel: {
+                visible: false
+            },
+            scrolling: {
+                mode: "virtual"
+            },
+            height: 200,
+            editing: {
+                allowUpdating: true,
+                allowDeleting: true,
+                allowAdding: true,
+                mode: 'cell'
+            },
+            columns: [
+                { dataField: 'EquipmentCode', caption: 'Kodu', width: 100, validationRules: [{ type: "required" }] },
+                { dataField: 'EquipmentName', caption: 'Adi' },
+                { dataField: 'Manufacturer', caption: 'Üretici' },
+                { dataField: 'ModelNo', caption: 'Model' },
+                { dataField: 'SerialNo', caption: 'Seri No' },
+                { dataField: 'Location', caption: 'Bölge' },
+                { dataField: 'UserName', caption: 'Kullanan', allowEditing:false },
             ]
         });
     }

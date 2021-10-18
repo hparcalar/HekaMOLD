@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Makine Ekipmanları";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+
+<div>
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="machineEquipmentsCtrl">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Title-->
+            <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                @ViewBag.Title
+            </h1>
+            <!--end::Title-->
+
+            @* ACTION BAR *@
+            <div class="row gy-5 mt-4 gx-xl-8 bg-white">
+                <div class="col-sm-8 col-xs-8 col-xxl-8">
+                    <a class="btn btn-sm w-200px h-75 mt-0 btn-primary" ng-click="showNewEqCatForm()">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
+                                <path d="M6 5C5.44772 5 5 5.44772 5 6C5 6.55228 5.44771 7 6 7H16C16.5523 7 17 6.55228 17 6C17 5.44772 16.5523 5 16 5H6Z" fill="#12131A" />
+                                <path d="M6 9C5.44772 9 5 9.44771 5 10C5 10.5523 5.44772 11 6 11H10C10.5523 11 11 10.5523 11 10C11 9.44771 10.5523 9 10 9H6Z" fill="#12131A" />
+                                <path d="M6 13C5.44772 13 5 13.4477 5 14C5 14.5523 5.44772 15 6 15H18C18.5523 15 19 14.5523 19 14C19 13.4477 18.5523 13 18 13H6Z" fill="#12131A" />
+                                <path d="M5 18C5 17.4477 5.44772 17 6 17H14C14.5523 17 15 17.4477 15 18C15 18.5523 14.5523 19 14 19H6C5.44772 19 5 18.5523 5 18Z" fill="#12131A" />
+                            </svg>
+                        </span>
+                        <br />
+                        <span style="display:block;margin-top:2px;margin-bottom:15px;">Yeni Kategori</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-2 col-xs-2 col-xxl-2">
+                    
+                </div>
+                <div class="col-sm-2 col-xs-2 col-xxl-2">
+                    
+                </div>
+            </div>
+
+            <!--begin::EQUIPMENT TABLE-->
+            <div class="row gy-5 mt-4 gx-xl-8 bg-white">
+                <div class="col-xxl-12 col-sm-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="w-20 px-2"><b>Ekipman Kategorisi</b></th>
+                                <th class="w-10 px-2" ng-repeat="item in machineList"><b>{{ item.MachineCode }}</b></th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-md">
+                        <table ng-cloak class="table table-bordered table-striped">
+                            <tbody>
+                                <tr ng-repeat="item in eqCategoryList">
+                                    <td class="w-20 px-2">{{item.EquipmentCategoryName}}</td>
+                                    <td class="w-10 px-2" ng-repeat="machine in machineList">
+                                        {{ getMachineData(item, machine) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--end::EQUIPMENT TABLE-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <style type="text/css">
+        .data-row.selected, .data-row-selected td {
+            background-color: #0094ff !important;
+        }
+    </style>
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+
+    <script src="~/FrontEndLogic/Mobile/machine-equipments.js"></script>
+}

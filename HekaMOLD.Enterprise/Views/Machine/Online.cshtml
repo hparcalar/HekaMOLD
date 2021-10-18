@@ -52,29 +52,36 @@
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
-                <div class="col-xxl-4 px-2 py-0" ng-repeat="item in machineList">
+                <div class="col-xxl-3 px-2 py-0" ng-repeat="item in machineList">
                     <div class="rounded-1 py-1 bg-light-dark">
                         <div class="m-2 border-1 rounded-1">
                             <h4 class="text-center bg-secondary rounded px-2 py-2 border-1 border-dark">{{item.MachineName}}</h4>
-                            <div class="active-plan bg-light-success text-center py-1">
-                                <h6 class="text-success">Aktif Üretim</h6>
-                                <hr class="my-1" />
-                                <p class="py-0 my-0" ng-show="item.ActivePlan.Id > 0">
-                                    Firma: {{item.ActivePlan.WorkOrder.FirmName}}
+                            <div class="active-plan text-center py-1 min-h-90px">
+                                <h6 class="text-primary">Aktif Üretim</h6>
+                                <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
+                                    <b>Firma:</b> {{item.ActivePlan.WorkOrder.FirmName}}
                                 </p>
-                                <p class="py-0 my-0" ng-show="item.ActivePlan.Id > 0">
-                                    Ürün: {{item.ActivePlan.WorkOrder.ProductName}}
+                                <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
+                                    <b>Ürün:</b> {{item.ActivePlan.WorkOrder.ProductName}}
                                 </p>
-                                <p class="py-0 my-0" ng-show="item.ActivePlan.Id > 0">
+                                <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
                                     Üretilen: <b>{{getFixed(item.ActivePlan.WorkOrder.CompleteQuantity,0)}}</b> /
                                     {{item.ActivePlan.WorkOrder.Quantity}}
                                 </p>
                             </div>
-                            <div class="general-avg bg-light-primary text-center py-1">
-                                <h6 class="text-primary">Genel Ortalama</h6>
+                            <div class="general-avg text-center py-1">
                                 <hr class="my-1" />
-                                <p class="py-0 my-0">Ort Şişirme: {{getFixed(item.MachineStats.AvgInflationTime,2)}} sn</p>
-                                <p class="py-0 my-0">Üretim: {{item.MachineStats.AvgProductionCount}} adet</p>
+                                <h6 class="text-primary">Genel Ortalama</h6>
+                                <p class="py-0 my-0">Ort Şişirme: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
+                                <p class="py-0 my-0">Üretim: <b>{{item.MachineStats.AvgProductionCount}}</b> adet</p>
+                                <div class="d-flex flex-row">
+                                    <div class="py-0 my-1 flex-grow-1" ng-repeat="shift in item.MachineStats.ShiftStats">
+                                        <hr class="my-1" />
+                                        <h6>{{ shift.ShiftCode }} Vardiyası</h6>
+                                        <p class="py-0 my-0">Ort Şişirme: <b>{{ getFixed(shift.AvgInflationTime,2) }}</b></p>
+                                        <p class="py-0 my-0">Üretim: <b>{{ shift.AvgProductionCount }}</b></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

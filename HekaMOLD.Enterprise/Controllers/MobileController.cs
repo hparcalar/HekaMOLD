@@ -613,5 +613,40 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
         #endregion
+
+        #region MAINTENANCE
+        public ActionResult MachineEquipments()
+        {
+            return View();
+        }
+
+        public ActionResult MaintenanceSchedule()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult SaveEquipmentCategory(string name)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                var existingCat = bObj.GetEquipmentCategory(0);
+                if (existingCat == null || existingCat.Id <= 0)
+                {
+                    result = bObj.SaveOrUpdateEquipmentCategory(new EquipmentCategoryModel
+                    {
+                        EquipmentCategoryCode = name,
+                        EquipmentCategoryName = name,
+                        IsCritical = true,
+                    });
+                }
+            }
+
+            return Json(new { Status=result.Result ? 1 : 0, RecordId=result.RecordId, ErrorMessage=result.ErrorMessage });
+        }
+        #endregion
     }
 }
