@@ -832,3 +832,9 @@ BEGIN
 	ALTER TABLE Equipment ADD EquipmentCategoryId INT NULL
 	ALTER TABLE Equipment ADD CONSTRAINT FK_Equipment_EquipmentCategory FOREIGN KEY(EquipmentCategoryId) REFERENCES EquipmentCategory(Id)
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ProductWastage' AND COLUMN_NAME='ShiftId')
+BEGIN
+	ALTER TABLE ProductWastage ADD ShiftId INT NULL
+	ALTER TABLE ProductWastage ADD CONSTRAINT FK_ProductWastage_Shift FOREIGN KEY(ShiftId) REFERENCES Shift(Id)
+END

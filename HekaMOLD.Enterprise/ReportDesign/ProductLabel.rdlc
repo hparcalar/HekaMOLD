@@ -7,8 +7,8 @@
         <Value>=First(Fields!BarcodeImage.Value, "DS1")</Value>
         <MIMEType>image/jpeg</MIMEType>
         <Sizing>Fit</Sizing>
-        <Top>5.29571cm</Top>
-        <Left>3.76594cm</Left>
+        <Top>0.25543cm</Top>
+        <Left>7.02921cm</Left>
         <Height>1.86103cm</Height>
         <Width>2.37853cm</Width>
         <Style>
@@ -36,8 +36,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox2</rd:DefaultName>
-        <Top>1.73426cm</Top>
-        <Left>2.90989cm</Left>
+        <Top>1.32151cm</Top>
+        <Left>0.59214cm</Left>
         <Height>0.4095cm</Height>
         <Width>3.81233cm</Width>
         <ZIndex>1</ZIndex>
@@ -64,7 +64,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>2.41539cm</Top>
+        <Top>2.63764cm</Top>
         <Left>0.42721cm</Left>
         <Height>0.45183cm</Height>
         <Width>2.119cm</Width>
@@ -96,7 +96,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>2.94837cm</Top>
+        <Top>3.17062cm</Top>
         <Left>0.42721cm</Left>
         <Height>0.42008cm</Height>
         <Width>2.119cm</Width>
@@ -128,7 +128,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>3.4428cm</Top>
+        <Top>3.66505cm</Top>
         <Left>0.42721cm</Left>
         <Height>0.48358cm</Height>
         <Width>2.119cm</Width>
@@ -160,7 +160,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>4.00752cm</Top>
+        <Top>4.22977cm</Top>
         <Left>0.42721cm</Left>
         <Height>0.48358cm</Height>
         <Width>2.119cm</Width>
@@ -192,7 +192,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>4.52638cm</Top>
+        <Top>4.74863cm</Top>
         <Left>0.42721cm</Left>
         <Height>0.45183cm</Height>
         <Width>2.119cm</Width>
@@ -225,7 +225,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>2.4154cm</Top>
+        <Top>2.63765cm</Top>
         <Left>2.7226cm</Left>
         <Height>0.45183cm</Height>
         <Width>6.68514cm</Width>
@@ -258,7 +258,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>2.91662cm</Top>
+        <Top>3.13887cm</Top>
         <Left>2.7226cm</Left>
         <Height>0.45183cm</Height>
         <Width>6.68514cm</Width>
@@ -291,7 +291,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>3.47455cm</Top>
+        <Top>3.6968cm</Top>
         <Left>2.7226cm</Left>
         <Height>0.45183cm</Height>
         <Width>6.68514cm</Width>
@@ -324,7 +324,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>4.03927cm</Top>
+        <Top>4.26152cm</Top>
         <Left>2.7226cm</Left>
         <Height>0.45183cm</Height>
         <Width>6.68514cm</Width>
@@ -357,7 +357,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>4.56519cm</Top>
+        <Top>4.78744cm</Top>
         <Left>2.7226cm</Left>
         <Height>0.45183cm</Height>
         <Width>6.68514cm</Width>
@@ -373,7 +373,7 @@
         </Style>
       </Textbox>
       <Line Name="Line3">
-        <Top>5.12638cm</Top>
+        <Top>5.34863cm</Top>
         <Left>0.25082cm</Left>
         <Height>0cm</Height>
         <Width>9.33331cm</Width>
@@ -385,7 +385,7 @@
         </Style>
       </Line>
       <Line Name="Line4">
-        <Top>2.32014cm</Top>
+        <Top>2.54239cm</Top>
         <Left>0.25082cm</Left>
         <Height>2.80623cm</Height>
         <Width>0cm</Width>
@@ -397,7 +397,7 @@
         </Style>
       </Line>
       <Line Name="Line5">
-        <Top>2.32014cm</Top>
+        <Top>2.54239cm</Top>
         <Left>0.25082cm</Left>
         <Height>0cm</Height>
         <Width>9.33331cm</Width>
@@ -409,7 +409,7 @@
         </Style>
       </Line>
       <Line Name="Line6">
-        <Top>2.32014cm</Top>
+        <Top>2.54239cm</Top>
         <Left>9.58413cm</Left>
         <Height>2.80624cm</Height>
         <Width>0cm</Width>
@@ -425,9 +425,9 @@
         <Value>BatusanLogo</Value>
         <Sizing>FitProportional</Sizing>
         <Top>0.25543cm</Top>
-        <Left>2.9131cm</Left>
-        <Height>1.3095cm</Height>
-        <Width>4.65383cm</Width>
+        <Left>0.53185cm</Left>
+        <Height>0.9285cm</Height>
+        <Width>4.27283cm</Width>
         <ZIndex>16</ZIndex>
         <Style>
           <Border>
@@ -435,13 +435,48 @@
           </Border>
         </Style>
       </Image>
+      <Textbox Name="Textbox7">
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!ShiftName.Value, "DS1")</Value>
+                <Style>
+                  <FontSize>46pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox4</rd:DefaultName>
+        <Top>0.24646cm</Top>
+        <Left>4.9584cm</Left>
+        <Height>1.86555cm</Height>
+        <Width>1.88031cm</Width>
+        <ZIndex>17</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>1pt</PaddingLeft>
+          <PaddingRight>1pt</PaddingRight>
+          <PaddingTop>1pt</PaddingTop>
+          <PaddingBottom>1pt</PaddingBottom>
+        </Style>
+      </Textbox>
     </ReportItems>
-    <Height>7.5cm</Height>
+    <Height>6cm</Height>
     <Style />
   </Body>
   <Width>10cm</Width>
   <Page>
-    <PageHeight>10cm</PageHeight>
+    <PageHeight>6cm</PageHeight>
     <PageWidth>7.5cm</PageWidth>
     <InteractiveHeight>7.5cm</InteractiveHeight>
     <InteractiveWidth>10cm</InteractiveWidth>
@@ -495,6 +530,10 @@
         </Field>
         <Field Name="Weight">
           <DataField>Weight</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShiftName">
+          <DataField>ShiftName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="BarcodeImage">

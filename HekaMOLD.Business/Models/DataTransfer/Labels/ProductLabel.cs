@@ -12,6 +12,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Labels
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
         public string CreatedDateStr { get; set; }
+        public string ShiftName { get; set; }
         public string InPackageQuantity { get; set; }
         public string Weight { get; set; }
         public string FirmName { get; set; }

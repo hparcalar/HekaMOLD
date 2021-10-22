@@ -287,6 +287,36 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        [FreeAction]
+        public JsonResult GetHistoryWorkOrderOnMachine(int workOrderDetailId)
+        {
+            MachinePlanModel data = new MachinePlanModel();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetHistoryWorkOrderOnMachine(workOrderDetailId);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [FreeAction]
+        public JsonResult GetHistoryWorkOrderListOnMachine(int machineId)
+        {
+            WorkOrderDetailModel[] data = new WorkOrderDetailModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetHistoryWorkOrderListOnMachine(machineId);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         #endregion
 
         #region QUALITY

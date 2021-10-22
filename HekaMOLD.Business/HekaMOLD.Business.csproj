@@ -234,6 +234,7 @@
   <ItemGroup>
     <EmbeddedResource Include="ReportDesign\DeliverySerialList.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\ProductLabel_Backup.rdlc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

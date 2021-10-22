@@ -2,7 +2,8 @@
     $scope.modelObject = {
         Id:0,
         Quantity: 0,
-        CompleteQuantity:0,
+        CompleteQuantity: 0,
+        WastageQuantity: 0,
     };
 
     $scope.save = function () {

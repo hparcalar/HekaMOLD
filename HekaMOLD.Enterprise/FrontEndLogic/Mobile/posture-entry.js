@@ -130,6 +130,45 @@
         });
     }
 
+    // STOP AN ONGOINT POSTURE
+    $scope.stopPosture = function (item) {
+        bootbox.prompt({
+            message: "Açıklama",
+            closeButton: false,
+            title: 'Bu duruş sona erecektir. Onaylıyor musunuz?',
+            buttons: {
+                confirm: {
+                    label: 'Evet',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'Hayır',
+                    className: 'btn-light'
+                }
+            },
+            callback: function (result) {
+                if (result != null) {
+                    $scope.saveStatus = 1;
+
+                    $http.post(HOST_URL + 'Mobile/FinishPosture', { postureId: item.Id, description: result }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                $scope.saveStatus = 0;
+
+                                if (resp.data.Result == true) {
+                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                                    $scope.loadMachineQueue();
+                                }
+                                else
+                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                            }
+                        }).catch(function (err) { });
+                }
+            }
+        });
+    }
+
     // LOAD EVENTS
     setTimeout($scope.showMachineList, 500);
 });

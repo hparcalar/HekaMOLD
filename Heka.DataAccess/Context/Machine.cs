@@ -23,11 +23,11 @@ namespace Heka.DataAccess.Context
             this.MoldTest = new HashSet<MoldTest>();
             this.ProductionPosture = new HashSet<ProductionPosture>();
             this.ProductQualityData = new HashSet<ProductQualityData>();
-            this.ProductWastage = new HashSet<ProductWastage>();
             this.UserWorkOrderHistory = new HashSet<UserWorkOrderHistory>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.MachineSignal = new HashSet<MachineSignal>();
             this.Equipment = new HashSet<Equipment>();
+            this.ProductWastage = new HashSet<ProductWastage>();
         }
     
         public int Id { get; set; }
@@ -62,8 +62,6 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductQualityData> ProductQualityData { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductWastage> ProductWastage { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
@@ -71,5 +69,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<MachineSignal> MachineSignal { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Equipment> Equipment { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductWastage> ProductWastage { get; set; }
     }
 }

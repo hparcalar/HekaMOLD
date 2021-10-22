@@ -19,6 +19,7 @@ namespace Heka.DataAccess.Context
         {
             this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
             this.MachineSignal = new HashSet<MachineSignal>();
+            this.ProductWastage = new HashSet<ProductWastage>();
         }
     
         public int Id { get; set; }
@@ -32,5 +33,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MachineSignal> MachineSignal { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductWastage> ProductWastage { get; set; }
     }
 }

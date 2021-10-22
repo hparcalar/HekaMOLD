@@ -43,7 +43,7 @@ namespace HekaMOLD.DataImporter
                                 string macName = "";
                                 try
                                 {
-                                    macName = sheet.Cells[11, 3].Value.ToString();
+                                    macName = sheet.Cells[10, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -53,7 +53,7 @@ namespace HekaMOLD.DataImporter
 
                                 try
                                 {
-                                    productDesc = sheet.Cells[12, 3].Value.ToString();
+                                    productDesc = sheet.Cells[11, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -64,7 +64,7 @@ namespace HekaMOLD.DataImporter
 
                                 try
                                 {
-                                    headSize = sheet.Cells[13, 3].Value.ToString();
+                                    headSize = sheet.Cells[12, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -74,7 +74,7 @@ namespace HekaMOLD.DataImporter
                                 string rawMatName = "";
                                 try
                                 {
-                                    rawMatName = sheet.Cells[14, 3].Value.ToString();
+                                    rawMatName = sheet.Cells[13, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -84,7 +84,7 @@ namespace HekaMOLD.DataImporter
                                 string rawMatGr = "";
                                 try
                                 {
-                                    rawMatGr = sheet.Cells[15, 3].Value.ToString();
+                                    rawMatGr = sheet.Cells[14, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -94,7 +94,7 @@ namespace HekaMOLD.DataImporter
                                 string inflTime = "";
                                 try
                                 {
-                                    inflTime = sheet.Cells[16, 3].Value.ToString();
+                                    inflTime = sheet.Cells[15, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -104,7 +104,7 @@ namespace HekaMOLD.DataImporter
                                 string totalTime = "";
                                 try
                                 {
-                                    totalTime = sheet.Cells[17, 3].Value.ToString();
+                                    totalTime = sheet.Cells[16, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -114,7 +114,7 @@ namespace HekaMOLD.DataImporter
                                 string dyeCode = "";
                                 try
                                 {
-                                    dyeCode = sheet.Cells[18, 3].Value.ToString();
+                                    dyeCode = sheet.Cells[17, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -124,7 +124,7 @@ namespace HekaMOLD.DataImporter
                                 string ralCode = "";
                                 try
                                 {
-                                    ralCode = sheet.Cells[18, 6].Value.ToString();
+                                    ralCode = sheet.Cells[17, 6].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -134,7 +134,7 @@ namespace HekaMOLD.DataImporter
                                 string packSize = "";
                                 try
                                 {
-                                    packSize = sheet.Cells[19, 3].Value.ToString();
+                                    packSize = sheet.Cells[18, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -144,7 +144,7 @@ namespace HekaMOLD.DataImporter
                                 string inPckQty = "";
                                 try
                                 {
-                                    inPckQty = sheet.Cells[20, 3].Value.ToString();
+                                    inPckQty = sheet.Cells[19, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -154,7 +154,7 @@ namespace HekaMOLD.DataImporter
                                 string nutQty = "";
                                 try
                                 {
-                                    nutQty = sheet.Cells[21, 3].Value.ToString();
+                                    nutQty = sheet.Cells[20, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -164,7 +164,7 @@ namespace HekaMOLD.DataImporter
                                 string nutCaliber = "";
                                 try
                                 {
-                                    sheet.Cells[21, 6].Value.ToString();
+                                    sheet.Cells[20, 6].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -173,7 +173,7 @@ namespace HekaMOLD.DataImporter
                                 string inPltQty = "";
                                 try
                                 {
-                                    inPltQty = sheet.Cells[22, 3].Value.ToString();
+                                    inPltQty = sheet.Cells[21, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -183,7 +183,7 @@ namespace HekaMOLD.DataImporter
                                 string productCode = "";
                                 try
                                 {
-                                    productCode = sheet.Cells[23, 3].Value.ToString();
+                                    productCode = sheet.Cells[22, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -193,7 +193,7 @@ namespace HekaMOLD.DataImporter
                                 string productName = "";
                                 try
                                 {
-                                    productName = sheet.Cells[24, 3].Value.ToString();
+                                    productName = sheet.Cells[23, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -203,7 +203,7 @@ namespace HekaMOLD.DataImporter
                                 string moldCode = "";
                                 try
                                 {
-                                    moldCode = sheet.Cells[25, 3].Value.ToString();
+                                    moldCode = sheet.Cells[24, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -213,7 +213,7 @@ namespace HekaMOLD.DataImporter
                                 string moldName = "";
                                 try
                                 {
-                                    moldName = sheet.Cells[26, 3].Value.ToString();
+                                    moldName = sheet.Cells[25, 3].Value.ToString();
                                 }
                                 catch (Exception)
                                 {
@@ -226,7 +226,7 @@ namespace HekaMOLD.DataImporter
 
                                 using (DefinitionsBO bObj = new DefinitionsBO())
                                 {
-                                    var dbMac = bObj.GetMachine(Regex.Match(macName, "[0-9]+").Value);
+                                    var dbMac = bObj.GetMachine(Regex.Match(macName, "[0-9]+").Value.PadLeft(2, '0'));
                                     if (dbMac != null && dbMac.Id > 0)
                                         machineId = dbMac.Id;
                                     else

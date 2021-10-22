@@ -196,6 +196,51 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
+        public WorkOrderDetailModel[] GetHistoryWorkOrderListOnMachine(int machineId)
+        {
+            List<WorkOrderDetailModel> data = new List<WorkOrderDetailModel>();
+
+            var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+
+            repo.Filter(d => d.MachineId == machineId 
+                && 
+                (
+                    d.WorkOrderStatus == (int)WorkOrderStatusType.Completed
+                    ||
+                    d.WorkOrderStatus == (int)WorkOrderStatusType.Cancelled
+                )).OrderByDescending(d => d.Id).Take(5).ToList().ForEach(d =>
+            {
+                WorkOrderDetailModel containerObj = new WorkOrderDetailModel();
+                d.MapTo(containerObj);
+
+                containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
+                containerObj.ProductName = d.Item != null ? d.Item.ItemName : "";
+                containerObj.WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
+                    string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "";
+                containerObj.WorkOrderNo = d.WorkOrder.WorkOrderNo;
+                containerObj.Quantity = d.Quantity;
+                containerObj.CompleteQuantity = Convert.ToInt32(d.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0);
+                containerObj.WastageQuantity = d.ProductWastage.Sum(m => m.Quantity) ?? 0;
+                containerObj.FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "";
+                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : "";
+                containerObj.DyeCode = d.Dye != null ? d.Dye.DyeCode : "";
+                containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
+                containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
+                containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
+                containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
+                containerObj.SaleOrderDocumentNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.DocumentNo : "";
+                containerObj.SaleOrderReceiptNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.OrderNo : "";
+                containerObj.SaleOrderDate = d.ItemOrderDetail != null ?
+                    string.Format("{0:dd.MM.yyyy}", d.ItemOrderDetail.ItemOrder.OrderDate) : "";
+                containerObj.SaleOrderDeadline = d.ItemOrderDetail != null ?
+                    string.Format("", d.ItemOrderDetail.ItemOrder.DateOfNeed) : "";
+
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
         public WorkOrderModel GetWorkOrder(int workOrderId)
         {
             WorkOrderModel model = new WorkOrderModel();
@@ -566,6 +611,95 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public MachinePlanModel GetHistoryWorkOrderOnMachine(int workOrderDetailId)
+        {
+            MachinePlanModel model = new MachinePlanModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var repoWastages = _unitOfWork.GetRepository<ProductWastage>();
+
+                var dbObj = repo.Filter(d => d.Id == workOrderDetailId).FirstOrDefault();
+                if (dbObj != null)
+                {
+                    model = new MachinePlanModel
+                    {
+                        Id = dbObj.Id,
+                        MachineId = dbObj.MachineId,
+                        WorkOrderDetailId = dbObj.Id,
+                        WorkOrder = new WorkOrderDetailModel
+                        {
+                            Id = dbObj.Id,
+                            ProductCode = dbObj.Item.ItemNo,
+                            ProductName = dbObj.Item.ItemName,
+                            WorkOrderId = dbObj.WorkOrderId,
+                            ItemId = dbObj.ItemId,
+                            MoldId = dbObj.MoldId,
+                            MoldCode = dbObj.Mold != null ? dbObj.Mold.MoldCode : "",
+                            MoldName = dbObj.Mold != null ? dbObj.Mold.MoldName : "",
+                            CreatedDate = dbObj.CreatedDate,
+                            Quantity = dbObj.Quantity,
+                            WorkOrderNo = dbObj.WorkOrder.WorkOrderNo,
+                            InPackageQuantity = dbObj.InPackageQuantity,
+                            InPalletPackageQuantity = dbObj.InPalletPackageQuantity,
+                            WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.WorkOrder.WorkOrderDate),
+                            FirmCode = dbObj.WorkOrder.Firm != null ?
+                            dbObj.WorkOrder.Firm.FirmCode : "",
+                            FirmName = dbObj.WorkOrder.Firm != null ?
+                            dbObj.WorkOrder.Firm.FirmName : "",
+                            WorkOrderStatus = dbObj.WorkOrderStatus,
+                            WorkOrderStatusStr = ((WorkOrderStatusType)dbObj.WorkOrderStatus).ToCaption(),
+                            CompleteQuantity = Convert.ToInt32(dbObj.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0),
+                            CompleteQuantitySingleProduct = dbObj.WorkOrderSerial.Count(),
+                            MoldTestCycle = dbObj.MoldTest != null ?
+                                dbObj.MoldTest.TotalTimeSeconds ?? 0 : 0,
+                        },
+                        Serials = repoSerial.Filter(d => d.WorkOrderDetailId == workOrderDetailId
+                            && d.SerialNo != null && d.SerialNo.Length > 0)
+                            .OrderByDescending(d => d.Id)
+                            .ToList()
+                            .Select(d => new WorkOrderSerialModel
+                            {
+                                Id = d.Id,
+                                SerialNo = d.SerialNo,
+                                ItemName = d.WorkOrderDetail.Item.ItemName,
+                                CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate),
+                                FirstQuantity = d.FirstQuantity,
+                                LiveQuantity = d.LiveQuantity,
+                                InPackageQuantity = d.InPackageQuantity,
+                            }).ToArray(),
+                        Wastages = repoWastages.Filter(d => d.WorkOrderDetailId == workOrderDetailId)
+                            .OrderByDescending(d => d.Id)
+                            .Take(30).ToList()
+                            .Select(d => new ProductWastageModel
+                            {
+                                Id = d.Id,
+                                CreatedDate = d.CreatedDate,
+                                CreatedUserId = d.CreatedUserId,
+                                EntryDate = d.EntryDate,
+                                EntryDateStr = d.EntryDate != null ?
+                                    string.Format("{0:dd.MM.yyyy HH:mm}", d.EntryDate) : "",
+                                WorkOrderNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.WorkOrderNo : "",
+                                MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                                MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                                ProductId = d.ProductId,
+                                MachineId = d.MachineId,
+                                ProductCode = d.Item != null ? d.Item.ItemNo : "",
+                                ProductName = d.Item != null ? d.Item.ItemName : "",
+                                Quantity = d.Quantity,
+                            }).ToArray()
+                    };
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return model;
+        }
         public BusinessResult AddProductEntry(int workOrderDetailId, int userId, WorkOrderSerialType serialType, 
             int inPackageQuantity, string barcode)
         {
@@ -2229,6 +2363,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ProductWastage>();
                 var repoWorkOrder = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoShift = _unitOfWork.GetRepository<Shift>();
 
                 if (model.WorkOrderDetailId == null && (model.MachineId == null || model.ProductId == null))
                     throw new Exception("Ürün ve makine bilgisi seçilmelidir.");
@@ -2247,6 +2382,36 @@ namespace HekaMOLD.Business.UseCases
                         WastageStatus = 0,
                     };
                     repo.Add(dbObj);
+
+                    // RESOLVE CURRENT SHIFT
+                    DateTime entryTime = DateTime.Now;
+                    Shift dbShift = null;
+                    var shiftList = repoShift.Filter(d => d.StartTime != null && d.EndTime != null).ToArray();
+                    foreach (var shift in shiftList)
+                    {
+                        DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
+                        DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
+
+                        if (shift.StartTime > shift.EndTime)
+                        {
+                            if (DateTime.Now.Hour >= shift.StartTime.Value.Hours)
+                                endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
+                            else
+                                startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
+                        }
+
+                        if (entryTime >= startTime && entryTime <= endTime)
+                        {
+                            dbShift = shift;
+                            break;
+                        }
+                    }
+
+                    if (dbShift != null)
+                    {
+                        model.ShiftId = dbShift.Id;
+                        dbObj.ShiftId = dbShift.Id;
+                    }
                 }
 
                 var crDate = dbObj.CreatedDate;
@@ -2538,6 +2703,7 @@ namespace HekaMOLD.Business.UseCases
                             dbObj.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
                         InPackageQuantity = string.Format("{0:N2}", dbObj.FirstQuantity ?? 0),
                         Weight = "",
+                        ShiftName = dbObj.Shift != null ? dbObj.Shift.ShiftCode : "",
                         CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", dbObj.CreatedDate),
                         BarcodeImage = imgBytes
                     }

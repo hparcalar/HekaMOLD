@@ -1,0 +1,31 @@
+﻿<div ng-controller="prodHistoryListCtrl" class="bg-light">
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="w-20 px-2 text-center"><b>Ürün</b></th>
+                <th class="w-20 px-2 text-center"><b>Miktar</b></th>
+                <th class="w-20 px-2 text-center"><b>Üretilen</b></th>
+                <th class="w-20 px-2 text-center"><b>Fire</b></th>
+                <th class="w-20 px-2 text-center"><b>Seç</b></th>
+            </tr>
+        </thead>
+    </table>
+    <div class="table-scroller-md">
+        <table ng-cloak class="table table-bordered table-striped">
+            <tbody>
+                <tr ng-repeat="item in prodList">
+                    <td class="w-20 px-2 text-center">{{item.ProductName}}</td>
+                    <td class="w-20 px-2 text-center">{{item.Quantity}}</td>
+                    <td class="w-20 px-2 text-center">{{item.CompleteQuantity}}</td>
+                    <td class="w-20 px-2 text-center">{{item.WastageQuantity}}</td>
+                    <td class="w-20 px-2 text-center">
+                        <button class="btn btn-primary btn-sm" style="float:right;" ng-click="selectHistory(item.Id)">
+                            Seç
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

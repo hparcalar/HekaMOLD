@@ -3942,6 +3942,7 @@
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
     <Content Include="Components\Controllers\attachment-list.js" />
     <Content Include="Components\Controllers\print-options.js" />
+    <Content Include="Components\Controllers\production-history-list.js" />
     <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
@@ -3959,6 +3960,7 @@
     <Content Include="Components\Views\RelatedOrderList.html" />
     <Content Include="Components\Views\RelatedRequestList.html" />
     <Content Include="Components\Views\ApprovedItemRequestDetails.html" />
+    <Content Include="Components\Views\ProductionHistoryList.html" />
     <Content Include="Components\Views\ReportTemplateList.html" />
     <Content Include="Components\VisualMechanics\camera-manager.js" />
     <Content Include="Content\bootstrap-theme.css" />

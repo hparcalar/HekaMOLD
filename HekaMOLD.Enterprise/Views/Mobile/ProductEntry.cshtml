@@ -28,9 +28,15 @@
                             </div>
                         </div>
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ürün</label>
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">
+                                Ürün
+                                <button type="button" ng-click="showProductionHistory()" class="btn btn-sm btn-warning mx-3">
+                                    {{ historyWorkOrderDetailId > 0 ? 'Aktif Üretime Dön' : 'Biten Üretimlerden Seç' }}
+                                </button>
+                            </label>
                             <!--begin::Input group-->
                             <input type="text" class="form-control form-control-solid"
+                                   ng-class="{'bg-light-danger': historyWorkOrderDetailId > 0}"
                                    ng-model="activeWorkOrder.WorkOrder.ProductName" readonly="readonly" placeholder="" />
                         </div>
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
@@ -81,11 +87,10 @@
                     </a>
                 </div>
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    <div style="text-align:center; border:1px solid #ffd800; border-radius:3px;" class="bg-light-warning py-2" 
+                    <div style="text-align:center; border:1px solid #ffd800; border-radius:3px;" class="bg-light-warning py-2"
                          ng-click="modelObject.PrintLabel = !modelObject.PrintLabel">
                         <input type="checkbox" style="margin-top:7px !important;" ng-model="modelObject.PrintLabel" />
-                        <span 
-                              style="cursor:default !important;">Etiket Yazdır</span>
+                        <span style="cursor:default !important;">Etiket Yazdır</span>
                     </div>
                     <a ng-hide="modelObject.Id > 0"
                        class="btn btn-sm btn-block w-100 h-50 mt-2 btn-success" style="padding-top:20px;" ng-click="readBarcode()">
@@ -147,6 +152,10 @@
         <div id="dial-machinelist" title="Makine Seç" style="display:none;">
             <ng-include src="'../Components/Views/MachineSelection.html'"></ng-include>
         </div>
+
+        <div id="dial-prodlist" title="Biten Üretimlerden Seç" style="display:none;">
+            <ng-include src="'../Components/Views/ProductionHistoryList.html'"></ng-include>
+        </div>
     </div>
     <!--end::Post-->
 </div>
@@ -157,5 +166,6 @@
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/Scripts/html5-qrcode.min.js"></script>
     <script src="~/FrontEndLogic/Mobile/product-entry.js"></script>
+    <script src="~/Components/Controllers/production-history-list.js"></script>
     <script src="~/Components/Controllers/machine-selection.js"></script>
 }

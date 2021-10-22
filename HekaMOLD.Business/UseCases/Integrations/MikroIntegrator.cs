@@ -582,6 +582,10 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
                                 if (itemId != null)
                                 {
+                                    var dbNewOrder = orderBO.GetItemOrder(lastOrderId);
+                                    if (dbNewOrder.Details.Any(m => m.ItemId == itemId))
+                                        continue;
+
                                     var newOrderDetail = new ItemOrderDetailModel
                                     {
                                         ItemId = itemId,

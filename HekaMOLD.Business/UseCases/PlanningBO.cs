@@ -382,7 +382,10 @@ namespace HekaMOLD.Business.UseCases
                             d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
                         WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
                         WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
-                        CompleteQuantity = d.WorkOrderDetail.WorkOrderSerial.Count()
+                        WastageQuantity = d.WorkOrderDetail.ProductWastage.Sum(m => m.Quantity) ?? 0,
+                        CompleteQuantity = Convert.ToInt32(d.WorkOrderDetail.WorkOrderSerial
+                            .Where(m => m.SerialNo != null && m.SerialNo.Length > 0)
+                            .Sum(m => m.FirstQuantity) ?? 0)
                     }
                 }).OrderBy(d => d.OrderNo).ToArray();
             }
@@ -534,6 +537,7 @@ namespace HekaMOLD.Business.UseCases
                     data.CompleteQuantity = dbObj.WorkOrderSerial.Count();
                     data.MoldCode = dbObj.Mold != null ? dbObj.Mold.MoldCode : "";
                     data.MoldName = dbObj.Mold != null ? dbObj.Mold.MoldName : "";
+                    data.WastageQuantity = dbObj.ProductWastage.Sum(d => d.Quantity) ?? 0;
                     data.OrderDeadline = dbObj.ItemOrderDetail != null &&
                             dbObj.ItemOrderDetail.ItemOrder.DateOfNeed != null ?
                                 string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrderDetail.ItemOrder.DateOfNeed) : "";
@@ -555,6 +559,8 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
                 var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
+                var repoShift = _unitOfWork.GetRepository<Shift>();
 
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
@@ -594,6 +600,79 @@ namespace HekaMOLD.Business.UseCases
                     {
                         if (oldSerials.Length > i)
                             repoSerial.Delete(oldSerials[i]);
+                    }
+                }
+
+                // UPDATE WASTAGE DATA
+                decimal exWst = dbObj.ProductWastage.Sum(d => d.Quantity) ?? 0;
+                if (exWst < model.WastageQuantity)
+                {
+                    // RESOLVE CURRENT SHIFT
+                    DateTime entryTime = DateTime.Now;
+                    Shift dbShift = null;
+                    var shiftList = repoShift.Filter(d => d.StartTime != null && d.EndTime != null).ToArray();
+                    foreach (var shift in shiftList)
+                    {
+                        DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
+                        DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
+
+                        if (shift.StartTime > shift.EndTime)
+                        {
+                            if (DateTime.Now.Hour >= shift.StartTime.Value.Hours)
+                                endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
+                            else
+                                startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
+                        }
+
+                        if (entryTime >= startTime && entryTime <= endTime)
+                        {
+                            dbShift = shift;
+                            break;
+                        }
+                    }
+
+                    // ADD NEW WASTAGE
+                    decimal diffQty = (model.WastageQuantity ?? 0) - exWst;
+
+                    ProductWastage newWst = new ProductWastage
+                    {
+                        WorkOrderDetail = dbObj,
+                        ProductId = dbObj.ItemId,
+                        CreatedDate = DateTime.Now,
+                        MachineId = dbObj.MachineId,
+                        EntryDate = DateTime.Now,
+                        Quantity = diffQty,
+                        Shift = dbShift,
+                        WastageStatus = 0,
+                    };
+                    repoWastage.Add(newWst);
+                }
+                else if (exWst > 0 && model.WastageQuantity > -1 && exWst > model.WastageQuantity)
+                {
+                    var oldWastages = dbObj.ProductWastage.OrderByDescending(d => d.Id).ToArray();
+
+                    decimal diffQty = exWst - (model.WastageQuantity ?? 0);
+
+                    foreach (var oldWst in oldWastages)
+                    {
+                        if (diffQty <= 0)
+                            break;
+
+                        if (oldWst.Quantity > diffQty)
+                        {
+                            oldWst.Quantity -= diffQty;
+                            diffQty = 0;
+                        }
+                        else if (oldWst.Quantity == diffQty)
+                        {
+                            repoWastage.Delete(oldWst);
+                            diffQty = 0;
+                        }
+                        else if (oldWst.Quantity < diffQty)
+                        {
+                            diffQty -= oldWst.Quantity ?? 0;
+                            repoWastage.Delete(oldWst);
+                        }
                     }
                 }
 
@@ -653,13 +732,34 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
                 var repoUserHistory = _unitOfWork.GetRepository<UserWorkOrderHistory>();
+                var repoPosture = _unitOfWork.GetRepository<ProductionPosture>();
 
                 var dbObj = repo.Get(d => d.Id == workOrderDetailId);
                 if (dbObj == null)
                     throw new Exception("Durumu değiştirilmek istenen iş emri kaydına ulaşılamadı.");
 
                 if (dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Planned || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Created)
+                {
+                    if (repo.Any(d => d.MachineId == dbObj.MachineId
+                        && d.Id != dbObj.Id
+                        && d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress))
+                        throw new Exception("Bu makinede zaten bir aktif üretim mevcuttur. Önce aktif işi bitirip sonra yenisine başlayabilirsiniz.");
+
+                    // CHECK IF THERE IS AN ONGOING POSTURE THEN STOP IT
+                    if (repoPosture.Any(d => d.MachineId == dbObj.MachineId && d.PostureStatus != (int)PostureStatusType.Resolved))
+                    {
+                        var dbOngoingPostureList = repoPosture.Filter(d => d.MachineId == dbObj.MachineId
+                            && d.PostureStatus != (int)PostureStatusType.Resolved).ToArray();
+                        foreach (var dbOngoingPosture in dbOngoingPostureList)
+                        {
+                            dbOngoingPosture.PostureStatus = (int)PostureStatusType.Resolved;
+                            dbOngoingPosture.EndDate = DateTime.Now;
+                            dbOngoingPosture.UpdatedUserId = userId;
+                        }
+                    }
+
                     dbObj.WorkOrderStatus = (int)WorkOrderStatusType.InProgress;
+                }
                 else
                 {
                     if ((dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0) < dbObj.Quantity)

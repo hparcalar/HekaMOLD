@@ -14,8 +14,10 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
     $scope.copiedPlan = { Id: 0 };
     $scope.selectedSource = { Id:0 }; // Plan queue of a selected machine for highlighting
 
-    $scope.getMachinePlans = function (machine) {
-        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id);
+    $scope.getMachinePlans = function (machine, isActive = true) {
+        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id
+            && ((isActive == true && d.WorkOrder.WorkOrderStatus != 6 && d.WorkOrder.WorkOrderStatus != 4)
+                || (isActive == false && (d.WorkOrder.WorkOrderStatus == 6 || d.WorkOrder.WorkOrderStatus == 4))));
     }
 
     $scope.toggleWaitingPlans = function () {
@@ -31,7 +33,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
         $scope.selectedSource = $scope.machineList.find(d => d.Id == machineId);
     }
 
-    // VISUAL TRIGGERS
+    // VISUAL TRIGGERS & METHODS
     $scope.showPlanDetails = function (plan, uiElement) {
         $scope.$broadcast('loadEditPlan', { id: plan.WorkOrderDetailId });
 
@@ -44,6 +46,9 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
             draggable: false,
             closeText: "KAPAT"
         });
+    }
+    $scope.showProperProductName = function (workOrder) {
+        return workOrder.ProductName.replace(workOrder.FirmName.split(' ')[0], '');
     }
 
     // DATA GET METHODS

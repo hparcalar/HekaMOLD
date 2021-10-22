@@ -53,6 +53,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string SaleOrderDeadline { get; set; }
         public int CompleteQuantity { get; set; }
         public int CompleteQuantitySingleProduct { get; set; }
+        public decimal? WastageQuantity { get; set; }
         public string ProductDescription { get; set; }
         public string UnitCode { get; set; }
         public string UnitName { get; set; }

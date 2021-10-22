@@ -7,6 +7,8 @@
         PrintLabel: false,
     };
 
+    $scope.historyWorkOrderDetailId = 0;
+
     $scope.bindModel = function (id) {
         $scope.modelObject = {
             Id: 0,
@@ -58,14 +60,24 @@
 
     $scope.loadActiveWorkOrder = function () {
         try {
-            $http.get(HOST_URL + 'Common/GetActiveWorkOrderOnMachine?machineId=' + $scope.selectedMachine.Id, {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        $scope.activeWorkOrder = resp.data;
-                        if ($scope.lastPackageQty > 0)
-                            $scope.activeWorkOrder.WorkOrder.InPackageQuantity = $scope.lastPackageQty;
-                    }
-                }).catch(function (err) { });
+            if ($scope.historyWorkOrderDetailId > 0) {
+                $http.get(HOST_URL + 'Common/GetHistoryWorkOrderOnMachine?workOrderDetailId=' + $scope.historyWorkOrderDetailId, {}, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                            $scope.activeWorkOrder = resp.data;
+                        }
+                    }).catch(function (err) { });
+            }
+            else {
+                $http.get(HOST_URL + 'Common/GetActiveWorkOrderOnMachine?machineId=' + $scope.selectedMachine.Id, {}, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                            $scope.activeWorkOrder = resp.data;
+                            if ($scope.lastPackageQty > 0)
+                                $scope.activeWorkOrder.WorkOrder.InPackageQuantity = $scope.lastPackageQty;
+                        }
+                    }).catch(function (err) { });
+            }
         } catch (e) {
 
         }
@@ -81,6 +93,29 @@
                 }).catch(function (err) { });
         } catch (e) {
 
+        }
+    }
+
+    // PRODUCTION HISTORY
+    $scope.showProductionHistory = function () {
+        if ($scope.historyWorkOrderDetailId > 0) {
+            $scope.historyWorkOrderDetailId = 0;
+            $scope.loadActiveWorkOrder();
+        }
+        else {
+            // DO BROADCAST
+            $scope.$broadcast('loadProdHistory', $scope.selectedMachine.Id);
+
+            $('#dial-prodlist').dialog({
+                width: window.innerWidth * 0.95,
+                height: window.innerHeight * 0.95,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
         }
     }
 
@@ -166,6 +201,13 @@
         $scope.loadActiveWorkOrder();
 
         $('#dial-machinelist').dialog('close');
+    });
+
+    $scope.$on('prodSelected', function (e, d) {
+        $scope.historyWorkOrderDetailId = d;
+        $scope.loadActiveWorkOrder();
+
+        $('#dial-prodlist').dialog('close');
     });
 
     $scope.approveProductEntry = function () {

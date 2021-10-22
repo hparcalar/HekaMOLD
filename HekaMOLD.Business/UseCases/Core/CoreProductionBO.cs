@@ -1,5 +1,7 @@
 ﻿using Heka.DataAccess.Context;
 using HekaMOLD.Business.Base;
+using HekaMOLD.Business.Helpers;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.UseCases.Core.Base;
 using System;
 using System.Collections.Generic;
@@ -78,6 +80,49 @@ namespace HekaMOLD.Business.UseCases.Core
             }
 
             return default;
+        }
+
+        public ShiftModel GetCurrentShift()
+        {
+            ShiftModel data = null;
+
+            try
+            {
+                var repoShift = _unitOfWork.GetRepository<Shift>();
+
+                // RESOLVE CURRENT SHIFT
+                DateTime entryTime = DateTime.Now;
+                Shift dbShift = null;
+                var shiftList = repoShift.Filter(d => d.StartTime != null && d.EndTime != null).ToArray();
+                foreach (var shift in shiftList)
+                {
+                    DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
+                    DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
+
+                    if (shift.StartTime > shift.EndTime)
+                    {
+                        if (DateTime.Now.Hour >= shift.StartTime.Value.Hours)
+                            endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
+                        else
+                            startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
+                    }
+
+                    if (entryTime >= startTime && entryTime <= endTime)
+                    {
+                        dbShift = shift;
+                        break;
+                    }
+                }
+
+                if (dbShift != null)
+                    dbShift.MapTo(data);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
         }
     }
 }

@@ -51,8 +51,9 @@
                                      ng-click="selectSource(machine.Id)"
                                      data-id="{{machine.Id}}"
                                      ng-repeat="machine in selectedMachineList">
-                                    <h5>{{machine.MachineName}}</h5>
-                                    <div class="d-flex flex-column">
+                                    <h5>{{machine.MachineCode}}</h5>
+                                    <div class="d-flex flex-column overflow-auto" style="max-height:400px;">
+                                        @* GET ACTIVE PLANS OF MACHINE *@
                                         <div class="plan-box" draggable="true"
                                              data-plan-id="{{plan.Id}}"
                                              ng-click="selectPlan(plan)"
@@ -60,7 +61,34 @@
                                                 'plan-box-completed': plan.WorkOrder.WorkOrderStatus == 4,
                                                 'plan-box-progress': plan.WorkOrder.WorkOrderStatus == 3,
                                                 'plan-selected': plan.Id == selectedPlan.Id}"
-                                             ng-repeat="plan in getMachinePlans(machine)">
+                                             ng-repeat="plan in getMachinePlans(machine, true)">
+                                            <button class="btn btn-primary btn-sm btn-plan-details px-1 py-1"
+                                                    ng-click="showPlanDetails(plan, $event.currentTarget)">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+
+                                            <p>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
+                                            <p><span class="plan-firm-name">{{plan.WorkOrder.FirmName}}</span>&nbsp;</p>
+                                            <p><b>{{showProperProductName(plan.WorkOrder)}}</b>&nbsp;</p>
+                                            <p>
+                                                {{plan.WorkOrder.CompleteQuantity}} /
+                                                {{plan.WorkOrder.Quantity}}
+                                            </p>
+                                            <p 
+                                               ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,
+                                               'label-wastage-count': plan.WorkOrder.WastageQuantity == 0}">
+                                                Fire: {{ plan.WorkOrder.WastageQuantity }}</p>
+                                        </div>
+
+                                        @* GET COMPLETED PLANS OF MACHINE *@
+                                        <div class="plan-box" draggable="true"
+                                             data-plan-id="{{plan.Id}}"
+                                             ng-click="selectPlan(plan)"
+                                             ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6,
+                                                    'plan-box-completed': plan.WorkOrder.WorkOrderStatus == 4,
+                                                    'plan-box-progress': plan.WorkOrder.WorkOrderStatus == 3,
+                                                    'plan-selected': plan.Id == selectedPlan.Id}"
+                                             ng-repeat="plan in getMachinePlans(machine, false)">
                                             <button class="btn btn-primary btn-sm btn-plan-details px-1 py-1"
                                                     ng-click="showPlanDetails(plan, $event.currentTarget)">
                                                 <i class="fas fa-edit"></i>
@@ -68,10 +96,14 @@
 
                                             <p>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
                                             <p>{{plan.WorkOrder.FirmName}}&nbsp;</p>
-                                            <p><b>{{plan.WorkOrder.ProductName}}</b>&nbsp;</p>
+                                            <p><b>{{showProperProductName(plan.WorkOrder)}}</b>&nbsp;</p>
                                             <p>
                                                 {{plan.WorkOrder.CompleteQuantity}} /
                                                 {{plan.WorkOrder.Quantity}}
+                                            </p>
+                                            <p ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,
+                                               'label-wastage-count': plan.WorkOrder.WastageQuantity == 0}">
+                                                Fire: {{ plan.WorkOrder.WastageQuantity }}
                                             </p>
                                         </div>
                                     </div>

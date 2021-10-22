@@ -72,6 +72,7 @@
                                 <th class="w-10 px-2"><b>Tarih</b></th>
                                 <th class="w-40 px-2"><b>Nedeni</b></th>
                                 <th class="w-10 px-2"><b>Durumu</b></th>
+                                <th class="w-10 px-2"><b>#</b></th>
                             </tr>
                         </thead>
                     </table>
@@ -82,6 +83,12 @@
                                     <td class="w-10 px-2">{{item.StartDateStr}}</td>
                                     <td class="w-40 px-2">{{item.PostureCategoryName}}</td>
                                     <td class="w-10 px-2">{{item.PostureStatusStr}}</td>
+                                    <td class="w-10 px-2">
+                                        <button type="button" ng-show="item.PostureStatus != 2" 
+                                                ng-click="stopPosture(item)" class="btn btn-sm btn-primary">
+                                            <i class="glyphicon glyphicon-ok-sign"></i>Bitir
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

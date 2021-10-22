@@ -110,11 +110,14 @@ namespace HekaPrintingService
                                             var dbWorkOrder = prodBo.GetWorkOrderDetail(dataModel.WorkOrderDetailId ?? 0);
                                             if (dbWorkOrder != null && dbWorkOrder.Id > 0)
                                             {
+                                                var currentShift = prodBo.GetCurrentShift();
+
                                                 prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
                                                 {
                                                     BarcodeContent = dataModel.Code,
                                                     CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now),
                                                     FirmName = dbWorkOrder.FirmName,
+                                                    ShiftName = currentShift != null ? currentShift.ShiftCode : "",
                                                     InPackageQuantity = string.Format("{0:N2}", dbWorkOrder.InPackageQuantity ?? 0),
                                                     ProductCode = dbWorkOrder.ProductCode,
                                                     ProductName = dbWorkOrder.ProductName,
