@@ -23,7 +23,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> MinimumBehaviour { get; set; }
         public Nullable<int> MaximumBehaviour { get; set; }
     
-        public virtual Warehouse Warehouse { get; set; }
         public virtual Item Item { get; set; }
+        public virtual Warehouse Warehouse { get; set; }
     }
 }

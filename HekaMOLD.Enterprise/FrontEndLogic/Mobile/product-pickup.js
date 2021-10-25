@@ -31,6 +31,11 @@
     $scope.warehouseList = [];
 
     $scope.selectProduct = function (item) {
+        if (item.QualityStatus != 1) {
+            toastr.error('Kalite onayı almamış ürün depoya girilemez.');
+            return;
+        }
+
         if ($scope.selectedProducts.some(d => d.Id == item.Id))
             $scope.selectedProducts.splice($scope.selectedProducts.indexOf(item), 1);
         else

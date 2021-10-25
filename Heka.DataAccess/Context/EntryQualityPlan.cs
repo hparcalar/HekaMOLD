@@ -34,10 +34,10 @@ namespace Heka.DataAccess.Context
         public string Responsible { get; set; }
         public string RecordType { get; set; }
     
-        public virtual ItemCategory ItemCategory { get; set; }
-        public virtual ItemGroup ItemGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
+        public virtual ItemCategory ItemCategory { get; set; }
+        public virtual ItemGroup ItemGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EntryQualityPlanDetail> EntryQualityPlanDetail { get; set; }
     }

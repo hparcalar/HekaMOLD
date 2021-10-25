@@ -108,7 +108,7 @@
 
     $scope.getQualityValue = function (planId, hourNo, checkType) {
         try {
-            var qData = $scope.modelObject.Details.find(d => d.ProductQualityPlanId == planId &&
+            var qData = $scope.modelObject.Details.find(d => d.ProductQualityPlanId == planId && 
                 d.OrderNo == hourNo);
 
             if (typeof qData != 'undefined' && qData != null) {

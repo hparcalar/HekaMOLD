@@ -19,7 +19,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> WorkOrderDetailId { get; set; }
         public Nullable<int> OrderNo { get; set; }
     
-        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
         public virtual Machine Machine { get; set; }
+        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
     }
 }

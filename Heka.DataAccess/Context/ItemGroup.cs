@@ -17,8 +17,8 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ItemGroup()
         {
-            this.Item = new HashSet<Item>();
             this.EntryQualityPlan = new HashSet<EntryQualityPlan>();
+            this.Item = new HashSet<Item>();
         }
     
         public int Id { get; set; }
@@ -31,11 +31,11 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
     
-        public virtual ItemCategory ItemCategory { get; set; }
-        public virtual Plant Plant { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Item> Item { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EntryQualityPlan> EntryQualityPlan { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Item> Item { get; set; }
+        public virtual ItemCategory ItemCategory { get; set; }
+        public virtual Plant Plant { get; set; }
     }
 }

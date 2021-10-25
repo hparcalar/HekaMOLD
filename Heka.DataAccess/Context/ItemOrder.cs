@@ -18,8 +18,8 @@ namespace Heka.DataAccess.Context
         public ItemOrder()
         {
             this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
-            this.ItemReceipt = new HashSet<ItemReceipt>();
             this.ItemOrderItemNeeds = new HashSet<ItemOrderItemNeeds>();
+            this.ItemReceipt = new HashSet<ItemReceipt>();
         }
     
         public int Id { get; set; }
@@ -35,6 +35,9 @@ namespace Heka.DataAccess.Context
         public string Explanation { get; set; }
         public Nullable<int> OrderStatus { get; set; }
         public Nullable<int> ItemRequestId { get; set; }
+        public Nullable<decimal> SubTotal { get; set; }
+        public Nullable<decimal> TaxPrice { get; set; }
+        public Nullable<decimal> OverallTotal { get; set; }
         public Nullable<int> SyncStatus { get; set; }
         public Nullable<int> SyncPointId { get; set; }
         public Nullable<System.DateTime> SyncDate { get; set; }
@@ -43,9 +46,6 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-        public Nullable<decimal> SubTotal { get; set; }
-        public Nullable<decimal> TaxPrice { get; set; }
-        public Nullable<decimal> OverallTotal { get; set; }
         public string SyncKey { get; set; }
     
         public virtual Firm Firm { get; set; }
@@ -57,8 +57,8 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemOrderDetail> ItemOrderDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemOrderItemNeeds> ItemOrderItemNeeds { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
     }
 }

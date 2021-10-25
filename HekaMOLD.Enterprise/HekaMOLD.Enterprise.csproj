@@ -4113,6 +4113,7 @@
     <Content Include="FrontEndLogic\ProductQuality\list-data.js" />
     <Content Include="FrontEndLogic\ProductQuality\list.js" />
     <Content Include="FrontEndLogic\ProductQuality\print-product-plans.js" />
+    <Content Include="FrontEndLogic\ProductQuality\serial-approval.js" />
     <Content Include="FrontEndLogic\ProductRecipe\index.js" />
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\ReportTemplate\index.js" />
@@ -4547,6 +4548,7 @@
     <Content Include="Views\ReportTemplate\List.cshtml" />
     <Content Include="Views\ReportTemplate\Index.cshtml" />
     <Content Include="Views\Mobile\MachineEquipments.cshtml" />
+    <Content Include="Views\ProductQuality\SerialApproval.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

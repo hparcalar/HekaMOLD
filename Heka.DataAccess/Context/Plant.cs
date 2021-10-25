@@ -17,10 +17,15 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Plant()
         {
+            this.Equipment = new HashSet<Equipment>();
+            this.EquipmentCategory = new HashSet<EquipmentCategory>();
             this.Firm = new HashSet<Firm>();
+            this.Invoice = new HashSet<Invoice>();
+            this.Item = new HashSet<Item>();
             this.ItemCategory = new HashSet<ItemCategory>();
             this.ItemGroup = new HashSet<ItemGroup>();
             this.ItemOrder = new HashSet<ItemOrder>();
+            this.ItemReceipt = new HashSet<ItemReceipt>();
             this.ItemRequest = new HashSet<ItemRequest>();
             this.SyncPoint = new HashSet<SyncPoint>();
             this.UnitType = new HashSet<UnitType>();
@@ -28,11 +33,6 @@ namespace Heka.DataAccess.Context
             this.UserRole = new HashSet<UserRole>();
             this.Warehouse = new HashSet<Warehouse>();
             this.WorkOrder = new HashSet<WorkOrder>();
-            this.Item = new HashSet<Item>();
-            this.Invoice = new HashSet<Invoice>();
-            this.ItemReceipt = new HashSet<ItemReceipt>();
-            this.Equipment = new HashSet<Equipment>();
-            this.EquipmentCategory = new HashSet<EquipmentCategory>();
         }
     
         public int Id { get; set; }
@@ -40,13 +40,23 @@ namespace Heka.DataAccess.Context
         public string PlantName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Equipment> Equipment { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EquipmentCategory> EquipmentCategory { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Firm> Firm { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Invoice> Invoice { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Item> Item { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemCategory> ItemCategory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemGroup> ItemGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemOrder> ItemOrder { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemRequest> ItemRequest { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -61,15 +71,5 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<Warehouse> Warehouse { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrder> WorkOrder { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Item> Item { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Invoice> Invoice { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Equipment> Equipment { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EquipmentCategory> EquipmentCategory { get; set; }
     }
 }

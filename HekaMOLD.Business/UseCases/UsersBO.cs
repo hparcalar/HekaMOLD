@@ -39,6 +39,16 @@ namespace HekaMOLD.Business.UseCases
                 result.UserData.IsWarehouseTerminal = dbUser.UserRole.UserAuth
                     .Any(d => d.UserAuthType.AuthTypeCode == "MobileWarehouseUser"
                     && d.IsGranted == true);
+                result.UserData.Auths = dbUser.UserRole.UserAuth
+                    .Select(d => new UserAuthModel
+                    {
+                        Id = d.Id,
+                        AuthTypeId = d.AuthTypeId,
+                        IsGranted = d.IsGranted,
+                        UserId = d.UserId,
+                        UserRoleId = d.UserRoleId,
+                        AuthTypeCode = d.UserAuthType != null ? d.UserAuthType.AuthTypeCode : "",
+                    }).ToArray();
 
                 result.Result = true;
             }

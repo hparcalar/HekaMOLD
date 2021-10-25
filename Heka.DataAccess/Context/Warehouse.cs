@@ -17,13 +17,13 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Warehouse()
         {
+            this.ItemLiveStatus = new HashSet<ItemLiveStatus>();
             this.ItemOrder = new HashSet<ItemOrder>();
             this.ItemOrder1 = new HashSet<ItemOrder>();
-            this.ItemWarehouse = new HashSet<ItemWarehouse>();
-            this.ItemLiveStatus = new HashSet<ItemLiveStatus>();
-            this.ProductRecipeDetail = new HashSet<ProductRecipeDetail>();
             this.ItemReceipt = new HashSet<ItemReceipt>();
             this.ItemReceipt1 = new HashSet<ItemReceipt>();
+            this.ItemWarehouse = new HashSet<ItemWarehouse>();
+            this.ProductRecipeDetail = new HashSet<ProductRecipeDetail>();
         }
     
         public int Id { get; set; }
@@ -37,19 +37,19 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UpdatedUserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemLiveStatus> ItemLiveStatus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemOrder> ItemOrder { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemOrder> ItemOrder1 { get; set; }
-        public virtual Plant Plant { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemWarehouse> ItemWarehouse { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemLiveStatus> ItemLiveStatus { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductRecipeDetail> ProductRecipeDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemReceipt> ItemReceipt1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemWarehouse> ItemWarehouse { get; set; }
+        public virtual Plant Plant { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductRecipeDetail> ProductRecipeDetail { get; set; }
     }
 }

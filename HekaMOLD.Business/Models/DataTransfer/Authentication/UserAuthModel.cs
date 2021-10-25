@@ -13,5 +13,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Authentication
         public int? UserRoleId { get; set; }
         public int? UserId { get; set; }
         public bool? IsGranted { get; set; }
+
+        #region VISUAL ELEMENTS
+        public string AuthTypeCode { get; set; }
+        #endregion
     }
 }

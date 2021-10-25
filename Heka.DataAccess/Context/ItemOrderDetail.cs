@@ -17,9 +17,9 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ItemOrderDetail()
         {
+            this.ItemOrderItemNeeds = new HashSet<ItemOrderItemNeeds>();
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
-            this.ItemOrderItemNeeds = new HashSet<ItemOrderItemNeeds>();
         }
     
         public int Id { get; set; }
@@ -34,6 +34,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> ForexId { get; set; }
         public Nullable<decimal> ForexRate { get; set; }
         public Nullable<decimal> ForexUnitPrice { get; set; }
+        public Nullable<bool> TaxIncluded { get; set; }
         public Nullable<int> TaxRate { get; set; }
         public Nullable<decimal> TaxAmount { get; set; }
         public Nullable<decimal> DiscountRate { get; set; }
@@ -41,6 +42,7 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> SubTotal { get; set; }
         public Nullable<decimal> OverallTotal { get; set; }
         public string Explanation { get; set; }
+        public Nullable<int> OrderStatus { get; set; }
         public Nullable<int> SyncStatus { get; set; }
         public Nullable<System.DateTime> SyncDate { get; set; }
         public Nullable<int> ItemRequestDetailId { get; set; }
@@ -48,19 +50,17 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-        public Nullable<bool> TaxIncluded { get; set; }
-        public Nullable<int> OrderStatus { get; set; }
     
         public virtual ForexType ForexType { get; set; }
+        public virtual Item Item { get; set; }
         public virtual ItemOrder ItemOrder { get; set; }
         public virtual ItemRequestDetail ItemRequestDetail { get; set; }
         public virtual UnitType UnitType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemOrderItemNeeds> ItemOrderItemNeeds { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemReceiptDetail> ItemReceiptDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
-        public virtual Item Item { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemOrderItemNeeds> ItemOrderItemNeeds { get; set; }
     }
 }

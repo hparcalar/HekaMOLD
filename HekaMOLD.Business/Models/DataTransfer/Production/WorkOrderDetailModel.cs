@@ -24,6 +24,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? InPalletPackageQuantity { get; set; }
         public int? InPackageQuantity { get; set; }
         public int? SaleOrderDetailId { get; set; }
+        public int? QualityStatus { get; set; }
         public int? MoldTestCycle { get; set; }
         public DateTime? DeliveryPlanDate { get; set; }
         public string DeliveryPlanDateStr { get; set; }
@@ -38,6 +39,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string WorkOrderNo { get; set; }
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
+        public string QualityStatusText { get; set; }
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
         public string DyeCode { get; set; }

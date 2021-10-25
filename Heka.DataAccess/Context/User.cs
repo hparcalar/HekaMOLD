@@ -17,12 +17,12 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
+            this.Equipment = new HashSet<Equipment>();
+            this.ItemRequest = new HashSet<ItemRequest>();
             this.ItemRequestApproveLog = new HashSet<ItemRequestApproveLog>();
-            this.UserAuth = new HashSet<UserAuth>();
             this.Notification = new HashSet<Notification>();
             this.TransactionLog = new HashSet<TransactionLog>();
-            this.ItemRequest = new HashSet<ItemRequest>();
-            this.Equipment = new HashSet<Equipment>();
+            this.UserAuth = new HashSet<UserAuth>();
         }
     
         public int Id { get; set; }
@@ -38,18 +38,18 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UpdatedUserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemRequestApproveLog> ItemRequestApproveLog { get; set; }
-        public virtual Plant Plant { get; set; }
-        public virtual UserRole UserRole { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserAuth> UserAuth { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Notification> Notification { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TransactionLog> TransactionLog { get; set; }
+        public virtual ICollection<Equipment> Equipment { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemRequest> ItemRequest { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Equipment> Equipment { get; set; }
+        public virtual ICollection<ItemRequestApproveLog> ItemRequestApproveLog { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notification> Notification { get; set; }
+        public virtual Plant Plant { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TransactionLog> TransactionLog { get; set; }
+        public virtual UserRole UserRole { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserAuth> UserAuth { get; set; }
     }
 }

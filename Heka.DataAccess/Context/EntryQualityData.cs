@@ -42,11 +42,11 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> SampleQuantity { get; set; }
     
         public virtual EntryQualityPlan EntryQualityPlan { get; set; }
+        public virtual EntryQualityPlanDetail EntryQualityPlanDetail { get; set; }
         public virtual Firm Firm { get; set; }
         public virtual Item Item { get; set; }
         public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EntryQualityDataDetail> EntryQualityDataDetail { get; set; }
-        public virtual EntryQualityPlanDetail EntryQualityPlanDetail { get; set; }
     }
 }

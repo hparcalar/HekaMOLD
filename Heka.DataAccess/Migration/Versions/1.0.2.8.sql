@@ -838,3 +838,38 @@ BEGIN
 	ALTER TABLE ProductWastage ADD ShiftId INT NULL
 	ALTER TABLE ProductWastage ADD CONSTRAINT FK_ProductWastage_Shift FOREIGN KEY(ShiftId) REFERENCES Shift(Id)
 END
+GO
+IF NOT EXISTS(select * from UserAuthType WHERE AuthTypeCode='ModuleQuality')
+BEGIN
+	INSERT INTO UserAuthType(AuthTypeCode, AuthTypeName) VALUES('ModuleQuality', 'Kalite Modülü')
+END
+GO
+IF NOT EXISTS(select * from UserAuthType WHERE AuthTypeCode='ModuleItems')
+BEGIN
+	INSERT INTO UserAuthType(AuthTypeCode, AuthTypeName) VALUES('ModuleItems', 'Stok Modülü')
+END
+GO
+IF NOT EXISTS(select * from UserAuthType WHERE AuthTypeCode='ModuleProduction')
+BEGIN
+	INSERT INTO UserAuthType(AuthTypeCode, AuthTypeName) VALUES('ModuleProduction', 'Üretim Modülü')
+END
+GO
+IF NOT EXISTS(select * from UserAuthType WHERE AuthTypeCode='ModuleDefinitions')
+BEGIN
+	INSERT INTO UserAuthType(AuthTypeCode, AuthTypeName) VALUES('ModuleDefinitions', 'Tanımlar')
+END
+GO
+IF NOT EXISTS(select * from UserAuthType WHERE AuthTypeCode='IsSystemAdmin')
+BEGIN
+	INSERT INTO UserAuthType(AuthTypeCode, AuthTypeName) VALUES('IsSystemAdmin', 'Sistem Yöneticisi')
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='WorkOrderSerial' AND COLUMN_NAME='QualityStatus')
+BEGIN
+	ALTER TABLE WorkOrderSerial ADD QualityStatus INT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='WorkOrderDetail' AND COLUMN_NAME='QualityStatus')
+BEGIN
+	ALTER TABLE WorkOrderDetail ADD QualityStatus INT NULL
+END

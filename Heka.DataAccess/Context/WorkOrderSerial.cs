@@ -30,6 +30,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UpdatedUserId { get; set; }
         public Nullable<int> ShiftId { get; set; }
         public Nullable<int> ItemReceiptDetailId { get; set; }
+        public Nullable<int> QualityStatus { get; set; }
     
         public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
         public virtual Shift Shift { get; set; }

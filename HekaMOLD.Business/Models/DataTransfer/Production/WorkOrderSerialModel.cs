@@ -21,6 +21,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? InPackageQuantity { get; set; }
         public int? ShiftId { get; set; }
         public int? ItemReceiptDetailId { get; set; }
+        public int? QualityStatus { get; set; }
 
         #region VISUAL ELEMENTS
         public int? ItemId { get; set; }
@@ -33,6 +34,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string FirmName { get; set; }
         public string MachineCode { get; set; }
         public string MachineName { get; set; }
+        public string QualityStatusText { get; set; }
         #endregion
     }
 }

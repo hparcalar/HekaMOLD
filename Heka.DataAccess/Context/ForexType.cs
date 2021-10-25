@@ -17,20 +17,20 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ForexType()
         {
-            this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
             this.ForexHistory = new HashSet<ForexHistory>();
+            this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
         }
     
         public int Id { get; set; }
+        public string ForexTypeCode { get; set; }
         public Nullable<decimal> ActiveSalesRate { get; set; }
         public Nullable<decimal> ActiveBuyingRate { get; set; }
-        public string ForexTypeCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemOrderDetail> ItemOrderDetail { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ForexHistory> ForexHistory { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemOrderDetail> ItemOrderDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemReceiptDetail> ItemReceiptDetail { get; set; }
     }

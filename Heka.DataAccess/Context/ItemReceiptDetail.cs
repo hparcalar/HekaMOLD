@@ -17,12 +17,12 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ItemReceiptDetail()
         {
-            this.ItemSerial = new HashSet<ItemSerial>();
-            this.WorkOrderAllocation = new HashSet<WorkOrderAllocation>();
             this.EntryQualityData = new HashSet<EntryQualityData>();
-            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
             this.ItemReceiptConsume = new HashSet<ItemReceiptConsume>();
             this.ItemReceiptConsume1 = new HashSet<ItemReceiptConsume>();
+            this.ItemSerial = new HashSet<ItemSerial>();
+            this.WorkOrderAllocation = new HashSet<WorkOrderAllocation>();
+            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
         }
     
         public int Id { get; set; }
@@ -55,22 +55,22 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
         public virtual ForexType ForexType { get; set; }
+        public virtual Item Item { get; set; }
         public virtual ItemOrderDetail ItemOrderDetail { get; set; }
+        public virtual ItemReceipt ItemReceipt { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemReceiptConsume> ItemReceiptConsume { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemReceiptConsume> ItemReceiptConsume1 { get; set; }
         public virtual UnitType UnitType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemSerial> ItemSerial { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderAllocation> WorkOrderAllocation { get; set; }
-        public virtual Item Item { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
-        public virtual ItemReceipt ItemReceipt { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemReceiptConsume> ItemReceiptConsume { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemReceiptConsume> ItemReceiptConsume1 { get; set; }
     }
 }

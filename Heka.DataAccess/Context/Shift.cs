@@ -17,9 +17,9 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Shift()
         {
-            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
             this.MachineSignal = new HashSet<MachineSignal>();
             this.ProductWastage = new HashSet<ProductWastage>();
+            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
         }
     
         public int Id { get; set; }
@@ -30,10 +30,10 @@ namespace Heka.DataAccess.Context
         public Nullable<bool> IsActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MachineSignal> MachineSignal { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductWastage> ProductWastage { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
     }
 }

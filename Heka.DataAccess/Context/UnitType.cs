@@ -18,11 +18,11 @@ namespace Heka.DataAccess.Context
         public UnitType()
         {
             this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
+            this.ItemReceiptConsume = new HashSet<ItemReceiptConsume>();
+            this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
             this.ItemRequestDetail = new HashSet<ItemRequestDetail>();
             this.ItemUnit = new HashSet<ItemUnit>();
             this.ProductRecipeDetail = new HashSet<ProductRecipeDetail>();
-            this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
-            this.ItemReceiptConsume = new HashSet<ItemReceiptConsume>();
         }
     
         public int Id { get; set; }
@@ -37,15 +37,15 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemOrderDetail> ItemOrderDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemReceiptConsume> ItemReceiptConsume { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemReceiptDetail> ItemReceiptDetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemRequestDetail> ItemRequestDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemUnit> ItemUnit { get; set; }
         public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductRecipeDetail> ProductRecipeDetail { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemReceiptDetail> ItemReceiptDetail { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemReceiptConsume> ItemReceiptConsume { get; set; }
     }
 }

@@ -9,6 +9,8 @@ using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.DataTransfer.Quality;
 using Heka.DataAccess.Context;
 using HekaMOLD.Business.Helpers;
+using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.Constants;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -743,6 +745,91 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return testValue;
+        }
+
+        // SERIAL APPROVALS & DENIALS
+        public BusinessResult ApproveSerials(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                foreach (var item in model)
+                {
+                    var dbSerial = repo.Get(d => d.Id == item.Id);
+                    if (dbSerial != null)
+                    {
+                        dbSerial.QualityStatus = (int)QualityStatusType.Ok;
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DenySerials(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                foreach (var item in model)
+                {
+                    var dbSerial = repo.Get(d => d.Id == item.Id);
+                    if (dbSerial != null)
+                    {
+                        dbSerial.QualityStatus = (int)QualityStatusType.Nok;
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult WaitSerials(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                foreach (var item in model)
+                {
+                    var dbSerial = repo.Get(d => d.Id == item.Id);
+                    if (dbSerial != null)
+                    {
+                        dbSerial.QualityStatus = (int)QualityStatusType.QualityWaiting;
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
         #endregion
     }

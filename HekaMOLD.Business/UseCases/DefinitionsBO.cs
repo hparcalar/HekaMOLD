@@ -231,6 +231,18 @@ namespace HekaMOLD.Business.UseCases
             }).ToArray();
         }
 
+        public ItemModel[] GetItemListJustNames()
+        {
+            var repo = _unitOfWork.GetRepository<Item>();
+
+            return repo.GetAll().Select(d => new ItemModel
+            {
+                Id = d.Id,
+                ItemNo = d.ItemNo,
+                ItemName = d.ItemName,
+            }).ToArray();
+        }
+
         public ItemModel[] GetProductList()
         {
             var repo = _unitOfWork.GetRepository<Item>();

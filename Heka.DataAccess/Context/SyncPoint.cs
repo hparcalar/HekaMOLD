@@ -40,8 +40,8 @@ namespace Heka.DataAccess.Context
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemOrder> ItemOrder { get; set; }
-        public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
+        public virtual Plant Plant { get; set; }
     }
 }

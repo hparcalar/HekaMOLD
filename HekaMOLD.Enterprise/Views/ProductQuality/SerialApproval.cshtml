@@ -1,0 +1,184 @@
+﻿@{
+    ViewBag.Title = "Onay Bekleyen Ürünler";
+}
+
+<div>
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="serialApprovalCtrl">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <div class="row gy-5 mt-0 gx-xl-8 bg-white">
+                <div class="col-sm-8 col-xs-8 col-xxl-8">
+                    <div class="row">
+                        <div class="col-sm-6 col-xxl-6 col-xs-6">
+                            <!--begin::Title-->
+                            <h1 class="d-flex align-items-center text-dark fw-bolder mt-3 fs-3">
+                                @ViewBag.Title
+                            </h1>
+                            <!--end::Title-->
+                        </div>
+                        <div class="col-sm-6 col-xxl-6 col-xs-6">
+                            <label class="form-check form-check-custom form-check-solid w-100 mt-3">
+                                <input class="form-check-input" type="checkbox"
+                                       ng-model="modelObject.ShowOnlyWaitings" />
+                                <span class="form-check-label">
+                                    Sadece onay bekleyenleri göster
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-4 col-xs-4 col-xxl-4">
+                    <div class="row">
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-success" ng-click="approveProduct()">
+                                <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+                                            <path d="M6.26193932,17.6476484 C5.90425297,18.0684559 5.27315905,18.1196257 4.85235158,17.7619393 C4.43154411,17.404253 4.38037434,16.773159 4.73806068,16.3523516 L13.2380607,6.35235158 C13.6013618,5.92493855 14.2451015,5.87991302 14.6643638,6.25259068 L19.1643638,10.2525907 C19.5771466,10.6195087 19.6143273,11.2515811 19.2474093,11.6643638 C18.8804913,12.0771466 18.2484189,12.1143273 17.8356362,11.7474093 L14.0997854,8.42665306 L6.26193932,17.6476484 Z" id="Path-94" fill="#000000" fill-rule="nonzero" transform="translate(11.999995, 12.000002) rotate(-180.000000) translate(-11.999995, -12.000002) "></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <br />
+                                <span style="display:block;margin-top:5px;margin-bottom:10px;">OK</span>
+                            </a>
+                        </div>
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-danger" ng-click="denyProduct()">
+                                <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M2.36899 6.54184C2.65912 4.34504 4.34504 2.65912 6.54184 2.36899C8.05208 2.16953 9.94127 2 12 2C14.0587 2 15.9479 2.16953 17.4582 2.36899C19.655 2.65912 21.3409 4.34504 21.631 6.54184C21.8305 8.05208 22 9.94127 22 12C22 14.0587 21.8305 15.9479 21.631 17.4582C21.3409 19.655 19.655 21.3409 17.4582 21.631C15.9479 21.8305 14.0587 22 12 22C9.94127 22 8.05208 21.8305 6.54184 21.631C4.34504 21.3409 2.65912 19.655 2.36899 17.4582C2.16953 15.9479 2 14.0587 2 12C2 9.94127 2.16953 8.05208 2.36899 6.54184Z" fill="#12131A" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.29289 8.29289C8.68342 7.90237 9.31658 7.90237 9.70711 8.29289L12 10.5858L14.2929 8.29289C14.6834 7.90237 15.3166 7.90237 15.7071 8.29289C16.0976 8.68342 16.0976 9.31658 15.7071 9.70711L13.4142 12L15.7071 14.2929C16.0976 14.6834 16.0976 15.3166 15.7071 15.7071C15.3166 16.0976 14.6834 16.0976 14.2929 15.7071L12 13.4142L9.70711 15.7071C9.31658 16.0976 8.68342 16.0976 8.29289 15.7071C7.90237 15.3166 7.90237 14.6834 8.29289 14.2929L10.5858 12L8.29289 9.70711C7.90237 9.31658 7.90237 8.68342 8.29289 8.29289Z" fill="#12131A" />
+                                    </svg>
+                                </span>
+                                <br />
+                                <span style="display: block; margin-top: 5px; margin-bottom: 10px;">NOK</span>
+                            </a>
+                        </div>
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-warning" ng-click="waitProduct()">
+                                <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Navigation-/-Waiting" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                            <path d="M19.5,10.5 L21,10.5 C21.8284271,10.5 22.5,11.1715729 22.5,12 C22.5,12.8284271 21.8284271,13.5 21,13.5 L19.5,13.5 C18.6715729,13.5 18,12.8284271 18,12 C18,11.1715729 18.6715729,10.5 19.5,10.5 Z M16.0606602,5.87132034 L17.1213203,4.81066017 C17.7071068,4.22487373 18.6568542,4.22487373 19.2426407,4.81066017 C19.8284271,5.39644661 19.8284271,6.34619408 19.2426407,6.93198052 L18.1819805,7.99264069 C17.5961941,8.57842712 16.6464466,8.57842712 16.0606602,7.99264069 C15.4748737,7.40685425 15.4748737,6.45710678 16.0606602,5.87132034 Z M16.0606602,18.1819805 C15.4748737,17.5961941 15.4748737,16.6464466 16.0606602,16.0606602 C16.6464466,15.4748737 17.5961941,15.4748737 18.1819805,16.0606602 L19.2426407,17.1213203 C19.8284271,17.7071068 19.8284271,18.6568542 19.2426407,19.2426407 C18.6568542,19.8284271 17.7071068,19.8284271 17.1213203,19.2426407 L16.0606602,18.1819805 Z M3,10.5 L4.5,10.5 C5.32842712,10.5 6,11.1715729 6,12 C6,12.8284271 5.32842712,13.5 4.5,13.5 L3,13.5 C2.17157288,13.5 1.5,12.8284271 1.5,12 C1.5,11.1715729 2.17157288,10.5 3,10.5 Z M12,1.5 C12.8284271,1.5 13.5,2.17157288 13.5,3 L13.5,4.5 C13.5,5.32842712 12.8284271,6 12,6 C11.1715729,6 10.5,5.32842712 10.5,4.5 L10.5,3 C10.5,2.17157288 11.1715729,1.5 12,1.5 Z M12,18 C12.8284271,18 13.5,18.6715729 13.5,19.5 L13.5,21 C13.5,21.8284271 12.8284271,22.5 12,22.5 C11.1715729,22.5 10.5,21.8284271 10.5,21 L10.5,19.5 C10.5,18.6715729 11.1715729,18 12,18 Z M4.81066017,4.81066017 C5.39644661,4.22487373 6.34619408,4.22487373 6.93198052,4.81066017 L7.99264069,5.87132034 C8.57842712,6.45710678 8.57842712,7.40685425 7.99264069,7.99264069 C7.40685425,8.57842712 6.45710678,8.57842712 5.87132034,7.99264069 L4.81066017,6.93198052 C4.22487373,6.34619408 4.22487373,5.39644661 4.81066017,4.81066017 Z M4.81066017,19.2426407 C4.22487373,18.6568542 4.22487373,17.7071068 4.81066017,17.1213203 L5.87132034,16.0606602 C6.45710678,15.4748737 7.40685425,15.4748737 7.99264069,16.0606602 C8.57842712,16.6464466 8.57842712,17.5961941 7.99264069,18.1819805 L6.93198052,19.2426407 C6.34619408,19.8284271 5.39644661,19.8284271 4.81066017,19.2426407 Z" id="Oval" fill="#000000" fill-rule="nonzero" opacity="0.5"></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <br />
+                                <span style="display: block; margin-top: 5px; margin-bottom: 10px;">Bekleme</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--begin::DETAIL TABLE-->
+            <div class="row gy-5 mt-4 gx-xl-8 bg-white">
+                @* KOLİ TABLOSU *@
+                <div class="col-xxl-8 col-sm-8">
+                    <h5 class="hk-title-mobile">Koli Listesi</h5>
+                    <table class="table table-bordered table-hk-sm">
+                        <thead>
+                            <tr>
+                                <th class="w-10 px-2">Tarih</th>
+                                <th class="w-10 px-2">Makine</th>
+                                <th class="w-10 px-2">Koli No</th>
+                                <th class="w-15 px-2">Stok No</th>
+                                <th class="w-15 px-2">Stok Adı</th>
+                                <th class="w-15 px-2">Firma</th>
+                                <th class="w-15 px-2">Koli İçi Adet</th>
+                                <th class="w-25 px-2">#</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-md">
+                        <table ng-cloak class="table table-bordered table-hk-sm">
+                            <tbody>
+                                <tr ng-repeat="item in pickupList"
+                                    ng-show="modelObject.ShowOnlyWaitings == false || (modelObject.ShowOnlyWaitings == true && (item.QualityStatus == 0 || item.QualityStatus == 3))"
+                                    ng-class="{'bg-primary': isSelectedProduct(item), 
+                                        'bg-success': !isSelectedProduct(item) && item.QualityStatus == 1,
+                                        'bg-danger': !isSelectedProduct(item) && item.QualityStatus == 2,
+                                        'bg-warning': !isSelectedProduct(item) && item.QualityStatus == 3}">
+                                    <td class="w-10 px-2">{{item.CreatedDateStr}}</td>
+                                    <td class="w-10 px-2">{{item.MachineCode}}</td>
+                                    <td class="w-10 px-2">{{item.SerialNo}}</td>
+                                    <td class="w-15 px-2">{{item.ItemNo}}</td>
+                                    <td class="w-15 px-2">{{item.ItemName}}</td>
+                                    <td class="w-15 px-2">{{item.FirmName}}</td>
+                                    <td class="w-15 px-2">
+                                        <input type="number"
+                                               class="form-control form-control-sm"
+                                               ng-model="item.FirstQuantity" />
+                                    </td>
+                                    <td class="w-25 px-2">
+                                        <div class="d-flex flex-row">
+                                            <button type="button" ng-click="selectProduct(item)"
+                                                    class="btn btn-sm btn-primary">
+                                                {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}
+                                            </button>
+                                            <button type="button" ng-click="selectParty(item)"
+                                                    class="btn btn-sm btn-primary mx-1 px-0">
+                                                {{ isSelectedParty(item) ? 'Partiyi Kaldır' : 'Partiyi Seç' }}
+                                            </button>
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @* STOK ÖZET & TOPLAM TABLOSU *@
+                <div class="col-xxl-4 col-sm-4">
+                    <h5 class="hk-title-mobile">Ürün Toplamları</h5>
+                    <table class="table table-bordered table-hk-sm">
+                        <thead>
+                            <tr>
+                                <th class="w-50 px-2">Ürün</th>
+                                <th class="w-25 px-2">Koli Adedi</th>
+                                <th class="w-25 px-2">Ürün Adedi</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-md">
+                        <table ng-cloak class="table table-bordered table-striped table-hk-sm">
+                            <tbody>
+                                <tr ng-repeat="item in summaryList">
+                                    <td class="w-50 px-2">{{item.ItemName}}</td>
+                                    <td class="w-25 px-2">{{item.SerialCount}}</td>
+                                    <td class="w-25 px-2">{{item.SerialSum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <table class="table table-bordered">
+                        <tfoot>
+                            <tr class="bg-primary text-white">
+                                <th class="w-50 px-2"><b>TOPLAM: </b></th>
+                                <th class="w-25 px-2"><b>{{ getListSum(summaryList, 'SerialCount') }} KOLİ</b></th>
+                                <th class="w-25 px-2"><b>{{ getListSum(summaryList, 'SerialSum') }} ADET</b></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <!--end::DETAIL TABLE-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/Scripts/html5-qrcode.min.js"></script>
+    <script src="~/FrontEndLogic/ProductQuality/serial-approval.js"></script>
+}

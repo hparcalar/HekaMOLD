@@ -18,8 +18,8 @@ namespace Heka.DataAccess.Context
         public Nullable<int> EntryQualityDataId { get; set; }
         public Nullable<int> EntryQualityPlanDetailId { get; set; }
         public Nullable<int> OrderNo { get; set; }
-        public Nullable<decimal> SampleQuantity { get; set; }
         public string FaultExplanation { get; set; }
+        public Nullable<decimal> SampleQuantity { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
     

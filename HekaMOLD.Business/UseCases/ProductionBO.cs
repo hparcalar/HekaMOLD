@@ -1895,6 +1895,7 @@ namespace HekaMOLD.Business.UseCases
                     .Select(d => new WorkOrderSerialModel
                     {
                         Id = d.Id,
+                        WorkOrderDetailId = d.WorkOrderDetailId,
                         ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemNo : "",
                         ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
                         CreatedDate = d.CreatedDate,
@@ -1904,6 +1905,8 @@ namespace HekaMOLD.Business.UseCases
                             d.WorkOrderDetail.Machine.MachineCode : "",
                         MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
                             d.WorkOrderDetail.Machine.MachineName : "",
+                        QualityStatus = d.QualityStatus ?? 0,
+                        QualityStatusText = ((QualityStatusType)(d.QualityStatus ?? 0)).ToCaption(),
                         FirstQuantity = d.FirstQuantity,
                         InPackageQuantity = d.InPackageQuantity,
                         IsGeneratedBySignal = d.IsGeneratedBySignal,

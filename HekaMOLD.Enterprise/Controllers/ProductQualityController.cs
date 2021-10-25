@@ -139,7 +139,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                items = bObj.GetItemList();
+                items = bObj.GetItemListJustNames();
                 machines = bObj.GetMachineList();
             }
 
@@ -223,6 +223,52 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
+        }
+        #endregion
+
+        #region SERIAL APPROVAL
+        public ActionResult SerialApproval()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult ApproveSerials(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = null;
+
+            using (QualityBO bObj = new QualityBO())
+            {
+                result = bObj.ApproveSerials(model);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
+        public JsonResult DenySerials(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = null;
+
+            using (QualityBO bObj = new QualityBO())
+            {
+                result = bObj.DenySerials(model);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
+        public JsonResult WaitSerials(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = null;
+
+            using (QualityBO bObj = new QualityBO())
+            {
+                result = bObj.WaitSerials(model);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
         #endregion
     }

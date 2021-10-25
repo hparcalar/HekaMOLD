@@ -17,14 +17,14 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Firm()
         {
-            this.ItemOrder = new HashSet<ItemOrder>();
-            this.FirmAuthor = new HashSet<FirmAuthor>();
-            this.WorkOrder = new HashSet<WorkOrder>();
-            this.Item = new HashSet<Item>();
             this.EntryQualityData = new HashSet<EntryQualityData>();
-            this.Mold = new HashSet<Mold>();
+            this.FirmAuthor = new HashSet<FirmAuthor>();
             this.Invoice = new HashSet<Invoice>();
+            this.Item = new HashSet<Item>();
+            this.ItemOrder = new HashSet<ItemOrder>();
             this.ItemReceipt = new HashSet<ItemReceipt>();
+            this.Mold = new HashSet<Mold>();
+            this.WorkOrder = new HashSet<WorkOrder>();
         }
     
         public int Id { get; set; }
@@ -40,33 +40,33 @@ namespace Heka.DataAccess.Context
         public string Twitter { get; set; }
         public string Instagram { get; set; }
         public string Address { get; set; }
+        public string Address2 { get; set; }
         public string Author { get; set; }
         public string Email { get; set; }
         public string TaxNo { get; set; }
         public string TaxOffice { get; set; }
+        public Nullable<bool> IsApproved { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-        public Nullable<bool> IsApproved { get; set; }
-        public string Address2 { get; set; }
     
-        public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemOrder> ItemOrder { get; set; }
+        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
+        public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FirmAuthor> FirmAuthor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WorkOrder> WorkOrder { get; set; }
+        public virtual ICollection<Invoice> Invoice { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Item> Item { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
+        public virtual ICollection<ItemOrder> ItemOrder { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Mold> Mold { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Invoice> Invoice { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
+        public virtual ICollection<WorkOrder> WorkOrder { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace Heka.DataAccess.Context
     
         public int Id { get; set; }
         public string ProductRecipeCode { get; set; }
+        public string Description { get; set; }
         public Nullable<int> ProductRecipeType { get; set; }
         public Nullable<int> ProductId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
@@ -29,10 +30,9 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public Nullable<bool> IsActive { get; set; }
-        public string Description { get; set; }
     
+        public virtual Item Item { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductRecipeDetail> ProductRecipeDetail { get; set; }
-        public virtual Item Item { get; set; }
     }
 }
