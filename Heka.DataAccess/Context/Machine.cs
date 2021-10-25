@@ -24,10 +24,10 @@ namespace Heka.DataAccess.Context
             this.MachineSignal = new HashSet<MachineSignal>();
             this.MoldTest = new HashSet<MoldTest>();
             this.ProductionPosture = new HashSet<ProductionPosture>();
-            this.ProductQualityData = new HashSet<ProductQualityData>();
             this.ProductWastage = new HashSet<ProductWastage>();
             this.UserWorkOrderHistory = new HashSet<UserWorkOrderHistory>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
+            this.ProductQualityData = new HashSet<ProductQualityData>();
         }
     
         public int Id { get; set; }
@@ -64,12 +64,12 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionPosture> ProductionPosture { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductQualityData> ProductQualityData { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductWastage> ProductWastage { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductQualityData> ProductQualityData { get; set; }
     }
 }

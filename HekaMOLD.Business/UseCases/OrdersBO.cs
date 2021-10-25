@@ -299,6 +299,8 @@ namespace HekaMOLD.Business.UseCases
             ItemOrderModel model = new ItemOrderModel { Details = new ItemOrderDetailModel[0] };
 
             var repo = _unitOfWork.GetRepository<ItemOrder>();
+            var repoDetails = _unitOfWork.GetRepository<ItemOrderDetail>();
+
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {
@@ -311,20 +313,40 @@ namespace HekaMOLD.Business.UseCases
                 model.WarehouseCode = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseCode : "";
                 model.WarehouseName = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseName : "";
 
-                List<ItemOrderDetailModel> detailContainers = new List<ItemOrderDetailModel>();
-                dbObj.ItemOrderDetail.ToList().ForEach(d =>
-                {
-                    ItemOrderDetailModel detailContainerObj = new ItemOrderDetailModel();
-                    d.MapTo(detailContainerObj);
-                    detailContainerObj.ItemNo = d.Item != null ? d.Item.ItemNo : "";
-                    detailContainerObj.ItemName = d.Item != null ? d.Item.ItemName : "";
-                    detailContainerObj.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
-                    detailContainerObj.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
-                    detailContainerObj.NewDetail = false;
-                    detailContainers.Add(detailContainerObj);
-                });
-
-                model.Details = detailContainers.ToArray();
+                model.Details =
+                    repoDetails.Filter(d => d.ItemOrderId == dbObj.Id)
+                    .Select(d => new ItemOrderDetailModel
+                    {
+                        Id = d.Id,
+                        ItemId = d.ItemId,
+                        CreatedDate = d.CreatedDate,
+                        CreatedUserId = d.CreatedUserId,
+                        Explanation = d.Explanation,
+                        ForexId = d.ForexId,
+                        ForexRate = d.ForexRate,
+                        ForexUnitPrice = d.ForexUnitPrice,
+                        GrossQuantity = d.GrossQuantity,
+                        ItemOrderId = d.ItemOrderId,
+                        ItemRequestDetailId = d.ItemRequestDetailId,
+                        LineNumber = d.LineNumber,
+                        NetQuantity = d.NetQuantity,
+                        NewDetail = false,
+                        OrderStatus = d.OrderStatus,
+                        OverallTotal = d.OverallTotal,
+                        Quantity = d.Quantity,
+                        SubTotal = d.SubTotal,
+                        TaxAmount = d.TaxAmount,
+                        TaxIncluded = d.TaxIncluded,
+                        TaxRate = d.TaxRate,
+                        UnitId = d.UnitId,
+                        UnitPrice = d.UnitPrice,
+                        UpdatedDate = d.UpdatedDate,
+                        UpdatedUserId = d.UpdatedUserId,
+                        ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                        ItemName = d.Item != null ? d.Item.ItemName : "",
+                        UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
+                        UnitName = d.UnitType != null ? d.UnitType.UnitName : "",
+                    }).ToArray();
             }
 
             return model;
@@ -435,6 +457,48 @@ namespace HekaMOLD.Business.UseCases
                 #endregion
 
                 result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult ToggleOrderDetailStatus(int orderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+                var dbDetail = repoDetail.Get(d => d.Id == orderDetailId);
+                if (dbDetail == null)
+                    throw new Exception("İşlem yapılması istenen sipariş kalemi kaydı artık bulunamadı.");
+
+                var dbHeader = dbDetail.ItemOrder;
+
+                if (dbDetail.OrderStatus == (int)OrderStatusType.Completed)
+                    dbDetail.OrderStatus = (int)OrderStatusType.Approved;
+                else if (dbDetail.OrderStatus != (int)OrderStatusType.Completed)
+                    dbDetail.OrderStatus = (int)OrderStatusType.Completed;
+
+                if (!dbHeader.ItemOrderDetail.Any(d => d.OrderStatus != (int)OrderStatusType.Completed))
+                    dbHeader.OrderStatus = (int)OrderStatusType.Completed;
+                else
+                {
+                    if (dbHeader.ItemOrderDetail.Any(d => d.WorkOrderDetail.Any()))
+                        dbHeader.OrderStatus = (int)OrderStatusType.Planned;
+                    else
+                        dbHeader.OrderStatus = (int)OrderStatusType.Approved;
+                }
+
+                _unitOfWork.SaveChanges();
+
                 result.Result = true;
             }
             catch (Exception ex)

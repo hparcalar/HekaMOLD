@@ -14,6 +14,7 @@
             },
             showColumnLines: false,
             showRowLines: true,
+            allowColumnResizing: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,
@@ -23,9 +24,10 @@
             headerFilter: {
                 visible: true
             },
+            height:500,
             paging: {
-                enabled: true,
-                pageSize: 13,
+                enabled: false,
+                pageSize: 8,
                 pageIndex: 0
             },
             groupPanel: {
@@ -35,10 +37,21 @@
                 allowUpdating: false,
                 allowDeleting: false
             },
+            onContentReady: function (e) {
+                try {
+                    var dataGrid = $("#dataList").dxDataGrid("instance");
+                    if (dataGrid != null) {
+                        cFilter = dataGrid.getCombinedFilter(true);
+                        console.log(cFilter);
+                    }
+                } catch (e) {
+
+                }
+            },
             columns: [
                 { dataField: 'ItemOrderDateStr', caption: 'Sip. Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'NeedsDateStr', caption: 'İhtiyaç Tar.', dataType: 'date', format: 'dd.MM.yyyy' },
-/*                { dataField: 'WorkOrderNo', caption: 'İş Emri No' },*/
+                /* { dataField: 'WorkOrderNo', caption: 'İş Emri No' },*/
                 { dataField: 'ProductCode', caption: 'Ürün Kodu' },
                 { dataField: 'ProductName', caption: 'Ürün Adı' },
                 { dataField: 'ItemOrderNo', caption: 'Sipariş No' },
@@ -49,21 +62,21 @@
                 { dataField: 'TargetQuantity', caption: 'Sipariş Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'WarehouseQuantity', caption: 'Depo Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Quantity', caption: 'İhtiyaç Miktar', format: { type: "fixedPoint", precision: 2 } },
-                //{
-                //    type: "buttons",
-                //    buttons: [
-                //        {
-                //            name: 'preview', cssClass: '', text: 'Düzenle', onClick: function (e) {
-                //                var dataGrid = $("#dataList").dxDataGrid("instance");
-                //                dataGrid.deselectAll();
-                //                dataGrid.selectRowsByIndexes([e.row.rowIndex]);
-
-                //                window.location.href = HOST_URL + 'WorkOrder?rid=' + e.row.data.Id;
-                //            }
-                //        }
-                //    ]
-                //}
-            ]
+            ],
+            summary: {
+                totalItems: [{
+                    column: "TargetQuantity",
+                    summaryType: "sum",
+                    }, {
+                    column: "WarehouseQuantity",
+                    summaryType: "sum",
+                    },
+                    {
+                        column: "Quantity",
+                        summaryType: "sum",
+                    }
+                ]
+            }
         });
 
         $('#dataListSummary').dxDataGrid({
@@ -77,6 +90,7 @@
             },
             showColumnLines: false,
             showRowLines: true,
+            allowColumnResizing: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,
@@ -88,7 +102,7 @@
             },
             paging: {
                 enabled: true,
-                pageSize: 13,
+                pageSize: 8,
                 pageIndex: 0
             },
             groupPanel: {

@@ -94,7 +94,10 @@ namespace HekaMOLD.Enterprise.Controllers
                 model = bObj.GetItemOrder(rid);
             }
 
-            return Json(model, JsonRequestBehavior.AllowGet);
+            var jsonResponse = Json(model, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+
+            return jsonResponse;
         }
 
         [HttpPost]
@@ -157,6 +160,19 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult ToggleOrderDetailStatus(int detailId)
+        {
+            BusinessResult result = null;
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                result = bObj.ToggleOrderDetailStatus(detailId);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
 
         #region CALCULATIONS

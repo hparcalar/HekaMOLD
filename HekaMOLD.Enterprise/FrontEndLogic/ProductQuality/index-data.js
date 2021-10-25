@@ -235,7 +235,7 @@
                 $scope.hourList.splice(0, $scope.hourList.length);
 
                 var startHour = 7;
-                for (var i = 0; i < 25; i++) {
+                for (var i = 0; i < 24; i++) {
                     $scope.hourList.push({
                         HourText:
                             (startHour >= 10 ? startHour.toString() : ('0' + startHour.toString()))

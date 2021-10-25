@@ -7,6 +7,7 @@
     $scope.forexList = [];
 
     $scope.selectedFirm = {};
+    $scope.selectedRow = { Id:0 };
 
     $scope.saveStatus = 0;
 
@@ -175,6 +176,7 @@
                         $scope.selectedFirm = {};
 
                     $scope.bindDetails();
+                    $scope.calculateHeader();
                 }
             }).catch(function (err) { });
     }
@@ -328,7 +330,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 400,
+            height: 280,
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
@@ -343,7 +345,7 @@
             onCellPrepared: function (e) {
                 if (e.rowType === "data") {
                     if (e.data.OrderStatus == 3) {
-                        e.cellElement.css("background-color", "#E8FFF3");
+                        e.cellElement.css("background-color", "#e64040");
                         //e.cellElement.css("color", "white");
                     }
                 }
@@ -403,7 +405,24 @@
                 { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'Explanation', caption: 'Açıklama' }
+                { dataField: 'Explanation', caption: 'Açıklama' },
+                {
+                    type: "buttons",
+                    buttons: [
+                        {
+                            name: 'delete', cssClass: '', text: '', onClick: function (e) {
+                                $('#dataList').dxDataGrid('instance').deleteRow(e.row.rowIndex);
+                            }
+                        },
+                        {
+                            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: '...', onClick: function (e) {
+                                var dataGrid = $("#dataList").dxDataGrid("instance");
+                                $scope.selectedRow = e.row.data;
+                                $scope.showRowMenu();
+                            }
+                        }
+                    ]
+                }
             ]
         });
     }
@@ -446,6 +465,63 @@
             draggable: false,
             closeText: "KAPAT"
         });
+    }
+
+    // ROW MENU ACTIONS
+    $scope.showRowMenu = function () {
+        if ($scope.selectedRow && $scope.selectedRow.Id > 0) {
+            $scope.$apply();
+
+            $('#dial-row-menu').dialog({
+                width: 300,
+                //height: window.innerHeight * 0.6,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+    }
+    $scope.toggleOrderDetailStatus = function () {
+        if ($scope.selectedRow && $scope.selectedRow.Id > 0) {
+            $('#dial-row-menu').dialog("close");
+
+            bootbox.confirm({
+                message: "Bu sipariş kaleminin durumunu değiştirmek istediğinizden emin misiniz?",
+                closeButton: false,
+                buttons: {
+                    confirm: {
+                        label: 'Evet',
+                        className: 'btn-primary'
+                    },
+                    cancel: {
+                        label: 'Hayır',
+                        className: 'btn-light'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $scope.saveStatus = 1;
+                        $http.post(HOST_URL + 'SIOrder/ToggleOrderDetailStatus', { detailId: $scope.selectedRow.Id }, 'json')
+                            .then(function (resp) {
+                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                    $scope.saveStatus = 0;
+
+                                    if (resp.data.Status == 1) {
+                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                                        $scope.bindModel($scope.modelObject.Id);
+                                    }
+                                    else
+                                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                                }
+                            }).catch(function (err) { });
+                    }
+                }
+            });
+        }
     }
 
     // APPROVALS

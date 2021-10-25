@@ -52,7 +52,6 @@
         <EntityTypeShape EntityType="Heka.DataAccess.Models.PostureCategory" Width="1.5" PointX="27" PointY="91.25" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.PrinterQueue" Width="1.5" PointX="3" PointY="1" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductionPosture" Width="1.5" PointX="29.25" PointY="94.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityData" Width="1.5" PointX="16.5" PointY="106.625" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityDataDetail" Width="1.5" PointX="21.75" PointY="105.625" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityPlan" Width="1.5" PointX="19.5" PointY="91.25" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductRecipe" Width="1.5" PointX="10.5" PointY="140.375" />
@@ -126,7 +125,6 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemWarehouse_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_Mold_MoldItem" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MoldProduct_Item" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductQualityData_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipe_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductWastage_Item" />
@@ -174,7 +172,6 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MoldTest_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductionPosture_Machine" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductQualityData_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductWastage_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" />
@@ -196,7 +193,6 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductionPosture_PostureCategory" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_PrinterQueue_SystemPrinter" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductionPosture_WorkOrderDetail" />
-        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityData" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityPlan" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_ProductRecipe" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_UnitType" />
@@ -216,12 +212,16 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderControl_WorkOrderControlType" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderControl_WorkOrderDetail" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrderDetail" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderSerial" Width="1.5" PointX="26.25" PointY="103" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityData" Width="1.5" PointX="10.5" PointY="91.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderSerial" Width="1.5" PointX="26.25" PointY="102.875" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductQualityData_Item" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderSerial_ItemReceiptDetail" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductQualityData_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityData" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderSerial_Shift" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrder" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

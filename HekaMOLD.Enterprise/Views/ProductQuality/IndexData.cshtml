@@ -141,7 +141,7 @@
                         </thead>
                     </table>
 
-                    <table border="1" class="planning-table table table-responsive">
+                    <table border="1" class="planning-table table table-responsive mb-0">
                         <thead>
                             <tr>
                                 <th>Sıra No</th>
@@ -159,23 +159,34 @@
                                     {{item.CheckProperties}}
                                 </td>
                                 <td ng-repeat="itemData in hourList" style="padding:1px !important;">
-                                    <input ng-show="item.CheckType == 1" class="plan-check"
+                                    <input ng-if="item.CheckType == 1" class="plan-check"
                                            data-active="{{item.CheckType == 1 ? 'true' : 'false'}}"
                                            data-hour="{{itemData.HourNo}}"
                                            data-plan-id="{{item.Id}}"
                                            ng-checked="getQualityValue(item.Id, itemData.HourNo, 1)"
                                            type="checkbox" />
-                                    <input ng-show="item.CheckType == 2" class="plan-numeric" 
+                                    <input ng-if="item.CheckType == 2" class="plan-numeric"
                                            style="width:35px !important; font-size:xx-small !important;"
-                                           data-active="{{item.CheckType == 1 ? 'true' : 'false'}}"
+                                           data-active="{{item.CheckType == 2 ? 'true' : 'false'}}"
                                            data-hour="{{itemData.HourNo}}"
                                            data-plan-id="{{item.Id}}"
-                                           type="number" 
-                                           value="{{getQualityValue(item.Id, itemData.HourNo, 2)}}"
-                                           />
+                                           type="number"
+                                           value="{{getQualityValue(item.Id, itemData.HourNo, 2)}}" />
                                 </td>
                             </tr>
                         </tbody>
+                    </table>
+
+                    <table border="1" class="planning-table table table-responsive mb-0">
+                        <thead>
+                            <tr>
+                                <th class="w-10">Açıklama</th>
+                                <th class="w-90">
+                                    <textarea type="text" class="form-control" 
+                                           ng-model="modelObject.Explanation" placeholder=""></textarea>
+                                </th>
+                            </tr>
+                        </thead>
                     </table>
                 </div>
             </div>

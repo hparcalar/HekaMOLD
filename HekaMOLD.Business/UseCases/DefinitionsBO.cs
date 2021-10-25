@@ -225,9 +225,29 @@ namespace HekaMOLD.Business.UseCases
                 ItemType = d.ItemType,
                 CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
                 GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
-                TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
-                TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
-                TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
+                //TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
+                //TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
+                //TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
+            }).ToArray();
+        }
+
+        public ItemModel[] GetItemListWithStates()
+        {
+            var repo = _unitOfWork.GetRepository<Item>();
+
+            return repo.GetAll().Select(d => new ItemModel
+            {
+                Id = d.Id,
+                ItemNo = d.ItemNo,
+                ItemName = d.ItemName,
+                ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
+                        d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "",
+                ItemType = d.ItemType,
+                CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
+                GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
+                //TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
+                //TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
+                //TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
             }).ToArray();
         }
 

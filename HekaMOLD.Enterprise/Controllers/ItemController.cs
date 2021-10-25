@@ -38,7 +38,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetItemList();
+                result = bObj.GetItemListWithStates();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

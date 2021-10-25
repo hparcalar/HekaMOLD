@@ -266,6 +266,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
             cacheEnabled: false,
+            allowColumnResizing: true,
             showBorders: true,
             filterRow: {
                 visible: true

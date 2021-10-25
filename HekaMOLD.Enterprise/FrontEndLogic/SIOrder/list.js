@@ -25,7 +25,7 @@
             },
             paging: {
                 enabled:true,
-                pageSize: 13,
+                pageSize: 8,
                 pageIndex:0
             },
             groupPanel: {

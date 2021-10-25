@@ -13,6 +13,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Quality
         public int? MachineId { get; set; }
         public int? ProductId { get; set; }
         public DateTime? ControlDate { get; set; }
+        public string Explanation { get; set; }
         public ProductQualityDataDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS

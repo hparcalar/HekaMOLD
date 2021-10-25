@@ -284,6 +284,14 @@
     <div id="dial-attachments" title="Ekler" style="display:none;">
         <ng-include src="'Components/Views/AttachmentList.html'"></ng-include>
     </div>
+
+    <div id="dial-row-menu" title="Sipariş Satır İşlemleri" style="display:none;">
+        <div class="d-flex flex-column">
+            <button class="btn btn-primary btn-sm" ng-click="toggleOrderDetailStatus()">
+                {{ selectedRow.OrderStatus == 3 ? 'Siparişi Aç' : 'Siparişi Kapat' }}
+            </button>
+        </div>
+    </div>
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
