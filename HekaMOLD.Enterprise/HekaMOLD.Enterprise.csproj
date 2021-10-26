@@ -4137,6 +4137,7 @@
     <Content Include="FrontEndLogic\Warehouse\list.js" />
     <Content Include="FrontEndLogic\WorkOrder\index.js" />
     <Content Include="FrontEndLogic\WorkOrder\list.js" />
+    <Content Include="FrontEndLogic\WorkOrder\production-history.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Helpers\FrontEnd\heka-ui-helpers.js" />
@@ -4551,6 +4552,7 @@
     <Content Include="Views\Mobile\MachineEquipments.cshtml" />
     <Content Include="Views\ProductQuality\SerialApproval.cshtml" />
     <Content Include="Views\Warehouse\States.cshtml" />
+    <Content Include="Views\WorkOrder\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

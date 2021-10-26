@@ -8,10 +8,13 @@
 
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
+    $scope.shiftList = [];
 
     $scope.summaryList = [];
+    $scope.filteredSummaryList = [];
     $scope.selectedProducts = [];
     $scope.selectedSummary = { ItemName: '' };
+    $scope.selectedShift = { Id: 0 };
 
     $scope.bindModel = function () {
         $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
@@ -20,6 +23,7 @@
                     $scope.pickupList = resp.data.Serials;
                     $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
+                    $scope.filteredSummaryList = $scope.summaryList;
                 }
             }).catch(function (err) { });
     }
@@ -58,6 +62,19 @@
         else {
             $scope.selectedSummary.ItemName = item.ItemName;
             $scope.filteredPickupList = $scope.pickupList.filter(d => d.ItemName == item.ItemName);
+        }
+    }
+
+    $scope.selectShift = function (item) {
+        if ($scope.selectedShift.Id == item.Id) {
+            $scope.selectedShift.Id = 0;
+            $scope.filteredSummaryList = $scope.summaryList;
+            $scope.filteredPickupList = $scope.pickupList;
+        }
+        else {
+            $scope.selectedShift.Id = item.Id;
+            $scope.filteredSummaryList = $scope.summaryList.filter(d => d.ShiftCode == item.ShiftCode);
+            $scope.filteredPickupList = $scope.pickupList.filter(d => d.ShiftCode == item.ShiftCode);
         }
     }
 
@@ -129,6 +146,8 @@
                         var emptyWrObj = { Id: 0, WarehouseName: '-- Seçiniz --' };
                         $scope.warehouseList.splice(0, 0, emptyWrObj);
                         $scope.selectedWarehouse = emptyWrObj;
+
+                        $scope.shiftList = resp.data.Shifts;
 
                         resolve();
                     }

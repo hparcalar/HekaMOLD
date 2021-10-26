@@ -2,12 +2,15 @@
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core.Base;
 using Microsoft.Reporting.WebForms;
 using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.IO;
@@ -341,6 +344,71 @@ namespace HekaMOLD.Business.UseCases
                     }).ToArray();
             }
             catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ProductionHistoryModel[] GetProductionHistory(BasicRangeFilter filter)
+        {
+            ProductionHistoryModel[] data = new ProductionHistoryModel[0];
+
+            try
+            {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(filter.StartDate))
+                    filter.StartDate = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(filter.EndDate))
+                    filter.EndDate = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var dataList = repoSerial.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd
+                    && d.SerialNo != null && d.SerialNo.Length > 0)
+                    .GroupBy(d => new
+                    {
+                        WorkOrderDetail = d.WorkOrderDetail,
+                        WorkDate = DbFunctions.TruncateTime(d.CreatedDate),
+                        Shift = d.Shift,
+                    })
+                    .Select(d => new ProductionHistoryModel
+                    {
+                        WorkDate = d.Key.WorkDate,
+                        //WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.Key.WorkDate),
+                        WorkOrderDetailId = d.Key.WorkOrderDetail.Id,
+                        MachineId = d.Key.WorkOrderDetail.MachineId,
+                        MachineCode = d.Key.WorkOrderDetail.Machine.MachineCode,
+                        MachineName = d.Key.WorkOrderDetail.Machine.MachineName,
+                        OrderQuantity = d.Key.WorkOrderDetail.ItemOrderDetail.Quantity ?? 0,
+                        CompleteQuantity = d.Sum(m => m.FirstQuantity) ?? 0,
+                        ProductId = d.Key.WorkOrderDetail.ItemId,
+                        ProductCode = d.Key.WorkOrderDetail.Item.ItemNo,
+                        ProductName = d.Key.WorkOrderDetail.Item.ItemName,
+                        SaleOrderNo = d.Key.WorkOrderDetail.ItemOrderDetail.ItemOrder.DocumentNo,
+                        SerialCount = d.Count(),
+                        ShiftId = d.Key.Shift.Id,
+                        ShiftCode = d.Key.Shift.ShiftCode,
+                        ShiftName = d.Key.Shift.ShiftName,
+                        WastageQuantity = d.Key.WorkOrderDetail.ProductWastage
+                            .Where(m => DbFunctions.TruncateTime(m.EntryDate) == d.Key.WorkDate)
+                            .Sum(m => m.Quantity) ?? 0,
+                        WorkQuantity = d.Key.WorkOrderDetail.Quantity,
+                    }).ToList();
+                dataList.ForEach(d =>
+                {
+                    d.WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkDate);
+                });
+
+                data = dataList.ToArray();
+            }
+            catch (Exception ex)
             {
 
             }

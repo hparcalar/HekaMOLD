@@ -1941,6 +1941,9 @@ namespace HekaMOLD.Business.UseCases
                     .Select(d => new WorkOrderSerialModel
                     {
                         Id = d.Id,
+                        ShiftId = d.ShiftId,
+                        ShiftCode = d.Shift != null ? d.Shift.ShiftCode : "",
+                        ShiftName = d.Shift != null ? d.Shift.ShiftName : "",
                         ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemNo : "",
                         ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
                         CreatedDate = d.CreatedDate,
@@ -1958,10 +1961,12 @@ namespace HekaMOLD.Business.UseCases
                         FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
                         FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
                     })
-                    .GroupBy(d => d.ItemName)
+                    .GroupBy(d => new { d.ItemName, d.ShiftId, d.ShiftCode })
                     .Select(d => new WorkOrderSerialSummary
                     {
-                        ItemName = d.Key,
+                        ItemName = d.Key.ItemName,
+                        ShiftId = d.Key.ShiftId,
+                        ShiftCode = d.Key.ShiftCode,
                         SerialCount = d.Count(),
                         SerialSum = d.Sum(m => m.FirstQuantity),
                     })

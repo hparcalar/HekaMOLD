@@ -39,17 +39,20 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             WarehouseModel[] warehouses = new WarehouseModel[0];
             FirmModel[] firms = new FirmModel[0];
+            ShiftModel[] shifts = new ShiftModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 warehouses = bObj.GetWarehouseList();
                 firms = bObj.GetFirmList();
+                shifts = bObj.GetShiftList();
             }
 
             var jsonResult = Json(new
             {
                 Warehouses = warehouses,
                 Firms = firms,
+                Shifts = shifts,
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
@@ -479,6 +482,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
         }
+
+
         #endregion
 
         #region PRODUCT WASTAGE

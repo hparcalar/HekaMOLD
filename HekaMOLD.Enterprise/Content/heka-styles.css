@@ -10,6 +10,11 @@
 .trow-table-dialog:hover {
     background-color: #888888;
 }
+.table-scroller-sm {
+    height: 250px;
+    max-height: 250px;
+    overflow: auto;
+}
 .table-scroller-md{
     height:300px;
     max-height:300px;
@@ -100,6 +105,29 @@
     font-size:x-small !important;
 }
 .table-hk-sm td{
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+}
+
+/* MEDIUM TABLE */
+.table-hk-md {
+    font-size: medium;
+    font-weight:bold !important;
+}
+
+.table-hk-md .btn {
+    padding: 6px !important;
+    min-height: 0px !important;
+    font-size: small !important;
+}
+
+.table-hk-md input {
+    padding: 2px !important;
+    min-height: 0px !important;
+    font-size: small !important;
+}
+
+.table-hk-md td {
     padding-top: 3px !important;
     padding-bottom: 3px !important;
 }

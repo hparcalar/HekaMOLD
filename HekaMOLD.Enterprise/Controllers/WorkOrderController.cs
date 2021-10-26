@@ -1,5 +1,6 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -156,6 +157,37 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
+        }
+
+        public ActionResult History()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetProductionHistory(string dt1, string dt2)
+        {
+            ProductionHistoryModel[] data = new ProductionHistoryModel[0];
+
+            try
+            {
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetProductionHistory(new Business.Models.Filters.BasicRangeFilter
+                    {
+                        StartDate = dt1,
+                        EndDate = dt2,
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
         }
     }
 }
