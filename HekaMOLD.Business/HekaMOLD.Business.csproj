@@ -175,6 +175,7 @@
     <Compile Include="Models\DataTransfer\Request\ItemRequestCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
+    <Compile Include="Models\DataTransfer\Summary\ItemStateModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\MachineStatsModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\ReceiptConsumeSummary.cs" />
     <Compile Include="Models\DataTransfer\Summary\WorkOrderSerialSummary.cs" />

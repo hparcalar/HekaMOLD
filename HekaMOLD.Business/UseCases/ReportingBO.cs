@@ -1,6 +1,7 @@
 ﻿using Heka.DataAccess.Context;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core.Base;
 using Microsoft.Reporting.WebForms;
@@ -310,6 +311,41 @@ namespace HekaMOLD.Business.UseCases
                 }
 
             }
+        }
+        #endregion
+
+        #region SYSTEM REPORTS
+        public ItemStateModel[] GetItemStates(int[] warehouseList)
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var movements = repo.Filter(d => warehouseList.Contains(d.ItemReceipt.InWarehouseId ?? 0)
+                    && d.ItemReceipt.ReceiptType < 200);
+                data = movements.GroupBy(d => new { d.Item, d.ItemReceipt.Warehouse })
+                    .Select(d => new ItemStateModel
+                    {
+                        ItemId = d.Key.Item.Id,
+                        ItemNo = d.Key.Item.ItemNo,
+                        ItemName = d.Key.Item.ItemName,
+                        WarehouseId = d.Key.Warehouse.Id,
+                        WarehouseCode = d.Key.Warehouse.WarehouseCode,
+                        WarehouseName = d.Key.Warehouse.WarehouseName,
+                        InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0,
+                        OutQty = d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0,
+                        TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0)
+                            - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
         }
         #endregion
     }

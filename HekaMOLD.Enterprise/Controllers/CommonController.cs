@@ -203,6 +203,19 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [FreeAction]
+        public JsonResult GetWarehouseList()
+        {
+            WarehouseModel[] data = new WarehouseModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetWarehouseList();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [FreeAction]
         public JsonResult GetEquipmentCategoryList()
         {
             EquipmentCategoryModel[] data = new EquipmentCategoryModel[0];

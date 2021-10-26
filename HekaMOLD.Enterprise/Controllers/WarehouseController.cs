@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -96,5 +97,36 @@ namespace HekaMOLD.Enterprise.Controllers
 
 
         }
+
+        #region WAREHOUSE STATES
+        public ActionResult States()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetStatesData(string warehouseList)
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                int[] warehouseIds = warehouseList.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
+
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetItemStates(warehouseIds);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+        #endregion
     }
 }

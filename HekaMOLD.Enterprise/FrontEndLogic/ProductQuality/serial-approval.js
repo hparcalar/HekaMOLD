@@ -8,14 +8,18 @@
     };
 
     $scope.pickupList = [];
+    $scope.filteredPickupList = [];
+
     $scope.summaryList = [];
     $scope.selectedProducts = [];
+    $scope.selectedSummary = { ItemName: '' };
 
     $scope.bindModel = function () {
         $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.pickupList = resp.data.Serials;
+                    $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
                 }
             }).catch(function (err) { });
@@ -57,6 +61,17 @@
 
     $scope.isSelectedParty = function (item) {
         return $scope.selectedProducts.some(d => d.WorkOrderDetailId == item.WorkOrderDetailId);
+    }
+
+    $scope.selectSummary = function (item) {
+        if ($scope.selectedSummary.ItemName == item.ItemName) {
+            $scope.selectedSummary.ItemName = '';
+            $scope.filteredPickupList = $scope.pickupList;
+        }
+        else {
+            $scope.selectedSummary.ItemName = item.ItemName;
+            $scope.filteredPickupList = $scope.pickupList.filter(d => d.ItemName == item.ItemName);
+        }
     }
 
     $scope.processBarcodeResult = function (barcode) {

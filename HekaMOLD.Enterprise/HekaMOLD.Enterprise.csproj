@@ -4133,6 +4133,7 @@
     <Content Include="FrontEndLogic\User\index.js" />
     <Content Include="FrontEndLogic\User\list.js" />
     <Content Include="FrontEndLogic\Warehouse\index.js" />
+    <Content Include="FrontEndLogic\Warehouse\states.js" />
     <Content Include="FrontEndLogic\Warehouse\list.js" />
     <Content Include="FrontEndLogic\WorkOrder\index.js" />
     <Content Include="FrontEndLogic\WorkOrder\list.js" />
@@ -4549,6 +4550,7 @@
     <Content Include="Views\ReportTemplate\Index.cshtml" />
     <Content Include="Views\Mobile\MachineEquipments.cshtml" />
     <Content Include="Views\ProductQuality\SerialApproval.cshtml" />
+    <Content Include="Views\Warehouse\States.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
