@@ -11,13 +11,13 @@
     background-color: #888888;
 }
 .table-scroller-sm {
-    height: 250px;
-    max-height: 250px;
+    height: 180px;
+    max-height: 180px;
     overflow: auto;
 }
 .table-scroller-md{
-    height:300px;
-    max-height:300px;
+    height:280px;
+    max-height:280px;
     overflow:auto;
 }
 .table-scroller-lg {

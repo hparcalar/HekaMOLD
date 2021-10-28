@@ -76,14 +76,15 @@
 
     <div id="dial-print-label" title="Kalıp Etiketi" style="display:none;">
         <div class="no-print">
-            <p>
-                <button class="btn btn-primary btn-sm" ng-click="printLabel()">Yazdır</button>
+            <p class="d-flex flex-row">
+                <button class="btn btn-primary btn-sm" ng-click="printLabel()">Toplu Yazdır</button>
+                <button class="btn btn-primary btn-sm mx-2" ng-click="printLabelAsSingle()">Ayrı Yazdır</button>
             </p>
         </div>
         <div id="mold-label">
             <div class="d-flex flex-wrap">
-                <div ng-repeat="item in moldList" style="height: 511px; width: 507px; background-color: #fff; white-space: nowrap;">
-                    <h3 class="text-center" style="margin-bottom:40px;padding-top:20px;">{{ item.FirmName }}</h3>
+                <div ng-repeat="item in printingMoldList" style="height: 511px; width: 507px; background-color: #fff; white-space: nowrap;">
+                    <h3 class="text-center" style="margin-bottom:40px;padding-top:20px;">BATUSAN</h3>
                     <h5 class="text-center" style="margin-bottom:40px;">{{ item.MoldName }}</h5>
                     <div class="text-center" style="margin-bottom:40px;">
                         <img height="150" ng-src="https://api.qrserver.com/v1/create-qr-code/?data={{ item.MoldCode }}" />

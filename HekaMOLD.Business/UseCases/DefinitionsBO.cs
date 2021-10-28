@@ -1747,6 +1747,7 @@ namespace HekaMOLD.Business.UseCases
                     string.Format("{0:dd.MM.yyyy}", d.OwnedDate) : "",
                 LifeTimeTicks = d.LifeTimeTicks,
                 CurrentTicks = d.CurrentTicks,
+                IsActive = d.IsActive,
             }).ToArray();
 
             return data;

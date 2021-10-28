@@ -82,52 +82,58 @@
                 @* KOLİ TABLOSU *@
                 <div class="col-xxl-8 col-sm-8">
                     <h5 class="hk-title-mobile">Koli Listesi</h5>
-                    <table class="table table-bordered table-hk-sm">
+                    <div class="d-flex flex-row justify-content-end">
+                        <button type="button" class="btn btn-primary mx-1" ng-cloak
+                                ng-click="selectAll(item)">
+                            {{ selectedProducts.length == filteredPickupList.length && selectedProducts.length > 0 ? 'Seçimi Kaldır' : 'Tümünü Seç' }}
+                        </button>
+                    </div>
+                    <table class="table table-bordered table-hk-md">
                         <thead>
                             <tr>
                                 @*<th class="w-10 px-2">Tarih</th>*@
                                 <th class="w-10 px-2">Makine</th>
                                 @*<th class="w-10 px-2">Koli No</th>*@
-                                @*<th class="w-15 px-2">Stok No</th>*@
+                                @*<th class="w-10 px-2">Stok No</th>*@
                                 <th class="w-25 px-2">Stok Adı</th>
                                 <th class="w-15 px-2">Firma</th>
+                                <th class="w-10 px-1">Vardiya</th>
+                                <th class="w-15 px-2">Durum</th>
                                 <th class="w-15 px-2">Koli İçi Adet</th>
-                                <th class="w-25 px-2">#</th>
+                                <th class="w-15 px-2">#</th>
                             </tr>
                         </thead>
                     </table>
                     <div class="table-scroller-md">
-                        <table ng-cloak class="table table-bordered table-hk-sm">
+                        <table ng-cloak class="table table-bordered table-hk-md">
                             <tbody>
                                 <tr ng-repeat="item in filteredPickupList"
-                                    ng-show="modelObject.ShowOnlyWaitings == false || (modelObject.ShowOnlyWaitings == true && (item.QualityStatus == 0 || item.QualityStatus == 3))"
-                                    ng-class="{'bg-primary': isSelectedProduct(item), 
-                                        'bg-success': !isSelectedProduct(item) && item.QualityStatus == 1,
-                                        'bg-danger': !isSelectedProduct(item) && item.QualityStatus == 2,
-                                        'bg-warning': !isSelectedProduct(item) && item.QualityStatus == 3}">
+                                    ng-show="modelObject.ShowOnlyWaitings == false || modelObject.ShowOnlyWaitings == true && (item.QualityStatus == 0 || item.QualityStatus == 3)"
+                                    ng-class="{'bg-warning': isSelectedProduct(item)}">
                                     @*<td class="w-10 px-2">{{item.CreatedDateStr}}</td>*@
                                     <td class="w-10 px-2">{{item.MachineCode}}</td>
                                     @*<td class="w-10 px-2">{{item.SerialNo}}</td>*@
-                                    @*<td class="w-15 px-2">{{item.ItemNo}}</td>*@
+                                    @*<td class="w-10 px-2">{{item.ItemNo}}</td>*@
                                     <td class="w-25 px-2">{{item.ItemName}}</td>
                                     <td class="w-15 px-2">{{item.FirmName}}</td>
+                                    <td class="w-10 px-1">{{item.ShiftCode}}</td>
+                                    <td class="w-15 px-2"
+                                        ng-class="{
+                                        'bg-success': item.QualityStatus == 1,
+                                        'bg-danger': item.QualityStatus == 2,
+                                        'bg-warning': item.QualityStatus == 3}">
+                                        {{item.QualityStatusText.replace('Kalite','')}}
+                                    </td>
                                     <td class="w-15 px-2">
                                         <input type="number"
                                                class="form-control form-control-sm"
                                                ng-model="item.FirstQuantity" />
                                     </td>
-                                    <td class="w-25 px-2">
-                                        <div class="d-flex flex-row">
-                                            <button type="button" ng-click="selectProduct(item)"
-                                                    class="btn btn-sm btn-primary">
-                                                {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}
-                                            </button>
-                                            <button type="button" ng-click="selectParty(item)"
-                                                    class="btn btn-sm btn-primary mx-1 px-0">
-                                                {{ isSelectedParty(item) ? 'Partiyi Kaldır' : 'Partiyi Seç' }}
-                                            </button>
-                                        </div>
-                                        
+                                    <td class="w-15 px-2">
+                                        <button type="button" ng-click="selectProduct(item)"
+                                                class="btn btn-sm btn-primary">
+                                            {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -138,22 +144,32 @@
                 @* STOK ÖZET & TOPLAM TABLOSU *@
                 <div class="col-xxl-4 col-sm-4">
                     <h5 class="hk-title-mobile">Ürün Toplamları</h5>
-                    <table class="table table-bordered table-hk-sm">
+                    <div class="d-flex flex-row">
+                        <button type="button" class="btn btn-primary flex-grow-1 mx-1"
+                                ng-class="{'btn-warning': selectedShift.Id == item.Id}"
+                                ng-click="selectShift(item)"
+                                ng-repeat="item in shiftList">
+                            {{ item.ShiftCode }}
+                        </button>
+                    </div>
+                    <table class="table table-bordered table-hk-md">
                         <thead>
                             <tr>
                                 <th class="w-50 px-2">Ürün</th>
-                                <th class="w-25 px-2">Koli Adedi</th>
-                                <th class="w-25 px-2">Ürün Adedi</th>
+                                <th class="w-10 px-1">Vardiya</th>
+                                <th class="w-20 px-2">Koli Adedi</th>
+                                <th class="w-20 px-2">Ürün Adedi</th>
                                 <th class="w-10 px-2">#</th>
                             </tr>
                         </thead>
                     </table>
-                    <div class="table-scroller-md">
-                        <table ng-cloak class="table table-bordered table-striped table-hk-sm">
+                    <div class="table-scroller-sm">
+                        <table ng-cloak class="table table-bordered table-striped table-hk-md">
                             <tbody>
-                                <tr ng-repeat="item in summaryList"
+                                <tr ng-repeat="item in filteredSummaryList"
                                     ng-class="{'bg-warning': selectedSummary.ItemName == item.ItemName}">
                                     <td class="w-50 px-2">{{item.ItemName}}</td>
+                                    <td class="w-20 px-1">{{ item.ShiftCode }}</td>
                                     <td class="w-25 px-2">{{item.SerialCount}}</td>
                                     <td class="w-25 px-2">{{item.SerialSum}}</td>
                                     <td class="w-10 px-2">
@@ -167,11 +183,17 @@
                     </div>
                     <table class="table table-bordered">
                         <tfoot>
+                            <tr class="bg-primary text-white" ng-repeat="item in shiftList">
+                                <th class="w-50 px-2 py-1"><b>{{ item.ShiftCode }} Vardiyası</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialCount') }} KOLİ</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialSum') }} ADET</b></th>
+                                <th class="w-10 px-2 py-1"></th>
+                            </tr>
                             <tr class="bg-primary text-white">
-                                <th class="w-50 px-2"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2"><b>{{ getListSum(summaryList, 'SerialCount') }} KOLİ</b></th>
-                                <th class="w-25 px-2"><b>{{ getListSum(summaryList, 'SerialSum') }} ADET</b></th>
-                                <th class="w-10 px-2"></th>
+                                <th class="w-50 px-2 py-1"><b>TOPLAM: </b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialCount') }} KOLİ</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialSum') }} ADET</b></th>
+                                <th class="w-10 px-2 py-1"></th>
                             </tr>
                         </tfoot>
                     </table>

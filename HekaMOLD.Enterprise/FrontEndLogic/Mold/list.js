@@ -23,8 +23,9 @@
             headerFilter: {
                 visible: true
             },
+            height:400,
             paging: {
-                enabled:true,
+                enabled:false,
                 pageSize: 10,
                 pageIndex:0
             },
@@ -42,6 +43,7 @@
                 { dataField: 'OwnedDateStr', caption: 'Giriş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'LifeTimeTicks', caption: 'Kalıp Ömrü' },
                 { dataField: 'CurrentTicks', caption: 'Mevcut Baskı' },
+                { dataField: 'IsActive', caption:'Aktif' },
                 {
                     type: "buttons",
                     buttons: [
@@ -60,14 +62,17 @@
             });
         }
 
-    $scope.moldList = [];
+    $scope.printingMoldList = [];
+
     $scope.showPrintDialog = function () {
         try {
-            $http.get(HOST_URL + 'Mold/GetMoldList', {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        $scope.moldList = resp.data;
-                    }
+            let gridInstance = $("#dataList").dxDataGrid("instance");
+            const filterExpr = gridInstance.getCombinedFilter(true);
+            gridInstance
+                .getDataSource()
+                .load({ filter: filterExpr })
+                .then((result) => {
+                    $scope.printingMoldList = result;
 
                     $('#dial-print-label').dialog({
                         width: 1100,
@@ -79,7 +84,7 @@
                         draggable: false,
                         closeText: "KAPAT"
                     });
-                }).catch(function (err) { });
+                });
         } catch (e) {
 
         }
@@ -92,6 +97,43 @@
         window.print();
         document.body.innerHTML = originalContents;
         window.location.reload();
+    }
+
+    $scope.printingQueue = [];
+    $scope.printEnd = false;
+
+    $scope.afterPrintQueue = function () {
+        if ($scope.printingQueue.length > 0)
+            $scope.printingQueue.splice(0, 1);
+        $scope.printEnd = true;
+    }
+
+    $scope.printLabelAsSingle = async function () {
+        $scope.printingQueue = $scope.printingMoldList;
+
+        window.onafterprint = $scope.afterPrintQueue;
+        $scope.printEnd = true;
+
+        while ($scope.printingQueue.length > 0 && $scope.printEnd == true) {
+            let d = $scope.printingQueue[0];
+
+            $scope.printingMoldList.splice(0, $scope.printingMoldList.length);
+            $scope.printingMoldList.push(d);
+
+            $scope.printEnd = false;
+
+            var prms = new Promise(function (resolve, reject) {
+                var printContents = document.getElementById('mold-label').innerHTML;
+                var originalContents = document.body.innerHTML;
+                document.body.innerHTML = printContents;
+                window.print();
+                document.body.innerHTML = originalContents;
+            });
+
+
+        }
+
+        //window.location.reload();
     }
 
     // ON LOAD EVENTS

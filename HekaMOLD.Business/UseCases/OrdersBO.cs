@@ -242,6 +242,7 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemOrder>();
                 var repoDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoNeeds = _unitOfWork.GetRepository<ItemOrderItemNeeds>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
@@ -265,6 +266,16 @@ namespace HekaMOLD.Business.UseCases
                         #endregion
 
                         repoDetail.Delete(item);
+                    }
+                }
+
+                // CLEAR NEEDS
+                if (dbObj.ItemOrderItemNeeds.Any())
+                {
+                    var needs = dbObj.ItemOrderItemNeeds.ToArray();
+                    foreach (var needItem in needs)
+                    {
+                        repoNeeds.Delete(needItem);
                     }
                 }
 

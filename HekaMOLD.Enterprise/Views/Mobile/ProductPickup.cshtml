@@ -73,6 +73,12 @@
                 @* KOLİ TABLOSU *@
                 <div class="col-xxl-8 col-sm-8">
                     <h5 class="hk-title-mobile">Koli Listesi</h5>
+                    <div class="d-flex flex-row justify-content-end">
+                        <button type="button" class="btn btn-primary mx-1" ng-cloak
+                                ng-click="selectAll(item)">
+                            {{ selectedProducts.length == filteredPickupList.length && selectedProducts.length > 0 ? 'Seçimi Kaldır' : 'Tümünü Seç' }}
+                        </button>
+                    </div>
                     <table class="table table-bordered table-hk-md">
                         <thead>
                             <tr>
@@ -105,8 +111,9 @@
                                         ng-class="{
                                         'bg-success': item.QualityStatus == 1,
                                         'bg-danger': item.QualityStatus == 2,
-                                        'bg-warning': item.QualityStatus == 3}"
-                                        >{{item.QualityStatusText.replace('Kalite','')}}</td>
+                                        'bg-warning': item.QualityStatus == 3}">
+                                        {{item.QualityStatusText.replace('Kalite','')}}
+                                    </td>
                                     <td class="w-15 px-2">
                                         <input type="number"
                                                class="form-control form-control-sm"
@@ -164,11 +171,17 @@
                     </div>
                     <table class="table table-bordered">
                         <tfoot>
+                            <tr class="bg-primary text-white" ng-repeat="item in shiftList">
+                                <th class="w-50 px-2 py-1"><b>{{ item.ShiftCode }} Vardiyası</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialCount') }} KOLİ</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialSum') }} ADET</b></th>
+                                <th class="w-10 px-2 py-1"></th>
+                            </tr>
                             <tr class="bg-primary text-white">
-                                <th class="w-50 px-2"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2"><b>{{ getListSum(filteredSummaryList, 'SerialCount') }} KOLİ</b></th>
-                                <th class="w-25 px-2"><b>{{ getListSum(filteredSummaryList, 'SerialSum') }} ADET</b></th>
-                                <th class="w-10 px-2"></th>
+                                <th class="w-50 px-2 py-1"><b>TOPLAM: </b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialCount') }} KOLİ</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialSum') }} ADET</b></th>
+                                <th class="w-10 px-2 py-1"></th>
                             </tr>
                         </tfoot>
                     </table>

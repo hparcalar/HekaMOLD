@@ -9,10 +9,13 @@
 
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
+    $scope.shiftList = [];
 
     $scope.summaryList = [];
+    $scope.filteredSummaryList = [];
     $scope.selectedProducts = [];
     $scope.selectedSummary = { ItemName: '' };
+    $scope.selectedShift = { Id: 0 };
 
     $scope.bindModel = function () {
         $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
@@ -21,6 +24,7 @@
                     $scope.pickupList = resp.data.Serials;
                     $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
+                    $scope.filteredSummaryList = $scope.summaryList;
                 }
             }).catch(function (err) { });
     }
@@ -30,6 +34,27 @@
             return getSumOf(list, key);
 
         return '';
+    }
+
+    $scope.getShiftSum = function (shiftCode, key) {
+        let list = $scope.filteredSummaryList.filter(d => d.ShiftCode == shiftCode);
+
+        if (list != null && list.length > 0)
+            return getSumOf(list, key);
+
+        return '';
+    }
+
+    $scope.selectAll = function () {
+        if ($scope.selectedProducts.length == $scope.filteredPickupList.length && $scope.selectedProducts.length > 0) {
+            $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+        }
+        else {
+            $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+            $scope.filteredPickupList.forEach(d => {
+                $scope.selectedProducts.push(d);
+            });
+        }
     }
 
     $scope.selectProduct = function (item) {
@@ -71,6 +96,19 @@
         else {
             $scope.selectedSummary.ItemName = item.ItemName;
             $scope.filteredPickupList = $scope.pickupList.filter(d => d.ItemName == item.ItemName);
+        }
+    }
+
+    $scope.selectShift = function (item) {
+        if ($scope.selectedShift.Id == item.Id) {
+            $scope.selectedShift.Id = 0;
+            $scope.filteredSummaryList = $scope.summaryList;
+            $scope.filteredPickupList = $scope.pickupList;
+        }
+        else {
+            $scope.selectedShift.Id = item.Id;
+            $scope.filteredSummaryList = $scope.summaryList.filter(d => d.ShiftCode == item.ShiftCode);
+            $scope.filteredPickupList = $scope.pickupList.filter(d => d.ShiftCode == item.ShiftCode);
         }
     }
 
@@ -270,6 +308,24 @@
         });
     }
 
+    $scope.loadSelectables = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Mobile/GetSelectables?action=ItemEntry', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+
+                        $scope.shiftList = resp.data.Shifts;
+
+                        resolve();
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prms;
+    }
+
     // LOAD EVENTS
-    $scope.bindModel();
+    $scope.loadSelectables().then(function () {
+        $scope.bindModel();
+    });
 });

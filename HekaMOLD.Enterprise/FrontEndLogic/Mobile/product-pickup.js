@@ -35,6 +35,27 @@
         return '';
     }
 
+    $scope.getShiftSum = function (shiftCode, key) {
+        let list = $scope.filteredSummaryList.filter(d => d.ShiftCode == shiftCode);
+
+        if (list != null && list.length > 0)
+            return getSumOf(list, key);
+
+        return '';
+    }
+
+    $scope.selectAll = function () {
+        if ($scope.selectedProducts.length == $scope.filteredPickupList.length && $scope.selectedProducts.length > 0) {
+            $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+        }
+        else {
+            $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+            $scope.filteredPickupList.forEach(d => {
+                $scope.selectedProducts.push(d);
+            });
+        }
+    }
+
     $scope.selectedWarehouse = { Id: 0, WarehouseName: '' };
     $scope.warehouseList = [];
 
