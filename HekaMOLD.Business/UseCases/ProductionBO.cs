@@ -2737,6 +2737,53 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+
+        public BusinessResult PrintMoldLabel(int id, string outputPath, string outputFileName)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Mold>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj == null)
+                    throw new Exception("Ürün giriş kaydına erişilemedi.");
+
+                // GENERATE BARCODE IMAGE
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(dbObj.MoldCode, QRCodeGenerator.ECCLevel.Q);
+                QRCode qrCode = new QRCode(qrCodeData);
+                Bitmap qrCodeImage = qrCode.GetGraphic(100);
+
+                ImageConverter converter = new ImageConverter();
+                var imgBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                List<ProductLabel> dataList = new List<ProductLabel>() {
+                    new ProductLabel
+                    {
+                        ProductCode = dbObj.MoldCode.Substring(dbObj.MoldCode.Length -9),
+                        ProductName = dbObj.MoldName,
+                        BarcodeImage = imgBytes
+                    }
+                };
+
+                LocalReport report = new LocalReport();
+                report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\MoldLabel.rdlc";
+
+                report.DataSources.Add(new ReportDataSource("DS1", dataList));
+                ExportPdf(report, "8cm","8cm", outputPath, outputFileName);
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         #endregion
 
         #region YAZDIRMAK İÇİN GEREKLİ STANDART METOTLAR
@@ -2794,6 +2841,47 @@ namespace HekaMOLD.Business.UseCases
              </DeviceInfo>"
             .Replace("{PageWidth}", "21cm")
             .Replace("{PageHeight}", "29.7cm")
+            .Replace("{MarginTop}", "0.2cm")
+            .Replace("{MarginLeft}", "0.0cm")
+            .Replace("{MarginRight}", "0.0cm")
+            .Replace("{MarginBottom}", "0.0cm");
+
+            Warning[] warnings;
+            //m_streams = new List<Stream>();
+            //report.Render("PDF", deviceInfo, CreateStream,
+            //   out warnings);
+            //foreach (Stream stream in m_streams)
+            //    stream.Position = 0;
+
+            string[] streamids;
+            string mimeType;
+            string encoding;
+            string filenameExtension;
+
+            byte[] bytes = report.Render(
+                "PDF", null, out mimeType, out encoding, out filenameExtension,
+                out streamids, out warnings);
+
+            using (FileStream fs = new FileStream(outputPath + outputFileName, FileMode.Create))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
+        }
+
+        private void ExportPdf(LocalReport report, string pageWidth, string pageHeight, string outputPath, string outputFileName)
+        {
+            string deviceInfo =
+          @"<DeviceInfo>
+                <OutputFormat>EMF</OutputFormat>
+                <PageWidth>{PageWidth}</PageWidth>
+                <PageHeight>{PageHeight}</PageHeight>
+                <MarginTop>{MarginTop}</MarginTop>
+                <MarginLeft>{MarginLeft}</MarginLeft>
+                <MarginRight>{MarginRight}</MarginRight>
+                <MarginBottom>{MarginBottom}</MarginBottom>
+             </DeviceInfo>"
+            .Replace("{PageWidth}", pageWidth)
+            .Replace("{PageHeight}", pageHeight)
             .Replace("{MarginTop}", "0.2cm")
             .Replace("{MarginLeft}", "0.0cm")
             .Replace("{MarginRight}", "0.0cm")

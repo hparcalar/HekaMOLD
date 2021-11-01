@@ -21,7 +21,7 @@
         $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data.Serials;
+                    $scope.pickupList = resp.data.Serials.sort((a, b) => a.WorkOrderDetailId - b.WorkOrderDetailId);
                     $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
                     $scope.filteredSummaryList = $scope.summaryList;

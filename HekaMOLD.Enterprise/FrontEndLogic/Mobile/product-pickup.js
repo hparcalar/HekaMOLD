@@ -2,7 +2,8 @@
     $scope.modelObject = {
         Id:0,
         DocumentNo: '', FirmId: 0,
-        FirmCode:'', FirmName:'',
+        FirmCode: '', FirmName: '',
+        ShowOnlyOk: false,
         Details: []
     };
 
@@ -20,7 +21,7 @@
         $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data.Serials;
+                    $scope.pickupList = resp.data.Serials.sort((a, b) => a.WorkOrderDetailId - b.WorkOrderDetailId);
                     $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
                     $scope.filteredSummaryList = $scope.summaryList;
@@ -45,13 +46,18 @@
     }
 
     $scope.selectAll = function () {
-        if ($scope.selectedProducts.length == $scope.filteredPickupList.length && $scope.selectedProducts.length > 0) {
+        if ($scope.selectedProducts.length > 0) {
             $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
         }
         else {
             $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
             $scope.filteredPickupList.forEach(d => {
-                $scope.selectedProducts.push(d);
+                if ($scope.modelObject.ShowOnlyOk == true) {
+                    if (d.QualityStatus == 1)
+                        $scope.selectedProducts.push(d);
+                }
+                else
+                    $scope.selectedProducts.push(d);
             });
         }
     }
@@ -102,6 +108,14 @@
     $scope.processBarcodeResult = function (barcode) {
         var product = $scope.pickupList.find(d => d.SerialNo == barcode);
         if (product != null && typeof product != 'undefined') {
+            if (!$scope.selectedProducts.some(d => d.SerialNo == barcode))
+                toastr.success('Ürün barkodu seçildi.');
+            else {
+                toastr.warning('Bu ürün barkodu zaten okutulmuş.');
+                $scope.isBarcodeRead = true;
+                return;
+            }
+
             $scope.selectProduct(product);
             $scope.isBarcodeRead = true;
             try {
@@ -110,15 +124,31 @@
 
             }
         }
+        else {
+            $scope.isBarcodeRead = true;
+            toastr.error('Okutulan barkoda ait bir kayıt bulunamadı.');
+        }
     }
 
     $scope.isBarcodeRead = false;
 
+    $scope.qrScanner = null;
+
     $scope.readBarcode = function () {
         $scope.isBarcodeRead = false;
         bootbox.alert({
-            message: '<div style="width: 500px" id="reader"></div>',
-            locale: 'tr'
+            message: '<div class="mx-auto" id="reader"></div>',
+            closeButton: false,
+            locale: 'tr',
+            callback: function () {
+                try {
+                    $scope.qrScanner.stop();
+                } catch (e) {
+
+                }
+
+                bootbox.hideAll();
+            }
         });
 
         // TO REQUEST WEB CAM ACCESS
@@ -134,22 +164,21 @@
         }).catch(err => { });
 
         // WEB CAM READER OBJECT
-        let qrScanner = new Html5Qrcode(
+        $scope.qrScanner = new Html5Qrcode(
             "reader");
 
-        qrScanner.start(
+        $scope.qrScanner.start(
             { facingMode: "environment" }, // prefers back, for the front camera use 'user'
             {
                 fps: 10,    // sets the framerate to 10 frame per second
-                qrbox: 250  // sets only 250 X 250 region of viewfinder to
+                qrbox: 250,  // sets only 250 X 250 region of viewfinder to
                 // scannable, rest shaded.
             },
             qrCodeMessage => {
-                bootbox.hideAll();
-                if (!$scope.isBarcodeRead)
+                if (!$scope.isBarcodeRead) {
                     $scope.processBarcodeResult(qrCodeMessage);
-                //qrScanner.stop();
-                Html5Qrcode.stop();
+                    setTimeout(() => { $scope.isBarcodeRead = false; }, 1500);
+                }
             },
             errorMessage => {
             })
@@ -225,6 +254,7 @@
                                     $scope.modelObject = {
                                         DocumentNo: '', FirmId: 0,
                                         FirmCode: '', FirmName: '',
+                                        ShowOnlyOk: false,
                                         Details: []
                                     };
 

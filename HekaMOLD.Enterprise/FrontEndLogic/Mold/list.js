@@ -102,38 +102,31 @@
     $scope.printingQueue = [];
     $scope.printEnd = false;
 
-    $scope.afterPrintQueue = function () {
-        if ($scope.printingQueue.length > 0)
-            $scope.printingQueue.splice(0, 1);
-        $scope.printEnd = true;
-    }
-
     $scope.printLabelAsSingle = async function () {
         $scope.printingQueue = $scope.printingMoldList;
-
-        window.onafterprint = $scope.afterPrintQueue;
         $scope.printEnd = true;
 
-        while ($scope.printingQueue.length > 0 && $scope.printEnd == true) {
-            let d = $scope.printingQueue[0];
-
-            $scope.printingMoldList.splice(0, $scope.printingMoldList.length);
-            $scope.printingMoldList.push(d);
-
-            $scope.printEnd = false;
-
+        $scope.printingQueue.forEach(d => {
             var prms = new Promise(function (resolve, reject) {
-                var printContents = document.getElementById('mold-label').innerHTML;
-                var originalContents = document.body.innerHTML;
-                document.body.innerHTML = printContents;
-                window.print();
-                document.body.innerHTML = originalContents;
+                $http.post(HOST_URL + 'Common/PrintMoldLabel', { id: d.Id }, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                            if (resp.data.Status == 1) {
+                                //window.open(HOST_URL + 'Outputs/' + resp.data.FileName);
+
+                                var link = document.createElement('a');
+                                link.href = HOST_URL + 'Outputs/' + resp.data.FileName;
+                                link.download = resp.data.FileName;
+                                link.dispatchEvent(new MouseEvent('click'));
+
+                                resolve();
+                            }
+                        }
+                    }).catch(function (err) { });
             });
 
-
-        }
-
-        //window.location.reload();
+            prms.then();
+        });
     }
 
     // ON LOAD EVENTS

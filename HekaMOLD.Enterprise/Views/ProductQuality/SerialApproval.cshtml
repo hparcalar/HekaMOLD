@@ -130,10 +130,17 @@
                                                ng-model="item.FirstQuantity" />
                                     </td>
                                     <td class="w-15 px-2">
-                                        <button type="button" ng-click="selectProduct(item)"
-                                                class="btn btn-sm btn-primary">
-                                            {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}
-                                        </button>
+                                        <div class="d-flex flex-row">
+                                            <button type="button" ng-click="selectProduct(item)"
+                                                    class="btn btn-sm btn-primary flex-grow-1">
+                                                {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}
+                                            </button>
+
+                                            <button type="button" ng-click="selectParty(item)"
+                                                    class="btn btn-sm btn-primary flex-grow-1 mx-2">
+                                                {{ isSelectedProduct(item) ? 'Partiyi Kaldır' : 'Partiyi Seç' }}
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>

@@ -384,6 +384,25 @@ namespace HekaMOLD.Enterprise.Controllers
             return Json(new { Status = 1 });
         }
 
+        [HttpPost]
+        [FreeAction]
+        public JsonResult PrintMoldLabel(int id)
+        {
+            string moldCode = "";
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                var dbMold = bObj.GetMold(id);
+                moldCode = dbMold.MoldName;
+            }
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                bObj.PrintMoldLabel(id, Server.MapPath("~/Outputs/"), moldCode + ".pdf");
+            }
+
+            return Json(new { Status = 1, FileName= moldCode + ".pdf" });
+        }
+
         [HttpGet]
         [FreeAction]
         public JsonResult GetDefaultSerialPrinter()

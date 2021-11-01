@@ -11,13 +11,13 @@
     background-color: #888888;
 }
 .table-scroller-sm {
-    height: 180px;
-    max-height: 180px;
+    height: 130px;
+    max-height: 130px;
     overflow: auto;
 }
 .table-scroller-md{
-    height:280px;
-    max-height:280px;
+    height:230px;
+    max-height:230px;
     overflow:auto;
 }
 .table-scroller-lg {
@@ -146,4 +146,9 @@
 
 ::-webkit-scrollbar-corner {
     background: #000;
+}
+
+#reader video {
+    width:100% !important;
+    margin:0 auto;
 }
