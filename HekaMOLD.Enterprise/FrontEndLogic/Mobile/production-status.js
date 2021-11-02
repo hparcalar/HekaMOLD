@@ -23,6 +23,49 @@
         $scope.selectedWorkOrder = workOrder;
     }
 
+    $scope.holdWorkOrder = function () {
+        try {
+            bootbox.confirm({
+                message: "Bu iş emrini beklemeye almak istediğinize emin misiniz?",
+                closeButton: false,
+                buttons: {
+                    confirm: {
+                        label: 'Evet',
+                        className: 'btn-primary'
+                    },
+                    cancel: {
+                        label: 'Hayır',
+                        className: 'btn-light'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $scope.saveStatus = 1;
+
+                        $http.post(HOST_URL + 'Mobile/HoldWorkOrder',
+                            { workOrderDetailId: $scope.selectedWorkOrder.WorkOrder.Id }, 'json')
+                            .then(function (resp) {
+                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                    $scope.saveStatus = 0;
+
+                                    if (resp.data.Result == true) {
+                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                                    }
+                                    else
+                                        toastr.error(resp.data.ErrorMessage, 'Hata');
+
+                                    $scope.loadMachineQueue();
+                                    $scope.loadActiveWorkOrder();
+                                }
+                            }).catch(function (err) { });
+                    }
+                }
+            });
+        } catch (e) {
+
+        }
+    }
+
     $scope.toggleWorkOrderStatus = function () {
         try {
             bootbox.confirm({
@@ -93,6 +136,7 @@
                         $scope.activeWorkOrder = resp.data;
                         if ($scope.lastPackageQty > 0)
                             $scope.activeWorkOrder.WorkOrder.InPackageQuantity = $scope.lastPackageQty;
+                        $scope.selectedWorkOrder = $scope.activeWorkOrder;
                     }
                 }).catch(function (err) { });
         } catch (e) {

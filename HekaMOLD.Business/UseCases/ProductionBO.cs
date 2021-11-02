@@ -241,6 +241,49 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
+        public WorkOrderDetailModel[] GetActiveWorkOrderListOnMachine(int machineId)
+        {
+            List<WorkOrderDetailModel> data = new List<WorkOrderDetailModel>();
+
+            var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+
+            repo.Filter(d => d.MachineId == machineId
+                &&
+                (
+                    d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
+                )).OrderByDescending(d => d.Id).ToList().ForEach(d =>
+                {
+                    WorkOrderDetailModel containerObj = new WorkOrderDetailModel();
+                    d.MapTo(containerObj);
+
+                    containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
+                    containerObj.ProductName = d.Item != null ? d.Item.ItemName : "";
+                    containerObj.WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
+                        string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "";
+                    containerObj.WorkOrderNo = d.WorkOrder.WorkOrderNo;
+                    containerObj.Quantity = d.Quantity;
+                    containerObj.CompleteQuantity = Convert.ToInt32(d.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0);
+                    containerObj.WastageQuantity = d.ProductWastage.Sum(m => m.Quantity) ?? 0;
+                    containerObj.FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "";
+                    containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : "";
+                    containerObj.DyeCode = d.Dye != null ? d.Dye.DyeCode : "";
+                    containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
+                    containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
+                    containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
+                    containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
+                    containerObj.SaleOrderDocumentNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.DocumentNo : "";
+                    containerObj.SaleOrderReceiptNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.OrderNo : "";
+                    containerObj.SaleOrderDate = d.ItemOrderDetail != null ?
+                        string.Format("{0:dd.MM.yyyy}", d.ItemOrderDetail.ItemOrder.OrderDate) : "";
+                    containerObj.SaleOrderDeadline = d.ItemOrderDetail != null ?
+                        string.Format("", d.ItemOrderDetail.ItemOrder.DateOfNeed) : "";
+
+                    data.Add(containerObj);
+                });
+
+            return data.ToArray();
+        }
+
         public WorkOrderModel GetWorkOrder(int workOrderId)
         {
             WorkOrderModel model = new WorkOrderModel();

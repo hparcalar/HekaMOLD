@@ -124,7 +124,7 @@
 
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
-            dropDownOptions: { width: 500 },
+            dropDownOptions: { width: 600 },
             dataSource: $scope.itemList,
             value: cellInfo.value,
             valueExpr: "Id",
@@ -149,6 +149,8 @@
                     selectedRowKeys: [cellInfo.value],
                     focusedRowEnabled: true,
                     focusedRowKey: cellInfo.value,
+                    allowColumnResizing: true,
+                    wordWrapEnabled: true,
                     onSelectionChanged: function (selectionChangedArgs) {
                         e.component.option("value", selectionChangedArgs.selectedRowKeys[0]);
                         cellInfo.setValue(selectionChangedArgs.selectedRowKeys[0]);

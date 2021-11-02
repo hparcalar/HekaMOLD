@@ -183,9 +183,38 @@ namespace HekaMOLD.Enterprise.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        public JsonResult HoldWorkOrder(int workOrderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+                result = bObj.HoldWorkOrder(workOrderDetailId);
+            }
+
+            return Json(result);
+        }
+
         public ActionResult ProductEntry()
         {
             return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetMachineWorkList(int machineId)
+        {
+            WorkOrderDetailModel[] data = new WorkOrderDetailModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetActiveWorkOrderListOnMachine(machineId);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
         [HttpPost]

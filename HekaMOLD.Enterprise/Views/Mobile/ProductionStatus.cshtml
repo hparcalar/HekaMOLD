@@ -15,7 +15,7 @@
             <!--end::Title-->
 
             <div class="row gy-5 mt-4 gx-xl-8 bg-white">
-                <div class="col-sm-8 col-xs-8 col-xxl-8">
+                <div class="col-sm-6 col-xs-6 col-xxl-6">
                     <div class="row">
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine</label>
@@ -60,9 +60,9 @@
                     </a>
                 </div>
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    <a ng-show="selectedWorkOrder.Id > 0"
-                       ng-class="{'btn-light-success': selectedWorkOrder.WorkOrder.WorkOrderStatus == 1 || selectedWorkOrder.WorkOrder.WorkOrderStatus == 2,
-                                    'btn-light-danger': selectedWorkOrder.WorkOrder.WorkOrderStatus == 3}"
+                    <a ng-show="selectedWorkOrder.Id > 0" ng-cloak
+                       ng-class="{'btn-success': selectedWorkOrder.WorkOrder.WorkOrderStatus == 1 || selectedWorkOrder.WorkOrder.WorkOrderStatus == 2,
+                                    'btn-danger': selectedWorkOrder.WorkOrder.WorkOrderStatus == 3}"
                        class="btn btn-sm btn-block w-100 h-75 mt-2" ng-click="toggleWorkOrderStatus()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -78,6 +78,24 @@
                         </span>
                     </a>
                 </div>
+                <div class="col-sm-2 col-xs-2 col-xxl-2">
+                    <a ng-show="selectedWorkOrder.Id > 0" ng-if="selectedWorkOrder.WorkOrder.WorkOrderStatus == 3"
+                       ng-cloak
+                       class="btn btn-sm btn-warning btn-block w-100 h-75 mt-2" ng-click="holdWorkOrder()">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+                                    <path d="M6.26193932,17.6476484 C5.90425297,18.0684559 5.27315905,18.1196257 4.85235158,17.7619393 C4.43154411,17.404253 4.38037434,16.773159 4.73806068,16.3523516 L13.2380607,6.35235158 C13.6013618,5.92493855 14.2451015,5.87991302 14.6643638,6.25259068 L19.1643638,10.2525907 C19.5771466,10.6195087 19.6143273,11.2515811 19.2474093,11.6643638 C18.8804913,12.0771466 18.2484189,12.1143273 17.8356362,11.7474093 L14.0997854,8.42665306 L6.26193932,17.6476484 Z" id="Path-94" fill="#000000" fill-rule="nonzero" transform="translate(11.999995, 12.000002) rotate(-180.000000) translate(-11.999995, -12.000002) "></path>
+                                </g>
+                            </svg>
+                        </span>
+                        <br />
+                        <span style="display:block;margin-top:10px;">
+                            Beklet
+                        </span>
+                    </a>
+                </div>
             </div>
 
             <!--begin::QUEUE TABLE-->
@@ -87,9 +105,10 @@
                         <thead>
                             <tr>
                                 <th class="w-10 px-2"><b>Sıra</b></th>
-                                <th class="w-40 px-2"><b>Ürün</b></th>
+                                <th class="w-30 px-2"><b>Ürün</b></th>
                                 <th class="w-10 px-2"><b>Miktar</b></th>
-                                <th class="w-40 px-2"><b>Müşteri</b></th>
+                                <th class="w-30 px-2"><b>Müşteri</b></th>
+                                <th class="w-20 px-2"><b>Açıklama</b></th>
                             </tr>
                         </thead>
                     </table>
@@ -102,9 +121,10 @@
                                         'bg-success': item.WorkOrder.WorkOrderStatus == 4}"
                                     >
                                     <td class="w-10 px-2">{{item.OrderNo}}</td>
-                                    <td class="w-40 px-2">{{item.WorkOrder.ProductName}}</td>
+                                    <td class="w-30 px-2">{{item.WorkOrder.ProductName}}</td>
                                     <td class="w-10 px-2">{{item.WorkOrder.Quantity}}</td>
-                                    <td class="w-40 px-2">{{item.WorkOrder.FirmName}}</td>
+                                    <td class="w-30 px-2">{{item.WorkOrder.FirmName}}</td>
+                                    <td class="w-20 px-2"><b>{{ item.WorkOrder.Explanation }}</b></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -10,6 +10,7 @@
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
     $scope.shiftList = [];
+    $scope.selectedQualities = [];
 
     $scope.summaryList = [];
     $scope.filteredSummaryList = [];
@@ -25,8 +26,54 @@
                     $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
                     $scope.filteredSummaryList = $scope.summaryList;
+
+                    $scope.updateFilteredList();
                 }
             }).catch(function (err) { });
+    }
+
+    // -- BEGIN -- QUALITY STATUS FILTER FUNCTIONS
+    $scope.toggleQualityFilter = function (qStatus) {
+        if ($scope.selectedQualities.some(d => d == qStatus)) {
+            $scope.selectedQualities.splice($scope.selectedQualities.indexOf(qStatus), 1);
+
+            if (qStatus == 3)
+                $scope.selectedQualities.splice($scope.selectedQualities.indexOf(0), 1);
+        }
+        else {
+            $scope.selectedQualities.push(qStatus);
+
+            if (qStatus == 3)
+                $scope.selectedQualities.push(0);
+        }
+
+        $scope.updateFilteredList();
+    }
+
+    $scope.isQualityFilterSelected = function (qStatus) {
+        return $scope.selectedQualities.some(d => d == qStatus);
+    }
+    // -- END -- QUALITY STATUS FILTER FUNCTIONS
+
+    $scope.updateFilteredList = function () {
+        // FILTER QUALITY STATUS
+        if ($scope.selectedQualities.length > 0) {
+            $scope.filteredPickupList = $scope.pickupList.filter(d => $scope.selectedQualities.some(q => q == d.QualityStatus));
+        }
+        else
+            $scope.filteredPickupList = $scope.pickupList;
+
+        // FILTER SHIFT
+        if ($scope.selectedShift.Id > 0) {
+            $scope.filteredPickupList = $scope.filteredPickupList.filter(d => d.ShiftCode == $scope.selectedShift.ShiftCode);
+            $scope.filteredSummaryList = $scope.summaryList.filter(d => d.ShiftCode == $scope.selectedShift.ShiftCode);
+        }
+        else
+            $scope.filteredSummaryList = $scope.summaryList;
+
+        // FILTER ITEM NAME (BY SUMMARY TABLE)
+        if ($scope.selectedSummary.ItemName.length > 0)
+            $scope.filteredPickupList = $scope.filteredPickupList.filter(d => d.ItemName == $scope.selectedSummary.ItemName);
     }
 
     $scope.getListSum = function (list, key) {
@@ -91,25 +138,31 @@
     $scope.selectSummary = function (item) {
         if ($scope.selectedSummary.ItemName == item.ItemName) {
             $scope.selectedSummary.ItemName = '';
-            $scope.filteredPickupList = $scope.pickupList;
+            //$scope.filteredPickupList = $scope.pickupList;
         }
         else {
             $scope.selectedSummary.ItemName = item.ItemName;
-            $scope.filteredPickupList = $scope.pickupList.filter(d => d.ItemName == item.ItemName);
+            //$scope.filteredPickupList = $scope.pickupList.filter(d => d.ItemName == item.ItemName);
         }
+
+        $scope.updateFilteredList();
     }
 
     $scope.selectShift = function (item) {
         if ($scope.selectedShift.Id == item.Id) {
             $scope.selectedShift.Id = 0;
-            $scope.filteredSummaryList = $scope.summaryList;
-            $scope.filteredPickupList = $scope.pickupList;
+            $scope.selectedShift.ShiftCode = '';
+            //$scope.filteredSummaryList = $scope.summaryList;
+            //$scope.filteredPickupList = $scope.pickupList;
         }
         else {
             $scope.selectedShift.Id = item.Id;
-            $scope.filteredSummaryList = $scope.summaryList.filter(d => d.ShiftCode == item.ShiftCode);
-            $scope.filteredPickupList = $scope.pickupList.filter(d => d.ShiftCode == item.ShiftCode);
+            $scope.selectedShift.ShiftCode = item.ShiftCode;
+            //$scope.filteredSummaryList = $scope.summaryList.filter(d => d.ShiftCode == item.ShiftCode);
+            //$scope.filteredPickupList = $scope.pickupList.filter(d => d.ShiftCode == item.ShiftCode);
         }
+
+        $scope.updateFilteredList();
     }
 
     $scope.processBarcodeResult = function (barcode) {

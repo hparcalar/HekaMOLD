@@ -15,6 +15,8 @@
             showColumnLines: false,
             showRowLines: true,
             rowAlternationEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,
             filterRow: {
@@ -37,6 +39,7 @@
             },
             columns: [
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
+                { dataField: 'DocumentNo', caption: 'Belge No' },
                 { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'DateOfNeedStr', caption: 'Termin Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'FirmCode', caption: 'Firma Kodu' },

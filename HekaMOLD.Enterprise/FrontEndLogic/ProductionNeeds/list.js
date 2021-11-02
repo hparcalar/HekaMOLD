@@ -15,6 +15,7 @@
             showColumnLines: false,
             showRowLines: true,
             allowColumnResizing: true,
+            wordWrapEnabled: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,

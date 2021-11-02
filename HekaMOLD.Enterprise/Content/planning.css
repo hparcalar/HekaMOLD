@@ -128,3 +128,7 @@
     background-color: #ef5454;
     font-weight: bold;
 }
+
+.dx-datagrid td {
+    font-size:x-small !important;
+}  

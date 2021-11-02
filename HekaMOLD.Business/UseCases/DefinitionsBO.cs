@@ -299,7 +299,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoWarehouses = _unitOfWork.GetRepository<ItemWarehouse>();
                 var repoUnits = _unitOfWork.GetRepository<ItemUnit>();
 
-                if (repo.Any(d => (d.ItemNo == model.ItemNo || d.ItemName == model.ItemName) 
+                if (repo.Any(d => (d.ItemNo == model.ItemNo) 
                     && d.Id != model.Id))
                     throw new Exception("Aynı numaraya sahip başka bir stok mevcuttur. Lütfen farklı bir numara giriniz.");
 

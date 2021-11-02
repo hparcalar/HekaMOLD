@@ -106,7 +106,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
             var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
             if (planObj != null) {
-                if (planObj.WorkOrder.WorkOrderStatus != 1) {
+                if (planObj.WorkOrder.WorkOrderStatus > 3) {
                     toastr.error('Tamamlanmış bir planı değiştiremezsiniz.', 'Uyarı');
                     return false;
                 }
@@ -126,7 +126,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 return false;
             else {
                 var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
-                if (planObj.WorkOrder.WorkOrderStatus != 1) {
+                if (planObj.WorkOrder.WorkOrderStatus > 3) {
                     toastr.error('Tamamlanmış bir planın önüne üretim alamazsınız.', 'Uyarı');
                     return false;
                 }
@@ -267,6 +267,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
             focusedRowEnabled: true,
             cacheEnabled: false,
             allowColumnResizing: true,
+            wordWrapEnabled: true,
             showBorders: true,
             filterRow: {
                 visible: true

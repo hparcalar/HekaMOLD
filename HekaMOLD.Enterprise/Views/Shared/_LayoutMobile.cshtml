@@ -587,10 +587,10 @@
                                                     <!--begin::Username-->
                                                     <div class="d-flex flex-column">
                                                         <div class="fw-bolder d-flex align-items-center fs-5">
-                                                            @Request.Cookies["UserName"].Value
+                                                            @Server.UrlDecode(Request.Cookies["UserName"].Value)
                                                             <span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2"></span>
                                                         </div>
-                                                        <a href="#" class="fw-bold text-muted text-hover-primary fs-7">@Request.Cookies["UserCode"].Value</a>
+                                                        <a href="#" class="fw-bold text-muted text-hover-primary fs-7">@Server.UrlDecode(Request.Cookies["UserCode"].Value)</a>
                                                     </div>
                                                     <!--end::Username-->
                                                 </div>

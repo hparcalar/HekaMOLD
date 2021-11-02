@@ -489,6 +489,7 @@ namespace HekaMOLD.Business.UseCases
                         Id= d.WorkOrderDetail.Id,
                         ProductCode = d.WorkOrderDetail.Item.ItemNo,
                         ProductName = d.WorkOrderDetail.Item.ItemName,
+                        Explanation = d.WorkOrderDetail.WorkOrder.Explanation,
                         WorkOrderId = d.WorkOrderDetail.WorkOrderId,
                         MoldId = d.WorkOrderDetail.MoldId,
                         MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
@@ -534,7 +535,7 @@ namespace HekaMOLD.Business.UseCases
                     data.Explanation = dbObj.WorkOrder.Explanation;
                     data.ProductName = dbObj.Item.ItemName;
                     data.Quantity = dbObj.Quantity;
-                    data.CompleteQuantity = dbObj.WorkOrderSerial.Count();
+                    data.CompleteQuantity = Convert.ToInt32(dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0);
                     data.MoldCode = dbObj.Mold != null ? dbObj.Mold.MoldCode : "";
                     data.MoldName = dbObj.Mold != null ? dbObj.Mold.MoldName : "";
                     data.WastageQuantity = dbObj.ProductWastage.Sum(d => d.Quantity) ?? 0;
@@ -573,35 +574,35 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.Quantity = model.Quantity;
 
                 // UPDATE PRODUCED SERIALS
-                int exComplete = dbObj.WorkOrderSerial.Sum(d => Convert.ToInt32(d.FirstQuantity ?? 0));
-                if (exComplete < model.CompleteQuantity)
-                {
-                    int diffQty = model.CompleteQuantity - exComplete;
-                    for (int i = 0; i < diffQty; i++)
-                    {
-                        WorkOrderSerial newSerial = new WorkOrderSerial();
-                        newSerial.SerialNo = "";
-                        newSerial.FirstQuantity = 1;
-                        newSerial.LiveQuantity = 1;
-                        newSerial.CreatedDate = DateTime.Now;
-                        newSerial.IsGeneratedBySignal = false;
-                        newSerial.SerialType = (int)WorkOrderSerialType.ProductPackage;
-                        newSerial.SerialStatus = (int)SerialStatusType.Created;
-                        newSerial.WorkOrderDetail = dbObj;
-                        repoSerial.Add(newSerial);
-                    }
-                }
-                else if (exComplete > 0 && model.CompleteQuantity > -1 && exComplete > model.CompleteQuantity)
-                {
-                    var oldSerials = dbObj.WorkOrderSerial.ToArray();
+                //int exComplete = dbObj.WorkOrderSerial.Sum(d => Convert.ToInt32(d.FirstQuantity ?? 0));
+                //if (exComplete < model.CompleteQuantity)
+                //{
+                //    int diffQty = model.CompleteQuantity - exComplete;
+                //    for (int i = 0; i < diffQty; i++)
+                //    {
+                //        WorkOrderSerial newSerial = new WorkOrderSerial();
+                //        newSerial.SerialNo = "";
+                //        newSerial.FirstQuantity = 1;
+                //        newSerial.LiveQuantity = 1;
+                //        newSerial.CreatedDate = DateTime.Now;
+                //        newSerial.IsGeneratedBySignal = false;
+                //        newSerial.SerialType = (int)WorkOrderSerialType.ProductPackage;
+                //        newSerial.SerialStatus = (int)SerialStatusType.Created;
+                //        newSerial.WorkOrderDetail = dbObj;
+                //        repoSerial.Add(newSerial);
+                //    }
+                //}
+                //else if (exComplete > 0 && model.CompleteQuantity > -1 && exComplete > model.CompleteQuantity)
+                //{
+                //    var oldSerials = dbObj.WorkOrderSerial.ToArray();
 
-                    int diffQty = exComplete - model.CompleteQuantity;
-                    for (int i = 0; i < diffQty; i++)
-                    {
-                        if (oldSerials.Length > i)
-                            repoSerial.Delete(oldSerials[i]);
-                    }
-                }
+                //    int diffQty = exComplete - model.CompleteQuantity;
+                //    for (int i = 0; i < diffQty; i++)
+                //    {
+                //        if (oldSerials.Length > i)
+                //            repoSerial.Delete(oldSerials[i]);
+                //    }
+                //}
 
                 // UPDATE WASTAGE DATA
                 decimal exWst = dbObj.ProductWastage.Sum(d => d.Quantity) ?? 0;
@@ -724,6 +725,33 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+
+        public BusinessResult HoldWorkOrder(int workOrderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var dbObj = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbObj == null)
+                    throw new Exception("Durumu değiştirilmek istenen iş emri kaydına ulaşılamadı.");
+
+                dbObj.WorkOrderStatus = (int)WorkOrderStatusType.OnHold;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public BusinessResult ToggleWorkOrderStatus(int workOrderDetailId, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
@@ -738,12 +766,14 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                     throw new Exception("Durumu değiştirilmek istenen iş emri kaydına ulaşılamadı.");
 
-                if (dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Planned || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Created)
+                if (dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Planned 
+                    || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Created 
+                    || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.OnHold)
                 {
-                    if (repo.Any(d => d.MachineId == dbObj.MachineId
-                        && d.Id != dbObj.Id
-                        && d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress))
-                        throw new Exception("Bu makinede zaten bir aktif üretim mevcuttur. Önce aktif işi bitirip sonra yenisine başlayabilirsiniz.");
+                    //if (repo.Any(d => d.MachineId == dbObj.MachineId
+                    //    && d.Id != dbObj.Id
+                    //    && d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress))
+                    //    throw new Exception("Bu makinede zaten bir aktif üretim mevcuttur. Önce aktif işi bitirip sonra yenisine başlayabilirsiniz.");
 
                     // CHECK IF THERE IS AN ONGOING POSTURE THEN STOP IT
                     if (repoPosture.Any(d => d.MachineId == dbObj.MachineId && d.PostureStatus != (int)PostureStatusType.Resolved))

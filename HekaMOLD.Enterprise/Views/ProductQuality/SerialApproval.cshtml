@@ -15,17 +15,46 @@
                             <h1 class="d-flex align-items-center text-dark fw-bolder mt-3 fs-3">
                                 @ViewBag.Title
                             </h1>
+                            <label class="mt-2"><b>Seçilen <u>Koli:</u> {{ selectedProducts.length }} / <u>Adet:</u> {{ getListSum(selectedProducts, 'FirstQuantity') }}</b></label>
                             <!--end::Title-->
                         </div>
                         <div class="col-sm-6 col-xxl-6 col-xs-6">
-                            <label class="form-check form-check-custom form-check-solid w-100 mt-3">
-                                <input class="form-check-input" type="checkbox"
-                                       ng-model="modelObject.ShowOnlyWaitings" />
-                                <span class="form-check-label">
-                                    Sadece onay bekleyenleri göster
-                                </span>
-                            </label>
-                            <label class="mt-2"><b>Seçilen <u>Koli:</u> {{ selectedProducts.length }} / <u>Adet:</u> {{ getListSum(selectedProducts, 'FirstQuantity') }}</b></label>
+                            <label class="mt-0 text-center w-100 bg-light-dark rounded-1"><b>Durum Filtreleri</b></label>
+                            <div class="d-flex flex-row h-75">
+                                <button type="button"
+                                        ng-class="{'btn-dark': isQualityFilterSelected(1)}"
+                                        ng-click="toggleQualityFilter(1)"
+                                        class="btn btn-sm btn-success btn-block h-75 flex-fill mt-2 mx-1">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Text-/-Filter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                            <path d="M5,4 L19,4 C19.2761424,4 19.5,4.22385763 19.5,4.5 C19.5,4.60818511 19.4649111,4.71345191 19.4,4.8 L14,12 L14,20.190983 C14,20.4671254 13.7761424,20.690983 13.5,20.690983 C13.4223775,20.690983 13.3458209,20.6729105 13.2763932,20.6381966 L10,19 L10,12 L4.6,4.8 C4.43431458,4.5790861 4.4790861,4.26568542 4.7,4.1 C4.78654809,4.03508894 4.89181489,4 5,4 Z" id="Path-33" fill="#000000"></path>
+                                        </g>
+                                    </svg>Ok
+                                </button>
+                                <button type="button"
+                                        ng-class="{'btn-dark': isQualityFilterSelected(2)}"
+                                        ng-click="toggleQualityFilter(2)"
+                                        class="btn btn-sm btn-danger btn-block h-75 flex-fill mt-2 mx-1">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Text-/-Filter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                            <path d="M5,4 L19,4 C19.2761424,4 19.5,4.22385763 19.5,4.5 C19.5,4.60818511 19.4649111,4.71345191 19.4,4.8 L14,12 L14,20.190983 C14,20.4671254 13.7761424,20.690983 13.5,20.690983 C13.4223775,20.690983 13.3458209,20.6729105 13.2763932,20.6381966 L10,19 L10,12 L4.6,4.8 C4.43431458,4.5790861 4.4790861,4.26568542 4.7,4.1 C4.78654809,4.03508894 4.89181489,4 5,4 Z" id="Path-33" fill="#000000"></path>
+                                        </g>
+                                    </svg>Red
+                                </button>
+                                <button type="button"
+                                        ng-class="{'btn-dark': isQualityFilterSelected(3)}"
+                                        ng-click="toggleQualityFilter(3)"
+                                        class="btn btn-sm btn-warning btn-block h-75 flex-fill mt-2 mx-1">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Text-/-Filter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                            <path d="M5,4 L19,4 C19.2761424,4 19.5,4.22385763 19.5,4.5 C19.5,4.60818511 19.4649111,4.71345191 19.4,4.8 L14,12 L14,20.190983 C14,20.4671254 13.7761424,20.690983 13.5,20.690983 C13.4223775,20.690983 13.3458209,20.6729105 13.2763932,20.6381966 L10,19 L10,12 L4.6,4.8 C4.43431458,4.5790861 4.4790861,4.26568542 4.7,4.1 C4.78654809,4.03508894 4.89181489,4 5,4 Z" id="Path-33" fill="#000000"></path>
+                                        </g>
+                                    </svg>Bekleme
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -146,6 +175,16 @@
                             </tbody>
                         </table>
                     </div>
+                    <table class="table table-bordered">
+                        <tfoot>
+                            <tr class="bg-primary text-white">
+                                <th class="w-50 px-2 py-1"><b>TOPLAM: </b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ filteredPickupList.length }} KOLİ</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredPickupList, 'FirstQuantity') }} ADET</b></th>
+                                <th class="w-10 px-2 py-1"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
 
                 @* STOK ÖZET & TOPLAM TABLOSU *@
@@ -153,7 +192,7 @@
                     <h5 class="hk-title-mobile">Ürün Toplamları</h5>
                     <div class="d-flex flex-row">
                         <button type="button" class="btn btn-primary flex-grow-1 mx-1"
-                                ng-class="{'btn-warning': selectedShift.Id == item.Id}"
+                                ng-class="{'btn-dark': selectedShift.Id == item.Id}"
                                 ng-click="selectShift(item)"
                                 ng-repeat="item in shiftList">
                             {{ item.ShiftCode }}

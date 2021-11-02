@@ -182,123 +182,145 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     itemType = (int)ItemType.RawMaterials;
                                 else if (Convert.ToInt32(row["sto_cins"]) == 2 || Convert.ToInt32(row["sto_cins"]) == 3)
                                     itemType = (int)ItemType.SemiProduct;
-                                else if (Convert.ToInt32(row["sto_cins"]) == 4 
+                                else if (Convert.ToInt32(row["sto_cins"]) == 4
                                     || Convert.ToInt32(row["sto_cins"]) == 5 || Convert.ToInt32(row["sto_cins"]) == 10)
                                     itemType = (int)ItemType.Product;
 
                                 int? categoryId = null;
                                 // FETCH & UPDATE ITEM CATEGORY
-                                if (!string.IsNullOrEmpty(row["sto_kategori_kodu"].ToString()))
+                                try
                                 {
-                                    using (DefinitionsBO subObj = new DefinitionsBO())
+                                    if (!string.IsNullOrEmpty(row["sto_kategori_kodu"].ToString()))
                                     {
-                                        if (!subObj.HasAnyItemCategory(row["sto_kategori_kodu"].ToString()))
+                                        using (DefinitionsBO subObj = new DefinitionsBO())
                                         {
-                                            SqlCommand cmd = new SqlCommand("SELECT * FROM STOK_KATEGORILERI WHERE ktg_kod='" +
-                                                    row["sto_kategori_kodu"]
-                                                + "'", con);
-                                            SqlDataReader rdr = cmd.ExecuteReader();
-                                            if (rdr.Read())
+                                            if (!subObj.HasAnyItemCategory(row["sto_kategori_kodu"].ToString()))
                                             {
-                                                string catName = rdr["ktg_isim"].ToString();
-                                                var bResult = subObj.SaveOrUpdateItemCategory(new ItemCategoryModel
+                                                SqlCommand cmd = new SqlCommand("SELECT * FROM STOK_KATEGORILERI WHERE ktg_kod='" +
+                                                        row["sto_kategori_kodu"]
+                                                    + "'", con);
+                                                SqlDataReader rdr = cmd.ExecuteReader();
+                                                if (rdr.Read())
                                                 {
-                                                    ItemCategoryCode = row["sto_kategori_kodu"].ToString(),
-                                                    ItemCategoryName = catName,
-                                                    PlantId = syncPoint.PlantId,
-                                                    CreatedDate = DateTime.Now,
-                                                });
-                                                if (bResult.Result)
-                                                    categoryId = bResult.RecordId;
+                                                    string catName = rdr["ktg_isim"].ToString();
+                                                    var bResult = subObj.SaveOrUpdateItemCategory(new ItemCategoryModel
+                                                    {
+                                                        ItemCategoryCode = row["sto_kategori_kodu"].ToString(),
+                                                        ItemCategoryName = catName,
+                                                        PlantId = syncPoint.PlantId,
+                                                        CreatedDate = DateTime.Now,
+                                                    });
+                                                    if (bResult.Result)
+                                                        categoryId = bResult.RecordId;
+                                                }
+                                                rdr.Close();
+                                                cmd.Dispose();
                                             }
-                                            rdr.Close();
-                                            cmd.Dispose();
-                                        }
-                                        else
-                                        {
-                                            var dbItemCat = subObj.GetItemCategory(row["sto_kategori_kodu"].ToString());
-                                            if (dbItemCat != null)
-                                                categoryId = dbItemCat.Id;
+                                            else
+                                            {
+                                                var dbItemCat = subObj.GetItemCategory(row["sto_kategori_kodu"].ToString());
+                                                if (dbItemCat != null)
+                                                    categoryId = dbItemCat.Id;
+                                            }
                                         }
                                     }
+                                }
+                                catch (Exception)
+                                {
+
                                 }
 
                                 int? groupId = null;
                                 // FETCH & UPDATE ITEM GROUP
-                                if (!string.IsNullOrEmpty(row["sto_anagrup_kod"].ToString()))
+                                try
                                 {
-                                    using (DefinitionsBO subObj = new DefinitionsBO())
+                                    if (!string.IsNullOrEmpty(row["sto_anagrup_kod"].ToString()))
                                     {
-                                        if (!subObj.HasAnyItemGroup(row["sto_anagrup_kod"].ToString()))
+                                        using (DefinitionsBO subObj = new DefinitionsBO())
                                         {
-                                            SqlCommand cmd = new SqlCommand("SELECT * FROM STOK_ANA_GRUPLARI WHERE san_kod='" +
-                                                    row["sto_anagrup_kod"]
-                                                + "'", con);
-                                            SqlDataReader rdr = cmd.ExecuteReader();
-                                            if (rdr.Read())
+                                            if (!subObj.HasAnyItemGroup(row["sto_anagrup_kod"].ToString()))
                                             {
-                                                string groupName = rdr["san_isim"].ToString();
-                                                var bResult = subObj.SaveOrUpdateItemGroup(new ItemGroupModel
+                                                SqlCommand cmd = new SqlCommand("SELECT * FROM STOK_ANA_GRUPLARI WHERE san_kod='" +
+                                                        row["sto_anagrup_kod"]
+                                                    + "'", con);
+                                                SqlDataReader rdr = cmd.ExecuteReader();
+                                                if (rdr.Read())
                                                 {
-                                                    ItemGroupCode = row["sto_anagrup_kod"].ToString(),
-                                                    ItemGroupName = groupName,
-                                                    PlantId = syncPoint.PlantId,
-                                                    CreatedDate = DateTime.Now,
-                                                });
-                                                if (bResult.Result)
-                                                    groupId = bResult.RecordId;
+                                                    string groupName = rdr["san_isim"].ToString();
+                                                    var bResult = subObj.SaveOrUpdateItemGroup(new ItemGroupModel
+                                                    {
+                                                        ItemGroupCode = row["sto_anagrup_kod"].ToString(),
+                                                        ItemGroupName = groupName,
+                                                        PlantId = syncPoint.PlantId,
+                                                        CreatedDate = DateTime.Now,
+                                                    });
+                                                    if (bResult.Result)
+                                                        groupId = bResult.RecordId;
+                                                }
+                                                rdr.Close();
+                                                cmd.Dispose();
                                             }
-                                            rdr.Close();
-                                            cmd.Dispose();
-                                        }
-                                        else
-                                        {
-                                            var dbItemGr = subObj.GetItemGroup(row["sto_anagrup_kod"].ToString());
-                                            if (dbItemGr != null)
-                                                groupId = dbItemGr.Id;
+                                            else
+                                            {
+                                                var dbItemGr = subObj.GetItemGroup(row["sto_anagrup_kod"].ToString());
+                                                if (dbItemGr != null)
+                                                    groupId = dbItemGr.Id;
+                                            }
                                         }
                                     }
+                                }
+                                catch (Exception)
+                                {
+
                                 }
 
                                 int? unitId = null;
                                 List<ItemUnitModel> itemUnits = new List<ItemUnitModel>();
                                 // FETCH & UPDATE UNITS
-                                if (!string.IsNullOrEmpty(row["sto_birim1_ad"].ToString()))
+                                try
                                 {
-                                    using (DefinitionsBO subObj = new DefinitionsBO())
+                                    if (!string.IsNullOrEmpty(row["sto_birim1_ad"].ToString()))
                                     {
-                                        if (!subObj.HasAnyUnitType(row["sto_birim1_ad"].ToString()))
+                                        using (DefinitionsBO subObj = new DefinitionsBO())
                                         {
-                                            var bResult = subObj.SaveOrUpdateUnitType(new UnitTypeModel
+                                            if (!subObj.HasAnyUnitType(row["sto_birim1_ad"].ToString()))
                                             {
-                                                PlantId = syncPoint.PlantId,
-                                                UnitCode = (string)row["sto_birim1_ad"],
-                                                UnitName = (string)row["sto_birim1_ad"],
-                                                CreatedDate = DateTime.Now,
-                                            });
+                                                var bResult = subObj.SaveOrUpdateUnitType(new UnitTypeModel
+                                                {
+                                                    PlantId = syncPoint.PlantId,
+                                                    UnitCode = (string)row["sto_birim1_ad"],
+                                                    UnitName = (string)row["sto_birim1_ad"],
+                                                    CreatedDate = DateTime.Now,
+                                                });
 
-                                            if (bResult.Result)
-                                                unitId = bResult.RecordId;
-                                        }
-                                        else
-                                        {
-                                            var dbUnit = subObj.GetUnitType(row["sto_birim1_ad"].ToString());
-                                            if (dbUnit != null)
-                                                unitId = dbUnit.Id;
+                                                if (bResult.Result)
+                                                    unitId = bResult.RecordId;
+                                            }
+                                            else
+                                            {
+                                                var dbUnit = subObj.GetUnitType(row["sto_birim1_ad"].ToString());
+                                                if (dbUnit != null)
+                                                    unitId = dbUnit.Id;
+                                            }
                                         }
                                     }
                                 }
+                                catch (Exception)
+                                {
+
+                                }
+
 
                                 if (unitId != null)
                                 {
                                     itemUnits.Add(new ItemUnitModel
                                     {
                                         UnitId = unitId,
-                                        CreatedDate =DateTime.Now,
-                                        IsMainUnit=true,
-                                        DividerFactor=1,
-                                        MultiplierFactor=1,
-                                        NewDetail=true
+                                        CreatedDate = DateTime.Now,
+                                        IsMainUnit = true,
+                                        DividerFactor = 1,
+                                        MultiplierFactor = 1,
+                                        NewDetail = true
                                     });
                                 }
 
@@ -313,8 +335,8 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     Units = itemUnits.ToArray(),
                                 });
 
-                                //if (!itemResult.Result)
-                                //    OnTransferError?.Invoke((string)row["sto_kod"] + ": " +itemResult.ErrorMessage, null);
+                                if (!itemResult.Result && row["sto_kod"].ToString() == "152.02.9002.2009.1003")
+                                    OnTransferError?.Invoke((string)row["sto_kod"] + ": " + itemResult.ErrorMessage, null);
                             }
                         }
                     }

@@ -46,10 +46,10 @@ namespace HekaMOLD.Enterprise.Controllers
                 Response.Cookies.Set(new HttpCookie("PlantId", authResult.UserData.PlantId.ToString()));
                 Response.Cookies["PlantId"].Expires = DateTime.Now.AddDays(1);
 
-                Response.Cookies.Set(new HttpCookie("UserCode", authResult.UserData.UserCode));
+                Response.Cookies.Set(new HttpCookie("UserCode", Server.UrlEncode(authResult.UserData.UserCode)));
                 Response.Cookies["UserCode"].Expires = DateTime.Now.AddDays(1);
 
-                Response.Cookies.Set(new HttpCookie("UserName", authResult.UserData.UserName));
+                Response.Cookies.Set(new HttpCookie("UserName", Server.UrlEncode(authResult.UserData.UserName)));
                 Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(1);
 
                 //Response.Cookies.Set(new HttpCookie("Gates", JsonConvert.SerializeObject(authResult.GateList)));

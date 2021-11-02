@@ -65,6 +65,43 @@
         });
     }
 
+    $scope.holdPlan = function () {
+        bootbox.confirm({
+            message: "Bu üretim planını beklemeye almak istediğinizden emin misiniz?",
+            closeButton: false,
+            buttons: {
+                confirm: {
+                    label: 'Evet',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'Hayır',
+                    className: 'btn-light'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    try {
+                        $http.post(HOST_URL + 'Mobile/HoldWorkOrder',
+                            { workOrderDetailId: $scope.modelObject.Id }, 'json')
+                            .then(function (resp) {
+                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                    if (resp.data.Result == true)
+                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                                    else
+                                        toastr.error('Hata: ' + resp.data.ErrorMessage, 'Uyarı');
+                                }
+
+                                $scope.$emit('editPlanEnd', $scope.modelObject);
+                            }).catch(function (err) { });
+                    } catch (e) {
+
+                    }
+                }
+            }
+        });
+    }
+
     $scope.bindPlanDetail = function () {
         try {
             $http.get(HOST_URL + 'Planning/GetPlanDetail?workOrderDetailId=' + $scope.modelObject.Id, { }, 'json')
