@@ -1350,6 +1350,10 @@ namespace HekaMOLD.Business.UseCases
             var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
             var repoShift = _unitOfWork.GetRepository<Shift>();
 
+            var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
+            var repoIncident = _unitOfWork.GetRepository<Incident>();
+            var repoPosture = _unitOfWork.GetRepository<ProductionPosture>();
+
             var shiftList = repoShift.GetAll().ToArray();
 
             // PRODUCTION BO FOR ACTIVE WORK ORDERS ON MACHINES
@@ -1364,11 +1368,20 @@ namespace HekaMOLD.Business.UseCases
 
                 var signalData = repoSignal.Filter(m => m.MachineId == d.Id &&
                     dt1 <= m.StartDate && dt2 >= m.StartDate);
+                var wastageData = repoWastage.Filter(m => m.MachineId == d.Id &&
+                    dt1 <= m.EntryDate && dt2 >= m.EntryDate);
+                var incidentData = repoIncident.Filter(m => m.MachineId == d.Id &&
+                    dt1 <= m.StartDate && dt2 >= m.StartDate);
+                var postureData = repoPosture.Filter(m => m.MachineId == d.Id &&
+                    dt1 <= m.StartDate && dt2 >= m.StartDate);
 
                 containerObj.MachineStats = new Models.DataTransfer.Summary.MachineStatsModel
                 {
                     AvgInflationTime = Convert.ToDecimal(signalData.Average(m => m.Duration) ?? 0),
                     AvgProductionCount = signalData.Count(),
+                    WastageCount = wastageData.Sum(m => m.Quantity) ?? 0,
+                    IncidentCount = incidentData.Count(),
+                    PostureCount = postureData.Count(),
                 };
 
                 // RESOLVE SHIFT STATS OF THAT MACHINE
@@ -1401,6 +1414,7 @@ namespace HekaMOLD.Business.UseCases
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
                         AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count(),
+                        WastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0,
                     });
                 }
 

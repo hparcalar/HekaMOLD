@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Ürün Bilgisi";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+
+<div>
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="productInformationCtrl">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Title-->
+            <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                @ViewBag.Title
+            </h1>
+            <!--end::Title-->
+            <!--begin::TOP FORM-->
+            <div class="row gy-5 mt-4 gx-xl-8 bg-white">
+                <div class="col-sm-8 col-xs-8 col-xxl-8">
+                    <div class="row">
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control"
+                                       ng-model="selectedMachine.MachineName"
+                                       readonly="readonly"
+                                       placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <div class="d-flex flex-row pb-1">
+                                <button type="button" ng-click="showProductionHistory()" class="btn py-2 btn-block flex-fill btn-sm btn-warning mx-1">
+                                    {{ historyWorkOrderDetailId > 0 ? 'Aktif Üretime Geç' : 'Biten Üretimler' }}
+                                </button>
+                                <button type="button" ng-if="activeDetails.length > 1" ng-click="showMultipleDetails()"
+                                        class="btn py-2 btn-block flex-1 btn-sm btn-primary mx-1">
+                                    Ürün Seç
+                                </button>
+                            </div>
+
+                            <!--begin::Input group-->
+                            <input type="text" class="form-control form-control-solid"
+                                   ng-class="{'bg-light-danger': historyWorkOrderDetailId > 0}"
+                                   ng-model="activeWorkOrder.WorkOrder.ProductName" readonly="readonly" placeholder="" />
+                        </div>
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Koli İçi Adet</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid"
+                                       ng-model="activeWorkOrder.WorkOrder.InPackageQuantity" readonly="readonly" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="row mb-3">
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Hedef</label>-->
+                            <!--begin::Input group-->
+                            <!--<input type="text" class="form-control bg-light-primary"
+                                   ng-model="activeWorkOrder.WorkOrder.Quantity" readonly="readonly" placeholder="" />
+                        </div>
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gerçekleşen</label>-->
+                            <!--begin::Input group-->
+                            <!--<input type="text" class="form-control bg-light-success"
+                                   ng-model="activeWorkOrder.WorkOrder.CompleteQuantity" readonly="readonly" placeholder="" />
+                        </div>
+
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            
+                        </div>
+                    </div>-->
+                </div>
+
+                <div class="col-sm-2 col-xs-2 col-xxl-2">
+                    <a class="btn btn-sm btn-block w-100 h-75 mt-1 btn-primary" style="padding-top:20px;" ng-click="showMachineList()">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
+                                <path d="M6 5C5.44772 5 5 5.44772 5 6C5 6.55228 5.44771 7 6 7H16C16.5523 7 17 6.55228 17 6C17 5.44772 16.5523 5 16 5H6Z" fill="#12131A" />
+                                <path d="M6 9C5.44772 9 5 9.44771 5 10C5 10.5523 5.44772 11 6 11H10C10.5523 11 11 10.5523 11 10C11 9.44771 10.5523 9 10 9H6Z" fill="#12131A" />
+                                <path d="M6 13C5.44772 13 5 13.4477 5 14C5 14.5523 5.44772 15 6 15H18C18.5523 15 19 14.5523 19 14C19 13.4477 18.5523 13 18 13H6Z" fill="#12131A" />
+                                <path d="M5 18C5 17.4477 5.44772 17 6 17H14C14.5523 17 15 17.4477 15 18C15 18.5523 14.5523 19 14 19H6C5.44772 19 5 18.5523 5 18Z" fill="#12131A" />
+                            </svg>
+                        </span>
+                        <br />
+                        <span style="display:block;margin-top:1px;">Makine Seç</span>
+                    </a>
+                </div>
+                <div class="col-sm-2 col-xs-2 col-xxl-2">
+                    
+                </div>
+            </div>
+            <!--end::TOP FORM -->
+            <!--begin::MOLD TEST DATA-->
+            <div class="row gy-5 mt-4 gx-xl-8 bg-white">
+                <div ng-if="modelObject.MoldData.Id > 0">
+                    <div class="row">
+                        @* LEFT COLUMN *@
+                        <div class="col-sm-2 col-md-2 col-xxl-2">
+                            <p class="fw-bold">Kafa Ölçüsü</p>
+                            <p class="fw-bold">Hammadde</p>
+                            <p class="fw-bold">Hammadde Grm</p>
+                            <p class="fw-bold">Şişirme Zamanı</p>
+                            <p class="fw-bold">Toplam Zaman</p>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-xxl-4">
+                            <p>{{ modelObject.MoldData.HeadSize }}</p>
+                            <p>{{ modelObject.MoldData.RawMaterialName }}</p>
+                            <p>{{ modelObject.MoldData.RawMaterialGr }}</p>
+                            <p>{{ modelObject.MoldData.InflationTimeSeconds }}</p>
+                            <p>{{ modelObject.MoldData.TotalTimeSeconds }}</p>
+                        </div>
+
+                        @* RIGHT COLUMN *@
+                        <div class="col-sm-2 col-md-2 col-xxl-2">
+                            <p class="fw-bold">Boya / Ral Kodu</p>
+                            <p class="fw-bold">Koli Ölçüsü</p>
+                            <p class="fw-bold">Somun Adet ve Çapı</p>
+                            <p class="fw-bold">Palet İçi Koli Adedi</p>
+                            <p class="fw-bold">Kalıp Kodu</p>
+                            <p class="fw-bold">Kalıp Adı</p>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-xxl-4">
+                            <p>{{ modelObject.MoldData.DyeCode }} / {{ modelObject.MoldData.RalCode }}</p>
+                            <p>{{ modelObject.MoldData.PackageDimension }}</p>
+                            <p>{{ modelObject.MoldData.NutCaliber }} / {{ modelObject.MoldData.NutQuantity }}</p>
+                            <p>{{ modelObject.MoldData.InPalletPackageQuantity }}</p>
+                            <p>{{ modelObject.MoldData.MoldCode }}</p>
+                            <p>{{ modelObject.MoldData.MoldName }}</p>
+                        </div>
+                    </div>
+                </div>
+                <span ng-if="modelObject.MoldData.Id == null || modelObject.MoldData.Id == 0"
+                      class="text-danger fw-bold fs-3 text-center">Sistemde bu ürünün bilgi formu bulunamadı.</span>
+            </div>
+            <!--end::MOLD TEST DATA-->
+        </div>
+        <!--end::Container-->
+
+        <div id="dial-machinelist" title="Makine Seç" style="display:none;">
+            <ng-include src="'../Components/Views/MachineSelection.html'"></ng-include>
+        </div>
+
+        <div id="dial-prodlist" title="Biten Üretimlerden Seç" style="display:none;">
+            <ng-include src="'../Components/Views/ProductionHistoryList.html'"></ng-include>
+        </div>
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/Scripts/html5-qrcode.min.js"></script>
+    <script src="~/FrontEndLogic/Mobile/product-information.js"></script>
+    <script src="~/Components/Controllers/production-history-list.js"></script>
+    <script src="~/Components/Controllers/machine-selection.js"></script>
+}

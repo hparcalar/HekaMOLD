@@ -3934,6 +3934,8 @@
     <Content Include="assets\plugins\global\plugins.bundle.js" />
     <Content Include="Components\Controllers\delivery-plan-list.js" />
     <Content Include="Components\Controllers\edit-plan.js" />
+    <Content Include="Components\Controllers\machine-incidents.js" />
+    <Content Include="Components\Controllers\machine-postures.js" />
     <Content Include="Components\Controllers\planning-work-copy.js" />
     <Content Include="Components\Controllers\posture-category-selection.js" />
     <Content Include="Components\Controllers\incident-category-selection.js" />
@@ -3949,6 +3951,8 @@
     <Content Include="Components\Controllers\report-template-list.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
+    <Content Include="Components\Views\MachineIncidents.html" />
+    <Content Include="Components\Views\MachinePostures.html" />
     <Content Include="Components\Views\PlanningWorkCopy.html" />
     <Content Include="Components\Views\PostureCategorySelection.html" />
     <Content Include="Components\Views\IncidentCategorySelection.html" />
@@ -4085,6 +4089,7 @@
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
     <Content Include="FrontEndLogic\Mobile\machine-equipments.js" />
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
+    <Content Include="FrontEndLogic\Mobile\product-information.js" />
     <Content Include="FrontEndLogic\Mobile\wastage-entry.js" />
     <Content Include="FrontEndLogic\Mobile\product-pickup.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
@@ -4373,6 +4378,10 @@
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
+    <Content Include="Scripts\chart.esm.js" />
+    <Content Include="Scripts\chart.js" />
+    <Content Include="Scripts\chart.min.js" />
+    <Content Include="Scripts\chunks\helpers.segment.js" />
     <Content Include="Scripts\ckeditor.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.de.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.en.js" />
@@ -4401,6 +4410,7 @@
     <Content Include="Scripts\globalize\plural.js" />
     <Content Include="Scripts\globalize\relative-time.js" />
     <Content Include="Scripts\globalize\unit.js" />
+    <Content Include="Scripts\helpers.esm.js" />
     <Content Include="Scripts\html5-qrcode.min.js" />
     <Content Include="Scripts\ckeditor.js.map" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
@@ -4553,6 +4563,7 @@
     <Content Include="Views\ProductQuality\SerialApproval.cshtml" />
     <Content Include="Views\Warehouse\States.cshtml" />
     <Content Include="Views\WorkOrder\History.cshtml" />
+    <Content Include="Views\Mobile\ProductInformation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

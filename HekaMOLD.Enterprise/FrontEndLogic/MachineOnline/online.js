@@ -22,7 +22,46 @@
         return arg;
     }
 
+    $scope.showIncidents = function (machineId) {
+        $scope.$broadcast('showIncidents',
+            {
+                MachineId: machineId,
+                StartDate: $scope.filterModel.startDate,
+                EndDate: $scope.filterModel.endDate
+            });
+
+        $('#dial-incidents').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: window.innerWidth * 0.8,
+            height: window.innerHeight * 0.8,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.showPostures = function (machineId) {
+        $scope.$broadcast('showPostures',
+            {
+                MachineId: machineId,
+                StartDate: $scope.filterModel.startDate,
+                EndDate: $scope.filterModel.endDate
+            });
+
+        $('#dial-postures').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: window.innerWidth * 0.8,
+            height: window.innerHeight * 0.8,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
     // ON LOAD EVENTS
-    
     $scope.bindModel(PRM_ID);
 });

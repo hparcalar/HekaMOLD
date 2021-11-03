@@ -26,6 +26,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string IncidentStatusStr { get; set; }
         public string IncidentCategoryCode { get; set; }
         public string IncidentCategoryName { get; set; }
+        public string CreatedOnlyDateStr { get; set; }
         public string CreatedDateStr { get; set; }
         public string StartDateStr { get; set; }
         public string EndDateStr { get; set; }

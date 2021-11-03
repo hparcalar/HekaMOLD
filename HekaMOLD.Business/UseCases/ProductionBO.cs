@@ -1255,6 +1255,8 @@ namespace HekaMOLD.Business.UseCases
                         UpdatedUserId = d.UpdatedUserId,
                         WorkOrderDetailId = d.WorkOrderDetailId,
                         PostureStatusStr = ((PostureStatusType)d.PostureStatus).ToCaption(),
+                        CreatedOnlyDateStr = string.Format("{0:dd.MM.yyyy}", d.StartDate),
+                        CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate),
                         StartDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate),
                         EndDateStr = d.EndDate != null ?
                             string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
@@ -1866,6 +1868,7 @@ namespace HekaMOLD.Business.UseCases
                         StartedUserId = d.StartedUserId,
                         EndUserId = d.EndUserId,
                         IncidentStatusStr = ((PostureStatusType)d.IncidentStatus).ToCaption(),
+                        CreatedOnlyDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
                         CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate),
                         StartDateStr = d.StartDate != null ? string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate) : "",
                         EndDateStr = d.EndDate != null ?

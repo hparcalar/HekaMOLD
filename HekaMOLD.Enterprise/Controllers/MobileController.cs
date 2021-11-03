@@ -202,6 +202,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult ProductInformation()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetMachineWorkList(int machineId)
         {

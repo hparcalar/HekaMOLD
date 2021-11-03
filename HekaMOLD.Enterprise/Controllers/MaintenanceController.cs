@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -340,6 +341,48 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
+        }
+        #endregion
+
+        #region SUMMARY DATA
+        [FreeAction]
+        public JsonResult GetIncidentsOfMachine(int machineId, string startDate, string endDate)
+        {
+            IncidentModel[] data = new IncidentModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetIncidentList(new Business.Models.Filters.BasicRangeFilter
+                {
+                    MachineId = machineId,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                });
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [FreeAction]
+        public JsonResult GetPosturesOfMachine(int machineId, string startDate, string endDate)
+        {
+            ProductionPostureModel[] data = new ProductionPostureModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetPostureList(new Business.Models.Filters.BasicRangeFilter
+                {
+                    MachineId = machineId,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                });
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
         #endregion
 

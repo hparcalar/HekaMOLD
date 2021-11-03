@@ -10,6 +10,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Summary
     {
         public decimal AvgInflationTime { get; set; }
         public int AvgProductionCount { get; set; }
+        public decimal? WastageCount { get; set; }
+        public int PostureCount { get; set; }
+        public int IncidentCount { get; set; }
         public ShiftStatsModel[] ShiftStats { get; set; }
     }
 
@@ -19,5 +22,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Summary
         public string ShiftCode { get; set; }
         public decimal AvgInflationTime { get; set; }
         public int AvgProductionCount { get; set; }
+        public decimal? WastageCount { get; set; }
+        public int PostureCount { get; set; }
+        public int IncidentCount { get; set; }
     }
 }

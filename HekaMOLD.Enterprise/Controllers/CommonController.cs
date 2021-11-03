@@ -317,6 +317,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [FreeAction]
+        public JsonResult GetMoldTestOfProduct(string productCode)
+        {
+            MoldTestModel data = new MoldTestModel();
+
+            using (MoldBO bObj = new MoldBO())
+            {
+                data = bObj.FindMoldTestByProduct(productCode);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [FreeAction]
         public JsonResult GetHistoryWorkOrderListOnMachine(int machineId)
         {
             WorkOrderDetailModel[] data = new WorkOrderDetailModel[0];
