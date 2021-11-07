@@ -130,6 +130,9 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (OrdersBO bObj = new OrdersBO())
                 {
+                    if (!Request.Cookies.AllKeys.Contains("PlantId") || Request.Cookies["PlantId"] == null)
+                        throw new Exception("Sisteme yeniden giriş yapmanız gerekmektedir.");
+
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
 
                     model.OrderType = (int)ItemOrderType.Sale;
