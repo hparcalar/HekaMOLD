@@ -321,9 +321,20 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 });
             },
             rowTemplate: function (container, item) {
-                var data = item.data,
-                    markup =
-                        "<tr draggable=\"true\" class=\"dx-row dx-data-row dx-row-lines waiting-plan-row\" data-id=\"" + data.Id + "\">" +
+                var data = item.data;
+
+                var deadlineClass = '';
+                if (item.data.DeadlineDateStr != null && item.data.DeadlineDateStr.length > 0) {
+                    var dtDeadline = moment(item.data.DeadlineDateStr, 'DD.MM.YYYY');
+                    if (moment().diff(dtDeadline, 'days') >= 0)
+                        deadlineClass = 'bg-danger';
+                    else if (moment().diff(dtDeadline, 'days') > -5)
+                        deadlineClass = 'bg-warning';
+                }
+
+                var markup =
+                    "<tr draggable=\"true\" "
+                    + "class=\"dx-row dx-data-row dx-row-lines waiting-plan-row " + deadlineClass + "\" data-id=\"" + data.Id + "\">" +
                         "<td>" + data.OrderDateStr + "</td>" +
                         "<td>" + data.DeadlineDateStr + "</td>" +
                         "<td>" + data.FirmName + "</td>" +

@@ -1,4 +1,6 @@
 ﻿using HekaMOLD.Business.Models.Authentication;
+using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -23,7 +25,21 @@ namespace HekaMOLD.Enterprise.Controllers
         #region LOGIN PROCESS
         public ActionResult Login()
         {
+            ViewBag.Users = BindUsers();
+
             return View();
+        }
+
+        private UserModel[] BindUsers()
+        {
+            UserModel[] data = new UserModel[0];
+
+            using (UsersBO bObj = new UsersBO())
+            {
+                data = bObj.GetUserList().OrderBy(d => d.UserCode).ToArray();
+            }
+
+            return data;
         }
 
         [HttpPost]
@@ -31,6 +47,8 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             try
             {
+                ViewBag.Users = BindUsers();
+
                 AuthenticationResult authResult = null;
                 using (UsersBO bObj = new UsersBO())
                 {
@@ -82,6 +100,48 @@ namespace HekaMOLD.Enterprise.Controllers
             Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(-1);
 
             return RedirectToAction("Index", "Home");
+        }
+        #endregion
+
+        #region USER SETTINGS
+        public ActionResult Settings(int? rid)
+        {
+            return View();
+        }
+
+        public ActionResult SettingsMobile(int? rid)
+        {
+            return View();
+        }
+
+        [FreeAction]
+        [HttpGet]
+        public JsonResult BindUser(int rid)
+        {
+            UserModel data = null;
+
+            using (UsersBO bObj = new UsersBO())
+            {
+                data = bObj.GetUser(rid);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult SaveUserSettings(UserModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (UsersBO bObj = new UsersBO())
+            {
+                result = bObj.SaveOrUpdateUser(model);
+            }
+
+            return Json(result);
         }
         #endregion
     }

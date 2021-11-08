@@ -4088,6 +4088,7 @@
     <Content Include="FrontEndLogic\Mobile\fault-entry.js" />
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
     <Content Include="FrontEndLogic\Mobile\machine-equipments.js" />
+    <Content Include="FrontEndLogic\Mobile\manage-machines.js" />
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\product-information.js" />
     <Content Include="FrontEndLogic\Mobile\wastage-entry.js" />
@@ -4134,6 +4135,7 @@
     <Content Include="FrontEndLogic\UnitType\list.js" />
     <Content Include="FrontEndLogic\UserRole\index.js" />
     <Content Include="FrontEndLogic\UserRole\list.js" />
+    <Content Include="FrontEndLogic\UserSettings\index.js" />
     <Content Include="FrontEndLogic\User\notifications.js" />
     <Content Include="FrontEndLogic\User\index.js" />
     <Content Include="FrontEndLogic\User\list.js" />
@@ -4564,6 +4566,10 @@
     <Content Include="Views\Warehouse\States.cshtml" />
     <Content Include="Views\WorkOrder\History.cshtml" />
     <Content Include="Views\Mobile\ProductInformation.cshtml" />
+    <Content Include="Views\Home\Settings.cshtml" />
+    <Content Include="Views\Home\SettingsMobile.cshtml" />
+    <Content Include="Views\Mobile\SettingsMobile.cshtml" />
+    <Content Include="Views\Mobile\ManageMachines.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -2,6 +2,7 @@
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetMachineList()
         {
             MachineModel[] result = new MachineModel[0];
@@ -47,6 +49,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetMachineStats(string t1, string t2)
         {
             MachineModel[] result = new MachineModel[0];
@@ -62,6 +65,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult BindModel(int rid)
         {
             MachineModel model = null;

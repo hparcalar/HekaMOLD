@@ -883,3 +883,13 @@ IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='WorkOrd
 BEGIN
 	ALTER TABLE WorkOrderSerial ADD QualityExplanation NVARCHAR(300) NULL
 END
+GO
+IF NOT EXISTS(select * from UserAuthType WHERE AuthTypeCode='IsProductionChief')
+BEGIN
+	INSERT INTO UserAuthType(AuthTypeCode, AuthTypeName) VALUES('IsProductionChief', 'Üretim Şefi')
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Machine' AND COLUMN_NAME='MachineStatus')
+BEGIN
+	ALTER TABLE Machine ADD MachineStatus INT NULL
+END

@@ -61,6 +61,21 @@
         });
     }
 
+    $scope.loadMoldTest = function () {
+        try {
+            $http.get(HOST_URL + 'Common/GetMoldTestOfProduct?productCode=' + $scope.activeWorkOrder.WorkOrder.ProductCode, {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.modelObject.MoldData = resp.data;
+                        if ($scope.modelObject.MoldData)
+                            $scope.activeWorkOrder.WorkOrder.InPackageQuantity = $scope.modelObject.MoldData.InPackageQuantity;
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
     $scope.loadActiveWorkOrder = function () {
         try {
             if ($scope.historyWorkOrderDetailId > 0 || $scope.selectedActiveDetailId > 0) {
@@ -70,6 +85,7 @@
                     .then(function (resp) {
                         if (typeof resp.data != 'undefined' && resp.data != null) {
                             $scope.activeWorkOrder = resp.data;
+                            $scope.loadMoldTest();
                         }
                     }).catch(function (err) { });
             }
@@ -80,6 +96,7 @@
                             $scope.activeWorkOrder = resp.data;
                             if ($scope.lastPackageQty > 0)
                                 $scope.activeWorkOrder.WorkOrder.InPackageQuantity = $scope.lastPackageQty;
+                            $scope.loadMoldTest();
                         }
                     }).catch(function (err) { });
             }

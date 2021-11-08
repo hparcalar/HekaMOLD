@@ -14,11 +14,11 @@
             },
             showColumnLines: false,
             showRowLines: true,
-            rowAlternationEnabled: true,
+            rowAlternationEnabled: false,
             focusedRowEnabled: true,
             showBorders: true,
             filterRow: {
-                visible: true
+                visible: true,
             },
             headerFilter: {
                 visible: true
@@ -34,6 +34,27 @@
             editing: {
                 allowUpdating: false,
                 allowDeleting: false
+            },
+            onRowPrepared: function (e) {
+                if (e.rowType != "data")
+                    return;
+
+                var deadlineClass = '', item = e.data;
+                if (item.OrderStatus == 3 || item.OrderStatus == 2) {
+                    deadlineClass = 'bg-secondary';
+                }
+                else {
+                    if (item.DateOfNeedStr != null && item.DateOfNeedStr.length > 0) {
+                        var dtDeadline = moment(item.DateOfNeedStr, 'DD.MM.YYYY');
+                        if (moment().diff(dtDeadline, 'days') >= 0)
+                            deadlineClass = 'bg-danger';
+                        else if (moment().diff(dtDeadline, 'days') > -5)
+                            deadlineClass = 'bg-warning';
+                    }
+                }
+
+                if (deadlineClass.length > 0)
+                    e.rowElement.addClass(deadlineClass);
             },
             columns: [
                 { dataField: 'OrderNo', caption: 'Sipariş No' },

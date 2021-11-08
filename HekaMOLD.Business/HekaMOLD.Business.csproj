@@ -83,6 +83,7 @@
     <Compile Include="Models\Constants\ItemReceiptType.cs" />
     <Compile Include="Models\Constants\ItemOrderType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
+    <Compile Include="Models\Constants\MachineStatusType.cs" />
     <Compile Include="Models\Constants\MoldStatus.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
     <Compile Include="Models\Constants\PostureStatusType.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Models\DataTransfer\Summary\WorkOrderSerialSummary.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
     <Compile Include="Models\Dictionaries\DictItemOrderType.cs" />
+    <Compile Include="Models\Dictionaries\DictMachineStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictMoldStatus.cs" />
     <Compile Include="Models\Dictionaries\DictPostureStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictQualityStatusType.cs" />

@@ -119,6 +119,13 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(MachineStatusType))
+                {
+                    return DictMachineStatusType.Values
+                        .Where(d => d.Key == (MachineStatusType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception)
             {

@@ -10,6 +10,7 @@ using HekaMOLD.MachineService.Models;
 using DynamicExpresso;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.Models.Constants;
 
 namespace HekaMOLD.MachineService.Services
 {
@@ -20,9 +21,12 @@ namespace HekaMOLD.MachineService.Services
         MachineStatus _status;
         bool _isRunning = false;
         bool _isPostureCheckRunning = false;
+        bool _isMachineDbCheckRunning = false;
+        MachineStatusType _machineStatus = MachineStatusType.Stopped;
         bool _lastResult = false;
         Task _tListen;
         Task _tPostureCheck;
+        Task _tMachineDbCheck;
 
         public DeviceListener(MachineModel machine)
         {
@@ -51,6 +55,9 @@ namespace HekaMOLD.MachineService.Services
 
             _isPostureCheckRunning = true;
             _tPostureCheck = Task.Run(DoPostureCheck);
+
+            _isMachineDbCheckRunning = true;
+            _tMachineDbCheck = Task.Run(DoDbCheck);
         }
 
         public void Stop()
@@ -114,12 +121,34 @@ namespace HekaMOLD.MachineService.Services
             return -1;
         }
 
+        private async Task DoDbCheck()
+        {
+            while (_isMachineDbCheckRunning)
+            {
+                try
+                {
+                    using (ProductionBO bObj = new ProductionBO())
+                    {
+                        _machineStatus = bObj.GetMachineStatus(_machine.Id);
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+
+                await Task.Delay(4000);
+            }
+        }
         private async Task DoListen()
         {
             while (_isRunning)
             {
                 try
                 {
+                    if (_machineStatus != MachineStatusType.Running)
+                        continue;
+
                     var variables = Regex.Matches(_machine.WatchCycleStartCondition, "\\[[^\\[\\]]+\\]");
                     if (variables.Count > 0)
                     {

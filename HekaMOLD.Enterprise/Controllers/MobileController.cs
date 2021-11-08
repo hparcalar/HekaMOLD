@@ -164,6 +164,24 @@ namespace HekaMOLD.Enterprise.Controllers
         #endregion
 
         #region PRODUCTION
+        public ActionResult ManageMachines()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult ToggleMachineStatus(int machineId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.ToggleMachineStatus(machineId);
+            }
+
+            return Json(result);
+        }
         public ActionResult ProductionStatus()
         {
             return View();
@@ -687,5 +705,10 @@ namespace HekaMOLD.Enterprise.Controllers
             return Json(new { Status=result.Result ? 1 : 0, RecordId=result.RecordId, ErrorMessage=result.ErrorMessage });
         }
         #endregion
+
+        public ActionResult SettingsMobile()
+        {
+            return View();
+        }
     }
 }

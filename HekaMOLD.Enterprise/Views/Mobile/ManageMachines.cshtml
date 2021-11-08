@@ -1,30 +1,25 @@
 ﻿@{
-    ViewBag.Title = "Makine İzleme";
+    ViewBag.Title = "Makine Yönetimi";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
 }
 
-<div ng-controller="machineOnlineCtrl">
-    <!--begin::Toolbar-->
-    <div class="toolbar" id="kt_toolbar">
+<div>
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="machineOnlineCtrl">
         <!--begin::Container-->
-        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
-            <!--begin::Page title-->
-            <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
-                 class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
-                <!--begin::Title-->
-                <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
-                    @ViewBag.Title
-                </h1>
-                <!--end::Title-->
-            </div>
-            <!--end::Page title-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Title-->
+            <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                @ViewBag.Title
+            </h1>
+            <!--end::Title-->
             <!--begin::Wrapper-->
-            <div>
+            @*<div>
                 <div class="d-flex flex-row">
                     <input type="text" class="form-control datepicker" ng-model="filterModel.startDate" placeholder="Başlangıç Tarihi" />
                     <input type="text" class="form-control datepicker mx-2" ng-model="filterModel.endDate" placeholder="Bitiş Tarihi" />
 
-                    <button
-                            ng-click="bindModel()"
+                    <button ng-click="bindModel()"
                             class="btn btn-sm btn-flex btn-light-primary btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -39,16 +34,8 @@
                     </button>
                 </div>
 
-            </div>
+            </div>*@
             <!--end::Wrapper-->
-        </div>
-        <!--end::Container-->
-    </div>
-    <!--end::Toolbar-->
-    <!--begin::Post-->
-    <div class="post d-flex flex-column-fluid" id="kt_post">
-        <!--begin::Container-->
-        <div id="kt_content_container" class="container-fluid">
             <!--begin::Row-->
             <div class="row gy-1 gx-xl-8 bg-white">
                 <!--begin::Col-->
@@ -58,10 +45,14 @@
                          ng-style="item.BackColor != null && item.BackColor.length > 0 && {'background-color': item.BackColor}">
                         <div class="m-2 border-1 rounded-1">
                             <div class="d-flex flex-row justify-content-between pt-2 my-1">
-                                <button type="button" class="btn btn-sm btn-secondary flex-fill">
-                                    Üretim
+                                <button type="button" ng-cloak
+                                        ng-click="toggleMachineStart(item)"
+                                        ng-class="{'btn-success': item.MachineStatus == 0 || item.MachineStatus == null,
+                                            'btn-danger': item.MachineStatus == 1}"
+                                        class="btn flex-fill">
+                                    {{ item.MachineStatus == 0 || item.MachineStatus == null ? 'MAKİNE BAŞLAT' : 'MAKİNE DURDUR' }} 
                                 </button>
-                                <button type="button" class="btn mx-2 btn-sm btn-warning flex-fill"
+                                @*<button type="button" class="btn mx-2 btn-sm btn-warning flex-fill"
                                         ng-click="showIncidents(item.Id)">
                                     Arızalar
                                     <span ng-if="item.MachineStats.IncidentCount > 0"
@@ -72,7 +63,7 @@
                                     Duruşlar
                                     <span ng-if="item.MachineStats.PostureCount > 0"
                                           class="badge badge-light-danger">{{ item.MachineStats.PostureCount }}</span>
-                                </button>
+                                </button>*@
                             </div>
                             <h4 class="text-center bg-secondary rounded px-2 py-2 border-1 border-dark">
                                 <svg ng-if="item.ActivePlan.WorkOrder != null" width="16px" height="16px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -133,20 +124,21 @@
             <!--end::Row-->
         </div>
         <!--end::Container-->
+
+        <div id="dial-incidents" title="Makine Arızaları" style="display:none;">
+            <ng-include src="'../Components/Views/MachineIncidents.html'"></ng-include>
+        </div>
+
+        <div id="dial-postures" title="Makine Duruşları" style="display:none;">
+            <ng-include src="'../Components/Views/MachinePostures.html'"></ng-include>
+        </div>
     </div>
     <!--end::Post-->
-
-    <div id="dial-incidents" title="Makine Arızaları" style="display:none;">
-        <ng-include src="'../Components/Views/MachineIncidents.html'"></ng-include>
-    </div>
-
-    <div id="dial-postures" title="Makine Duruşları" style="display:none;">
-        <ng-include src="'../Components/Views/MachinePostures.html'"></ng-include>
-    </div>
 </div>
+
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
-    <script src="~/FrontEndLogic/MachineOnline/online.js"></script>
+    <script src="~/FrontEndLogic/Mobile/manage-machines.js"></script>
     <script src="~/Scripts/chart.min.js"></script>
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>

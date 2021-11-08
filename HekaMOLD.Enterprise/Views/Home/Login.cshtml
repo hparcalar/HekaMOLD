@@ -1,5 +1,7 @@
-﻿@{
+﻿@using HekaMOLD.Business.Models.DataTransfer.Core
+@{
     Layout = null;
+    UserModel[] userList = ViewBag.Users;
 }
 <html lang="en">
 <head>
@@ -135,8 +137,14 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" name="Login" class="form-control" placeholder="Kullanıcı Adı">
-
+                            @*<input type="text" name="Login" class="form-control" placeholder="Kullanıcı Adı">*@
+                            <select class="form-control" name="Login">
+                                <option value="-1">-- Kullanıcı --</option>
+                                @foreach(UserModel user in userList)
+                                {
+                                    <option value="@user.Login">@user.UserCode - @user.UserName</option>
+                                }
+                            </select>
                         </div>
                         <div class="input-group form-group">
                             <div class="input-group-prepend">

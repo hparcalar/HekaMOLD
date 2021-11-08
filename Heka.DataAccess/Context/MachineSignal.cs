@@ -23,8 +23,8 @@ namespace Heka.DataAccess.Context
         public Nullable<int> SignalStatus { get; set; }
         public Nullable<int> ShiftId { get; set; }
     
-        public virtual Machine Machine { get; set; }
         public virtual Shift Shift { get; set; }
         public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual Machine Machine { get; set; }
     }
 }

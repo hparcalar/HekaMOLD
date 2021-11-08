@@ -849,6 +849,50 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public MachineStatusType GetMachineStatus(int machineId)
+        {
+            MachineStatusType status = MachineStatusType.Stopped;
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Machine>();
+                status = (MachineStatusType)(repo.Filter(d => d.Id == machineId).Select(d => d.MachineStatus).FirstOrDefault() ?? 0);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return status;
+        }
+
+        public BusinessResult ToggleMachineStatus(int machineId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Machine>();
+                var dbObj = repo.Get(d => d.Id == machineId);
+                if (dbObj == null)
+                    throw new Exception("Makine tanımı bulunamadı.");
+
+                dbObj.MachineStatus = (dbObj.MachineStatus ?? 0) == (int)MachineStatusType.Running ?
+                        (int)MachineStatusType.Stopped : (int)MachineStatusType.Running;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public BusinessResult DeleteProductEntry(int serialId)
         {
             BusinessResult result = new BusinessResult();
