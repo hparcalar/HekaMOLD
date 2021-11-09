@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Vardiya Yönetimi";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+
+<div>
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="manageShiftsCtrl">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Title-->
+            <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                @ViewBag.Title
+            </h1>
+            <!--end::Title-->
+
+            <!--begin::SHIFTS TABLE-->
+            <div class="row gy-5 mt-4 gx-xl-8 bg-white">
+                <div class="col-xxl-12 col-sm-12">
+                    <table class="table table-bordered table-hk-md">
+                        <thead>
+                            <tr>
+                                <th class="w-25 px-2">Vardiya Adı</th>
+                                <th class="w-25 px-2">Başlangıç</th>
+                                <th class="w-25 px-2">Bitiş</th>
+                                <th class="w-25 px-2">#</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-md">
+                        <table ng-cloak class="table table-bordered table-hk-md table-striped">
+                            <tbody>
+                                <tr ng-repeat="item in shiftList">
+                                    <td class="w-25 px-2">{{item.ShiftCode}}</td>
+                                    <td class="w-25 px-2">
+                                        <input type="text"
+                                               class="form-control form-control-sm"
+                                               ng-model="item.StartTimeStr" />
+                                    </td>
+                                    <td class="w-25 px-2">
+                                        <input type="text"
+                                               class="form-control form-control-sm"
+                                               ng-model="item.EndTimeStr" />
+                                    </td>
+                                    <td class="w-25 px-2">
+                                        <button type="button" 
+                                                ng-click="saveChanges(item)"
+                                                class="btn btn-sm btn-primary">
+                                            Kaydet
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--end::SHIFTS TABLE-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <script src="~/FrontEndLogic/Mobile/manage-shifts.js"></script>
+}

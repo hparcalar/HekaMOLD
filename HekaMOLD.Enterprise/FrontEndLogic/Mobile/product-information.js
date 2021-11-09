@@ -2,7 +2,8 @@
     $scope.modelObject = {
         Id: 0,
         MachineId: 0,
-        MoldData: {Id:0},
+        MoldData: { Id: 0 },
+        IsPopup: false,
     };
 
     $scope.activeDetails = [];
@@ -15,6 +16,7 @@
             Id: 0,
             MachineId: 0,
             Barcode: '',
+            IsPopup: false,
         };
     }
 
@@ -181,5 +183,11 @@
     }
 
     // LOAD EVENTS
-    setTimeout($scope.showMachineList, 500);
+    if (parseInt(PRM_ID) > 0) {
+        $scope.modelObject.IsPopup = true;
+        $scope.selectedActiveDetailId = PRM_ID;
+        $scope.loadActiveWorkOrder();
+    }
+    else
+        setTimeout($scope.showMachineList, 500);
 });

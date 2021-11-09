@@ -4,6 +4,7 @@
     var actn = this.ViewContext.RouteData.Values["action"].ToString();
     var rcgr = Request.QueryString["receiptCategory"];
     var runningHost = WebConfigurationManager.AppSettings["RunningHost"];
+    var isPopup = Request.QueryString.AllKeys.Contains("popup") && Request.QueryString["popup"] == "1" ? 1 : 0;
 }
 
 <!DOCTYPE html>
@@ -17,7 +18,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="~/assets/media/logos/favicon.ico" />
     <!--begin::Fonts-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    @*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />*@
     <!--end::Fonts-->
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
@@ -39,17 +40,17 @@
         <!--begin::Page-->
         <div class="page d-flex flex-row flex-column-fluid">
             <!--begin::Wrapper-->
-            <div class="wrapper d-flex flex-column flex-row-fluid" style="padding-top:65px;padding-left:0px;" id="kt_wrapper">
+            <div class="wrapper d-flex flex-column flex-row-fluid" style="@(isPopup == 0 ? "padding-top:65px;":"padding-top:0px;margin-top:0px;")padding-left:0px;" id="kt_wrapper">
                 <!--begin::Header-->
-                <div id="kt_header" style="left:0px;" class="header align-items-stretch">
+                <div id="kt_header" ng-show="@isPopup == 0" style="left:0px;" class="header align-items-stretch">
                     <!--begin::Container-->
                     <div class="container-fluid d-flex align-items-stretch justify-content-between">
                         <!--begin::Mobile logo-->
-                        <div class="d-flex align-items-center flex-lg-grow-0">
+                        <!--<div class="d-flex align-items-center flex-lg-grow-0">
                             <a href="index.html" class="d-lg-none">
                                 <img alt="Logo" src="~/assets/media/logos/batusan-logo.png" class="h-30px logo" />
                             </a>
-                        </div>
+                        </div>-->
                         <!--end::Mobile logo-->
 
                         <a href="@Url.Action("Index","Mobile")"
@@ -67,7 +68,17 @@
                             <!--begin::Navbar-->
                             <div class="d-flex align-items-stretch" id="kt_header_nav">
                                 <!--begin::Menu wrapper-->
-                                <div class="header-menu align-items-stretch" data-kt-drawer="true" data-kt-drawer-name="header-menu" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
+                                <div class="header-menu align-items-stretch"
+                                     data-kt-drawer="true"
+                                     data-kt-drawer-name="header-menu"
+                                     data-kt-drawer-activate="{default: true, lg: false}"
+                                     data-kt-drawer-overlay="true"
+                                     data-kt-drawer-width="{default:'200px', '300px': '250px'}"
+                                     data-kt-drawer-direction="end"
+                                     data-kt-drawer-toggle="#kt_header_menu_mobile_toggle"
+                                     data-kt-place="true"
+                                     data-kt-place-mode="prepend"
+                                     data-kt-place-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
 
                                 </div>
                                 <!--end::Menu wrapper-->
@@ -571,7 +582,8 @@
                                     <!--begin::User-->
                                     <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                                         <!--begin::Menu-->
-                                        <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
+                                        <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click"
+                                             data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
                                             <img src="~/assets/media/avatars/blank.png" alt="metronic" />
                                         </div>
                                         <!--begin::Menu-->
@@ -606,13 +618,13 @@
                                             <!--end::Menu item-->
                                             <!--begin::Menu item-->
                                             @*<div class="menu-item px-5">
-            <a href="pages/projects/list.html" class="menu-link px-5">
-                <span class="menu-text">My Projects</span>
-                <span class="menu-badge">
-                    <span class="badge badge-light-danger badge-circle fw-bolder fs-7">3</span>
-                </span>
-            </a>
-        </div>*@
+                                                    <a href="pages/projects/list.html" class="menu-link px-5">
+                                                        <span class="menu-text">My Projects</span>
+                                                        <span class="menu-badge">
+                                                            <span class="badge badge-light-danger badge-circle fw-bolder fs-7">3</span>
+                                                        </span>
+                                                    </a>
+                                                </div>*@
                                             <!--end::Menu item-->
                                             <!--begin::Menu separator-->
                                             <div class="separator my-2"></div>
@@ -632,6 +644,23 @@
                                         <!--end::Menu-->
                                     </div>
                                     <!--end::User -->
+                                    <!--begin::Heaeder menu toggle-->
+                                    <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
+                                        <div class="btn btn-icon btn-active-light-primary" id="kt_header_menu_mobile_toggle">
+                                            <!--begin::Svg Icon | path: icons/stockholm/Text/Toggle-Right.svg-->
+                                            <span class="svg-icon svg-icon-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24" />
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M22 11.5C22 12.3284 21.3284 13 20.5 13H3.5C2.6716 13 2 12.3284 2 11.5C2 10.6716 2.6716 10 3.5 10H20.5C21.3284 10 22 10.6716 22 11.5Z" fill="black" />
+                                                        <path opacity="0.5" fill-rule="evenodd" clip-rule="evenodd" d="M14.5 20C15.3284 20 16 19.3284 16 18.5C16 17.6716 15.3284 17 14.5 17H3.5C2.6716 17 2 17.6716 2 18.5C2 19.3284 2.6716 20 3.5 20H14.5ZM8.5 6C9.3284 6 10 5.32843 10 4.5C10 3.67157 9.3284 3 8.5 3H3.5C2.6716 3 2 3.67157 2 4.5C2 5.32843 2.6716 6 3.5 6H8.5Z" fill="black" />
+                                                    </g>
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                        </div>
+                                    </div>
+                                    <!--end::Heaeder menu toggle-->
                                 </div>
                                 <!--end::Toolbar wrapper-->
                             </div>
@@ -648,7 +677,7 @@
                 </div>
                 <!--end::Content-->
                 <!--begin::Footer-->
-                <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
+                <div ng-show="@isPopup == 0" class="footer py-4 d-flex flex-lg-column" id="kt_footer">
                     <!--begin::Container-->
                     <div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
                         <!--begin::Copyright-->
@@ -990,13 +1019,13 @@
     <!--end::Global Javascript Bundle-->
     <!--begin::Page Custom Javascript(used by this page)-->
     <script src="~/assets/js/custom/widgets.js"></script>
-    <script src="~/assets/js/custom/apps/chat/chat.js"></script>
-    <script src="~/assets/js/custom/modals/create-app.js"></script>
-    <script src="~/assets/js/custom/modals/upgrade-plan.js"></script>
+    @*<script src="~/assets/js/custom/apps/chat/chat.js"></script>
+        <script src="~/assets/js/custom/modals/create-app.js"></script>
+        <script src="~/assets/js/custom/modals/upgrade-plan.js"></script>*@
     <script src="~/Scripts/angular.min.js"></script>
 
     <script type="text/javascript">
-    var app = angular.module('moldApp', []);
+        var app = angular.module('moldApp', []);
 
         $(function () {
             $('.datepicker').datepicker({ dateFormat: 'dd.mm.yy' });

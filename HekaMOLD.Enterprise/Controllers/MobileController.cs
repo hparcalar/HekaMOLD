@@ -169,6 +169,36 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult ManageShifts()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult SaveShift(ShiftModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                if (!string.IsNullOrEmpty(model.StartTimeStr))
+                {
+                    var startData = model.StartTimeStr.Split(':');
+                    model.StartTime = TimeSpan.FromMinutes(Convert.ToInt32(startData[0]) * 60 + Convert.ToInt32(startData[1]));
+                }
+
+                if (!string.IsNullOrEmpty(model.EndTimeStr))
+                {
+                    var endData = model.EndTimeStr.Split(':');
+                    model.EndTime = TimeSpan.FromMinutes(Convert.ToInt32(endData[0]) * 60 + Convert.ToInt32(endData[1]));
+                }
+
+                result = bObj.SaveOrUpdateShift(model);
+            }
+
+            return Json(result);
+        }
+
         [HttpPost]
         [FreeAction]
         public JsonResult ToggleMachineStatus(int machineId)

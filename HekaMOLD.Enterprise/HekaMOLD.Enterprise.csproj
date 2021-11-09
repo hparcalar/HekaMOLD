@@ -4089,6 +4089,7 @@
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
     <Content Include="FrontEndLogic\Mobile\machine-equipments.js" />
     <Content Include="FrontEndLogic\Mobile\manage-machines.js" />
+    <Content Include="FrontEndLogic\Mobile\manage-shifts.js" />
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\product-information.js" />
     <Content Include="FrontEndLogic\Mobile\wastage-entry.js" />
@@ -4570,6 +4571,7 @@
     <Content Include="Views\Home\SettingsMobile.cshtml" />
     <Content Include="Views\Mobile\SettingsMobile.cshtml" />
     <Content Include="Views\Mobile\ManageMachines.cshtml" />
+    <Content Include="Views\Mobile\ManageShifts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

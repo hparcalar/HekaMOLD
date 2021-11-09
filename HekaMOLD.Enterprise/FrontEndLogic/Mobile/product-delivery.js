@@ -64,11 +64,23 @@
 
     $scope.isBarcodeRead = false;
 
+    $scope.qrScanner = null;
+
     $scope.readBarcode = function () {
         $scope.isBarcodeRead = false;
         bootbox.alert({
-            message: '<div style="width: 500px" id="reader"></div>',
-            locale: 'tr'
+            message: '<div class="mx-auto" id="reader"></div>',
+            closeButton: false,
+            locale: 'tr',
+            callback: function () {
+                try {
+                    $scope.qrScanner.stop();
+                } catch (e) {
+
+                }
+
+                bootbox.hideAll();
+            }
         });
 
         // TO REQUEST WEB CAM ACCESS
@@ -84,22 +96,21 @@
         }).catch(err => { });
 
         // WEB CAM READER OBJECT
-        let qrScanner = new Html5Qrcode(
+        $scope.qrScanner = new Html5Qrcode(
             "reader");
 
-        qrScanner.start(
+        $scope.qrScanner.start(
             { facingMode: "environment" }, // prefers back, for the front camera use 'user'
             {
                 fps: 10,    // sets the framerate to 10 frame per second
-                qrbox: 250  // sets only 250 X 250 region of viewfinder to
+                qrbox: 250,  // sets only 250 X 250 region of viewfinder to
                 // scannable, rest shaded.
             },
             qrCodeMessage => {
-                bootbox.hideAll();
-                if (!$scope.isBarcodeRead)
+                if (!$scope.isBarcodeRead) {
                     $scope.processBarcodeResult(qrCodeMessage);
-                //qrScanner.stop();
-                Html5Qrcode.stop();
+                    setTimeout(() => { $scope.isBarcodeRead = false; }, 1500);
+                }
             },
             errorMessage => {
             })

@@ -19,7 +19,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="~/assets/media/logos/favicon.ico" />
     <!--begin::Fonts-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    @*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />*@
     <!--end::Fonts-->
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
@@ -918,7 +918,17 @@
                             <!--begin::Navbar-->
                             <div class="d-flex align-items-stretch" id="kt_header_nav">
                                 <!--begin::Menu wrapper-->
-                                <div class="header-menu align-items-stretch" data-kt-drawer="true" data-kt-drawer-name="header-menu" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
+                                <div class="header-menu align-items-stretch" 
+                                     data-kt-drawer="true" 
+                                     data-kt-drawer-name="header-menu" 
+                                     data-kt-drawer-activate="{default: true, lg: false}" 
+                                     data-kt-drawer-overlay="true" 
+                                     data-kt-drawer-width="{default:'200px', '300px': '250px'}" 
+                                     data-kt-drawer-direction="end" 
+                                     data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" 
+                                     data-kt-place="true" 
+                                     data-kt-place-mode="prepend" 
+                                     data-kt-place-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
 
                                 </div>
                                 <!--end::Menu wrapper-->
@@ -1460,7 +1470,9 @@
                                     <!--begin::User-->
                                     <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                                         <!--begin::Menu-->
-                                        <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
+                                        <div class="cursor-pointer symbol symbol-30px symbol-md-40px" 
+                                             data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" 
+                                             data-kt-menu-flip="bottom">
                                             <img src="~/assets/media/avatars/blank.png" alt="metronic" />
                                         </div>
                                         <!--begin::Menu-->

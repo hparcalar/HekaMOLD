@@ -203,6 +203,19 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [FreeAction]
+        public JsonResult GetShiftList()
+        {
+            ShiftModel[] data = new ShiftModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetShiftList();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [FreeAction]
         public JsonResult GetWarehouseList()
         {
             WarehouseModel[] data = new WarehouseModel[0];

@@ -574,7 +574,7 @@ var KTDrawer = function(element, options) {
 };
 
 // Static methods
-KTDrawer.getInstance = function(element) {
+KTDrawer.getInstance = function (element) {
     if (element !== null && KTUtil.data(element).has('drawer')) {
         return KTUtil.data(element).get('drawer');
     } else {
@@ -620,7 +620,12 @@ window.addEventListener('resize', function() {
 
         if ( elements && elements.length > 0 ) {
             for (var i = 0, len = elements.length; i < len; i++) {
-                KTDrawer.getInstance(elements[i]).update();
+                try {
+                    KTDrawer.getInstance(elements[i]).update();
+                } catch (e) {
+                    
+                }
+                
             }
         }
     }, 200);
@@ -2480,7 +2485,11 @@ window.addEventListener('resize', function() {
 
         if ( elements && elements.length > 0 ) {
             for (var i = 0, len = elements.length; i < len; i++) {
-                KTPlace.getInstance(elements[i]).update();
+                try {
+                    KTPlace.getInstance(elements[i]).update();
+                } catch (e) {
+                    
+                }
             }
         }
     }, 200);
@@ -4964,7 +4973,7 @@ var KTUtil = function() {
                     window.KTUtilElementDataStore[el.customDataTag][name] = data;
                 },
 
-                get: function(name) {
+                get: function (name) {
                     if (!el) {
                         return;
                     }

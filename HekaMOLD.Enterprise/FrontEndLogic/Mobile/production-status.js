@@ -19,6 +19,26 @@
         }
     }
 
+    $scope.showProductInfo = function () {
+        try {
+            if ($scope.selectedWorkOrder.Id > 0) {
+                bootbox.alert({
+                    size: 'xl',
+                    centerVertical: true,
+                    
+                    title: $scope.selectedWorkOrder.WorkOrder.ProductName + ' / Ürün Bilgileri',
+                    message: '<iframe class="w-100 h-300px" src="' + HOST_URL + 'Mobile/ProductInformation?rid=' + $scope.selectedWorkOrder.WorkOrder.Id
+                        + '&popup=1"></iframe>',
+                    callback: function (result) {
+                        
+                    }
+                });
+            }
+        } catch (e) {
+
+        }
+    }
+
     $scope.selectWorkOrder = function (workOrder) {
         $scope.selectedWorkOrder = workOrder;
     }
