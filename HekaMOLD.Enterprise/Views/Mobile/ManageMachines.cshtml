@@ -8,11 +8,6 @@
     <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="machineOnlineCtrl">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
-            <!--begin::Title-->
-            <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
-                @ViewBag.Title
-            </h1>
-            <!--end::Title-->
             <!--begin::Wrapper-->
             @*<div>
                 <div class="d-flex flex-row">
@@ -37,10 +32,10 @@
             </div>*@
             <!--end::Wrapper-->
             <!--begin::Row-->
-            <div class="row gy-1 gx-xl-8 bg-white">
+            <div class="row gy-1 mt-0 gx-xl-8 bg-white">
                 <!--begin::Col-->
-                <div class="col-xxl-3 col-sm-3 col-md-3 px-2 py-0" ng-repeat="item in machineList">
-                    <div class="rounded-1 py-0 my-0"
+                <div class="col-xxl-3 col-sm-3 col-md-3 px-2 py-0" ng-cloak ng-repeat="item in machineList">
+                    <div class="rounded-1 py-0 my-0" ng-cloak
                          ng-class="{'bg-light-dark': item.BackColor == null || item.BackColor.length == 0}"
                          ng-style="item.BackColor != null && item.BackColor.length > 0 && {'background-color': item.BackColor}">
                         <div class="m-2 border-1 rounded-1">

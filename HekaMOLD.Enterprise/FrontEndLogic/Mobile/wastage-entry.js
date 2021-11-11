@@ -2,13 +2,14 @@
     $scope.modelObject = {
         Id: 0,
         MachineId: 0,
+        IsProdChief: false,
         WastageQuantity: 1,
     };
 
     $scope.bindModel = function (id) {
         $scope.modelObject = {
             Id: 0,
-            MachineId: 0
+            MachineId: 0,
         };
     }
 
@@ -155,5 +156,13 @@
     }
 
     // LOAD EVENTS
-    setTimeout($scope.showMachineList, 500);
+    if (IS_PRODCHIEF)
+        setTimeout($scope.showMachineList, 500);
+    else {
+        $scope.selectedMachine.Id = MACHINE_ID;
+        $scope.selectedMachine.MachineName = MACHINE_NAME;
+        $scope.modelObject.IsProdChief = IS_PRODCHIEF;
+
+        $scope.loadActiveWorkOrder();
+    }
 });

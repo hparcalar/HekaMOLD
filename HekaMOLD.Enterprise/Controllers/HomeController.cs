@@ -1,5 +1,6 @@
 ﻿using HekaMOLD.Business.Models.Authentication;
 using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Attributes;
@@ -25,30 +26,41 @@ namespace HekaMOLD.Enterprise.Controllers
         #region LOGIN PROCESS
         public ActionResult Login()
         {
-            ViewBag.Users = BindUsers();
-
             return View();
         }
 
-        private UserModel[] BindUsers()
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetSelectables()
         {
-            UserModel[] data = new UserModel[0];
+            UserModel[] users = new UserModel[0];
+            MachineModel[] machines = new MachineModel[0];
 
             using (UsersBO bObj = new UsersBO())
             {
-                data = bObj.GetUserList().OrderBy(d => d.UserCode).ToArray();
+                users = bObj.GetUserList();
             }
 
-            return data;
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                machines = bObj.GetMachineList();
+            }
+
+            var jsonResult = Json(new
+            {
+                Users = users,
+                Machines = machines,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
         [HttpPost]
+        [FreeAction]
         public ActionResult Login(LoginModel model)
         {
             try
             {
-                ViewBag.Users = BindUsers();
-
                 AuthenticationResult authResult = null;
                 using (UsersBO bObj = new UsersBO())
                 {
@@ -57,6 +69,42 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 if (!authResult.Result)
                     throw new Exception(authResult.ErrorMessage);
+                else
+                {
+                    if (authResult.UserData.IsProdTerminal
+                        && !authResult.UserData.IsProdChief)
+                    {
+                        if (model.MachineId <= 0)
+                            throw new Exception("Makine seçmelisiniz.");
+
+                        BusinessResult machineAvailableResult = null;
+                        using (UsersBO bObj = new UsersBO())
+                        {
+                            machineAvailableResult =
+                                bObj.IsMachineAvailableForLoggedIn(authResult.UserData.Id, model.MachineId);
+                        }
+
+                        if (!machineAvailableResult.Result)
+                            throw new Exception(machineAvailableResult.ErrorMessage);
+                        else
+                        {
+                            BusinessResult logIntoMachineResult = null;
+                            using (UsersBO bObj = new UsersBO())
+                            {
+                                logIntoMachineResult = bObj.LogUserIntoMachine(authResult.UserData.Id, model.MachineId);
+                            }
+
+                            if (!logIntoMachineResult.Result)
+                                throw new Exception(logIntoMachineResult.ErrorMessage);
+
+                            Response.Cookies.Set(new HttpCookie("MachineName", Server.UrlEncode(logIntoMachineResult.Code)));
+                            Response.Cookies["MachineName"].Expires = DateTime.Now.AddDays(1);
+                        }
+
+                        Response.Cookies.Set(new HttpCookie("MachineId", model.MachineId.ToString()));
+                        Response.Cookies["MachineId"].Expires = DateTime.Now.AddDays(1);
+                    }
+                }
 
                 Response.Cookies.Set(new HttpCookie("UserId", authResult.UserData.Id.ToString()));
                 Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(1);
@@ -69,9 +117,6 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 Response.Cookies.Set(new HttpCookie("UserName", Server.UrlEncode(authResult.UserData.UserName)));
                 Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(1);
-
-                //Response.Cookies.Set(new HttpCookie("Gates", JsonConvert.SerializeObject(authResult.GateList)));
-                //Response.Cookies["Gates"].Expires = DateTime.Now.AddDays(1);
 
                 RedirectToRouteResult redirectionResult = null;
                 if (authResult.UserData.IsMechanicTerminal
@@ -97,7 +142,18 @@ namespace HekaMOLD.Enterprise.Controllers
         [FreeAction]
         public ActionResult Logout()
         {
+            if (Request.Cookies.AllKeys.Contains("UserId")
+                && Request.Cookies["UserId"].Value != null)
+            {
+                using (UsersBO bObj = new UsersBO())
+                {
+                    bObj.LogOffUserFromMachine(Convert.ToInt32(Request.Cookies["UserId"].Value));
+                }
+            }
+
             Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies["MachineId"].Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies["MachineName"].Expires = DateTime.Now.AddDays(-1);
 
             return RedirectToAction("Index", "Home");
         }

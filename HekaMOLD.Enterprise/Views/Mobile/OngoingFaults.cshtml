@@ -8,13 +8,7 @@
     <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="incidentListCtrl">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
-            <!--begin::Title-->
-            <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
-                @ViewBag.Title
-            </h1>
-            <!--end::Title-->
-
-            <div class="row py-3 mt-4 gx-xl-8 bg-white">
+            <div class="row py-3 mt-0 gx-xl-8 bg-white">
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
                     <button class="btn btn-sm btn-block w-100 h-100 btn-light-primary"
                             ng-disabled="selectedIncident.Id == 0 || selectedIncident.IncidentStatus != 0"

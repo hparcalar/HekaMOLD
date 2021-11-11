@@ -3971,6 +3971,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap4.min.css" />
     <Content Include="Content\dx-diagram.css" />
     <Content Include="Content\dx-diagram.min.css" />
     <Content Include="Content\dx-gantt.css" />
@@ -4012,6 +4013,7 @@
     <Content Include="Content\dx.material.teal.light.css" />
     <Content Include="Content\dx.softblue.compact.css" />
     <Content Include="Content\dx.softblue.css" />
+    <Content Include="Content\fontawesome5.min.css" />
     <Content Include="Content\heka-styles.css" />
     <Content Include="Content\images\close.png" />
     <Content Include="Content\images\loading.gif" />
@@ -4068,6 +4070,7 @@
     <Content Include="FrontEndLogic\Firm\index.js" />
     <Content Include="FrontEndLogic\Firm\approved-suppliers.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
+    <Content Include="FrontEndLogic\Home\login.js" />
     <Content Include="FrontEndLogic\IncidentCategory\index.js" />
     <Content Include="FrontEndLogic\IncidentCategory\list.js" />
     <Content Include="FrontEndLogic\Incident\index.js" />
@@ -4381,6 +4384,7 @@
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
+    <Content Include="Scripts\bootstrap4.min.js" />
     <Content Include="Scripts\chart.esm.js" />
     <Content Include="Scripts\chart.js" />
     <Content Include="Scripts\chart.min.js" />
@@ -4417,6 +4421,7 @@
     <Content Include="Scripts\html5-qrcode.min.js" />
     <Content Include="Scripts\ckeditor.js.map" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
+    <Content Include="Scripts\jquery-3.2.1.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.js" />

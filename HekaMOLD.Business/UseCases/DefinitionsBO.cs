@@ -1337,7 +1337,7 @@ namespace HekaMOLD.Business.UseCases
         public MachineModel[] GetMachineStats(string startDate, string endDate)
         {
             List<MachineModel> data = new List<MachineModel>();
-
+            
             if (string.IsNullOrEmpty(startDate))
                 startDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now.AddMonths(-1));
             if (string.IsNullOrEmpty(endDate))
@@ -1349,6 +1349,7 @@ namespace HekaMOLD.Business.UseCases
             var repo = _unitOfWork.GetRepository<Machine>();
             var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
             var repoShift = _unitOfWork.GetRepository<Shift>();
+            var repoUser = _unitOfWork.GetRepository<User>();
 
             var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
             var repoIncident = _unitOfWork.GetRepository<Incident>();
@@ -1363,6 +1364,16 @@ namespace HekaMOLD.Business.UseCases
             {
                 MachineModel containerObj = new MachineModel();
                 d.MapTo(containerObj);
+                
+                if (d.WorkingUserId != null)
+                {
+                    var dbUser = repoUser.Get(m => m.Id == d.WorkingUserId);
+                    if (dbUser != null)
+                    {
+                        containerObj.WorkingUserCode = dbUser.UserCode;
+                        containerObj.WorkingUserName = dbUser.UserName;
+                    }
+                }
 
                 containerObj.ActivePlan = prodBO.GetActiveWorkOrderOnMachine(d.Id);
 

@@ -27,9 +27,12 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public Nullable<int> PostureCategoryId { get; set; }
+        public Nullable<int> ShiftId { get; set; }
+        public Nullable<System.DateTime> ShiftBelongsToDate { get; set; }
     
-        public virtual PostureCategory PostureCategory { get; set; }
-        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
         public virtual Machine Machine { get; set; }
+        public virtual PostureCategory PostureCategory { get; set; }
+        public virtual Shift Shift { get; set; }
+        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
     }
 }

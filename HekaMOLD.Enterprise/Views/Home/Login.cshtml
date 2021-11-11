@@ -1,7 +1,9 @@
 ﻿@using HekaMOLD.Business.Models.DataTransfer.Core
+@using System.Web.Configuration
 @{
     Layout = null;
     UserModel[] userList = ViewBag.Users;
+    var runningHost = WebConfigurationManager.AppSettings["RunningHost"];
 }
 <html lang="en">
 <head>
@@ -11,17 +13,13 @@
     <title>Giriş - Batusan Plastik</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="~/assets/media/logos/favicon.ico" />
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <style type="text/css">
-
-        @@import url('https://fonts.googleapis.com/css?family=Numans');
 
         html, body {
             background-color: #326195 !important;
             background-size: cover;
-
             height: 100%;
-            font-family: 'Numans', sans-serif;
+            font-family: sans-serif;
         }
 
         .container {
@@ -100,8 +98,8 @@
                 margin-left: 4px;
             }
     </style>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-3.2.1.min.js"></script>
+    <script src="~/Scripts/bootstrap4.min.js"></script>
     <script type="text/javascript">
         window.alert = function () { };
         var defaultCSS = document.getElementById('bootstrap-css');
@@ -109,22 +107,19 @@
             if (css) $('head > link').filter(':first').replaceWith('<link rel="stylesheet" href="' + css + '" type="text/css" />');
             else $('head > link').filter(':first').replaceWith(defaultCSS);
         }
-        
+
     </script>
 </head>
 <body>
-    <img style="position:absolute;top:10px;left:10px;" 
+    <img style="position:absolute;top:10px;left:10px;"
          width="180"
          src="~/assets/media/logos/login-background.jpg" />
 
-    <!--Bootsrap 4 CDN-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-    <!--Fontawesome CDN-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="~/Content/bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/Content/fontawesome5.min.css" rel="stylesheet" />
 
     <div class="container">
-        <div class="d-flex justify-content-center h-100">
+        <div class="d-flex justify-content-center h-100" ng-app="loginApp" ng-controller="loginCtrl">
             <div class="card">
                 <div class="card-header">
                     <h3 class="text-center">
@@ -135,20 +130,58 @@
                     <form method="post" action="@Url.Action("Login","Home")">
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                <span class="input-group-text bg-light">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-General-/-User" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+                                            <path d="M12,11 C9.790861,11 8,9.209139 8,7 C8,4.790861 9.790861,3 12,3 C14.209139,3 16,4.790861 16,7 C16,9.209139 14.209139,11 12,11 Z" id="Mask" fill="#000000" fill-rule="nonzero" opacity="0.3"></path>
+                                            <path d="M3.00065168,20.1992055 C3.38825852,15.4265159 7.26191235,13 11.9833413,13 C16.7712164,13 20.7048837,15.2931929 20.9979143,20.2 C21.0095879,20.3954741 20.9979143,21 20.2466999,21 C16.541124,21 11.0347247,21 3.72750223,21 C3.47671215,21 2.97953825,20.45918 3.00065168,20.1992055 Z" id="Mask-Copy" fill="#000000" fill-rule="nonzero"></path>
+                                        </g>
+                                    </svg>
+                                </span>
                             </div>
-                            @*<input type="text" name="Login" class="form-control" placeholder="Kullanıcı Adı">*@
-                            <select class="form-control" name="Login">
-                                <option value="-1">-- Kullanıcı --</option>
-                                @foreach(UserModel user in userList)
-                                {
-                                    <option value="@user.Login">@user.UserCode - @user.UserName</option>
-                                }
+                            <select aria-label="-- Kullanıcı --"
+                                    ng-options="item.UserCode + '-' + item.UserName for item in userList"
+                                    ng-model="selectedUser"
+                                    class="form-control">
                             </select>
+                            <input type="hidden" name="Login" value="{{selectedUser.Login}}" />
+                        </div>
+                        <div class="input-group form-group" ng-if="getIsProductionUser()">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-light">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path opacity="0.25" d="M5 7C5 5.89543 5.89543 5 7 5H17C18.1046 5 19 5.89543 19 7V17C19 18.1046 18.1046 19 17 19H7C5.89543 19 5 18.1046 5 17V7Z" fill="#12131A" />
+                                        <path d="M10 11C10 10.4477 10.4477 10 11 10H13C13.5523 10 14 10.4477 14 11V13C14 13.5523 13.5523 14 13 14H11C10.4477 14 10 13.5523 10 13V11Z" fill="#12131A" />
+                                        <path d="M9 2C8.44772 2 8 2.44772 8 3V5H10V3C10 2.44772 9.55228 2 9 2Z" fill="#12131A" />
+                                        <path d="M10 21V19H8V21C8 21.5523 8.44772 22 9 22C9.55228 22 10 21.5523 10 21Z" fill="#12131A" />
+                                        <path d="M14 3C14 2.44772 14.4477 2 15 2C15.5523 2 16 2.44772 16 3V5H14V3Z" fill="#12131A" />
+                                        <path d="M16 21V19H14V21C14 21.5523 14.4477 22 15 22C15.5523 22 16 21.5523 16 21Z" fill="#12131A" />
+                                        <path d="M21 8C21.5523 8 22 8.44772 22 9C22 9.55229 21.5523 10 21 10H19V8H21Z" fill="#12131A" />
+                                        <path d="M3 10H5V8H3C2.44772 8 2 8.44771 2 9C2 9.55229 2.44772 10 3 10Z" fill="#12131A" />
+                                        <path d="M21 14C21.5523 14 22 14.4477 22 15C22 15.5523 21.5523 16 21 16H19V14H21Z" fill="#12131A" />
+                                        <path d="M3 16H5V14H3C2.44772 14 2 14.4477 2 15C2 15.5523 2.44772 16 3 16Z" fill="#12131A" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <select aria-label="-- Makine --"
+                                    ng-options="item.MachineName for item in machineList"
+                                    ng-model="selectedMachine"
+                                    class="form-control">
+                            </select>
+                            <input type="hidden" name="MachineId" value="{{selectedMachine.Id}}" />
                         </div>
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text bg-light"><i class="fas fa-key"></i></span>
+                                <span class="input-group-text bg-light">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Home-/-Key" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                            <polygon id="Path-59" fill="#000000" opacity="0.3" transform="translate(8.885842, 16.114158) rotate(-315.000000) translate(-8.885842, -16.114158) " points="6.89784488 10.6187476 6.76452164 19.4882481 8.88584198 21.6095684 11.0071623 19.4882481 9.59294876 18.0740345 10.9659914 16.7009919 9.55177787 15.2867783 11.0071623 13.8313939 10.8837471 10.6187476"></polygon>
+                                            <path d="M15.9852814,14.9852814 C12.6715729,14.9852814 9.98528137,12.2989899 9.98528137,8.98528137 C9.98528137,5.67157288 12.6715729,2.98528137 15.9852814,2.98528137 C19.2989899,2.98528137 21.9852814,5.67157288 21.9852814,8.98528137 C21.9852814,12.2989899 19.2989899,14.9852814 15.9852814,14.9852814 Z M16.1776695,9.07106781 C17.0060967,9.07106781 17.6776695,8.39949494 17.6776695,7.57106781 C17.6776695,6.74264069 17.0060967,6.07106781 16.1776695,6.07106781 C15.3492424,6.07106781 14.6776695,6.74264069 14.6776695,7.57106781 C14.6776695,8.39949494 15.3492424,9.07106781 16.1776695,9.07106781 Z" id="Combined-Shape" fill="#000000" transform="translate(15.985281, 8.985281) rotate(-315.000000) translate(-15.985281, -8.985281) "></path>
+                                        </g>
+                                    </svg>
+                                </span>
                             </div>
                             <input type="password" name="Password" class="form-control" placeholder="Parola">
                         </div>
@@ -163,10 +196,16 @@
                     {
                         <span class="text-danger bg-white p-2" style="font-weight:bold;border-radius:3px;">@ViewBag.ErrorMessage</span>
                     }
+
                 </div>
             </div>
         </div>
     </div>
+
+    <script>var HOST_URL = "@runningHost";</script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/angular-mocks.js"></script>
+    <script src="~/FrontEndLogic/Home/login.js"></script>
 
     <script type="text/javascript">
         $(function () {

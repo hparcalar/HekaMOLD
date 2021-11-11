@@ -59,6 +59,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ItemSerial> ItemSerial { get; set; }
         public virtual DbSet<ItemUnit> ItemUnit { get; set; }
         public virtual DbSet<ItemWarehouse> ItemWarehouse { get; set; }
+        public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         public virtual DbSet<MachineMaintenanceInstructionEntry> MachineMaintenanceInstructionEntry { get; set; }
         public virtual DbSet<MachinePlan> MachinePlan { get; set; }
@@ -71,6 +72,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<PostureCategory> PostureCategory { get; set; }
         public virtual DbSet<PrinterQueue> PrinterQueue { get; set; }
         public virtual DbSet<ProductionPosture> ProductionPosture { get; set; }
+        public virtual DbSet<ProductQualityData> ProductQualityData { get; set; }
         public virtual DbSet<ProductQualityDataDetail> ProductQualityDataDetail { get; set; }
         public virtual DbSet<ProductQualityPlan> ProductQualityPlan { get; set; }
         public virtual DbSet<ProductRecipe> ProductRecipe { get; set; }
@@ -97,8 +99,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<WorkOrderControlType> WorkOrderControlType { get; set; }
         public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
         public virtual DbSet<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
-        public virtual DbSet<ProductQualityData> ProductQualityData { get; set; }
         public virtual DbSet<WorkOrderSerial> WorkOrderSerial { get; set; }
-        public virtual DbSet<Machine> Machine { get; set; }
     }
 }

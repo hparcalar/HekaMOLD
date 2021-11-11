@@ -1,5 +1,9 @@
 ﻿app.controller('postureEntryCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id: 0 };
+    $scope.modelObject = {
+        Id: 0,
+        IsProdChief: false,
+        IsMechanics: false,
+    };
     $scope.machineQueue = [];
 
     $scope.bindModel = function (id) {
@@ -170,5 +174,14 @@
     }
 
     // LOAD EVENTS
-    setTimeout($scope.showMachineList, 500);
+    if (IS_PRODCHIEF || IS_MECHANICS)
+        setTimeout($scope.showMachineList, 500);
+    else {
+        $scope.selectedMachine.Id = MACHINE_ID;
+        $scope.selectedMachine.MachineName = MACHINE_NAME;
+        $scope.modelObject.IsProdChief = IS_PRODCHIEF;
+        $scope.modelObject.IsMechanics = IS_MECHANICS;
+
+        $scope.loadMachineQueue();
+    }
 });

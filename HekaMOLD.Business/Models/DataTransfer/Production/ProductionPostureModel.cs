@@ -18,6 +18,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? PostureCategoryId { get; set; }
         public string Reason { get; set; }
         public string Explanation { get; set; }
+        public int? ShiftId { get; set; }
+        public DateTime? ShiftBelongsToDate { get; set; }
 
         #region VISUAL ELEMENTS
         public string PostureStatusStr { get; set; }

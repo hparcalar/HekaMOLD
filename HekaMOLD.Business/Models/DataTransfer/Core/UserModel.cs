@@ -22,6 +22,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         #region VISUAL ELEMENTS
         public string RoleName { get; set; }
         public bool IsProdTerminal { get; set; }
+        public bool IsProdChief { get; set; }
         public bool IsMechanicTerminal { get; set; }
         public bool IsWarehouseTerminal { get; set; }
 

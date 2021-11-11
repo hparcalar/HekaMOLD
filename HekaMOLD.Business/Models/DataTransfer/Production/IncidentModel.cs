@@ -19,6 +19,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? CreatedUserId { get; set; }
         public int? StartedUserId { get; set; }
         public int? EndUserId { get; set; }
+        public int? ShiftId { get; set; }
+        public DateTime? ShiftBelongsToDate { get; set; }
 
         #region VISUAL ELEMENTS
         public string MachineCode { get; set; }

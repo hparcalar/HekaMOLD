@@ -25,8 +25,11 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<int> StartedUserId { get; set; }
         public Nullable<int> EndUserId { get; set; }
+        public Nullable<int> ShiftId { get; set; }
+        public Nullable<System.DateTime> ShiftBelongsToDate { get; set; }
     
         public virtual IncidentCategory IncidentCategory { get; set; }
         public virtual Machine Machine { get; set; }
+        public virtual Shift Shift { get; set; }
     }
 }

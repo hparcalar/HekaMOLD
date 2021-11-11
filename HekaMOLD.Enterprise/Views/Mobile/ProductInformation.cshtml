@@ -1,4 +1,5 @@
-﻿@{
+﻿@using HekaMOLD.Enterprise.Helpers
+@{
     ViewBag.Title = "Ürün Bilgisi";
     Layout = "~/Views/Shared/_LayoutMobile.cshtml";
 }
@@ -8,20 +9,15 @@
     <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="productInformationCtrl">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
-            <!--begin::Title-->
-            <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3" ng-if="modelObject.IsPopup == false">
-                @ViewBag.Title
-            </h1>
-            <!--end::Title-->
             <!--begin::TOP FORM-->
-            <div class="row gy-5 mt-4 gx-xl-8 bg-white" ng-if="modelObject.IsPopup == false">
+            <div class="row gy-5 mt-0 gx-xl-8 bg-white" ng-if="modelObject.IsPopup == false">
                 <div class="col-sm-8 col-xs-8 col-xxl-8">
                     <div class="row">
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <input type="text" class="form-control"
+                                <input type="text" ng-cloak class="form-control"
                                        ng-model="selectedMachine.MachineName"
                                        readonly="readonly"
                                        placeholder="" />
@@ -29,10 +25,10 @@
                         </div>
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
                             <div class="d-flex flex-row pb-1">
-                                <button type="button" ng-click="showProductionHistory()" class="btn py-2 btn-block flex-fill btn-sm btn-warning mx-1">
+                                <button type="button" ng-cloak ng-click="showProductionHistory()" class="btn py-2 btn-block flex-fill btn-sm btn-warning mx-1">
                                     {{ historyWorkOrderDetailId > 0 ? 'Aktif Üretime Geç' : 'Biten Üretimler' }}
                                 </button>
-                                <button type="button" ng-if="activeDetails.length > 1" ng-click="showMultipleDetails()"
+                                <button type="button" ng-cloak ng-if="activeDetails.length > 1" ng-click="showMultipleDetails()"
                                         class="btn py-2 btn-block flex-1 btn-sm btn-primary mx-1">
                                     Ürün Seç
                                 </button>
@@ -73,7 +69,7 @@
                 </div>
 
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    <a class="btn btn-sm btn-block w-100 h-75 mt-1 btn-primary" style="padding-top:20px;" ng-click="showMachineList()">
+                    <a ng-if="modelObject.IsProdChief" ng-cloak class="btn btn-sm btn-block w-100 h-75 mt-1 btn-primary" style="padding-top:20px;" ng-click="showMachineList()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -94,7 +90,7 @@
             <!--end::TOP FORM -->
             <!--begin::MOLD TEST DATA-->
             <div class="row gy-5 mt-4 gx-xl-8 bg-white">
-                <div ng-if="modelObject.MoldData.Id > 0">
+                <div ng-cloak ng-if="modelObject.MoldData.Id > 0">
                     <div class="row">
                         @* LEFT COLUMN *@
                         <div class="col-sm-2 col-md-2 col-xxl-2">
@@ -105,11 +101,11 @@
                             <p class="fw-bold">Toplam Zaman</p>
                         </div>
                         <div class="col-sm-4 col-md-4 col-xxl-4">
-                            <p>{{ modelObject.MoldData.HeadSize }}</p>
-                            <p>{{ modelObject.MoldData.RawMaterialName }}</p>
-                            <p>{{ modelObject.MoldData.RawMaterialGr }}</p>
-                            <p>{{ modelObject.MoldData.InflationTimeSeconds }}</p>
-                            <p>{{ modelObject.MoldData.TotalTimeSeconds }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.HeadSize }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.RawMaterialName }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.RawMaterialGr }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.InflationTimeSeconds }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.TotalTimeSeconds }}</p>
                         </div>
 
                         @* RIGHT COLUMN *@
@@ -122,12 +118,12 @@
                             <p class="fw-bold">Kalıp Adı</p>
                         </div>
                         <div class="col-sm-4 col-md-4 col-xxl-4">
-                            <p>{{ modelObject.MoldData.DyeCode }} / {{ modelObject.MoldData.RalCode }}</p>
-                            <p>{{ modelObject.MoldData.PackageDimension }}</p>
-                            <p>{{ modelObject.MoldData.NutCaliber }} / {{ modelObject.MoldData.NutQuantity }}</p>
-                            <p>{{ modelObject.MoldData.InPalletPackageQuantity }}</p>
-                            <p>{{ modelObject.MoldData.MoldCode }}</p>
-                            <p>{{ modelObject.MoldData.MoldName }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.DyeCode }} / {{ modelObject.MoldData.RalCode }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.PackageDimension }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.NutCaliber }} / {{ modelObject.MoldData.NutQuantity }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.InPalletPackageQuantity }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.MoldCode }}</p>
+                            <p ng-cloak>{{ modelObject.MoldData.MoldName }}</p>
                         </div>
                     </div>
                 </div>
@@ -150,7 +146,12 @@
 </div>
 
 @section scripts{
-    <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
+    <script>
+        var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");
+        var IS_PRODCHIEF = @(Html.IsGranted("IsProductionChief") ? "true" : "false");
+        var MACHINE_ID = @(Request.Cookies.AllKeys.Contains("MachineId") ? Request.Cookies["MachineId"].Value : "0");
+        var MACHINE_NAME = '@(Request.Cookies.AllKeys.Contains("MachineName") ? Server.UrlDecode(Request.Cookies["MachineName"].Value) : "")';
+    </script>
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>

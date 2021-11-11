@@ -28,8 +28,8 @@ namespace Heka.DataAccess.Context
         public Nullable<int> EquipmentCategoryId { get; set; }
     
         public virtual EquipmentCategory EquipmentCategory { get; set; }
+        public virtual Machine Machine { get; set; }
         public virtual Plant Plant { get; set; }
         public virtual User User { get; set; }
-        public virtual Machine Machine { get; set; }
     }
 }

@@ -800,10 +800,11 @@ namespace HekaMOLD.Business.UseCases
 
                 _unitOfWork.SaveChanges();
 
-                using (ProductionBO bObj = new ProductionBO())
-                {
-                    bObj.UpdateUserHistory(dbObj.MachineId ?? 0, userId ?? 0);
-                }
+                // MOVED TO USER LOGIN WITH MACHINE SELECTION
+                //using (ProductionBO bObj = new ProductionBO())
+                //{
+                //    bObj.UpdateUserHistory(dbObj.MachineId ?? 0, userId ?? 0);
+                //}
 
                 result.Result = true;
             }

@@ -4,6 +4,7 @@
         MachineId: 0,
         Barcode: '',
         PrinterId: 0,
+        IsProdChief: false,
         PrintLabel: false,
     };
 
@@ -425,5 +426,14 @@
 
     // LOAD EVENTS
     $scope.getDefaultSerialPrinter();
-    setTimeout($scope.showMachineList, 500);
+
+    if (IS_PRODCHIEF)
+        setTimeout($scope.showMachineList, 500);
+    else {
+        $scope.selectedMachine.Id = MACHINE_ID;
+        $scope.selectedMachine.MachineName = MACHINE_NAME;
+        $scope.modelObject.IsProdChief = IS_PRODCHIEF;
+
+        $scope.loadActiveWorkOrder();
+    }
 });

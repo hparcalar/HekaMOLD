@@ -35,6 +35,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string CreatedDateStr { get; set; }
         public string MachineStatusText { get; set; }
         public MachineStatsModel MachineStats { get; set; }
+        public string WorkingUserCode { get; set; }
+        public string WorkingUserName { get; set; }
         #endregion
     }
 }

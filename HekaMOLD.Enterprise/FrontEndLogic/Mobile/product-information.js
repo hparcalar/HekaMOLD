@@ -188,6 +188,15 @@
         $scope.selectedActiveDetailId = PRM_ID;
         $scope.loadActiveWorkOrder();
     }
-    else
-        setTimeout($scope.showMachineList, 500);
+    else {
+        if (IS_PRODCHIEF)
+            setTimeout($scope.showMachineList, 500);
+        else {
+            $scope.selectedMachine.Id = MACHINE_ID;
+            $scope.selectedMachine.MachineName = MACHINE_NAME;
+            $scope.modelObject.IsProdChief = IS_PRODCHIEF;
+
+            $scope.loadActiveWorkOrder();
+        }
+    }
 });

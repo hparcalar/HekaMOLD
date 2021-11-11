@@ -287,11 +287,12 @@ namespace HekaMOLD.Enterprise.Controllers
                 result = bObj.AddProductEntry(workOrderDetailId, userId, serialType, inPackageQuantity, barcode);
             }
 
+            // UPDATE USER STATS
             using (ProductionBO bObj = new ProductionBO())
             {
                 int? machineId = bObj.GetMachineByWorkOrderDetail(workOrderDetailId);
                 if (machineId != null)
-                    bObj.UpdateUserHistory(machineId ?? 0, userId);
+                    bObj.UpdateUserHistory(machineId ?? 0, 0);
             }
 
             if (printLabel == true)

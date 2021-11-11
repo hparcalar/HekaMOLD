@@ -24,7 +24,7 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
     
-        public virtual ProductQualityPlan ProductQualityPlan { get; set; }
         public virtual ProductQualityData ProductQualityData { get; set; }
+        public virtual ProductQualityPlan ProductQualityPlan { get; set; }
     }
 }

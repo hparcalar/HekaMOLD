@@ -28,8 +28,8 @@ namespace Heka.DataAccess.Context
         public string Responsible { get; set; }
         public Nullable<int> LineNumber { get; set; }
     
+        public virtual Machine Machine { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MachineMaintenanceInstructionEntry> MachineMaintenanceInstructionEntry { get; set; }
-        public virtual Machine Machine { get; set; }
     }
 }

@@ -1013,6 +1013,12 @@ namespace HekaMOLD.Business.UseCases
 
                 _unitOfWork.SaveChanges();
 
+                // UPDATE USER STATS
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    bObj.UpdateUserHistory(machineId, 0);
+                }
+
                 result.RecordId = lastActiveSignal.Id;
                 result.Result = true;
             }
@@ -2638,6 +2644,19 @@ namespace HekaMOLD.Business.UseCases
                 var repoMachine = _unitOfWork.GetRepository<Machine>();
 
                 var dbUser = repoUser.Get(d => d.Id == userId);
+                if (userId == 0) // IF USER ID IS 0 THEN GET ACTIVE WORKING USER ON THAT MACHINE
+                {
+                    var activeUserId = repo.Filter(d => d.MachineId == machineId && d.EndDate == null)
+                        .OrderByDescending(d => d.Id).Select(d => d.UserId).FirstOrDefault();
+                    if (activeUserId == null)
+                        throw new Exception("Bu makinede çalışan aktif bir personel bulunamadı.");
+                    else
+                    {
+                        userId = activeUserId.Value;
+                        dbUser = repoUser.Get(d => d.Id == userId);
+                    }
+                }
+
                 var dbMachine = repoMachine.Get(d => d.Id == machineId);
 
                 if (dbUser == null)
@@ -2666,7 +2685,7 @@ namespace HekaMOLD.Business.UseCases
                         StartDate = DateTime.Now,
                         StartQuantity = dbMachine.WorkOrderDetail
                                 .Where(d => d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
-                                .Select(d => d.WorkOrderSerial.Count()).FirstOrDefault(),
+                                .Select(d => d.MachineSignal.Where(m => m.SignalStatus == 1).Count()).FirstOrDefault(),
                         FinishedQuantity = 0,
                         MachineId = machineId,
                         UserId = userId,
@@ -2687,7 +2706,7 @@ namespace HekaMOLD.Business.UseCases
                             StartDate = DateTime.Now,
                             StartQuantity = dbMachine.WorkOrderDetail
                                 .Where(d => d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
-                                .Select(d => d.WorkOrderSerial.Count()).FirstOrDefault(),
+                                .Select(d => d.MachineSignal.Where(m => m.SignalStatus == 1).Count()).FirstOrDefault(),
                             FinishedQuantity = 0,
                             MachineId = machineId,
                             UserId = userId,
@@ -2695,16 +2714,28 @@ namespace HekaMOLD.Business.UseCases
                                 .Where(d => d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
                                 .Select(d => d.Id).FirstOrDefault(),
                         };
+                        
+                        if (dbStats.WorkOrderDetailId == 0)
+                            dbStats.WorkOrderDetailId = null;
+
                         repo.Add(dbStats);
                     }
 
-                    if (dbStats.WorkOrderDetail != null)
-                        dbStats.FinishedQuantity = dbStats.WorkOrderDetail.WorkOrderSerial.Count() - dbStats.StartQuantity;
-                    if (!dbMachine.WorkOrderDetail.Any(d => d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress))
+                    if (dbStats.WorkOrderDetail == null)
                     {
-                        dbStats.EndDate = DateTime.Now;
-                        dbStats.EndQuantity = dbStats.StartQuantity + dbStats.FinishedQuantity;
+                        dbStats.WorkOrderDetail = dbMachine.WorkOrderDetail
+                                .FirstOrDefault(d => d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress);
                     }
+
+                    if (dbStats.WorkOrderDetail != null)
+                        dbStats.FinishedQuantity = dbStats.WorkOrderDetail.MachineSignal.Where(m => m.SignalStatus == 1).Count() 
+                            - dbStats.StartQuantity;
+
+                    //if (!dbMachine.WorkOrderDetail.Any(d => d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress))
+                    //{
+                    //    dbStats.EndDate = DateTime.Now;
+                    //    dbStats.EndQuantity = dbStats.StartQuantity + dbStats.FinishedQuantity;
+                    //}
                 }
 
                 _unitOfWork.SaveChanges();

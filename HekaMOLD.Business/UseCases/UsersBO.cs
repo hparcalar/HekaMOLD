@@ -33,6 +33,9 @@ namespace HekaMOLD.Business.UseCases
                 result.UserData.IsProdTerminal = dbUser.UserRole.UserAuth
                     .Any(d => d.UserAuthType.AuthTypeCode == "MobileProductionUser"
                     && d.IsGranted == true);
+                result.UserData.IsProdChief = dbUser.UserRole.UserAuth
+                    .Any(d => d.UserAuthType.AuthTypeCode == "IsProductionChief"
+                    && d.IsGranted == true);
                 result.UserData.IsMechanicTerminal = dbUser.UserRole.UserAuth
                     .Any(d => d.UserAuthType.AuthTypeCode == "MobileMechanicUser"
                     && d.IsGranted == true);
@@ -79,6 +82,124 @@ namespace HekaMOLD.Business.UseCases
 
                 if (!result.Result)
                     result.ErrorMessage = "Bu bölümde yetkiniz bulunmamaktadır.";
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
+
+        #region PRODUCTION USERS MANAGEMENT
+        public BusinessResult IsMachineAvailableForLoggedIn(int userId, int machineId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<UserWorkOrderHistory>();
+                var repoUser = _unitOfWork.GetRepository<User>();
+
+                var lastActive = repo.Filter(d => d.MachineId == machineId && d.EndDate == null)
+                    .OrderByDescending(d => d.Id).FirstOrDefault();
+                
+                if (lastActive == null)
+                    result.Result = true;
+                else
+                {
+                    if (lastActive.UserId == userId)
+                        result.Result = true;
+                    else
+                    {
+                        if ((DateTime.Now - lastActive.StartDate.Value).TotalHours >= 23)
+                        {
+                            lastActive.EndDate = DateTime.Now;
+                            _unitOfWork.SaveChanges();
+
+                            result.Result = true;
+                        }
+                        else
+                        {
+                            var dbUser = repoUser.Get(d => d.Id == lastActive.UserId);
+                            throw new Exception("Bu makinede şuan " + dbUser.UserName + " çalışmaktadır. "
+                                + "Personel çıkış yapmadan siz bu makine için giriş yapamazsınız.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult LogUserIntoMachine(int userId, int machineId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<UserWorkOrderHistory>();
+                var repoMachine = _unitOfWork.GetRepository<Machine>();
+
+                var lastActive = repo.Filter(d => d.MachineId == machineId && d.EndDate == null)
+                    .OrderByDescending(d => d.Id).FirstOrDefault();
+                var dbMachine = repoMachine.Get(d => d.Id == machineId);
+
+                var exActives = repo.Filter(d => d.MachineId == machineId && d.EndDate == null).ToArray();
+                foreach (var item in exActives.Where(m => lastActive == null || m.Id != lastActive.Id))
+                {
+                    item.EndDate = DateTime.Now;
+                }
+
+                _unitOfWork.SaveChanges();
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    bObj.UpdateUserHistory(machineId, userId);
+                }
+
+                result.Result = true;
+                result.Code = dbMachine.MachineName;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult LogOffUserFromMachine(int userId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<UserWorkOrderHistory>();
+                var repoMachines = _unitOfWork.GetRepository<Machine>();
+
+                var userActives = repo.Filter(d => d.UserId == userId && d.EndDate == null).ToArray();
+                foreach (var item in userActives)
+                {
+                    item.EndDate = DateTime.Now;
+                }
+
+                var machineActives = repoMachines.Filter(d => d.WorkingUserId == userId).ToArray();
+                foreach (var item in machineActives)
+                {
+                    item.WorkingUserId = null;
+                }
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
             }
             catch (Exception ex)
             {
@@ -171,6 +292,10 @@ namespace HekaMOLD.Business.UseCases
                 UserModel containerObj = new UserModel();
                 d.MapTo(containerObj);
                 containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                containerObj.IsProdTerminal = d.UserRole.UserAuth
+                    .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);
+                containerObj.IsProdChief = d.UserRole.UserAuth
+                    .Any(m => m.UserAuthType.AuthTypeCode == "IsProductionChief" && m.IsGranted == true);
                 data.Add(containerObj);
             });
 
