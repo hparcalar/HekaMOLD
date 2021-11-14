@@ -11,5 +11,6 @@ namespace Heka.DataAccess.UnitOfWork
     {
         IRepository<T> GetRepository<T>() where T : class;
         int SaveChanges();
+        void SetTimeout(int seconds);
     }
 }

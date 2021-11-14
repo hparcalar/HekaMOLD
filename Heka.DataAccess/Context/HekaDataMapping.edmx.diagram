@@ -7,79 +7,82 @@
       <Diagram DiagramId="b552cb97d7914bdca30c27814841d085" Name="Diagram1" ZoomLevel="59">
         <EntityTypeShape EntityType="Heka.DataAccess.Models.AllocatedCode" Width="1.5" PointX="0.75" PointY="4.75" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.Attachment" Width="1.5" PointX="2.75" PointY="4.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.DeliveryPlan" Width="1.5" PointX="24" PointY="130.375" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Dye" Width="1.5" PointX="19.5" PointY="120" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.EntryQualityData" Width="1.5" PointX="8.25" PointY="101.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.EntryQualityDataDetail" Width="1.5" PointX="18" PointY="108" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.EntryQualityPlan" Width="1.5" PointX="13.5" PointY="114.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.EntryQualityPlanDetail" Width="1.5" PointX="15.75" PointY="114.375" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Equipment" Width="1.5" PointX="5.25" PointY="99.375" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.EquipmentCategory" Width="1.5" PointX="3" PointY="111" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Firm" Width="1.5" PointX="3" PointY="95.5" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.FirmAuthor" Width="1.5" PointX="5.25" PointY="123.5" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ForexHistory" Width="1.5" PointX="18.75" PointY="88.625" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ForexType" Width="1.5" PointX="16.5" PointY="89.625" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Incident" Width="1.5" PointX="30" PointY="110.25" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.IncidentCategory" Width="1.5" PointX="27.75" PointY="116.375" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Invoice" Width="1.5" PointX="5.25" PointY="87.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Item" Width="1.5" PointX="5.25" PointY="105" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemCategory" Width="1.5" PointX="3" PointY="122.875" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemGroup" Width="1.5" PointX="11.25" PointY="106.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemLiveStatus" Width="1.5" PointX="13.5" PointY="110.375" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemOrder" Width="1.5" PointX="8.25" PointY="92.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemOrderDetail" Width="1.5" PointX="16.5" PointY="92.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemOrderItemNeeds" Width="1.5" PointX="18.75" PointY="102" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemReceipt" Width="1.5" PointX="10.5" PointY="92.5" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemReceiptConsume" Width="1.5" PointX="21" PointY="89.625" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemReceiptDetail" Width="1.5" PointX="18.75" PointY="92.375" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequest" Width="1.5" PointX="3" PointY="89.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestApproveLog" Width="1.5" PointX="10.5" PointY="100.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestCategory" Width="1.5" PointX="0.75" PointY="85.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestDetail" Width="1.5" PointX="13.5" PointY="89.5" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemSerial" Width="1.5" PointX="27" PointY="101.875" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemUnit" Width="1.5" PointX="13.5" PointY="95.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemWarehouse" Width="1.5" PointX="7.5" PointY="114.25" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Machine" Width="1.5" PointX="19.5" PointY="112.5" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineMaintenanceInstruction" Width="1.5" PointX="21.75" PointY="122.25" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineMaintenanceInstructionEntry" Width="1.5" PointX="24" PointY="122.5" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachinePlan" Width="1.5" PointX="30" PointY="96.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineSignal" Width="1.5" PointX="24" PointY="92.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Mold" Width="1.5" PointX="13.5" PointY="101.5" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.MoldProduct" Width="1.5" PointX="20.75" PointY="108" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.MoldTest" Width="1.5" PointX="23.75" PointY="108.25" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Notification" Width="1.5" PointX="10.5" PointY="110.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Plant" Width="1.5" PointX="0.75" PointY="89.625" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.PostureCategory" Width="1.5" PointX="27.75" PointY="90.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.DeliveryPlan" Width="1.5" PointX="22.5" PointY="131.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Dye" Width="1.5" PointX="18" PointY="102.375" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.EntryQualityData" Width="1.5" PointX="15.75" PointY="118.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.EntryQualityDataDetail" Width="1.5" PointX="21" PointY="120" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.EntryQualityPlan" Width="1.5" PointX="7.5" PointY="115.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.EntryQualityPlanDetail" Width="1.5" PointX="9.75" PointY="119.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Equipment" Width="1.5" PointX="7.5" PointY="91.375" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.EquipmentCategory" Width="1.5" PointX="3" PointY="85.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Firm" Width="1.5" PointX="3" PointY="126.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.FirmAuthor" Width="1.5" PointX="5.25" PointY="163.25" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ForexHistory" Width="1.5" PointX="20.25" PointY="93.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ForexType" Width="1.5" PointX="18" PointY="106.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Incident" Width="1.5" PointX="7.5" PointY="77.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.IncidentCategory" Width="1.5" PointX="5.25" PointY="71.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Invoice" Width="1.5" PointX="8.25" PointY="109.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Item" Width="1.5" PointX="10.5" PointY="111.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemCategory" Width="1.5" PointX="3" PointY="122.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemGroup" Width="1.5" PointX="5.25" PointY="109.25" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemLiveStatus" Width="1.5" PointX="17.75" PointY="126.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemOrder" Width="1.5" PointX="12.75" PointY="114.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemOrderDetail" Width="1.5" PointX="18" PointY="109.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemOrderItemNeeds" Width="1.5" PointX="23.25" PointY="114.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemReceipt" Width="1.5" PointX="18" PointY="118.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemReceiptConsume" Width="1.5" PointX="25.5" PointY="114.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemReceiptDetail" Width="1.5" PointX="20.25" PointY="110.375" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequest" Width="1.5" PointX="10.5" PointY="93" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestApproveLog" Width="1.5" PointX="12.75" PointY="92.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestCategory" Width="1.5" PointX="8.25" PointY="106" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemRequestDetail" Width="1.5" PointX="12.75" PointY="105.25" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemSerial" Width="1.5" PointX="23.5" PointY="119" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemUnit" Width="1.5" PointX="15.75" PointY="113.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ItemWarehouse" Width="1.5" PointX="12.75" PointY="130.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.LayoutItem" Width="1.5" PointX="6" PointY="97.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.LayoutObjectType" Width="1.5" PointX="0.75" PointY="92.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Machine" Width="1.5" PointX="5.25" PointY="78.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineGroup" Width="1.5" PointX="3" PointY="97.25" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineMaintenanceInstruction" Width="1.5" PointX="7.5" PointY="83" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineMaintenanceInstructionEntry" Width="1.5" PointX="9.75" PointY="83.25" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachinePlan" Width="1.5" PointX="22.5" PointY="92.375" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MachineSignal" Width="1.5" PointX="25.5" PointY="91.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Mold" Width="1.5" PointX="12.75" PointY="123.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MoldProduct" Width="1.5" PointX="21" PointY="124" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.MoldTest" Width="1.5" PointX="15" PointY="101.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Notification" Width="1.5" PointX="7.5" PointY="101" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Plant" Width="1.5" PointX="0.75" PointY="95.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.PostureCategory" Width="1.5" PointX="20.25" PointY="96.625" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.PrinterQueue" Width="1.5" PointX="3" PointY="1" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductionPosture" Width="1.5" PointX="30" PointY="100.5" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityData" Width="1.5" PointX="16.5" PointY="103.25" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityDataDetail" Width="1.5" PointX="24.75" PointY="103.375" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityPlan" Width="1.5" PointX="22.5" PointY="117" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductRecipe" Width="1.5" PointX="7.5" PointY="138.25" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductRecipeDetail" Width="1.5" PointX="15.75" PointY="109.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductWastage" Width="1.5" PointX="26" PointY="110.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductionPosture" Width="1.5" PointX="22.5" PointY="96.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityData" Width="1.5" PointX="12.75" PointY="97.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityDataDetail" Width="1.5" PointX="15" PointY="97.25" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductQualityPlan" Width="1.5" PointX="12.75" PointY="87" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductRecipe" Width="1.5" PointX="12.75" PointY="135.375" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductRecipeDetail" Width="1.5" PointX="15" PointY="126" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProductWastage" Width="1.5" PointX="25.5" PointY="96.75" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ReportTemplate" Width="1.5" PointX="4.75" PointY="4.75" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.SectionSetting" Width="1.5" PointX="5.75" PointY="0.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Shift" Width="1.5" PointX="21.75" PointY="93.25" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.SyncPoint" Width="1.5" PointX="3" PointY="75.375" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Shift" Width="1.5" PointX="5.25" PointY="74.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.SyncPoint" Width="1.5" PointX="3" PointY="139.75" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.SystemParameter" Width="1.5" PointX="6.75" PointY="3.75" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.SystemPrinter" Width="1.5" PointX="0.75" PointY="1" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.TransactionLog" Width="1.5" PointX="10.5" PointY="114.875" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.UnitType" Width="1.5" PointX="3" PointY="80.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.TransactionLog" Width="1.5" PointX="7.5" PointY="87.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UnitType" Width="1.5" PointX="3" PointY="118" />
         <EntityTypeShape EntityType="Heka.DataAccess.Models.UsageDocument" Width="1.5" PointX="6.75" PointY="6.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.User" Width="1.5" PointX="8.25" PointY="108.5" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserAuth" Width="1.5" PointX="10.5" PointY="119" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserAuthType" Width="1.5" PointX="8.25" PointY="119.375" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserRole" Width="1.5" PointX="3" PointY="119.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserWorkOrderHistory" Width="1.5" PointX="30" PointY="106.25" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.Warehouse" Width="1.5" PointX="3" PointY="114.125" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrder" Width="1.5" PointX="5.25" PointY="93.875" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderAllocation" Width="1.5" PointX="27" PointY="98" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderControl" Width="1.5" PointX="27" PointY="93.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderControlType" Width="1.5" PointX="24.75" PointY="87.875" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderDetail" Width="1.5" PointX="21.75" PointY="98.75" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderItemNeeds" Width="1.5" PointX="27" PointY="106.875" />
-        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderSerial" Width="1.5" PointX="24" PointY="97.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.User" Width="1.5" PointX="5.25" PointY="89.25" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserAuth" Width="1.5" PointX="10.5" PointY="86.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserAuthType" Width="1.5" PointX="8.25" PointY="97" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserRole" Width="1.5" PointX="3" PointY="82" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.UserWorkOrderHistory" Width="1.5" PointX="22.5" PointY="87.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Warehouse" Width="1.5" PointX="3" PointY="134.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrder" Width="1.5" PointX="5.25" PointY="113.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderAllocation" Width="1.5" PointX="25.5" PointY="107.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderControl" Width="1.5" PointX="25.5" PointY="103.375" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderControlType" Width="1.5" PointX="23.25" PointY="83.625" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderDetail" Width="1.5" PointX="20.25" PointY="99.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderItemNeeds" Width="1.5" PointX="22.5" PointY="102.875" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.WorkOrderSerial" Width="1.5" PointX="22.5" PointY="106.875" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_DeliveryPlan_WorkOrderDetail" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MoldTest_Dye" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Dye" />
@@ -172,6 +175,10 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemRequestDetail_UnitType" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemUnit_UnitType" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ItemWarehouse_Warehouse" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_LayoutItem_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_LayoutItem_Plant" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineGroup_LayoutObjectType" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Machine_MachineGrouo" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachinePlan_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_Machine" />
@@ -181,6 +188,7 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductWastage_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineGroup_Plant" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachinePlan_WorkOrderDetail" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_MachineSignal_Shift" />
@@ -207,6 +215,7 @@
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductRecipeDetail_Warehouse" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductWastage_Shift" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ProductWastage_WorkOrderDetail" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_WorkOrderSerial_Shift" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_TransactionLog_User" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_User_UserRole" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_UserAuth_User" />

@@ -1320,18 +1320,34 @@ namespace HekaMOLD.Business.UseCases
         #region MACHINE BUSINESS
         public MachineModel[] GetMachineList()
         {
-            List<MachineModel> data = new List<MachineModel>();
+            MachineModel[] data = new MachineModel[0];
 
             var repo = _unitOfWork.GetRepository<Machine>();
 
-            repo.GetAll().ToList().ForEach(d =>
+            data = repo.GetAll().Select(d => new MachineModel
             {
-                MachineModel containerObj = new MachineModel();
-                d.MapTo(containerObj);
-                data.Add(containerObj);
-            });
+                Id = d.Id,
+                BackColor = d.BackColor,
+                CreatedDate = d.CreatedDate,
+                CreatedUserId = d.CreatedUserId,
+                DeviceIp = d.DeviceIp,
+                ForeColor = d.ForeColor,
+                IsActive = d.IsActive,
+                IsUpToPostureEntry = d.IsUpToPostureEntry,
+                IsWatched = d.IsWatched,
+                MachineCode = d.MachineCode,
+                MachineName = d.MachineName,
+                MachineStatus = d.MachineStatus,
+                MachineType = d.MachineType,
+                PlantId = d.PlantId,
+                PostureExpirationCycleCount = d.PostureExpirationCycleCount,
+                UpdatedDate = d.UpdatedDate,
+                UpdatedUserId = d.UpdatedUserId,
+                WatchCycleStartCondition = d.WatchCycleStartCondition,
+                WorkingUserId = d.WorkingUserId,
+            }).ToArray();
 
-            return data.ToArray();
+            return data;
         }
 
         public MachineModel[] GetMachineStats(string startDate, string endDate)
@@ -1378,13 +1394,13 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.ActivePlan = prodBO.GetActiveWorkOrderOnMachine(d.Id);
 
                 var signalData = repoSignal.Filter(m => m.MachineId == d.Id &&
-                    dt1 <= m.StartDate && dt2 >= m.StartDate);
+                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
                 var wastageData = repoWastage.Filter(m => m.MachineId == d.Id &&
-                    dt1 <= m.EntryDate && dt2 >= m.EntryDate);
+                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
                 var incidentData = repoIncident.Filter(m => m.MachineId == d.Id &&
-                    dt1 <= m.StartDate && dt2 >= m.StartDate);
+                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
                 var postureData = repoPosture.Filter(m => m.MachineId == d.Id &&
-                    dt1 <= m.StartDate && dt2 >= m.StartDate);
+                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
 
                 containerObj.MachineStats = new Models.DataTransfer.Summary.MachineStatsModel
                 {
@@ -1419,6 +1435,91 @@ namespace HekaMOLD.Business.UseCases
                     //    cDate = cDate.AddDays(1);
                     //}
 
+                    shiftStats.Add(new ShiftStatsModel
+                    {
+                        ShiftId = shift.Id,
+                        ShiftCode = shift.ShiftCode,
+                        AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
+                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count(),
+                        WastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0,
+                    });
+                }
+
+                containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
+
+                data.Add(containerObj);
+            });
+
+            prodBO.Dispose();
+
+            return data.ToArray();
+        }
+
+        public MachineModel[] GetMachineStats(int machineId, string startDate, string endDate)
+        {
+            List<MachineModel> data = new List<MachineModel>();
+
+            if (string.IsNullOrEmpty(startDate))
+                startDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now.AddMonths(-1));
+            if (string.IsNullOrEmpty(endDate))
+                endDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now);
+
+            DateTime dt1 = DateTime.ParseExact(startDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+            DateTime dt2 = DateTime.ParseExact(endDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+            var repo = _unitOfWork.GetRepository<Machine>();
+            var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
+            var repoShift = _unitOfWork.GetRepository<Shift>();
+            var repoUser = _unitOfWork.GetRepository<User>();
+
+            var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
+            var repoIncident = _unitOfWork.GetRepository<Incident>();
+            var repoPosture = _unitOfWork.GetRepository<ProductionPosture>();
+
+            var shiftList = repoShift.GetAll().ToArray();
+
+            // PRODUCTION BO FOR ACTIVE WORK ORDERS ON MACHINES
+            ProductionBO prodBO = new ProductionBO();
+
+            repo.Filter(d => d.Id == machineId).ToList().ForEach(d =>
+            {
+                MachineModel containerObj = new MachineModel();
+                d.MapTo(containerObj);
+
+                if (d.WorkingUserId != null)
+                {
+                    var dbUser = repoUser.Get(m => m.Id == d.WorkingUserId);
+                    if (dbUser != null)
+                    {
+                        containerObj.WorkingUserCode = dbUser.UserCode;
+                        containerObj.WorkingUserName = dbUser.UserName;
+                    }
+                }
+
+                containerObj.ActivePlan = prodBO.GetActiveWorkOrderOnMachine(d.Id);
+
+                var signalData = repoSignal.Filter(m => m.MachineId == d.Id &&
+                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
+                var wastageData = repoWastage.Filter(m => m.MachineId == d.Id &&
+                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
+                var incidentData = repoIncident.Filter(m => m.MachineId == d.Id &&
+                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
+                var postureData = repoPosture.Filter(m => m.MachineId == d.Id &&
+                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
+
+                containerObj.MachineStats = new Models.DataTransfer.Summary.MachineStatsModel
+                {
+                    AvgInflationTime = Convert.ToDecimal(signalData.Average(m => m.Duration) ?? 0),
+                    AvgProductionCount = signalData.Count(),
+                    WastageCount = wastageData.Sum(m => m.Quantity) ?? 0,
+                    IncidentCount = incidentData.Count(),
+                    PostureCount = postureData.Count(),
+                };
+
+                // RESOLVE SHIFT STATS OF THAT MACHINE
+                List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
+                foreach (var shift in shiftList)
+                {
                     shiftStats.Add(new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
@@ -2481,6 +2582,98 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        #endregion
+
+        #region MACHINE GROUP BUSINESS
+        public MachineGroupModel[] GetMachineGroupList()
+        {
+            var repo = _unitOfWork.GetRepository<MachineGroup>();
+
+            return repo.GetAll()
+                .Select(d => new MachineGroupModel
+                {
+                    Id = d.Id,
+                    LayoutObjectTypeId = d.LayoutObjectTypeId,
+                    MachineGroupCode = d.MachineGroupCode,
+                    MachineGroupName = d.MachineGroupName,
+                    PlantId = d.PlantId,
+                }).ToArray();
+        }
+        public BusinessResult SaveOrUpdateMachineGroup(MachineGroupModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.MachineGroupCode))
+                    throw new Exception("Grup kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.MachineGroupName))
+                    throw new Exception("Grup adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<MachineGroup>();
+
+                if (repo.Any(d => (d.MachineGroupCode == model.MachineGroupCode) && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir makine grubu mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new MachineGroup();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteMachineGroup(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachineGroup>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public MachineGroupModel GetMachineGroup(int id)
+        {
+            MachineGroupModel model = new MachineGroupModel { };
+
+            var repo = _unitOfWork.GetRepository<MachineGroup>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
         #endregion
     }
 }

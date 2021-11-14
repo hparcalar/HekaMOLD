@@ -151,11 +151,17 @@ namespace HekaMOLD.Business.UseCases
                 var lastActive = repo.Filter(d => d.MachineId == machineId && d.EndDate == null)
                     .OrderByDescending(d => d.Id).FirstOrDefault();
                 var dbMachine = repoMachine.Get(d => d.Id == machineId);
+                var exActiveMachines = repoMachine.Filter(d => d.Id != machineId && d.WorkingUserId == userId).ToArray();
 
                 var exActives = repo.Filter(d => d.MachineId == machineId && d.EndDate == null).ToArray();
                 foreach (var item in exActives.Where(m => lastActive == null || m.Id != lastActive.Id))
                 {
                     item.EndDate = DateTime.Now;
+                }
+
+                foreach (var item in exActiveMachines)
+                {
+                    item.WorkingUserId = null;
                 }
 
                 _unitOfWork.SaveChanges();

@@ -59,7 +59,10 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ItemSerial> ItemSerial { get; set; }
         public virtual DbSet<ItemUnit> ItemUnit { get; set; }
         public virtual DbSet<ItemWarehouse> ItemWarehouse { get; set; }
+        public virtual DbSet<LayoutItem> LayoutItem { get; set; }
+        public virtual DbSet<LayoutObjectType> LayoutObjectType { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
+        public virtual DbSet<MachineGroup> MachineGroup { get; set; }
         public virtual DbSet<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         public virtual DbSet<MachineMaintenanceInstructionEntry> MachineMaintenanceInstructionEntry { get; set; }
         public virtual DbSet<MachinePlan> MachinePlan { get; set; }

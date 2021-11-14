@@ -84,7 +84,7 @@ namespace HekaMOLD.Business.UseCases.Core
 
         public ShiftModel GetCurrentShift()
         {
-            ShiftModel data = null;
+            ShiftModel data = new ShiftModel();
 
             try
             {
@@ -92,6 +92,8 @@ namespace HekaMOLD.Business.UseCases.Core
 
                 // RESOLVE CURRENT SHIFT
                 DateTime entryTime = DateTime.Now;
+                DateTime shiftBelongsTo = DateTime.Now.Date;
+
                 Shift dbShift = null;
                 var shiftList = repoShift.Filter(d => d.StartTime != null && d.EndTime != null).ToArray();
                 foreach (var shift in shiftList)
@@ -101,11 +103,19 @@ namespace HekaMOLD.Business.UseCases.Core
 
                     if (shift.StartTime > shift.EndTime)
                     {
-                        if (DateTime.Now.Hour >= shift.StartTime.Value.Hours)
+                        if (DateTime.Now.Hour >= shift.StartTime.Value.Hours) // gece 12 den önce
+                        {
                             endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
-                        else
+                            shiftBelongsTo = DateTime.Now.Date;
+                        }
+                        else // gece 12den sonra
+                        {
                             startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
+                            shiftBelongsTo = DateTime.Now.Date.AddDays(-1);
+                        }
                     }
+                    else
+                        shiftBelongsTo = DateTime.Now.Date;
 
                     if (entryTime >= startTime && entryTime <= endTime)
                     {
@@ -115,7 +125,10 @@ namespace HekaMOLD.Business.UseCases.Core
                 }
 
                 if (dbShift != null)
+                {
                     dbShift.MapTo(data);
+                    data.ShiftBelongsToDate = shiftBelongsTo;
+                }
             }
             catch (Exception)
             {

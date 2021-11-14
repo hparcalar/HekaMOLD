@@ -27,6 +27,11 @@ namespace Heka.DataAccess.UnitOfWork
             _dbContext = dbContext;
         }
 
+        public void SetTimeout(int seconds)
+        {
+            _dbContext.Database.CommandTimeout = seconds;
+        }
+
         #region IUnitOfWork Members
         public IRepository<T> GetRepository<T>() where T : class
         {

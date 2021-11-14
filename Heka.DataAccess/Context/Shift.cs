@@ -21,6 +21,7 @@ namespace Heka.DataAccess.Context
             this.MachineSignal = new HashSet<MachineSignal>();
             this.ProductionPosture = new HashSet<ProductionPosture>();
             this.ProductWastage = new HashSet<ProductWastage>();
+            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
         }
     
         public int Id { get; set; }
@@ -38,5 +39,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ProductionPosture> ProductionPosture { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductWastage> ProductWastage { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
     }
 }

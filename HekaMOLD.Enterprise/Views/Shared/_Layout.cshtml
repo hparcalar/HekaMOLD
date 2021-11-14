@@ -6,6 +6,7 @@
     var actn = this.ViewContext.RouteData.Values["action"].ToString();
     var rcgr = Request.QueryString["receiptCategory"];
     var runningHost = WebConfigurationManager.AppSettings["RunningHost"];
+    var virtualPlantEnabled = WebConfigurationManager.AppSettings["VirtualPlantEnabled"] == "1";
 }
 
 <!DOCTYPE html>
@@ -93,18 +94,58 @@
                                 </a>
                             </div>
 
+                            @if (virtualPlantEnabled)
+                            {
+                                <div class="menu-item">
+                                    <div class="menu-content pt-8 pb-2">
+                                        <span class="menu-section text-dark text-uppercase fs-6 fw-bold">Sanal İşletme</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item">
+                                    <a class="menu-link" href="@Url.Action("List", "LayoutObjectType")">
+                                        <span class="menu-bullet">
+                                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                    <rect id="Rectangle" fill="#000000" x="4" y="4" width="16" height="16" rx="2"></rect>
+                                                </g>
+                                            </svg>
+                                        </span>
+                                        <span class="menu-title">Nesne Tanımları</span>
+                                    </a>
+                                </div>
+                                <div class="menu-item">
+                                    <a class="menu-link @(Regex.IsMatch(ctrl, "Layout$") ? "active" : "")"
+                                       href="@Url.Action("Index", "Layout")">
+                                        <span class="menu-bullet">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M8 10C8 8.89543 8.89543 8 10 8H20C21.1046 8 22 8.89543 22 10V20C22 21.1046 21.1046 22 20 22H10C8.89543 22 8 21.1046 8 20V10Z" fill="#12131A" />
+                                                <path d="M16 9C16 12.866 12.866 16 9 16C5.13401 16 2 12.866 2 9C2 5.13401 5.13401 2 9 2C12.866 2 16 5.13401 16 9Z" fill="#12131A" />
+                                            </svg>
+
+                                        </span>
+                                        <span class="menu-title">İşletme Görünümü</span>
+                                    </a>
+                                </div>
+                            }
+
                             @if (Html.IsGranted("ModuleItems"))
                             {
                                 @* SATIŞ *@
                                 <div class="menu-item">
                                     <div class="menu-content pt-8 pb-2">
-                                        <span class="menu-section text-dark text-uppercase fs-6 fw-bold">Satış Sipariş Yönetimi (CRM)</span>
+                                        <span class="menu-section text-dark text-uppercase fs-6 fw-bold">Satış Sipariş Yönetimi</span>
                                     </div>
                                 </div>
                                 <div class="menu-item">
                                     <a class="menu-link" href="@Url.Action("List", "SIOrder")">
                                         <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
+                                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                    <rect id="Rectangle" fill="#000000" x="4" y="4" width="16" height="16" rx="2"></rect>
+                                                </g>
+                                            </svg>
                                         </span>
                                         <span class="menu-title">Sipariş</span>
                                     </a>
@@ -113,7 +154,12 @@
                                     <a class="menu-link @(Regex.IsMatch(ctrl, "ItemReceipt$") ? "active" : "")"
                                        href="@Url.Action("List", "ItemReceipt", new { @receiptCategory = 3 })">
                                         <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
+                                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                    <rect id="Rectangle" fill="#000000" x="4" y="4" width="16" height="16" rx="2"></rect>
+                                                </g>
+                                            </svg>
                                         </span>
                                         <span class="menu-title">Çeki Listesi</span>
                                     </a>
@@ -680,6 +726,24 @@
                                             <!--end::Svg Icon-->
                                         </span>
                                         <span class="menu-title">Makine</span>
+                                    </a>
+                                </div>
+                                <div class="menu-item">
+                                    <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "MachineGroup") ? "active" : "") "
+                                       href="@Url.Action("List","MachineGroup")">
+                                        <span class="menu-icon">
+                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
+                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                    <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                        <rect id="Rectangle" fill="#000000" x="4" y="4" width="16" height="16" rx="2"></rect>
+                                                    </g>
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-title">Makine Grupları</span>
                                     </a>
                                 </div>
                                 <div class="menu-item">

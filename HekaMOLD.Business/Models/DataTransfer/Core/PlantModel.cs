@@ -11,5 +11,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int Id { get; set; }
         public string PlantCode { get; set; }
         public string PlantName { get; set; }
+        public byte[] LogoData { get; set; }
     }
 }

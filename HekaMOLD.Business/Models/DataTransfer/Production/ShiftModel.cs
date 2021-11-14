@@ -18,6 +18,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         #region VISUAL ELEMENTS
         public string StartTimeStr { get; set; }
         public string EndTimeStr { get; set; }
+        public DateTime? ShiftBelongsToDate { get; set; }
         #endregion
     }
 }

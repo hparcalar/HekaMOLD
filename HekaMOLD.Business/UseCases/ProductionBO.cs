@@ -603,7 +603,9 @@ namespace HekaMOLD.Business.UseCases
                             dbObj.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
                             WorkOrderStatus = dbObj.WorkOrderDetail.WorkOrderStatus,
                             WorkOrderStatusStr = ((WorkOrderStatusType)dbObj.WorkOrderDetail.WorkOrderStatus).ToCaption(),
-                            CompleteQuantity = Convert.ToInt32(dbObj.WorkOrderDetail.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0),
+                            CompleteQuantity = dbObj.WorkOrderDetail.MachineSignal.Any() ?
+                                dbObj.WorkOrderDetail.MachineSignal.Count() :
+                                Convert.ToInt32(dbObj.WorkOrderDetail.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0),
                             CompleteQuantitySingleProduct = dbObj.WorkOrderDetail.WorkOrderSerial.Count(),
                             MoldTestCycle = dbObj.WorkOrderDetail.MoldTest != null ?
                                 dbObj.WorkOrderDetail.MoldTest.TotalTimeSeconds ?? 0 : 0,
@@ -760,28 +762,7 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("İş emri kaydına ulaşılamadı.");
 
                 // RESOLVE CURRENT SHIFT
-                DateTime entryTime = DateTime.Now;
-                Shift dbShift = null;
-                var shiftList = repoShift.Filter(d => d.StartTime != null && d.EndTime != null).ToArray();
-                foreach (var shift in shiftList)
-                {
-                    DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
-                    DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
-
-                    if (shift.StartTime > shift.EndTime)
-                    {
-                        if (DateTime.Now.Hour >= shift.StartTime.Value.Hours)
-                            endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
-                        else
-                            startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
-                    }
-
-                    if (entryTime >= startTime && entryTime <= endTime)
-                    {
-                        dbShift = shift;
-                        break;
-                    }
-                }
+                var currentShift = GetCurrentShift();
 
                 if (inPackageQuantity <= 0 && (dbObj.InPackageQuantity ?? 0) <= 0)
                     throw new Exception("Koli içi miktarı iş emrinde tanımlı değil!");
@@ -819,7 +800,7 @@ namespace HekaMOLD.Business.UseCases
                         SerialType = (int)serialType,
                         WorkOrderDetail = dbObj,
                         WorkOrder = dbObj.WorkOrder,
-                        Shift = dbShift,
+                        ShiftId = currentShift != null ? currentShift.Id : (int?)null,
                         CreatedUserId = userId,
                     };
 
@@ -917,7 +898,6 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
-
         public BusinessResult StartMachineCycle(int machineId)
         {
             BusinessResult result = new BusinessResult();
@@ -933,35 +913,15 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Makine tanımı bulunamadı.");
 
                 // RESOLVE CURRENT SHIFT
-                DateTime entryTime = DateTime.Now;
-                Shift dbShift = null;
-                var shiftList = repoShift.Filter(d => d.StartTime != null && d.EndTime != null).ToArray();
-                foreach (var shift in shiftList)
-                {
-                    DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
-                    DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
-
-                    if (shift.StartTime > shift.EndTime)
-                    {
-                        if (DateTime.Now.Hour >= shift.StartTime.Value.Hours)
-                            endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
-                        else
-                            startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
-                    }
-
-                    if (entryTime >= startTime && entryTime <= endTime)
-                    {
-                        dbShift = shift;
-                        break;
-                    }
-                }
+                var currentShift = GetCurrentShift();
 
                 MachineSignal newSignal = new MachineSignal
                 {
                     StartDate = DateTime.Now,
                     MachineId = machineId,
                     SignalStatus = 0,
-                    Shift = dbShift,
+                    ShiftId = currentShift != null ? currentShift.Id : (int?)null,
+                    ShiftBelongsToDate = currentShift != null ? currentShift.ShiftBelongsToDate : null,
                     Duration = null,
                     EndDate = null,
                 };
@@ -1166,12 +1126,16 @@ namespace HekaMOLD.Business.UseCases
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
+                    var currentShift = GetCurrentShift();
+
                     var dbMachine = repoMachine.Get(d => d.Id == model.MachineId);
                     if (dbMachine != null)
                         dbMachine.IsUpToPostureEntry = false;
 
                     model.PostureStatus = 0;
                     model.CreatedDate = DateTime.Now;
+                    model.ShiftId = currentShift != null ? currentShift.Id : (int?)null;
+                    model.ShiftBelongsToDate = currentShift != null ? currentShift.ShiftBelongsToDate : null;
 
                     dbObj = new ProductionPosture
                     {
@@ -1187,6 +1151,7 @@ namespace HekaMOLD.Business.UseCases
                 var crDate = dbObj.CreatedDate;
                 var stDate = dbObj.StartDate;
                 var edDate = dbObj.EndDate;
+                var sfDate = dbObj.ShiftBelongsToDate;
 
                 model.MapTo(dbObj);
 
@@ -1196,6 +1161,8 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.StartDate = stDate;
                 if (dbObj.EndDate == null)
                     dbObj.EndDate = edDate;
+                if (dbObj.ShiftBelongsToDate == null)
+                    dbObj.ShiftBelongsToDate = sfDate;
 
                 _unitOfWork.SaveChanges();
 
@@ -1756,8 +1723,12 @@ namespace HekaMOLD.Business.UseCases
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
+                    var currentShift = GetCurrentShift();
+
                     model.IncidentStatus = 0;
                     model.CreatedDate = DateTime.Now;
+                    model.ShiftId = currentShift != null ? currentShift.Id : (int?)null;
+                    model.ShiftBelongsToDate = currentShift != null ? currentShift.ShiftBelongsToDate : null;
 
                     dbObj = new Incident
                     {
@@ -1770,6 +1741,7 @@ namespace HekaMOLD.Business.UseCases
                 var crDate = dbObj.CreatedDate;
                 var stDate = dbObj.StartDate;
                 var edDate = dbObj.EndDate;
+                var sfDate = dbObj.ShiftBelongsToDate;
 
                 model.MapTo(dbObj);
 
@@ -1779,6 +1751,8 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.StartDate = stDate;
                 if (dbObj.EndDate == null)
                     dbObj.EndDate = edDate;
+                if (dbObj.ShiftBelongsToDate == null)
+                    dbObj.ShiftBelongsToDate = sfDate;
 
                 _unitOfWork.SaveChanges();
 
@@ -2491,38 +2465,20 @@ namespace HekaMOLD.Business.UseCases
                     repo.Add(dbObj);
 
                     // RESOLVE CURRENT SHIFT
-                    DateTime entryTime = DateTime.Now;
-                    Shift dbShift = null;
-                    var shiftList = repoShift.Filter(d => d.StartTime != null && d.EndTime != null).ToArray();
-                    foreach (var shift in shiftList)
+                    var currentShift = GetCurrentShift();
+
+                    if (currentShift != null)
                     {
-                        DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
-                        DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
-
-                        if (shift.StartTime > shift.EndTime)
-                        {
-                            if (DateTime.Now.Hour >= shift.StartTime.Value.Hours)
-                                endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
-                            else
-                                startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
-                        }
-
-                        if (entryTime >= startTime && entryTime <= endTime)
-                        {
-                            dbShift = shift;
-                            break;
-                        }
-                    }
-
-                    if (dbShift != null)
-                    {
-                        model.ShiftId = dbShift.Id;
-                        dbObj.ShiftId = dbShift.Id;
+                        model.ShiftId = currentShift.Id;
+                        dbObj.ShiftId = currentShift.Id;
+                        dbObj.ShiftBelongsToDate = currentShift.ShiftBelongsToDate;
+                        model.ShiftBelongsToDate = currentShift.ShiftBelongsToDate;
                     }
                 }
 
                 var crDate = dbObj.CreatedDate;
                 var entDate = dbObj.EntryDate;
+                var sfDate = dbObj.ShiftBelongsToDate;
 
                 if (model.WorkOrderDetailId > 0)
                 {
@@ -2540,6 +2496,8 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedDate = crDate;
                 if (dbObj.EntryDate == null)
                     dbObj.EntryDate = entDate;
+                if (dbObj.ShiftBelongsToDate == null)
+                    dbObj.ShiftBelongsToDate = sfDate;
 
                 _unitOfWork.SaveChanges();
 

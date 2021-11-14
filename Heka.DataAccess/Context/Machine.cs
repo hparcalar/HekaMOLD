@@ -19,6 +19,7 @@ namespace Heka.DataAccess.Context
         {
             this.Equipment = new HashSet<Equipment>();
             this.Incident = new HashSet<Incident>();
+            this.LayoutItem = new HashSet<LayoutItem>();
             this.MachineMaintenanceInstruction = new HashSet<MachineMaintenanceInstruction>();
             this.MachinePlan = new HashSet<MachinePlan>();
             this.MachineSignal = new HashSet<MachineSignal>();
@@ -49,11 +50,15 @@ namespace Heka.DataAccess.Context
         public string BackColor { get; set; }
         public string ForeColor { get; set; }
         public Nullable<int> MachineStatus { get; set; }
+        public Nullable<int> MachineGroupId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Equipment> Equipment { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Incident> Incident { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LayoutItem> LayoutItem { get; set; }
+        public virtual MachineGroup MachineGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

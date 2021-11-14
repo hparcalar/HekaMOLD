@@ -153,6 +153,9 @@
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
+    <Compile Include="Controllers\LayoutController.cs" />
+    <Compile Include="Controllers\LayoutObjectTypeController.cs" />
+    <Compile Include="Controllers\MachineGroupController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
     <Compile Include="Controllers\PrintingController.cs" />
@@ -4084,6 +4087,11 @@
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\extract.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
+    <Content Include="FrontEndLogic\LayoutObjectType\index.js" />
+    <Content Include="FrontEndLogic\LayoutObjectType\list.js" />
+    <Content Include="FrontEndLogic\Layout\index.js" />
+    <Content Include="FrontEndLogic\MachineGroup\index.js" />
+    <Content Include="FrontEndLogic\MachineGroup\list.js" />
     <Content Include="FrontEndLogic\MachineOnline\online.js" />
     <Content Include="FrontEndLogic\Machine\index.js" />
     <Content Include="FrontEndLogic\Machine\list.js" />
@@ -4158,6 +4166,11 @@
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\babylon.glTFFileLoader.min.js" />
+    <Content Include="Scripts\babylon.gui.min.js" />
+    <Content Include="Scripts\babylon.js" />
+    <Content Include="Scripts\babylon.viewer.js" />
+    <Content Include="Scripts\babylonjs.loaders.min.js" />
     <Content Include="Scripts\bootbox.all.js" />
     <Content Include="Scripts\bootbox.all.min.js" />
     <Content Include="Scripts\bootbox.js" />
@@ -4577,6 +4590,11 @@
     <Content Include="Views\Mobile\SettingsMobile.cshtml" />
     <Content Include="Views\Mobile\ManageMachines.cshtml" />
     <Content Include="Views\Mobile\ManageShifts.cshtml" />
+    <Content Include="Views\MachineGroup\List.cshtml" />
+    <Content Include="Views\MachineGroup\Index.cshtml" />
+    <Content Include="Views\LayoutObjectType\List.cshtml" />
+    <Content Include="Views\LayoutObjectType\Index.cshtml" />
+    <Content Include="Views\Layout\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

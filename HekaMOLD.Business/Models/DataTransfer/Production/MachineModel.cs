@@ -26,6 +26,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string BackColor { get; set; }
         public string ForeColor { get; set; }
         public int? MachineStatus { get; set; }
+        public int? MachineGroupId { get; set; }
         public MachinePlanModel ActivePlan { get; set; }
         public MachinePlanModel[] Plans { get; set; }
         public MachineMaintenanceInstructionModel[] Instructions { get; set; }
@@ -37,6 +38,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public MachineStatsModel MachineStats { get; set; }
         public string WorkingUserCode { get; set; }
         public string WorkingUserName { get; set; }
+        public string MachineGroupCode { get; set; }
+        public string MachineGroupName { get; set; }
         #endregion
     }
 }

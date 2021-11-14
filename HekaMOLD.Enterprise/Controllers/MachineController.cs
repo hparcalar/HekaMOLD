@@ -66,6 +66,22 @@ namespace HekaMOLD.Enterprise.Controllers
 
         [HttpGet]
         [FreeAction]
+        public JsonResult GetMachineStatsByMachineId(int machineId, string t1, string t2)
+        {
+            MachineModel[] result = new MachineModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.GetMachineStats(machineId, t1, t2);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
         public JsonResult BindModel(int rid)
         {
             MachineModel model = null;

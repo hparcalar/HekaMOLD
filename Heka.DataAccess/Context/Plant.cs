@@ -27,6 +27,8 @@ namespace Heka.DataAccess.Context
             this.ItemOrder = new HashSet<ItemOrder>();
             this.ItemReceipt = new HashSet<ItemReceipt>();
             this.ItemRequest = new HashSet<ItemRequest>();
+            this.LayoutItem = new HashSet<LayoutItem>();
+            this.MachineGroup = new HashSet<MachineGroup>();
             this.SyncPoint = new HashSet<SyncPoint>();
             this.UnitType = new HashSet<UnitType>();
             this.User = new HashSet<User>();
@@ -38,6 +40,7 @@ namespace Heka.DataAccess.Context
         public int Id { get; set; }
         public string PlantCode { get; set; }
         public string PlantName { get; set; }
+        public byte[] LogoData { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Equipment> Equipment { get; set; }
@@ -59,6 +62,10 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemRequest> ItemRequest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LayoutItem> LayoutItem { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MachineGroup> MachineGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SyncPoint> SyncPoint { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

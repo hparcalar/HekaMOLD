@@ -130,6 +130,8 @@
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
     <Compile Include="Models\DataTransfer\Finance\InvoiceModel.cs" />
     <Compile Include="Models\DataTransfer\Labels\ProductLabel.cs" />
+    <Compile Include="Models\DataTransfer\Layout\LayoutItemModel.cs" />
+    <Compile Include="Models\DataTransfer\Layout\LayoutObjectTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
@@ -144,6 +146,7 @@
     <Compile Include="Models\DataTransfer\Production\IncidentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\IncidentModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ItemOrderItemNeedsModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachineGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineSignalModel.cs" />
@@ -213,6 +216,7 @@
     <Compile Include="UseCases\HekaBO.cs" />
     <Compile Include="UseCases\Integrations\IntegratorBase.cs" />
     <Compile Include="UseCases\Integrations\MikroIntegrator.cs" />
+    <Compile Include="UseCases\LayoutBO.cs" />
     <Compile Include="UseCases\MoldBO.cs" />
     <Compile Include="UseCases\OrdersBO.cs" />
     <Compile Include="UseCases\PlanningBO.cs" />
