@@ -49,6 +49,8 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public Nullable<int> QualityStatus { get; set; }
+        public Nullable<int> WorkOrderType { get; set; }
+        public string TrialProductName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DeliveryPlan> DeliveryPlan { get; set; }

@@ -40,16 +40,18 @@ namespace HekaMOLD.Business.UseCases
                 d.MapTo(containerObj);
 
                 containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
-                containerObj.ProductName = d.Item != null ? d.Item.ItemName : "";
+                containerObj.ProductName = d.Item != null ? d.Item.ItemName : d.TrialProductName;
                 containerObj.WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ? 
                     string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "";
                 containerObj.WorkOrderNo = d.WorkOrder.WorkOrderNo;
                 containerObj.FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "";
-                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : "";
+                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : d.WorkOrder.TrialFirmName;
                 containerObj.DyeCode = d.Dye != null ? d.Dye.DyeCode : "";
                 containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
                 containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
                 containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
+                containerObj.TrialProductName = d.TrialProductName;
+                containerObj.WorkOrderType = d.WorkOrderType;
                 containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
                 containerObj.SaleOrderDocumentNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.DocumentNo : "";
                 containerObj.SaleOrderReceiptNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.OrderNo : "";
@@ -76,14 +78,16 @@ namespace HekaMOLD.Business.UseCases
                 d.MapTo(containerObj);
 
                 containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
-                containerObj.ProductName = d.Item != null ? d.Item.ItemName : "";
+                containerObj.ProductName = d.Item != null ? d.Item.ItemName : d.TrialProductName;
                 containerObj.WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
                     string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "";
                 containerObj.WorkOrderNo = d.WorkOrder.WorkOrderNo;
                 containerObj.FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "";
-                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : "";
+                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : d.WorkOrder.TrialFirmName;
                 containerObj.DyeCode = d.Dye != null ? d.Dye.DyeCode : "";
                 containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
+                containerObj.TrialProductName = d.TrialProductName;
+                containerObj.WorkOrderType = d.WorkOrderType;
                 containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
                 containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
                 containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
@@ -172,15 +176,17 @@ namespace HekaMOLD.Business.UseCases
                 d.MapTo(containerObj);
 
                 containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
-                containerObj.ProductName = d.Item != null ? d.Item.ItemName : "";
+                containerObj.ProductName = d.Item != null ? d.Item.ItemName : d.TrialProductName;
                 containerObj.WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
                     string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "";
                 containerObj.WorkOrderNo = d.WorkOrder.WorkOrderNo;
                 containerObj.FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "";
-                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : "";
+                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : d.WorkOrder.TrialFirmName;
                 containerObj.DyeCode = d.Dye != null ? d.Dye.DyeCode : "";
                 containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
                 containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
+                containerObj.WorkOrderType = d.WorkOrderType;
+                containerObj.TrialProductName = d.TrialProductName;
                 containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
                 containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
                 containerObj.SaleOrderDocumentNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.DocumentNo : "";
@@ -214,7 +220,7 @@ namespace HekaMOLD.Business.UseCases
                 d.MapTo(containerObj);
 
                 containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
-                containerObj.ProductName = d.Item != null ? d.Item.ItemName : "";
+                containerObj.ProductName = d.Item != null ? d.Item.ItemName : d.TrialProductName;
                 containerObj.WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
                     string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "";
                 containerObj.WorkOrderNo = d.WorkOrder.WorkOrderNo;
@@ -222,7 +228,9 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.CompleteQuantity = Convert.ToInt32(d.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0);
                 containerObj.WastageQuantity = d.ProductWastage.Sum(m => m.Quantity) ?? 0;
                 containerObj.FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "";
-                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : "";
+                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : d.WorkOrder.TrialFirmName;
+                containerObj.WorkOrderType = d.WorkOrderType;
+                containerObj.TrialProductName = d.TrialProductName;
                 containerObj.DyeCode = d.Dye != null ? d.Dye.DyeCode : "";
                 containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
                 containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
@@ -257,7 +265,7 @@ namespace HekaMOLD.Business.UseCases
                     d.MapTo(containerObj);
 
                     containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
-                    containerObj.ProductName = d.Item != null ? d.Item.ItemName : "";
+                    containerObj.ProductName = d.Item != null ? d.Item.ItemName : d.TrialProductName;
                     containerObj.WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
                         string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "";
                     containerObj.WorkOrderNo = d.WorkOrder.WorkOrderNo;
@@ -265,7 +273,9 @@ namespace HekaMOLD.Business.UseCases
                     containerObj.CompleteQuantity = Convert.ToInt32(d.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0);
                     containerObj.WastageQuantity = d.ProductWastage.Sum(m => m.Quantity) ?? 0;
                     containerObj.FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "";
-                    containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : "";
+                    containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : d.WorkOrder.TrialFirmName;
+                    containerObj.WorkOrderType = d.WorkOrderType;
+                    containerObj.TrialProductName = d.TrialProductName;
                     containerObj.DyeCode = d.Dye != null ? d.Dye.DyeCode : "";
                     containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
                     containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
@@ -365,6 +375,9 @@ namespace HekaMOLD.Business.UseCases
 
                 dbObj.UpdatedDate = DateTime.Now;
 
+                int detailRecordId = 0;
+                List<WorkOrderDetail> detailRecordList = new List<WorkOrderDetail>();
+
                 #region SAVE DETAILS
                 if (model.Details == null)
                     throw new Exception("Detay bilgisi olmadan iş emri kaydedilemez.");
@@ -411,9 +424,13 @@ namespace HekaMOLD.Business.UseCases
                             repoDetail.Add(dbDetail);
                         }
 
+                        detailRecordList.Add(dbDetail);
+
                         item.MapTo(dbDetail);
                         dbDetail.WorkOrder = dbObj;
-                        dbDetail.WorkOrderStatus = dbObj.WorkOrderStatus;
+
+                        if (dbDetail.WorkOrderStatus == null)
+                            dbDetail.WorkOrderStatus = dbObj.WorkOrderStatus;
                         if (dbObj.Id > 0)
                             dbDetail.WorkOrderId = dbObj.Id;
 
@@ -457,7 +474,11 @@ namespace HekaMOLD.Business.UseCases
 
                 _unitOfWork.SaveChanges();
 
+                if (detailRecordList.Count() > 0)
+                    detailRecordId = detailRecordList[0].Id;
+
                 result.Result = true;
+                result.DetailRecordId = detailRecordId;
                 result.RecordId = dbObj.Id;
             }
             catch (Exception ex)
@@ -1119,16 +1140,20 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ProductionPosture>();
                 var repoMachine = _unitOfWork.GetRepository<Machine>();
+                var repoPostureCategory = _unitOfWork.GetRepository<PostureCategory>();
 
                 if (model.MachineId == null)
                     throw new Exception("Makine bilgisi duruş için girilmelidir.");
 
+                var dbMachine = repoMachine.Get(d => d.Id == model.MachineId);
+                var dbPostureCategory = repoPostureCategory.Get(d => d.Id == model.PostureCategoryId);
+
+                bool createNotification = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
                     var currentShift = GetCurrentShift();
 
-                    var dbMachine = repoMachine.Get(d => d.Id == model.MachineId);
                     if (dbMachine != null)
                         dbMachine.IsUpToPostureEntry = false;
 
@@ -1146,7 +1171,11 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.StartDate = dbObj.CreatedDate;
 
                     repo.Add(dbObj);
+                    createNotification = true;
                 }
+
+                if (dbObj.Id > 0 && model.PostureStatus != dbObj.PostureStatus)
+                    createNotification = true; ;
 
                 var crDate = dbObj.CreatedDate;
                 var stDate = dbObj.StartDate;
@@ -1165,6 +1194,36 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.ShiftBelongsToDate = sfDate;
 
                 _unitOfWork.SaveChanges();
+
+                if (createNotification)
+                {
+                    string notifyMessage = string.Format("[{0:dd.MM.yyyy}]", dbObj.CreatedDate)
+                           + " " + dbMachine.MachineName + " için duruş bildirimi: " + dbPostureCategory.PostureCategoryName;
+                    if (dbObj.PostureStatus == (int)PostureStatusType.WorkingOn)
+                        notifyMessage = string.Format("[{0:dd.MM.yyyy}]", dbObj.CreatedDate)
+                           + " " + dbMachine.MachineName + " için duruşa müdahale başlandı: " + dbPostureCategory.PostureCategoryName;
+                    else if (dbObj.PostureStatus == (int)PostureStatusType.Resolved)
+                        notifyMessage = string.Format("[{0:dd.MM.yyyy}]", dbObj.CreatedDate)
+                           + " " + dbMachine.MachineName + " için duruş sona erdi: " + dbPostureCategory.PostureCategoryName;
+
+                    base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                    {
+                        IsProcessed = false,
+                        Message = notifyMessage,
+                        Title = (
+                            dbObj.PostureStatus == (int)PostureStatusType.WorkingOn ? NotifyType.PostureTouched :
+                            dbObj.PostureStatus == (int)PostureStatusType.Resolved ? NotifyType.PostureResolved :
+                                NotifyType.PostureCreated
+                        ).ToCaption(),
+                        NotifyType = dbObj.PostureStatus == (int)PostureStatusType.WorkingOn ? (int)NotifyType.PostureTouched :
+                            dbObj.PostureStatus == (int)PostureStatusType.Resolved ? (int)NotifyType.PostureResolved :
+                                (int)NotifyType.PostureCreated,
+                        SeenStatus = 0,
+                        PushStatus = 0,
+                        RecordId = dbObj.Id,
+                        UserId = null,
+                    });
+                }
 
                 result.Result = true;
                 result.RecordId = dbObj.Id;
@@ -1185,15 +1244,34 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<ProductionPosture>();
+                var repoMachine = _unitOfWork.GetRepository<Machine>();
+                var repoPostureCategory = _unitOfWork.GetRepository<PostureCategory>();
+
                 var dbPosture = repo.Get(d => d.Id == model.PostureId);
                 if (dbPosture == null)
                     throw new Exception("Duruş kaydı bulunamadı.");
+
+                var dbMachine = repoMachine.Get(d => d.Id == dbPosture.MachineId);
+                var dbPostureCategory = repoPostureCategory.Get(d => d.Id == dbPosture.PostureCategoryId);
 
                 dbPosture.PostureStatus = (int)PostureStatusType.Resolved;
                 dbPosture.EndDate = DateTime.Now;
                 dbPosture.Explanation = model.Description;
 
                 _unitOfWork.SaveChanges();
+
+                base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                {
+                    IsProcessed = false,
+                    Message = string.Format("[{0:dd.MM.yyyy}]", DateTime.Now)
+                           + " " + dbMachine.MachineName + " için duruş sona erdi: " + dbPostureCategory.PostureCategoryName,
+                    Title = NotifyType.PostureResolved.ToCaption(),
+                    NotifyType = (int)NotifyType.PostureResolved,
+                    SeenStatus = 0,
+                    PushStatus = 0,
+                    RecordId = dbPosture.Id,
+                    UserId = null,
+                });
 
                 result.RecordId = dbPosture.Id;
                 result.Result = true;
@@ -1717,9 +1795,16 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<Incident>();
+                var repoMachine = _unitOfWork.GetRepository<Machine>();
+                var repoCategory = _unitOfWork.GetRepository<IncidentCategory>();
+
                 if (model.MachineId == null)
                     throw new Exception("Makine bilgisi arıza için girilmelidir.");
 
+                var dbMachine = repoMachine.Get(d => d.Id == model.MachineId);
+                var dbCategory = repoCategory.Get(d => d.Id == model.IncidentCategoryId);
+
+                bool createNotification = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
@@ -1736,7 +1821,12 @@ namespace HekaMOLD.Business.UseCases
                         IncidentStatus = 0,
                     };
                     repo.Add(dbObj);
+
+                    createNotification = true;
                 }
+
+                if (dbObj.Id > 0 && dbObj.IncidentStatus != model.IncidentStatus)
+                    createNotification = true;
 
                 var crDate = dbObj.CreatedDate;
                 var stDate = dbObj.StartDate;
@@ -1755,6 +1845,36 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.ShiftBelongsToDate = sfDate;
 
                 _unitOfWork.SaveChanges();
+
+                if (createNotification)
+                {
+                    string notifyMessage = string.Format("[{0:dd.MM.yyyy}]", dbObj.CreatedDate)
+                           + " " + dbMachine.MachineName + " için arıza bildirimi: " + dbCategory.IncidentCategoryName;
+                    if (dbObj.IncidentStatus == (int)PostureStatusType.WorkingOn)
+                        notifyMessage = string.Format("[{0:dd.MM.yyyy}]", dbObj.CreatedDate)
+                           + " " + dbMachine.MachineName + " için arızaya müdahale başlandı: " + dbCategory.IncidentCategoryName;
+                    else if (dbObj.IncidentStatus == (int)PostureStatusType.Resolved)
+                        notifyMessage = string.Format("[{0:dd.MM.yyyy}]", dbObj.CreatedDate)
+                           + " " + dbMachine.MachineName + " için arıza sona erdi: " + dbCategory.IncidentCategoryName;
+
+                    base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                    {
+                        IsProcessed = false,
+                        Message = notifyMessage,
+                        Title = (
+                            dbObj.IncidentStatus == (int)PostureStatusType.WorkingOn ? NotifyType.IncidentTouched :
+                            dbObj.IncidentStatus == (int)PostureStatusType.Resolved ? NotifyType.IncidentResolved :
+                                NotifyType.IncidentCreated
+                        ).ToCaption(),
+                        NotifyType = dbObj.IncidentStatus == (int)PostureStatusType.WorkingOn ? (int)NotifyType.IncidentTouched :
+                            dbObj.IncidentStatus == (int)PostureStatusType.Resolved ? (int)NotifyType.IncidentResolved :
+                                (int)NotifyType.IncidentCreated,
+                        SeenStatus = 0,
+                        PushStatus = 0,
+                        RecordId = dbObj.Id,
+                        UserId = null,
+                    });
+                }
 
                 result.Result = true;
                 result.RecordId = dbObj.Id;
@@ -1775,15 +1895,34 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<Incident>();
+                var repoMachine = _unitOfWork.GetRepository<Machine>();
+                var repoCategory = _unitOfWork.GetRepository<IncidentCategory>();
+
                 var dbIncident = repo.Get(d => d.Id == model.IncidentId);
                 if (dbIncident == null)
                     throw new Exception("Arıza kaydı bulunamadı.");
+
+                var dbMachine = repoMachine.Get(d => d.Id == dbIncident.MachineId);
+                var dbCategory = repoCategory.Get(d => d.Id == dbIncident.IncidentCategoryId);
 
                 dbIncident.IncidentStatus = (int)PostureStatusType.WorkingOn;
                 dbIncident.StartDate = DateTime.Now;
                 dbIncident.StartedUserId = model.UserId;
 
                 _unitOfWork.SaveChanges();
+
+                base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                {
+                    IsProcessed = false,
+                    Message = string.Format("[{0:dd.MM.yyyy}]", DateTime.Now)
+                           + " " + dbMachine.MachineName + " için arızaya müdahale başlandı: " + dbCategory.IncidentCategoryName,
+                    Title = NotifyType.IncidentTouched.ToCaption(),
+                    NotifyType = (int)NotifyType.IncidentTouched,
+                    SeenStatus = 0,
+                    PushStatus = 0,
+                    RecordId = dbIncident.Id,
+                    UserId = null,
+                });
 
                 result.RecordId = dbIncident.Id;
                 result.Result = true;
@@ -1804,9 +1943,15 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<Incident>();
+                var repoMachine = _unitOfWork.GetRepository<Machine>();
+                var repoCategory = _unitOfWork.GetRepository<IncidentCategory>();
+
                 var dbIncident = repo.Get(d => d.Id == model.IncidentId);
                 if (dbIncident == null)
                     throw new Exception("Arıza kaydı bulunamadı.");
+
+                var dbMachine = repoMachine.Get(d => d.Id == dbIncident.MachineId);
+                var dbCategory = repoCategory.Get(d => d.Id == dbIncident.IncidentCategoryId);
 
                 dbIncident.IncidentStatus = (int)PostureStatusType.Resolved;
                 dbIncident.EndDate = DateTime.Now;
@@ -1814,6 +1959,19 @@ namespace HekaMOLD.Business.UseCases
                 dbIncident.Description = model.Description;
 
                 _unitOfWork.SaveChanges();
+
+                base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                {
+                    IsProcessed = false,
+                    Message = string.Format("[{0:dd.MM.yyyy}]", DateTime.Now)
+                           + " " + dbMachine.MachineName + " için arıza sona erdi: " + dbCategory.IncidentCategoryName,
+                    Title = NotifyType.IncidentResolved.ToCaption(),
+                    NotifyType = (int)NotifyType.IncidentResolved,
+                    SeenStatus = 0,
+                    PushStatus = 0,
+                    RecordId = dbIncident.Id,
+                    UserId = null,
+                });
 
                 result.RecordId = dbIncident.Id;
                 result.Result = true;

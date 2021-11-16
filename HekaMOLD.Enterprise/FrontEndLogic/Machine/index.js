@@ -1,10 +1,30 @@
 ﻿app.controller('machineCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
+    $scope.selectedMachineGroup = {};
+    $scope.machineGroupList = [];
+
     $scope.saveStatus = 0;
 
     $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0 };
+        $scope.modelObject = { Id: 0, MachineGroupId: null };
+        $scope.selectedMachineGroup = {};
+    }
+
+    // GET SELECTABLE DATA
+    $scope.loadSelectables = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Machine/GetSelectables', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.machineGroupList = resp.data.Groups;
+
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prmReq;
     }
 
     $scope.performDelete = function () {
@@ -51,6 +71,11 @@
         $scope.modelObject.ForeColor = $("#fore-color").spectrum("get") != null ?
             $("#fore-color").spectrum("get").toHexString() : "";
 
+        if (typeof $scope.selectedMachineGroup != 'undefined' && $scope.selectedMachineGroup != null)
+            $scope.modelObject.MachineGroupId = $scope.selectedMachineGroup.Id;
+        else
+            $scope.modelObject.MachineGroupId = null;
+
         $http.post(HOST_URL + 'Machine/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -72,6 +97,13 @@
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
+
+                    // BIND EXTERNAL TYPES
+                    if ($scope.modelObject.MachineGroupId > 0)
+                        $scope.selectedMachineGroup = $scope.machineGroupList
+                            .find(d => d.Id == $scope.modelObject.MachineGroupId);
+                    else
+                        $scope.selectedMachineGroup = {};
 
                     $("#back-color").spectrum("set", $scope.modelObject.BackColor);
                     $("#fore-color").spectrum("set", $scope.modelObject.ForeColor);
@@ -250,10 +282,12 @@
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
-    if (PRM_ID > 0)
-        $scope.bindModel(PRM_ID);
-    else
-        $scope.bindModel(0);
+    $scope.loadSelectables().then(function (data) {
+        if (PRM_ID > 0)
+            $scope.bindModel(PRM_ID);
+        else
+            $scope.bindModel(0);
+    });
 
     $('#back-color').spectrum({
         type: 'component',

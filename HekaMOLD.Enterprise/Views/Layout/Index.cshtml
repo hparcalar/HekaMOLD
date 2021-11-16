@@ -58,8 +58,20 @@
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
             <!--begin::Row-->
-            <div class="row gy-5 gx-xl-8 bg-white" id="layoutContainer">
-               
+            <div class="d-flex flex-row">
+                <div class="w-200px d-flex flex-column px-2 py-0">
+                    <h5 class="text-center bg-success rounded-1 mb-1 mt-0 p-3">Makineler</h5>
+                    <hr />
+                    <div class="my-1 p-3 rounded-1 bg-primary text-light text-center" 
+                         ng-repeat="item in availableMachines"
+                         draggable="true"
+                         data-id="{{item.Id}}"
+                         ondragstart="dragStartOfMachine(event)"
+                         >
+                        {{ item.MachineName }}
+                    </div>
+                </div>
+                <div id="layoutContainer" class="flex-fill d-flex"></div>
             </div>
             <!--end::Row-->
         </div>

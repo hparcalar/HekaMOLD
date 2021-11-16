@@ -60,6 +60,8 @@ namespace HekaMOLD.Business.Base
             {
                 var uof = new EFUnitOfWork();
                 var repo = uof.GetRepository<Notification>();
+                var repoSbsc = uof.GetRepository<UserRoleSubscription>();
+                var repoUsers = uof.GetRepository<User>();
 
                 var dbObj = new Notification();
                 model.MapTo(dbObj);
@@ -100,6 +102,34 @@ namespace HekaMOLD.Business.Base
                         item.ProcessedDate = DateTime.Now;
                     }
                 }
+                else if (model.UserId == null) // BROADCAST MESSAGES BY SUBSCRIPTION LISTS
+                {
+                    SubscriptionCategory category = GetSubscriptionCatetory((NotifyType)model.NotifyType);
+
+                    var memberRoles = repoSbsc.Filter(d => d.SubscriptionCategory == (int)category).ToArray();
+                    var memberRoleIds = memberRoles
+                        .Select(m => m.UserRoleId ?? 0).ToArray();
+                    var members = repoUsers.Filter(d => memberRoleIds.Contains(d.UserRoleId ?? 0)).ToArray();
+
+                    // FIRST EDIT DBOBJ.RECEIVER THEN GO ON WITH OTHER MEMBERS
+                    int memberIndex = 0;
+                    foreach (var member in members)
+                    {
+                        if (memberIndex == 0)
+                        {
+                            dbObj.UserId = member.Id;
+                        }
+                        else
+                        {
+                            var newNotificaiton = new Notification();
+                            model.MapTo(newNotificaiton);
+                            newNotificaiton.UserId = member.Id;
+                            repo.Add(newNotificaiton);
+                        }
+
+                        memberIndex++;
+                    }
+                }
 
                 uof.SaveChanges();
                 result.Result = true;
@@ -112,6 +142,39 @@ namespace HekaMOLD.Business.Base
             }
 
             return result;
+        }
+
+        protected SubscriptionCategory GetSubscriptionCatetory(NotifyType notifyType)
+        {
+            switch (notifyType)
+            {
+                case NotifyType.ItemRequestWaitForApproval:
+                    return SubscriptionCategory.ItemRequest;
+                case NotifyType.ItemRequestIsApproved:
+                    return SubscriptionCategory.ItemRequest;
+                case NotifyType.ItemOrderWaitForApproval:
+                    return SubscriptionCategory.ItemOrder;
+                case NotifyType.ItemOrderIsApproved:
+                    return SubscriptionCategory.ItemOrder;
+                case NotifyType.IncidentCreated:
+                    return SubscriptionCategory.Incident;
+                case NotifyType.PostureCreated:
+                    return SubscriptionCategory.Posture;
+                case NotifyType.IncidentTouched:
+                    return SubscriptionCategory.Incident;
+                case NotifyType.IncidentResolved:
+                    return SubscriptionCategory.Incident;
+                case NotifyType.PostureTouched:
+                    return SubscriptionCategory.Posture;
+                case NotifyType.PostureResolved:
+                    return SubscriptionCategory.Posture;
+                case NotifyType.ItemAtMinimumInWarehouse:
+                    return SubscriptionCategory.ItemCriticals;
+                case NotifyType.ItemAtMaximumInWarehouse:
+                    return SubscriptionCategory.ItemCriticals;
+                default:
+                    return default;
+            }
         }
 
         public SystemParameterModel GetParameter(string prmCode, int plantId)

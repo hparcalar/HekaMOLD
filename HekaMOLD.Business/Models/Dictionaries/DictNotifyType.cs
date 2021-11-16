@@ -15,7 +15,15 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { NotifyType.ItemRequestWaitForApproval, "Satınalma Talebi" },
             { NotifyType.ItemRequestIsApproved, "Talep Sonucu" },
             { NotifyType.ItemOrderWaitForApproval, "Satınalma Siparişi" },
-            { NotifyType.ItemOrderIsApproved, "Sipariş Sonucu" }
+            { NotifyType.ItemOrderIsApproved, "Sipariş Sonucu" },
+            { NotifyType.IncidentCreated, "Arıza Bildirimi" },
+            { NotifyType.PostureCreated, "Duruş Bildirimi" },
+            { NotifyType.IncidentTouched, "Arızaya Müdahale Başlandı" },
+            { NotifyType.IncidentResolved, "Arıza Tamamlandı" },
+            { NotifyType.PostureTouched, "Duruşa Müdahale Başlandı" },
+            { NotifyType.PostureResolved, "Duruş Tamamlandı" },
+            { NotifyType.ItemAtMinimumInWarehouse, "Malzeme Azalıyor" },
+            { NotifyType.ItemAtMaximumInWarehouse, "Malzeme Gereğinden Fazla Birikti" },
         };
     }
 }

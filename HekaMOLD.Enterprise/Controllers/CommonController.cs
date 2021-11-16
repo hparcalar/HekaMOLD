@@ -66,6 +66,19 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        public JsonResult SetNotifyAsPushed(int notificationId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (UsersBO bObj = new UsersBO())
+            {
+                result = bObj.SetNotifyAsPushed(Convert.ToInt32(Request.Cookies["UserId"].Value), notificationId);
+            }
+
+            return Json(result);
+        }
         #endregion
 
         #region RECORD INFORMATION

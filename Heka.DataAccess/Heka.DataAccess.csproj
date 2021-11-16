@@ -276,6 +276,9 @@
     <Compile Include="Context\UserRole.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\UserRoleSubscription.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\UserWorkOrderHistory.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -333,7 +336,7 @@
       <DependentUpon>HekaDataMapping.edmx</DependentUpon>
       <LastGenOutput>HekaDataMapping.cs</LastGenOutput>
     </Content>
-    <EmbeddedResource Include="Migration\Versions\1.0.3.3.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.3.6.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.6.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.3.sql" />

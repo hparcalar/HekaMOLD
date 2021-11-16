@@ -108,9 +108,22 @@
                     <div class="mb-5">
                         <input type="text" class="form-control form-control-solid" ng-model="modelObject.RoleName" placeholder="" />
                     </div>
+
+                    <h5>Bildirim Üyelikleri</h5>
+                    <hr />
+                    <div class="d-flex flex-column py-2">
+                        <label class="form-check form-check-custom form-check-solid w-50 mt-3" ng-repeat="item in subscriptionList">
+                            <input class="form-check-input" type="checkbox" ng-model="item.IsChecked" />
+                            <span class="form-check-label">
+                                {{item.Category}}
+                            </span>
+                        </label>
+                    </div>
                 </div>
                 <!--end::Col-->
                 <div class="col-xxl-6">
+                    <h5>Yetki Kategorileri Seçimi</h5>
+                    <hr />
                     <div class="d-flex flex-wrap">
                         <label class="form-check form-check-custom form-check-solid w-50 mt-3" ng-repeat="item in authTypeList">
                             <input class="form-check-input" type="checkbox" ng-model="item.IsGranted" />

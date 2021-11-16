@@ -126,6 +126,20 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(SubscriptionCategory))
+                {
+                    return DictSubscriptionCategory.Values
+                        .Where(d => d.Key == (SubscriptionCategory)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
+                else if (obj.GetType() == typeof(WorkOrderType))
+                {
+                    return DictWorkOrderType.Values
+                        .Where(d => d.Key == (WorkOrderType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception)
             {

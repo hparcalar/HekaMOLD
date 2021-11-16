@@ -70,7 +70,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<Mold> Mold { get; set; }
         public virtual DbSet<MoldProduct> MoldProduct { get; set; }
         public virtual DbSet<MoldTest> MoldTest { get; set; }
-        public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Plant> Plant { get; set; }
         public virtual DbSet<PostureCategory> PostureCategory { get; set; }
         public virtual DbSet<PrinterQueue> PrinterQueue { get; set; }
@@ -96,12 +95,14 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<UserRole> UserRole { get; set; }
         public virtual DbSet<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
         public virtual DbSet<Warehouse> Warehouse { get; set; }
-        public virtual DbSet<WorkOrder> WorkOrder { get; set; }
         public virtual DbSet<WorkOrderAllocation> WorkOrderAllocation { get; set; }
         public virtual DbSet<WorkOrderControl> WorkOrderControl { get; set; }
         public virtual DbSet<WorkOrderControlType> WorkOrderControlType { get; set; }
-        public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
         public virtual DbSet<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
         public virtual DbSet<WorkOrderSerial> WorkOrderSerial { get; set; }
+        public virtual DbSet<UserRoleSubscription> UserRoleSubscription { get; set; }
+        public virtual DbSet<Notification> Notification { get; set; }
+        public virtual DbSet<WorkOrder> WorkOrder { get; set; }
+        public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
     }
 }

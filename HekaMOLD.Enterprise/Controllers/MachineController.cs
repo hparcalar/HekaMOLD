@@ -49,6 +49,24 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetSelectables()
+        {
+            MachineGroupModel[] groups = new MachineGroupModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                groups = bObj.GetMachineGroupList();
+            }
+
+            var jsonResult = Json(new
+            {
+                Groups = groups,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         [FreeAction]
         public JsonResult GetMachineStats(string t1, string t2)
         {

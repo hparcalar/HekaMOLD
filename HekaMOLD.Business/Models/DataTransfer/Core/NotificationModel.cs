@@ -15,6 +15,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string Message { get; set; }
         public int? RecordId { get; set; }
         public int? SeenStatus { get; set; }
+        public int? PushStatus { get; set; }
         public DateTime? SeenDate { get; set; }
         public bool? IsProcessed { get; set; }
         public DateTime? ProcessedDate { get; set; }

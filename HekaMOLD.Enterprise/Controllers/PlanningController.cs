@@ -3,6 +3,7 @@ using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
@@ -158,6 +159,45 @@ namespace HekaMOLD.Enterprise.Controllers
             using (PlanningBO bObj = new PlanningBO())
             {
                 result = bObj.EditWorkOrder(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult CreateTrialPlan(TrialPlanModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.SaveOrUpdateWorkOrder(new WorkOrderModel
+                {
+                    CreatedDate = DateTime.Now,
+                    FirmId = null,
+                    PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value),
+                    TrialFirmName = model.TrialFirmExplanation,
+                    WorkOrderDate = DateTime.Now,
+                    WorkOrderNo = bObj.GetNextWorkOrderNo(),
+                    WorkOrderStatus = (int)WorkOrderStatusType.Created,
+                    WorkOrderType = (int)WorkOrderType.TrialProduction,
+                    Details = new WorkOrderDetailModel[] { 
+                        new WorkOrderDetailModel
+                        {
+                            TrialProductName = model.TrialProductExplanation,
+                            Quantity = model.Quantity,
+                            WorkOrderType = (int)WorkOrderType.TrialProduction,
+                        }
+                    }
+                });
+            }
+
+            if (result.Result)
+            {
+                using (PlanningBO bObj = new PlanningBO())
+                {
+                    result = bObj.CreateMachinePlan(result.DetailRecordId, model.MachineId);
+                }
             }
 
             return Json(result);

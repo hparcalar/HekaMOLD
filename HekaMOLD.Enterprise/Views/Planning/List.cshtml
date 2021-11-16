@@ -19,6 +19,10 @@
             <!--end::Page title-->
             <!--begin::Actions-->
             <div class="d-flex align-items-center py-1">
+                <button class="btn btn-sm btn-success mx-2" ng-click="showTrialForm()">
+                    Deneme Üretimi Oluştur
+                </button>
+
                 <a class="btn btn-sm btn-primary" href="@Url.Action("PrintTemplate", "Planning")">
                     Planlama Çizelgesi
                 </a>
@@ -74,10 +78,10 @@
                                                 {{plan.WorkOrder.CompleteQuantity}} /
                                                 {{plan.WorkOrder.Quantity}}
                                             </p>
-                                            <p 
-                                               ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,
+                                            <p ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,
                                                'label-wastage-count': plan.WorkOrder.WastageQuantity == 0}">
-                                                Fire: {{ plan.WorkOrder.WastageQuantity }}</p>
+                                                Fire: {{ plan.WorkOrder.WastageQuantity }}
+                                            </p>
                                         </div>
 
                                         @* GET COMPLETED PLANS OF MACHINE *@
@@ -154,6 +158,10 @@
     <div id="dial-plan" title="İş Emri Düzenleme" style="display:none;">
         <ng-include src="'../Components/Views/EditPlan.html'"></ng-include>
     </div>
+
+    <div id="dial-trial" title="Deneme Üretimi" style="display:none;">
+        <ng-include src="'../Components/Views/TrialWorkForm.html'"></ng-include>
+    </div>
 </div>
 
 @section scripts{
@@ -166,4 +174,5 @@
     <script src="~/Components/Controllers/planning-work-copy.js"></script>
     <script src="~/Components/Controllers/print-options.js"></script>
     <script src="~/Components/Controllers/edit-plan.js"></script>
+    <script src="~/Components/Controllers/trial-work-form.js"></script>
 }

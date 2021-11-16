@@ -28,6 +28,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? MoldTestCycle { get; set; }
         public DateTime? DeliveryPlanDate { get; set; }
         public string DeliveryPlanDateStr { get; set; }
+        public int? WorkOrderType { get; set; }
+        public string TrialProductName { get; set; }
 
         #region VISUAL ELEMENTS
         public bool NewDetail { get; set; }

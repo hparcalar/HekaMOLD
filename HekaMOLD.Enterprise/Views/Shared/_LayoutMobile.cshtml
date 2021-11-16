@@ -59,12 +59,10 @@
 
                         <!--begin::Title-->
                         <h1 class="d-flex align-items-center text-dark mx-5 fw-bolder my-0 mt-2 fs-3"
-                            style="text-shadow: 1px 1px 2px #aaa;"
-                            >
+                            style="text-shadow: 1px 1px 2px #aaa;">
                             @ViewBag.Title
                         </h1>
                         <!--end::Title-->
-
                         <!--begin::Wrapper-->
                         <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
                             <!--begin::Navbar-->
@@ -539,6 +537,8 @@
         toastr.options.progressBar = true;
         toastr.options.preventDuplicates = true;</script>
     <script src="~/Helpers/FrontEnd/heka-ui-helpers.js"></script>
+    <script src="~/Scripts/push.min.js"></script>
+    <script src="~/Scripts/serviceWorker.min.js"></script>
     <script src="~/FrontEndLogic/Main/main-notifications.js"></script>
 
     @RenderSection("scripts", required: false)

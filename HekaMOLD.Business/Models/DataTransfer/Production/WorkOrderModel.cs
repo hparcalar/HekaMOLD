@@ -17,6 +17,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? PlantId { get; set; }
         public int? WorkOrderStatus { get; set; }
         public string Explanation { get; set; }
+        public int? WorkOrderType { get; set; }
+        public string TrialFirmName { get; set; }
         public WorkOrderDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS

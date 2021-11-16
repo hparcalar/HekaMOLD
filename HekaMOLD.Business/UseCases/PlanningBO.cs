@@ -152,6 +152,50 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult CreateMachinePlan(int workOrderDetailId, int machineId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachinePlan>();
+                var repoDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+
+                var dbDetail = repoDetail.Get(d => d.Id == workOrderDetailId);
+
+                // CREATE MACHINE PLAN
+                var dbMachinePlan = repo.Get(d => d.WorkOrderDetailId == workOrderDetailId);
+                if (dbMachinePlan == null)
+                {
+                    int? lastOrderNo = repo.Filter(d => d.MachineId == machineId)
+                        .Max(d => d.OrderNo);
+                    if ((lastOrderNo ?? 0) == 0)
+                        lastOrderNo = 0;
+
+                    lastOrderNo++;
+
+                    dbMachinePlan = new MachinePlan
+                    {
+                        WorkOrderDetail = dbDetail,
+                        MachineId = machineId,
+                        OrderNo = lastOrderNo
+                    };
+                    repo.Add(dbMachinePlan);
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbMachinePlan.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public BusinessResult CopyFromWorkOrder(int fromPlanId, int quantity,
             int firmId, int targetMachineId)
         {
@@ -366,8 +410,8 @@ namespace HekaMOLD.Business.UseCases
                     WorkOrderDetailId = d.WorkOrderDetailId,
                     WorkOrder = new WorkOrderDetailModel
                     {
-                        ProductCode = d.WorkOrderDetail.Item.ItemNo,
-                        ProductName = d.WorkOrderDetail.Item.ItemName,
+                        ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                        ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
                         WorkOrderId = d.WorkOrderDetail.WorkOrderId,
                         MoldId = d.WorkOrderDetail.MoldId,
                         MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
@@ -379,7 +423,7 @@ namespace HekaMOLD.Business.UseCases
                         FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
                             d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
                         FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ? 
-                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName,
                         WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
                         WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
                         WastageQuantity = d.WorkOrderDetail.ProductWastage.Sum(m => m.Quantity) ?? 0,

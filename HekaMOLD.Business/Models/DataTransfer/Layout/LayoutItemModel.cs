@@ -21,6 +21,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Layout
         public string MachineName { get; set; }
         public string MachineGroupCode { get; set; }
         public string MachineGroupName { get; set; }
+        public string DesignPath { get; set; }
         #endregion
     }
 }

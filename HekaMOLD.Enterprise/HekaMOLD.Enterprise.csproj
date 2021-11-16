@@ -3952,6 +3952,7 @@
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
     <Content Include="Components\Controllers\report-template-list.js" />
+    <Content Include="Components\Controllers\trial-work-form.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
     <Content Include="Components\Views\MachineIncidents.html" />
@@ -3969,6 +3970,7 @@
     <Content Include="Components\Views\ApprovedItemRequestDetails.html" />
     <Content Include="Components\Views\ProductionHistoryList.html" />
     <Content Include="Components\Views\ReportTemplateList.html" />
+    <Content Include="Components\Views\TrialWorkForm.html" />
     <Content Include="Components\VisualMechanics\camera-manager.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -4160,6 +4162,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Helpers\FrontEnd\heka-ui-helpers.js" />
+    <Content Include="Helpers\FrontEnd\ng-drag.js" />
     <Content Include="Outputs\info.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -4461,6 +4464,8 @@
     <Content Include="Scripts\ng-file-upload.js" />
     <Content Include="Scripts\ng-file-upload.min.js" />
     <Content Include="Scripts\printElement.js" />
+    <Content Include="Scripts\push.min.js" />
+    <Content Include="Scripts\serviceWorker.min.js" />
     <Content Include="Scripts\spectrum.min.js" />
     <Content Include="Scripts\toastr.js" />
     <Content Include="Scripts\toastr.min.js" />
@@ -4595,6 +4600,8 @@
     <Content Include="Views\LayoutObjectType\List.cshtml" />
     <Content Include="Views\LayoutObjectType\Index.cshtml" />
     <Content Include="Views\Layout\Index.cshtml" />
+    <Content Include="Scripts\push.min.js.map" />
+    <Content Include="Scripts\serviceWorker.min.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4641,7 +4648,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56183</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56183/</IISUrl>
+          <IISUrl>http://localhost:56186/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

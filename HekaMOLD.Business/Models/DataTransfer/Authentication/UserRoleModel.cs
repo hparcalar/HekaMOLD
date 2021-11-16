@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Base;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Authentication
 
         #region VISUAL ELEMENTS
         public UserAuthModel[] AuthTypes { get; set; }
+        public UserRoleSubscriptionModel[] Subscriptions { get; set; }
         #endregion
     }
 }

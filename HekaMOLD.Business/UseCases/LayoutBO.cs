@@ -120,7 +120,7 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<Machine>();
 
-            data = repo.Filter(d => d.LayoutItem.Any() == false).Select(d => new MachineModel
+            data = repo.Filter(d => d.LayoutItem.Any() == false).ToList().Select(d => new MachineModel
             {
                 Id = d.Id,
                 MachineCode = d.MachineCode,
@@ -129,6 +129,8 @@ namespace HekaMOLD.Business.UseCases
                 PlantId = d.PlantId,
                 MachineGroupCode = d.MachineGroup != null ? d.MachineGroup.MachineGroupCode : "",
                 MachineGroupName = d.MachineGroup != null ? d.MachineGroup.MachineGroupName : "",
+                DesignPath = d.MachineGroup != null && d.MachineGroup.LayoutObjectType != null ?
+                    "LObject_" + d.MachineGroup.LayoutObjectType.Id + ".glb" : null,
             }).ToArray();
 
             return data;
@@ -138,6 +140,7 @@ namespace HekaMOLD.Business.UseCases
             var repo = _unitOfWork.GetRepository<LayoutItem>();
 
             return repo.GetAll()
+                .ToList()
                 .Select(d => new LayoutItemModel
                 {
                     Id = d.Id,
@@ -149,6 +152,8 @@ namespace HekaMOLD.Business.UseCases
                     PlantId = d.PlantId,
                     MachineCode = d.Machine.MachineCode,
                     MachineName = d.Machine.MachineName,
+                    DesignPath = d.Machine.MachineGroup != null && d.Machine.MachineGroup.LayoutObjectType != null ?
+                        "LObject_" + d.Machine.MachineGroup.LayoutObjectType.Id + ".glb" : null,
                     MachineGroupCode = d.Machine.MachineGroup != null ? d.Machine.MachineGroup.MachineGroupCode : "",
                     MachineGroupName = d.Machine.MachineGroup != null ? d.Machine.MachineGroup.MachineGroupName : "",
                 }).ToArray();
@@ -166,6 +171,7 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("İşletme bilgisi verilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<LayoutItem>();
+                var uniqueId = 0;
 
                 var dbObj = repo.Get(d => d.MachineId == model.MachineId);
                 if (dbObj == null)
@@ -173,8 +179,15 @@ namespace HekaMOLD.Business.UseCases
                     dbObj = new LayoutItem();
                     repo.Add(dbObj);
                 }
+                else
+                {
+                    uniqueId = dbObj.Id;
+                }
 
                 model.MapTo(dbObj);
+
+                if (uniqueId > 0)
+                    dbObj.Id = uniqueId;
 
                 _unitOfWork.SaveChanges();
 

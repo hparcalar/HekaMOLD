@@ -25,6 +25,7 @@ namespace Heka.DataAccess.Context
         public Nullable<bool> IsProcessed { get; set; }
         public Nullable<System.DateTime> ProcessedDate { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> PushStatus { get; set; }
     
         public virtual User User { get; set; }
     }

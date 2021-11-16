@@ -40,6 +40,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string WorkingUserName { get; set; }
         public string MachineGroupCode { get; set; }
         public string MachineGroupName { get; set; }
+        public string DesignPath { get; set; }
         #endregion
     }
 }

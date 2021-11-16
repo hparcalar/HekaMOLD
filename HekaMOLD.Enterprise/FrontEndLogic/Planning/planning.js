@@ -500,7 +500,23 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
         }
     });
 
-    // EMIT ORDER DETAIL DATA
+    // #region TRIAL FORM
+    $scope.showTrialForm = function () {
+        //$scope.$broadcast('loadTrialPlan', { id: plan.WorkOrderDetailId });
+
+        $('#dial-trial').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: 600,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+    // #endregion
+
+    // EMIT DATA
     $scope.$on('confirmCopy', function (e, d) {
         $scope.saveStatus = 1;
 
@@ -533,6 +549,11 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
         $scope.loadMachineList();
         $scope.loadWaitingPlanList();
+    });
+    $scope.$on('trialPlanCreated', function (e, d) {
+        $('#dial-trial').dialog('close');
+
+        $scope.loadMachineList();
     });
 
     // ON LOAD EVENTS

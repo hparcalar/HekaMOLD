@@ -2,6 +2,7 @@
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Authentication;
+using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Authentication;
 using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.Operational;
@@ -270,6 +271,34 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+
+        public BusinessResult SetNotifyAsPushed(int userId, int notificationId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Notification>();
+                var dbObj = repo.GetById(notificationId);
+                if (dbObj == null)
+                    throw new Exception("Bildirim kaydı bulunamadı.");
+
+                if (dbObj.UserId != userId)
+                    throw new Exception("Bildirimin hedefi olan kullanıcı ile gören uyuşmuyor.");
+
+                dbObj.PushStatus = 1;
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         #endregion
 
         #region USERS MANAGEMENT
@@ -410,6 +439,7 @@ namespace HekaMOLD.Business.UseCases
 
                 var repo = _unitOfWork.GetRepository<UserRole>();
                 var repoAuth = _unitOfWork.GetRepository<UserAuth>();
+                var repoSbsc = _unitOfWork.GetRepository<UserRoleSubscription>();
 
                 if (repo.Any(d => (d.RoleName == model.RoleName)
                     && d.Id != model.Id))
@@ -451,6 +481,34 @@ namespace HekaMOLD.Business.UseCases
                         }
                         else
                             dbAuthObj.IsGranted = item.IsGranted;
+                    }
+                }
+                #endregion
+
+                #region SAVE SUBSCRIPTION CATEGORIES
+                if (model.Subscriptions != null)
+                {
+                    var toBeRemovedSubscriptions = dbObj.UserRoleSubscription
+                    .Where(d => !model.Subscriptions
+                        .Select(m => m.SubscriptionCategory).ToArray().Contains(d.SubscriptionCategory)
+                    ).ToArray();
+                    foreach (var item in toBeRemovedSubscriptions)
+                    {
+                        repoSbsc.Delete(item);
+                    }
+
+                    foreach (var item in model.Subscriptions)
+                    {
+                        var dbSbscObj = dbObj.UserRoleSubscription.FirstOrDefault(m => m.SubscriptionCategory == item.SubscriptionCategory);
+                        if (dbSbscObj == null)
+                        {
+                            dbSbscObj = new UserRoleSubscription
+                            {
+                                SubscriptionCategory = item.SubscriptionCategory,
+                                UserRole = dbObj,
+                            };
+                            repoSbsc.Add(dbSbscObj);
+                        }
                     }
                 }
                 #endregion
@@ -508,6 +566,13 @@ namespace HekaMOLD.Business.UseCases
                     IsGranted = d.IsGranted,
                     UserId = d.UserId,
                     UserRoleId = d.UserRoleId
+                }).ToArray();
+                model.Subscriptions = dbObj.UserRoleSubscription.Select(d => new UserRoleSubscriptionModel
+                {
+                    Id = d.Id,
+                    UserRoleId = d.UserRoleId,
+                    SubscriptionCategory = d.SubscriptionCategory ?? 0,
+                    SubscriptionText = ((SubscriptionCategory)d.SubscriptionCategory).ToCaption(),
                 }).ToArray();
             }
 

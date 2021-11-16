@@ -1,5 +1,8 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Authentication;
+﻿using HekaMOLD.Business.Helpers;
+using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Authentication;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
@@ -35,6 +38,27 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetSelectables()
+        {
+            List<SubscriptionCategoryModel> result = new List<SubscriptionCategoryModel>();
+
+            var values = Enum.GetValues(typeof(SubscriptionCategory));
+            foreach (var valueItem in values)
+            {
+                result.Add(new SubscriptionCategoryModel
+                {
+                    Id = (int)valueItem,
+                    Category = ((SubscriptionCategory)((int)valueItem)).ToCaption(),
+                    IsChecked = false,
+                });
+            }
+
+            var jsonResult = Json(result.ToArray(), JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -108,8 +132,6 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
-
-
         }
     }
 }

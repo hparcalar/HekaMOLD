@@ -35,6 +35,8 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public Nullable<int> WorkOrderType { get; set; }
+        public string TrialFirmName { get; set; }
     
         public virtual Firm Firm { get; set; }
         public virtual Plant Plant { get; set; }
