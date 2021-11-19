@@ -30,7 +30,7 @@ namespace Heka.DataAccess.Context
     
         public virtual Item Item { get; set; }
         public virtual Machine Machine { get; set; }
-        public virtual Shift Shift { get; set; }
         public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual Shift Shift { get; set; }
     }
 }

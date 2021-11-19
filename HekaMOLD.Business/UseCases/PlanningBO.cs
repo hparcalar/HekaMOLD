@@ -429,7 +429,8 @@ namespace HekaMOLD.Business.UseCases
                         WastageQuantity = d.WorkOrderDetail.ProductWastage.Sum(m => m.Quantity) ?? 0,
                         CompleteQuantity = Convert.ToInt32(d.WorkOrderDetail.WorkOrderSerial
                             .Where(m => m.SerialNo != null && m.SerialNo.Length > 0)
-                            .Sum(m => m.FirstQuantity) ?? 0)
+                            .Sum(m => m.FirstQuantity) ?? 0),
+                        WorkOrderType = d.WorkOrderDetail.WorkOrderType ?? 1,
                     }
                 }).OrderBy(d => d.OrderNo).ToArray();
             }
@@ -531,8 +532,8 @@ namespace HekaMOLD.Business.UseCases
                     WorkOrder = new WorkOrderDetailModel
                     {
                         Id= d.WorkOrderDetail.Id,
-                        ProductCode = d.WorkOrderDetail.Item.ItemNo,
-                        ProductName = d.WorkOrderDetail.Item.ItemName,
+                        ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                        ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
                         Explanation = d.WorkOrderDetail.WorkOrder.Explanation,
                         WorkOrderId = d.WorkOrderDetail.WorkOrderId,
                         MoldId = d.WorkOrderDetail.MoldId,
@@ -545,10 +546,12 @@ namespace HekaMOLD.Business.UseCases
                         FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
                             d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
                         FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
-                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName,
                         WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
                         WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
-                        CompleteQuantity = d.WorkOrderDetail.WorkOrderSerial.Count()
+                        CompleteQuantity = d.WorkOrderDetail.MachineSignal.Any() ?
+                            d.WorkOrderDetail.MachineSignal.Where(m => m.SignalStatus == 1).Count() :
+                            Convert.ToInt32(d.WorkOrderDetail.WorkOrderSerial.Sum(m => m.FirstQuantity ?? 0))
                     }
                 }).OrderBy(d => d.OrderNo).ToArray();
             }
@@ -572,14 +575,16 @@ namespace HekaMOLD.Business.UseCases
                 {
                     data.Id = workOrderDetailId;
                     data.WorkOrderNo = dbObj.WorkOrder.WorkOrderNo;
-                    data.FirmCode = dbObj.WorkOrder.Firm.FirmCode;
-                    data.FirmName = dbObj.WorkOrder.Firm.FirmName;
+                    data.FirmCode = dbObj.WorkOrder.Firm != null ? dbObj.WorkOrder.Firm.FirmCode : "";
+                    data.FirmName = dbObj.WorkOrder.Firm != null ? dbObj.WorkOrder.Firm.FirmName : dbObj.WorkOrder.TrialFirmName;
                     data.ItemOrderDocumentNo = dbObj.ItemOrderDetail != null ? dbObj.ItemOrderDetail.ItemOrder.DocumentNo : "";
-                    data.ProductCode = dbObj.Item.ItemNo;
+                    data.ProductCode = dbObj.Item != null ? dbObj.Item.ItemNo : "";
                     data.Explanation = dbObj.WorkOrder.Explanation;
-                    data.ProductName = dbObj.Item.ItemName;
+                    data.ProductName = dbObj.Item != null ? dbObj.Item.ItemName : dbObj.TrialProductName;
                     data.Quantity = dbObj.Quantity;
-                    data.CompleteQuantity = Convert.ToInt32(dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0);
+                    data.CompleteQuantity = Convert.ToInt32(dbObj.MachineSignal.Any() ?
+                        dbObj.MachineSignal.Where(m => m.SignalStatus == 1).Count() :
+                        dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0);
                     data.MoldCode = dbObj.Mold != null ? dbObj.Mold.MoldCode : "";
                     data.MoldName = dbObj.Mold != null ? dbObj.Mold.MoldName : "";
                     data.WastageQuantity = dbObj.ProductWastage.Sum(d => d.Quantity) ?? 0;

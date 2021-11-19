@@ -605,8 +605,8 @@ namespace HekaMOLD.Business.UseCases
                         WorkOrder = new WorkOrderDetailModel
                         {
                             Id = dbObj.WorkOrderDetail.Id,
-                            ProductCode = dbObj.WorkOrderDetail.Item.ItemNo,
-                            ProductName = dbObj.WorkOrderDetail.Item.ItemName,
+                            ProductCode = dbObj.WorkOrderDetail.Item != null ? dbObj.WorkOrderDetail.Item.ItemNo : "",
+                            ProductName = dbObj.WorkOrderDetail.Item != null ? dbObj.WorkOrderDetail.Item.ItemName : dbObj.WorkOrderDetail.TrialProductName,
                             WorkOrderId = dbObj.WorkOrderDetail.WorkOrderId,
                             ItemId = dbObj.WorkOrderDetail.ItemId,
                             MoldId = dbObj.WorkOrderDetail.MoldId,
@@ -621,11 +621,11 @@ namespace HekaMOLD.Business.UseCases
                             FirmCode = dbObj.WorkOrderDetail.WorkOrder.Firm != null ?
                             dbObj.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
                             FirmName = dbObj.WorkOrderDetail.WorkOrder.Firm != null ?
-                            dbObj.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                            dbObj.WorkOrderDetail.WorkOrder.Firm.FirmName : dbObj.WorkOrderDetail.WorkOrder.TrialFirmName,
                             WorkOrderStatus = dbObj.WorkOrderDetail.WorkOrderStatus,
                             WorkOrderStatusStr = ((WorkOrderStatusType)dbObj.WorkOrderDetail.WorkOrderStatus).ToCaption(),
                             CompleteQuantity = dbObj.WorkOrderDetail.MachineSignal.Any() ?
-                                dbObj.WorkOrderDetail.MachineSignal.Count() :
+                                dbObj.WorkOrderDetail.MachineSignal.Where(m => m.SignalStatus == 1).Count() :
                                 Convert.ToInt32(dbObj.WorkOrderDetail.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0),
                             CompleteQuantitySingleProduct = dbObj.WorkOrderDetail.WorkOrderSerial.Count(),
                             MoldTestCycle = dbObj.WorkOrderDetail.MoldTest != null ?
@@ -2855,6 +2855,77 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
+
+        #region SHIFT PERFORMANCE BUSINESS
+        public ShiftTargetModel[] GetShiftTargets(string startDate, string endDate)
+        {
+            ShiftTargetModel[] data = new ShiftTargetModel[0];
+
+            try
+            {
+                DateTime dt1 = DateTime.ParseExact(startDate, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                DateTime dt2 = DateTime.ParseExact(endDate, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repo = _unitOfWork.GetRepository<ShiftTarget>();
+
+                data = repo.Filter(d => d.TargetDate >= dt1 && d.TargetDate <= dt2)
+                    .ToList()
+                    .Select(d => new ShiftTargetModel
+                    {
+                        Id = d.Id,
+                        ShiftId = d.ShiftId,
+                        TargetDate = d.TargetDate,
+                        TargetCount = d.TargetCount,
+                        ShiftCode = d.Shift.ShiftCode,
+                        ShiftName = d.Shift.ShiftName,
+                        TargetDateStr = string.Format("{0:dd.MM.yyyy}", d.TargetDate),
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        public BusinessResult SaveShiftTargets(ShiftTargetModel[] model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ShiftTarget>();
+                foreach (var item in model)
+                {
+                    item.TargetDate = item.TargetDate.Value.Date;
+                    var dbModel = repo.Filter(d => d.ShiftId == item.ShiftId && d.TargetDate == item.TargetDate)
+                        .FirstOrDefault();
+                    if (dbModel == null)
+                    {
+                        dbModel = new ShiftTarget
+                        {
+                            ShiftId = item.ShiftId,
+                            TargetDate = item.TargetDate,
+                        };
+                        repo.Add(dbModel);
+                    }
+
+                    dbModel.TargetCount = item.TargetCount;
+                }
+
+                _unitOfWork.SaveChanges();
+
                 result.Result = true;
             }
             catch (Exception ex)

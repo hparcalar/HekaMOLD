@@ -67,5 +67,6 @@
     }
 
     // LOAD EVENTS
+    $scope.isMechanics = IS_MECHANICS;
     setTimeout($scope.loadMachineQueue, 500);
 });

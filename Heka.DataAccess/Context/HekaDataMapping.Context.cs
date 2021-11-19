@@ -82,14 +82,12 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ProductWastage> ProductWastage { get; set; }
         public virtual DbSet<ReportTemplate> ReportTemplate { get; set; }
         public virtual DbSet<SectionSetting> SectionSetting { get; set; }
-        public virtual DbSet<Shift> Shift { get; set; }
         public virtual DbSet<SyncPoint> SyncPoint { get; set; }
         public virtual DbSet<SystemParameter> SystemParameter { get; set; }
         public virtual DbSet<SystemPrinter> SystemPrinter { get; set; }
         public virtual DbSet<TransactionLog> TransactionLog { get; set; }
         public virtual DbSet<UnitType> UnitType { get; set; }
         public virtual DbSet<UsageDocument> UsageDocument { get; set; }
-        public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserAuth> UserAuth { get; set; }
         public virtual DbSet<UserAuthType> UserAuthType { get; set; }
         public virtual DbSet<UserRole> UserRole { get; set; }
@@ -104,5 +102,8 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<WorkOrder> WorkOrder { get; set; }
         public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
+        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Shift> Shift { get; set; }
+        public virtual DbSet<ShiftTarget> ShiftTarget { get; set; }
     }
 }

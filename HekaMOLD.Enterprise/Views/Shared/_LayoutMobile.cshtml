@@ -109,6 +109,9 @@
                                                 </a>
                                             </div>
                                         }
+                                        <div ng-controller="userProfileCtrl" class="menu-item px-5 p-0 bg-primary">
+                                            <img src="~/assets/media/avatars/blank.png" height="55" id="imgProfile1" alt="metronic" />
+                                        </div>
                                         <div class="menu-item px-5 py-4 bg-primary">
                                             <a class="text-light fs-2 fw-bolder px-5 cursor-default">
                                                 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -540,6 +543,7 @@
     <script src="~/Scripts/push.min.js"></script>
     <script src="~/Scripts/serviceWorker.min.js"></script>
     <script src="~/FrontEndLogic/Main/main-notifications.js"></script>
+    <script src="~/FrontEndLogic/Main/user-profile.js"></script>
 
     @RenderSection("scripts", required: false)
     <!--end::Page Custom Javascript-->

@@ -39,10 +39,10 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ItemOrder> ItemOrder { get; set; }
         public virtual ItemRequestCategory ItemRequestCategory { get; set; }
         public virtual Plant Plant { get; set; }
-        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemRequestApproveLog> ItemRequestApproveLog { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemRequestDetail> ItemRequestDetail { get; set; }
+        public virtual User User { get; set; }
     }
 }

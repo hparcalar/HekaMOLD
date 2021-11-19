@@ -41,6 +41,11 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string MachineGroupCode { get; set; }
         public string MachineGroupName { get; set; }
         public string DesignPath { get; set; }
+        public bool IsInIncident { get; set; }
+        public bool IsInPosture { get; set; }
+        public string ActivePostureText { get; set; }
+        public string ActiveIncidentText { get; set; }
+
         #endregion
     }
 }

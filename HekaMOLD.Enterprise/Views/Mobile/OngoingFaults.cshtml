@@ -1,4 +1,5 @@
-﻿@{
+﻿@using HekaMOLD.Enterprise.Helpers
+@{
     ViewBag.Title = "Devam Eden Arızalar";
     Layout = "~/Views/Shared/_LayoutMobile.cshtml";
 }
@@ -9,7 +10,7 @@
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
             <div class="row py-3 mt-0 gx-xl-8 bg-white">
-                <div class="col-sm-2 col-xs-2 col-xxl-2">
+                <div ng-cloak ng-if="isMechanics" class="col-sm-2 col-xs-2 col-xxl-2">
                     <button class="btn btn-sm btn-block w-100 h-100 btn-light-primary"
                             ng-disabled="selectedIncident.Id == 0 || selectedIncident.IncidentStatus != 0"
                             ng-click="startIncident()">
@@ -28,7 +29,7 @@
                         <span style="display:block;margin-top:10px;">Müdahale Et</span>
                     </button>
                 </div>
-                <div class="col-sm-2 col-xs-2 col-xxl-2">
+                <div ng-cloak ng-if="isMechanics" class="col-sm-2 col-xs-2 col-xxl-2">
                     <button class="btn btn-sm btn-block w-100 h-100 btn-light-success"
                             ng-disabled="selectedIncident.Id == 0 || selectedIncident.IncidentStatus != 1"
                             ng-click="finishIncident()">
@@ -88,6 +89,10 @@
             background-color: #0094ff !important;
         }
     </style>
+    <script>
+        var IS_PRODCHIEF = @(Html.IsGranted("IsProductionChief") ? "true" : "false");
+        var IS_MECHANICS = @(Html.IsGranted("MobileMechanicUser") ? "true" : "false");
+    </script>
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
 

@@ -1,6 +1,8 @@
-﻿app.controller('userCtrl', function ($scope, $http) {
+﻿app.controller('userCtrl', ['$scope', '$http', 'Upload',
+function ($scope, $http, Upload) {
     $scope.modelObject = {};
 
+    $scope.selectedObjectFile = null;
     $scope.saveStatus = 0;
 
     $scope.selectedRole = {};
@@ -25,6 +27,35 @@
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
         $scope.selectedRole = {};
+    }
+
+    $scope.onDataSelected = function (invalids, valids) {
+        if (valids.length > 0)
+            $scope.selectedObjectFile = valids[0];
+    }
+
+    $scope.uploadObjectData = function () {
+        if ($scope.selectedObjectFile != null) {
+            Upload.upload({
+                url: HOST_URL + 'User/UploadProfileImage',
+                data: {
+                    file: $scope.selectedObjectFile,
+                    userId: $scope.modelObject.Id,
+                }
+            }).then(function (resp) {
+                if (resp.data.Result) {
+                    toastr.success('Profil resmi başarıyla yüklendi.');
+                    $scope.bindModel();
+                    $scope.selectedObjectFile = null;
+                }
+                else
+                    toastr.error(resp.data.ErrorMessage);
+            }, function (resp) {
+            }, function (evt) {
+                //var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                //console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+            });
+        }
     }
 
     $scope.performDelete = function () {
@@ -97,6 +128,12 @@
                         $scope.selectedRole = $scope.roleList.find(d => d.Id == $scope.modelObject.UserRoleId);
                     else
                         $scope.selectedRole = {};
+
+                    if ($scope.modelObject.ProfileImage != null) {
+                        $('#imgProfile').attr('src', $scope.modelObject.ProfileImageBase64);
+                    }
+                    else
+                        $('#imgProfile').attr('src', '');
                 }
             }).catch(function (err) { });
     }
@@ -106,4 +143,4 @@
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
     });
-});
+}]);

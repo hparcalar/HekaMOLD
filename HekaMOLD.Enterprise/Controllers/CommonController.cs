@@ -54,6 +54,21 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
 
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetProfileImage()
+        {
+            UserModel data = new UserModel();
+            using (UsersBO bObj = new UsersBO())
+            {
+                data = bObj.GetUser(Convert.ToInt32(Request.Cookies["UserId"].Value));
+            }
+
+            var jsonResult = Json(data.ProfileImageBase64, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         [HttpPost]
         public JsonResult SetNotifyAsSeen(int notificationId)
         {
@@ -226,6 +241,21 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [FreeAction]
+        public JsonResult GetProductionChiefs()
+        {
+            UserModel[] data = new UserModel[0];
+
+            using (UsersBO bObj = new UsersBO())
+            {
+                data = bObj.GetProductionChiefList();
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
         }
 
         [FreeAction]

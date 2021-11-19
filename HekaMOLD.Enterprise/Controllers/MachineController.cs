@@ -84,6 +84,30 @@ namespace HekaMOLD.Enterprise.Controllers
 
         [HttpGet]
         [FreeAction]
+        public JsonResult GetUserProfiles(string userIdPrm)
+        {
+            int[] userIdList = userIdPrm.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
+
+            List<UserModel> data = new List<UserModel>();
+            using (UsersBO bObj = new UsersBO())
+            {
+                foreach (var userId in userIdList)
+                {
+                    var userModel = bObj.GetUser(userId);
+                    if (userModel != null && userModel.Id > 0)
+                    {
+                        data.Add(userModel);
+                    }
+                }
+            }
+
+            var jsonResult = Json(data.ToArray(), JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
         public JsonResult GetMachineStatsByMachineId(int machineId, string t1, string t2)
         {
             MachineModel[] result = new MachineModel[0];

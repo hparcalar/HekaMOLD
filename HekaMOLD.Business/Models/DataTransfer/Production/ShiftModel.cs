@@ -14,11 +14,14 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public TimeSpan? StartTime { get; set; }
         public TimeSpan? EndTime { get; set; }
         public bool? IsActive { get; set; }
+        public int? ShiftChiefId { get; set; }
 
         #region VISUAL ELEMENTS
         public string StartTimeStr { get; set; }
         public string EndTimeStr { get; set; }
         public DateTime? ShiftBelongsToDate { get; set; }
+        public string ChiefCode { get; set; }
+        public string ChiefName { get; set; }
         #endregion
     }
 }

@@ -25,5 +25,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Summary
         public decimal? WastageCount { get; set; }
         public int PostureCount { get; set; }
         public int IncidentCount { get; set; }
+        public string ChiefUserName { get; set; }
+        public int TargetCount { get; set; }
+        public string LastProductName { get; set; }
     }
 }

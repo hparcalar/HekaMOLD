@@ -87,13 +87,21 @@
                     </a>
                 </div>
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
+                    <div style="text-align:center; border:1px solid #888; border-radius:3px;" class="bg-secondary py-0">
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-1">Etiket Adedi</label>
+                        <!--begin::Input group-->
+                        <div class="mb-0">
+                            <input type="number" ng-cloak class="form-control"
+                                   ng-model="labelCount" placeholder="" />
+                        </div>
+                    </div>
                     <div style="text-align:center; border:1px solid #ffd800; border-radius:3px;" class="bg-light-warning py-2"
                          ng-click="modelObject.PrintLabel = !modelObject.PrintLabel">
                         <input type="checkbox" style="margin-top:7px !important;" ng-model="modelObject.PrintLabel" />
                         <span style="cursor:default !important;">Etiket Yazdır</span>
                     </div>
                     <a ng-hide="modelObject.Id > 0"
-                       class="btn btn-sm btn-block w-100 h-50 mt-2 btn-success" style="padding-top:20px;" ng-click="readBarcode()">
+                       class="btn btn-sm btn-block w-100 h-30 mt-0 btn-success" style="padding-top:10px;" ng-click="readBarcode()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

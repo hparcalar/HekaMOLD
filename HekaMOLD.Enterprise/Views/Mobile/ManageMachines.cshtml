@@ -48,17 +48,17 @@
                                     {{ item.MachineStatus == 0 || item.MachineStatus == null ? 'MAKİNE BAŞLAT' : 'MAKİNE DURDUR' }}
                                 </button>
                                 @*<button type="button" class="btn mx-2 btn-sm btn-warning flex-fill"
-                                        ng-click="showIncidents(item.Id)">
-                                    Arızalar
-                                    <span ng-if="item.MachineStats.IncidentCount > 0"
-                                          class="badge badge-light-warning">{{ item.MachineStats.IncidentCount }}</span>
-                                </button>
-                                <button type="button" class="btn btn-sm btn-danger flex-fill"
-                                        ng-click="showPostures(item.Id)">
-                                    Duruşlar
-                                    <span ng-if="item.MachineStats.PostureCount > 0"
-                                          class="badge badge-light-danger">{{ item.MachineStats.PostureCount }}</span>
-                                </button>*@
+                    ng-click="showIncidents(item.Id)">
+                Arızalar
+                <span ng-if="item.MachineStats.IncidentCount > 0"
+                      class="badge badge-light-warning">{{ item.MachineStats.IncidentCount }}</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-danger flex-fill"
+                    ng-click="showPostures(item.Id)">
+                Duruşlar
+                <span ng-if="item.MachineStats.PostureCount > 0"
+                      class="badge badge-light-danger">{{ item.MachineStats.PostureCount }}</span>
+            </button>*@
                             </div>
                             <h4 class="text-center bg-secondary rounded px-2 py-2 mb-0 border-1 border-dark">
                                 <svg ng-if="item.ActivePlan.WorkOrder != null" width="16px" height="16px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -74,14 +74,18 @@
                                 </svg>
                                 {{item.MachineName}}
                             </h4>
+                            <h5 ng-if="item.IsInPosture || item.IsInIncident"
+                                class="text-center bg-danger text-light mt-1 rounded px-2 py-2 border-1 border-dark">
+                                {{item.IsInPosture ? 'DURUŞ: ' + item.ActivePostureText : 'BAKIM: ' + item.ActiveIncidentText}}
+                            </h5>
                             <h4 class="text-center bg-primary text-light mt-1 rounded px-2 py-2 border-1 border-dark">
                                 {{item.WorkingUserName.length > 0 ? item.WorkingUserName : 'OPERATÖR YOK'}}
                             </h4>
                             <div class="active-plan text-center py-0 min-h-55px">
                                 @*<h6
-                                    ng-class="{'text-primary': item.ForeColor == null || item.ForeColor.length == 0}"
-                                    ng-style="item.ForeColor != null && item.ForeColor.length > 0 && {'color': item.ForeColor}"
-                                    >Aktif Üretim</h6>*@
+            ng-class="{'text-primary': item.ForeColor == null || item.ForeColor.length == 0}"
+            ng-style="item.ForeColor != null && item.ForeColor.length > 0 && {'color': item.ForeColor}"
+            >Aktif Üretim</h6>*@
                                 <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
                                     <b>Firma:</b> {{item.ActivePlan.WorkOrder.FirmName}}
                                 </p>

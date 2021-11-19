@@ -72,6 +72,10 @@
             }).catch(function (err) { });
     }
 
+    $scope.showTargets = function () {
+
+    }
+
     // ON LOAD EVENTS
     if (PRM_ID > 0)
         $scope.bindModel(PRM_ID);

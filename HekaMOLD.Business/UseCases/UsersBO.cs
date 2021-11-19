@@ -31,6 +31,12 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Hatalı parola girildi.");
 
                 result.UserData = GetUser(dbUser.Id);
+                if (result.UserData.ProfileImage != null)
+                {
+                    result.UserData.ProfileImageBase64 = "data:image/png;base64, " + Convert.ToBase64String(result.UserData.ProfileImage);
+                }
+                result.UserData.ProfileImage = null;
+
                 result.UserData.IsProdTerminal = dbUser.UserRole.UserAuth
                     .Any(d => d.UserAuthType.AuthTypeCode == "MobileProductionUser"
                     && d.IsGranted == true);
@@ -311,6 +317,10 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                if (dbObj.ProfileImage != null)
+                {
+                    model.ProfileImageBase64 = "data:image/png;base64, " + Convert.ToBase64String(dbObj.ProfileImage);
+                }
             }
 
             return model;
@@ -326,6 +336,39 @@ namespace HekaMOLD.Business.UseCases
             {
                 UserModel containerObj = new UserModel();
                 d.MapTo(containerObj);
+                containerObj.ProfileImage = null;
+                containerObj.ProfileImageBase64 = "";
+                containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                containerObj.IsProdTerminal = d.UserRole.UserAuth
+                    .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);
+                containerObj.IsProdChief = d.UserRole.UserAuth
+                    .Any(m => m.UserAuthType.AuthTypeCode == "IsProductionChief" && m.IsGranted == true);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public UserModel[] GetProductionChiefList()
+        {
+            List<UserModel> data = new List<UserModel>();
+
+            var repo = _unitOfWork.GetRepository<User>();
+            var repoRole = _unitOfWork.GetRepository<UserRole>();
+
+            var chiefRole = repoRole.Filter(d => 
+                d.UserAuth.Any(m => m.UserAuthType.AuthTypeCode == "IsProductionChief" && m.IsGranted == true))
+                .FirstOrDefault();
+
+            if (chiefRole == null)
+                return default;
+
+            repo.Filter(d => d.UserRoleId == chiefRole.Id).ToList().ForEach(d =>
+            {
+                UserModel containerObj = new UserModel();
+                d.MapTo(containerObj);
+                containerObj.ProfileImage = null;
+                containerObj.ProfileImageBase64 = "";
                 containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
                 containerObj.IsProdTerminal = d.UserRole.UserAuth
                     .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);

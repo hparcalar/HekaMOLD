@@ -9,7 +9,7 @@
     };
 
     $scope.activeDetails = [];
-
+    $scope.labelCount = 1;
     $scope.historyWorkOrderDetailId = 0;
     $scope.selectedActiveDetailId = 0;
 
@@ -68,7 +68,7 @@
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.modelObject.MoldData = resp.data;
-                        if ($scope.modelObject.MoldData)
+                        if ($scope.modelObject.MoldData != null && $scope.modelObject.MoldData.InPackageQuantity > 0)
                             $scope.activeWorkOrder.WorkOrder.InPackageQuantity = $scope.modelObject.MoldData.InPackageQuantity;
                     }
                 }).catch(function (err) { });
@@ -243,32 +243,47 @@
         $('#dial-prodlist').dialog('close');
     });
 
-    $scope.directPrintWorkOrder = function (workOrderDetailId) {
+    $scope.directPrintWorkOrder = async function (workOrderDetailId) {
         var workObj = $scope.activeDetails.find(d => d.Id == workOrderDetailId);
 
         workObj.InPackageQuantity = $scope.activeWorkOrder.WorkOrder.InPackageQuantity;
 
-        $http.post(HOST_URL + 'Mobile/SaveProductEntry', {
-            workOrderDetailId: workObj.Id,
-            inPackageQuantity: workObj.InPackageQuantity,
-            barcode: $scope.modelObject.Barcode,
-            printLabel: $scope.modelObject.PrintLabel,
-            printerId: $scope.modelObject.PrinterId,
-        }, 'json')
-            .then(function (resp) {
-                if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.saveStatus = 0;
+        while ($scope.labelCount >= 1) {
+            var prms = new Promise(function (resolve, reject) {
+                $http.post(HOST_URL + 'Mobile/SaveProductEntry', {
+                    workOrderDetailId: workObj.Id,
+                    inPackageQuantity: workObj.InPackageQuantity,
+                    barcode: $scope.modelObject.Barcode,
+                    printLabel: $scope.modelObject.PrintLabel,
+                    printerId: $scope.modelObject.PrinterId,
+                }, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                            $scope.saveStatus = 0;
 
-                    if (resp.data.Result == true) {
-                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
-                        $scope.lastPackageQty = workObj.InPackageQuantity;
-                        $scope.loadActiveWorkOrder();
-                        $scope.modelObject.Barcode = '';
-                    }
-                    else
-                        toastr.error(resp.data.ErrorMessage, 'Hata');
-                }
-            }).catch(function (err) { });
+                            if (resp.data.Result == true) {
+                                toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                                $scope.lastPackageQty = workObj.InPackageQuantity;
+
+                                if ($scope.labelCount == 1) {
+                                    $scope.loadActiveWorkOrder();
+                                    $scope.modelObject.Barcode = '';
+                                }
+                            }
+                            else
+                                toastr.error(resp.data.ErrorMessage, 'Hata');
+
+                            resolve();
+                        }
+                    }).catch(function (err) { });
+            });
+
+            await prms;
+
+            $scope.labelCount--;
+        }
+
+        $scope.labelCount = 1;
     }
 
     $scope.showMultipleDetails = function () {
@@ -302,7 +317,7 @@
         }
     }
 
-    $scope.approveProductEntry = function () {
+    $scope.approveProductEntry = async function () {
         $scope.isBarcodeRead = true;
 
         bootbox.confirm({
@@ -319,12 +334,12 @@
                     className: 'btn-light'
                 }
             },
-            callback: function (result) {
+            callback: async function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
 
                     $http.get(HOST_URL + 'Mobile/GetMachineWorkList?machineId=' + $scope.selectedMachine.Id, {}, 'json')
-                        .then(function (respMac) {
+                        .then(async function (respMac) {
                             if (typeof respMac.data != 'undefined' && respMac.data != null) {
                                 if (respMac.data.length > 1) { // birden fazla ürün tek kalıptan çıkacaksa, giriş yapmak için seçtir
                                     $scope.activeDetails = respMac.data;
@@ -355,28 +370,44 @@
                                         });
                                     }, 200);
                                 }
-                                else { // tek ürün ise doğrudan yazdır
-                                    $http.post(HOST_URL + 'Mobile/SaveProductEntry', {
-                                        workOrderDetailId: $scope.activeWorkOrder.WorkOrder.Id,
-                                        inPackageQuantity: $scope.activeWorkOrder.WorkOrder.InPackageQuantity,
-                                        barcode: $scope.modelObject.Barcode,
-                                        printLabel: $scope.modelObject.PrintLabel,
-                                        printerId: $scope.modelObject.PrinterId,
-                                    }, 'json')
-                                        .then(function (resp) {
-                                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                                $scope.saveStatus = 0;
+                                else {
+                                    while ($scope.labelCount >= 1) {
+                                        var prms = new Promise(function (resolve, reject) {
+                                            // tek ürün ise doğrudan yazdır
+                                            $http.post(HOST_URL + 'Mobile/SaveProductEntry', {
+                                                workOrderDetailId: $scope.activeWorkOrder.WorkOrder.Id,
+                                                inPackageQuantity: $scope.activeWorkOrder.WorkOrder.InPackageQuantity,
+                                                barcode: $scope.modelObject.Barcode,
+                                                printLabel: $scope.modelObject.PrintLabel,
+                                                printerId: $scope.modelObject.PrinterId,
+                                            }, 'json')
+                                                .then(function (resp) {
+                                                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                                                        $scope.saveStatus = 0;
 
-                                                if (resp.data.Result == true) {
-                                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
-                                                    $scope.lastPackageQty = $scope.activeWorkOrder.WorkOrder.InPackageQuantity;
-                                                    $scope.loadActiveWorkOrder();
-                                                    $scope.modelObject.Barcode = '';
-                                                }
-                                                else
-                                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                                            }
-                                        }).catch(function (err) { });
+                                                        if (resp.data.Result == true) {
+                                                            toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                                                            $scope.lastPackageQty = $scope.activeWorkOrder.WorkOrder.InPackageQuantity;
+
+                                                            if ($scope.labelCount == 1) {
+                                                                $scope.loadActiveWorkOrder();
+                                                                $scope.modelObject.Barcode = '';
+                                                            }
+                                                        }
+                                                        else
+                                                            toastr.error(resp.data.ErrorMessage, 'Hata');
+
+                                                        resolve();
+                                                    }
+                                                }).catch(function (err) { });
+                                        });
+
+                                        await prms;
+
+                                        $scope.labelCount--;
+                                    }
+
+                                    $scope.labelCount = 1;
                                 }
                             }
                         }).catch(function (err) { });

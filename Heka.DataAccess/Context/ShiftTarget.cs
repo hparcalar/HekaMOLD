@@ -12,20 +12,15 @@ namespace Heka.DataAccess.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class MachineSignal
+    public partial class ShiftTarget
     {
         public int Id { get; set; }
-        public Nullable<int> MachineId { get; set; }
-        public Nullable<int> WorkOrderDetailId { get; set; }
-        public Nullable<System.DateTime> StartDate { get; set; }
-        public Nullable<System.DateTime> EndDate { get; set; }
-        public Nullable<int> Duration { get; set; }
-        public Nullable<int> SignalStatus { get; set; }
         public Nullable<int> ShiftId { get; set; }
-        public Nullable<System.DateTime> ShiftBelongsToDate { get; set; }
+        public Nullable<System.DateTime> TargetDate { get; set; }
+        public Nullable<int> TargetCount { get; set; }
+        public Nullable<int> MachineId { get; set; }
     
         public virtual Machine Machine { get; set; }
-        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
         public virtual Shift Shift { get; set; }
     }
 }

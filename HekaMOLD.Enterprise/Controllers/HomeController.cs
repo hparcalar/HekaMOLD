@@ -154,6 +154,7 @@ namespace HekaMOLD.Enterprise.Controllers
             Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(-1);
             Response.Cookies["MachineId"].Expires = DateTime.Now.AddDays(-1);
             Response.Cookies["MachineName"].Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies["ProfileImage"].Expires = DateTime.Now.AddDays(-1);
 
             return RedirectToAction("Index", "Home");
         }
@@ -198,6 +199,14 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(result);
+        }
+        #endregion
+
+        #region DASHBOARDS
+        [FreeAction]
+        public ActionResult Dashboard()
+        {
+            return View();
         }
         #endregion
     }

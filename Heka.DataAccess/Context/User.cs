@@ -20,9 +20,10 @@ namespace Heka.DataAccess.Context
             this.Equipment = new HashSet<Equipment>();
             this.ItemRequest = new HashSet<ItemRequest>();
             this.ItemRequestApproveLog = new HashSet<ItemRequestApproveLog>();
+            this.Notification = new HashSet<Notification>();
             this.TransactionLog = new HashSet<TransactionLog>();
             this.UserAuth = new HashSet<UserAuth>();
-            this.Notification = new HashSet<Notification>();
+            this.Shift = new HashSet<Shift>();
         }
     
         public int Id { get; set; }
@@ -36,6 +37,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public byte[] ProfileImage { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Equipment> Equipment { get; set; }
@@ -43,6 +45,8 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ItemRequest> ItemRequest { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemRequestApproveLog> ItemRequestApproveLog { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notification> Notification { get; set; }
         public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TransactionLog> TransactionLog { get; set; }
@@ -50,6 +54,6 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserAuth> UserAuth { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Notification> Notification { get; set; }
+        public virtual ICollection<Shift> Shift { get; set; }
     }
 }

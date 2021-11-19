@@ -19,6 +19,7 @@ namespace HekaMOLD.MachineService.Services
         ApiHelper _apiDevice;
         MachineModel _machine;
         MachineStatus _status;
+        TimeSpan _lastZeroTime = TimeSpan.Zero;
         bool _isRunning = false;
         bool _isPostureCheckRunning = false;
         bool _isMachineDbCheckRunning = false;
@@ -173,24 +174,35 @@ namespace HekaMOLD.MachineService.Services
                         {
                             using (ProductionBO bObj = new ProductionBO())
                             {
-                                BusinessResult bResult;
+                                BusinessResult bResult = null;
 
                                 if (resultSatisfied)
+                                {
                                     bResult = bObj.StartMachineCycle(_machine.Id);
+                                    _lastZeroTime = TimeSpan.Zero;
+                                }
                                 else
-                                    bResult = bObj.StopMachineCycle(_machine.Id);
+                                {
+                                    if ((DateTime.Now.TimeOfDay - _lastZeroTime).TotalSeconds > 10)
+                                        bResult = bObj.StopMachineCycle(_machine.Id);
+                                    else if (_lastZeroTime != TimeSpan.Zero)
+                                        _lastZeroTime = TimeSpan.Zero;
+                                }
 
-                                if (bResult.Result)
-                                    Console.WriteLine(string.Format("{0:[HH:mm:ss]}", DateTime.Now) +
-                                        " " + _machine.MachineCode + ": " + (resultSatisfied ? "Cycle Started" : "Cycle End"));
-                                else
-                                    Console.WriteLine(string.Format("{0:[HH:mm:ss]}", DateTime.Now) +
-                                        " " + _machine.MachineCode + ": HATA= " + bResult.ErrorMessage);
+                                if (bResult != null)
+                                {
+                                    if (bResult.Result)
+                                        Console.WriteLine(string.Format("{0:[HH:mm:ss]}", DateTime.Now) +
+                                            " " + _machine.MachineCode + ": " + (resultSatisfied ? "Cycle Started" : "Cycle End"));
+                                    else
+                                        Console.WriteLine(string.Format("{0:[HH:mm:ss]}", DateTime.Now) +
+                                            " " + _machine.MachineCode + ": HATA= " + bResult.ErrorMessage);
+
+                                    _lastResult = resultSatisfied;
+                                    _status.PostureRequestSent = false;
+                                    _status.LastCycleEnd = null;
+                                }   
                             }
-
-                            _lastResult = resultSatisfied;
-                            _status.PostureRequestSent = false;
-                            _status.LastCycleEnd = null;
                         }
                     }
                 }

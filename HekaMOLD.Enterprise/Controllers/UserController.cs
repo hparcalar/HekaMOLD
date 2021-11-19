@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using HekaMOLD.Business.Models.DataTransfer.Authentication;
+using System.IO;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -64,7 +65,9 @@ namespace HekaMOLD.Enterprise.Controllers
                 model = bObj.GetUser(rid);
             }
 
-            return Json(model, JsonRequestBehavior.AllowGet);
+            var jsonResponse = Json(model, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
         }
 
         [HttpPost]
@@ -109,6 +112,38 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
+        }
+
+        [HttpPost]
+        public JsonResult UploadProfileImage(int userId,
+            HttpPostedFileBase file)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (file == null || file.ContentLength == 0)
+                    throw new Exception("Yüklemek için bir resim seçiniz.");
+
+                var byteReader = new MemoryStream();
+                file.InputStream.CopyTo(byteReader);
+
+                using (UsersBO bObj = new UsersBO())
+                {
+                    var objType = bObj.GetUser(userId);
+                    objType.ProfileImage = byteReader.ToArray();
+                    //objType.DataTypeExtension = file.ContentType;
+
+                    result = bObj.SaveOrUpdateUser(objType);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
         }
 
         #region NOTIFICATIONS

@@ -17,9 +17,9 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public UserRole()
         {
-            this.User = new HashSet<User>();
             this.UserAuth = new HashSet<UserAuth>();
             this.UserRoleSubscription = new HashSet<UserRoleSubscription>();
+            this.User = new HashSet<User>();
         }
     
         public int Id { get; set; }
@@ -32,10 +32,10 @@ namespace Heka.DataAccess.Context
     
         public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<User> User { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserAuth> UserAuth { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserRoleSubscription> UserRoleSubscription { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<User> User { get; set; }
     }
 }

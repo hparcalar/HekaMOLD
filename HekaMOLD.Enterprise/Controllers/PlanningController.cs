@@ -179,7 +179,7 @@ namespace HekaMOLD.Enterprise.Controllers
                     TrialFirmName = model.TrialFirmExplanation,
                     WorkOrderDate = DateTime.Now,
                     WorkOrderNo = bObj.GetNextWorkOrderNo(),
-                    WorkOrderStatus = (int)WorkOrderStatusType.Created,
+                    WorkOrderStatus = (int)WorkOrderStatusType.Planned,
                     WorkOrderType = (int)WorkOrderType.TrialProduction,
                     Details = new WorkOrderDetailModel[] { 
                         new WorkOrderDetailModel

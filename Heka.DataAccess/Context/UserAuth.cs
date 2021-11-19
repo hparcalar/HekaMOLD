@@ -20,8 +20,8 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UserId { get; set; }
         public Nullable<bool> IsGranted { get; set; }
     
-        public virtual User User { get; set; }
         public virtual UserAuthType UserAuthType { get; set; }
         public virtual UserRole UserRole { get; set; }
+        public virtual User User { get; set; }
     }
 }

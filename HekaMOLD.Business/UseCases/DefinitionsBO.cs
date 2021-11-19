@@ -1366,6 +1366,7 @@ namespace HekaMOLD.Business.UseCases
             var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
             var repoShift = _unitOfWork.GetRepository<Shift>();
             var repoUser = _unitOfWork.GetRepository<User>();
+            var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
 
             var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
             var repoIncident = _unitOfWork.GetRepository<Incident>();
@@ -1402,6 +1403,18 @@ namespace HekaMOLD.Business.UseCases
                 var postureData = repoPosture.Filter(m => m.MachineId == d.Id &&
                     dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
 
+                containerObj.IsInIncident = repoIncident.Any(m => m.MachineId == d.Id
+                    && m.IncidentStatus != (int)PostureStatusType.Resolved);
+                containerObj.ActiveIncidentText = repoIncident.Filter(m => m.MachineId == d.Id
+                    && m.IncidentStatus != (int)PostureStatusType.Resolved)
+                    .Select(m => m.IncidentCategory.IncidentCategoryName).FirstOrDefault();
+
+                containerObj.IsInPosture = repoPosture.Any(m => m.MachineId == d.Id
+                    && m.PostureStatus != (int)PostureStatusType.Resolved);
+                containerObj.ActivePostureText = repoPosture.Filter(m => m.MachineId == d.Id
+                    && m.PostureStatus != (int)PostureStatusType.Resolved)
+                    .Select(m => m.PostureCategory.PostureCategoryName).FirstOrDefault();
+
                 containerObj.MachineStats = new Models.DataTransfer.Summary.MachineStatsModel
                 {
                     AvgInflationTime = Convert.ToDecimal(signalData.Average(m => m.Duration) ?? 0),
@@ -1413,6 +1426,7 @@ namespace HekaMOLD.Business.UseCases
 
                 // RESOLVE SHIFT STATS OF THAT MACHINE
                 List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
+                shiftList = shiftList.OrderBy(m => m.StartTime).ToArray();
                 foreach (var shift in shiftList)
                 {
                     //DateTime cDate = dt1.Date;
@@ -1428,20 +1442,74 @@ namespace HekaMOLD.Business.UseCases
                     //        endTime = cDate.AddDays(1).Add(shift.EndTime.Value);
 
                     //    var shiftSignals = signalData.Where(m => m.StartDate >= startTime && m.StartDate <= endTime);
-                        
+
                     //    shAvgInflation += Convert.ToDecimal(shiftSignals.Average(m => m.Duration) ?? 0);
                     //    shAvgProdCount += shiftSignals.Count();
 
                     //    cDate = cDate.AddDays(1);
                     //}
 
+                    // CALCULATE TARGET COUNT
+                    DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
+                    DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
+
+                    if (shift.StartTime > shift.EndTime)
+                        endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
+
+                    var totalBreakTimeSeconds = 75 * 60;
+                    var totalShiftTime = (endTime - startTime).TotalSeconds;
+                    var netShiftTime = totalShiftTime - totalBreakTimeSeconds;
+
+                    // GET ACTIVE PLANS CYCLE TIME
+                    string lastProductName = "";
+                    decimal avgCycleTime = 0;
+                    int targetCount = 0;
+
+                    var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
+                        && m.WorkOrderDetailId != null
+                        && m.ShiftId == shift.Id)
+                        .OrderByDescending(m => m.Id).FirstOrDefault();
+                    if (lastSignal != null)
+                    {
+                        lastProductName = lastSignal.WorkOrderDetail.Item != null ?
+                            lastSignal.WorkOrderDetail.Item.ItemName : lastSignal.WorkOrderDetail.TrialProductName;
+                        if (lastSignal.WorkOrderDetail.Item != null)
+                        {
+                            var dbMoldTest = repoMoldTest.Get(m => m.ProductCode == lastSignal.WorkOrderDetail.Item.ItemNo);
+                            if (dbMoldTest != null)
+                                avgCycleTime = dbMoldTest.TotalTimeSeconds ?? 0;
+                        }
+                    }
+
+                    // IF NO CYCLE TIME FOUND THEN CALCULATE OVER HISTORY
+                    if (avgCycleTime <= 0)
+                    {
+                        avgCycleTime = Convert.ToDecimal(repoSignal.Filter(m => m.MachineId == d.Id && m.ShiftId == shift.Id)
+                            .Average(m => m.Duration) ?? 0);
+                    }
+
+                    if (avgCycleTime > 0)
+                    {
+                        try
+                        {
+                            targetCount = Convert.ToInt32(Convert.ToDecimal(netShiftTime) / avgCycleTime);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+
                     shiftStats.Add(new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
+                        ChiefUserName = shift.User != null ? shift.User.UserName : "",
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
                         AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count(),
                         WastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0,
+                        LastProductName = lastProductName,
+                        TargetCount = targetCount,
                     });
                 }
 
@@ -1506,6 +1574,18 @@ namespace HekaMOLD.Business.UseCases
                     dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
                 var postureData = repoPosture.Filter(m => m.MachineId == d.Id &&
                     dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
+
+                containerObj.IsInIncident = repoIncident.Any(m => m.MachineId == d.Id
+                    && m.IncidentStatus != (int)PostureStatusType.Resolved);
+                containerObj.ActiveIncidentText = repoIncident.Filter(m => m.MachineId == d.Id
+                    && m.IncidentStatus != (int)PostureStatusType.Resolved)
+                    .Select(m => m.IncidentCategory.IncidentCategoryName).FirstOrDefault();
+
+                containerObj.IsInPosture = repoPosture.Any(m => m.MachineId == d.Id
+                    && m.PostureStatus != (int)PostureStatusType.Resolved);
+                containerObj.ActivePostureText = repoPosture.Filter(m => m.MachineId == d.Id
+                    && m.PostureStatus != (int)PostureStatusType.Resolved)
+                    .Select(m => m.PostureCategory.PostureCategoryName).FirstOrDefault();
 
                 containerObj.MachineStats = new Models.DataTransfer.Summary.MachineStatsModel
                 {
@@ -2174,6 +2254,8 @@ namespace HekaMOLD.Business.UseCases
                     string.Format("{0:hh\\:mm}", model.StartTime) : "";
                 model.EndTimeStr = model.EndTime != null ?
                     string.Format("{0:hh\\:mm}", model.EndTime) : "";
+                model.ChiefCode = dbObj.User != null ? dbObj.User.UserCode : "";
+                model.ChiefName = dbObj.User != null ? dbObj.User.UserName : "";
             }
 
             return model;

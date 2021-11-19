@@ -89,14 +89,14 @@
                                 </svg>
                                 {{item.MachineName}}
                             </h4>
+                            <h5 ng-if="item.IsInPosture || item.IsInIncident" 
+                                class="text-center bg-danger text-light mt-1 rounded px-2 py-2 border-1 border-dark">
+                                {{item.IsInPosture ? 'DURUŞ: ' + item.ActivePostureText : 'BAKIM: ' + item.ActiveIncidentText}}
+                            </h5>
                             <h4 class="text-center bg-primary text-light mt-1 rounded px-2 py-2 border-1 border-dark">
                                 {{item.WorkingUserName.length > 0 ? item.WorkingUserName : 'OPERATÖR YOK'}}
                             </h4>
                             <div class="active-plan text-center py-0 min-h-55px">
-                                @*<h6
-            ng-class="{'text-primary': item.ForeColor == null || item.ForeColor.length == 0}"
-            ng-style="item.ForeColor != null && item.ForeColor.length > 0 && {'color': item.ForeColor}"
-            >Aktif Üretim</h6>*@
                                 <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
                                     <b>Firma:</b> {{item.ActivePlan.WorkOrder.FirmName}}
                                 </p>

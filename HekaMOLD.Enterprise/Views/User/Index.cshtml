@@ -144,6 +144,20 @@
                                    ng-model="modelObject.Password" placeholder="" />
                         </div>
                     </div>
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Profil Resmi</label>
+                    <div class="mb-5">
+                        <div class="d-flex flex-row align-items-center">
+                            <div ng-cloak class="button text-dark w-200px mx-2" ngf-select="onDataSelected($invalidFiles, $files)"
+                                 ng-model="selectedObjectFile" name="file"
+                                 ngf-max-size="30MB">{{selectedObjectFile != null ? selectedObjectFile.name : 'Resim Seçiniz'}}</div>
+                            <button type="button" class="btn btn-sm btn-primary mx-2"
+                                    ng-click="uploadObjectData()">
+                                Yükle
+                            </button>
+                        </div>
+                        <img id="imgProfile" class="mt-3" width="200" />
+                    </div>
                 </div>
             </div>
             <!--end::Row-->

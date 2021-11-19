@@ -34,8 +34,8 @@ namespace Heka.DataAccess.Context
         public string QualityExplanation { get; set; }
     
         public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
-        public virtual Shift Shift { get; set; }
         public virtual WorkOrder WorkOrder { get; set; }
         public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual Shift Shift { get; set; }
     }
 }

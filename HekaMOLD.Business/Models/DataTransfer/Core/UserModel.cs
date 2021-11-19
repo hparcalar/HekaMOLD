@@ -17,6 +17,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string Password { get; set; }
         public int? PlantId { get; set; }
         public int? UserRoleId { get; set; }
+        public byte[] ProfileImage { get; set; }
         public UserAuthModel[] Auths { get; set; }
 
         #region VISUAL ELEMENTS
@@ -25,7 +26,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public bool IsProdChief { get; set; }
         public bool IsMechanicTerminal { get; set; }
         public bool IsWarehouseTerminal { get; set; }
-
+        public string ProfileImageBase64 { get; set; }
         #endregion
     }
 }

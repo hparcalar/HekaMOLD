@@ -3952,6 +3952,7 @@
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
     <Content Include="Components\Controllers\report-template-list.js" />
+    <Content Include="Components\Controllers\shift-targets.js" />
     <Content Include="Components\Controllers\trial-work-form.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
@@ -3970,6 +3971,7 @@
     <Content Include="Components\Views\ApprovedItemRequestDetails.html" />
     <Content Include="Components\Views\ProductionHistoryList.html" />
     <Content Include="Components\Views\ReportTemplateList.html" />
+    <Content Include="Components\Views\ShiftTargets.html" />
     <Content Include="Components\Views\TrialWorkForm.html" />
     <Content Include="Components\VisualMechanics\camera-manager.js" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -4075,6 +4077,7 @@
     <Content Include="FrontEndLogic\Firm\index.js" />
     <Content Include="FrontEndLogic\Firm\approved-suppliers.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
+    <Content Include="FrontEndLogic\Home\dashboard.js" />
     <Content Include="FrontEndLogic\Home\login.js" />
     <Content Include="FrontEndLogic\IncidentCategory\index.js" />
     <Content Include="FrontEndLogic\IncidentCategory\list.js" />
@@ -4098,6 +4101,7 @@
     <Content Include="FrontEndLogic\Machine\index.js" />
     <Content Include="FrontEndLogic\Machine\list.js" />
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
+    <Content Include="FrontEndLogic\Main\user-profile.js" />
     <Content Include="FrontEndLogic\Mobile\fault-entry.js" />
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
     <Content Include="FrontEndLogic\Mobile\machine-equipments.js" />
@@ -4602,6 +4606,7 @@
     <Content Include="Views\Layout\Index.cshtml" />
     <Content Include="Scripts\push.min.js.map" />
     <Content Include="Scripts\serviceWorker.min.js.map" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4626,7 +4631,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ReportDesign\DeliverySerialList.rdlc" />
+    <Content Include="ReportDesign\DeliverySerialList.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
   </ItemGroup>

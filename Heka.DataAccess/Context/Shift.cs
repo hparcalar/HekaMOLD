@@ -22,6 +22,7 @@ namespace Heka.DataAccess.Context
             this.ProductionPosture = new HashSet<ProductionPosture>();
             this.ProductWastage = new HashSet<ProductWastage>();
             this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
+            this.ShiftTarget = new HashSet<ShiftTarget>();
         }
     
         public int Id { get; set; }
@@ -30,6 +31,7 @@ namespace Heka.DataAccess.Context
         public Nullable<System.TimeSpan> StartTime { get; set; }
         public Nullable<System.TimeSpan> EndTime { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public Nullable<int> ShiftChiefId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Incident> Incident { get; set; }
@@ -39,7 +41,10 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ProductionPosture> ProductionPosture { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductWastage> ProductWastage { get; set; }
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ShiftTarget> ShiftTarget { get; set; }
     }
 }
