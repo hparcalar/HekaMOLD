@@ -2757,5 +2757,109 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
         #endregion
+
+        #region PROCESS GROUP BUSINESS
+        public ProcessGroupModel[] GetProcessGroupList()
+        {
+            List<ProcessGroupModel> data = new List<ProcessGroupModel>();
+
+            var repo = _unitOfWork.GetRepository<ProcessGroup>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ProcessGroupModel containerObj = new ProcessGroupModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateProcessGroup(ProcessGroupModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.ProcessGroupCode))
+                    throw new Exception("Grup kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.ProcessGroupName))
+                    throw new Exception("Grup adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<ProcessGroup>();
+
+                if (repo.Any(d => (d.ProcessGroupCode == model.ProcessGroupCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir grup mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ProcessGroup();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteProcessGroup(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ProcessGroup>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ProcessGroupModel GetProcessGroup(int id)
+        {
+            ProcessGroupModel model = new ProcessGroupModel { };
+
+            var repo = _unitOfWork.GetRepository<ProcessGroup>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
     }
 }

@@ -35,6 +35,9 @@ namespace Heka.DataAccess.Context
             this.Warehouse = new HashSet<Warehouse>();
             this.WorkOrder = new HashSet<WorkOrder>();
             this.User = new HashSet<User>();
+            this.Process = new HashSet<Process>();
+            this.ProcessGroup = new HashSet<ProcessGroup>();
+            this.Route = new HashSet<Route>();
         }
     
         public int Id { get; set; }
@@ -78,5 +81,11 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<WorkOrder> WorkOrder { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Process> Process { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProcessGroup> ProcessGroup { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Route> Route { get; set; }
     }
 }

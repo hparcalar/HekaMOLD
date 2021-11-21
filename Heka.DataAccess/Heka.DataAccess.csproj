@@ -54,6 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\ActualRouteHistory.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\AllocatedCode.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -216,6 +219,12 @@
     <Compile Include="Context\PrinterQueue.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\Process.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\ProcessGroup.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\ProductionPosture.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -238,6 +247,12 @@
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\ReportTemplate.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\Route.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\RouteItem.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\SectionSetting.cs">
@@ -339,7 +354,7 @@
       <DependentUpon>HekaDataMapping.edmx</DependentUpon>
       <LastGenOutput>HekaDataMapping.cs</LastGenOutput>
     </Content>
-    <EmbeddedResource Include="Migration\Versions\1.0.3.9.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.4.1.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.6.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.3.sql" />

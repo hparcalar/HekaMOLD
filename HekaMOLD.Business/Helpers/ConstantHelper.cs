@@ -140,6 +140,13 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(ProcessStatusType))
+                {
+                    return DictProcessStatusType.Values
+                        .Where(d => d.Key == (ProcessStatusType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception)
             {

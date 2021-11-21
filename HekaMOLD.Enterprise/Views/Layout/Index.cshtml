@@ -8,7 +8,8 @@
         <!--begin::Container-->
         <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
             <!--begin::Page title-->
-            <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+            <div data-kt-place="true" data-kt-place-mode="prepend"
+                 data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
                  class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
                 <!--begin::Title-->
                 <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
@@ -59,15 +60,17 @@
         <div id="kt_content_container" class="container-fluid">
             <!--begin::Row-->
             <div class="d-flex flex-row">
-                <div class="w-200px d-flex flex-column px-2 py-0">
+                <div class="w-250px d-flex flex-column px-2 py-0">
+                    <div class="dx-viewport">
+                        <div id="gauge"></div>
+                    </div>
                     <h5 class="text-center bg-success rounded-1 mb-1 mt-0 p-3">Makineler</h5>
                     <hr />
-                    <div class="my-1 p-3 rounded-1 bg-primary text-light text-center" 
+                    <div class="my-1 p-3 rounded-1 bg-primary text-light text-center"
                          ng-repeat="item in availableMachines"
                          draggable="true"
                          data-id="{{item.Id}}"
-                         ondragstart="dragStartOfMachine(event)"
-                         >
+                         ondragstart="dragStartOfMachine(event)">
                         {{ item.MachineName }}
                     </div>
                 </div>
@@ -80,6 +83,10 @@
     <!--end::Post-->
 </div>
 @section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+
     <script src="~/Scripts/babylon.js"></script>
     <script src="~/Scripts/babylon.gui.min.js"></script>
     <script src="~/Scripts/babylonjs.loaders.min.js"></script>

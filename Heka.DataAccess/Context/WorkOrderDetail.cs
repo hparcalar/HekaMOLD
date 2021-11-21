@@ -27,6 +27,7 @@ namespace Heka.DataAccess.Context
             this.WorkOrderControl = new HashSet<WorkOrderControl>();
             this.WorkOrderItemNeeds = new HashSet<WorkOrderItemNeeds>();
             this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
+            this.ActualRouteHistory = new HashSet<ActualRouteHistory>();
         }
     
         public int Id { get; set; }
@@ -79,5 +80,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
     }
 }

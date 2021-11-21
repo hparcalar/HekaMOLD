@@ -237,6 +237,25 @@
         <EntityTypeShape EntityType="Heka.DataAccess.Models.ShiftTarget" Width="1.5" PointX="9.75" PointY="78.5" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ShiftTarget_Machine" />
         <AssociationConnector Association="Heka.DataAccess.Models.FK_ShiftTarget_Shift" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ActualRouteHistory" Width="1.5" PointX="25.5" PointY="86.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Process" Width="1.5" PointX="5.25" PointY="101.5" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.ProcessGroup" Width="1.5" PointX="3" PointY="103.75" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.Route" Width="1.5" PointX="3" PointY="93.125" />
+        <EntityTypeShape EntityType="Heka.DataAccess.Models.RouteItem" Width="1.5" PointX="10.5" PointY="98.25" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ActualRouteHistory_MachineGroup" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ActualRouteHistory_Process" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ActualRouteHistory_ProcessGroup" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ActualRouteHistory_WorkOrderDetail" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_RouteItem_Machine" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_RouteItem_MachineGroup" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Process_Plant" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_ProcessGroup_Plant" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Route_Plant" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_Process_ProcessGroup" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_RouteItem_Process" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_RouteItem_ProcessGroup" />
+        <AssociationConnector Association="Heka.DataAccess.Models.FK_RouteItem_Route" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

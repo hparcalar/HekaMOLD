@@ -12,28 +12,30 @@ namespace Heka.DataAccess.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class MachineGroup
+    public partial class ProcessGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public MachineGroup()
+        public ProcessGroup()
         {
-            this.Machine = new HashSet<Machine>();
             this.ActualRouteHistory = new HashSet<ActualRouteHistory>();
+            this.Process = new HashSet<Process>();
             this.RouteItem = new HashSet<RouteItem>();
         }
     
         public int Id { get; set; }
-        public string MachineGroupCode { get; set; }
-        public string MachineGroupName { get; set; }
+        public string ProcessGroupCode { get; set; }
+        public string ProcessGroupName { get; set; }
         public Nullable<int> PlantId { get; set; }
-        public Nullable<int> LayoutObjectTypeId { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
+        public Nullable<int> UpdatedUserId { get; set; }
     
-        public virtual LayoutObjectType LayoutObjectType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Machine> Machine { get; set; }
-        public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
+        public virtual Plant Plant { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Process> Process { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteItem> RouteItem { get; set; }
     }

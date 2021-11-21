@@ -5,6 +5,23 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Heka.DataAccess.Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ActualRouteHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkOrderDetailId" Type="int" />
+          <Property Name="ProcessId" Type="int" />
+          <Property Name="ProcessGroupId" Type="int" />
+          <Property Name="MachineId" Type="int" />
+          <Property Name="MachineGroupId" Type="int" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="ProcessStatus" Type="int" />
+          <Property Name="StartUserId" Type="int" />
+          <Property Name="EndUserId" Type="int" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="AllocatedCode">
           <Key>
             <PropertyRef Name="Id" />
@@ -783,6 +800,35 @@
           <Property Name="AllocatedPrintData" Type="nvarchar" MaxLength="250" />
           <Property Name="CreatedDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="Process">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProcessCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProcessName" Type="nvarchar" MaxLength="250" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="TheoreticalDuration" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ProcessGroupId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="ProcessGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProcessGroupCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProcessGroupName" Type="nvarchar" MaxLength="250" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
         <EntityType Name="ProductionPosture">
           <Key>
             <PropertyRef Name="Id" />
@@ -909,6 +955,33 @@
           <Property Name="ReportName" Type="nvarchar" MaxLength="150" />
           <Property Name="FileName" Type="nvarchar" MaxLength="300" />
           <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RouteCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="RouteName" Type="nvarchar" MaxLength="250" />
+          <Property Name="PlantId" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedUserId" Type="int" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedUserId" Type="int" />
+        </EntityType>
+        <EntityType Name="RouteItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RouteId" Type="int" />
+          <Property Name="ProcessId" Type="int" />
+          <Property Name="ProcessGroupId" Type="int" />
+          <Property Name="LineNumber" Type="int" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="250" />
+          <Property Name="MachineId" Type="int" />
+          <Property Name="MachineGroupId" Type="int" />
         </EntityType>
         <EntityType Name="SectionSetting">
           <Key>
@@ -1227,6 +1300,66 @@
           <Property Name="QualityStatus" Type="int" />
           <Property Name="QualityExplanation" Type="nvarchar" MaxLength="300" />
         </EntityType>
+        <Association Name="FK_ActualRouteHistory_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
+          <End Role="ActualRouteHistory" Type="Self.ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActualRouteHistory_MachineGroup">
+          <End Role="MachineGroup" Type="Self.MachineGroup" Multiplicity="0..1" />
+          <End Role="ActualRouteHistory" Type="Self.ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachineGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="MachineGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActualRouteHistory_Process">
+          <End Role="Process" Type="Self.Process" Multiplicity="0..1" />
+          <End Role="ActualRouteHistory" Type="Self.ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Process">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="ProcessId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActualRouteHistory_ProcessGroup">
+          <End Role="ProcessGroup" Type="Self.ProcessGroup" Multiplicity="0..1" />
+          <End Role="ActualRouteHistory" Type="Self.ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="ProcessGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActualRouteHistory_WorkOrderDetail">
+          <End Role="WorkOrderDetail" Type="Self.WorkOrderDetail" Multiplicity="0..1" />
+          <End Role="ActualRouteHistory" Type="Self.ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DeliveryPlan_WorkOrderDetail">
           <End Role="WorkOrderDetail" Type="Self.WorkOrderDetail" Multiplicity="0..1" />
           <End Role="DeliveryPlan" Type="Self.DeliveryPlan" Multiplicity="*" />
@@ -2403,6 +2536,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Process_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="Process" Type="Self.Process" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Process">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Process_ProcessGroup">
+          <End Role="ProcessGroup" Type="Self.ProcessGroup" Multiplicity="0..1" />
+          <End Role="Process" Type="Self.Process" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Process">
+              <PropertyRef Name="ProcessGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProcessGroup_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="ProcessGroup" Type="Self.ProcessGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProcessGroup">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductionPosture_Machine">
           <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
           <End Role="ProductionPosture" Type="Self.ProductionPosture" Multiplicity="*" />
@@ -2604,6 +2773,78 @@
             </Principal>
             <Dependent Role="ProductWastage">
               <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Route_Plant">
+          <End Role="Plant" Type="Self.Plant" Multiplicity="0..1" />
+          <End Role="Route" Type="Self.Route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Route">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_Machine">
+          <End Role="Machine" Type="Self.Machine" Multiplicity="0..1" />
+          <End Role="RouteItem" Type="Self.RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_MachineGroup">
+          <End Role="MachineGroup" Type="Self.MachineGroup" Multiplicity="0..1" />
+          <End Role="RouteItem" Type="Self.RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachineGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="MachineGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_Process">
+          <End Role="Process" Type="Self.Process" Multiplicity="0..1" />
+          <End Role="RouteItem" Type="Self.RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Process">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="ProcessId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_ProcessGroup">
+          <End Role="ProcessGroup" Type="Self.ProcessGroup" Multiplicity="0..1" />
+          <End Role="RouteItem" Type="Self.RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="ProcessGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_Route">
+          <End Role="Route" Type="Self.Route" Multiplicity="0..1" />
+          <End Role="RouteItem" Type="Self.RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="RouteId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3052,6 +3293,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="HekaDataAccessModelsStoreContainer">
+          <EntitySet Name="ActualRouteHistory" EntityType="Self.ActualRouteHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AllocatedCode" EntityType="Self.AllocatedCode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Attachment" EntityType="Self.Attachment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeliveryPlan" EntityType="Self.DeliveryPlan" Schema="dbo" store:Type="Tables" />
@@ -3101,6 +3343,8 @@
           <EntitySet Name="Plant" EntityType="Self.Plant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostureCategory" EntityType="Self.PostureCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PrinterQueue" EntityType="Self.PrinterQueue" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Process" EntityType="Self.Process" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProcessGroup" EntityType="Self.ProcessGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionPosture" EntityType="Self.ProductionPosture" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductQualityData" EntityType="Self.ProductQualityData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductQualityDataDetail" EntityType="Self.ProductQualityDataDetail" Schema="dbo" store:Type="Tables" />
@@ -3109,6 +3353,8 @@
           <EntitySet Name="ProductRecipeDetail" EntityType="Self.ProductRecipeDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductWastage" EntityType="Self.ProductWastage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ReportTemplate" EntityType="Self.ReportTemplate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Route" EntityType="Self.Route" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RouteItem" EntityType="Self.RouteItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SectionSetting" EntityType="Self.SectionSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shift" EntityType="Self.Shift" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShiftTarget" EntityType="Self.ShiftTarget" Schema="dbo" store:Type="Tables" />
@@ -3132,6 +3378,26 @@
           <EntitySet Name="WorkOrderDetail" EntityType="Self.WorkOrderDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderItemNeeds" EntityType="Self.WorkOrderItemNeeds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkOrderSerial" EntityType="Self.WorkOrderSerial" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ActualRouteHistory_Machine" Association="Self.FK_ActualRouteHistory_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActualRouteHistory_MachineGroup" Association="Self.FK_ActualRouteHistory_MachineGroup">
+            <End Role="MachineGroup" EntitySet="MachineGroup" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActualRouteHistory_Process" Association="Self.FK_ActualRouteHistory_Process">
+            <End Role="Process" EntitySet="Process" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActualRouteHistory_ProcessGroup" Association="Self.FK_ActualRouteHistory_ProcessGroup">
+            <End Role="ProcessGroup" EntitySet="ProcessGroup" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActualRouteHistory_WorkOrderDetail" Association="Self.FK_ActualRouteHistory_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
           <AssociationSet Name="FK_DeliveryPlan_WorkOrderDetail" Association="Self.FK_DeliveryPlan_WorkOrderDetail">
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
             <End Role="DeliveryPlan" EntitySet="DeliveryPlan" />
@@ -3524,6 +3790,18 @@
             <End Role="SystemPrinter" EntitySet="SystemPrinter" />
             <End Role="PrinterQueue" EntitySet="PrinterQueue" />
           </AssociationSet>
+          <AssociationSet Name="FK_Process_Plant" Association="Self.FK_Process_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Process" EntitySet="Process" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Process_ProcessGroup" Association="Self.FK_Process_ProcessGroup">
+            <End Role="ProcessGroup" EntitySet="ProcessGroup" />
+            <End Role="Process" EntitySet="Process" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProcessGroup_Plant" Association="Self.FK_ProcessGroup_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ProcessGroup" EntitySet="ProcessGroup" />
+          </AssociationSet>
           <AssociationSet Name="FK_ProductionPosture_Machine" Association="Self.FK_ProductionPosture_Machine">
             <End Role="Machine" EntitySet="Machine" />
             <End Role="ProductionPosture" EntitySet="ProductionPosture" />
@@ -3591,6 +3869,30 @@
           <AssociationSet Name="FK_ProductWastage_WorkOrderDetail" Association="Self.FK_ProductWastage_WorkOrderDetail">
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
             <End Role="ProductWastage" EntitySet="ProductWastage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Route_Plant" Association="Self.FK_Route_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Route" EntitySet="Route" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_Machine" Association="Self.FK_RouteItem_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_MachineGroup" Association="Self.FK_RouteItem_MachineGroup">
+            <End Role="MachineGroup" EntitySet="MachineGroup" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_Process" Association="Self.FK_RouteItem_Process">
+            <End Role="Process" EntitySet="Process" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_ProcessGroup" Association="Self.FK_RouteItem_ProcessGroup">
+            <End Role="ProcessGroup" EntitySet="ProcessGroup" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_Route" Association="Self.FK_RouteItem_Route">
+            <End Role="Route" EntitySet="Route" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
           </AssociationSet>
           <AssociationSet Name="FK_Shift_User" Association="Self.FK_Shift_User">
             <End Role="User" EntitySet="User" />
@@ -4434,6 +4736,67 @@
             <End Role="Shift" EntitySet="Shift" />
             <End Role="ShiftTarget" EntitySet="ShiftTarget" />
           </AssociationSet>
+          <EntitySet Name="ActualRouteHistory" EntityType="Heka.DataAccess.Models.ActualRouteHistory" />
+          <EntitySet Name="Process" EntityType="Heka.DataAccess.Models.Process" />
+          <EntitySet Name="ProcessGroup" EntityType="Heka.DataAccess.Models.ProcessGroup" />
+          <EntitySet Name="Route" EntityType="Heka.DataAccess.Models.Route" />
+          <EntitySet Name="RouteItem" EntityType="Heka.DataAccess.Models.RouteItem" />
+          <AssociationSet Name="FK_ActualRouteHistory_Machine" Association="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActualRouteHistory_MachineGroup" Association="Heka.DataAccess.Models.FK_ActualRouteHistory_MachineGroup">
+            <End Role="MachineGroup" EntitySet="MachineGroup" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActualRouteHistory_Process" Association="Heka.DataAccess.Models.FK_ActualRouteHistory_Process">
+            <End Role="Process" EntitySet="Process" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActualRouteHistory_ProcessGroup" Association="Heka.DataAccess.Models.FK_ActualRouteHistory_ProcessGroup">
+            <End Role="ProcessGroup" EntitySet="ProcessGroup" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActualRouteHistory_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_ActualRouteHistory_WorkOrderDetail">
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_Machine" Association="Heka.DataAccess.Models.FK_RouteItem_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_MachineGroup" Association="Heka.DataAccess.Models.FK_RouteItem_MachineGroup">
+            <End Role="MachineGroup" EntitySet="MachineGroup" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Process_Plant" Association="Heka.DataAccess.Models.FK_Process_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Process" EntitySet="Process" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProcessGroup_Plant" Association="Heka.DataAccess.Models.FK_ProcessGroup_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="ProcessGroup" EntitySet="ProcessGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Route_Plant" Association="Heka.DataAccess.Models.FK_Route_Plant">
+            <End Role="Plant" EntitySet="Plant" />
+            <End Role="Route" EntitySet="Route" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Process_ProcessGroup" Association="Heka.DataAccess.Models.FK_Process_ProcessGroup">
+            <End Role="ProcessGroup" EntitySet="ProcessGroup" />
+            <End Role="Process" EntitySet="Process" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_Process" Association="Heka.DataAccess.Models.FK_RouteItem_Process">
+            <End Role="Process" EntitySet="Process" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_ProcessGroup" Association="Heka.DataAccess.Models.FK_RouteItem_ProcessGroup">
+            <End Role="ProcessGroup" EntitySet="ProcessGroup" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_Route" Association="Heka.DataAccess.Models.FK_RouteItem_Route">
+            <End Role="Route" EntitySet="Route" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AllocatedCode">
           <Key>
@@ -5199,6 +5562,8 @@
           <NavigationProperty Name="UserWorkOrderHistory" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" FromRole="Machine" ToRole="UserWorkOrderHistory" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="Machine" ToRole="WorkOrderDetail" />
           <NavigationProperty Name="ShiftTarget" Relationship="Heka.DataAccess.Models.FK_ShiftTarget_Machine" FromRole="Machine" ToRole="ShiftTarget" />
+          <NavigationProperty Name="ActualRouteHistory" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine" FromRole="Machine" ToRole="ActualRouteHistory" />
+          <NavigationProperty Name="RouteItem" Relationship="Heka.DataAccess.Models.FK_RouteItem_Machine" FromRole="Machine" ToRole="RouteItem" />
         </EntityType>
         <EntityType Name="MachineGroup">
           <Key>
@@ -5212,6 +5577,8 @@
           <NavigationProperty Name="LayoutObjectType" Relationship="Heka.DataAccess.Models.FK_MachineGroup_LayoutObjectType" FromRole="MachineGroup" ToRole="LayoutObjectType" />
           <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_Machine_MachineGrouo" FromRole="MachineGroup" ToRole="Machine" />
           <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_MachineGroup_Plant" FromRole="MachineGroup" ToRole="Plant" />
+          <NavigationProperty Name="ActualRouteHistory" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_MachineGroup" FromRole="MachineGroup" ToRole="ActualRouteHistory" />
+          <NavigationProperty Name="RouteItem" Relationship="Heka.DataAccess.Models.FK_RouteItem_MachineGroup" FromRole="MachineGroup" ToRole="RouteItem" />
         </EntityType>
         <EntityType Name="MachineMaintenanceInstruction">
           <Key>
@@ -5371,6 +5738,9 @@
           <NavigationProperty Name="Warehouse" Relationship="Heka.DataAccess.Models.FK_Warehouse_Plant" FromRole="Plant" ToRole="Warehouse" />
           <NavigationProperty Name="WorkOrder" Relationship="Heka.DataAccess.Models.FK_WorkOrder_Plant" FromRole="Plant" ToRole="WorkOrder" />
           <NavigationProperty Name="User" Relationship="Heka.DataAccess.Models.FK_User_Plant" FromRole="Plant" ToRole="User" />
+          <NavigationProperty Name="Process" Relationship="Heka.DataAccess.Models.FK_Process_Plant" FromRole="Plant" ToRole="Process" />
+          <NavigationProperty Name="ProcessGroup" Relationship="Heka.DataAccess.Models.FK_ProcessGroup_Plant" FromRole="Plant" ToRole="ProcessGroup" />
+          <NavigationProperty Name="Route" Relationship="Heka.DataAccess.Models.FK_Route_Plant" FromRole="Plant" ToRole="Route" />
         </EntityType>
         <EntityType Name="PostureCategory">
           <Key>
@@ -7271,6 +7641,7 @@
           <NavigationProperty Name="WorkOrderControl" Relationship="Heka.DataAccess.Models.FK_WorkOrderControl_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderControl" />
           <NavigationProperty Name="WorkOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderItemNeeds" />
           <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderSerial" />
+          <NavigationProperty Name="ActualRouteHistory" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="ActualRouteHistory" />
         </EntityType>
         <Association Name="FK_DeliveryPlan_WorkOrderDetail">
           <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
@@ -7782,6 +8153,267 @@
             </Principal>
             <Dependent Role="ShiftTarget">
               <PropertyRef Name="ShiftId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ActualRouteHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderDetailId" Type="Int32" />
+          <Property Name="ProcessId" Type="Int32" />
+          <Property Name="ProcessGroupId" Type="Int32" />
+          <Property Name="MachineId" Type="Int32" />
+          <Property Name="MachineGroupId" Type="Int32" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="ProcessStatus" Type="Int32" />
+          <Property Name="StartUserId" Type="Int32" />
+          <Property Name="EndUserId" Type="Int32" />
+          <Property Name="Explanation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine" FromRole="ActualRouteHistory" ToRole="Machine" />
+          <NavigationProperty Name="MachineGroup" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_MachineGroup" FromRole="ActualRouteHistory" ToRole="MachineGroup" />
+          <NavigationProperty Name="Process" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_Process" FromRole="ActualRouteHistory" ToRole="Process" />
+          <NavigationProperty Name="ProcessGroup" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_ProcessGroup" FromRole="ActualRouteHistory" ToRole="ProcessGroup" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_WorkOrderDetail" FromRole="ActualRouteHistory" ToRole="WorkOrderDetail" />
+        </EntityType>
+        <EntityType Name="Process">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProcessCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProcessName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="TheoreticalDuration" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ProcessGroupId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ActualRouteHistory" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_Process" FromRole="Process" ToRole="ActualRouteHistory" />
+          <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_Process_Plant" FromRole="Process" ToRole="Plant" />
+          <NavigationProperty Name="ProcessGroup" Relationship="Heka.DataAccess.Models.FK_Process_ProcessGroup" FromRole="Process" ToRole="ProcessGroup" />
+          <NavigationProperty Name="RouteItem" Relationship="Heka.DataAccess.Models.FK_RouteItem_Process" FromRole="Process" ToRole="RouteItem" />
+        </EntityType>
+        <EntityType Name="ProcessGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProcessGroupCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProcessGroupName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="ActualRouteHistory" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_ProcessGroup" FromRole="ProcessGroup" ToRole="ActualRouteHistory" />
+          <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_ProcessGroup_Plant" FromRole="ProcessGroup" ToRole="Plant" />
+          <NavigationProperty Name="Process" Relationship="Heka.DataAccess.Models.FK_Process_ProcessGroup" FromRole="ProcessGroup" ToRole="Process" />
+          <NavigationProperty Name="RouteItem" Relationship="Heka.DataAccess.Models.FK_RouteItem_ProcessGroup" FromRole="ProcessGroup" ToRole="RouteItem" />
+        </EntityType>
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RouteCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RouteName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_Route_Plant" FromRole="Route" ToRole="Plant" />
+          <NavigationProperty Name="RouteItem" Relationship="Heka.DataAccess.Models.FK_RouteItem_Route" FromRole="Route" ToRole="RouteItem" />
+        </EntityType>
+        <EntityType Name="RouteItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RouteId" Type="Int32" />
+          <Property Name="ProcessId" Type="Int32" />
+          <Property Name="ProcessGroupId" Type="Int32" />
+          <Property Name="LineNumber" Type="Int32" />
+          <Property Name="Explanation" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="MachineId" Type="Int32" />
+          <Property Name="MachineGroupId" Type="Int32" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_RouteItem_Machine" FromRole="RouteItem" ToRole="Machine" />
+          <NavigationProperty Name="MachineGroup" Relationship="Heka.DataAccess.Models.FK_RouteItem_MachineGroup" FromRole="RouteItem" ToRole="MachineGroup" />
+          <NavigationProperty Name="Process" Relationship="Heka.DataAccess.Models.FK_RouteItem_Process" FromRole="RouteItem" ToRole="Process" />
+          <NavigationProperty Name="ProcessGroup" Relationship="Heka.DataAccess.Models.FK_RouteItem_ProcessGroup" FromRole="RouteItem" ToRole="ProcessGroup" />
+          <NavigationProperty Name="Route" Relationship="Heka.DataAccess.Models.FK_RouteItem_Route" FromRole="RouteItem" ToRole="Route" />
+        </EntityType>
+        <Association Name="FK_ActualRouteHistory_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ActualRouteHistory" Role="ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActualRouteHistory_MachineGroup">
+          <End Type="Heka.DataAccess.Models.MachineGroup" Role="MachineGroup" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ActualRouteHistory" Role="ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachineGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="MachineGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActualRouteHistory_Process">
+          <End Type="Heka.DataAccess.Models.Process" Role="Process" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ActualRouteHistory" Role="ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Process">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="ProcessId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActualRouteHistory_ProcessGroup">
+          <End Type="Heka.DataAccess.Models.ProcessGroup" Role="ProcessGroup" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ActualRouteHistory" Role="ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="ProcessGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActualRouteHistory_WorkOrderDetail">
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ActualRouteHistory" Role="ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="WorkOrderDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.RouteItem" Role="RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_MachineGroup">
+          <End Type="Heka.DataAccess.Models.MachineGroup" Role="MachineGroup" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.RouteItem" Role="RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachineGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="MachineGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Process_Plant">
+          <End Type="Heka.DataAccess.Models.Plant" Role="Plant" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Process" Role="Process" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Process">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProcessGroup_Plant">
+          <End Type="Heka.DataAccess.Models.Plant" Role="Plant" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProcessGroup" Role="ProcessGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProcessGroup">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Route_Plant">
+          <End Type="Heka.DataAccess.Models.Plant" Role="Plant" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Route" Role="Route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Route">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Process_ProcessGroup">
+          <End Type="Heka.DataAccess.Models.ProcessGroup" Role="ProcessGroup" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Process" Role="Process" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Process">
+              <PropertyRef Name="ProcessGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_Process">
+          <End Type="Heka.DataAccess.Models.Process" Role="Process" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.RouteItem" Role="RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Process">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="ProcessId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_ProcessGroup">
+          <End Type="Heka.DataAccess.Models.ProcessGroup" Role="ProcessGroup" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.RouteItem" Role="RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="ProcessGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_Route">
+          <End Type="Heka.DataAccess.Models.Route" Role="Route" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.RouteItem" Role="RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="RouteId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -9089,6 +9721,84 @@
                 <ScalarProperty Name="TargetCount" ColumnName="TargetCount" />
                 <ScalarProperty Name="TargetDate" ColumnName="TargetDate" />
                 <ScalarProperty Name="ShiftId" ColumnName="ShiftId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ActualRouteHistory">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ActualRouteHistory">
+              <MappingFragment StoreEntitySet="ActualRouteHistory">
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="EndUserId" ColumnName="EndUserId" />
+                <ScalarProperty Name="StartUserId" ColumnName="StartUserId" />
+                <ScalarProperty Name="ProcessStatus" ColumnName="ProcessStatus" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="MachineGroupId" ColumnName="MachineGroupId" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="ProcessGroupId" ColumnName="ProcessGroupId" />
+                <ScalarProperty Name="ProcessId" ColumnName="ProcessId" />
+                <ScalarProperty Name="WorkOrderDetailId" ColumnName="WorkOrderDetailId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Process">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Process">
+              <MappingFragment StoreEntitySet="Process">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ProcessGroupId" ColumnName="ProcessGroupId" />
+                <ScalarProperty Name="TheoreticalDuration" ColumnName="TheoreticalDuration" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="ProcessName" ColumnName="ProcessName" />
+                <ScalarProperty Name="ProcessCode" ColumnName="ProcessCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProcessGroup">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.ProcessGroup">
+              <MappingFragment StoreEntitySet="ProcessGroup">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="ProcessGroupName" ColumnName="ProcessGroupName" />
+                <ScalarProperty Name="ProcessGroupCode" ColumnName="ProcessGroupCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Route">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Route">
+              <MappingFragment StoreEntitySet="Route">
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="RouteName" ColumnName="RouteName" />
+                <ScalarProperty Name="RouteCode" ColumnName="RouteCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RouteItem">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.RouteItem">
+              <MappingFragment StoreEntitySet="RouteItem">
+                <ScalarProperty Name="MachineGroupId" ColumnName="MachineGroupId" />
+                <ScalarProperty Name="MachineId" ColumnName="MachineId" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
+                <ScalarProperty Name="ProcessGroupId" ColumnName="ProcessGroupId" />
+                <ScalarProperty Name="ProcessId" ColumnName="ProcessId" />
+                <ScalarProperty Name="RouteId" ColumnName="RouteId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

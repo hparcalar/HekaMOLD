@@ -105,5 +105,10 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Shift> Shift { get; set; }
         public virtual DbSet<ShiftTarget> ShiftTarget { get; set; }
+        public virtual DbSet<ActualRouteHistory> ActualRouteHistory { get; set; }
+        public virtual DbSet<Process> Process { get; set; }
+        public virtual DbSet<ProcessGroup> ProcessGroup { get; set; }
+        public virtual DbSet<Route> Route { get; set; }
+        public virtual DbSet<RouteItem> RouteItem { get; set; }
     }
 }

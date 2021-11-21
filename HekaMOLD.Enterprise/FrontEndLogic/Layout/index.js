@@ -1,4 +1,6 @@
-﻿app.controller('virtualPlantCtrl', ['$scope', '$http', 'Upload',
+﻿DevExpress.localization.locale('tr');
+
+app.controller('virtualPlantCtrl', ['$scope', '$http', 'Upload',
     function ($scope, $http, Upload) {
         $scope.modelObject = {};
 
@@ -16,6 +18,8 @@
         $scope.engine.enableOfflineSupport = false;
         $scope.manager3d = null;
         $scope.scene = null;
+
+        $scope.gaugeBar = null;
 
         // #region DRAW FUNCTIONS
         $scope.createMachine = async (machineId) => {
@@ -61,15 +65,15 @@
             pointerDragBehavior.enabled = $scope.editModeEnabled;
             mergedMesh.addBehavior(pointerDragBehavior);
 
-            // const objLabel = createLabelForWorldObject(machineObject.name, 'Red', { x: 0, y: 10, z: -1.5 });
+            const objLabel = $scope.createLabelForWorldObject(machineObject.name, 'Red', { x: 0, y: 10, z: -1.5 });
 
-            // mergedMesh?.addChild(objLabel);
+            mergedMesh?.addChild(objLabel);
 
             const newComponent = {
                 code: machineObject.MachineCode,
                 name: machineObject.MachineName,
                 scalingData: { x: 1, y: 1, z: 1 },
-                positionData: { x: 1, y: 1, z: 1 },
+                positionData: { x: 1, y: 30, z: 1 },
                 rotationData: { x: 0, y: 0, z: 0 },
                 machineId: machineObject.Id,
             };
@@ -119,7 +123,8 @@
             if (machineObject.rotationData != null)
                 mergedMesh.rotation = new BABYLON.Vector3(machineObject.rotationData.x, machineObject.rotationData.y, machineObject.rotationData.z);
 
-            mergedMesh.position = new BABYLON.Vector3(machineObject.positionData.x, (meshCenterWorld_Y *
+            mergedMesh.position = new BABYLON.Vector3(machineObject.positionData.x,
+                (meshCenterWorld_Y *
                 (scalingRateByX * machineObject.scalingData.x) * -1)
                 + (antiScalingSize.y * (scalingRateByX * machineObject.scalingData.x)), machineObject.positionData.z);
             // mergedMesh.computeWorldMatrix(true);
@@ -130,13 +135,13 @@
             pointerDragBehavior.enabled = $scope.editModeEnabled;
             mergedMesh.addBehavior(pointerDragBehavior);
 
-            // const objLabel = createLabelForWorldObject(machineObject.name, 'Red', {
-            //   y: machineObject.positionData.y + 5,
-            //   z: machineObject.positionData.z + 5,
-            //   x: machineObject.positionData.x + 5,
-            // });
+            const objLabel = $scope.createLabelForWorldObject(machineObject.MachineName, 'Red', {
+            y: machineObject.positionData.y + 30,
+            z: machineObject.positionData.z + 1,
+            x: machineObject.positionData.x + 1,
+            });
 
-            // mergedMesh?.addChild(objLabel);
+            mergedMesh?.addChild(objLabel);
 
             mergedMesh.metadata = machineObject;
 
@@ -148,6 +153,81 @@
             // 	  });
             // });
         };
+
+        $scope.createLabelForWorldObject = (title, color, position) => {
+            if (!position.scaleX)
+                position.scaleX = 1;
+
+            const anchor = new BABYLON.AbstractMesh('anchor', $scope.scene);
+            const button = new BABYLON.GUI.HolographicButton('down');
+            $scope.manager3d.addControl(button);
+            button.linkToTransformNode(anchor);
+            button.position.z = position.z;
+            button.position.y = position.y;
+            button.position.x = position.x;
+            button.scaling.scaleInPlace(20);
+
+            const textContent = new BABYLON.GUI.TextBlock();
+            textContent.text = title;
+            textContent.color = color;
+            textContent.clipContent = true;
+            textContent.resizeToFit = true;
+            textContent.fontSize = 48;
+            textContent.scaleX = 1;
+            textContent.fontWeight = 'Bold';
+            button.content = textContent;
+            button.scaling.x *= 3;
+
+            return anchor;
+        };
+
+        $scope.createConsumptionGauge = () => {
+            $scope.gaugeBar = $('#gauge').dxBarGauge({
+                startValue: 0,
+                endValue: 100,
+                values: [47.27, 65.32, 84.59, 71.86],
+                label: {
+                    indent: 0,
+                    format: {
+                        type: 'fixedPoint',
+                        precision: 1,
+                    },
+                    customizeText(arg) {
+                        return `${arg.valueText} %`;
+                    },
+                },
+                export: {
+                    enabled: true,
+                },
+                title: {
+                    text: "Tüketimler",
+                    font: {
+                        size: 14,
+                    },
+                },
+                legend: {
+                    visible: true,
+                    verticalAlignment: 'top',
+                    horizontalAlignment: 'center',
+                    columnCount:0,
+                    customizeText(arg) {
+                        var _legend = arg.item.index == 0 ? 'Elektrik' : 
+                            arg.item.index == 1 ? 'Doğalgaz' : 
+                            arg.item.index == 2 ? 'Buhar' : 'Su';
+                        return _legend;
+                    },
+                }
+            }).dxBarGauge('instance');
+        };
+
+        $scope.updateConsumptions = () => {
+            if ($scope.gaugeBar != null) {
+                var currentValues = $scope.gaugeBar.option('values');
+                currentValues = [(Math.floor(Math.random() * 80) + 10), (Math.floor(Math.random() * 80) + 10),
+                    (Math.floor(Math.random() * 80) + 10), (Math.floor(Math.random() * 80) + 10)];
+                $scope.gaugeBar.option('values', currentValues);
+            }
+        }
         // #endregion
 
         $scope.createScene = function () {
@@ -244,11 +324,14 @@
                                         //emit('click-outside');
                                         $scope.selectedMachine = { Id: 0, MachineName: '' };
                                     }
+
+                                    $scope.updateConsumptions();
                                 }
                             }
                             else {
                                 $scope.selectedMachine = { Id: 0, MachineName: '' };
                                 clearSelectedObjectEffects();
+                                $scope.updateConsumptions();
                                 //emit('click-outside');
                             }
                         }
@@ -389,6 +472,8 @@
             window.addEventListener('resize', () =>
                 $scope.engine.resize(),
             );
+
+            $scope.createConsumptionGauge();
         });
     }]);
 
