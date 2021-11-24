@@ -4104,10 +4104,12 @@
     <Content Include="FrontEndLogic\Main\main-notifications.js" />
     <Content Include="FrontEndLogic\Main\user-profile.js" />
     <Content Include="FrontEndLogic\Mobile\fault-entry.js" />
+    <Content Include="FrontEndLogic\Mobile\incident-history.js" />
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
     <Content Include="FrontEndLogic\Mobile\machine-equipments.js" />
     <Content Include="FrontEndLogic\Mobile\manage-machines.js" />
     <Content Include="FrontEndLogic\Mobile\manage-shifts.js" />
+    <Content Include="FrontEndLogic\Mobile\posture-history.js" />
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\product-information.js" />
     <Content Include="FrontEndLogic\Mobile\wastage-entry.js" />
@@ -4612,6 +4614,8 @@
     <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\ProcessGroup\Index.cshtml" />
     <Content Include="Views\ProcessGroup\List.cshtml" />
+    <Content Include="Views\Mobile\PostureHistory.cshtml" />
+    <Content Include="Views\Mobile\IncidentHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

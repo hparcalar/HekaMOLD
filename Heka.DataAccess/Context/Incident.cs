@@ -29,7 +29,7 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> ShiftBelongsToDate { get; set; }
     
         public virtual IncidentCategory IncidentCategory { get; set; }
-        public virtual Machine Machine { get; set; }
         public virtual Shift Shift { get; set; }
+        public virtual Machine Machine { get; set; }
     }
 }

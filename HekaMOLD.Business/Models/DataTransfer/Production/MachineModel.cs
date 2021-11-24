@@ -27,6 +27,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string ForeColor { get; set; }
         public int? MachineStatus { get; set; }
         public int? MachineGroupId { get; set; }
+        public int? SignalEndDelay { get; set; }
         public MachinePlanModel ActivePlan { get; set; }
         public MachinePlanModel[] Plans { get; set; }
         public MachineMaintenanceInstructionModel[] Instructions { get; set; }

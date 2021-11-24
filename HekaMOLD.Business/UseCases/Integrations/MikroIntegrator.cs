@@ -543,8 +543,8 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     {
                                         lastOrderId = dbItemOrder.Id;
 
-                                        if (dbItemOrder.OrderStatus != (int)OrderStatusType.Created)
-                                            isLockedOrder = true;
+                                        //if (dbItemOrder.OrderStatus != (int)OrderStatusType.Created)
+                                        //    isLockedOrder = true;
 
                                         if (!isLockedOrder)
                                         {
@@ -606,36 +606,59 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                 {
                                     var dbNewOrder = orderBO.GetItemOrder(lastOrderId);
                                     if (dbNewOrder.Details.Any(m => m.ItemId == itemId))
-                                        continue;
-
-                                    var newOrderDetail = new ItemOrderDetailModel
                                     {
-                                        ItemId = itemId,
-                                        UnitId = unitTypeId,
-                                        LineNumber = lineNumber,
-                                        OrderStatus = (int)OrderStatusType.Created,
-                                        UnitPrice = Decimal.Parse(row["sip_b_fiyat"].ToString(), System.Globalization.NumberStyles.Float),
-                                        Quantity = Decimal.Parse(row["sip_miktar"].ToString(), System.Globalization.NumberStyles.Float)
-                                            - Decimal.Parse(row["sip_planlananmiktar"].ToString(), System.Globalization.NumberStyles.Float),
-                                        SubTotal = Decimal.Parse(row["sip_tutar"].ToString(), System.Globalization.NumberStyles.Float),
-                                        TaxAmount = Decimal.Parse(row["sip_vergi"].ToString(), System.Globalization.NumberStyles.Float),
-                                        TaxIncluded = false,
-                                        NewDetail = true,
-                                        SyncDate = DateTime.Now,
-                                        SyncStatus = 1,
-                                        ForexId = forexId,
-                                        ForexRate = Decimal.Parse(row["sip_doviz_kuru"].ToString(), System.Globalization.NumberStyles.Float),
-                                        CreatedDate = DateTime.Now,
-                                    };
+                                        var existingDetail = dbNewOrder.Details.FirstOrDefault(m => m.ItemId == itemId);
+                                        if (existingDetail != null)
+                                        {
+                                            existingDetail.UnitPrice = Decimal.Parse(row["sip_b_fiyat"].ToString(), System.Globalization.NumberStyles.Float);
+                                            existingDetail.Quantity = Decimal.Parse(row["sip_miktar"].ToString(), System.Globalization.NumberStyles.Float)
+                                            - Decimal.Parse(row["sip_planlananmiktar"].ToString(), System.Globalization.NumberStyles.Float);
+                                            existingDetail.SubTotal = Decimal.Parse(row["sip_tutar"].ToString(), System.Globalization.NumberStyles.Float);
+                                            existingDetail.TaxAmount = Decimal.Parse(row["sip_vergi"].ToString(), System.Globalization.NumberStyles.Float);
+                                            existingDetail.ForexRate = Decimal.Parse(row["sip_doviz_kuru"].ToString(), System.Globalization.NumberStyles.Float);
+                                            existingDetail.ForexId = forexId;
 
-                                    // IF THERE IS A FOREX TYPE, CONVERT UNIT PRICE BY FOREX
-                                    if (newOrderDetail.ForexId > 0)
-                                    {
-                                        newOrderDetail.ForexUnitPrice = newOrderDetail.UnitPrice;
-                                        newOrderDetail.UnitPrice = newOrderDetail.ForexUnitPrice * newOrderDetail.ForexRate;
+                                            // IF THERE IS A FOREX TYPE, CONVERT UNIT PRICE BY FOREX
+                                            if (existingDetail.ForexId > 0)
+                                            {
+                                                existingDetail.ForexUnitPrice = existingDetail.UnitPrice;
+                                                existingDetail.UnitPrice = existingDetail.ForexUnitPrice * existingDetail.ForexRate;
+                                            }
+
+                                            orderBO.UpdateOrderDetail(existingDetail);
+                                        }
                                     }
+                                    else
+                                    {
+                                        var newOrderDetail = new ItemOrderDetailModel
+                                        {
+                                            ItemId = itemId,
+                                            UnitId = unitTypeId,
+                                            LineNumber = lineNumber,
+                                            OrderStatus = (int)OrderStatusType.Created,
+                                            UnitPrice = Decimal.Parse(row["sip_b_fiyat"].ToString(), System.Globalization.NumberStyles.Float),
+                                            Quantity = Decimal.Parse(row["sip_miktar"].ToString(), System.Globalization.NumberStyles.Float)
+                                            - Decimal.Parse(row["sip_planlananmiktar"].ToString(), System.Globalization.NumberStyles.Float),
+                                            SubTotal = Decimal.Parse(row["sip_tutar"].ToString(), System.Globalization.NumberStyles.Float),
+                                            TaxAmount = Decimal.Parse(row["sip_vergi"].ToString(), System.Globalization.NumberStyles.Float),
+                                            TaxIncluded = false,
+                                            NewDetail = true,
+                                            SyncDate = DateTime.Now,
+                                            SyncStatus = 1,
+                                            ForexId = forexId,
+                                            ForexRate = Decimal.Parse(row["sip_doviz_kuru"].ToString(), System.Globalization.NumberStyles.Float),
+                                            CreatedDate = DateTime.Now,
+                                        };
 
-                                    var dResult = orderBO.AddOrderDetail(lastOrderId, newOrderDetail);
+                                        // IF THERE IS A FOREX TYPE, CONVERT UNIT PRICE BY FOREX
+                                        if (newOrderDetail.ForexId > 0)
+                                        {
+                                            newOrderDetail.ForexUnitPrice = newOrderDetail.UnitPrice;
+                                            newOrderDetail.UnitPrice = newOrderDetail.ForexUnitPrice * newOrderDetail.ForexRate;
+                                        }
+
+                                        var dResult = orderBO.AddOrderDetail(lastOrderId, newOrderDetail);
+                                    }
 
                                     lineNumber++;
                                 }

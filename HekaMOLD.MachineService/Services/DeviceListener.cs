@@ -183,10 +183,16 @@ namespace HekaMOLD.MachineService.Services
                                 }
                                 else
                                 {
-                                    if ((DateTime.Now.TimeOfDay - _lastZeroTime).TotalSeconds > 10)
+                                    if ((_machine.SignalEndDelay ?? 0) > 0)
+                                    {
+                                        if (_lastZeroTime != TimeSpan.Zero
+                                            && (DateTime.Now.TimeOfDay - _lastZeroTime).TotalSeconds > _machine.SignalEndDelay)
+                                            bResult = bObj.StopMachineCycle(_machine.Id);
+                                        else if (_lastZeroTime == TimeSpan.Zero)
+                                            _lastZeroTime = DateTime.Now.TimeOfDay;
+                                    }
+                                    else
                                         bResult = bObj.StopMachineCycle(_machine.Id);
-                                    else if (_lastZeroTime != TimeSpan.Zero)
-                                        _lastZeroTime = TimeSpan.Zero;
                                 }
 
                                 if (bResult != null)
@@ -201,9 +207,11 @@ namespace HekaMOLD.MachineService.Services
                                     _lastResult = resultSatisfied;
                                     _status.PostureRequestSent = false;
                                     _status.LastCycleEnd = null;
-                                }   
+                                }
                             }
                         }
+                        else
+                            _lastZeroTime = TimeSpan.Zero;
                     }
                 }
                 catch (Exception ex)

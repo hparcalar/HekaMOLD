@@ -20,7 +20,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> TargetCount { get; set; }
         public Nullable<int> MachineId { get; set; }
     
-        public virtual Machine Machine { get; set; }
         public virtual Shift Shift { get; set; }
+        public virtual Machine Machine { get; set; }
     }
 }

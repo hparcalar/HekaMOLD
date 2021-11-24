@@ -2,7 +2,7 @@
     ViewBag.Title = "Üretim Planlama";
 }
 
-<div ng-controller="workOrderPlanningCtrl">
+<div ng-controller="workOrderPlanningCtrl" ng-cloak>
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -60,7 +60,7 @@
                                     <div class="d-flex flex-column overflow-auto" style="max-height:400px;">
                                         @* GET ACTIVE PLANS OF MACHINE *@
                                         <div class="plan-box" draggable="true"
-                                             ng-cloak
+                                             ng-dblclick="showProductInfo(plan.Id)"
                                              data-plan-id="{{plan.Id}}"
                                              ng-click="selectPlan(plan)"
                                              ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6,

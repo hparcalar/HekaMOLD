@@ -17,6 +17,7 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Machine()
         {
+            this.ActualRouteHistory = new HashSet<ActualRouteHistory>();
             this.Equipment = new HashSet<Equipment>();
             this.Incident = new HashSet<Incident>();
             this.LayoutItem = new HashSet<LayoutItem>();
@@ -27,11 +28,10 @@ namespace Heka.DataAccess.Context
             this.ProductionPosture = new HashSet<ProductionPosture>();
             this.ProductQualityData = new HashSet<ProductQualityData>();
             this.ProductWastage = new HashSet<ProductWastage>();
+            this.RouteItem = new HashSet<RouteItem>();
+            this.ShiftTarget = new HashSet<ShiftTarget>();
             this.UserWorkOrderHistory = new HashSet<UserWorkOrderHistory>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
-            this.ShiftTarget = new HashSet<ShiftTarget>();
-            this.ActualRouteHistory = new HashSet<ActualRouteHistory>();
-            this.RouteItem = new HashSet<RouteItem>();
         }
     
         public int Id { get; set; }
@@ -54,7 +54,10 @@ namespace Heka.DataAccess.Context
         public string ForeColor { get; set; }
         public Nullable<int> MachineStatus { get; set; }
         public Nullable<int> MachineGroupId { get; set; }
+        public Nullable<int> SignalEndDelay { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Equipment> Equipment { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -77,14 +80,12 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductWastage> ProductWastage { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+        public virtual ICollection<RouteItem> RouteItem { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ShiftTarget> ShiftTarget { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
+        public virtual ICollection<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RouteItem> RouteItem { get; set; }
+        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
     }
 }

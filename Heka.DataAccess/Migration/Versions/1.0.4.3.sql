@@ -322,3 +322,13 @@ BEGIN
 
 	ALTER TABLE [dbo].[ActualRouteHistory] CHECK CONSTRAINT [FK_ActualRouteHistory_WorkOrderDetail]
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Machine' AND COLUMN_NAME='SignalEndDelay')
+BEGIN
+	ALTER TABLE Machine ADD SignalEndDelay INT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='PostureCategory' AND COLUMN_NAME='ShouldStopSignal')
+BEGIN
+	ALTER TABLE PostureCategory ADD ShouldStopSignal BIT NULL
+END

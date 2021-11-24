@@ -11,9 +11,9 @@
         <div id="kt_content_container" class="container-fluid">
             <div class="row py-3 mt-0 gx-xl-8 bg-white">
                 <div ng-cloak ng-if="isMechanics" class="col-sm-2 col-xs-2 col-xxl-2">
-                    <button class="btn btn-sm btn-block w-100 h-100 btn-light-primary"
+                    <button class="btn btn-sm btn-block w-100 h-100 btn-primary"
                             ng-disabled="selectedIncident.Id == 0 || selectedIncident.IncidentStatus != 0"
-                            ng-click="startIncident()">
+                            ng-click="showIncidentCategoryList()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Stockholm-icons-/-Home-/-Timer" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -26,11 +26,11 @@
                             </svg>
                         </span>
                         <br />
-                        <span style="display:block;margin-top:10px;">Müdahale Et</span>
+                        <span style="display:block;margin-top:10px;" class="fw-bolder fs-3 text-light">Müdahaleye Başla</span>
                     </button>
                 </div>
                 <div ng-cloak ng-if="isMechanics" class="col-sm-2 col-xs-2 col-xxl-2">
-                    <button class="btn btn-sm btn-block w-100 h-100 btn-light-success"
+                    <button class="btn btn-sm btn-block w-100 h-100 btn-success"
                             ng-disabled="selectedIncident.Id == 0 || selectedIncident.IncidentStatus != 1"
                             ng-click="finishIncident()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
@@ -42,7 +42,7 @@
                             </svg>
                         </span>
                         <br />
-                        <span style="display:block;margin-top:10px;">Arızayı Tamamla</span>
+                        <span style="display:block;margin-top:10px;" class="fw-bolder fs-3 text-light">Arızayı Tamamla</span>
                     </button>
                 </div>
             </div>
@@ -78,6 +78,10 @@
             <!--end::INCIDENT TABLE-->
         </div>
         <!--end::Container-->
+
+        <div id="dial-categorylist" title="Arıza Türü Seç" style="display:none;">
+            <ng-include src="'../Components/Views/IncidentCategorySelection.html'"></ng-include>
+        </div>
     </div>
     <!--end::Post-->
 </div>
@@ -95,6 +99,6 @@
     </script>
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-
     <script src="~/FrontEndLogic/Mobile/incident-list.js"></script>
+    <script src="~/Components/Controllers/incident-category-selection.js"></script>
 }

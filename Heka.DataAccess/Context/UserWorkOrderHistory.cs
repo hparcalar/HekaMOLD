@@ -24,7 +24,7 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
     
-        public virtual Machine Machine { get; set; }
         public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual Machine Machine { get; set; }
     }
 }

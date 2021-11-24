@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Arızalar";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+
+<div ng-controller="incidentListCtrl">
+    
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Row-->
+            <div class="row gy-5 gx-xl-8">
+                <!--begin::Col-->
+                <div class="col-xxl-12">
+
+                    <div class="dx-viewport">
+                        <div id="dataList"></div>
+                    </div>
+
+                </div>
+                <!--end::Col-->
+            </div>
+            <!--end::Row-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/FrontEndLogic/Mobile/incident-history.js"></script>
+}

@@ -1345,6 +1345,7 @@ namespace HekaMOLD.Business.UseCases
                 UpdatedUserId = d.UpdatedUserId,
                 WatchCycleStartCondition = d.WatchCycleStartCondition,
                 WorkingUserId = d.WorkingUserId,
+                SignalEndDelay = d.SignalEndDelay,
             }).ToArray();
 
             return data;

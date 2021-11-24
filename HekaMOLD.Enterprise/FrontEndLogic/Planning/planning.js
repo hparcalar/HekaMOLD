@@ -33,6 +33,26 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
         $scope.selectedSource = $scope.machineList.find(d => d.Id == machineId);
     }
 
+    $scope.showProductInfo = function (workOrderDetailId) {
+        try {
+            if (workOrderDetailId > 0) {
+                bootbox.alert({
+                    size: 'xl',
+                    centerVertical: true,
+
+                    title: 'Ürün Bilgileri',
+                    message: '<iframe class="w-100 h-300px" src="' + HOST_URL + 'Mobile/ProductInformation?rid=' + workOrderDetailId
+                        + '&popup=1"></iframe>',
+                    callback: function (result) {
+
+                    }
+                });
+            }
+        } catch (e) {
+
+        }
+    }
+
     // VISUAL TRIGGERS & METHODS
     $scope.showPlanDetails = function (plan, uiElement) {
         $scope.$broadcast('loadEditPlan', { id: plan.WorkOrderDetailId });
@@ -502,8 +522,6 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
     // #region TRIAL FORM
     $scope.showTrialForm = function () {
-        //$scope.$broadcast('loadTrialPlan', { id: plan.WorkOrderDetailId });
-
         $('#dial-trial').dialog({
             hide: true,
             modal: true,

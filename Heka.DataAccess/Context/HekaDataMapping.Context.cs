@@ -61,7 +61,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ItemWarehouse> ItemWarehouse { get; set; }
         public virtual DbSet<LayoutItem> LayoutItem { get; set; }
         public virtual DbSet<LayoutObjectType> LayoutObjectType { get; set; }
-        public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MachineGroup> MachineGroup { get; set; }
         public virtual DbSet<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         public virtual DbSet<MachineMaintenanceInstructionEntry> MachineMaintenanceInstructionEntry { get; set; }
@@ -71,7 +70,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<MoldProduct> MoldProduct { get; set; }
         public virtual DbSet<MoldTest> MoldTest { get; set; }
         public virtual DbSet<Plant> Plant { get; set; }
-        public virtual DbSet<PostureCategory> PostureCategory { get; set; }
         public virtual DbSet<PrinterQueue> PrinterQueue { get; set; }
         public virtual DbSet<ProductionPosture> ProductionPosture { get; set; }
         public virtual DbSet<ProductQualityData> ProductQualityData { get; set; }
@@ -110,5 +108,7 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ProcessGroup> ProcessGroup { get; set; }
         public virtual DbSet<Route> Route { get; set; }
         public virtual DbSet<RouteItem> RouteItem { get; set; }
+        public virtual DbSet<Machine> Machine { get; set; }
+        public virtual DbSet<PostureCategory> PostureCategory { get; set; }
     }
 }

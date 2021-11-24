@@ -631,6 +631,7 @@
           <Property Name="ForeColor" Type="nvarchar" MaxLength="100" />
           <Property Name="MachineStatus" Type="int" />
           <Property Name="MachineGroupId" Type="int" />
+          <Property Name="SignalEndDelay" Type="int" />
         </EntityType>
         <EntityType Name="MachineGroup">
           <Key>
@@ -787,6 +788,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PostureCategoryCode" Type="nvarchar" MaxLength="50" />
           <Property Name="PostureCategoryName" Type="nvarchar" MaxLength="250" />
+          <Property Name="ShouldStopSignal" Type="bit" />
         </EntityType>
         <EntityType Name="PrinterQueue">
           <Key>
@@ -4084,7 +4086,6 @@
           <EntitySet Name="ItemWarehouse" EntityType="Heka.DataAccess.Models.ItemWarehouse" />
           <EntitySet Name="LayoutItem" EntityType="Heka.DataAccess.Models.LayoutItem" />
           <EntitySet Name="LayoutObjectType" EntityType="Heka.DataAccess.Models.LayoutObjectType" />
-          <EntitySet Name="Machine" EntityType="Heka.DataAccess.Models.Machine" />
           <EntitySet Name="MachineGroup" EntityType="Heka.DataAccess.Models.MachineGroup" />
           <EntitySet Name="MachineMaintenanceInstruction" EntityType="Heka.DataAccess.Models.MachineMaintenanceInstruction" />
           <EntitySet Name="MachineMaintenanceInstructionEntry" EntityType="Heka.DataAccess.Models.MachineMaintenanceInstructionEntry" />
@@ -4094,7 +4095,6 @@
           <EntitySet Name="MoldProduct" EntityType="Heka.DataAccess.Models.MoldProduct" />
           <EntitySet Name="MoldTest" EntityType="Heka.DataAccess.Models.MoldTest" />
           <EntitySet Name="Plant" EntityType="Heka.DataAccess.Models.Plant" />
-          <EntitySet Name="PostureCategory" EntityType="Heka.DataAccess.Models.PostureCategory" />
           <EntitySet Name="PrinterQueue" EntityType="Heka.DataAccess.Models.PrinterQueue" />
           <EntitySet Name="ProductionPosture" EntityType="Heka.DataAccess.Models.ProductionPosture" />
           <EntitySet Name="ProductQualityData" EntityType="Heka.DataAccess.Models.ProductQualityData" />
@@ -4169,10 +4169,6 @@
             <End Role="EquipmentCategory" EntitySet="EquipmentCategory" />
             <End Role="Equipment" EntitySet="Equipment" />
           </AssociationSet>
-          <AssociationSet Name="FK_Equipment_Machine" Association="Heka.DataAccess.Models.FK_Equipment_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="Equipment" EntitySet="Equipment" />
-          </AssociationSet>
           <AssociationSet Name="FK_Equipment_Plant" Association="Heka.DataAccess.Models.FK_Equipment_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="Equipment" EntitySet="Equipment" />
@@ -4223,10 +4219,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Incident_IncidentCategory" Association="Heka.DataAccess.Models.FK_Incident_IncidentCategory">
             <End Role="IncidentCategory" EntitySet="IncidentCategory" />
-            <End Role="Incident" EntitySet="Incident" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Incident_Machine" Association="Heka.DataAccess.Models.FK_Incident_Machine">
-            <End Role="Machine" EntitySet="Machine" />
             <End Role="Incident" EntitySet="Incident" />
           </AssociationSet>
           <AssociationSet Name="FK_Invoice_Plant" Association="Heka.DataAccess.Models.FK_Invoice_Plant">
@@ -4453,10 +4445,6 @@
             <End Role="Warehouse" EntitySet="Warehouse" />
             <End Role="ItemWarehouse" EntitySet="ItemWarehouse" />
           </AssociationSet>
-          <AssociationSet Name="FK_LayoutItem_Machine" Association="Heka.DataAccess.Models.FK_LayoutItem_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="LayoutItem" EntitySet="LayoutItem" />
-          </AssociationSet>
           <AssociationSet Name="FK_LayoutItem_Plant" Association="Heka.DataAccess.Models.FK_LayoutItem_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="LayoutItem" EntitySet="LayoutItem" />
@@ -4464,42 +4452,6 @@
           <AssociationSet Name="FK_MachineGroup_LayoutObjectType" Association="Heka.DataAccess.Models.FK_MachineGroup_LayoutObjectType">
             <End Role="LayoutObjectType" EntitySet="LayoutObjectType" />
             <End Role="MachineGroup" EntitySet="MachineGroup" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Machine_MachineGrouo" Association="Heka.DataAccess.Models.FK_Machine_MachineGrouo">
-            <End Role="MachineGroup" EntitySet="MachineGroup" />
-            <End Role="Machine" EntitySet="Machine" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MachineMaintenanceInstruction_Machine" Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="MachineMaintenanceInstruction" EntitySet="MachineMaintenanceInstruction" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MachinePlan_Machine" Association="Heka.DataAccess.Models.FK_MachinePlan_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="MachinePlan" EntitySet="MachinePlan" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MachineSignal_Machine" Association="Heka.DataAccess.Models.FK_MachineSignal_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="MachineSignal" EntitySet="MachineSignal" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MoldTest_Machine" Association="Heka.DataAccess.Models.FK_MoldTest_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="MoldTest" EntitySet="MoldTest" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductionPosture_Machine" Association="Heka.DataAccess.Models.FK_ProductionPosture_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductQualityData_Machine" Association="Heka.DataAccess.Models.FK_ProductQualityData_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="ProductQualityData" EntitySet="ProductQualityData" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductWastage_Machine" Association="Heka.DataAccess.Models.FK_ProductWastage_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="ProductWastage" EntitySet="ProductWastage" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserWorkOrderHistory_Machine" Association="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="UserWorkOrderHistory" EntitySet="UserWorkOrderHistory" />
           </AssociationSet>
           <AssociationSet Name="FK_MachineGroup_Plant" Association="Heka.DataAccess.Models.FK_MachineGroup_Plant">
             <End Role="Plant" EntitySet="Plant" />
@@ -4532,10 +4484,6 @@
           <AssociationSet Name="FK_Warehouse_Plant" Association="Heka.DataAccess.Models.FK_Warehouse_Plant">
             <End Role="Plant" EntitySet="Plant" />
             <End Role="Warehouse" EntitySet="Warehouse" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductionPosture_PostureCategory" Association="Heka.DataAccess.Models.FK_ProductionPosture_PostureCategory">
-            <End Role="PostureCategory" EntitySet="PostureCategory" />
-            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
           </AssociationSet>
           <AssociationSet Name="FK_PrinterQueue_SystemPrinter" Association="Heka.DataAccess.Models.FK_PrinterQueue_SystemPrinter">
             <End Role="SystemPrinter" EntitySet="SystemPrinter" />
@@ -4599,10 +4547,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_WorkOrderDetail_ItemOrderDetail" Association="Heka.DataAccess.Models.FK_WorkOrderDetail_ItemOrderDetail">
             <End Role="ItemOrderDetail" EntitySet="ItemOrderDetail" />
-            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WorkOrderDetail_Machine" Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine">
-            <End Role="Machine" EntitySet="Machine" />
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_MachinePlan_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_MachinePlan_WorkOrderDetail">
@@ -4728,10 +4672,6 @@
             <End Role="WorkOrderSerial" EntitySet="WorkOrderSerial" />
           </AssociationSet>
           <EntitySet Name="ShiftTarget" EntityType="Heka.DataAccess.Models.ShiftTarget" />
-          <AssociationSet Name="FK_ShiftTarget_Machine" Association="Heka.DataAccess.Models.FK_ShiftTarget_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="ShiftTarget" EntitySet="ShiftTarget" />
-          </AssociationSet>
           <AssociationSet Name="FK_ShiftTarget_Shift" Association="Heka.DataAccess.Models.FK_ShiftTarget_Shift">
             <End Role="Shift" EntitySet="Shift" />
             <End Role="ShiftTarget" EntitySet="ShiftTarget" />
@@ -4741,10 +4681,6 @@
           <EntitySet Name="ProcessGroup" EntityType="Heka.DataAccess.Models.ProcessGroup" />
           <EntitySet Name="Route" EntityType="Heka.DataAccess.Models.Route" />
           <EntitySet Name="RouteItem" EntityType="Heka.DataAccess.Models.RouteItem" />
-          <AssociationSet Name="FK_ActualRouteHistory_Machine" Association="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
-          </AssociationSet>
           <AssociationSet Name="FK_ActualRouteHistory_MachineGroup" Association="Heka.DataAccess.Models.FK_ActualRouteHistory_MachineGroup">
             <End Role="MachineGroup" EntitySet="MachineGroup" />
             <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
@@ -4760,10 +4696,6 @@
           <AssociationSet Name="FK_ActualRouteHistory_WorkOrderDetail" Association="Heka.DataAccess.Models.FK_ActualRouteHistory_WorkOrderDetail">
             <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
             <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RouteItem_Machine" Association="Heka.DataAccess.Models.FK_RouteItem_Machine">
-            <End Role="Machine" EntitySet="Machine" />
-            <End Role="RouteItem" EntitySet="RouteItem" />
           </AssociationSet>
           <AssociationSet Name="FK_RouteItem_MachineGroup" Association="Heka.DataAccess.Models.FK_RouteItem_MachineGroup">
             <End Role="MachineGroup" EntitySet="MachineGroup" />
@@ -4796,6 +4728,76 @@
           <AssociationSet Name="FK_RouteItem_Route" Association="Heka.DataAccess.Models.FK_RouteItem_Route">
             <End Role="Route" EntitySet="Route" />
             <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <EntitySet Name="Machine" EntityType="Heka.DataAccess.Models.Machine" />
+          <AssociationSet Name="FK_ActualRouteHistory_Machine" Association="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ActualRouteHistory" EntitySet="ActualRouteHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Equipment_Machine" Association="Heka.DataAccess.Models.FK_Equipment_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="Equipment" EntitySet="Equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Incident_Machine" Association="Heka.DataAccess.Models.FK_Incident_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="Incident" EntitySet="Incident" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LayoutItem_Machine" Association="Heka.DataAccess.Models.FK_LayoutItem_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="LayoutItem" EntitySet="LayoutItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Machine_MachineGrouo" Association="Heka.DataAccess.Models.FK_Machine_MachineGrouo">
+            <End Role="MachineGroup" EntitySet="MachineGroup" />
+            <End Role="Machine" EntitySet="Machine" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachineMaintenanceInstruction_Machine" Association="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachineMaintenanceInstruction" EntitySet="MachineMaintenanceInstruction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachinePlan_Machine" Association="Heka.DataAccess.Models.FK_MachinePlan_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachinePlan" EntitySet="MachinePlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MachineSignal_Machine" Association="Heka.DataAccess.Models.FK_MachineSignal_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MachineSignal" EntitySet="MachineSignal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MoldTest_Machine" Association="Heka.DataAccess.Models.FK_MoldTest_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="MoldTest" EntitySet="MoldTest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionPosture_Machine" Association="Heka.DataAccess.Models.FK_ProductionPosture_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductQualityData_Machine" Association="Heka.DataAccess.Models.FK_ProductQualityData_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ProductQualityData" EntitySet="ProductQualityData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductWastage_Machine" Association="Heka.DataAccess.Models.FK_ProductWastage_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ProductWastage" EntitySet="ProductWastage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RouteItem_Machine" Association="Heka.DataAccess.Models.FK_RouteItem_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="RouteItem" EntitySet="RouteItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShiftTarget_Machine" Association="Heka.DataAccess.Models.FK_ShiftTarget_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="ShiftTarget" EntitySet="ShiftTarget" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserWorkOrderHistory_Machine" Association="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="UserWorkOrderHistory" EntitySet="UserWorkOrderHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderDetail_Machine" Association="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine">
+            <End Role="Machine" EntitySet="Machine" />
+            <End Role="WorkOrderDetail" EntitySet="WorkOrderDetail" />
+          </AssociationSet>
+          <EntitySet Name="PostureCategory" EntityType="Heka.DataAccess.Models.PostureCategory" />
+          <AssociationSet Name="FK_ProductionPosture_PostureCategory" Association="Heka.DataAccess.Models.FK_ProductionPosture_PostureCategory">
+            <End Role="PostureCategory" EntitySet="PostureCategory" />
+            <End Role="ProductionPosture" EntitySet="ProductionPosture" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AllocatedCode">
@@ -4956,9 +4958,9 @@
           <Property Name="IsCritical" Type="Boolean" />
           <Property Name="EquipmentCategoryId" Type="Int32" />
           <NavigationProperty Name="EquipmentCategory" Relationship="Heka.DataAccess.Models.FK_Equipment_EquipmentCategory" FromRole="Equipment" ToRole="EquipmentCategory" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_Equipment_Machine" FromRole="Equipment" ToRole="Machine" />
           <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_Equipment_Plant" FromRole="Equipment" ToRole="Plant" />
           <NavigationProperty Name="User" Relationship="Heka.DataAccess.Models.FK_Equipment_User" FromRole="Equipment" ToRole="User" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_Equipment_Machine" FromRole="Equipment" ToRole="Machine" />
         </EntityType>
         <EntityType Name="EquipmentCategory">
           <Key>
@@ -5065,8 +5067,8 @@
           <Property Name="ShiftId" Type="Int32" />
           <Property Name="ShiftBelongsToDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="IncidentCategory" Relationship="Heka.DataAccess.Models.FK_Incident_IncidentCategory" FromRole="Incident" ToRole="IncidentCategory" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_Incident_Machine" FromRole="Incident" ToRole="Machine" />
           <NavigationProperty Name="Shift" Relationship="Heka.DataAccess.Models.FK_Incident_Shift" FromRole="Incident" ToRole="Shift" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_Incident_Machine" FromRole="Incident" ToRole="Machine" />
         </EntityType>
         <EntityType Name="IncidentCategory">
           <Key>
@@ -5510,8 +5512,8 @@
           <Property Name="ScalingData" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="PlantId" Type="Int32" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_LayoutItem_Machine" FromRole="LayoutItem" ToRole="Machine" />
           <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_LayoutItem_Plant" FromRole="LayoutItem" ToRole="Plant" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_LayoutItem_Machine" FromRole="LayoutItem" ToRole="Machine" />
         </EntityType>
         <EntityType Name="LayoutObjectType">
           <Key>
@@ -5524,47 +5526,6 @@
           <Property Name="DataTypeExtension" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MachineGroup" Relationship="Heka.DataAccess.Models.FK_MachineGroup_LayoutObjectType" FromRole="LayoutObjectType" ToRole="MachineGroup" />
         </EntityType>
-        <EntityType Name="Machine">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MachineCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="MachineName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="MachineType" Type="Int32" />
-          <Property Name="PlantId" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="CreatedUserId" Type="Int32" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedUserId" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="IsWatched" Type="Boolean" />
-          <Property Name="WatchCycleStartCondition" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="DeviceIp" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PostureExpirationCycleCount" Type="Int32" />
-          <Property Name="IsUpToPostureEntry" Type="Boolean" />
-          <Property Name="WorkingUserId" Type="Int32" />
-          <Property Name="BackColor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="ForeColor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="MachineStatus" Type="Int32" />
-          <Property Name="MachineGroupId" Type="Int32" />
-          <NavigationProperty Name="Equipment" Relationship="Heka.DataAccess.Models.FK_Equipment_Machine" FromRole="Machine" ToRole="Equipment" />
-          <NavigationProperty Name="Incident" Relationship="Heka.DataAccess.Models.FK_Incident_Machine" FromRole="Machine" ToRole="Incident" />
-          <NavigationProperty Name="LayoutItem" Relationship="Heka.DataAccess.Models.FK_LayoutItem_Machine" FromRole="Machine" ToRole="LayoutItem" />
-          <NavigationProperty Name="MachineGroup" Relationship="Heka.DataAccess.Models.FK_Machine_MachineGrouo" FromRole="Machine" ToRole="MachineGroup" />
-          <NavigationProperty Name="MachineMaintenanceInstruction" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="Machine" ToRole="MachineMaintenanceInstruction" />
-          <NavigationProperty Name="MachinePlan" Relationship="Heka.DataAccess.Models.FK_MachinePlan_Machine" FromRole="Machine" ToRole="MachinePlan" />
-          <NavigationProperty Name="MachineSignal" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Machine" FromRole="Machine" ToRole="MachineSignal" />
-          <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="Machine" ToRole="MoldTest" />
-          <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Machine" FromRole="Machine" ToRole="ProductionPosture" />
-          <NavigationProperty Name="ProductQualityData" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Machine" FromRole="Machine" ToRole="ProductQualityData" />
-          <NavigationProperty Name="ProductWastage" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Machine" FromRole="Machine" ToRole="ProductWastage" />
-          <NavigationProperty Name="UserWorkOrderHistory" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" FromRole="Machine" ToRole="UserWorkOrderHistory" />
-          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="Machine" ToRole="WorkOrderDetail" />
-          <NavigationProperty Name="ShiftTarget" Relationship="Heka.DataAccess.Models.FK_ShiftTarget_Machine" FromRole="Machine" ToRole="ShiftTarget" />
-          <NavigationProperty Name="ActualRouteHistory" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine" FromRole="Machine" ToRole="ActualRouteHistory" />
-          <NavigationProperty Name="RouteItem" Relationship="Heka.DataAccess.Models.FK_RouteItem_Machine" FromRole="Machine" ToRole="RouteItem" />
-        </EntityType>
         <EntityType Name="MachineGroup">
           <Key>
             <PropertyRef Name="Id" />
@@ -5575,10 +5536,10 @@
           <Property Name="PlantId" Type="Int32" />
           <Property Name="LayoutObjectTypeId" Type="Int32" />
           <NavigationProperty Name="LayoutObjectType" Relationship="Heka.DataAccess.Models.FK_MachineGroup_LayoutObjectType" FromRole="MachineGroup" ToRole="LayoutObjectType" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_Machine_MachineGrouo" FromRole="MachineGroup" ToRole="Machine" />
           <NavigationProperty Name="Plant" Relationship="Heka.DataAccess.Models.FK_MachineGroup_Plant" FromRole="MachineGroup" ToRole="Plant" />
           <NavigationProperty Name="ActualRouteHistory" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_MachineGroup" FromRole="MachineGroup" ToRole="ActualRouteHistory" />
           <NavigationProperty Name="RouteItem" Relationship="Heka.DataAccess.Models.FK_RouteItem_MachineGroup" FromRole="MachineGroup" ToRole="RouteItem" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_Machine_MachineGrouo" FromRole="MachineGroup" ToRole="Machine" />
         </EntityType>
         <EntityType Name="MachineMaintenanceInstruction">
           <Key>
@@ -5591,8 +5552,8 @@
           <Property Name="ToDoList" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Responsible" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="LineNumber" Type="Int32" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="MachineMaintenanceInstruction" ToRole="Machine" />
           <NavigationProperty Name="MachineMaintenanceInstructionEntry" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstructionEntry_MachineMaintenanceInstruction" FromRole="MachineMaintenanceInstruction" ToRole="MachineMaintenanceInstructionEntry" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="MachineMaintenanceInstruction" ToRole="Machine" />
         </EntityType>
         <EntityType Name="MachineMaintenanceInstructionEntry">
           <Key>
@@ -5614,8 +5575,8 @@
           <Property Name="MachineId" Type="Int32" />
           <Property Name="WorkOrderDetailId" Type="Int32" />
           <Property Name="OrderNo" Type="Int32" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachinePlan_Machine" FromRole="MachinePlan" ToRole="Machine" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_MachinePlan_WorkOrderDetail" FromRole="MachinePlan" ToRole="WorkOrderDetail" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachinePlan_Machine" FromRole="MachinePlan" ToRole="Machine" />
         </EntityType>
         <EntityType Name="MachineSignal">
           <Key>
@@ -5630,9 +5591,9 @@
           <Property Name="SignalStatus" Type="Int32" />
           <Property Name="ShiftId" Type="Int32" />
           <Property Name="ShiftBelongsToDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Machine" FromRole="MachineSignal" ToRole="Machine" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail" FromRole="MachineSignal" ToRole="WorkOrderDetail" />
           <NavigationProperty Name="Shift" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Shift" FromRole="MachineSignal" ToRole="Shift" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Machine" FromRole="MachineSignal" ToRole="Machine" />
         </EntityType>
         <EntityType Name="Mold">
           <Key>
@@ -5708,9 +5669,9 @@
           <Property Name="UpdatedUserId" Type="Int32" />
           <Property Name="HeadSize" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Dye" Relationship="Heka.DataAccess.Models.FK_MoldTest_Dye" FromRole="MoldTest" ToRole="Dye" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="MoldTest" ToRole="Machine" />
           <NavigationProperty Name="Mold" Relationship="Heka.DataAccess.Models.FK_MoldTest_Mold" FromRole="MoldTest" ToRole="Mold" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_MoldTest" FromRole="MoldTest" ToRole="WorkOrderDetail" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="MoldTest" ToRole="Machine" />
         </EntityType>
         <EntityType Name="Plant">
           <Key>
@@ -5741,15 +5702,6 @@
           <NavigationProperty Name="Process" Relationship="Heka.DataAccess.Models.FK_Process_Plant" FromRole="Plant" ToRole="Process" />
           <NavigationProperty Name="ProcessGroup" Relationship="Heka.DataAccess.Models.FK_ProcessGroup_Plant" FromRole="Plant" ToRole="ProcessGroup" />
           <NavigationProperty Name="Route" Relationship="Heka.DataAccess.Models.FK_Route_Plant" FromRole="Plant" ToRole="Route" />
-        </EntityType>
-        <EntityType Name="PostureCategory">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PostureCategoryCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PostureCategoryName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_PostureCategory" FromRole="PostureCategory" ToRole="ProductionPosture" />
         </EntityType>
         <EntityType Name="PrinterQueue">
           <Key>
@@ -5783,10 +5735,10 @@
           <Property Name="PostureCategoryId" Type="Int32" />
           <Property Name="ShiftId" Type="Int32" />
           <Property Name="ShiftBelongsToDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Machine" FromRole="ProductionPosture" ToRole="Machine" />
-          <NavigationProperty Name="PostureCategory" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_PostureCategory" FromRole="ProductionPosture" ToRole="PostureCategory" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_WorkOrderDetail" FromRole="ProductionPosture" ToRole="WorkOrderDetail" />
           <NavigationProperty Name="Shift" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Shift" FromRole="ProductionPosture" ToRole="Shift" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Machine" FromRole="ProductionPosture" ToRole="Machine" />
+          <NavigationProperty Name="PostureCategory" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_PostureCategory" FromRole="ProductionPosture" ToRole="PostureCategory" />
         </EntityType>
         <EntityType Name="ProductQualityData">
           <Key>
@@ -5802,8 +5754,8 @@
           <Property Name="UpdatedUserId" Type="Int32" />
           <Property Name="Explanation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Item" FromRole="ProductQualityData" ToRole="Item" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Machine" FromRole="ProductQualityData" ToRole="Machine" />
           <NavigationProperty Name="ProductQualityDataDetail" Relationship="Heka.DataAccess.Models.FK_ProductQualityDataDetail_ProductQualityData" FromRole="ProductQualityData" ToRole="ProductQualityDataDetail" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Machine" FromRole="ProductQualityData" ToRole="Machine" />
         </EntityType>
         <EntityType Name="ProductQualityDataDetail">
           <Key>
@@ -5896,9 +5848,9 @@
           <Property Name="ShiftId" Type="Int32" />
           <Property Name="ShiftBelongsToDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Item" FromRole="ProductWastage" ToRole="Item" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Machine" FromRole="ProductWastage" ToRole="Machine" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_ProductWastage_WorkOrderDetail" FromRole="ProductWastage" ToRole="WorkOrderDetail" />
           <NavigationProperty Name="Shift" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Shift" FromRole="ProductWastage" ToRole="Shift" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Machine" FromRole="ProductWastage" ToRole="Machine" />
         </EntityType>
         <EntityType Name="ReportTemplate">
           <Key>
@@ -6063,8 +6015,8 @@
           <Property Name="FinishedQuantity" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="StartDate" Type="DateTime" Precision="3" />
           <Property Name="EndDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" FromRole="UserWorkOrderHistory" ToRole="Machine" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_WorkOrderDetail" FromRole="UserWorkOrderHistory" ToRole="WorkOrderDetail" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" FromRole="UserWorkOrderHistory" ToRole="Machine" />
         </EntityType>
         <EntityType Name="Warehouse">
           <Key>
@@ -6322,18 +6274,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Equipment_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.Equipment" Role="Equipment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Equipment">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Equipment_Plant">
           <End Type="Heka.DataAccess.Models.Plant" Role="Plant" Multiplicity="0..1" />
           <End Type="Heka.DataAccess.Models.Equipment" Role="Equipment" Multiplicity="*" />
@@ -6487,18 +6427,6 @@
             </Principal>
             <Dependent Role="Incident">
               <PropertyRef Name="IncidentCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Incident_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.Incident" Role="Incident" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Incident">
-              <PropertyRef Name="MachineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7174,18 +7102,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_LayoutItem_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.LayoutItem" Role="LayoutItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="LayoutItem">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_LayoutItem_Plant">
           <End Type="Heka.DataAccess.Models.Plant" Role="Plant" Multiplicity="0..1" />
           <End Type="Heka.DataAccess.Models.LayoutItem" Role="LayoutItem" Multiplicity="*" />
@@ -7207,114 +7123,6 @@
             </Principal>
             <Dependent Role="MachineGroup">
               <PropertyRef Name="LayoutObjectTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Machine_MachineGrouo">
-          <End Type="Heka.DataAccess.Models.MachineGroup" Role="MachineGroup" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MachineGroup">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Machine">
-              <PropertyRef Name="MachineGroupId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MachineMaintenanceInstruction_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.MachineMaintenanceInstruction" Role="MachineMaintenanceInstruction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MachineMaintenanceInstruction">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MachinePlan_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.MachinePlan" Role="MachinePlan" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MachinePlan">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MachineSignal_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.MachineSignal" Role="MachineSignal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MachineSignal">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MoldTest_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.MoldTest" Role="MoldTest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MoldTest">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductionPosture_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ProductionPosture" Role="ProductionPosture" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductionPosture">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductQualityData_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ProductQualityData" Role="ProductQualityData" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductQualityData">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductWastage_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ProductWastage" Role="ProductWastage" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductWastage">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserWorkOrderHistory_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.UserWorkOrderHistory" Role="UserWorkOrderHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UserWorkOrderHistory">
-              <PropertyRef Name="MachineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7411,18 +7219,6 @@
             </Principal>
             <Dependent Role="Warehouse">
               <PropertyRef Name="PlantId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductionPosture_PostureCategory">
-          <End Type="Heka.DataAccess.Models.PostureCategory" Role="PostureCategory" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ProductionPosture" Role="ProductionPosture" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PostureCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductionPosture">
-              <PropertyRef Name="PostureCategoryId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7628,7 +7424,6 @@
           <NavigationProperty Name="Dye" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Dye" FromRole="WorkOrderDetail" ToRole="Dye" />
           <NavigationProperty Name="Item" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Item" FromRole="WorkOrderDetail" ToRole="Item" />
           <NavigationProperty Name="ItemOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_ItemOrderDetail" FromRole="WorkOrderDetail" ToRole="ItemOrderDetail" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="WorkOrderDetail" ToRole="Machine" />
           <NavigationProperty Name="MachinePlan" Relationship="Heka.DataAccess.Models.FK_MachinePlan_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="MachinePlan" />
           <NavigationProperty Name="MachineSignal" Relationship="Heka.DataAccess.Models.FK_MachineSignal_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="MachineSignal" />
           <NavigationProperty Name="Mold" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Mold" FromRole="WorkOrderDetail" ToRole="Mold" />
@@ -7642,6 +7437,7 @@
           <NavigationProperty Name="WorkOrderItemNeeds" Relationship="Heka.DataAccess.Models.FK_WorkOrderItemNeeds_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderItemNeeds" />
           <NavigationProperty Name="WorkOrderSerial" Relationship="Heka.DataAccess.Models.FK_WorkOrderSerial_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="WorkOrderSerial" />
           <NavigationProperty Name="ActualRouteHistory" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_WorkOrderDetail" FromRole="WorkOrderDetail" ToRole="ActualRouteHistory" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="WorkOrderDetail" ToRole="Machine" />
         </EntityType>
         <Association Name="FK_DeliveryPlan_WorkOrderDetail">
           <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="0..1" />
@@ -7700,18 +7496,6 @@
             </Principal>
             <Dependent Role="WorkOrderDetail">
               <PropertyRef Name="SaleOrderDetailId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WorkOrderDetail_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WorkOrderDetail">
-              <PropertyRef Name="MachineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -8129,21 +7913,9 @@
           <Property Name="TargetDate" Type="DateTime" Precision="3" />
           <Property Name="TargetCount" Type="Int32" />
           <Property Name="MachineId" Type="Int32" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ShiftTarget_Machine" FromRole="ShiftTarget" ToRole="Machine" />
           <NavigationProperty Name="Shift" Relationship="Heka.DataAccess.Models.FK_ShiftTarget_Shift" FromRole="ShiftTarget" ToRole="Shift" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ShiftTarget_Machine" FromRole="ShiftTarget" ToRole="Machine" />
         </EntityType>
-        <Association Name="FK_ShiftTarget_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ShiftTarget" Role="ShiftTarget" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ShiftTarget">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ShiftTarget_Shift">
           <End Type="Heka.DataAccess.Models.Shift" Role="Shift" Multiplicity="0..1" />
           <End Type="Heka.DataAccess.Models.ShiftTarget" Role="ShiftTarget" Multiplicity="*" />
@@ -8172,11 +7944,11 @@
           <Property Name="StartUserId" Type="Int32" />
           <Property Name="EndUserId" Type="Int32" />
           <Property Name="Explanation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine" FromRole="ActualRouteHistory" ToRole="Machine" />
           <NavigationProperty Name="MachineGroup" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_MachineGroup" FromRole="ActualRouteHistory" ToRole="MachineGroup" />
           <NavigationProperty Name="Process" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_Process" FromRole="ActualRouteHistory" ToRole="Process" />
           <NavigationProperty Name="ProcessGroup" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_ProcessGroup" FromRole="ActualRouteHistory" ToRole="ProcessGroup" />
           <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_WorkOrderDetail" FromRole="ActualRouteHistory" ToRole="WorkOrderDetail" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine" FromRole="ActualRouteHistory" ToRole="Machine" />
         </EntityType>
         <EntityType Name="Process">
           <Key>
@@ -8243,24 +8015,12 @@
           <Property Name="Explanation" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="MachineId" Type="Int32" />
           <Property Name="MachineGroupId" Type="Int32" />
-          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_RouteItem_Machine" FromRole="RouteItem" ToRole="Machine" />
           <NavigationProperty Name="MachineGroup" Relationship="Heka.DataAccess.Models.FK_RouteItem_MachineGroup" FromRole="RouteItem" ToRole="MachineGroup" />
           <NavigationProperty Name="Process" Relationship="Heka.DataAccess.Models.FK_RouteItem_Process" FromRole="RouteItem" ToRole="Process" />
           <NavigationProperty Name="ProcessGroup" Relationship="Heka.DataAccess.Models.FK_RouteItem_ProcessGroup" FromRole="RouteItem" ToRole="ProcessGroup" />
           <NavigationProperty Name="Route" Relationship="Heka.DataAccess.Models.FK_RouteItem_Route" FromRole="RouteItem" ToRole="Route" />
+          <NavigationProperty Name="Machine" Relationship="Heka.DataAccess.Models.FK_RouteItem_Machine" FromRole="RouteItem" ToRole="Machine" />
         </EntityType>
-        <Association Name="FK_ActualRouteHistory_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.ActualRouteHistory" Role="ActualRouteHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ActualRouteHistory">
-              <PropertyRef Name="MachineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ActualRouteHistory_MachineGroup">
           <End Type="Heka.DataAccess.Models.MachineGroup" Role="MachineGroup" Multiplicity="0..1" />
           <End Type="Heka.DataAccess.Models.ActualRouteHistory" Role="ActualRouteHistory" Multiplicity="*" />
@@ -8306,18 +8066,6 @@
             </Principal>
             <Dependent Role="ActualRouteHistory">
               <PropertyRef Name="WorkOrderDetailId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RouteItem_Machine">
-          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
-          <End Type="Heka.DataAccess.Models.RouteItem" Role="RouteItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Machine">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="RouteItem">
-              <PropertyRef Name="MachineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -8414,6 +8162,262 @@
             </Principal>
             <Dependent Role="RouteItem">
               <PropertyRef Name="RouteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Machine">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachineCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MachineName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MachineType" Type="Int32" />
+          <Property Name="PlantId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUserId" Type="Int32" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedUserId" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="IsWatched" Type="Boolean" />
+          <Property Name="WatchCycleStartCondition" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="DeviceIp" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PostureExpirationCycleCount" Type="Int32" />
+          <Property Name="IsUpToPostureEntry" Type="Boolean" />
+          <Property Name="WorkingUserId" Type="Int32" />
+          <Property Name="BackColor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ForeColor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MachineStatus" Type="Int32" />
+          <Property Name="MachineGroupId" Type="Int32" />
+          <Property Name="SignalEndDelay" Type="Int32" />
+          <NavigationProperty Name="ActualRouteHistory" Relationship="Heka.DataAccess.Models.FK_ActualRouteHistory_Machine" FromRole="Machine" ToRole="ActualRouteHistory" />
+          <NavigationProperty Name="Equipment" Relationship="Heka.DataAccess.Models.FK_Equipment_Machine" FromRole="Machine" ToRole="Equipment" />
+          <NavigationProperty Name="Incident" Relationship="Heka.DataAccess.Models.FK_Incident_Machine" FromRole="Machine" ToRole="Incident" />
+          <NavigationProperty Name="LayoutItem" Relationship="Heka.DataAccess.Models.FK_LayoutItem_Machine" FromRole="Machine" ToRole="LayoutItem" />
+          <NavigationProperty Name="MachineGroup" Relationship="Heka.DataAccess.Models.FK_Machine_MachineGrouo" FromRole="Machine" ToRole="MachineGroup" />
+          <NavigationProperty Name="MachineMaintenanceInstruction" Relationship="Heka.DataAccess.Models.FK_MachineMaintenanceInstruction_Machine" FromRole="Machine" ToRole="MachineMaintenanceInstruction" />
+          <NavigationProperty Name="MachinePlan" Relationship="Heka.DataAccess.Models.FK_MachinePlan_Machine" FromRole="Machine" ToRole="MachinePlan" />
+          <NavigationProperty Name="MachineSignal" Relationship="Heka.DataAccess.Models.FK_MachineSignal_Machine" FromRole="Machine" ToRole="MachineSignal" />
+          <NavigationProperty Name="MoldTest" Relationship="Heka.DataAccess.Models.FK_MoldTest_Machine" FromRole="Machine" ToRole="MoldTest" />
+          <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_Machine" FromRole="Machine" ToRole="ProductionPosture" />
+          <NavigationProperty Name="ProductQualityData" Relationship="Heka.DataAccess.Models.FK_ProductQualityData_Machine" FromRole="Machine" ToRole="ProductQualityData" />
+          <NavigationProperty Name="ProductWastage" Relationship="Heka.DataAccess.Models.FK_ProductWastage_Machine" FromRole="Machine" ToRole="ProductWastage" />
+          <NavigationProperty Name="RouteItem" Relationship="Heka.DataAccess.Models.FK_RouteItem_Machine" FromRole="Machine" ToRole="RouteItem" />
+          <NavigationProperty Name="ShiftTarget" Relationship="Heka.DataAccess.Models.FK_ShiftTarget_Machine" FromRole="Machine" ToRole="ShiftTarget" />
+          <NavigationProperty Name="UserWorkOrderHistory" Relationship="Heka.DataAccess.Models.FK_UserWorkOrderHistory_Machine" FromRole="Machine" ToRole="UserWorkOrderHistory" />
+          <NavigationProperty Name="WorkOrderDetail" Relationship="Heka.DataAccess.Models.FK_WorkOrderDetail_Machine" FromRole="Machine" ToRole="WorkOrderDetail" />
+        </EntityType>
+        <Association Name="FK_ActualRouteHistory_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ActualRouteHistory" Role="ActualRouteHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActualRouteHistory">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Equipment_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Equipment" Role="Equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Incident_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Incident" Role="Incident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Incident">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LayoutItem_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.LayoutItem" Role="LayoutItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LayoutItem">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Machine_MachineGrouo">
+          <End Type="Heka.DataAccess.Models.MachineGroup" Role="MachineGroup" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MachineGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Machine">
+              <PropertyRef Name="MachineGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachineMaintenanceInstruction_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachineMaintenanceInstruction" Role="MachineMaintenanceInstruction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineMaintenanceInstruction">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachinePlan_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachinePlan" Role="MachinePlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachinePlan">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MachineSignal_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MachineSignal" Role="MachineSignal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MachineSignal">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MoldTest_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.MoldTest" Role="MoldTest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MoldTest">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionPosture_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductionPosture" Role="ProductionPosture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductionPosture">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductQualityData_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductQualityData" Role="ProductQualityData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductQualityData">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductWastage_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductWastage" Role="ProductWastage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductWastage">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RouteItem_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.RouteItem" Role="RouteItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RouteItem">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShiftTarget_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ShiftTarget" Role="ShiftTarget" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ShiftTarget">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserWorkOrderHistory_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.UserWorkOrderHistory" Role="UserWorkOrderHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserWorkOrderHistory">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderDetail_Machine">
+          <End Type="Heka.DataAccess.Models.Machine" Role="Machine" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.WorkOrderDetail" Role="WorkOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Machine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkOrderDetail">
+              <PropertyRef Name="MachineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PostureCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PostureCategoryCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PostureCategoryName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ShouldStopSignal" Type="Boolean" />
+          <NavigationProperty Name="ProductionPosture" Relationship="Heka.DataAccess.Models.FK_ProductionPosture_PostureCategory" FromRole="PostureCategory" ToRole="ProductionPosture" />
+        </EntityType>
+        <Association Name="FK_ProductionPosture_PostureCategory">
+          <End Type="Heka.DataAccess.Models.PostureCategory" Role="PostureCategory" Multiplicity="0..1" />
+          <End Type="Heka.DataAccess.Models.ProductionPosture" Role="ProductionPosture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PostureCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductionPosture">
+              <PropertyRef Name="PostureCategoryId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -9044,32 +9048,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Machine">
-            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Machine">
-              <MappingFragment StoreEntitySet="Machine">
-                <ScalarProperty Name="MachineGroupId" ColumnName="MachineGroupId" />
-                <ScalarProperty Name="MachineStatus" ColumnName="MachineStatus" />
-                <ScalarProperty Name="ForeColor" ColumnName="ForeColor" />
-                <ScalarProperty Name="BackColor" ColumnName="BackColor" />
-                <ScalarProperty Name="WorkingUserId" ColumnName="WorkingUserId" />
-                <ScalarProperty Name="IsUpToPostureEntry" ColumnName="IsUpToPostureEntry" />
-                <ScalarProperty Name="PostureExpirationCycleCount" ColumnName="PostureExpirationCycleCount" />
-                <ScalarProperty Name="DeviceIp" ColumnName="DeviceIp" />
-                <ScalarProperty Name="WatchCycleStartCondition" ColumnName="WatchCycleStartCondition" />
-                <ScalarProperty Name="IsWatched" ColumnName="IsWatched" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
-                <ScalarProperty Name="MachineType" ColumnName="MachineType" />
-                <ScalarProperty Name="MachineName" ColumnName="MachineName" />
-                <ScalarProperty Name="MachineCode" ColumnName="MachineCode" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="MachineGroup">
             <EntityTypeMapping TypeName="Heka.DataAccess.Models.MachineGroup">
               <MappingFragment StoreEntitySet="MachineGroup">
@@ -9206,15 +9184,6 @@
                 <ScalarProperty Name="LogoData" ColumnName="LogoData" />
                 <ScalarProperty Name="PlantName" ColumnName="PlantName" />
                 <ScalarProperty Name="PlantCode" ColumnName="PlantCode" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PostureCategory">
-            <EntityTypeMapping TypeName="Heka.DataAccess.Models.PostureCategory">
-              <MappingFragment StoreEntitySet="PostureCategory">
-                <ScalarProperty Name="PostureCategoryName" ColumnName="PostureCategoryName" />
-                <ScalarProperty Name="PostureCategoryCode" ColumnName="PostureCategoryCode" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -9799,6 +9768,43 @@
                 <ScalarProperty Name="ProcessGroupId" ColumnName="ProcessGroupId" />
                 <ScalarProperty Name="ProcessId" ColumnName="ProcessId" />
                 <ScalarProperty Name="RouteId" ColumnName="RouteId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Machine">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.Machine">
+              <MappingFragment StoreEntitySet="Machine">
+                <ScalarProperty Name="SignalEndDelay" ColumnName="SignalEndDelay" />
+                <ScalarProperty Name="MachineGroupId" ColumnName="MachineGroupId" />
+                <ScalarProperty Name="MachineStatus" ColumnName="MachineStatus" />
+                <ScalarProperty Name="ForeColor" ColumnName="ForeColor" />
+                <ScalarProperty Name="BackColor" ColumnName="BackColor" />
+                <ScalarProperty Name="WorkingUserId" ColumnName="WorkingUserId" />
+                <ScalarProperty Name="IsUpToPostureEntry" ColumnName="IsUpToPostureEntry" />
+                <ScalarProperty Name="PostureExpirationCycleCount" ColumnName="PostureExpirationCycleCount" />
+                <ScalarProperty Name="DeviceIp" ColumnName="DeviceIp" />
+                <ScalarProperty Name="WatchCycleStartCondition" ColumnName="WatchCycleStartCondition" />
+                <ScalarProperty Name="IsWatched" ColumnName="IsWatched" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedUserId" ColumnName="UpdatedUserId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedUserId" ColumnName="CreatedUserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="MachineType" ColumnName="MachineType" />
+                <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+                <ScalarProperty Name="MachineCode" ColumnName="MachineCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PostureCategory">
+            <EntityTypeMapping TypeName="Heka.DataAccess.Models.PostureCategory">
+              <MappingFragment StoreEntitySet="PostureCategory">
+                <ScalarProperty Name="ShouldStopSignal" ColumnName="ShouldStopSignal" />
+                <ScalarProperty Name="PostureCategoryName" ColumnName="PostureCategoryName" />
+                <ScalarProperty Name="PostureCategoryCode" ColumnName="PostureCategoryCode" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

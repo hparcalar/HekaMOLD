@@ -25,6 +25,32 @@
         $scope.selectedIncident = item;
     }
 
+    // INCIDENT CATEGORY SELECTION EVENTS
+    $scope.selectedIncidentCategory = { Id: 0 };
+
+    $scope.showIncidentCategoryList = function () {
+        // DO BROADCAST
+        $scope.$broadcast('loadIncidentCategoryList');
+
+        $('#dial-categorylist').dialog({
+            width: window.innerWidth * 0.95,
+            height: window.innerHeight * 0.95,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    // EMIT SELECTED INCIDENT CATEGORY DATA
+    $scope.$on('incidentCategorySelected', function (e, d) {
+        $scope.selectedIncidentCategory = d;
+        $('#dial-categorylist').dialog('close');
+        $scope.startIncident();
+    });
+
     // INCIDENT STATUS EVENTS
     $scope.startIncident = function () {
         bootbox.confirm({
@@ -44,7 +70,10 @@
                 if (result) {
                     $scope.saveStatus = 1;
 
-                    $http.post(HOST_URL + 'Mobile/StartIncident', { incidentId: $scope.selectedIncident.Id }, 'json')
+                    $http.post(HOST_URL + 'Mobile/StartIncident', {
+                        incidentId: $scope.selectedIncident.Id,
+                        categoryId: $scope.selectedIncidentCategory.Id
+                    }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;

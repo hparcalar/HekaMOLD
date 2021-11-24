@@ -27,10 +27,10 @@ namespace Heka.DataAccess.Context
         public Nullable<int> EndUserId { get; set; }
         public string Explanation { get; set; }
     
-        public virtual Machine Machine { get; set; }
         public virtual MachineGroup MachineGroup { get; set; }
         public virtual Process Process { get; set; }
         public virtual ProcessGroup ProcessGroup { get; set; }
         public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual Machine Machine { get; set; }
     }
 }

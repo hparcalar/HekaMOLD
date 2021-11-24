@@ -214,7 +214,7 @@ namespace HekaMOLD.Business.UseCases
                     d.WorkOrderStatus == (int)WorkOrderStatusType.Completed
                     ||
                     d.WorkOrderStatus == (int)WorkOrderStatusType.Cancelled
-                )).OrderByDescending(d => d.Id).Take(5).ToList().ForEach(d =>
+                )).OrderByDescending(d => d.CreatedDate).Take(10).ToList().ForEach(d =>
             {
                 WorkOrderDetailModel containerObj = new WorkOrderDetailModel();
                 d.MapTo(containerObj);
@@ -990,7 +990,8 @@ namespace HekaMOLD.Business.UseCases
 
                 lastActiveSignal.SignalStatus = 1;
                 lastActiveSignal.EndDate = DateTime.Now;
-                lastActiveSignal.Duration = Convert.ToInt32((lastActiveSignal.EndDate - lastActiveSignal.StartDate).Value.TotalSeconds);
+                lastActiveSignal.Duration = Convert.ToInt32((lastActiveSignal.EndDate - lastActiveSignal.StartDate).Value.TotalSeconds)
+                    - (dbMachine.SignalEndDelay ?? 0);
 
                 _unitOfWork.SaveChanges();
 
@@ -1162,6 +1163,11 @@ namespace HekaMOLD.Business.UseCases
                     model.ShiftId = currentShift != null ? currentShift.Id : (int?)null;
                     model.ShiftBelongsToDate = currentShift != null ? currentShift.ShiftBelongsToDate : null;
 
+                    if (dbPostureCategory != null && dbPostureCategory.ShouldStopSignal == true)
+                    {
+                        dbMachine.MachineStatus = (int)MachineStatusType.Stopped;
+                    }
+
                     dbObj = new ProductionPosture
                     {
                         CreatedDate = DateTime.Now,
@@ -1175,7 +1181,7 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 if (dbObj.Id > 0 && model.PostureStatus != dbObj.PostureStatus)
-                    createNotification = true; ;
+                    createNotification = true;
 
                 var crDate = dbObj.CreatedDate;
                 var stDate = dbObj.StartDate;
@@ -1257,6 +1263,11 @@ namespace HekaMOLD.Business.UseCases
                 dbPosture.PostureStatus = (int)PostureStatusType.Resolved;
                 dbPosture.EndDate = DateTime.Now;
                 dbPosture.Explanation = model.Description;
+
+                if (dbPostureCategory != null && dbPostureCategory.ShouldStopSignal == true)
+                {
+                    dbMachine.MachineStatus = (int)MachineStatusType.Running;
+                }
 
                 _unitOfWork.SaveChanges();
 
@@ -1355,7 +1366,9 @@ namespace HekaMOLD.Business.UseCases
                         StartDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate),
                         EndDateStr = d.EndDate != null ?
                             string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
-                    }).ToArray();
+                    })
+                    .OrderByDescending(d => d.CreatedDate)
+                    .ToArray();
             }
             catch (Exception)
             {
@@ -1798,6 +1811,9 @@ namespace HekaMOLD.Business.UseCases
                 var repoMachine = _unitOfWork.GetRepository<Machine>();
                 var repoCategory = _unitOfWork.GetRepository<IncidentCategory>();
 
+                if (model.IncidentCategoryId == 0)
+                    model.IncidentCategoryId = null;
+
                 if (model.MachineId == null)
                     throw new Exception("Makine bilgisi arıza için girilmelidir.");
 
@@ -1849,13 +1865,13 @@ namespace HekaMOLD.Business.UseCases
                 if (createNotification)
                 {
                     string notifyMessage = string.Format("[{0:dd.MM.yyyy}]", dbObj.CreatedDate)
-                           + " " + dbMachine.MachineName + " için arıza bildirimi: " + dbCategory.IncidentCategoryName;
+                           + " " + dbMachine.MachineName + " için arıza bildirimi: " + (dbCategory != null ? dbCategory.IncidentCategoryName : "");
                     if (dbObj.IncidentStatus == (int)PostureStatusType.WorkingOn)
                         notifyMessage = string.Format("[{0:dd.MM.yyyy}]", dbObj.CreatedDate)
-                           + " " + dbMachine.MachineName + " için arızaya müdahale başlandı: " + dbCategory.IncidentCategoryName;
+                           + " " + dbMachine.MachineName + " için arızaya müdahale başlandı: " + (dbCategory != null ? dbCategory.IncidentCategoryName : "");
                     else if (dbObj.IncidentStatus == (int)PostureStatusType.Resolved)
                         notifyMessage = string.Format("[{0:dd.MM.yyyy}]", dbObj.CreatedDate)
-                           + " " + dbMachine.MachineName + " için arıza sona erdi: " + dbCategory.IncidentCategoryName;
+                           + " " + dbMachine.MachineName + " için arıza sona erdi: " + (dbCategory != null ? dbCategory.IncidentCategoryName : "");
 
                     base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
                     {
@@ -1903,10 +1919,12 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Arıza kaydı bulunamadı.");
 
                 var dbMachine = repoMachine.Get(d => d.Id == dbIncident.MachineId);
-                var dbCategory = repoCategory.Get(d => d.Id == dbIncident.IncidentCategoryId);
+                var dbCategory = repoCategory.Get(d => d.Id == model.CategoryId);
 
                 dbIncident.IncidentStatus = (int)PostureStatusType.WorkingOn;
                 dbIncident.StartDate = DateTime.Now;
+                if (model.CategoryId > 0)
+                    dbIncident.IncidentCategoryId = model.CategoryId;
                 dbIncident.StartedUserId = model.UserId;
 
                 _unitOfWork.SaveChanges();
@@ -1915,7 +1933,7 @@ namespace HekaMOLD.Business.UseCases
                 {
                     IsProcessed = false,
                     Message = string.Format("[{0:dd.MM.yyyy}]", DateTime.Now)
-                           + " " + dbMachine.MachineName + " için arızaya müdahale başlandı: " + dbCategory.IncidentCategoryName,
+                           + " " + dbMachine.MachineName + " için arızaya müdahale başlandı: " + (dbCategory != null ? dbCategory.IncidentCategoryName : ""),
                     Title = NotifyType.IncidentTouched.ToCaption(),
                     NotifyType = (int)NotifyType.IncidentTouched,
                     SeenStatus = 0,
@@ -2055,7 +2073,9 @@ namespace HekaMOLD.Business.UseCases
                         StartDateStr = d.StartDate != null ? string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate) : "",
                         EndDateStr = d.EndDate != null ?
                             string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
-                    }).ToArray();
+                    })
+                    .OrderByDescending(d => d.CreatedDate)
+                    .ToArray();
             }
             catch (Exception)
             {

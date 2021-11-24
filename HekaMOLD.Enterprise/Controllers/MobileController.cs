@@ -24,12 +24,25 @@ namespace HekaMOLD.Enterprise.Controllers
         // GET: Mobile
         public ActionResult Index()
         {
-            if (this.IsGranted("MobileProductionUser"))
-                return RedirectToAction("Production");
-            else if (this.IsGranted("MobileMechanicUser"))
-                return RedirectToAction("Mechanic");
-            else if (this.IsGranted("MobileWarehouseUser"))
-                return RedirectToAction("Warehouse");
+            if (Request.Cookies.AllKeys.Contains("ShowAs"))
+            {
+                var showAs = Request.Cookies["ShowAs"].Value;
+                if (showAs == "MobileProductionUser")
+                    return RedirectToAction("Production");
+                else if (showAs == "MobileMechanicUser")
+                    return RedirectToAction("Mechanic");
+                else if (showAs == "MobileWarehouseUser")
+                    return RedirectToAction("Warehouse");
+            }
+            else
+            {
+                if (this.IsGranted("MobileProductionUser"))
+                    return RedirectToAction("Production");
+                else if (this.IsGranted("MobileMechanicUser"))
+                    return RedirectToAction("Mechanic");
+                else if (this.IsGranted("MobileWarehouseUser"))
+                    return RedirectToAction("Warehouse");
+            }
 
             return View();
         }
@@ -709,6 +722,16 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         public ActionResult MaintenanceSchedule()
+        {
+            return View();
+        }
+
+        public ActionResult PostureHistory()
+        {
+            return View();
+        }
+
+        public ActionResult IncidentHistory()
         {
             return View();
         }

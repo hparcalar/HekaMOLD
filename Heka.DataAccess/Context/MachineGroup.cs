@@ -17,9 +17,9 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MachineGroup()
         {
-            this.Machine = new HashSet<Machine>();
             this.ActualRouteHistory = new HashSet<ActualRouteHistory>();
             this.RouteItem = new HashSet<RouteItem>();
+            this.Machine = new HashSet<Machine>();
         }
     
         public int Id { get; set; }
@@ -29,12 +29,12 @@ namespace Heka.DataAccess.Context
         public Nullable<int> LayoutObjectTypeId { get; set; }
     
         public virtual LayoutObjectType LayoutObjectType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Machine> Machine { get; set; }
         public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteItem> RouteItem { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Machine> Machine { get; set; }
     }
 }

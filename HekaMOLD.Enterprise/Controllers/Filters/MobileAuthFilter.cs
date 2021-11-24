@@ -15,6 +15,13 @@ namespace HekaMOLD.Enterprise.Controllers.Filters
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            if (filterContext.HttpContext.Request.QueryString.AllKeys.Contains("ShowAs"))
+            {
+                var showAs = filterContext.HttpContext.Request.QueryString["ShowAs"];
+                filterContext.HttpContext.Response.Cookies.Set(new HttpCookie("ShowAs", HttpUtility.UrlEncode(showAs)));
+                filterContext.HttpContext.Response.Cookies["ShowAs"].Expires = DateTime.Now.AddDays(1);
+            }
+
             if (string.Equals(filterContext.ActionDescriptor.ActionName, "Login") &&
                 string.Equals(filterContext.RouteData.Values["controller"].ToString(), "Mobile"))
             {

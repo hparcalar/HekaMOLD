@@ -273,7 +273,9 @@ namespace HekaMOLD.Business.UseCases
                     CreatedUserId = d.CreatedUserId,
                     UpdatedDate = d.UpdatedDate,
                     UpdatedUserId = d.UpdatedUserId,
-                }).ToArray();
+                })
+                .OrderByDescending(m => m.CreatedDate)
+                .ToArray();
             }
             catch (Exception)
             {
@@ -569,7 +571,9 @@ namespace HekaMOLD.Business.UseCases
                     CreatedUserId = d.CreatedUserId,
                     UpdatedDate = d.UpdatedDate,
                     UpdatedUserId = d.UpdatedUserId,
-                }).ToArray();
+                })
+                .OrderByDescending(m => m.ControlDate)    
+                .ToArray();
             }
             catch (Exception)
             {

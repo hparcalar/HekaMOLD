@@ -22,7 +22,7 @@ namespace Heka.DataAccess.Context
         public string Title { get; set; }
         public Nullable<int> PlantId { get; set; }
     
-        public virtual Machine Machine { get; set; }
         public virtual Plant Plant { get; set; }
+        public virtual Machine Machine { get; set; }
     }
 }

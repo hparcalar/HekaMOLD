@@ -112,8 +112,12 @@
                 d.OrderNo == hourNo);
 
             if (typeof qData != 'undefined' && qData != null) {
-                return checkType == 1 ?
-                    qData.CheckResult : qData.NumericResult;
+                if (checkType == 1) {
+                    return qData.NumericResult == null ? 0 :
+                        qData.NumericResult == 2 ? 2 : qData.NumericResult == 1 ? 1 : 0;
+                }
+                else
+                    return qData.NumericResult;
             }
         } catch (e) {
 
@@ -122,33 +126,69 @@
         return checkType == 1 ? false : 0;
     }
 
+    $scope.toggleQualityValue = function (planId, hourNo, checkType) {
+        try {
+            var qData = $scope.modelObject.Details.find(d => d.ProductQualityPlanId == planId &&
+                d.OrderNo == hourNo);
+
+            if (typeof qData == 'undefined' || qData == null) {
+                qData = {
+                    ProductQualityPlanId: planId,
+                    NumericResult: null,
+                    IsOk: false,
+                    OrderNo: hourNo,
+                    NewDetail: true,
+                };
+                $scope.modelObject.Details.push(qData);
+            }
+
+            if (typeof qData != 'undefined' && qData != null) {
+                if (checkType == 1) {
+                    if (qData.NumericResult == null || qData.NumericResult == 0)
+                        qData.NumericResult = 1;
+                    else if (qData.NumericResult == 1)
+                        qData.NumericResult = 2;
+                    else if (qData.NumericResult == 2)
+                        qData.NumericResult = null;
+                }
+            }
+        } catch (e) {
+
+        }
+    }
+
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
         // VALIDATE CHECK TYPE = 1 DATA
-        $.each($('.plan-check'), function (ix, elm) {
-            if ($(elm).attr('data-active') == 'true') {
-                var planId = parseInt($(elm).attr('data-plan-id'));
-                var hourData = parseInt($(elm).attr('data-hour'));
+        //$.each($('.plan-check'), function (ix, elm) {
+        //    if ($(elm).attr('data-active') == 'true') {
+        //        var planId = parseInt($(elm).attr('data-plan-id'));
+        //        var hourData = parseInt($(elm).attr('data-hour'));
 
-                var existingData = $scope.modelObject.Details.find(d => d.ProductQualityPlanId == planId &&
-                    d.OrderNo == hourData);
-                if (typeof existingData != 'undefined' && existingData != null) {
-                    existingData.CheckResult = $(elm).is(':checked');
-                    existingData.IsOk = existingData.CheckResult;
-                }
-                else {
-                    var newData = {
-                        ProductQualityPlanId: planId,
-                        CheckResult: $(elm).is(':checked'),
-                        IsOk: $(elm).is(':checked'),
-                        OrderNo: hourData,
-                        NewDetail: true,
-                    };
-                    $scope.modelObject.Details.push(newData);
-                }
-            }
-        });
+        //        var existingData = $scope.modelObject.Details.find(d => d.ProductQualityPlanId == planId &&
+        //            d.OrderNo == hourData);
+        //        if (typeof existingData != 'undefined' && existingData != null) {
+        //            existingData.NumericResult = $scope.getQualityValue(planId, hourData, 1);
+        //            if (existingData.NumericResult == 0)
+        //                existingData.NumericResult == null;
+
+        //            existingData.IsOk = existingData.NumericResult == 1;
+        //        }
+        //        else {
+        //            var nmResult = $scope.getQualityValue(planId, hourData, 1);
+
+        //            var newData = {
+        //                ProductQualityPlanId: planId,
+        //                NumericResult: $scope.getQualityValue(planId, hourData, 1),
+        //                IsOk: nmResult == 1,
+        //                OrderNo: hourData,
+        //                NewDetail: true,
+        //            };
+        //            $scope.modelObject.Details.push(newData);
+        //        }
+        //    }
+        //});
 
         // VALIDATE CHECK TYPE = 2 DATA
         $.each($('.plan-numeric'), function (ix, elm) {

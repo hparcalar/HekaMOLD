@@ -23,6 +23,7 @@ namespace Heka.DataAccess.Context
         public int Id { get; set; }
         public string PostureCategoryCode { get; set; }
         public string PostureCategoryName { get; set; }
+        public Nullable<bool> ShouldStopSignal { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionPosture> ProductionPosture { get; set; }

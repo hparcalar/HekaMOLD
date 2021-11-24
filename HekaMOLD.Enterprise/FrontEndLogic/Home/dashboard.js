@@ -15,6 +15,23 @@
             + $scope.filterModel.endDate, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
+                    if ($scope.profileList.length > 0) {
+                        for (var i = 0; i < resp.data.length; i++) {
+                            var cMac = resp.data[i];
+                            var relatedProfile = $scope.profileList.find(d => d.Id == cMac.WorkingUserId);
+                            if (relatedProfile != null) {
+                                cMac.ProfileImageBase64 = relatedProfile.ProfileImageBase64;
+                            }
+                            else
+                                cMac.ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
+                        }
+                    }
+                    else {
+                        for (var i = 0; i < resp.data.length; i++) {
+                            resp.data[i].ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
+                        }
+                    }
+
                     $scope.machineList = resp.data;
                     $scope.getUserProfiles();
                     $scope.isBindingModel = false;
@@ -45,8 +62,10 @@
         $.each($('.user-img'), function (ix, val) {
             var userId = parseInt($(this).attr('data-user-id'));
             var relatedProfile = $scope.profileList.find(d => d.Id == userId);
-            if (relatedProfile != null && relatedProfile.ProfileImageBase64.length > 0)
+            if (relatedProfile != null && relatedProfile.ProfileImageBase64.length > 0) {
+                var currentUserId = $(this).attr('data-user-id');
                 $(this).attr('src', relatedProfile.ProfileImageBase64);
+            }
         });
     }
 

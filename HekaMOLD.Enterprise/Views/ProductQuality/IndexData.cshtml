@@ -159,12 +159,23 @@
                                     {{item.CheckProperties}}
                                 </td>
                                 <td ng-repeat="itemData in hourList" style="padding:1px !important;">
-                                    <input ng-if="item.CheckType == 1" class="plan-check"
+                                    <button ng-if="item.CheckType == 1" class="plan-check m-0 p-2"
+                                            data-active="{{ item.CheckType == 1 ? 'true' : 'false' }}"
+                                            data-hour="{{ itemData.HourNo }}"
+                                            data-plan-id="{{ item.Id }}"
+                                            ng-click="toggleQualityValue(item.Id, itemData.HourNo, 1)"
+                                            ng-class="{'bg-light': getQualityValue(item.Id, itemData.HourNo, 1) == 0,
+                                                'bg-danger': getQualityValue(item.Id, itemData.HourNo, 1) == 2,
+                                                'bg-success': getQualityValue(item.Id, itemData.HourNo, 1) == 1}"
+                                            >
+                                        &nbsp;
+                                    </button>
+                                    @*<input ng-if="item.CheckType == 1" class="plan-check"
                                            data-active="{{item.CheckType == 1 ? 'true' : 'false'}}"
                                            data-hour="{{itemData.HourNo}}"
                                            data-plan-id="{{item.Id}}"
                                            ng-checked="getQualityValue(item.Id, itemData.HourNo, 1)"
-                                           type="checkbox" />
+                                           type="checkbox" />*@
                                     <input ng-if="item.CheckType == 2" class="plan-numeric"
                                            style="width:35px !important; font-size:xx-small !important;"
                                            data-active="{{item.CheckType == 2 ? 'true' : 'false'}}"

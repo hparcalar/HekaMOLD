@@ -103,7 +103,11 @@ namespace HekaMOLD.Business.UseCases
                     foreach (var item in deletedDetails)
                     {
                         if (item.ItemReceiptDetail.Any())
-                            throw new Exception("İrsaliyesi girilmiş olan bir sipariş detayı silinemez.");
+                            continue;
+                        //throw new Exception("İrsaliyesi girilmiş olan bir sipariş detayı silinemez.");
+
+                        if (item.WorkOrderDetail.Any())
+                            continue;
 
                         #region SET REQUEST & DETAIL TO APPROVED
                         if (item.ItemRequestDetail != null)
@@ -233,6 +237,37 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult UpdateOrderDetail(ItemOrderDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+                var dbOrder = repoOrderDetail.Get(d => d.Id == model.Id);
+                if (dbOrder == null)
+                    throw new Exception("Sipariş kalem bilgisi HEKA yazılımında bulunamadı.");
+
+                dbOrder.Quantity = model.Quantity;
+                dbOrder.UnitPrice = model.UnitPrice;
+                dbOrder.SubTotal = model.SubTotal;
+                dbOrder.TaxAmount = model.TaxAmount;
+                dbOrder.ForexRate = model.ForexRate;
+                dbOrder.ForexId = model.ForexId;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public BusinessResult DeleteItemOrder(int id)
         {
             BusinessResult result = new BusinessResult();

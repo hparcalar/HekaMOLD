@@ -190,6 +190,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetIncidentList()
         {
             IncidentModel[] result = new IncidentModel[0];
@@ -273,6 +274,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetPostureList()
         {
             ProductionPostureModel[] result = new ProductionPostureModel[0];

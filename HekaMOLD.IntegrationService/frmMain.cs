@@ -86,6 +86,7 @@ namespace HekaMOLD.IntegrationService
                         var syncList = bObj.GetSyncPointList()
                             .Where(d => d.SyncPointType == (int)SyncPointType.WorkData)
                             .ToArray();
+
                         foreach (var sync in syncList)
                         {
                             var result = entObj.PullFirms(sync);

@@ -11,5 +11,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int Id { get; set; }
         public string PostureCategoryCode { get; set; }
         public string PostureCategoryName { get; set; }
+        public bool? ShouldStopSignal { get; set; }
     }
 }
