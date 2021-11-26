@@ -113,8 +113,12 @@
     $scope.warehouseList = [];
 
     $scope.selectProduct = function (item) {
-        if (item.QualityStatus != 1) {
-            toastr.error('Kalite onayı almamış ürün depoya girilemez.');
+        if (item.QualityStatus == 2) {
+            toastr.error('Kalite RED almış ürün OK olana kadar depo hareketi göremez.');
+            return;
+        }
+        else if (item.QualityStatus == 3) {
+            toastr.error('Kalite RED almış ürün OK olana kadar depo hareketi göremez.');
             return;
         }
 
@@ -303,6 +307,50 @@
 
                                 if (resp.data.Status == 1) {
                                     toastr.success('Kayıt başarılı.', 'Bilgilendirme');
+
+                                    $scope.modelObject = {
+                                        DocumentNo: '', FirmId: 0,
+                                        FirmCode: '', FirmName: '',
+                                        ShowOnlyOk: false,
+                                        Details: []
+                                    };
+
+                                    $scope.bindModel();
+                                }
+                                else
+                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                            }
+                        }).catch(function (err) { });
+                }
+            }
+        });
+    }
+
+    $scope.deleteEntries = function () {
+        bootbox.confirm({
+            message: "Seçilen ürünleri silmek istediğinizden emin misiniz?",
+            closeButton: false,
+            buttons: {
+                confirm: {
+                    label: 'Evet',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'Hayır',
+                    className: 'btn-light'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $scope.saveStatus = 1;
+
+                    $http.post(HOST_URL + 'Mobile/DeleteSerials', { model: $scope.selectedProducts }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                $scope.saveStatus = 0;
+
+                                if (resp.data.Status == 1) {
+                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
 
                                     $scope.modelObject = {
                                         DocumentNo: '', FirmId: 0,

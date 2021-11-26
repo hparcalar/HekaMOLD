@@ -64,7 +64,6 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<Incident> Incident { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LayoutItem> LayoutItem { get; set; }
-        public virtual MachineGroup MachineGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -87,5 +86,6 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+        public virtual MachineGroup MachineGroup { get; set; }
     }
 }

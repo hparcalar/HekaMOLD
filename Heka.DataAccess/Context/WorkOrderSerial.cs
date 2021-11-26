@@ -32,10 +32,12 @@ namespace Heka.DataAccess.Context
         public Nullable<int> ItemReceiptDetailId { get; set; }
         public Nullable<int> QualityStatus { get; set; }
         public string QualityExplanation { get; set; }
+        public Nullable<int> TargetWarehouseId { get; set; }
     
         public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
-        public virtual WorkOrder WorkOrder { get; set; }
-        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
         public virtual Shift Shift { get; set; }
+        public virtual Warehouse Warehouse { get; set; }
+        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual WorkOrder WorkOrder { get; set; }
     }
 }

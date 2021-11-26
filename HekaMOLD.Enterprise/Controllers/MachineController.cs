@@ -84,6 +84,34 @@ namespace HekaMOLD.Enterprise.Controllers
 
         [HttpGet]
         [FreeAction]
+        public JsonResult GetMachineStatsForDashboard()
+        {
+            MachineModel[] result = new MachineModel[0];
+
+            ShiftModel shiftData = null;
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                shiftData = bObj.GetCurrentShift();
+            }
+
+            if (shiftData != null)
+            {
+                string t1 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                string t2 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    result = bObj.GetMachineStats(t1, t2);
+                }
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
         public JsonResult GetUserProfiles(string userIdPrm)
         {
             int[] userIdList = userIdPrm.Split(',').Select(d => Convert.ToInt32(d)).ToArray();

@@ -20,9 +20,11 @@ namespace Heka.DataAccess.Context
             this.EntryQualityData = new HashSet<EntryQualityData>();
             this.ItemReceiptConsume = new HashSet<ItemReceiptConsume>();
             this.ItemReceiptConsume1 = new HashSet<ItemReceiptConsume>();
-            this.ItemSerial = new HashSet<ItemSerial>();
             this.WorkOrderAllocation = new HashSet<WorkOrderAllocation>();
             this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
+            this.ItemSerial = new HashSet<ItemSerial>();
+            this.ItemOrderConsume = new HashSet<ItemOrderConsume>();
+            this.ItemOrderConsume1 = new HashSet<ItemOrderConsume>();
         }
     
         public int Id { get; set; }
@@ -67,10 +69,14 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ItemReceiptConsume> ItemReceiptConsume1 { get; set; }
         public virtual UnitType UnitType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemSerial> ItemSerial { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderAllocation> WorkOrderAllocation { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemSerial> ItemSerial { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemOrderConsume> ItemOrderConsume { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemOrderConsume> ItemOrderConsume1 { get; set; }
     }
 }

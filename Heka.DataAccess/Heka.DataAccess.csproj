@@ -138,6 +138,9 @@
     <Compile Include="Context\ItemOrder.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\ItemOrderConsume.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\ItemOrderDetail.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -309,6 +312,9 @@
     <Compile Include="Context\WorkOrderAllocation.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\WorkOrderCategory.cs">
+      <DependentUpon>HekaDataMapping.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\WorkOrderControl.cs">
       <DependentUpon>HekaDataMapping.tt</DependentUpon>
     </Compile>
@@ -354,7 +360,7 @@
       <DependentUpon>HekaDataMapping.edmx</DependentUpon>
       <LastGenOutput>HekaDataMapping.cs</LastGenOutput>
     </Content>
-    <EmbeddedResource Include="Migration\Versions\1.0.4.3.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.4.9.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.6.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.3.sql" />

@@ -23,6 +23,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? ItemReceiptDetailId { get; set; }
         public int? QualityStatus { get; set; }
         public string QualityExplanation { get; set; }
+        public int? TargetWarehouseId { get; set; }
 
         #region VISUAL ELEMENTS
         public int? ItemId { get; set; }

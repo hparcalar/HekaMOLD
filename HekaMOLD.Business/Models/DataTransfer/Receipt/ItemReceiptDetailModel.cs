@@ -38,6 +38,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         #region SERIAL SAVING PARAMETERS
         public bool UpdateSerials { get; set; } = false;
         public List<WorkOrderSerialModel> Serials { get; set; } = new List<WorkOrderSerialModel>();
+        public List<ItemSerialModel> ItemSerials { get; set; } = new List<ItemSerialModel>();
         #endregion
 
         #region VISUAL ELEMENTS

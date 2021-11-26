@@ -166,6 +166,7 @@
     <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
+    <Compile Include="Controllers\WorkOrderCategoryController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Controllers\MoldTestController.cs" />
     <Compile Include="Controllers\Filters\MobileAuthFilter.cs" />
@@ -3940,6 +3941,7 @@
     <Content Include="Components\Controllers\edit-plan.js" />
     <Content Include="Components\Controllers\machine-incidents.js" />
     <Content Include="Components\Controllers\machine-postures.js" />
+    <Content Include="Components\Controllers\open-so-list.js" />
     <Content Include="Components\Controllers\planning-work-copy.js" />
     <Content Include="Components\Controllers\posture-category-selection.js" />
     <Content Include="Components\Controllers\incident-category-selection.js" />
@@ -3959,6 +3961,7 @@
     <Content Include="Components\Views\EditPlan.html" />
     <Content Include="Components\Views\MachineIncidents.html" />
     <Content Include="Components\Views\MachinePostures.html" />
+    <Content Include="Components\Views\OpenSoList.html" />
     <Content Include="Components\Views\PlanningWorkCopy.html" />
     <Content Include="Components\Views\PostureCategorySelection.html" />
     <Content Include="Components\Views\IncidentCategorySelection.html" />
@@ -4621,6 +4624,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Printing\" />
+    <Folder Include="Views\WorkOrderCategory\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

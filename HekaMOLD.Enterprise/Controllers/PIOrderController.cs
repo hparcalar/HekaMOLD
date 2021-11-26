@@ -176,7 +176,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (OrdersBO bObj = new OrdersBO())
             {
-                result = bObj.GetApprovedOrderDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
+                result = bObj.GetApprovedPurchaseOrderDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

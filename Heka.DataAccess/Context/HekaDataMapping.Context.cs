@@ -56,12 +56,10 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ItemRequestApproveLog> ItemRequestApproveLog { get; set; }
         public virtual DbSet<ItemRequestCategory> ItemRequestCategory { get; set; }
         public virtual DbSet<ItemRequestDetail> ItemRequestDetail { get; set; }
-        public virtual DbSet<ItemSerial> ItemSerial { get; set; }
         public virtual DbSet<ItemUnit> ItemUnit { get; set; }
         public virtual DbSet<ItemWarehouse> ItemWarehouse { get; set; }
         public virtual DbSet<LayoutItem> LayoutItem { get; set; }
         public virtual DbSet<LayoutObjectType> LayoutObjectType { get; set; }
-        public virtual DbSet<MachineGroup> MachineGroup { get; set; }
         public virtual DbSet<MachineMaintenanceInstruction> MachineMaintenanceInstruction { get; set; }
         public virtual DbSet<MachineMaintenanceInstructionEntry> MachineMaintenanceInstructionEntry { get; set; }
         public virtual DbSet<MachinePlan> MachinePlan { get; set; }
@@ -95,10 +93,8 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<WorkOrderControl> WorkOrderControl { get; set; }
         public virtual DbSet<WorkOrderControlType> WorkOrderControlType { get; set; }
         public virtual DbSet<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
-        public virtual DbSet<WorkOrderSerial> WorkOrderSerial { get; set; }
         public virtual DbSet<UserRoleSubscription> UserRoleSubscription { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
-        public virtual DbSet<WorkOrder> WorkOrder { get; set; }
         public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Shift> Shift { get; set; }
@@ -110,5 +106,11 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<RouteItem> RouteItem { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<PostureCategory> PostureCategory { get; set; }
+        public virtual DbSet<WorkOrderSerial> WorkOrderSerial { get; set; }
+        public virtual DbSet<MachineGroup> MachineGroup { get; set; }
+        public virtual DbSet<WorkOrder> WorkOrder { get; set; }
+        public virtual DbSet<WorkOrderCategory> WorkOrderCategory { get; set; }
+        public virtual DbSet<ItemSerial> ItemSerial { get; set; }
+        public virtual DbSet<ItemOrderConsume> ItemOrderConsume { get; set; }
     }
 }

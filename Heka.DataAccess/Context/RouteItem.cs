@@ -23,10 +23,10 @@ namespace Heka.DataAccess.Context
         public Nullable<int> MachineId { get; set; }
         public Nullable<int> MachineGroupId { get; set; }
     
-        public virtual MachineGroup MachineGroup { get; set; }
         public virtual Process Process { get; set; }
         public virtual ProcessGroup ProcessGroup { get; set; }
         public virtual Route Route { get; set; }
         public virtual Machine Machine { get; set; }
+        public virtual MachineGroup MachineGroup { get; set; }
     }
 }

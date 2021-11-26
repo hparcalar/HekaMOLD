@@ -178,6 +178,22 @@ namespace HekaMOLD.Enterprise.Controllers
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
 
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetOpenOrderDetails()
+        {
+            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                result = bObj.GetOpenSaleOrderDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         #region CALCULATIONS
         [HttpPost]
         public JsonResult CalculateRow(ItemOrderDetailModel model)

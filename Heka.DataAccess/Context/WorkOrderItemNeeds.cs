@@ -23,7 +23,7 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> CalculatedDate { get; set; }
     
         public virtual Item Item { get; set; }
-        public virtual WorkOrder WorkOrder { get; set; }
         public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual WorkOrder WorkOrder { get; set; }
     }
 }

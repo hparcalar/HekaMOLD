@@ -143,6 +143,7 @@
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionEntryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionModel.cs" />
     <Compile Include="Models\DataTransfer\MoldTrace\MoldMoveHistory.cs" />
+    <Compile Include="Models\DataTransfer\Order\ItemOrderConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ActualRouteHistoryModel.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Models\DataTransfer\Production\ShiftModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ShiftTargetModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderAllocationModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\WorkOrderCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderItemNeedsModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderModel.cs" />
@@ -184,11 +186,13 @@
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptModel.cs" />
+    <Compile Include="Models\DataTransfer\Receipt\ItemSerialModel.cs" />
     <Compile Include="Models\DataTransfer\Reporting\DeliverySerialListModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestApproveLogModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestModel.cs" />
+    <Compile Include="Models\DataTransfer\Summary\ItemSerialSummary.cs" />
     <Compile Include="Models\DataTransfer\Summary\ItemStateModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\MachineStatsModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\ProductionHistoryModel.cs" />

@@ -332,3 +332,96 @@ IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Posture
 BEGIN
 	ALTER TABLE PostureCategory ADD ShouldStopSignal BIT NULL
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='WorkOrderSerial' AND COLUMN_NAME='TargetWarehouseId')
+BEGIN
+	ALTER TABLE WorkOrderSerial ADD TargetWarehouseId INT NULL
+	ALTER TABLE WorkOrderSerial ADD CONSTRAINT FK_WorkOrderSerial_Warehouse FOREIGN KEY(TargetWarehouseId) REFERENCES Warehouse(Id)
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='MachineGroup' AND COLUMN_NAME='IsProduction')
+BEGIN
+	ALTER TABLE MachineGroup ADD IsProduction BIT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='WorkOrderCategory')
+BEGIN
+	CREATE TABLE [dbo].[WorkOrderCategory](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[WorkOrderCategoryCode] [nvarchar](50) NULL,
+	[WorkOrderCategoryName] [nvarchar](250) NULL,
+	 CONSTRAINT [PK_WorkOrderCategory] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='WorkOrder' AND COLUMN_NAME='WorkOrderCategoryId')
+BEGIN
+	ALTER TABLE WorkOrder ADD WorkOrderCategoryId INT NULL
+	ALTER TABLE WorkOrder ADD CONSTRAINT FK_WorkOrder_WorkOrderCategory FOREIGN KEY(WorkOrderCategoryId) REFERENCES WorkOrderCategory(Id)
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ItemSerial' AND COLUMN_NAME='FirstQuantity')
+BEGIN
+	ALTER TABLE ItemSerial ADD FirstQuantity DECIMAL(18,5) NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ItemSerial' AND COLUMN_NAME='LiveQuantity')
+BEGIN
+	ALTER TABLE ItemSerial ADD LiveQuantity DECIMAL(18,5) NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ItemSerial' AND COLUMN_NAME='WorkOrderDetailId')
+BEGIN
+	ALTER TABLE ItemSerial ADD WorkOrderDetailId INT NULL
+	ALTER TABLE ItemSerial ADD CONSTRAINT FK_ItemSerial_WorkOrderDetail FOREIGN KEY(WorkOrderDetailId) REFERENCES WorkOrderDetail(Id)
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ItemSerial' AND COLUMN_NAME='SerialType')
+BEGIN
+	ALTER TABLE ItemSerial ADD SerialType INT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='ItemSerial' AND COLUMN_NAME='InPackageQuantity')
+BEGIN
+	ALTER TABLE ItemSerial ADD InPackageQuantity INT NULL
+END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='WorkOrderCategory')
+BEGIN
+	CREATE TABLE [dbo].[ItemOrderConsume](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ItemOrderDetailId] [int] NULL,
+	[ConsumerReceiptDetailId] [int] NULL,
+	[ConsumedReceiptDetailId] [int] NULL,
+	[UsedQuantity] [decimal](18, 5) NULL,
+	[UsedGrossQuantity] [decimal](18, 5) NULL,
+	[UnitId] [int] NULL,
+	 CONSTRAINT [PK_ItemOrderConsume] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[ItemOrderConsume]  WITH CHECK ADD  CONSTRAINT [FK_ItemOrderConsume_ItemOrderDetail] FOREIGN KEY([ItemOrderDetailId])
+	REFERENCES [dbo].[ItemOrderDetail] ([Id])
+
+	ALTER TABLE [dbo].[ItemOrderConsume] CHECK CONSTRAINT [FK_ItemOrderConsume_ItemOrderDetail]
+
+	ALTER TABLE [dbo].[ItemOrderConsume]  WITH CHECK ADD  CONSTRAINT [FK_ItemOrderConsume_ItemReceiptDetailConsumed] FOREIGN KEY([ConsumedReceiptDetailId])
+	REFERENCES [dbo].[ItemReceiptDetail] ([Id])
+
+	ALTER TABLE [dbo].[ItemOrderConsume] CHECK CONSTRAINT [FK_ItemOrderConsume_ItemReceiptDetailConsumed]
+
+	ALTER TABLE [dbo].[ItemOrderConsume]  WITH CHECK ADD  CONSTRAINT [FK_ItemOrderConsume_ItemReceiptDetailConsumer] FOREIGN KEY([ConsumerReceiptDetailId])
+	REFERENCES [dbo].[ItemReceiptDetail] ([Id])
+
+	ALTER TABLE [dbo].[ItemOrderConsume] CHECK CONSTRAINT [FK_ItemOrderConsume_ItemReceiptDetailConsumer]
+
+	ALTER TABLE [dbo].[ItemOrderConsume]  WITH CHECK ADD  CONSTRAINT [FK_ItemOrderConsume_UnitType] FOREIGN KEY([UnitId])
+	REFERENCES [dbo].[UnitType] ([Id])
+
+	ALTER TABLE [dbo].[ItemOrderConsume] CHECK CONSTRAINT [FK_ItemOrderConsume_UnitType]
+END

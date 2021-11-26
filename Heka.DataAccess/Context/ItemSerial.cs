@@ -24,8 +24,14 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public Nullable<decimal> FirstQuantity { get; set; }
+        public Nullable<decimal> LiveQuantity { get; set; }
+        public Nullable<int> WorkOrderDetailId { get; set; }
+        public Nullable<int> SerialType { get; set; }
+        public Nullable<int> InPackageQuantity { get; set; }
     
         public virtual Item Item { get; set; }
         public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
+        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
     }
 }

@@ -10,5 +10,6 @@ namespace HekaMOLD.Business.Models.Constants
     {
         Casual=1,
         TrialProduction=2,
+        Contract=3,
     }
 }

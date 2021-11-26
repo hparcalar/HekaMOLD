@@ -18,8 +18,8 @@ namespace Heka.DataAccess.Context
         public MachineGroup()
         {
             this.ActualRouteHistory = new HashSet<ActualRouteHistory>();
-            this.RouteItem = new HashSet<RouteItem>();
             this.Machine = new HashSet<Machine>();
+            this.RouteItem = new HashSet<RouteItem>();
         }
     
         public int Id { get; set; }
@@ -27,14 +27,15 @@ namespace Heka.DataAccess.Context
         public string MachineGroupName { get; set; }
         public Nullable<int> PlantId { get; set; }
         public Nullable<int> LayoutObjectTypeId { get; set; }
+        public Nullable<bool> IsProduction { get; set; }
     
-        public virtual LayoutObjectType LayoutObjectType { get; set; }
-        public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RouteItem> RouteItem { get; set; }
+        public virtual LayoutObjectType LayoutObjectType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Machine> Machine { get; set; }
+        public virtual Plant Plant { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RouteItem> RouteItem { get; set; }
     }
 }

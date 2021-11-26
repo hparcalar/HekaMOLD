@@ -76,6 +76,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
                 var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var repoItemSerial = _unitOfWork.GetRepository<ItemSerial>();
 
                 if (model.FirmId == 0)
                     model.FirmId = null;
@@ -177,34 +178,41 @@ namespace HekaMOLD.Business.UseCases
                         #region UPDATE SERIALS
                         if (item.UpdateSerials)
                         {
-                            var newSerialIdList = item.Serials.Select(d => d.Id).ToArray();
-                            var deletedSerials = dbDetail.WorkOrderSerial.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
+                            var newSerialIdList = item.ItemSerials.Select(d => d.Id).ToArray();
+                            var deletedSerials = dbDetail.ItemSerial.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
                             foreach (var serialItem in deletedSerials)
                             {
-                                if (serialItem.WorkOrderDetail != null)
+                                // IF THERE IS A WORK ORDER, THEN CHANGE STATUS TO APPROVED
+                                if (serialItem.WorkOrderDetail != null && dbObj.ReceiptType == (int)ItemReceiptType.WarehouseInput)
                                 {
-                                    serialItem.SerialStatus = (int)SerialStatusType.Created;
-                                    serialItem.ItemReceiptDetailId = null;
+                                    var dbWorkOrderSerial = repoSerial.Get(m => m.WorkOrderDetailId == serialItem.WorkOrderDetailId
+                                        && m.SerialNo == serialItem.SerialNo);
+                                    if (dbWorkOrderSerial != null)
+                                    {
+                                        dbWorkOrderSerial.SerialStatus = (int)SerialStatusType.Approved;
+                                        dbWorkOrderSerial.QualityStatus = (int)QualityStatusType.Waiting;
+                                        dbWorkOrderSerial.ItemReceiptDetailId = null;
+                                    }
                                 }
                                 else
                                 {
-                                    repoSerial.Delete(serialItem);
+                                    repoItemSerial.Delete(serialItem);
                                 }
                             }
 
-                            foreach (var serialItem in item.Serials)
+                            foreach (var serialItem in item.ItemSerials)
                             {
-                                var dbSerial = repoSerial.Get(d => d.Id == serialItem.Id);
+                                var dbSerial = repoItemSerial.Get(d => d.Id == serialItem.Id);
                                 if (dbSerial != null)
                                 {
-                                    dbSerial.ItemReceiptDetail = dbDetail;
+                                    serialItem.MapTo(dbSerial);
                                 }
                                 else
                                 {
-                                    dbSerial = new WorkOrderSerial();
+                                    dbSerial = new ItemSerial();
                                     dbSerial.ItemReceiptDetail = dbDetail;
                                     serialItem.MapTo(dbSerial);
-                                    repoSerial.Add(dbSerial);
+                                    repoItemSerial.Add(dbSerial);
                                 }
                             }
                         }
@@ -220,22 +228,7 @@ namespace HekaMOLD.Business.UseCases
                         }
                         #endregion
 
-                        #region SET ORDER & DETAIL STATUS TO COMPLETE
-                        if (dbDetail.ItemOrderDetailId > 0)
-                        {
-                            var dbOrderDetail = repoOrderDetail.Get(d => d.Id == dbDetail.ItemOrderDetailId);
-                            if (dbOrderDetail != null)
-                            {
-                                dbOrderDetail.OrderStatus = (int)OrderStatusType.Completed;
-
-                                if (!dbOrderDetail.ItemOrder
-                                    .ItemOrderDetail.Any(d => d.OrderStatus != (int)OrderStatusType.Completed))
-                                {
-                                    dbOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Completed;
-                                }
-                            }
-                        }
-                        #endregion
+                        // WILL BE TRIGGER POINT TO CHECK ITEM ORDER STATUS
 
                         lineNo++;
                     }
@@ -468,5 +461,91 @@ namespace HekaMOLD.Business.UseCases
 
             return extract;
         }
+
+        #region STATUS VALIDATIONS
+        public BusinessResult CheckReceiptDetailStatus(int itemReceiptDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoConsumption = _unitOfWork.GetRepository<ItemReceiptConsume>();
+
+                var dbDetail = repo.Get(d => d.Id == itemReceiptDetailId);
+                if (dbDetail == null)
+                    throw new Exception("İrsaliye kalemi bulunamadı.");
+
+                var availableQty = dbDetail.Quantity;
+                var usedQty = repoConsumption.Filter(d => d.ConsumedReceiptDetailId == dbDetail.Id)
+                    .Sum(d => d.UsedQuantity ?? 0);
+                if (availableQty <= usedQty && usedQty > 0)
+                    dbDetail.ReceiptStatus = (int)ReceiptStatusType.Closed;
+                else if (usedQty > 0 && availableQty > usedQty)
+                    dbDetail.ReceiptStatus = (int)ReceiptStatusType.InUse;
+                else if (usedQty == 0)
+                    dbDetail.ReceiptStatus = (int)ReceiptStatusType.Created;
+
+                _unitOfWork.SaveChanges();
+
+                try
+                {
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        bObj.CheckReceiptStatus(dbDetail.ItemReceiptId.Value);
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult CheckReceiptStatus(int itemReceiptId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceipt>();
+                var dbReceipt = repo.Get(d => d.Id == itemReceiptId);
+                if (dbReceipt == null)
+                    throw new Exception("İrsaliye bulunamadı.");
+
+                var totalDetailCount = dbReceipt.ItemReceiptDetail.Count();
+                var closedDetailCount = dbReceipt.ItemReceiptDetail
+                    .Where(d => d.ReceiptStatus == (int)ReceiptStatusType.Closed)
+                    .Count();
+
+                if (totalDetailCount <= closedDetailCount && closedDetailCount > 0)
+                    dbReceipt.ReceiptStatus = (int)ReceiptStatusType.Closed;
+                else if (closedDetailCount > 0)
+                    dbReceipt.ReceiptStatus = (int)ReceiptStatusType.InUse;
+                else if (closedDetailCount == 0)
+                    dbReceipt.ReceiptStatus = (int)ReceiptStatusType.Created;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
     }
 }

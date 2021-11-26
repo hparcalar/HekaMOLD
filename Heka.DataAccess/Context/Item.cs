@@ -23,7 +23,6 @@ namespace Heka.DataAccess.Context
             this.ItemOrderItemNeeds = new HashSet<ItemOrderItemNeeds>();
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
             this.ItemRequestDetail = new HashSet<ItemRequestDetail>();
-            this.ItemSerial = new HashSet<ItemSerial>();
             this.ItemUnit = new HashSet<ItemUnit>();
             this.ItemWarehouse = new HashSet<ItemWarehouse>();
             this.Mold1 = new HashSet<Mold>();
@@ -34,6 +33,7 @@ namespace Heka.DataAccess.Context
             this.ProductWastage = new HashSet<ProductWastage>();
             this.WorkOrderItemNeeds = new HashSet<WorkOrderItemNeeds>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
+            this.ItemSerial = new HashSet<ItemSerial>();
         }
     
         public int Id { get; set; }
@@ -68,8 +68,6 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemRequestDetail> ItemRequestDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ItemSerial> ItemSerial { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemUnit> ItemUnit { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemWarehouse> ItemWarehouse { get; set; }
@@ -89,5 +87,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemSerial> ItemSerial { get; set; }
     }
 }

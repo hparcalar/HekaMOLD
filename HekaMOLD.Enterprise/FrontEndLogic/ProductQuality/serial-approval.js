@@ -19,7 +19,7 @@
     $scope.selectedShift = { Id: 0 };
 
     $scope.bindModel = function () {
-        $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
+        $http.get(HOST_URL + 'Mobile/GetApprovedSerials', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.pickupList = resp.data.Serials.sort((a, b) => a.WorkOrderDetailId - b.WorkOrderDetailId);
@@ -285,31 +285,54 @@
             },
             callback: function (result) {
                 if (result) {
-                    $scope.saveStatus = 1;
-
-                    $http.post(HOST_URL + 'ProductQuality/DenySerials',
-                        { model: $scope.selectedProducts }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
-
-                                if (resp.data.Status == 1) {
-                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
-
-                                    $scope.modelObject = {
-                                        DocumentNo: '', FirmId: 0,
-                                        FirmCode: '', FirmName: '',
-                                        ShowOnlyWaitings: false,
-                                        Details: []
-                                    };
-                                    $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
-
-                                    $scope.bindModel();
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                    bootbox.prompt({
+                        message: "Açıklama",
+                        closeButton: false,
+                        title: 'RED Nedenini Giriniz',
+                        buttons: {
+                            confirm: {
+                                label: 'Evet',
+                                className: 'btn-primary'
+                            },
+                            cancel: {
+                                label: 'Hayır',
+                                className: 'btn-light'
                             }
-                        }).catch(function (err) { });
+                        },
+                        callback: function (resultMsg) {
+                            if (resultMsg != null) {
+                                $scope.saveStatus = 1;
+
+                                for (var i = 0; i < $scope.selectedProducts.length; i++) {
+                                    $scope.selectedProducts[i].QualityExplanation = resultMsg;
+                                }
+
+                                $http.post(HOST_URL + 'ProductQuality/DenySerials',
+                                    { model: $scope.selectedProducts }, 'json')
+                                    .then(function (resp) {
+                                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                                            $scope.saveStatus = 0;
+
+                                            if (resp.data.Status == 1) {
+                                                toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                                                $scope.modelObject = {
+                                                    DocumentNo: '', FirmId: 0,
+                                                    FirmCode: '', FirmName: '',
+                                                    ShowOnlyWaitings: false,
+                                                    Details: []
+                                                };
+                                                $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
+                                                $scope.bindModel();
+                                            }
+                                            else
+                                                toastr.error(resp.data.ErrorMessage, 'Hata');
+                                        }
+                                    }).catch(function (err) { });
+                            }
+                        }
+                    });
                 }
             },
         });

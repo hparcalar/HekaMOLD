@@ -1350,7 +1350,7 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
-
+        
         public MachineModel[] GetMachineStats(string startDate, string endDate)
         {
             List<MachineModel> data = new List<MachineModel>();
@@ -1430,26 +1430,6 @@ namespace HekaMOLD.Business.UseCases
                 shiftList = shiftList.OrderBy(m => m.StartTime).ToArray();
                 foreach (var shift in shiftList)
                 {
-                    //DateTime cDate = dt1.Date;
-                    //decimal shAvgInflation = 0;
-                    //int shAvgProdCount = 0;
-
-                    //while (cDate <= dt2.Date)
-                    //{
-                    //    DateTime startTime = cDate.Add(shift.StartTime.Value);
-                    //    DateTime endTime = cDate.Add(shift.EndTime.Value);
-
-                    //    if (shift.StartTime > shift.EndTime)
-                    //        endTime = cDate.AddDays(1).Add(shift.EndTime.Value);
-
-                    //    var shiftSignals = signalData.Where(m => m.StartDate >= startTime && m.StartDate <= endTime);
-
-                    //    shAvgInflation += Convert.ToDecimal(shiftSignals.Average(m => m.Duration) ?? 0);
-                    //    shAvgProdCount += shiftSignals.Count();
-
-                    //    cDate = cDate.AddDays(1);
-                    //}
-
                     // CALCULATE TARGET COUNT
                     DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
                     DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
@@ -1510,7 +1490,7 @@ namespace HekaMOLD.Business.UseCases
                         AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count(),
                         WastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0,
                         LastProductName = lastProductName,
-                        TargetCount = targetCount,
+                        TargetCount = targetCount - Convert.ToInt32((wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0)),
                     });
                 }
 
@@ -2680,6 +2660,7 @@ namespace HekaMOLD.Business.UseCases
                     MachineGroupCode = d.MachineGroupCode,
                     MachineGroupName = d.MachineGroupName,
                     PlantId = d.PlantId,
+                    IsProduction = d.IsProduction,
                 }).ToArray();
         }
         public BusinessResult SaveOrUpdateMachineGroup(MachineGroupModel model)
@@ -2853,6 +2834,101 @@ namespace HekaMOLD.Business.UseCases
             ProcessGroupModel model = new ProcessGroupModel { };
 
             var repo = _unitOfWork.GetRepository<ProcessGroup>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region WORK ORDER CATEGORY BUSINESS
+        public WorkOrderCategoryModel[] GetWorkOrderCategoryList()
+        {
+            List<WorkOrderCategoryModel> data = new List<WorkOrderCategoryModel>();
+
+            var repo = _unitOfWork.GetRepository<WorkOrderCategory>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                WorkOrderCategoryModel containerObj = new WorkOrderCategoryModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateWorkOrderCategory(WorkOrderCategoryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.WorkOrderCategoryCode))
+                    throw new Exception("Kategori kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.WorkOrderCategoryName))
+                    throw new Exception("Kategori adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<WorkOrderCategory>();
+
+                if (repo.Any(d => (d.WorkOrderCategoryCode == model.WorkOrderCategoryCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir kategori mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new WorkOrderCategory();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteWorkOrderCategory(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderCategory>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public WorkOrderCategoryModel GetWorkOrderCategory(int id)
+        {
+            WorkOrderCategoryModel model = new WorkOrderCategoryModel { };
+
+            var repo = _unitOfWork.GetRepository<WorkOrderCategory>();
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {

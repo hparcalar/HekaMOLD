@@ -752,12 +752,14 @@ namespace HekaMOLD.Business.UseCases
         }
 
         // SERIAL APPROVALS & DENIALS
-        public BusinessResult ApproveSerials(WorkOrderSerialModel[] model)
+        public BusinessResult ApproveSerials(WorkOrderSerialModel[] model, int plantId)
         {
             BusinessResult result = new BusinessResult();
-
+            
             try
             {
+                int warehouseId = 0;
+
                 var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
                 foreach (var item in model)
                 {
@@ -765,11 +767,28 @@ namespace HekaMOLD.Business.UseCases
                     if (dbSerial != null)
                     {
                         dbSerial.QualityStatus = (int)QualityStatusType.Ok;
+                        dbSerial.SerialStatus = (int)SerialStatusType.Approved;
+                        item.QualityStatus = dbSerial.QualityStatus;
+
+                        if (warehouseId == 0 && (dbSerial.TargetWarehouseId) > 0)
+                            warehouseId = dbSerial.TargetWarehouseId.Value;
                     }
                 }
 
+                if (warehouseId == 0)
+                    throw new Exception("Hedef depo seçilmeden çekilen ürünleri onaylayamazsınız.");
+
                 _unitOfWork.SaveChanges();
-                result.Result = true;
+
+                // CREATE WAREHOUSE ENTRY RECEIPT
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.MakeSerialPickupForProductWarehouse(new Models.DataTransfer.Receipt.ItemReceiptModel
+                    {
+                        PlantId = plantId,
+                        InWarehouseId = warehouseId,
+                    }, model);
+                }
             }
             catch (Exception ex)
             {
@@ -793,6 +812,8 @@ namespace HekaMOLD.Business.UseCases
                     if (dbSerial != null)
                     {
                         dbSerial.QualityStatus = (int)QualityStatusType.Nok;
+                        dbSerial.QualityExplanation = item.QualityExplanation;
+                        dbSerial.SerialStatus = (int)SerialStatusType.Created;
                     }
                 }
 
@@ -821,6 +842,7 @@ namespace HekaMOLD.Business.UseCases
                     if (dbSerial != null)
                     {
                         dbSerial.QualityStatus = (int)QualityStatusType.QualityWaiting;
+                        dbSerial.SerialStatus = (int)SerialStatusType.Created;
                     }
                 }
 

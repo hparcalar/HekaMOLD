@@ -25,7 +25,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UpdatedUserId { get; set; }
     
         public virtual WorkOrderControlType WorkOrderControlType { get; set; }
-        public virtual WorkOrder WorkOrder { get; set; }
         public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual WorkOrder WorkOrder { get; set; }
     }
 }

@@ -11,8 +11,7 @@
 
         $scope.isBindingModel = true;
 
-        $http.get(HOST_URL + 'Machine/GetMachineStats?t1=' + $scope.filterModel.startDate + '&t2='
-            + $scope.filterModel.endDate, {}, 'json')
+        $http.get(HOST_URL + 'Machine/GetMachineStatsForDashboard', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     if ($scope.profileList.length > 0) {

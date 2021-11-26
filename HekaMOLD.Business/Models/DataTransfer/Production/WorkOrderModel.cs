@@ -19,6 +19,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string Explanation { get; set; }
         public int? WorkOrderType { get; set; }
         public string TrialFirmName { get; set; }
+        public int? WorkOrderCategoryId { get; set; }
         public WorkOrderDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS
@@ -26,6 +27,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string WorkOrderDateStr { get; set; }
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
+        public string WorkOrderCategoryCode { get; set; }
+        public string WorkOrderCategoryName { get; set; }
         #endregion
     }
 }

@@ -530,6 +530,27 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetApprovedSerials()
+        {
+            WorkOrderSerialModel[] result = new WorkOrderSerialModel[0];
+            WorkOrderSerialSummary[] resultSum = new WorkOrderSerialSummary[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.GetApprovedSerials();
+                resultSum = bObj.GetApprovedSerialsSummary();
+            }
+
+            var jsonResult = Json(new
+            {
+                Serials = result,
+                Summaries = resultSum,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult GetProductsForPickup()
         {
             WorkOrderSerialModel[] result = new WorkOrderSerialModel[0];
@@ -556,16 +577,17 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 BusinessResult result = null;
 
-                receiptModel.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
-                if (receiptModel.Id == 0)
-                {
-                    receiptModel.CreatedDate = DateTime.Now;
-                    receiptModel.CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
-                }
+                //receiptModel.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                //if (receiptModel.Id == 0)
+                //{
+                //    receiptModel.CreatedDate = DateTime.Now;
+                //    receiptModel.CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+                //}
 
                 using (ProductionBO bObj = new ProductionBO())
                 {
-                    result = bObj.MakeSerialPickupForProductWarehouse(receiptModel, model);
+                    //result = bObj.MakeSerialPickupForProductWarehouse(receiptModel, model);
+                    result = bObj.ApproveProducedSerials(model, receiptModel.InWarehouseId);
                 }
 
                 if (result.Result)
@@ -579,6 +601,25 @@ namespace HekaMOLD.Enterprise.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult DeleteSerials(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = null;
+
+            try
+            {
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.DeleteSerials(model);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage=result.ErrorMessage });
+        }
 
         #endregion
 
@@ -634,8 +675,8 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult GetProductsForDelivery()
         {
-            WorkOrderSerialModel[] result = new WorkOrderSerialModel[0];
-            WorkOrderSerialSummary[] resultSum = new WorkOrderSerialSummary[0];
+            ItemSerialModel[] result = new ItemSerialModel[0];
+            ItemSerialSummary[] resultSum = new ItemSerialSummary[0];
 
             using (ProductionBO bObj = new ProductionBO())
             {
@@ -668,7 +709,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveProductDelivery(ItemReceiptModel receiptModel, WorkOrderSerialModel[] model)
+        public JsonResult SaveProductDelivery(ItemReceiptModel receiptModel, ItemSerialModel[] model)
         {
             try
             {

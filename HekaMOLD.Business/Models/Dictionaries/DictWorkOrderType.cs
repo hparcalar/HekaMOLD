@@ -14,6 +14,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
         {
             { WorkOrderType.Casual, "Standart" },
             { WorkOrderType.TrialProduction, "Deneme Üretimi" },
+            { WorkOrderType.Contract, "Fason" },
         };
     }
 }

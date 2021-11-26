@@ -9,6 +9,7 @@ namespace HekaMOLD.Business.Models.Constants
     public enum SerialStatusType
     {
         Created = 0,
+        Approved=3,
         Placed=1,
         Used=2,
     }

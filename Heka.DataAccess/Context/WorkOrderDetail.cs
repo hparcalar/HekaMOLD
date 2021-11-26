@@ -26,8 +26,9 @@ namespace Heka.DataAccess.Context
             this.WorkOrderAllocation = new HashSet<WorkOrderAllocation>();
             this.WorkOrderControl = new HashSet<WorkOrderControl>();
             this.WorkOrderItemNeeds = new HashSet<WorkOrderItemNeeds>();
-            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
             this.ActualRouteHistory = new HashSet<ActualRouteHistory>();
+            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
+            this.ItemSerial = new HashSet<ItemSerial>();
         }
     
         public int Id { get; set; }
@@ -70,7 +71,6 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ProductWastage> ProductWastage { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
-        public virtual WorkOrder WorkOrder { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderAllocation> WorkOrderAllocation { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -78,9 +78,12 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
         public virtual Machine Machine { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
+        public virtual WorkOrder WorkOrder { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ItemSerial> ItemSerial { get; set; }
     }
 }

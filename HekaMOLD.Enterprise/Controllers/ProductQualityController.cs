@@ -236,10 +236,11 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult ApproveSerials(WorkOrderSerialModel[] model)
         {
             BusinessResult result = null;
+            int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.ApproveSerials(model);
+                result = bObj.ApproveSerials(model, plantId);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });

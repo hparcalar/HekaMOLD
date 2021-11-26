@@ -14,6 +14,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string MachineGroupName { get; set; }
         public int? PlantId { get; set; }
         public int? LayoutObjectTypeId { get; set; }
+        public bool? IsProduction { get; set; }
 
         #region VISUAL ELEMENTS
         public LayoutObjectTypeModel LayoutObjectTypeData { get; set; }

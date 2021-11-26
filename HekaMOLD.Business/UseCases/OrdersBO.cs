@@ -623,7 +623,7 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
-        public ItemOrderDetailModel[] GetApprovedOrderDetails(int plantId)
+        public ItemOrderDetailModel[] GetApprovedPurchaseOrderDetails(int plantId)
         {
             ItemOrderDetailModel[] data = new ItemOrderDetailModel[0];
 
@@ -632,6 +632,7 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
 
                 data = repo.Filter(d => d.ItemOrder.PlantId == plantId &&
+                    d.ItemOrder.OrderType == (int)ItemOrderType.Purchase &&
                     d.OrderStatus == (int)OrderStatusType.Approved
                     && d.ItemOrder.OrderStatus == (int)OrderStatusType.Approved)
                     .ToList()
@@ -665,6 +666,79 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return data;
+        }
+
+        public ItemOrderDetailModel[] GetOpenSaleOrderDetails(int plantId)
+        {
+            ItemOrderDetailModel[] data = new ItemOrderDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+                data = repo.Filter(d => d.ItemOrder.PlantId == plantId
+                    && d.ItemOrder.OrderType == (int)ItemOrderType.Sale
+                    && d.OrderStatus != (int)OrderStatusType.Cancelled 
+                    && d.OrderStatus != (int)OrderStatusType.Completed)
+                    .ToList()
+                    .Select(d => new ItemOrderDetailModel
+                    {
+                        Id = d.Id,
+                        Quantity = d.Quantity,
+                        FirmId = d.ItemOrder.FirmId,
+                        FirmCode = d.ItemOrder.Firm != null ?
+                            d.ItemOrder.Firm.FirmCode : "",
+                        FirmName = d.ItemOrder.Firm != null ?
+                            d.ItemOrder.Firm.FirmName : "",
+                        OrderDate = d.ItemOrder.OrderDate,
+                        OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
+                        CreatedDate = d.ItemOrder.CreatedDate,
+                        Explanation = d.Explanation,
+                        OrderExplanation = d.ItemOrder.Explanation,
+                        ItemNo = d.Item.ItemNo,
+                        ItemName = d.Item.ItemName,
+                        ItemId = d.ItemId,
+                        OrderNo = d.ItemOrder.OrderNo,
+                        LineNumber = d.LineNumber,
+                        UnitId = d.UnitId,
+                        UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
+                        UnitName = d.UnitType != null ? d.UnitType.UnitName : ""
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        #endregion
+
+        #region STATUS VALIDATIONS
+        public BusinessResult CheckOrderDetailStatus(int orderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+                var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+
+                var dbDetail = repo.Get(d => d.Id == orderDetailId);
+                if (dbDetail == null)
+                    throw new Exception("Sipariş kalemi bulunamadı.");
+
+                
+
+                result.Result = false;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
         #endregion
     }

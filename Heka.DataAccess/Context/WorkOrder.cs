@@ -37,9 +37,11 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UpdatedUserId { get; set; }
         public Nullable<int> WorkOrderType { get; set; }
         public string TrialFirmName { get; set; }
+        public Nullable<int> WorkOrderCategoryId { get; set; }
     
         public virtual Firm Firm { get; set; }
         public virtual Plant Plant { get; set; }
+        public virtual WorkOrderCategory WorkOrderCategory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderControl> WorkOrderControl { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

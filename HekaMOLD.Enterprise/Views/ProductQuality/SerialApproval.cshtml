@@ -21,7 +21,7 @@
                         <div class="col-sm-6 col-xxl-6 col-xs-6">
                             <label class="mt-0 text-center w-100 bg-light-dark rounded-1"><b>Durum Filtreleri</b></label>
                             <div class="d-flex flex-row h-75">
-                                <button type="button"
+                                @*<button type="button"
                                         ng-class="{'btn-dark': isQualityFilterSelected(1)}"
                                         ng-click="toggleQualityFilter(1)"
                                         class="btn btn-sm btn-success btn-block h-75 flex-fill mt-2 mx-1">
@@ -31,7 +31,7 @@
                                             <path d="M5,4 L19,4 C19.2761424,4 19.5,4.22385763 19.5,4.5 C19.5,4.60818511 19.4649111,4.71345191 19.4,4.8 L14,12 L14,20.190983 C14,20.4671254 13.7761424,20.690983 13.5,20.690983 C13.4223775,20.690983 13.3458209,20.6729105 13.2763932,20.6381966 L10,19 L10,12 L4.6,4.8 C4.43431458,4.5790861 4.4790861,4.26568542 4.7,4.1 C4.78654809,4.03508894 4.89181489,4 5,4 Z" id="Path-33" fill="#000000"></path>
                                         </g>
                                     </svg>Ok
-                                </button>
+                                </button>*@
                                 <button type="button"
                                         ng-class="{'btn-dark': isQualityFilterSelected(2)}"
                                         ng-click="toggleQualityFilter(2)"
@@ -120,7 +120,7 @@
                     <table class="table table-bordered table-hk-md">
                         <thead>
                             <tr>
-                                @*<th class="w-10 px-2">Tarih</th>*@
+                                <th class="w-10 px-2">Tarih</th>
                                 <th class="w-10 px-2">Makine</th>
                                 @*<th class="w-10 px-2">Koli No</th>*@
                                 @*<th class="w-10 px-2">Stok No</th>*@
@@ -139,7 +139,7 @@
                                 <tr ng-repeat="item in filteredPickupList"
                                     ng-show="modelObject.ShowOnlyWaitings == false || modelObject.ShowOnlyWaitings == true && (item.QualityStatus == 0 || item.QualityStatus == 3)"
                                     ng-class="{'bg-warning': isSelectedProduct(item)}">
-                                    @*<td class="w-10 px-2">{{item.CreatedDateStr}}</td>*@
+                                    <td class="w-10 px-2">{{item.CreatedDateStr}}</td>
                                     <td class="w-10 px-2">{{item.MachineCode}}</td>
                                     @*<td class="w-10 px-2">{{item.SerialNo}}</td>*@
                                     @*<td class="w-10 px-2">{{item.ItemNo}}</td>*@

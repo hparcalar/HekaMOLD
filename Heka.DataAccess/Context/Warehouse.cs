@@ -24,6 +24,7 @@ namespace Heka.DataAccess.Context
             this.ItemReceipt1 = new HashSet<ItemReceipt>();
             this.ItemWarehouse = new HashSet<ItemWarehouse>();
             this.ProductRecipeDetail = new HashSet<ProductRecipeDetail>();
+            this.WorkOrderSerial = new HashSet<WorkOrderSerial>();
         }
     
         public int Id { get; set; }
@@ -51,5 +52,7 @@ namespace Heka.DataAccess.Context
         public virtual Plant Plant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductRecipeDetail> ProductRecipeDetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkOrderSerial> WorkOrderSerial { get; set; }
     }
 }
