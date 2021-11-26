@@ -1,5 +1,5 @@
 ﻿app.controller('orderCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id:0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus:0 };
+    $scope.modelObject = { Id:0, OrderDateStr: moment().format('DD.MM.YYYY'), Details: [], OrderStatus:0 };
 
     $scope.itemList = [];
     $scope.unitList = [];
@@ -169,8 +169,8 @@
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
-                    $scope.modelObject.DateOfNeed = $scope.modelObject.DateOfNeedStr;
-                    $scope.modelObject.OrderDate = $scope.modelObject.OrderDateStr;
+                    //$scope.modelObject.DateOfNeed = $scope.modelObject.DateOfNeedStr;
+                    //$scope.modelObject.OrderDate = $scope.modelObject.OrderDateStr;
 
                     if (typeof $scope.modelObject.FirmId != 'undefined' && $scope.modelObject.FirmId != null)
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);

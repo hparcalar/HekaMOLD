@@ -709,7 +709,9 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveProductDelivery(ItemReceiptModel receiptModel, ItemSerialModel[] model)
+        public JsonResult SaveProductDelivery(ItemReceiptModel receiptModel, 
+            ItemSerialModel[] model, 
+            int[] orderDetails = null)
         {
             try
             {
@@ -724,7 +726,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 using (ProductionBO bObj = new ProductionBO())
                 {
-                    result = bObj.CreateSerialDelivery(receiptModel, model);
+                    result = bObj.CreateSerialDelivery(receiptModel, model, orderDetails);
                 }
 
                 if (result.Result)

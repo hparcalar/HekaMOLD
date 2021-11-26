@@ -37,7 +37,7 @@ namespace Heka.DataAccess.Context
         public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
         public virtual Shift Shift { get; set; }
         public virtual Warehouse Warehouse { get; set; }
-        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
         public virtual WorkOrder WorkOrder { get; set; }
+        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
     }
 }

@@ -2611,7 +2611,8 @@ namespace HekaMOLD.Business.UseCases
 
         public BusinessResult CreateSerialDelivery(
             ItemReceiptModel receiptModel,
-            ItemSerialModel[] model)
+            ItemSerialModel[] model, 
+            int[] orderDetails = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -2620,6 +2621,7 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemSerial>();
                 var repoReceipt = _unitOfWork.GetRepository<ItemReceipt>();
                 var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoWr = _unitOfWork.GetRepository<Warehouse>();
 
                 if (!repoWr.Any(d => d.Id == receiptModel.InWarehouseId))
@@ -2639,11 +2641,15 @@ namespace HekaMOLD.Business.UseCases
                 List<int> checkListForWarehouseInputReceiptDetails = new List<int>();
 
                 List<ReceiptConsumeSummary> consumedList = new List<ReceiptConsumeSummary>();
-                List<ItemOrderConsumeModel> orderConsumedList = new List<ItemOrderConsumeModel>();
+                List<ItemOrderConsumeSummary> orderConsumedList = new List<ItemOrderConsumeSummary>();
+                List<ItemOrderDetail> selectedOrderDetails = orderDetails != null && orderDetails.Length > 0 ?
+                    repoOrderDetail.Filter(d => orderDetails.Contains(d.Id))
+                    .OrderBy(d => d.ItemOrder.OrderDate).ToList() : new List<ItemOrderDetail>();
 
                 List<ItemReceiptDetailModel> receiptDetails = new List<ItemReceiptDetailModel>();
                 int receiptLineNumber = 1;
 
+                // PROCESS SERIALS
                 foreach (var item in model)
                 {
                     var dbSerial = repo.Get(d => d.Id == item.Id);
@@ -2703,7 +2709,27 @@ namespace HekaMOLD.Business.UseCases
                             consumedObj.UsedQuantity += dbSerial.FirstQuantity;
 
                         // SALES ORDER CONSUMES
-
+                        var currentOrder = selectedOrderDetails.Where(d => d.Quantity > 0 &&
+                            d.Quantity > orderConsumedList.Where(m => m.ItemOrderDetailId == d.Id).Sum(m => m.UsedQuantity))
+                            .FirstOrDefault();
+                        if (currentOrder != null)
+                        {
+                            var ordConsumedObj = orderConsumedList.FirstOrDefault(d =>
+                                d.ConsumedReceiptDetailId == dbSerial.ItemReceiptDetailId
+                                && d.ItemOrderDetailId == currentOrder.Id);
+                            if (ordConsumedObj == null)
+                            {
+                                ordConsumedObj = new ItemOrderConsumeSummary
+                                {
+                                    ConsumedReceiptDetailId = dbSerial.ItemReceiptDetailId ?? 0,
+                                    ItemOrderDetailId = currentOrder.Id,
+                                    UsedQuantity = dbSerial.FirstQuantity ?? 0,
+                                };
+                                orderConsumedList.Add(ordConsumedObj);
+                            }
+                            else
+                                ordConsumedObj.UsedQuantity += dbSerial.FirstQuantity ?? 0;
+                        }
                         #endregion
 
                         ItemSerialModel deliverySerial = new ItemSerialModel
@@ -2719,7 +2745,7 @@ namespace HekaMOLD.Business.UseCases
 
                         relatedDetail.ItemSerials.Add(deliverySerial);
 
-                        // UPDATE SERIAL STATUS TO PLACED
+                        // UPDATE SERIAL STATUS TO USED
                         dbSerial.SerialStatus = (int)SerialStatusType.Used;
                         dbSerial.FirstQuantity = item.FirstQuantity;
                         dbSerial.LiveQuantity = item.FirstQuantity;
@@ -2750,6 +2776,16 @@ namespace HekaMOLD.Business.UseCases
                     }
                 }
 
+                // CREATE SALES ORDER CONSUMPTIONS
+                foreach (var item in orderConsumedList)
+                {
+                    using (OrdersBO bObj = new OrdersBO())
+                    {
+                        bObj.UpdateOrderConsume(item.ItemOrderDetailId, 
+                            item.ConsumedReceiptDetailId, null, item.UsedQuantity);
+                    }
+                }
+
                 #region ROLLBACK: IF RECEIPT SAVE PROCESS HAS FAILED THEN ROLLBACK SERIAL FROM USED STATUS TO PLACED
                 if (!receiptResult.Result)
                 {
@@ -2763,11 +2799,21 @@ namespace HekaMOLD.Business.UseCases
 
                     newUof.SaveChanges();
 
+                    // DELETE RECEIPT CONSUMES
                     foreach (var item in consumedList)
                     {
                         using (ReceiptBO bObj = new ReceiptBO())
                         {
                             bObj.DeleteConsume(item.ConsumedReceiptDetailId, receiptResult.RecordId);
+                        }
+                    }
+
+                    // DELETE SALES ORDER CONSUMES
+                    foreach (var item in orderConsumedList)
+                    {
+                        using (OrdersBO bObj = new OrdersBO())
+                        {
+                            bObj.DeleteOrderConsume(item.ItemOrderDetailId, item.ConsumedReceiptDetailId, null);
                         }
                     }
 
@@ -2788,14 +2834,23 @@ namespace HekaMOLD.Business.UseCases
                         }
                     }
 
-                    // TRG: WORK ORDER STATUS CHECK
-                    foreach (var recId in checkListForWorkOrderDetails)
-                    {
+                    // TRG: WORK ORDER STATUS CHECK - NOT URGENT FOR NOW
+                    //foreach (var recId in checkListForWorkOrderDetails)
+                    //{
 
-                    }
+                    //}
 
                     // TRG: SALES ORDER STATUS CHECK
-
+                    if (orderDetails != null)
+                    {
+                        foreach (var recId in orderDetails)
+                        {
+                            using (OrdersBO bObj = new OrdersBO())
+                            {
+                                bObj.CheckOrderDetailStatus(recId);
+                            }
+                        }
+                    }
                 }
 
                 result.Result = true;

@@ -82,7 +82,7 @@ namespace HekaMOLD.Business.UseCases.Core
 
             return default;
         }
-
+        
         public BusinessResult UpdateConsume(int? consumedId, int? consumerId, decimal usedQuantity)
         {
             BusinessResult result = new BusinessResult();

@@ -425,3 +425,8 @@ BEGIN
 
 	ALTER TABLE [dbo].[ItemOrderConsume] CHECK CONSTRAINT [FK_ItemOrderConsume_UnitType]
 END
+GO
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='WorkOrderDetail' AND COLUMN_NAME='LabelConfig')
+BEGIN
+	ALTER TABLE WorkOrderDetail ADD LabelConfig NVARCHAR(300) NULL
+END

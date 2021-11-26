@@ -1,9 +1,11 @@
 ﻿using HekaMOLD.Business.Base;
+using HekaMOLD.Business.Models.Virtual;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace HekaMOLD.Business.Models.DataTransfer.Production
 {
@@ -30,6 +32,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string DeliveryPlanDateStr { get; set; }
         public int? WorkOrderType { get; set; }
         public string TrialProductName { get; set; }
+        public string LabelConfig { get; set; }
 
         #region VISUAL ELEMENTS
         public bool NewDetail { get; set; }
@@ -62,6 +65,42 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string UnitCode { get; set; }
         public string UnitName { get; set; }
         public string OrderDeadline { get; set; }
+        public LabelConfigModel LabelConfigData
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.LabelConfig))
+                {
+                    try
+                    {
+                        return 
+                            JsonConvert.DeserializeObject<LabelConfigModel>(this.LabelConfig);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                }
+
+                return null;
+            }
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        this.LabelConfig = JsonConvert.SerializeObject(value);
+                    }
+                    else
+                        this.LabelConfig = null;
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+        }
         #endregion
     }
 }

@@ -19,8 +19,8 @@ namespace Heka.DataAccess.Context
         {
             this.ItemOrderItemNeeds = new HashSet<ItemOrderItemNeeds>();
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
-            this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.ItemOrderConsume = new HashSet<ItemOrderConsume>();
+            this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
         }
     
         public int Id { get; set; }
@@ -62,8 +62,8 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemReceiptDetail> ItemReceiptDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemOrderConsume> ItemOrderConsume { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
     }
 }

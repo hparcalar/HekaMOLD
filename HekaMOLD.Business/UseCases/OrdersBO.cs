@@ -40,7 +40,9 @@ namespace HekaMOLD.Business.UseCases
                     OrderStatus = d.OrderStatus,
                     OrderType = d.OrderType,
                     PlantId = d.PlantId,
-                }).ToArray();
+                })
+                .OrderByDescending(d => d.OrderDate)
+                .ToArray();
         }
 
         public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model, bool detailCanBeNull=false)
@@ -65,6 +67,18 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.OrderStatus = (int)OrderStatusType.Created;
                     repo.Add(dbObj);
                     newRecord = true;
+                }
+
+                if (!string.IsNullOrEmpty(model.OrderDateStr))
+                {
+                    model.OrderDate = DateTime.ParseExact(model.OrderDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+
+                if (!string.IsNullOrEmpty(model.DateOfNeedStr))
+                {
+                    model.DateOfNeed = DateTime.ParseExact(model.DateOfNeedStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
 
                 var crDate = dbObj.CreatedDate;
@@ -567,6 +581,70 @@ namespace HekaMOLD.Business.UseCases
             var repo = _unitOfWork.GetRepository<ItemOrder>();
             return repo.Any(d => d.SyncKey == syncKey);
         }
+
+        #region CONSUMINGS
+        public BusinessResult UpdateOrderConsume(int? orderDetailId, int? consumedId, int? consumerId, decimal usedQuantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrderConsume>();
+                var existingConsume = repo.Get(d => 
+                    (d.ConsumedReceiptDetailId == consumedId || d.ConsumerReceiptDetailId == consumerId)
+                    && d.ItemOrderDetailId == orderDetailId);
+                if (existingConsume == null)
+                {
+                    existingConsume = new ItemOrderConsume
+                    {
+                        ConsumedReceiptDetailId = consumedId,
+                        ConsumerReceiptDetailId = consumerId,
+                        ItemOrderDetailId = orderDetailId,
+                        UsedQuantity = usedQuantity,
+                    };
+                    repo.Add(existingConsume);
+                }
+
+                existingConsume.UsedQuantity = usedQuantity;
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public BusinessResult DeleteOrderConsume(int? orderDetailId, int? consumedId, int? consumerId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrderConsume>();
+                var existingConsume = repo.Get(d =>
+                    (d.ConsumedReceiptDetailId == consumedId || d.ConsumerReceiptDetailId == consumerId)
+                    && d.ItemOrderDetailId == orderDetailId);
+                if (existingConsume != null)
+                {
+                    repo.Delete(existingConsume);
+                }
+
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
 
         #region ORDER PRESENTATION
         public ItemOrderModel[] GetRelatedOrders(int receiptId)

@@ -321,13 +321,16 @@
         });
 
         if (firstOrderRecord != null) {
-            $scope.modelObject.FirmId = firstOrderRecord.FirmId;
-            $scope.modelObject.FirmCode = firstOrderRecord.FirmCode;
-            $scope.modelObject.FirmName = firstOrderRecord.FirmName;
+            $scope.selectedFirm = $scope.firmList.find(d => d.Id == firstOrderRecord.FirmId);
+            refreshArray($scope.firmList);
         }
 
         $('#dial-orderlist').dialog('close');
     });
+
+    $scope.clearSelectedOrders = function () {
+        $scope.modelObject.OrderDetails.splice(0, $scope.modelObject.OrderDetails.length);
+    }
 
     $scope.approveDelivery = function () {
         bootbox.confirm({
@@ -376,7 +379,11 @@
                         return;
                     }
 
-                    $http.post(HOST_URL + 'Mobile/SaveProductDelivery', { receiptModel: $scope.modelObject, model: $scope.selectedProducts }, 'json')
+                    $http.post(HOST_URL + 'Mobile/SaveProductDelivery', {
+                        receiptModel: $scope.modelObject,
+                        model: $scope.selectedProducts,
+                        orderDetails: $scope.modelObject.OrderDetails.map(m => m.Id),
+                    }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;

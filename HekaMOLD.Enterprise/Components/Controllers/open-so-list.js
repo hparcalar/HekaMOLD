@@ -12,8 +12,10 @@
                     if ($scope.orderDetailList.length == 0)
                         $scope.orderDetailList = $.getJSON(HOST_URL + 'SIOrder/GetOpenOrderDetails', function (data) {
                             data.forEach(d => {
-                                d.CreatedDate = moment(parseInt(d.CreatedDate.toString().substr(6, d.CreatedDate.toString().length - 8)));
-                                d.OrderDate = moment(parseInt(d.OrderDate.toString().substr(6, d.OrderDate.toString().length - 8)));
+                                if (d.CreatedDate != null)
+                                    d.CreatedDate = moment(parseInt(d.CreatedDate.toString().substr(6, d.CreatedDate.toString().length - 8)));
+                                if (d.OrderDate != null)
+                                    d.OrderDate = moment(parseInt(d.OrderDate.toString().substr(6, d.OrderDate.toString().length - 8)));
                                 d.IsChecked = false;
                             }
                             );

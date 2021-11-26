@@ -95,7 +95,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
         public virtual DbSet<UserRoleSubscription> UserRoleSubscription { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
-        public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Shift> Shift { get; set; }
         public virtual DbSet<ShiftTarget> ShiftTarget { get; set; }
@@ -112,5 +111,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<WorkOrderCategory> WorkOrderCategory { get; set; }
         public virtual DbSet<ItemSerial> ItemSerial { get; set; }
         public virtual DbSet<ItemOrderConsume> ItemOrderConsume { get; set; }
+        public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
     }
 }

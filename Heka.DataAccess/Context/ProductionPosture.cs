@@ -30,9 +30,9 @@ namespace Heka.DataAccess.Context
         public Nullable<int> ShiftId { get; set; }
         public Nullable<System.DateTime> ShiftBelongsToDate { get; set; }
     
-        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
         public virtual Shift Shift { get; set; }
         public virtual Machine Machine { get; set; }
         public virtual PostureCategory PostureCategory { get; set; }
+        public virtual WorkOrderDetail WorkOrderDetail { get; set; }
     }
 }

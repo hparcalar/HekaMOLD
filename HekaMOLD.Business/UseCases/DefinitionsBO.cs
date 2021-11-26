@@ -1416,11 +1416,12 @@ namespace HekaMOLD.Business.UseCases
                     && m.PostureStatus != (int)PostureStatusType.Resolved)
                     .Select(m => m.PostureCategory.PostureCategoryName).FirstOrDefault();
 
+                var machineWastageCount = wastageData.Sum(m => m.Quantity) ?? 0;
                 containerObj.MachineStats = new Models.DataTransfer.Summary.MachineStatsModel
                 {
                     AvgInflationTime = Convert.ToDecimal(signalData.Average(m => m.Duration) ?? 0),
-                    AvgProductionCount = signalData.Count(),
-                    WastageCount = wastageData.Sum(m => m.Quantity) ?? 0,
+                    AvgProductionCount = signalData.Count() - Convert.ToInt32(machineWastageCount),
+                    WastageCount = machineWastageCount,
                     IncidentCount = incidentData.Count(),
                     PostureCount = postureData.Count(),
                 };
@@ -1481,16 +1482,19 @@ namespace HekaMOLD.Business.UseCases
                         }
                     }
 
+                    var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
+
                     shiftStats.Add(new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
                         ChiefUserName = shift.User != null ? shift.User.UserName : "",
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
-                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count(),
-                        WastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0,
+                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count() -
+                            Convert.ToInt32(shiftWastageCount),
+                        WastageCount = shiftWastageCount,
                         LastProductName = lastProductName,
-                        TargetCount = targetCount - Convert.ToInt32((wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0)),
+                        TargetCount = targetCount - Convert.ToInt32(shiftWastageCount),
                     });
                 }
 
@@ -1568,11 +1572,12 @@ namespace HekaMOLD.Business.UseCases
                     && m.PostureStatus != (int)PostureStatusType.Resolved)
                     .Select(m => m.PostureCategory.PostureCategoryName).FirstOrDefault();
 
+                var machineWastageCount = wastageData.Sum(m => m.Quantity) ?? 0;
                 containerObj.MachineStats = new Models.DataTransfer.Summary.MachineStatsModel
                 {
                     AvgInflationTime = Convert.ToDecimal(signalData.Average(m => m.Duration) ?? 0),
-                    AvgProductionCount = signalData.Count(),
-                    WastageCount = wastageData.Sum(m => m.Quantity) ?? 0,
+                    AvgProductionCount = signalData.Count() - Convert.ToInt32(machineWastageCount),
+                    WastageCount = machineWastageCount,
                     IncidentCount = incidentData.Count(),
                     PostureCount = postureData.Count(),
                 };
@@ -1581,13 +1586,15 @@ namespace HekaMOLD.Business.UseCases
                 List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
                 foreach (var shift in shiftList)
                 {
+                    var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
                     shiftStats.Add(new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
-                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count(),
-                        WastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0,
+                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count() 
+                            - Convert.ToInt32(shiftWastageCount),
+                        WastageCount = shiftWastageCount,
                     });
                 }
 

@@ -54,8 +54,8 @@ namespace Heka.DataAccess.Context
     
         public virtual Dye Dye { get; set; }
         public virtual Mold Mold { get; set; }
+        public virtual Machine Machine { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
-        public virtual Machine Machine { get; set; }
     }
 }

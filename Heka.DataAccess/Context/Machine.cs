@@ -84,8 +84,8 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<ShiftTarget> ShiftTarget { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
+        public virtual MachineGroup MachineGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
-        public virtual MachineGroup MachineGroup { get; set; }
     }
 }
