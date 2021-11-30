@@ -1,4 +1,5 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
@@ -460,6 +461,93 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return extract;
+        }
+
+        public ItemReceiptModel[] GetNonSyncProductions()
+        {
+            ItemReceiptModel[] data = new ItemReceiptModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceipt>();
+                data = repo.Filter(d => (d.SyncStatus == null || d.SyncStatus == 0)
+                        && d.ReceiptType == (int)ItemReceiptType.WarehouseInput)
+                    .ToList()
+                    .Select(d => new ItemReceiptModel
+                    {
+                        Id = d.Id,
+                        WarehouseCode = d.Warehouse.WarehouseCode,
+                        WarehouseName = d.Warehouse.WarehouseName,
+                        DocumentNo = d.DocumentNo,
+                        Explanation = d.Explanation,
+                        FirmId = d.FirmId,
+                        FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                        FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                        ReceiptDate = d.ReceiptDate,
+                        ReceiptNo = d.ReceiptNo,
+                        ReceiptType = d.ReceiptType,
+                        Details = d.ItemReceiptDetail.Where(m => m.SyncStatus == null || m.SyncStatus == 0)
+                            .Select(m => new ItemReceiptDetailModel
+                            {
+                                Id = m.Id,
+                                ItemId = m.ItemId,
+                                ItemNo = m.Item != null ? m.Item.ItemNo : "",
+                                ItemName = m.Item != null ? m.Item.ItemName : "",
+                                UnitId = m.UnitId,
+                                UnitCode = m.UnitType != null ? m.UnitType.UnitCode : "",
+                                UnitName = m.UnitType != null ? m.UnitType.UnitName : "",
+                                Quantity = m.Quantity,
+                                LineNumber = m.LineNumber,
+                                UnitPrice = m.UnitPrice,
+                                OverallTotal = m.OverallTotal,
+                                SubTotal = m.SubTotal,
+                                TaxAmount = m.TaxAmount,
+                                TaxIncluded = m.TaxIncluded,
+                                TaxRate = m.TaxRate,
+                            }).ToArray()
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult SignDetailAsSynced(int receiptDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                IUnitOfWork newUof = new EFUnitOfWork();
+                var repo = newUof.GetRepository<ItemReceiptDetail>();
+
+                var dbObj = repo.Get(d => d.Id == receiptDetailId);
+                if (dbObj == null)
+                    throw new Exception("İrsaliye kalem kaydı bulunamadı.");
+
+                dbObj.SyncDate = DateTime.Now;
+                dbObj.SyncStatus = 1;
+
+                if (!dbObj.ItemReceipt.ItemReceiptDetail.Any(d => d.SyncStatus != 1))
+                {
+                    dbObj.ItemReceipt.SyncDate = DateTime.Now;
+                    dbObj.ItemReceipt.SyncStatus = 1;
+                }
+
+                newUof.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
 
         #region STATUS VALIDATIONS

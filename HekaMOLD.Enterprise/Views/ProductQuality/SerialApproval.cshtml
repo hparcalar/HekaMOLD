@@ -151,7 +151,10 @@
                                         'bg-success': item.QualityStatus == 1,
                                         'bg-danger': item.QualityStatus == 2,
                                         'bg-warning': item.QualityStatus == 3}">
-                                        {{item.QualityStatusText.replace('Kalite','')}}
+                                        <a ng-bind="item.QualityStatusText.replace('Kalite','')"
+                                           class="text-dark cursor-pointer"
+                                           ng-class="{'text-decoration-underline': item.QualityStatus == 2}"
+                                           ng-click="showQualityText(item)"></a>
                                     </td>
                                     <td class="w-15 px-2">
                                         <input type="number"

@@ -47,7 +47,7 @@
                 { dataField: 'MachineCode', caption: 'Makine' },
                 { dataField: 'OrderQuantity', caption: 'Sipariş Miktar' },
                 { dataField: 'CompleteQuantity', caption: 'Üretilen Miktar' },
-                { dataField: 'SerialCount', caption: 'Koli Adedi' },
+                /*{ dataField: 'SerialCount', caption: 'Koli Adedi' },*/
                 { dataField: 'WastageQuantity', caption: 'Fire Miktar' },
             ],
             summary: {

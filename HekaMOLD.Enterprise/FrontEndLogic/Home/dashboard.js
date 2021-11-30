@@ -122,4 +122,6 @@
     $scope.bindModel();
 
     $interval($scope.bindModel, 5000);
+
+    setTimeout(function () { window.location.reload(); }, 1000 * 60 * 5);
 });

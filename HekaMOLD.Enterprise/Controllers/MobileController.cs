@@ -584,10 +584,19 @@ namespace HekaMOLD.Enterprise.Controllers
                 //    receiptModel.CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
                 //}
 
+                int wrId = 0;
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    wrId = bObj.GetWarehouseList()
+                        .Where(d => d.WarehouseType == (int)WarehouseType.ProductWarehouse)
+                        .Select(d => d.Id)
+                        .FirstOrDefault();
+                }
+
                 using (ProductionBO bObj = new ProductionBO())
                 {
                     //result = bObj.MakeSerialPickupForProductWarehouse(receiptModel, model);
-                    result = bObj.ApproveProducedSerials(model, receiptModel.InWarehouseId);
+                    result = bObj.ApproveProducedSerials(model, wrId); //receiptModel.InWarehouseId
                 }
 
                 if (result.Result)

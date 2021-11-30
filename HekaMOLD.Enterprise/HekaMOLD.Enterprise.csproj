@@ -4619,6 +4619,7 @@
     <Content Include="Views\ProcessGroup\List.cshtml" />
     <Content Include="Views\Mobile\PostureHistory.cshtml" />
     <Content Include="Views\Mobile\IncidentHistory.cshtml" />
+    <Content Include="Views\Home\PlainDashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

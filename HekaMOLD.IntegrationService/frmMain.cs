@@ -103,6 +103,9 @@ namespace HekaMOLD.IntegrationService
 
                             result = entObj.PullSaleOrders(sync);
                             AddLog(result.Result ? "Satış siparişleri transfer edildi." : "Satış Siparişi Transferi Hata: " + result.ErrorMessage);
+
+                            var pResult = entObj.PushProductions(sync);
+                            AddLog(pResult.Result ? "Üretimler transfer edildi." : "Üretim Transferi Hata: " + pResult.ErrorMessage);
                         }
                     }
                 }

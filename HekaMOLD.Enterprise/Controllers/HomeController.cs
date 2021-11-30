@@ -209,6 +209,12 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
+
+        [FreeAction]
+        public ActionResult PlainDashboard()
+        {
+            return View();
+        }
         #endregion
     }
 }

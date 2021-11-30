@@ -22,7 +22,7 @@
         $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data.Serials.sort((a, b) => a.WorkOrderDetailId - b.WorkOrderDetailId);
+                    $scope.pickupList = resp.data.Serials;
                     $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
                     $scope.filteredSummaryList = $scope.summaryList;
@@ -30,6 +30,22 @@
                     $scope.updateFilteredList();
                 }
             }).catch(function (err) { });
+    }
+
+    $scope.showQualityText = function (item) {
+        if (item.QualityStatus == 2) {
+            if (item.QualityExplanation != null && item.QualityExplanation.length > 0) {
+                bootbox.alert({
+                    title: "Ürün Red Nedeni",
+                    message: item.QualityExplanation,
+                });
+            }
+            else
+                bootbox.alert({
+                    title: "Ürün Red Nedeni",
+                    message: 'Herhangi bir red nedeni girilmemiş.',
+                });
+        }
     }
 
     $scope.getListSum = function (list, key) {
@@ -290,15 +306,15 @@
                     else
                         $scope.modelObject.InWarehouseId = null;
 
-                    if ($scope.modelObject.InWarehouseId == null) {
-                        toastr.error('Depo seçmelisiniz.');
-                        return;
-                    }
+                    //if ($scope.modelObject.InWarehouseId == null) {
+                    //    toastr.error('Depo seçmelisiniz.');
+                    //    return;
+                    //}
 
-                    if ($scope.selectedWarehouse.WarehouseType != 2) {
-                        toastr.error('Ürün deposu seçmelisiniz.');
-                        return;
-                    }
+                    //if ($scope.selectedWarehouse.WarehouseType != 2) {
+                    //    toastr.error('Ürün deposu seçmelisiniz.');
+                    //    return;
+                    //}
 
                     $http.post(HOST_URL + 'Mobile/SaveProductPickup', { receiptModel: $scope.modelObject, model: $scope.selectedProducts }, 'json')
                         .then(function (resp) {

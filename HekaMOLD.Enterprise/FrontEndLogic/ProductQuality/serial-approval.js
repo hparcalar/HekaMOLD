@@ -32,6 +32,21 @@
             }).catch(function (err) { });
     }
 
+    $scope.showQualityText = function (item) {
+        if (item.QualityStatus == 2) {
+            var faultMsg = 'Herhangi bir red nedeni girilmemiş.';
+            if (item.QualityExplanation != null && item.QualityExplanation.length > 0) {
+                faultMsg = item.QualityExplanation;
+            }
+
+            bootbox.alert({
+                title: "Ürün Red Bilgisi",
+                closeButton:false,
+                message: faultMsg,
+            });
+        }
+    }
+
     // -- BEGIN -- QUALITY STATUS FILTER FUNCTIONS
     $scope.toggleQualityFilter = function (qStatus) {
         if ($scope.selectedQualities.some(d => d == qStatus)) {

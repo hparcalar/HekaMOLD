@@ -2164,6 +2164,7 @@ namespace HekaMOLD.Business.UseCases
                         QualityStatus = d.QualityStatus ?? 0,
                         QualityStatusText = ((QualityStatusType)(d.QualityStatus ?? 0)).ToCaption(),
                         FirstQuantity = d.FirstQuantity,
+                        QualityExplanation = d.QualityExplanation,
                         InPackageQuantity = d.InPackageQuantity,
                         ShiftId = d.ShiftId,
                         ShiftCode = d.Shift != null ? d.Shift.ShiftCode : "",
@@ -2273,13 +2274,16 @@ namespace HekaMOLD.Business.UseCases
                         InPackageQuantity = d.InPackageQuantity,
                         ShiftId = d.ShiftId,
                         ShiftCode = d.Shift != null ? d.Shift.ShiftCode : "",
+                        QualityExplanation = d.QualityExplanation,
                         ShiftName = d.Shift != null ? d.Shift.ShiftName : "",
                         IsGeneratedBySignal = d.IsGeneratedBySignal,
                         LiveQuantity = d.LiveQuantity,
                         SerialNo = d.SerialNo,
                         FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "" : "",
                         FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName : "",
-                    }).ToArray();
+                    })
+                    .OrderByDescending(d => d.CreatedDate).ThenByDescending(d => d.WorkOrderDetailId)
+                    .ToArray();
             }
             catch (Exception)
             {
@@ -2435,6 +2439,9 @@ namespace HekaMOLD.Business.UseCases
                     var dbSerial = repo.Get(d => d.Id == item.Id);
                     if (dbSerial != null)
                     {
+                        if (dbSerial.WorkOrderDetail.ItemId == null)
+                            continue;
+
                         var relatedDetail = receiptDetails.FirstOrDefault(d => d.ItemId == dbSerial.WorkOrderDetail.ItemId);
                         if (relatedDetail == null)
                         {
