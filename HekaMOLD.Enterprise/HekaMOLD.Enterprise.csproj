@@ -4140,11 +4140,13 @@
     <Content Include="FrontEndLogic\ProcessGroup\index.js" />
     <Content Include="FrontEndLogic\ProcessGroup\list.js" />
     <Content Include="FrontEndLogic\ProductionNeeds\list.js" />
+    <Content Include="FrontEndLogic\ProductQuality\conditional-approvals.js" />
     <Content Include="FrontEndLogic\ProductQuality\index-data.js" />
     <Content Include="FrontEndLogic\ProductQuality\index.js" />
     <Content Include="FrontEndLogic\ProductQuality\list-data.js" />
     <Content Include="FrontEndLogic\ProductQuality\list.js" />
     <Content Include="FrontEndLogic\ProductQuality\print-product-plans.js" />
+    <Content Include="FrontEndLogic\ProductQuality\scrap-list.js" />
     <Content Include="FrontEndLogic\ProductQuality\serial-approval.js" />
     <Content Include="FrontEndLogic\ProductRecipe\index.js" />
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
@@ -4165,6 +4167,8 @@
     <Content Include="FrontEndLogic\User\notifications.js" />
     <Content Include="FrontEndLogic\User\index.js" />
     <Content Include="FrontEndLogic\User\list.js" />
+    <Content Include="FrontEndLogic\Warehouse\finished-product-state.js" />
+    <Content Include="FrontEndLogic\Warehouse\finished-products.js" />
     <Content Include="FrontEndLogic\Warehouse\index.js" />
     <Content Include="FrontEndLogic\Warehouse\states.js" />
     <Content Include="FrontEndLogic\Warehouse\list.js" />
@@ -4620,6 +4624,10 @@
     <Content Include="Views\Mobile\PostureHistory.cshtml" />
     <Content Include="Views\Mobile\IncidentHistory.cshtml" />
     <Content Include="Views\Home\PlainDashboard.cshtml" />
+    <Content Include="Views\Warehouse\FinishedProducts.cshtml" />
+    <Content Include="Views\ProductQuality\ScrapList.cshtml" />
+    <Content Include="Views\ProductQuality\ConditionalApproveList.cshtml" />
+    <Content Include="Views\Warehouse\FinishedProductState.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

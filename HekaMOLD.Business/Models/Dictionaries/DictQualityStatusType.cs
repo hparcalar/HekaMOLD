@@ -16,6 +16,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { QualityStatusType.Ok, "Kalite Onaylandı" },
             { QualityStatusType.Nok, "Kalite Reddedildi" },
             { QualityStatusType.QualityWaiting, "Kalite Beklemede" },
+            { QualityStatusType.ConditionalApproved, "Şartlı Kabul" },
         };
     }
 }

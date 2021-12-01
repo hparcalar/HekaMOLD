@@ -232,6 +232,16 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult ScrapList()
+        {
+            return View();
+        }
+
+        public ActionResult ConditionalApproveList()
+        {
+            return View();
+        }
+
         [HttpPost]
         public JsonResult ApproveSerials(WorkOrderSerialModel[] model)
         {
@@ -270,6 +280,65 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
+        public JsonResult SendToWastage(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = null;
+
+            using (QualityBO bObj = new QualityBO())
+            {
+                result = bObj.SendToWastage(model);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
+        public JsonResult ConditionalApprove(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = null;
+            int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+
+            using (QualityBO bObj = new QualityBO())
+            {
+                result = bObj.ConditionalApproveSerials(model, plantId);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+        #endregion
+
+        #region CONDITIONAL APPROVE & SCRAP REPORTS
+        [HttpGet]
+        public JsonResult GetConditionalApprovedList()
+        {
+            WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];
+
+            using (QualityBO bObj = new QualityBO())
+            {
+                data = bObj.GetConditionalApprovedSerials();
+            }
+
+            var jsonResp = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResp.MaxJsonLength = int.MaxValue;
+            return jsonResp;
+        }
+
+        [HttpGet]
+        public JsonResult GetScrapList()
+        {
+            ProductWastageModel[] data = new ProductWastageModel[0];
+
+            using (QualityBO bObj = new QualityBO())
+            {
+                data = bObj.GetScrapList(new Business.Models.Filters.BasicRangeFilter { });
+            }
+
+            var jsonResp = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResp.MaxJsonLength = int.MaxValue;
+            return jsonResp;
         }
         #endregion
     }

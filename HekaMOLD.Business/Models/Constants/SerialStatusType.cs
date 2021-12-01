@@ -12,5 +12,6 @@ namespace HekaMOLD.Business.Models.Constants
         Approved=3,
         Placed=1,
         Used=2,
+        Scrap = 4,
     }
 }

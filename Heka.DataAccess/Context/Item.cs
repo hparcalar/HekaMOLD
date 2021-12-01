@@ -30,10 +30,10 @@ namespace Heka.DataAccess.Context
             this.ProductQualityData = new HashSet<ProductQualityData>();
             this.ProductRecipe = new HashSet<ProductRecipe>();
             this.ProductRecipeDetail = new HashSet<ProductRecipeDetail>();
-            this.ProductWastage = new HashSet<ProductWastage>();
             this.WorkOrderItemNeeds = new HashSet<WorkOrderItemNeeds>();
             this.ItemSerial = new HashSet<ItemSerial>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
+            this.ProductWastage = new HashSet<ProductWastage>();
         }
     
         public int Id { get; set; }
@@ -82,12 +82,12 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductRecipeDetail> ProductRecipeDetail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductWastage> ProductWastage { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderItemNeeds> WorkOrderItemNeeds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ItemSerial> ItemSerial { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductWastage> ProductWastage { get; set; }
     }
 }

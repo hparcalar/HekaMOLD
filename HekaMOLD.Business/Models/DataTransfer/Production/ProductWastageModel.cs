@@ -18,6 +18,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public decimal? Quantity { get; set; }
         public int? WastageStatus { get; set; }
         public DateTime? ShiftBelongsToDate { get; set; }
+        public bool? IsAfterScrap { get; set; }
 
         #region VISUAL ELEMENTS
         public string WorkOrderNo { get; set; }

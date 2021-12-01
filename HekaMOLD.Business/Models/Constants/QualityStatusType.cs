@@ -12,5 +12,6 @@ namespace HekaMOLD.Business.Models.Constants
         Ok=1,
         Nok=2,
         QualityWaiting=3,
+        ConditionalApproved=4,
     }
 }

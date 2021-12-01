@@ -982,6 +982,21 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public WarehouseModel GetProductWarehouse()
+        {
+            WarehouseModel data = null;
+
+            var repo = _unitOfWork.GetRepository<Warehouse>();
+            var dbObj = repo.Get(d => d.WarehouseType == (int)WarehouseType.ProductWarehouse);
+            if (dbObj != null)
+            {
+                data = new WarehouseModel();
+                dbObj.MapTo(data);
+            }
+
+            return data;
+        }
+
         #endregion
 
         #region ITEM UNIT BUSINESS

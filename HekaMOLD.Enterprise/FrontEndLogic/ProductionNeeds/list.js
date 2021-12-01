@@ -68,13 +68,16 @@
                 totalItems: [{
                     column: "TargetQuantity",
                     summaryType: "sum",
+                    valueFormat: { type: "fixedPoint", precision: 2 }
                     }, {
                     column: "WarehouseQuantity",
                     summaryType: "sum",
+                    valueFormat: { type: "fixedPoint", precision: 2 }
                     },
                     {
                         column: "Quantity",
                         summaryType: "sum",
+                        valueFormat: { type: "fixedPoint", precision: 2 }
                     }
                 ]
             }

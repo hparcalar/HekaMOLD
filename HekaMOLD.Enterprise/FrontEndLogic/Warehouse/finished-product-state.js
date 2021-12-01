@@ -1,4 +1,4 @@
-﻿app.controller('productionHistoryCtrl', function ($scope, $http) {
+﻿app.controller('finishedProductStateCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     $scope.filterModel = {
@@ -11,12 +11,12 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'WorkOrder/GetProductionHistory?dt1=' + $scope.filterModel.startDate +
+                    return $.getJSON(HOST_URL + 'Warehouse/GetFinishedProductState?dt1=' + $scope.filterModel.startDate +
                         '&dt2=' + $scope.filterModel.endDate, function (data) {
-                            
+
                         });
                 },
-                key: ['WorkOrderDetailId','WorkDateStr', 'ShiftCode']
+                key: ['ItemId']
             },
             showColumnLines: false,
             showRowLines: true,
@@ -30,7 +30,7 @@
             headerFilter: {
                 visible: true
             },
-            height:700,
+            height: 700,
             groupPanel: {
                 visible: true
             },
@@ -39,33 +39,28 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'WorkDateStr', caption: 'Tarih' },
-                { dataField: 'ShiftCode', caption: 'Vardiya' },
-                { dataField: 'SaleOrderNo', caption: 'Sipariş No' },
-                { dataField: 'ProductCode', caption: 'Ürün Kodu' },
-                { dataField: 'ProductName', caption: 'Ürün Adı' },
-                { dataField: 'MachineCode', caption: 'Makine' },
-                { dataField: 'OrderQuantity', caption: 'Sipariş Miktar' },
-                { dataField: 'CompleteQuantity', caption: 'Üretilen Miktar' },
-                /*{ dataField: 'SerialCount', caption: 'Koli Adedi' },*/
-                { dataField: 'WastageQuantity', caption: 'Fire Miktar' },
+                { dataField: 'ItemNo', caption: 'Ürün Kodu' },
+                { dataField: 'ItemName', caption: 'Ürün Adı' },
+                { dataField: 'InQty', caption: 'Giriş Miktar' },
+                { dataField: 'OutQty', caption: 'Çıkış Miktar' },
+                { dataField: 'TotalQty', caption: 'Mevcut Miktar' },
             ],
             summary: {
                 totalItems: [{
-                    column: "CompleteQuantity",
+                    column: "InQty",
                     summaryType: "sum",
                 }, {
-                    column: "SerialCount",
+                    column: "OutQty",
                     summaryType: "sum",
                 },
                 {
-                    column: "WastageQuantity",
+                    column: "TotalQty",
                     summaryType: "sum",
                 }
                 ]
             }
-            });
-        }
+        });
+    }
 
     // ON LOAD EVENTS
     $scope.loadReport();

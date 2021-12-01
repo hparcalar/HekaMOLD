@@ -56,7 +56,11 @@
                                      ng-cloak
                                      data-id="{{machine.Id}}"
                                      ng-repeat="machine in selectedMachineList">
-                                    <h5 ng-cloak>{{machine.MachineCode}}</h5>
+                                    <h5 ng-cloak ng-bind="machine.MachineCode"></h5>
+                                    <h5 ng-cloak ng-if="machine.IsInIncident"
+                                        class="text-center bg-danger text-light mt-0  px-2 py-2 border-1 border-dark">
+                                        BAKIMDA
+                                    </h5>
                                     <div class="d-flex flex-column overflow-auto" style="max-height:400px;">
                                         @* GET ACTIVE PLANS OF MACHINE *@
                                         <div class="plan-box" draggable="true"

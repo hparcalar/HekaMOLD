@@ -75,7 +75,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ProductQualityPlan> ProductQualityPlan { get; set; }
         public virtual DbSet<ProductRecipe> ProductRecipe { get; set; }
         public virtual DbSet<ProductRecipeDetail> ProductRecipeDetail { get; set; }
-        public virtual DbSet<ProductWastage> ProductWastage { get; set; }
         public virtual DbSet<ReportTemplate> ReportTemplate { get; set; }
         public virtual DbSet<SectionSetting> SectionSetting { get; set; }
         public virtual DbSet<SyncPoint> SyncPoint { get; set; }
@@ -112,5 +111,6 @@ namespace Heka.DataAccess.Context
         public virtual DbSet<ItemSerial> ItemSerial { get; set; }
         public virtual DbSet<ItemOrderConsume> ItemOrderConsume { get; set; }
         public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
+        public virtual DbSet<ProductWastage> ProductWastage { get; set; }
     }
 }

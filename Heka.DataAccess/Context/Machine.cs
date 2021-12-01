@@ -27,11 +27,11 @@ namespace Heka.DataAccess.Context
             this.MoldTest = new HashSet<MoldTest>();
             this.ProductionPosture = new HashSet<ProductionPosture>();
             this.ProductQualityData = new HashSet<ProductQualityData>();
-            this.ProductWastage = new HashSet<ProductWastage>();
             this.RouteItem = new HashSet<RouteItem>();
             this.ShiftTarget = new HashSet<ShiftTarget>();
             this.UserWorkOrderHistory = new HashSet<UserWorkOrderHistory>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
+            this.ProductWastage = new HashSet<ProductWastage>();
         }
     
         public int Id { get; set; }
@@ -77,8 +77,6 @@ namespace Heka.DataAccess.Context
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductQualityData> ProductQualityData { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductWastage> ProductWastage { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteItem> RouteItem { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ShiftTarget> ShiftTarget { get; set; }
@@ -87,5 +85,7 @@ namespace Heka.DataAccess.Context
         public virtual MachineGroup MachineGroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductWastage> ProductWastage { get; set; }
     }
 }

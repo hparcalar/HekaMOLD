@@ -11,6 +11,7 @@ using Heka.DataAccess.Context;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.Filters;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -856,6 +857,275 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return result;
+        }
+
+        private ShiftModel GetCurrentShift()
+        {
+            ShiftModel data = new ShiftModel();
+
+            try
+            {
+                var repoShift = _unitOfWork.GetRepository<Shift>();
+
+                // RESOLVE CURRENT SHIFT
+                DateTime entryTime = DateTime.Now;
+                DateTime shiftBelongsTo = DateTime.Now.Date;
+
+                Shift dbShift = null;
+                var shiftList = repoShift.Filter(d => d.StartTime != null && d.EndTime != null).ToArray();
+                foreach (var shift in shiftList)
+                {
+                    DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
+                    DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
+
+                    if (shift.StartTime > shift.EndTime)
+                    {
+                        if (DateTime.Now.Hour >= shift.StartTime.Value.Hours) // gece 12 den önce
+                        {
+                            endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
+                            shiftBelongsTo = DateTime.Now.Date;
+                        }
+                        else // gece 12den sonra
+                        {
+                            startTime = DateTime.Now.Date.AddDays(-1).Add(shift.StartTime.Value);
+                            shiftBelongsTo = DateTime.Now.Date.AddDays(-1);
+                        }
+                    }
+                    else
+                        shiftBelongsTo = DateTime.Now.Date;
+
+                    if (entryTime >= startTime && entryTime <= endTime)
+                    {
+                        dbShift = shift;
+                        break;
+                    }
+                }
+
+                if (dbShift != null)
+                {
+                    dbShift.MapTo(data);
+                    data.ShiftBelongsToDate = shiftBelongsTo;
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult SendToWastage(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
+
+                foreach (var item in model)
+                {
+                    var dbSerial = repo.Get(d => d.Id == item.Id);
+                    if (dbSerial != null)
+                    {
+                        dbSerial.QualityStatus = (int)QualityStatusType.Nok;
+                        dbSerial.QualityExplanation = item.QualityExplanation;
+                        dbSerial.SerialStatus = (int)SerialStatusType.Scrap;
+
+                        if (dbSerial.WorkOrderDetail != null)
+                        {
+                            // RESOLVE CURRENT SHIFT
+                            var currentShift = GetCurrentShift();
+
+                            if (currentShift != null)
+                            {
+                                // CREATE WASTAGE RECORD
+                                var wstg = new ProductWastage
+                                {
+                                    CreatedDate = DateTime.Now,
+                                    EntryDate = DateTime.Now,
+                                    IsAfterScrap = true,
+                                    MachineId = dbSerial.WorkOrderDetail.MachineId,
+                                    ProductId = dbSerial.WorkOrderDetail.ItemId,
+                                    WorkOrderDetailId = dbSerial.WorkOrderDetailId,
+                                    Quantity = dbSerial.FirstQuantity,
+                                    WastageStatus = 0,
+                                    ShiftId = currentShift.Id,
+                                    ShiftBelongsToDate = currentShift.ShiftBelongsToDate,
+                                };
+                                repoWastage.Add(wstg);
+                            }
+                        }
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
+                
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult ConditionalApproveSerials(WorkOrderSerialModel[] model, int plantId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                int warehouseId = 0;
+
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                foreach (var item in model)
+                {
+                    var dbSerial = repo.Get(d => d.Id == item.Id);
+                    if (dbSerial != null)
+                    {
+                        dbSerial.QualityStatus = (int)QualityStatusType.ConditionalApproved;
+                        dbSerial.QualityExplanation = item.QualityExplanation;
+                        dbSerial.SerialStatus = (int)SerialStatusType.Approved;
+                        item.QualityStatus = dbSerial.QualityStatus;
+
+                        if (warehouseId == 0 && (dbSerial.TargetWarehouseId) > 0)
+                            warehouseId = dbSerial.TargetWarehouseId.Value;
+                    }
+                }
+
+                if (warehouseId == 0)
+                    throw new Exception("Hedef depo seçilmeden çekilen ürünleri onaylayamazsınız.");
+
+                _unitOfWork.SaveChanges();
+
+                // CREATE WAREHOUSE ENTRY RECEIPT
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.MakeSerialPickupForProductWarehouse(new Models.DataTransfer.Receipt.ItemReceiptModel
+                    {
+                        PlantId = plantId,
+                        InWarehouseId = warehouseId,
+                    }, model);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ProductWastageModel[] GetScrapList(BasicRangeFilter filter)
+        {
+            ProductWastageModel[] data = new ProductWastageModel[0];
+
+            try
+            {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(filter.StartDate))
+                    filter.StartDate = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(filter.EndDate))
+                    filter.EndDate = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repo = _unitOfWork.GetRepository<ProductWastage>();
+
+                data = repo.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd
+                        && (filter.MachineId == 0 || d.MachineId == filter.MachineId)
+                        && d.IsAfterScrap == true
+                    )
+                    .ToList()
+                    .Select(d => new ProductWastageModel
+                    {
+                        Id = d.Id,
+                        CreatedDate = d.CreatedDate,
+                        EntryDate = d.EntryDate,
+                        CreatedUserId = d.CreatedUserId,
+                        MachineId = d.MachineId,
+                        WastageStatus = d.WastageStatus,
+                        MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                        MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                        Quantity = d.Quantity,
+                        ProductId = d.ProductId,
+                        ProductCode = d.Item != null ? d.Item.ItemNo : "",
+                        ProductName = d.Item != null ? d.Item.ItemName : "",
+                        WorkOrderNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.WorkOrderNo : "",
+                        ItemOrderNo = d.WorkOrderDetail != null && d.WorkOrderDetail.ItemOrderDetail != null ?
+                            d.WorkOrderDetail.ItemOrderDetail.ItemOrder.DocumentNo : "",
+                        EntryDateStr = d.EntryDate != null ?
+                            string.Format("{0:dd.MM.yyyy HH:mm}", d.EntryDate) : "",
+                    })
+                    .OrderByDescending(d => d.EntryDate)
+                    .ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public WorkOrderSerialModel[] GetConditionalApprovedSerials()
+        {
+            WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                data = repo.Filter(d =>
+                    (
+                        d.QualityStatus == (int)QualityStatusType.ConditionalApproved
+                    )
+                    && d.SerialNo != null && d.SerialNo.Length > 0)
+                    .ToList()
+                    .Select(d => new WorkOrderSerialModel
+                    {
+                        Id = d.Id,
+                        WorkOrderDetailId = d.WorkOrderDetailId,
+                        ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "" : "",
+                        ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName : "",
+                        CreatedDate = d.CreatedDate,
+                        CreatedDateStr = d.CreatedDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "",
+                        MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineCode : "",
+                        MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineName : "",
+                        QualityStatus = d.QualityStatus ?? 0,
+                        QualityStatusText = ((QualityStatusType)(d.QualityStatus ?? 0)).ToCaption(),
+                        FirstQuantity = d.FirstQuantity,
+                        QualityExplanation = d.QualityExplanation,
+                        InPackageQuantity = d.InPackageQuantity,
+                        ShiftId = d.ShiftId,
+                        ShiftCode = d.Shift != null ? d.Shift.ShiftCode : "",
+                        ShiftName = d.Shift != null ? d.Shift.ShiftName : "",
+                        IsGeneratedBySignal = d.IsGeneratedBySignal,
+                        LiveQuantity = d.LiveQuantity,
+                        SerialNo = d.SerialNo,
+                        FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "" : "",
+                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName : "",
+                    })
+                    .OrderByDescending(d => d.CreatedDate) 
+                    .ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
         }
         #endregion
     }

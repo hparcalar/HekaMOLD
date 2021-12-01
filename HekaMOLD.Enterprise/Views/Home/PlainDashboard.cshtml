@@ -32,6 +32,10 @@
                                                       repeatCount="indefinite" />
                                 </svg>
                                 {{item.MachineCode}}
+                                <span ng-if="item.IsInIncident"
+                                    class="text-center bg-warning text-dark mt-1 rounded px-2 py-2 border-1 border-dark">
+                                    {{'BAKIM'}}
+                                </span>
                             </h4>
                             <div class="cursor-pointer symbol d-flex flex-row mt-2 justify-content-center">
                                 <img src="{{item.ProfileImageBase64}}" class="user-img"
@@ -39,10 +43,6 @@
                                      data-user-id="{{item.WorkingUserId}}" />
                             </div>
                             <div class="text-center py-0 min-h-30px h-30px w-100">
-                                <h5 ng-if="item.IsInIncident"
-                                    class="text-center bg-warning text-dark mt-1 rounded px-2 py-2 border-1 border-dark">
-                                    {{'BAKIMDA'}}
-                                </h5>
                                 <h5 ng-if="item.IsInIncident == false && item.WorkingUserId > 0"
                                     class="text-center bg-success text-dark mt-1 rounded px-2 py-2 border-1 border-dark">
                                     {{ item.WorkingUserName }}

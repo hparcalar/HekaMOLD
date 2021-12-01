@@ -570,12 +570,20 @@ namespace HekaMOLD.Business.UseCases
         public MachineModel[] GetMachineList()
         {
             var repo = _unitOfWork.GetRepository<Machine>();
+            var repoIncident = _unitOfWork.GetRepository<Incident>();
 
             List<MachineModel> containerList = new List<MachineModel>();
             repo.GetAll().ToList().ForEach(d =>
             {
                 MachineModel containerObj = new MachineModel();
                 d.MapTo(containerObj);
+
+                containerObj.IsInIncident = repoIncident.Any(m => m.MachineId == d.Id
+                    && m.IncidentStatus != (int)PostureStatusType.Resolved);
+                containerObj.ActiveIncidentText = repoIncident.Filter(m => m.MachineId == d.Id
+                    && m.IncidentStatus != (int)PostureStatusType.Resolved)
+                    .Select(m => m.IncidentCategory.IncidentCategoryName).FirstOrDefault();
+
                 containerList.Add(containerObj);
             });
 

@@ -104,6 +104,16 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult FinishedProducts()
+        {
+            return View();
+        }
+
+        public ActionResult FinishedProductState()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetStatesData(string warehouseList)
         {
@@ -116,6 +126,71 @@ namespace HekaMOLD.Enterprise.Controllers
                 using (ReportingBO bObj = new ReportingBO())
                 {
                     data = bObj.GetItemStates(warehouseIds);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpGet]
+        public JsonResult GetFinishedProducts()
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                int pWrId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var wrModel = bObj.GetProductWarehouse();
+                    if (wrModel != null && wrModel.Id > 0)
+                        pWrId = wrModel.Id;
+                }
+
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetItemStates(new int[] { pWrId });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpGet]
+        public JsonResult GetFinishedProductState(string dt1, string dt2)
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                int pWrId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var wrModel = bObj.GetProductWarehouse();
+                    if (wrModel != null && wrModel.Id > 0)
+                        pWrId = wrModel.Id;
+                }
+
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetItemStates(new int[] { pWrId }, new Business.Models.Filters.BasicRangeFilter { 
+                        StartDate = dt1,
+                        EndDate = dt2,
+                    });
                 }
             }
             catch (Exception)
