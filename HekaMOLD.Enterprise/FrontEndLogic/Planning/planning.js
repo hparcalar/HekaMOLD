@@ -302,7 +302,15 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 mode: "virtual"
             },
             height: 450,
-            width:450,
+            width: 450,
+            onEditorPreparing: function (e) {
+                if (e.parentType === "filterRow") {
+                    let onValueChanged = e.editorOptions.onValueChanged
+                    e.editorOptions.onValueChanged = function (args) {
+                        e.component.columnOption(e.dataField, "filterValue", args.value.toUpperCase())
+                    }
+                }
+            },
             editing: {
                 allowUpdating: false,
                 allowDeleting: false

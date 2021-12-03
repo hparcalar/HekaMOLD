@@ -71,6 +71,8 @@
     // -- END -- QUALITY STATUS FILTER FUNCTIONS
 
     $scope.updateFilteredList = function () {
+        $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
         // FILTER QUALITY STATUS
         if ($scope.selectedQualities.length > 0) {
             $scope.filteredPickupList = $scope.pickupList.filter(d => $scope.selectedQualities.some(q => q == d.QualityStatus));

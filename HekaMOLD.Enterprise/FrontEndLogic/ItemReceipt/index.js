@@ -359,6 +359,8 @@
             showColumnLines: true,
             showRowLines: true,
             rowAlternationEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             focusedRowEnabled: false,
             showBorders: true,
             filterRow: {

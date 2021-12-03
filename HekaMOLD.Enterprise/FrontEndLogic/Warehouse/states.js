@@ -95,6 +95,8 @@
             showColumnLines: false,
             showRowLines: true,
             rowAlternationEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,
             filterRow: {
@@ -118,7 +120,7 @@
             },
             columns: [
                 { dataField: 'WarehouseName', caption: 'Depo' },
-                { dataField: 'ItemNo', caption: 'Stok Kodu' },
+                /*{ dataField: 'ItemNo', caption: 'Stok Kodu' },*/
                 { dataField: 'ItemName', caption: 'Stok Adı' },
                 { dataField: 'InQty', caption: 'Giriş Miktar' },
                 { dataField: 'OutQty', caption: 'Çıkış Miktar' },

@@ -294,11 +294,11 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj.MachineId != model.MachineId)
                 {
                     var exMachinePlans = repo.Filter(d => d.MachineId == dbObj.MachineId &&
-                        (
-                            d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Planned
-                            ||
-                            d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
-                        )
+                            (
+                                d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Planned
+                                ||
+                                d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
+                            )
                             && d.Id != dbObj.Id)
                         .OrderBy(d => d.OrderNo)
                         .ToArray();
@@ -306,7 +306,7 @@ namespace HekaMOLD.Business.UseCases
                     var orderNo = 1;
                     foreach (var item in exMachinePlans)
                     {
-                        item.OrderNo = orderNo++;
+                        item.OrderNo = orderNo++;   
                     }
                 }
 
@@ -352,6 +352,15 @@ namespace HekaMOLD.Business.UseCases
                     }
 
                     dbObj.OrderNo = model.OrderNo;
+                }
+
+                if (activePlans.Any(d => d.OrderNo == dbObj.OrderNo && d.Id != dbObj.Id))
+                {
+                    var sameData = activePlans.Where(d => d.OrderNo == dbObj.OrderNo && d.Id != dbObj.Id);
+                    foreach (var smData in sameData)
+                    {
+                        smData.OrderNo++;
+                    }
                 }
 
                 _unitOfWork.SaveChanges();

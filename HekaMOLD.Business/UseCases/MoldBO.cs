@@ -87,19 +87,49 @@ namespace HekaMOLD.Business.UseCases
         #region MOLD TEST BUSINESS
         public MoldTestModel[] GetMoldTestList()
         {
-            List<MoldTestModel> data = new List<MoldTestModel>();
+            MoldTestModel[] data = new MoldTestModel[0];
 
             var repo = _unitOfWork.GetRepository<MoldTest>();
 
-            repo.GetAll().ToList().ForEach(d =>
-            {
-                MoldTestModel containerObj = new MoldTestModel();
-                d.MapTo(containerObj);
-                containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
-                containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
-                containerObj.TestDateStr = string.Format("{0:dd.MM.yyyy}", d.TestDate);
-                data.Add(containerObj);
-            });
+            data = repo.GetAll().ToList()
+                .Select(d => new MoldTestModel
+                {
+                    Id = d.Id,
+                    CreatedDate = d.CreatedDate,
+                    CreatedUserId = d.CreatedUserId,
+                    DyeCode = d.DyeCode,
+                    DyeId = d.DyeId,
+                    HeadSize = d.HeadSize,
+                    InflationTimeSeconds = d.InflationTimeSeconds,
+                    InPackageQuantity = d.InPackageQuantity,
+                    InPalletPackageQuantity = d.InPalletPackageQuantity,
+                    MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                    MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                    TestDateStr = string.Format("{0:dd.MM.yyyy}", d.TestDate),
+                    MachineId = d.MachineId,
+                    MoldCode = d.MoldCode,
+                    MoldId = d.MoldId,
+                    MoldName = d.MoldName,
+                    NutCaliber = d.NutCaliber,
+                    NutQuantity = d.NutQuantity,
+                    PackageDimension = d.PackageDimension,
+                    PlantId = d.PlantId,
+                    ProductCode = d.ProductCode,
+                    ProductDescription = d.ProductDescription,
+                    ProductId = d.ProductId,
+                    ProductName = d.ProductName,
+                    RalCode = d.RalCode,
+                    RawItemName = d.RawMaterialName,
+                    RawMaterialGr = d.RawMaterialGr,
+                    RawMaterialGrText = d.RawMaterialGrText,
+                    RawMaterialName = d.RawMaterialName,
+                    RawMaterialId = d.RawMaterialId,
+                    RawMaterialTolerationGr = d.RawMaterialTolerationGr,
+                    TestDate = d.TestDate,
+                    TotalTimeSeconds = d.TotalTimeSeconds,
+                    UpdatedDate = d.UpdatedDate,
+                    UpdatedUserId = d.UpdatedUserId,
+                }).ToArray();
 
             return data.ToArray();
         }

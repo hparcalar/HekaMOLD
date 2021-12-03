@@ -2057,7 +2057,7 @@ namespace HekaMOLD.Business.UseCases
                 dbMoldItem.ItemNo = dbObj.MoldCode;
                 dbMoldItem.ItemName = dbObj.MoldName;
                 dbMoldItem.SupplierFirmId = dbObj.FirmId;
-                dbObj.Item1 = dbMoldItem;
+                dbObj.ItemMold = dbMoldItem;
                 #endregion
 
                 _unitOfWork.SaveChanges();

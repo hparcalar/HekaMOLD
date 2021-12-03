@@ -22,6 +22,7 @@
             showRowLines: true,
             rowAlternationEnabled: true,
             allowColumnResizing: true,
+            wordWrapEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,
             filterRow: {
@@ -39,7 +40,7 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'ItemNo', caption: 'Ürün Kodu' },
+                /*{ dataField: 'ItemNo', caption: 'Ürün Kodu' },*/
                 { dataField: 'ItemName', caption: 'Ürün Adı' },
                 { dataField: 'InQty', caption: 'Giriş Miktar' },
                 { dataField: 'OutQty', caption: 'Çıkış Miktar' },

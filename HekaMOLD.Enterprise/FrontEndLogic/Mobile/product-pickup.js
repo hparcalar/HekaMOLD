@@ -88,6 +88,8 @@
     // -- END -- QUALITY STATUS FILTER FUNCTIONS
 
     $scope.updateFilteredList = function () {
+        $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
         // FILTER QUALITY STATUS
         if ($scope.selectedQualities.length > 0) {
             $scope.filteredPickupList = $scope.pickupList.filter(d => $scope.selectedQualities.some(q => q == d.QualityStatus));
@@ -119,8 +121,18 @@
                     if (d.QualityStatus == 1)
                         $scope.selectedProducts.push(d);
                 }
-                else
+                else {
+                    if (d.QualityStatus == 2) {
+                        toastr.error('Kalite RED almış ürün OK olana kadar depo hareketi göremez.');
+                        return;
+                    }
+                    else if (d.QualityStatus == 3) {
+                        toastr.error('Kalite BEKLEMEYE almış ürün OK olana kadar depo hareketi göremez.');
+                        return;
+                    }
+
                     $scope.selectedProducts.push(d);
+                }
             });
         }
     }
@@ -134,7 +146,7 @@
             return;
         }
         else if (item.QualityStatus == 3) {
-            toastr.error('Kalite RED almış ürün OK olana kadar depo hareketi göremez.');
+            toastr.error('Kalite BEKLEMEYE almış ürün OK olana kadar depo hareketi göremez.');
             return;
         }
 
@@ -343,6 +355,14 @@
     }
 
     $scope.deleteEntries = function () {
+        for (var i = 0; i < $scope.selectedProducts.length; i++) {
+            var prd = $scope.selectedProducts[i];
+            if (prd.QualityStatus != null && prd.QualityStatus > 0) {
+                toastr.error('Seçilen ürünlerin kalite durumları silmek için uygun değil.');
+                return;
+            }
+        }
+
         bootbox.confirm({
             message: "Seçilen ürünleri silmek istediğinizden emin misiniz?",
             closeButton: false,
