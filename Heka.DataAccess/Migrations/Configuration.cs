@@ -18,13 +18,15 @@
             try
             {
                 #region CREATE DEFAULT PLANT
+                var defaultPlan = context.Plant.FirstOrDefault();
                 if (!context.Plant.Any())
                 {
-                    context.Plant.Add(new Plant
+                    defaultPlan = new Plant
                     {
                         PlantCode = "001",
                         PlantName = "PLANT",
-                    });
+                    };
+                    context.Plant.Add(defaultPlan);
                 }
                 #endregion
 
@@ -62,7 +64,7 @@
                 {
                     var adminRole = new UserRole
                     {
-                        Plant = context.Plant.FirstOrDefault(),
+                        Plant = defaultPlan,
                         RoleName = "System Admin",
                     };
 
@@ -87,7 +89,7 @@
                     context.User.Add(new User
                     {
                         UserCode = "SysAdmin",
-                        Plant = context.Plant.FirstOrDefault(),
+                        Plant = defaultPlan,
                         Login = "SysAdmin",
                         UserName = "SysAdmin",
                         Password = "root",

@@ -39,6 +39,9 @@ namespace HekaMOLD.Business.UseCases.Integrations
                     case "Password":
                         data.Password = pairParts[1];
                         break;
+                    case "BranchOfficeNo":
+                        data.BranchOfficeNo = pairParts[1];
+                        break;
                     default:
                         break;
                 }
@@ -69,7 +72,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                     {
                         foreach (var item in itemParent.Value)
                         {
-                            if (!string.IsNullOrEmpty(item.cr_no.Value))
+                            if (!string.IsNullOrEmpty(item.cr_no.Value) && item.cr_sube == loginConfig.BranchOfficeNo)
                             {
                                 using (DefinitionsBO bObj = new DefinitionsBO())
                                 {
@@ -136,7 +139,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
                             using (DefinitionsBO bObj = new DefinitionsBO())
                             {
-                                if (!bObj.HasAnyItem(item.ur_kod.Value))
+                                if (item.ur_sube == loginConfig.BranchOfficeNo && !bObj.HasAnyItem(item.ur_kod.Value))
                                 {
                                     int? unitTypeId = null;
                                     #region RESOLVE SYSTEM UNIT TYPE
