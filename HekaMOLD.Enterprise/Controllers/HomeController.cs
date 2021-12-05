@@ -126,8 +126,8 @@ namespace HekaMOLD.Enterprise.Controllers
                     redirectionResult = RedirectToAction("Index", "Home");
 
                 // CHECK & RUN MIGRATION SCRTIPS
-                HekaBO hekaBase = new HekaBO();
-                hekaBase.RunMigrations();
+                //HekaBO hekaBase = new HekaBO();
+                //hekaBase.RunMigrations();
 
                 return redirectionResult;
             }

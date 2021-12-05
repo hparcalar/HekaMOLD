@@ -1,0 +1,1549 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="urn:WebticariService" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:WebticariService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="urn:WebticariService">
+      <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+      <xsd:complexType name="bembelesTekUrunBilgi">
+        <xsd:all>
+          <xsd:element name="ur_no" type="xsd:string" />
+          <xsd:element name="ur_kod" type="xsd:string" />
+          <xsd:element name="ur_adi" type="xsd:string" />
+          <xsd:element name="ur_adi2" type="xsd:string" />
+          <xsd:element name="ur_doviz" type="xsd:string" />
+          <xsd:element name="ur_aciklama" type="xsd:string" />
+          <xsd:element name="ur_kullbirim" type="xsd:string" />
+          <xsd:element name="ur_tipi" type="xsd:string" />
+          <xsd:element name="ur_ozellik" type="xsd:string" />
+          <xsd:element name="bi_birim" type="xsd:string" />
+          <xsd:element name="bi_carpan" type="xsd:string" />
+          <xsd:element name="bi_satisfiyat1" type="xsd:string" />
+          <xsd:element name="bi_satisfiyat1doviz" type="xsd:string" />
+          <xsd:element name="bi_satisfiyat2" type="xsd:string" />
+          <xsd:element name="bi_satisfiyat2doviz" type="xsd:string" />
+          <xsd:element name="bi_satisfiyat3" type="xsd:string" />
+          <xsd:element name="bi_satisfiyat3doviz" type="xsd:string" />
+          <xsd:element name="bi_kullfiyat" type="xsd:string" />
+          <xsd:element name="stokAdet" type="xsd:string" />
+          <xsd:element name="bi_barkodtur" type="xsd:string" />
+          <xsd:element name="bi_barkod" type="xsd:string" />
+          <xsd:element name="bi_en" type="xsd:string" />
+          <xsd:element name="bi_boy" type="xsd:string" />
+          <xsd:element name="bi_yukseklik" type="xsd:string" />
+          <xsd:element name="bi_hacim" type="xsd:string" />
+          <xsd:element name="bi_agirlik" type="xsd:string" />
+          <xsd:element name="bi_stokminimum" type="xsd:string" />
+          <xsd:element name="uw_bembeles" type="xsd:string" />
+          <xsd:element name="uw_bembeles_kategori" type="xsd:string" />
+          <xsd:element name="uw_cityshop" type="xsd:string" />
+          <xsd:element name="uw_cityshop_kategori" type="xsd:string" />
+          <xsd:element name="uw_ozellik" type="xsd:string" />
+          <xsd:element name="kdv" type="xsd:string" />
+          <xsd:element name="satiskdv" type="xsd:string" />
+          <xsd:element name="otv" type="xsd:string" />
+          <xsd:element name="oiv" type="xsd:string" />
+          <xsd:element name="resimler" type="tns:bembelesResimList" />
+          <xsd:element name="ozellikler" type="tns:bembelesOzellikList" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="bembelesResimList">
+        <xsd:sequence>
+          <xsd:element name="resim" type="tns:bembelesResimInsert" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="bembelesOzellikList">
+        <xsd:sequence>
+          <xsd:element name="ozellik" type="tns:bembelesOzellikInsert" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="bembelesResimInsert">
+        <xsd:sequence>
+          <xsd:element name="tur" type="xsd:string" />
+          <xsd:element name="hash" type="xsd:string" />
+          <xsd:element name="base64" type="xsd:string" />
+          <xsd:element name="isim" type="xsd:string" />
+          <xsd:element name="url" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="bembelesOzellikInsert">
+        <xsd:sequence>
+          <xsd:element name="isim" type="xsd:string" />
+          <xsd:element name="deger" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="grupResimBilgi">
+        <xsd:sequence>
+          <xsd:element name="dy_id" type="xsd:string" />
+          <xsd:element name="dy_yol" type="xsd:string" />
+          <xsd:element name="dy_boyut" type="xsd:string" />
+          <xsd:element name="di_no" type="xsd:string" />
+          <xsd:element name="di_dosyano" type="xsd:string" />
+          <xsd:element name="di_tablo" type="xsd:string" />
+          <xsd:element name="di_tabloid" type="xsd:string" />
+          <xsd:element name="di_varsayilan" type="xsd:string" />
+          <xsd:element name="di_dosyasira" type="xsd:string" />
+          <xsd:element name="dosyaBase64" type="xsd:string" />
+          <xsd:element name="thumbnails" type="tns:grupResimThumbList" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="grupResimThumbList">
+        <xsd:sequence>
+          <xsd:element name="dt_id" type="xsd:string" />
+          <xsd:element name="dt_dy_id" type="xsd:string" />
+          <xsd:element name="dt_boyut" type="xsd:string" />
+          <xsd:element name="dt_yol" type="xsd:string" />
+          <xsd:element name="dosyaBase64" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="loginRequest">
+    <wsdl:part name="customerNumber" type="xsd:string" />
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="password" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="loginResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="loginMobileRequest">
+    <wsdl:part name="customerNumber" type="xsd:string" />
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="deviceId" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="loginMobileResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importStockXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="stocks" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importStockXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importCustomerXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="customers" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importCustomerXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteSellingXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="satis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteSellingXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteBuyingXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="satis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteBuyingXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importSellingXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="satis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importSellingXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importBuyingXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="alis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importBuyingXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importSalesReceiptXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="satis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importSalesReceiptXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importPurchaseReceiptXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="alis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importPurchaseReceiptXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importSalesOrderXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="siparis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importSalesOrderXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getSalesOrderListXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="customerId" type="xsd:int" />
+    <wsdl:part name="limit" type="xsd:int" />
+    <wsdl:part name="offset" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="getSalesOrderListXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerBABSRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="customerId" type="xsd:int" />
+    <wsdl:part name="month" type="xsd:int" />
+    <wsdl:part name="year" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerBABSResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getAccountStatementRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="customerId" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="getAccountStatementResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerDebitAgingRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="customerId" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerDebitAgingResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteSalesOrderXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="siparis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteSalesOrderXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="cancelSalesOrderXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="salesOrders" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="cancelSalesOrderXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="convertSalesOrderToReceiptRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="siparis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="convertSalesOrderToReceiptResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="convertSalesOrderToInvoiceRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="siparis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="convertSalesOrderToInvoiceResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importPurchaseOrderXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="siparis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importPurchaseOrderXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="convertPurchaseOrderToReceiptRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="siparis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="convertPurchaseOrderToReceiptResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="convertPurchaseOrderToInvoiceRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="siparis" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="convertPurchaseOrderToInvoiceResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importSalesOfferXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="teklif" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importSalesOfferXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importPurchaseOfferXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="teklif" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importPurchaseOfferXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importCashTransactionXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="islemtipi" type="xsd:string" />
+    <wsdl:part name="nakit" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importCashTransactionXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importCreditTransactionXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="islemtipi" type="xsd:string" />
+    <wsdl:part name="kredi" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importCreditTransactionXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importChequeTransactionXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="islemtipi" type="xsd:string" />
+    <wsdl:part name="cek" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importChequeTransactionXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importBondTransactionXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="islemtipi" type="xsd:string" />
+    <wsdl:part name="senet" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importBondTransactionXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importStockCountingXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="sayim" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importStockCountingXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importStockTransportXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="depohareket" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importStockTransportXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importIncomeExpenseXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="gelirgider" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importIncomeExpenseXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportCustomerXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="field" type="xsd:string" />
+    <wsdl:part name="condition" type="xsd:string" />
+    <wsdl:part name="limit" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportCustomerXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportStockXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="field" type="xsd:string" />
+    <wsdl:part name="condition" type="xsd:string" />
+    <wsdl:part name="limit" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportStockXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportStockImageBase64JSONRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="jsonId" type="xsd:string" />
+    <wsdl:part name="imageNo" type="xsd:string" />
+    <wsdl:part name="thumbnail" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportStockImageBase64JSONResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportStockWithRepositoryXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="field" type="xsd:string" />
+    <wsdl:part name="condition" type="xsd:string" />
+    <wsdl:part name="limit" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportStockWithRepositoryXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportDataXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="query" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportDataXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportStockVariantXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="stockId" type="xsd:string" />
+    <wsdl:part name="field" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="exportStockVariantXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importDataSqlRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="query" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importDataSqlResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="licenceInfoRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="customerNumber" type="xsd:string" />
+    <wsdl:part name="modul" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="licenceInfoResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getCurrencyXMLRequest">
+    <wsdl:part name="source" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getCurrencyXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteCashTransactionXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="nakit" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteCashTransactionXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importBankTransferXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="islemtipi" type="xsd:string" />
+    <wsdl:part name="havale" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importBankTransferXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteBankTransferXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="nakit" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteBankTransferXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getDatabaseXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getDatabaseXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getCarServiceStatusRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="licenseplate" type="xsd:string" />
+    <wsdl:part name="phonenumber" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getCarServiceStatusResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getEBookXBRLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="id" type="xsd:string" />
+    <wsdl:part name="defterTuru" type="xsd:string" />
+    <wsdl:part name="donem" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getEBookXBRLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="setEbookXBRLWithSignatureRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="id" type="xsd:string" />
+    <wsdl:part name="data" type="xsd:string" />
+    <wsdl:part name="defterTuru" type="xsd:string" />
+    <wsdl:part name="donem" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="setEbookXBRLWithSignatureResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="setEbookXBRLWithGIBConfirmationRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="id" type="xsd:string" />
+    <wsdl:part name="filename" type="xsd:string" />
+    <wsdl:part name="data" type="xsd:base64Binary" />
+    <wsdl:part name="defterTuru" type="xsd:string" />
+    <wsdl:part name="donem" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="setEbookXBRLWithGIBConfirmationResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="setEbookXBRLWithSignatureZipRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="id" type="xsd:string" />
+    <wsdl:part name="data" type="xsd:base64Binary" />
+    <wsdl:part name="defterTuru" type="xsd:string" />
+    <wsdl:part name="donem" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="setEbookXBRLWithSignatureZipResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="createEBookPatentRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="id" type="xsd:string" />
+    <wsdl:part name="defterTuru" type="xsd:string" />
+    <wsdl:part name="donem" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="createEBookPatentResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="eBookRollbackRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="id" type="xsd:string" />
+    <wsdl:part name="donem" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="eBookRollbackResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importAccountingVoucherXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="fisler" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importAccountingVoucherXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteAccountingVoucherXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="fisler" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteAccountingVoucherXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importCrmXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="tablo" type="xsd:string" />
+    <wsdl:part name="xmlVeri" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importCrmXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importMrpXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="xmlVeri" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importMrpXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="agreementApprovalRequest">
+    <wsdl:part name="musNo" type="xsd:string" />
+    <wsdl:part name="uuid" type="xsd:string" />
+    <wsdl:part name="onay" type="xsd:string" />
+    <wsdl:part name="donem" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="agreementApprovalResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="webSocketPushRouterRequest">
+    <wsdl:part name="data" type="xsd:string" />
+    <wsdl:part name="dataType" type="xsd:string" />
+    <wsdl:part name="onay" type="xsd:userId" />
+  </wsdl:message>
+  <wsdl:message name="webSocketPushRouterResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="fileUploadRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="dataType" type="xsd:string" />
+    <wsdl:part name="fileName" type="xsd:string" />
+    <wsdl:part name="file" type="xsd:base64Binary" />
+  </wsdl:message>
+  <wsdl:message name="fileUploadResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="eBookFileUploadRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="id" type="xsd:string" />
+    <wsdl:part name="fileName" type="xsd:string" />
+    <wsdl:part name="file" type="xsd:base64Binary" />
+    <wsdl:part name="donem" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="eBookFileUploadResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getInvoiceByWUIDRequest">
+    <wsdl:part name="wuid" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getInvoiceByWUIDResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getEmployeeConstXMLRequest" />
+  <wsdl:message name="getEmployeeConstXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="bembelesUrunEntegreKaldirRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="musno" type="xsd:string" />
+    <wsdl:part name="urno" type="xsd:string" />
+    <wsdl:part name="provider" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="bembelesUrunEntegreKaldirResponse">
+    <wsdl:part name="sonuc" type="xsd:string" />
+    <wsdl:part name="mesaj" type="xsd:string" />
+    <wsdl:part name="tur" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="bembelesTekUrunGonderRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="musno" type="xsd:string" />
+    <wsdl:part name="urbilgi" type="tns:bembelesTekUrunBilgi" />
+    <wsdl:part name="provider" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="bembelesTekUrunGonderResponse">
+    <wsdl:part name="sonuc" type="xsd:string" />
+    <wsdl:part name="mesaj" type="xsd:string" />
+    <wsdl:part name="tur" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getPosSliderImageBase64JSONRequest">
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getPosSliderImageBase64JSONResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="grupResimCekRequest">
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="grupResimCekResponse">
+    <wsdl:part name="grupresimbilgi" type="tns:grupResimBilgi" />
+  </wsdl:message>
+  <wsdl:message name="importServiceXMLRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="xml" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="importServiceXMLResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getServiceByIdOrRegistrationNoRequest">
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="id" type="xsd:string" />
+    <wsdl:part name="registrationNo" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getServiceByIdOrRegistrationNoResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:portType name="WebticariServicePortType">
+    <wsdl:operation name="login">
+      <documentation>token almak icin kullanilir</documentation>
+      <wsdl:input message="tns:loginRequest" />
+      <wsdl:output message="tns:loginResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="loginMobile">
+      <documentation>mobil aygitlarda token almak icin kullanilir</documentation>
+      <wsdl:input message="tns:loginMobileRequest" />
+      <wsdl:output message="tns:loginMobileResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importStockXML">
+      <documentation>stok kartlarini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importStockXMLRequest" />
+      <wsdl:output message="tns:importStockXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importCustomerXML">
+      <documentation>cari kartlarini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importCustomerXMLRequest" />
+      <wsdl:output message="tns:importCustomerXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteSellingXML">
+      <documentation>satis faturalarini silmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:deleteSellingXMLRequest" />
+      <wsdl:output message="tns:deleteSellingXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteBuyingXML">
+      <documentation>alis faturalarini silmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:deleteBuyingXMLRequest" />
+      <wsdl:output message="tns:deleteBuyingXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importSellingXML">
+      <documentation>satis faturalarini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importSellingXMLRequest" />
+      <wsdl:output message="tns:importSellingXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importBuyingXML">
+      <documentation>alis faturalarini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importBuyingXMLRequest" />
+      <wsdl:output message="tns:importBuyingXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importSalesReceiptXML">
+      <documentation>satis irsaliyelerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importSalesReceiptXMLRequest" />
+      <wsdl:output message="tns:importSalesReceiptXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importPurchaseReceiptXML">
+      <documentation>alis irsaliyelerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importPurchaseReceiptXMLRequest" />
+      <wsdl:output message="tns:importPurchaseReceiptXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importSalesOrderXML">
+      <documentation>satis siparislerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importSalesOrderXMLRequest" />
+      <wsdl:output message="tns:importSalesOrderXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getSalesOrderListXML">
+      <documentation>satis siparisleri listesini xml formatinda almak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:getSalesOrderListXMLRequest" />
+      <wsdl:output message="tns:getSalesOrderListXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerBABS">
+      <documentation>BA-BS listesini xml formatinda almak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:getCustomerBABSRequest" />
+      <wsdl:output message="tns:getCustomerBABSResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getAccountStatement">
+      <documentation>Cari hesap ekstresini xml formatinda almak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:getAccountStatementRequest" />
+      <wsdl:output message="tns:getAccountStatementResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerDebitAging">
+      <documentation>Cari borc yaslandirmasini xml formatinda almak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:getCustomerDebitAgingRequest" />
+      <wsdl:output message="tns:getCustomerDebitAgingResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteSalesOrderXML">
+      <documentation>satis siparis ve satis rezervasyonlarini silmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:deleteSalesOrderXMLRequest" />
+      <wsdl:output message="tns:deleteSalesOrderXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="cancelSalesOrderXML">
+      <documentation>satis siparis ve satis rezervasyonlarini iptal etmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:cancelSalesOrderXMLRequest" />
+      <wsdl:output message="tns:cancelSalesOrderXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="convertSalesOrderToReceipt">
+      <documentation>satis siparislerini satis irsaliyesine donusturmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:convertSalesOrderToReceiptRequest" />
+      <wsdl:output message="tns:convertSalesOrderToReceiptResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="convertSalesOrderToInvoice">
+      <documentation>satis siparislerini satis faturasina donusturmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:convertSalesOrderToInvoiceRequest" />
+      <wsdl:output message="tns:convertSalesOrderToInvoiceResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importPurchaseOrderXML">
+      <documentation>alis siparislerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importPurchaseOrderXMLRequest" />
+      <wsdl:output message="tns:importPurchaseOrderXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="convertPurchaseOrderToReceipt">
+      <documentation>alis siparislerini alis irsaliyesine donusturmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:convertPurchaseOrderToReceiptRequest" />
+      <wsdl:output message="tns:convertPurchaseOrderToReceiptResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="convertPurchaseOrderToInvoice">
+      <documentation>alis siparislerini alis faturasina donusturmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:convertPurchaseOrderToInvoiceRequest" />
+      <wsdl:output message="tns:convertPurchaseOrderToInvoiceResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importSalesOfferXML">
+      <documentation>satis tekliflerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importSalesOfferXMLRequest" />
+      <wsdl:output message="tns:importSalesOfferXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importPurchaseOfferXML">
+      <documentation>alis tekliflerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importPurchaseOfferXMLRequest" />
+      <wsdl:output message="tns:importPurchaseOfferXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importCashTransactionXML">
+      <documentation>nakit islemlerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importCashTransactionXMLRequest" />
+      <wsdl:output message="tns:importCashTransactionXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importCreditTransactionXML">
+      <documentation>kredi karti islemlerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importCreditTransactionXMLRequest" />
+      <wsdl:output message="tns:importCreditTransactionXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importChequeTransactionXML">
+      <documentation>cek islemlerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importChequeTransactionXMLRequest" />
+      <wsdl:output message="tns:importChequeTransactionXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importBondTransactionXML">
+      <documentation>senet islemlerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importBondTransactionXMLRequest" />
+      <wsdl:output message="tns:importBondTransactionXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importStockCountingXML">
+      <documentation>stok sayimlarini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importStockCountingXMLRequest" />
+      <wsdl:output message="tns:importStockCountingXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importStockTransportXML">
+      <documentation>depo hareketlerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importStockTransportXMLRequest" />
+      <wsdl:output message="tns:importStockTransportXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importIncomeExpenseXML">
+      <documentation>gelir gider hareketlerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importIncomeExpenseXMLRequest" />
+      <wsdl:output message="tns:importIncomeExpenseXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="exportCustomerXML">
+      <documentation>query</documentation>
+      <wsdl:input message="tns:exportCustomerXMLRequest" />
+      <wsdl:output message="tns:exportCustomerXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="exportStockXML">
+      <documentation>query</documentation>
+      <wsdl:input message="tns:exportStockXMLRequest" />
+      <wsdl:output message="tns:exportStockXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="exportStockImageBase64JSON">
+      <documentation>query</documentation>
+      <wsdl:input message="tns:exportStockImageBase64JSONRequest" />
+      <wsdl:output message="tns:exportStockImageBase64JSONResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="exportStockWithRepositoryXML">
+      <documentation>query</documentation>
+      <wsdl:input message="tns:exportStockWithRepositoryXMLRequest" />
+      <wsdl:output message="tns:exportStockWithRepositoryXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="exportDataXML">
+      <documentation>query</documentation>
+      <wsdl:input message="tns:exportDataXMLRequest" />
+      <wsdl:output message="tns:exportDataXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="exportStockVariantXML">
+      <documentation>query</documentation>
+      <wsdl:input message="tns:exportStockVariantXMLRequest" />
+      <wsdl:output message="tns:exportStockVariantXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importDataSql">
+      <documentation>query</documentation>
+      <wsdl:input message="tns:importDataSqlRequest" />
+      <wsdl:output message="tns:importDataSqlResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="licenceInfo">
+      <documentation>query</documentation>
+      <wsdl:input message="tns:licenceInfoRequest" />
+      <wsdl:output message="tns:licenceInfoResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCurrencyXML">
+      <documentation>query</documentation>
+      <wsdl:input message="tns:getCurrencyXMLRequest" />
+      <wsdl:output message="tns:getCurrencyXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteCashTransactionXML">
+      <documentation>nakit giris cikislarini silmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:deleteCashTransactionXMLRequest" />
+      <wsdl:output message="tns:deleteCashTransactionXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importBankTransferXML">
+      <documentation>banka havale islemlerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importBankTransferXMLRequest" />
+      <wsdl:output message="tns:importBankTransferXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteBankTransferXML">
+      <documentation>banka havale islemlerini silmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:deleteBankTransferXMLRequest" />
+      <wsdl:output message="tns:deleteBankTransferXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getDatabaseXML">
+      <wsdl:input message="tns:getDatabaseXMLRequest" />
+      <wsdl:output message="tns:getDatabaseXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCarServiceStatus">
+      <wsdl:input message="tns:getCarServiceStatusRequest" />
+      <wsdl:output message="tns:getCarServiceStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getEBookXBRL">
+      <wsdl:input message="tns:getEBookXBRLRequest" />
+      <wsdl:output message="tns:getEBookXBRLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="setEbookXBRLWithSignature">
+      <wsdl:input message="tns:setEbookXBRLWithSignatureRequest" />
+      <wsdl:output message="tns:setEbookXBRLWithSignatureResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="setEbookXBRLWithGIBConfirmation">
+      <wsdl:input message="tns:setEbookXBRLWithGIBConfirmationRequest" />
+      <wsdl:output message="tns:setEbookXBRLWithGIBConfirmationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="setEbookXBRLWithSignatureZip">
+      <wsdl:input message="tns:setEbookXBRLWithSignatureZipRequest" />
+      <wsdl:output message="tns:setEbookXBRLWithSignatureZipResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="createEBookPatent">
+      <wsdl:input message="tns:createEBookPatentRequest" />
+      <wsdl:output message="tns:createEBookPatentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="eBookRollback">
+      <wsdl:input message="tns:eBookRollbackRequest" />
+      <wsdl:output message="tns:eBookRollbackResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importAccountingVoucherXML">
+      <documentation>muhasebe fislerini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importAccountingVoucherXMLRequest" />
+      <wsdl:output message="tns:importAccountingVoucherXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteAccountingVoucherXML">
+      <documentation>muhasebe fislerini xml formatinda silmek icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:deleteAccountingVoucherXMLRequest" />
+      <wsdl:output message="tns:deleteAccountingVoucherXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importCrmXML">
+      <documentation>crm kayitlarini aktarmak icin kullanilan methoddur.</documentation>
+      <wsdl:input message="tns:importCrmXMLRequest" />
+      <wsdl:output message="tns:importCrmXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importMrpXML">
+      <documentation>mrp uretim fislerini aktarmak icin kullanilan methoddur.</documentation>
+      <wsdl:input message="tns:importMrpXMLRequest" />
+      <wsdl:output message="tns:importMrpXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="agreementApproval">
+      <documentation>cari mutabakat onayi icin kullanilir.</documentation>
+      <wsdl:input message="tns:agreementApprovalRequest" />
+      <wsdl:output message="tns:agreementApprovalResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="webSocketPushRouter">
+      <wsdl:input message="tns:webSocketPushRouterRequest" />
+      <wsdl:output message="tns:webSocketPushRouterResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="fileUpload">
+      <wsdl:input message="tns:fileUploadRequest" />
+      <wsdl:output message="tns:fileUploadResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="eBookFileUpload">
+      <wsdl:input message="tns:eBookFileUploadRequest" />
+      <wsdl:output message="tns:eBookFileUploadResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getInvoiceByWUID">
+      <wsdl:input message="tns:getInvoiceByWUIDRequest" />
+      <wsdl:output message="tns:getInvoiceByWUIDResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getEmployeeConstXML">
+      <wsdl:input message="tns:getEmployeeConstXMLRequest" />
+      <wsdl:output message="tns:getEmployeeConstXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="bembelesUrunEntegreKaldir">
+      <wsdl:input message="tns:bembelesUrunEntegreKaldirRequest" />
+      <wsdl:output message="tns:bembelesUrunEntegreKaldirResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="bembelesTekUrunGonder">
+      <documentation>stok kartlarini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:bembelesTekUrunGonderRequest" />
+      <wsdl:output message="tns:bembelesTekUrunGonderResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getPosSliderImageBase64JSON">
+      <wsdl:input message="tns:getPosSliderImageBase64JSONRequest" />
+      <wsdl:output message="tns:getPosSliderImageBase64JSONResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="grupResimCek">
+      <documentation>gruplarin resimlerini almak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:grupResimCekRequest" />
+      <wsdl:output message="tns:grupResimCekResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="importServiceXML">
+      <documentation>servis kayitlarini xml formatinda aktarmak icin bu method kullanilir</documentation>
+      <wsdl:input message="tns:importServiceXMLRequest" />
+      <wsdl:output message="tns:importServiceXMLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getServiceByIdOrRegistrationNo">
+      <wsdl:input message="tns:getServiceByIdOrRegistrationNoRequest" />
+      <wsdl:output message="tns:getServiceByIdOrRegistrationNoResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebticariServiceBinding" type="tns:WebticariServicePortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="login">
+      <soap:operation soapAction="urn:WebticariService#login" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="loginMobile">
+      <soap:operation soapAction="urn:WebticariService#login" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importStockXML">
+      <soap:operation soapAction="urn:WebticariService#importStockXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importCustomerXML">
+      <soap:operation soapAction="urn:WebticariService#importCustomerXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSellingXML">
+      <soap:operation soapAction="urn:WebticariService#deleteSellingXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteBuyingXML">
+      <soap:operation soapAction="urn:WebticariService#deleteBuyingXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importSellingXML">
+      <soap:operation soapAction="urn:WebticariService#importSellingXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importBuyingXML">
+      <soap:operation soapAction="urn:WebticariService#importBuyingXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importSalesReceiptXML">
+      <soap:operation soapAction="urn:WebticariService#importSalesReceiptXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importPurchaseReceiptXML">
+      <soap:operation soapAction="urn:WebticariService#importPurchaseReceiptXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importSalesOrderXML">
+      <soap:operation soapAction="urn:WebticariService#importSalesOrderXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSalesOrderListXML">
+      <soap:operation soapAction="urn:WebticariService#getSalesOrderListXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerBABS">
+      <soap:operation soapAction="urn:WebticariService#getCustomerBABS" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAccountStatement">
+      <soap:operation soapAction="urn:WebticariService#getAccountStatement" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerDebitAging">
+      <soap:operation soapAction="urn:WebticariService#getCustomerDebitAging" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSalesOrderXML">
+      <soap:operation soapAction="urn:WebticariService#deleteSalesOrderXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelSalesOrderXML">
+      <soap:operation soapAction="urn:WebticariService#cancelSalesOrderXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="convertSalesOrderToReceipt">
+      <soap:operation soapAction="urn:WebticariService#convertSalesOrderToReceipt" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="convertSalesOrderToInvoice">
+      <soap:operation soapAction="urn:WebticariService#convertSalesOrderToInvoice" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importPurchaseOrderXML">
+      <soap:operation soapAction="urn:WebticariService#importPurchaseOrderXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="convertPurchaseOrderToReceipt">
+      <soap:operation soapAction="urn:WebticariService#convertPurchaseOrderToReceipt" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="convertPurchaseOrderToInvoice">
+      <soap:operation soapAction="urn:WebticariService#convertPurchaseOrderToInvoice" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importSalesOfferXML">
+      <soap:operation soapAction="urn:WebticariService#importSalesOfferXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importPurchaseOfferXML">
+      <soap:operation soapAction="urn:WebticariService#importPurchaseOfferXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importCashTransactionXML">
+      <soap:operation soapAction="urn:WebticariService#importCashTransactionXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importCreditTransactionXML">
+      <soap:operation soapAction="urn:WebticariService#importCreditTransactionXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importChequeTransactionXML">
+      <soap:operation soapAction="urn:WebticariService#importChequeTransactionXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importBondTransactionXML">
+      <soap:operation soapAction="urn:WebticariService#importBondTransactionXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importStockCountingXML">
+      <soap:operation soapAction="urn:WebticariService#importStockCountingXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importStockTransportXML">
+      <soap:operation soapAction="urn:WebticariService#importStockTransportXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importIncomeExpenseXML">
+      <soap:operation soapAction="urn:WebticariService#importIncomeExpenseXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exportCustomerXML">
+      <soap:operation soapAction="urn:WebticariService#exportCustomerXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exportStockXML">
+      <soap:operation soapAction="urn:WebticariService#exportStockXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exportStockImageBase64JSON">
+      <soap:operation soapAction="urn:WebticariService#exportStockImageBase64JSON" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exportStockWithRepositoryXML">
+      <soap:operation soapAction="urn:WebticariService#exportStockXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exportDataXML">
+      <soap:operation soapAction="urn:WebticariService#exportDataXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exportStockVariantXML">
+      <soap:operation soapAction="urn:WebticariService#exportStockVariantXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importDataSql">
+      <soap:operation soapAction="urn:WebticariService#importDataSql" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="licenceInfo">
+      <soap:operation soapAction="urn:WebticariService#licenceInfo" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCurrencyXML">
+      <soap:operation soapAction="urn:WebticariService#getCurrencyXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCashTransactionXML">
+      <soap:operation soapAction="urn:WebticariService#deleteCashTransactionXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importBankTransferXML">
+      <soap:operation soapAction="urn:WebticariService#importBankTransferXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteBankTransferXML">
+      <soap:operation soapAction="urn:WebticariService#deleteBankTransferXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDatabaseXML">
+      <soap:operation soapAction="urn:WebticariService#getDatabaseXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCarServiceStatus">
+      <soap:operation soapAction="urn:WebticariService#getCarServiceStatus" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEBookXBRL">
+      <soap:operation soapAction="urn:WebticariService#getEBookXBRL" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setEbookXBRLWithSignature">
+      <soap:operation soapAction="urn:WebticariService#setEbookXBRLWithSignature" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setEbookXBRLWithGIBConfirmation">
+      <soap:operation soapAction="urn:WebticariService#setEbookXBRLWithSignature" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setEbookXBRLWithSignatureZip">
+      <soap:operation soapAction="urn:WebticariService#setEbookXBRLWithSignatureZip" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createEBookPatent">
+      <soap:operation soapAction="urn:WebticariService#createEBookPatent" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eBookRollback">
+      <soap:operation soapAction="urn:WebticariService#eBookRollback" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importAccountingVoucherXML">
+      <soap:operation soapAction="urn:WebticariService#importAccountingVoucherXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAccountingVoucherXML">
+      <soap:operation soapAction="urn:WebticariService#deleteAccountingVoucherXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importCrmXML">
+      <soap:operation soapAction="urn:WebticariService#importCrmXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importMrpXML">
+      <soap:operation soapAction="urn:WebticariService#importMrpXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="agreementApproval">
+      <soap:operation soapAction="urn:WebticariService#agreementApproval" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webSocketPushRouter">
+      <soap:operation soapAction="urn:WebticariService#webSocketPushRouter" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="fileUpload">
+      <soap:operation soapAction="urn:WebticariService#fileUpload" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eBookFileUpload">
+      <soap:operation soapAction="urn:WebticariService#eBookFileUpload" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getInvoiceByWUID">
+      <soap:operation soapAction="urn:WebticariService#getInvoiceByWUID" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEmployeeConstXML">
+      <soap:operation soapAction="urn:WebticariService#getEmployeeConstXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="bembelesUrunEntegreKaldir">
+      <soap:operation soapAction="urn:WebticariService#bembelesUrunEntegreKaldir" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="bembelesTekUrunGonder">
+      <soap:operation soapAction="urn:WebticariService#bembelesImportStockXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPosSliderImageBase64JSON">
+      <soap:operation soapAction="urn:WebticariService#getPosSliderImageBase64JSON" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="grupResimCek">
+      <soap:operation soapAction="urn:WebticariService#grupResimCek" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importServiceXML">
+      <soap:operation soapAction="urn:WebticariService#importServiceXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getServiceByIdOrRegistrationNo">
+      <soap:operation soapAction="urn:WebticariService#getServiceByIdOrRegistrationNo" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:WebticariService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebticariService">
+    <wsdl:port name="WebticariServicePort" binding="tns:WebticariServiceBinding">
+      <soap:address location="https://www.webticari.net/webservis/server/importservice/rpc/service.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

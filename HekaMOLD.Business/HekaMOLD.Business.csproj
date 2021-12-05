@@ -67,7 +67,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -229,6 +231,11 @@
     <Compile Include="Models\Virtual\SubscriptionCategoryModel.cs" />
     <Compile Include="Models\Virtual\TrialPlanModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="UseCases\Core\Base\CoreSystemBO.cs" />
     <Compile Include="UseCases\Core\CoreProductionBO.cs" />
     <Compile Include="UseCases\Core\CoreReceiptsBO.cs" />
@@ -240,6 +247,8 @@
     <Compile Include="UseCases\HekaBO.cs" />
     <Compile Include="UseCases\Integrations\IntegratorBase.cs" />
     <Compile Include="UseCases\Integrations\MikroIntegrator.cs" />
+    <Compile Include="UseCases\Integrations\Params\WebTicari\WebTicariLoginConfiguration.cs" />
+    <Compile Include="UseCases\Integrations\WebTicariIntegrator.cs" />
     <Compile Include="UseCases\LayoutBO.cs" />
     <Compile Include="UseCases\MoldBO.cs" />
     <Compile Include="UseCases\OrdersBO.cs" />
@@ -251,6 +260,11 @@
     <Compile Include="UseCases\ReportingBO.cs" />
     <Compile Include="UseCases\RequestBO.cs" />
     <Compile Include="UseCases\UsersBO.cs" />
+    <Compile Include="Web References\IntSvc_WebTicari\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Heka.DataAccess\Heka.DataAccess.csproj">
@@ -261,6 +275,18 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\IntSvc_WebTicari\grupResimBilgi.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\IntSvc_WebTicari\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\IntSvc_WebTicari\service.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Notes\TriggerPoints.txt" />
@@ -270,6 +296,25 @@
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel_Backup.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://www.webticari.net/webservis/server/importservice/rpc/service.php%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\IntSvc_WebTicari\</RelPath>
+      <UpdateFromURL>http://www.webticari.net/webservis/server/importservice/rpc/service.php%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>HekaMOLD_Business_IntSvc_WebTicari_WebticariService</CachedSettingsPropName>
+    </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

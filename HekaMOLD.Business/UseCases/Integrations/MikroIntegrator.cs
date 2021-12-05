@@ -689,7 +689,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                 {
                     var masterPoint = bObj.GetSyncPointList()
                         .FirstOrDefault(d => d.SyncPointCode == (syncPoint.SyncPointCode + "_MASTER")
-                        && d.SyncPointType == (int)SyncPointType.Master && d.IsActive == true);
+                        && d.SyncPointType == (int)SyncPointType.MikroMaster && d.IsActive == true);
                     if (masterPoint != null)
                         syncPoint = masterPoint;
                 }

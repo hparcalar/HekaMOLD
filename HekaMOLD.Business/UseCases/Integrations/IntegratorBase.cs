@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases.Integrations
 {
-    interface IntegratorBase
+    public interface IntegratorBase
     {
         event EventHandler OnTransferError;
         BusinessResult PullItems(SyncPointModel syncPoint);

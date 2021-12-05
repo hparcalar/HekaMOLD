@@ -9,6 +9,7 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Heka.DataAccess.Context;
 
 namespace Heka.DataAccess.Migration
 {

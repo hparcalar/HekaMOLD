@@ -78,17 +78,23 @@ namespace HekaMOLD.IntegrationService
             {
                 try
                 {
-                    MikroIntegrator entObj = new MikroIntegrator();
-                    entObj.OnTransferError += EntObj_OnTransferError;
-
                     using (DefinitionsBO bObj = new DefinitionsBO())
                     {
                         var syncList = bObj.GetSyncPointList()
-                            .Where(d => d.SyncPointType == (int)SyncPointType.WorkData)
+                            //.Where(d => d.SyncPointType == (int)SyncPointType.MikroWorkData)
                             .ToArray();
 
                         foreach (var sync in syncList)
                         {
+                            IntegratorBase entObj = null;
+                            if (sync.SyncPointType == (int)SyncPointType.MikroMaster ||
+                                sync.SyncPointType == (int)SyncPointType.MikroWorkData)
+                                entObj = new MikroIntegrator();
+                            else if (sync.SyncPointType == (int)SyncPointType.WebTicari)
+                                entObj = new WebTicariIntegrator();
+
+                            entObj.OnTransferError += EntObj_OnTransferError;
+
                             var result = entObj.PullFirms(sync);
                             AddLog(result.Result ? "Firmalar transfer edildi." : "Firma Transferi Hata: " + result.ErrorMessage);
 
@@ -104,8 +110,11 @@ namespace HekaMOLD.IntegrationService
                             result = entObj.PullSaleOrders(sync);
                             AddLog(result.Result ? "Satış siparişleri transfer edildi." : "Satış Siparişi Transferi Hata: " + result.ErrorMessage);
 
-                            var pResult = entObj.PushProductions(sync);
-                            AddLog(pResult.Result ? "Üretimler transfer edildi." : "Üretim Transferi Hata: " + pResult.ErrorMessage);
+                            if (entObj is MikroIntegrator)
+                            {
+                                var pResult = ((MikroIntegrator)entObj).PushProductions(sync);
+                                AddLog(pResult.Result ? "Üretimler transfer edildi." : "Üretim Transferi Hata: " + pResult.ErrorMessage);
+                            }
                         }
                     }
                 }

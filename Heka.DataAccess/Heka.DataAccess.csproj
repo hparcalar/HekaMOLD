@@ -81,6 +81,7 @@
     <Compile Include="Context\Models\ItemOrderConsume.cs" />
     <Compile Include="Context\Models\ItemOrderDetail.cs" />
     <Compile Include="Context\Models\ItemOrderItemNeeds.cs" />
+    <Compile Include="Context\Models\ItemPrice.cs" />
     <Compile Include="Context\Models\ItemReceipt.cs" />
     <Compile Include="Context\Models\ItemReceiptConsume.cs" />
     <Compile Include="Context\Models\ItemReceiptDetail.cs" />
@@ -146,6 +147,10 @@
     <Compile Include="Migrations\202112031032538_CodeFirstInitial.designer.cs">
       <DependentUpon>202112031032538_CodeFirstInitial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.cs" />
+    <Compile Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.designer.cs">
+      <DependentUpon>202112042047139_ItemPricesAndItemTaxDefinition.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,6 +167,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202112031032538_CodeFirstInitial.resx">
       <DependentUpon>202112031032538_CodeFirstInitial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.resx">
+      <DependentUpon>202112042047139_ItemPricesAndItemTaxDefinition.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
