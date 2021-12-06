@@ -7,7 +7,11 @@
     $scope.forexList = [];
     $scope.moldList = [];
     $scope.moldTestList = [];
+    $scope.workOrderTypeList = [{ Id: 1, Text: 'Üretim' }, { Id: 2, Text: 'Deneme Üretimi' }, { Id:3, Text:'Fason' }];
+    $scope.workCategoryList = [];
 
+    $scope.selectedWorkOrderType = {};
+    $scope.selectedWorkCategory = {};
     $scope.selectedFirm = {};
 
     $scope.saveStatus = 0;
@@ -15,7 +19,7 @@
     // WORK ORDER FUNCTIONS
     $scope.getNextWorkOrderNo = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'WorkOrder/GetNextOrderNo', {}, 'json')
+            $http.get(HOST_URL + 'WorkOrder/GetNextWorkOrderNo', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         if (resp.data.Result) {
@@ -107,6 +111,16 @@
             $scope.modelObject.FirmId = $scope.selectedFirm.Id;
         else
             $scope.modelObject.FirmId = null;
+
+        if (typeof $scope.selectedWorkCategory != 'undefined' && $scope.selectedWorkCategory != null)
+            $scope.modelObject.WorkOrderCategoryId = $scope.selectedWorkCategory.Id;
+        else
+            $scope.modelObject.WorkOrderCategoryId = null;
+
+        if (typeof $scope.selectedWorkOrderType != 'undefined' && $scope.selectedWorkOrderType != null)
+            $scope.modelObject.WorkOrderType = $scope.selectedWorkOrderType.Id;
+        else
+            $scope.modelObject.WorkOrderType = null;
 
         $http.post(HOST_URL + 'WorkOrder/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -251,6 +265,16 @@
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
                     else
                         $scope.selectedFirm = {};
+
+                    if (typeof $scope.modelObject.WorkOrderCategoryId != 'undefined' && $scope.modelObject.WorkOrderCategoryId != null)
+                        $scope.selectedWorkCategory = $scope.workCategoryList.find(d => d.Id == $scope.modelObject.WorkOrderCategoryId);
+                    else
+                        $scope.selectedWorkCategory = {};
+
+                    if (typeof $scope.modelObject.WorkOrderType != 'undefined' && $scope.modelObject.WorkOrderType != null)
+                        $scope.selectedWorkOrderType = $scope.workOrderTypeList.find(d => d.Id == $scope.modelObject.WorkOrderType);
+                    else
+                        $scope.selectedWorkOrderType = {};
 
                     $scope.bindDetails();
                 }
@@ -470,6 +494,7 @@
                         $scope.forexList = resp.data.Forexes;
                         $scope.moldList = resp.data.Molds;
                         $scope.moldTestList = resp.data.MoldTests;
+                        $scope.workCategoryList = resp.data.WorkCategories;
 
                         resolve();
                     }

@@ -16,6 +16,8 @@ namespace HekaMOLD.Business.Models.Constants
         Consumption = 103,
         Wastage = 204,
         WarehouseInput = 3,
-        WarehouseOutput = 105
+        WarehouseOutput = 105,
+        ToContractor = 106,
+        FromContractor = 4,
     }
 }

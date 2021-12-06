@@ -20,7 +20,9 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { ItemReceiptType.Consumption, "Sarf Fişi" },
             { ItemReceiptType.Wastage, "Fire Fişi" },
             { ItemReceiptType.WarehouseInput, "Depo Giriş Fişi" },
-            { ItemReceiptType.WarehouseOutput, "Depo Çıkış Fişi" }
+            { ItemReceiptType.WarehouseOutput, "Depo Çıkış Fişi" },
+            { ItemReceiptType.ToContractor, "Fasona Çıkış" },
+            { ItemReceiptType.FromContractor, "Fasondan Giriş" },
         };
 
         public static Dictionary<int, string> 

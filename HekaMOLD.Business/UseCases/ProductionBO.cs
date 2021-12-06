@@ -2459,7 +2459,7 @@ namespace HekaMOLD.Business.UseCases
                                 Quantity = 0,
                                 GrossQuantity = 0,
                                 NetQuantity = 0,
-                                UnitId = 1,
+                                UnitId = null,
                                 CreatedDate = DateTime.Now,
                                 LineNumber = receiptLineNumber,
                                 NewDetail = true,

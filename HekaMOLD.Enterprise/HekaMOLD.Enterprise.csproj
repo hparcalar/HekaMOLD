@@ -150,6 +150,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\ContractWorksController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
@@ -4025,6 +4026,7 @@
     <Content Include="Content\dx.softblue.compact.css" />
     <Content Include="Content\dx.softblue.css" />
     <Content Include="Content\fontawesome5.min.css" />
+    <Content Include="Content\heka-styles-red.css" />
     <Content Include="Content\heka-styles.css" />
     <Content Include="Content\images\close.png" />
     <Content Include="Content\images\loading.gif" />
@@ -4066,6 +4068,7 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="FrontEndLogic\ContractWorks\index.js" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
     <Content Include="FrontEndLogic\Delivery\planning.js" />
     <Content Include="FrontEndLogic\Document\index.js" />
@@ -4172,6 +4175,8 @@
     <Content Include="FrontEndLogic\Warehouse\index.js" />
     <Content Include="FrontEndLogic\Warehouse\states.js" />
     <Content Include="FrontEndLogic\Warehouse\list.js" />
+    <Content Include="FrontEndLogic\WorkOrderCategory\index.js" />
+    <Content Include="FrontEndLogic\WorkOrderCategory\list.js" />
     <Content Include="FrontEndLogic\WorkOrder\index.js" />
     <Content Include="FrontEndLogic\WorkOrder\list.js" />
     <Content Include="FrontEndLogic\WorkOrder\production-history.js" />
@@ -4628,12 +4633,14 @@
     <Content Include="Views\ProductQuality\ScrapList.cshtml" />
     <Content Include="Views\ProductQuality\ConditionalApproveList.cshtml" />
     <Content Include="Views\Warehouse\FinishedProductState.cshtml" />
+    <Content Include="Views\WorkOrderCategory\List.cshtml" />
+    <Content Include="Views\WorkOrderCategory\Index.cshtml" />
+    <Content Include="Views\ContractWorks\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Printing\" />
-    <Folder Include="Views\WorkOrderCategory\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
