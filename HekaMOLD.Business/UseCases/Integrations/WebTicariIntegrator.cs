@@ -13,6 +13,7 @@ using System.Xml;
 using Newtonsoft.Json;
 using HekaMOLD.Business.Models.Constants;
 using System.Text.RegularExpressions;
+using HekaMOLD.Business.Models.DataTransfer.Order;
 
 namespace HekaMOLD.Business.UseCases.Integrations
 {
@@ -347,6 +348,13 @@ namespace HekaMOLD.Business.UseCases.Integrations
                 result.Result = false;
                 result.ErrorMessage = ex.Message;
             }
+
+            return result;
+        }
+
+        public BusinessResult PushSaleOrders(SyncPointModel syncPoint)
+        {
+            BusinessResult result = new BusinessResult();
 
             return result;
         }

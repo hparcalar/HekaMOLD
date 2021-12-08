@@ -42,22 +42,22 @@
             columns: [
                 /*{ dataField: 'ItemNo', caption: 'Ürün Kodu' },*/
                 { dataField: 'ItemName', caption: 'Ürün Adı' },
-                { dataField: 'InQty', caption: 'Giriş Miktar' },
-                { dataField: 'OutQty', caption: 'Çıkış Miktar' },
-                { dataField: 'TotalQty', caption: 'Mevcut Miktar' },
+                //{ dataField: 'InQty', caption: 'Giriş Miktar' },
+                //{ dataField: 'OutQty', caption: 'Çıkış Miktar' },
+                { dataField: 'TotalQty', caption: 'Miktar' },
             ],
             summary: {
                 totalItems: [{
-                    column: "InQty",
-                    summaryType: "sum",
-                }, {
-                    column: "OutQty",
-                    summaryType: "sum",
-                },
-                {
-                    column: "TotalQty",
-                    summaryType: "sum",
-                }
+                        column: "InQty",
+                        summaryType: "sum",
+                    }, {
+                        column: "OutQty",
+                        summaryType: "sum",
+                    },
+                    {
+                        column: "TotalQty",
+                        summaryType: "sum",
+                    }
                 ]
             }
         });

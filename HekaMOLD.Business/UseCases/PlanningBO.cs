@@ -4,7 +4,9 @@ using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.UseCases.Core;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -298,6 +300,8 @@ namespace HekaMOLD.Business.UseCases
                                 d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Planned
                                 ||
                                 d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
+                                ||
+                                d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.OnHold
                             )
                             && d.Id != dbObj.Id)
                         .OrderBy(d => d.OrderNo)
@@ -318,6 +322,8 @@ namespace HekaMOLD.Business.UseCases
                         d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Planned
                         ||
                         d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
+                        ||
+                        d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.OnHold
                     )
                 ).ToArray();
 
@@ -340,15 +346,12 @@ namespace HekaMOLD.Business.UseCases
                         .OrderBy(d => d.OrderNo)
                         .ToArray();
 
-                    var lastOrderNo = model.OrderNo;
+                    var lastOrderNo = model.OrderNo + 1;
                     foreach (var item in laterPlans)
                     {
-                        if (item.OrderNo - lastOrderNo > 1)
-                            item.OrderNo = lastOrderNo + 1;
-                        else
-                            item.OrderNo++;
+                        item.OrderNo = lastOrderNo;
 
-                        lastOrderNo = item.OrderNo;
+                        lastOrderNo++;
                     }
 
                     dbObj.OrderNo = model.OrderNo;
@@ -357,9 +360,11 @@ namespace HekaMOLD.Business.UseCases
                 if (activePlans.Any(d => d.OrderNo == dbObj.OrderNo && d.Id != dbObj.Id))
                 {
                     var sameData = activePlans.Where(d => d.OrderNo == dbObj.OrderNo && d.Id != dbObj.Id);
+                    var lastOrderNo = model.OrderNo + 1;
                     foreach (var smData in sameData)
                     {
-                        smData.OrderNo++;
+                        smData.OrderNo = lastOrderNo;
+                        lastOrderNo++;
                     }
                 }
 
@@ -437,7 +442,7 @@ namespace HekaMOLD.Business.UseCases
                         WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
                         WastageQuantity = d.WorkOrderDetail.ProductWastage.Sum(m => m.Quantity) ?? 0,
                         CompleteQuantity = Convert.ToInt32(d.WorkOrderDetail.WorkOrderSerial
-                            .Where(m => m.SerialNo != null && m.SerialNo.Length > 0)
+                            .Where(m => m.QualityStatus == (int)QualityStatusType.Ok)
                             .Sum(m => m.FirstQuantity) ?? 0),
                         WorkOrderType = d.WorkOrderDetail.WorkOrderType ?? 1,
                     }
@@ -600,6 +605,14 @@ namespace HekaMOLD.Business.UseCases
                     data.OrderDeadline = dbObj.ItemOrderDetail != null &&
                             dbObj.ItemOrderDetail.ItemOrder.DateOfNeed != null ?
                                 string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrderDetail.ItemOrder.DateOfNeed) : "";
+                    data.LabelConfig = dbObj.LabelConfig;
+
+                    if (!string.IsNullOrEmpty(data.LabelConfig))
+                    {
+                        data.LabelConfigData = JsonConvert.DeserializeObject<LabelConfigModel>(data.LabelConfig);
+                    }
+                    else
+                        data.LabelConfigData = new LabelConfigModel { ShowFirm = true };
                 }
             }
             catch (Exception)
@@ -624,6 +637,11 @@ namespace HekaMOLD.Business.UseCases
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                     throw new Exception("Düzenlenecek iş emri bilgisi bulunamadı.");
+
+                if (model.LabelConfigData != null)
+                    model.LabelConfig = JsonConvert.SerializeObject(model.LabelConfigData);
+
+                dbObj.LabelConfig = model.LabelConfig;
 
                 // SET DESCRIPTION
                 dbObj.WorkOrder.Explanation = model.Explanation;

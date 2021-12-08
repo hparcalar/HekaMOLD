@@ -100,6 +100,8 @@
     <Compile Include="Context\Models\MachineMaintenanceInstruction.cs" />
     <Compile Include="Context\Models\MachineMaintenanceInstructionEntry.cs" />
     <Compile Include="Context\Models\MachinePlan.cs" />
+    <Compile Include="Context\Models\MachinePreProcess.cs" />
+    <Compile Include="Context\Models\MachinePreProcessHistory.cs" />
     <Compile Include="Context\Models\MachineSignal.cs" />
     <Compile Include="Context\Models\Mold.cs" />
     <Compile Include="Context\Models\MoldProduct.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Context\Models\Notification.cs" />
     <Compile Include="Context\Models\Plant.cs" />
     <Compile Include="Context\Models\PostureCategory.cs" />
+    <Compile Include="Context\Models\PreProcessType.cs" />
     <Compile Include="Context\Models\PrinterQueue.cs" />
     <Compile Include="Context\Models\Process.cs" />
     <Compile Include="Context\Models\ProcessGroup.cs" />
@@ -156,6 +159,10 @@
     <Compile Include="Migrations\202112061028085_ContractWorkFlow.designer.cs">
       <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112080853143_Machine_PreProcess.cs" />
+    <Compile Include="Migrations\202112080853143_Machine_PreProcess.designer.cs">
+      <DependentUpon>202112080853143_Machine_PreProcess.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -178,6 +185,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112061028085_ContractWorkFlow.resx">
       <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112080853143_Machine_PreProcess.resx">
+      <DependentUpon>202112080853143_Machine_PreProcess.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

@@ -24,6 +24,8 @@
             showRowLines: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             showBorders: true,
             filterRow: {
                 visible: true

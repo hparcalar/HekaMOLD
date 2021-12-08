@@ -66,6 +66,35 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
+        public ItemReceiptDetailModel[] GetOpenWarehouseEntries()
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                data = repo.Filter(d => d.ReceiptStatus != (int)ReceiptStatusType.Closed
+                    && d.ItemReceipt.ReceiptType < 100)
+                    .ToList()
+                    .Select(d => new ItemReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate),
+                        WarehouseName = d.ItemReceipt.Warehouse.WarehouseName,
+                        ItemName = d.Item != null ? d.Item.ItemName : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        ReceiptNo = d.ItemReceipt.ReceiptNo,
+                        Quantity = d.Quantity,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
         public BusinessResult SaveOrUpdateItemReceipt(ItemReceiptModel model)
         {
             BusinessResult result = new BusinessResult();
@@ -129,6 +158,7 @@ namespace HekaMOLD.Business.UseCases
                         item.Id = 0;
                 }
 
+                ItemReceiptDetail newDbDetail = null;
                 if (dbObj.ReceiptStatus != (int)ReceiptStatusType.Closed)
                 {
                     var newDetailIdList = model.Details.Select(d => d.Id).ToArray();
@@ -165,6 +195,7 @@ namespace HekaMOLD.Business.UseCases
                             {
                                 ItemReceipt = dbObj
                             };
+                            newDbDetail = dbDetail;
 
                             repoDetail.Add(dbDetail);
                         }
@@ -268,6 +299,9 @@ namespace HekaMOLD.Business.UseCases
 
                 result.Result = true;
                 result.RecordId = dbObj.Id;
+
+                if (newDbDetail != null)
+                    result.DetailRecordId = newDbDetail.Id;
             }
             catch (Exception ex)
             {

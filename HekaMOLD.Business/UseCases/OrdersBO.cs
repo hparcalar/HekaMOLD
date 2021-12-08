@@ -1,4 +1,5 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
@@ -43,6 +44,105 @@ namespace HekaMOLD.Business.UseCases
                 })
                 .OrderByDescending(d => d.OrderDate)
                 .ToArray();
+        }
+
+        public ItemOrderModel[] GetNonSyncOrders(ItemOrderType orderType)
+        {
+            List<ItemOrderModel> data = new List<ItemOrderModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemOrder>();
+
+            return repo.Filter(d => d.OrderType == (int)orderType).ToList()
+                .Select(d => new ItemOrderModel
+                {
+                    Id = d.Id,
+                    OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                    DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                    FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                    FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "",
+                    WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "",
+                    OrderNo = d.OrderNo,
+                    OrderDate = d.OrderDate,
+                    DocumentNo = d.DocumentNo,
+                    Explanation = d.Explanation,
+                    FirmId = d.FirmId,
+                    OrderStatus = d.OrderStatus,
+                    OrderType = d.OrderType,
+                    PlantId = d.PlantId,
+                    Details = d.ItemOrderDetail
+                    .Where(m => m.SyncStatus == null || m.SyncStatus == 0)
+                    .Select(m => new ItemOrderDetailModel
+                    {
+                        Id = m.Id,
+                        ItemId = m.ItemId,
+                        CreatedDate = m.CreatedDate,
+                        CreatedUserId = m.CreatedUserId,
+                        Explanation = m.Explanation,
+                        ForexId = m.ForexId,
+                        ForexRate = m.ForexRate,
+                        ForexUnitPrice = m.ForexUnitPrice,
+                        GrossQuantity = m.GrossQuantity,
+                        ItemOrderId = m.ItemOrderId,
+                        ItemRequestDetailId = m.ItemRequestDetailId,
+                        LineNumber = m.LineNumber,
+                        NetQuantity = m.NetQuantity,
+                        NewDetail = false,
+                        OrderStatus = m.OrderStatus,
+                        OverallTotal = m.OverallTotal,
+                        Quantity = m.Quantity,
+                        SubTotal = m.SubTotal,
+                        TaxAmount = m.TaxAmount,
+                        TaxIncluded = m.TaxIncluded,
+                        TaxRate = m.TaxRate,
+                        UnitId = m.UnitId,
+                        UnitPrice = m.UnitPrice,
+                        UpdatedDate = m.UpdatedDate,
+                        UpdatedUserId = m.UpdatedUserId,
+                        ItemNo = m.Item != null ? m.Item.ItemNo : "",
+                        ItemName = m.Item != null ? m.Item.ItemName : "",
+                        UnitCode = m.UnitType != null ? m.UnitType.UnitCode : "",
+                        UnitName = m.UnitType != null ? m.UnitType.UnitName : "",
+                    }).ToArray(),
+                })
+                .OrderByDescending(d => d.OrderDate)
+                .ToArray();
+        }
+
+        public BusinessResult SignDetailAsSynced(int receiptDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                IUnitOfWork newUof = new EFUnitOfWork();
+                var repo = newUof.GetRepository<ItemOrderDetail>();
+
+                var dbObj = repo.Get(d => d.Id == receiptDetailId);
+                if (dbObj == null)
+                    throw new Exception("Sipariş kalem kaydı bulunamadı.");
+
+                dbObj.SyncDate = DateTime.Now;
+                dbObj.SyncStatus = 1;
+
+                if (!dbObj.ItemOrder.ItemOrderDetail.Any(d => d.SyncStatus != 1))
+                {
+                    dbObj.ItemOrder.SyncDate = DateTime.Now;
+                    dbObj.ItemOrder.SyncStatus = 1;
+                }
+
+                newUof.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
 
         public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model, bool detailCanBeNull=false)

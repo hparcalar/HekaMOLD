@@ -2960,5 +2960,100 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
         #endregion
+
+        #region PRE PROCESS TYPE BUSINESS
+        public PreProcessTypeModel[] GetPreProcessTypeList()
+        {
+            List<PreProcessTypeModel> data = new List<PreProcessTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                PreProcessTypeModel containerObj = new PreProcessTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdatePreProcessType(PreProcessTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.PreProcessCode))
+                    throw new Exception("Ön işlem kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.PreProcessName))
+                    throw new Exception("Ön işlem adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+                if (repo.Any(d => (d.PreProcessCode == model.PreProcessCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir ön işlem tanımı mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new PreProcessType();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePreProcessType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public PreProcessTypeModel GetPreProcessType(int id)
+        {
+            PreProcessTypeModel model = new PreProcessTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<PreProcessType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
     }
 }

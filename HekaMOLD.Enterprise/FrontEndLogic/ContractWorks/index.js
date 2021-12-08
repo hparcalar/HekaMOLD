@@ -241,18 +241,18 @@
                 { dataField: 'ItemName', caption: 'Stok' },
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                {
-                    type: "buttons",
-                    buttons: [
-                        {
-                            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: 'Seç', onClick: function (e) {
-                                var dataGrid = $("#dataList").dxDataGrid("instance");
-                                $scope.selectedWorkOrder = e.row.data;
-                                $scope.bindMovements();
-                            }
-                        }
-                    ]
-                }
+                //{
+                //    type: "buttons",
+                //    buttons: [
+                //        {
+                //            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: 'Seç', onClick: function (e) {
+                //                var dataGrid = $("#dataList").dxDataGrid("instance");
+                //                $scope.selectedWorkOrder = e.row.data;
+                //                $scope.bindMovements();
+                //            }
+                //        }
+                //    ]
+                //}
             ],
         });
 
@@ -294,21 +294,62 @@
                 { dataField: 'ItemName', caption: 'Stok' },
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                {
-                    type: "buttons",
-                    buttons: [
-                        {
-                            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: 'Seç', onClick: function (e) {
-                                var dataGrid = $("#dataList").dxDataGrid("instance");
-                                $scope.selectedWorkOrder = e.row.data;
-                                $scope.bindMovements();
-                            }
-                        }
-                    ]
-                }
+                //{
+                //    type: "buttons",
+                //    buttons: [
+                //        {
+                //            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: 'Seç', onClick: function (e) {
+                //                var dataGrid = $("#dataList").dxDataGrid("instance");
+                //                $scope.selectedWorkOrder = e.row.data;
+                //                $scope.bindMovements();
+                //            }
+                //        }
+                //    ]
+                //}
             ],
         });
     }
+
+    $scope.showToContract = function () {
+        $scope.$broadcast('loadToContract', 0);
+
+        $('#dial-entrylist').dialog({
+            width: window.innerWidth * 0.8,
+            height: window.innerHeight * 0.8,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.$on('endToContract', function (e, d) {
+        $http.post(HOST_URL + 'ContractWorks/CreateDelivery',
+            {
+                EntryReceiptDetailId: d.ReceiptDetailId,
+                Quantity: d.Quantity,
+                DeliveryDate: d.DeliveryDate,
+                DocumentNo: d.DocumentNo,
+                WorkOrderDetailId: $scope.selectedWorkOrder.Id,
+            }, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.saveStatus = 0;
+
+                    if (resp.data.Status == 1) {
+                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                        $scope.bindModel();
+                        $scope.bindMovements();
+                    }
+                    else
+                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                }
+            }).catch(function (err) { });
+
+        $('#dial-entrylist').dialog('close');
+    });
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');

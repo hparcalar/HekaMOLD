@@ -161,11 +161,14 @@
     <Compile Include="Models\DataTransfer\Production\MachineGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachinePreProcessHistoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachinePreProcessModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineSignalModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldProductModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldTestModel.cs" />
     <Compile Include="Models\DataTransfer\Production\PostureCategoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\PreProcessTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProcessGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProcessModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductionPostureModel.cs" />

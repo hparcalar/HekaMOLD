@@ -57,18 +57,18 @@
 }
 
 .aside-blue {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100;White+3D */
-    background: #ffffff; /* Old browsers */
-    background: -moz-linear-gradient(left, #ffffff 0%, #e5e5e5 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left, #ffffff 0%,#e5e5e5 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right, #ffffff 0%,#e5e5e5 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=1 ); /* IE6-9 */
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#febbbb+0,fe9090+45,ff5c5c+100;Red+3D+%231 */
+    background: #febbbb; /* Old browsers */
+    background: -moz-linear-gradient(left, #febbbb 0%, #fe9090 45%, #ff5c5c 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #febbbb 0%,#fe9090 45%,#ff5c5c 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #febbbb 0%,#fe9090 45%,#ff5c5c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#febbbb', endColorstr='#ff5c5c',GradientType=1 ); /* IE6-9 */
 }
 .menu-link{
     font-weight:bold;
 }
 .menu-item .active, .menu-link:hover{
-    background-color:#207cca;
+    background-color:#ff5c5c;
 }
 .bullet-dot{
     color:black;
@@ -108,6 +108,29 @@
     padding-top: 3px !important;
     padding-bottom: 3px !important;
 }
+
+/* MEDIUM LIGHT TABLE */
+.table-hk-md-lh {
+    font-size: small;
+    /*font-weight: bold !important;*/
+}
+
+    .table-hk-md-lh .btn {
+        padding: 6px !important;
+        min-height: 0px !important;
+        font-size: small !important;
+    }
+
+    .table-hk-md-lh input {
+        padding: 2px !important;
+        min-height: 0px !important;
+        font-size: small !important;
+    }
+
+    .table-hk-md-lh td {
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
+    }
 
 /* MEDIUM TABLE */
 .table-hk-md {

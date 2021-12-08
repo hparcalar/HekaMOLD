@@ -64,7 +64,7 @@ namespace HekaMOLD.Business.UseCases
                 data.Add(containerObj);
             });
 
-            return data.ToArray();
+            return data.OrderByDescending(d => d.CreatedDate).ToArray();
         }
 
         public WorkOrderDetailModel GetWorkOrderDetail(int workOrderDetailId)
@@ -2182,7 +2182,9 @@ namespace HekaMOLD.Business.UseCases
                         SerialNo = d.SerialNo,
                         FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "" : "",
                         FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName : "",
-                    }).ToArray();
+                    })
+                    .OrderByDescending(d => d.CreatedDate)
+                    .ToArray();
             }
             catch (Exception)
             {

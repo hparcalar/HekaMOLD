@@ -10,6 +10,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases.Integrations
@@ -528,6 +529,8 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             PlantId = syncPoint.PlantId,
                                             OrderDate = (DateTime)row["sip_tarih"],
                                             OrderStatus = (int)OrderStatusType.Created,
+                                            //SyncDate = DateTime.Now,
+                                            //SyncStatus = 1,
                                             CreatedDate = DateTime.Now,
                                             Details = new ItemOrderDetailModel[0]
                                         }, detailCanBeNull: true);
@@ -835,6 +838,110 @@ namespace HekaMOLD.Business.UseCases.Integrations
         public BusinessResult PushPurchasingWaybills(SyncPointModel syncPoint, ItemReceiptModel[] receipts)
         {
             throw new NotImplementedException();
+        }
+
+        public BusinessResult PushSaleOrders(SyncPointModel syncPoint)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                using (OrdersBO bObj = new OrdersBO())
+                {
+                    var receipts = bObj.GetNonSyncOrders(ItemOrderType.Sale);
+                    if (receipts != null)
+                    {
+                        foreach (var rcp in receipts)
+                        {
+                            if (rcp.Details != null && rcp.Details.Length > 0)
+                            {
+                                if (rcp.DocumentNo == null)
+                                    continue;
+
+                                string docText = Regex.Match(rcp.DocumentNo, "[A-Z]+").Value;
+                                if (string.IsNullOrEmpty(docText))
+                                    continue;
+
+                                DataTable dTable = new DataTable();
+                                using (SqlConnection con = new SqlConnection(syncPoint.ConnectionString))
+                                {
+                                    con.Open();
+                                    
+                                    SqlDataAdapter dAdapter =
+                                        new SqlDataAdapter("SELECT TOP 1 sip_evrakno_sira FROM SIPARISLER WHERE sip_tip=0 AND sip_evrakno_seri='"+ docText +"'" +
+                                            " ORDER BY sip_evrakno_sira DESC", con);
+                                    dAdapter.Fill(dTable);
+                                    dAdapter.Dispose();
+
+                                    int newReceiptNo = 1;
+                                    if (dTable.Rows.Count > 0 && dTable.Rows[0][0] != DBNull.Value)
+                                    {
+                                        var lastReceiptNo = Convert.ToInt32(dTable.Rows[0][0]);
+                                        newReceiptNo = lastReceiptNo + 1;
+                                    }
+
+                                    int lineNumber = 1;
+                                    foreach (var rdt in rcp.Details)
+                                    {
+                                        if (rdt.Quantity <= 0)
+                                        {
+                                            lineNumber++;
+                                            continue;
+                                        }
+
+                                        try
+                                        {
+                                            string sql = "INSERT INTO SIPARISLER(sip_SpecRECno, sip_iptal, sip_fileid, sip_hidden, sip_kilitli, sip_degisti, sip_checksum, sip_create_user, sip_lastup_user, "
+                                                + "sip_special1, sip_special2, sip_special3, sip_firmano, sip_subeno, sip_tarih, sip_tip, sip_cins, "
+                                                + "sip_evrakno_seri, sip_evrakno_sira, sip_satirno, sip_belgeno, sip_belge_tarih, sip_stok_kod, sip_iskonto_1, sip_iskonto_2, sip_iskonto_3, sip_iskonto_4, sip_iskonto_5, sip_iskonto_6, sip_masraf_1, sip_masraf_2, sip_masraf_3, sip_masraf_4, "
+                                                + "sip_isk1, sip_isk2,sip_isk3,sip_isk4,sip_isk5,sip_isk6,sip_mas1,sip_mas2,sip_mas3,sip_mas4, "
+                                                + "sip_musteri_kod, "
+                                                + "sip_doviz_cinsi, sip_doviz_kuru, sip_miktar, sip_birim_pntr, sip_tutar, "
+                                                + "sip_iskonto1,sip_iskonto2,sip_iskonto3,sip_iskonto4,sip_iskonto5,sip_iskonto6, sip_masraf1,sip_masraf2,sip_masraf3,sip_masraf4, "
+                                                + "sip_vergi_pntr, sip_vergi, sip_masvergi_pntr,sip_masvergi,sip_opno, sip_aciklama, sip_b_fiyat, sip_depono, sip_stok_sormerk, sip_cari_sormerk,sip_harekettipi, sip_projekodu) "
+                                                + " VALUES('0', 0, 16, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.OrderDate) + "', "
+                                                + "'0', '0', '"+ docText +"', '" + newReceiptNo + "', " + lineNumber + ", '', '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.OrderDate) + "', "
+                                                + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, '"+ rcp.FirmCode +"', 0, 1, " +
+                                                   string.Format("{0:0.00}", rdt.Quantity ?? 0).Replace(",", ".") + " , 1, 0, 0,0,0,0,0,0, 0,0,0,0, 0,0, 0,0,0, '', " +
+                                                   string.Format("{0:0.00}", rdt.UnitPrice ?? 0).Replace(",", ".") +", 1, '','', 0, '')";
+                                            SqlCommand cmd = new SqlCommand(sql, con);
+                                            int affectedRows = cmd.ExecuteNonQuery();
+                                            if (affectedRows > 0)
+                                            {
+                                                bObj.SignDetailAsSynced(rdt.Id);
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+
+                                        }
+
+                                        lineNumber++;
+                                    }
+
+                                    using (OrdersBO bObjHeader = new OrdersBO())
+                                    {
+                                        var orderHeader = bObjHeader.GetItemOrder(rcp.Id);
+                                        orderHeader.DocumentNo = docText + newReceiptNo.ToString();
+                                        bObjHeader.SaveOrUpdateItemOrder(orderHeader);
+                                    }
+
+                                    con.Close();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
     }
 }

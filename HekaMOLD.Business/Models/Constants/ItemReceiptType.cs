@@ -18,6 +18,6 @@ namespace HekaMOLD.Business.Models.Constants
         WarehouseInput = 3,
         WarehouseOutput = 105,
         ToContractor = 106,
-        FromContractor = 4,
+        FromContractor = 5,
     }
 }

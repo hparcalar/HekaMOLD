@@ -16,6 +16,8 @@
             showRowLines: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             showBorders: true,
             wordWrapEnabled: true,
             filterRow: {
