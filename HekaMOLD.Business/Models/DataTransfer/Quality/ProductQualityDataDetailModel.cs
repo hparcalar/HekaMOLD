@@ -20,7 +20,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Quality
         public bool NewDetail { get; set; }
 
         #region VISUAL ELEMENTS
-        
+        public string MoldTestFieldName { get; set; }
         #endregion
     }
 }

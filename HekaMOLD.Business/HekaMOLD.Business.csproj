@@ -301,6 +301,7 @@
   <ItemGroup>
     <EmbeddedResource Include="ReportDesign\DeliverySerialList.rdlc" />
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\ProductLabelWithoutFirm.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel_Backup.rdlc" />
   </ItemGroup>

@@ -163,6 +163,10 @@
     <Compile Include="Migrations\202112080853143_Machine_PreProcess.designer.cs">
       <DependentUpon>202112080853143_Machine_PreProcess.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.cs" />
+    <Compile Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.designer.cs">
+      <DependentUpon>202112090847474_QualityUserAndMachineSignalOperator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -188,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112080853143_Machine_PreProcess.resx">
       <DependentUpon>202112080853143_Machine_PreProcess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.resx">
+      <DependentUpon>202112090847474_QualityUserAndMachineSignalOperator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

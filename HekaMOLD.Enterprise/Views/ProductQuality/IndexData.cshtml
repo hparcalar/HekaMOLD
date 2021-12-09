@@ -134,6 +134,7 @@
                                 <th class="w-10">Ürün Adı</th>
                                 <th class="w-20">
                                     <select class="form-select form-select-solid" data-allow-clear="true"
+                                            ng-change="onProductChanged()"
                                             ng-options="item.ItemName for item in productList" ng-model="selectedProduct"
                                             data-control="select2" data-placeholder="-- Seçiniz --"></select>
                                 </th>
@@ -166,9 +167,12 @@
                                             ng-click="toggleQualityValue(item.Id, itemData.HourNo, 1)"
                                             ng-class="{'bg-light': getQualityValue(item.Id, itemData.HourNo, 1) == 0,
                                                 'bg-danger': getQualityValue(item.Id, itemData.HourNo, 1) == 2,
-                                                'bg-success': getQualityValue(item.Id, itemData.HourNo, 1) == 1}"
+                                                'bg-success': getQualityValue(item.Id, itemData.HourNo, 1) == 1,
+                                                'bg-dark': getQualityValue(item.Id, itemData.HourNo, 1) == 3}"
                                             >
-                                        &nbsp;
+                                        &nbsp;<span ng-if="getQualityValue(item.Id, itemData.HourNo, 1) == 3" 
+                                                    class="text-light p-0 m-0 fs-9"
+                                                    ng-bind="'YOK'"></span>
                                     </button>
                                     @*<input ng-if="item.CheckType == 1" class="plan-check"
                                            data-active="{{item.CheckType == 1 ? 'true' : 'false'}}"
@@ -183,6 +187,7 @@
                                            data-plan-id="{{item.Id}}"
                                            type="number"
                                            value="{{getQualityValue(item.Id, itemData.HourNo, 2)}}" />
+                                    <span class="fs-9" ng-bind="getDefaultValuesByMoldTest(item.Id)"></span>
                                 </td>
                             </tr>
                         </tbody>

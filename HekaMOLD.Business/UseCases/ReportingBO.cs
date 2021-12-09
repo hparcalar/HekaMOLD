@@ -337,11 +337,16 @@ namespace HekaMOLD.Business.UseCases
                         WarehouseId = d.Key.Warehouse.Id,
                         WarehouseCode = d.Key.Warehouse.WarehouseCode,
                         WarehouseName = d.Key.Warehouse.WarehouseName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
                         InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0,
                         OutQty = d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0,
                         TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0)
                             - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
-                    }).ToArray();
+                    })
+                    .OrderBy(d => d.ItemGroupId)
+                    .ToArray();
             }
             catch (Exception)
             {
@@ -384,6 +389,9 @@ namespace HekaMOLD.Business.UseCases
                         WarehouseId = d.Key.Warehouse.Id,
                         WarehouseCode = d.Key.Warehouse.WarehouseCode,
                         WarehouseName = d.Key.Warehouse.WarehouseName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
                         InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100
                             && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd
                             ).Sum(m => m.Quantity) ?? 0,
@@ -392,7 +400,9 @@ namespace HekaMOLD.Business.UseCases
                         TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100
                             && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd).Sum(m => m.Quantity) ?? 0)
                             - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
-                    }).ToArray();
+                    })
+                    .OrderBy(d => d.ItemGroupId)
+                    .ToArray();
             }
             catch (Exception)
             {

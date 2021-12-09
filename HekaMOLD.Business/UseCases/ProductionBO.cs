@@ -10,8 +10,10 @@ using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.UseCases.Core;
 using Microsoft.Reporting.WebForms;
+using Newtonsoft.Json;
 using QRCoder;
 using System;
 using System.Collections;
@@ -952,6 +954,7 @@ namespace HekaMOLD.Business.UseCases
                     SignalStatus = 0,
                     ShiftId = currentShift != null ? currentShift.Id : (int?)null,
                     ShiftBelongsToDate = currentShift != null ? currentShift.ShiftBelongsToDate : null,
+                    OperatorId = dbMachine.WorkingUserId,
                     Duration = null,
                     EndDate = null,
                 };
@@ -3323,6 +3326,16 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                     throw new Exception("Ürün giriş kaydına erişilemedi.");
 
+                string designFileName = "ProductLabel.rdlc";
+                if (!string.IsNullOrEmpty(dbObj.WorkOrderDetail.LabelConfig))
+                {
+                    LabelConfigModel labelData = JsonConvert.DeserializeObject<LabelConfigModel>(dbObj.WorkOrderDetail.LabelConfig);
+                    if (labelData != null && labelData.ShowFirm == false)
+                    {
+                        designFileName = "ProductLabelWithoutFirm.rdlc";
+                    }
+                }
+
                 // GENERATE BARCODE IMAGE
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(dbObj.SerialNo, QRCodeGenerator.ECCLevel.Q);
@@ -3348,7 +3361,7 @@ namespace HekaMOLD.Business.UseCases
                 };
 
                 LocalReport report = new LocalReport();
-                report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\ProductLabel.rdlc";
+                report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\" + designFileName;
 
                 report.DataSources.Add(new ReportDataSource("DS1", dataList));
                 Export(report, dbPrinter.PageWidth ?? 0, dbPrinter.PageHeight ?? 0); // (9.7m, 8)

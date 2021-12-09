@@ -31,7 +31,7 @@
             headerFilter: {
                 visible: true
             },
-            height: 700,
+            height: 500,
             groupPanel: {
                 visible: true
             },
@@ -42,6 +42,7 @@
             columns: [
                 /*{ dataField: 'ItemNo', caption: 'Ürün Kodu' },*/
                 { dataField: 'ItemName', caption: 'Ürün Adı' },
+                { dataField: 'ItemGroupName', caption: 'Grup' },
                 //{ dataField: 'InQty', caption: 'Giriş Miktar' },
                 //{ dataField: 'OutQty', caption: 'Çıkış Miktar' },
                 { dataField: 'TotalQty', caption: 'Miktar' },

@@ -4,11 +4,13 @@ using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.Operational;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -163,6 +165,21 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
             try
             {
+                SystemParameterModel groupParams = null;
+                Dictionary<string, int> groupKeys = null;
+                
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var allParams = bObj.GetAllParameters(syncPoint.PlantId.Value);
+                    if (allParams.Any(d => d.PrmCode == "IntegrationItemGroups"))
+                        groupParams = allParams.First(d => d.PrmCode == "IntegrationItemGroups");
+                }
+
+                if (groupParams != null && !string.IsNullOrEmpty(groupParams.PrmValue))
+                {
+                    groupKeys = JsonConvert.DeserializeObject<Dictionary<string, int>>(groupParams.PrmValue);
+                }
+
                 DataTable dTable = new DataTable();
                 using (SqlConnection con = new SqlConnection(syncPoint.ConnectionString))
                 {
@@ -186,6 +203,14 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                 else if (Convert.ToInt32(row["sto_cins"]) == 4
                                     || Convert.ToInt32(row["sto_cins"]) == 5 || Convert.ToInt32(row["sto_cins"]) == 10)
                                     itemType = (int)ItemType.Product;
+
+                                // SYSTEM PARAMETER GROUP ASSIGNMENT BY MIKRO ITEM CODE
+                                int? properGroupId = null;
+                                if (groupKeys.Any(d => row["sto_kod"].ToString().StartsWith(d.Key)))
+                                {
+                                    var properGroupKey = groupKeys.First(d => row["sto_kod"].ToString().StartsWith(d.Key));
+                                    properGroupId = properGroupKey.Value;
+                                }
 
                                 int? categoryId = null;
                                 // FETCH & UPDATE ITEM CATEGORY
@@ -332,12 +357,35 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     ItemType = itemType,
                                     PlantId = syncPoint.PlantId,
                                     ItemCategoryId = categoryId,
-                                    ItemGroupId = groupId,
+                                    ItemGroupId = properGroupId != null ? properGroupId : groupId,
                                     Units = itemUnits.ToArray(),
                                 });
 
                                 if (!itemResult.Result && row["sto_kod"].ToString() == "152.02.9002.2009.1003")
                                     OnTransferError?.Invoke((string)row["sto_kod"] + ": " + itemResult.ErrorMessage, null);
+                            }
+                            else
+                            {
+                                using (DefinitionsBO bObjEx = new DefinitionsBO())
+                                {
+                                    var dbItem = bObjEx.GetItem(row["sto_kod"].ToString());
+                                    if (dbItem != null)
+                                    {
+                                        // SYSTEM PARAMETER GROUP ASSIGNMENT BY MIKRO ITEM CODE
+                                        int? properGroupId = null;
+                                        if (groupKeys.Any(d => row["sto_kod"].ToString().StartsWith(d.Key)))
+                                        {
+                                            var properGroupKey = groupKeys.First(d => row["sto_kod"].ToString().StartsWith(d.Key));
+                                            properGroupId = properGroupKey.Value;
+                                        }
+
+                                        if (dbItem.ItemGroupId != properGroupId && properGroupId != null)
+                                        {
+                                            dbItem.ItemGroupId = properGroupId;
+                                            bObjEx.SaveOrUpdateItem(dbItem);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
