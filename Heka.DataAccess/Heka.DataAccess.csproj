@@ -77,12 +77,14 @@
     <Compile Include="Context\Models\Item.cs" />
     <Compile Include="Context\Models\ItemCategory.cs" />
     <Compile Include="Context\Models\ItemGroup.cs" />
+    <Compile Include="Context\Models\ItemKnitDensity.cs" />
     <Compile Include="Context\Models\ItemLiveStatus.cs" />
     <Compile Include="Context\Models\ItemOrder.cs" />
     <Compile Include="Context\Models\ItemOrderConsume.cs" />
     <Compile Include="Context\Models\ItemOrderDetail.cs" />
     <Compile Include="Context\Models\ItemOrderItemNeeds.cs" />
     <Compile Include="Context\Models\ItemPrice.cs" />
+    <Compile Include="Context\Models\ItemQualityType.cs" />
     <Compile Include="Context\Models\ItemReceipt.cs" />
     <Compile Include="Context\Models\ItemReceiptConsume.cs" />
     <Compile Include="Context\Models\ItemReceiptDetail.cs" />
@@ -144,19 +146,9 @@
     <Compile Include="Context\Models\WorkOrderDetail.cs" />
     <Compile Include="Context\Models\WorkOrderItemNeeds.cs" />
     <Compile Include="Context\Models\WorkOrderSerial.cs" />
-    <Compile Include="Migrations\202112031032538_CodeFirstInitial.cs" />
-    <Compile Include="Migrations\202112031032538_CodeFirstInitial.designer.cs">
-      <DependentUpon>202112031032538_CodeFirstInitial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.cs" />
-    <Compile Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.designer.cs">
-      <DependentUpon>202112042047139_ItemPricesAndItemTaxDefinition.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112061028085_ContractWorkFlow.cs" />
-    <Compile Include="Migrations\202112061028085_ContractWorkFlow.designer.cs">
-      <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Context\Models\YarnRecipe.cs" />
+    <Compile Include="Context\Models\YarnRecipeType.cs" />
+    <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EFRepository.cs" />
@@ -170,15 +162,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112031032538_CodeFirstInitial.resx">
-      <DependentUpon>202112031032538_CodeFirstInitial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.resx">
-      <DependentUpon>202112042047139_ItemPricesAndItemTaxDefinition.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112061028085_ContractWorkFlow.resx">
-      <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.6.sql" />
