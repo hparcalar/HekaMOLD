@@ -371,6 +371,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
                     string lastRecipeNo = "";
                     int lastRecipeId = 0;
+                    List<int> processedRecipes = new List<int>();
 
                     foreach (DataRow row in dTable.Rows)
                     {
@@ -457,6 +458,36 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         CreatedDate = DateTime.Now,
                                     });
                                 }
+                            }
+
+                            // SİSTEMDEKİ REÇETE OLUP, MİKRODA OLMAYAN MALZEME VARSA; SİSTEMDEN SİL
+                            if (!processedRecipes.Contains(lastRecipeId))
+                            {
+                                using (RecipeBO bObj = new RecipeBO())
+                                {
+                                    var dbRecipe = bObj.GetProductRecipe(lastRecipeId);
+                                    if (dbRecipe != null)
+                                    {
+                                        var mikroItems = dTable.Select("[rec_anakod] = '" + row["rec_anakod"].ToString() + "'")
+                                            .Select(d => d["rec_tuketim_kod"].ToString()).ToArray();
+
+                                        var currentItems = dbRecipe.Details.ToList();
+                                        var nonExistingItems = dbRecipe.Details.Where(d => !mikroItems.Contains(d.ItemNo))
+                                            .ToArray();
+                                        if (nonExistingItems.Length > 0)
+                                        {
+                                            foreach (var nonExsItem in nonExistingItems)
+                                            {
+                                                currentItems.Remove(nonExsItem);
+                                            }
+                                            dbRecipe.Details = currentItems.ToArray();
+
+                                            bObj.SaveOrUpdateProductRecipe(dbRecipe);
+                                        }
+                                    }
+                                }
+
+                                processedRecipes.Add(lastRecipeId);
                             }
                         }
                     }
@@ -545,6 +576,17 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     if (dbItemOrder != null)
                                     {
                                         lastOrderId = dbItemOrder.Id;
+
+                                        int? firmId = null;
+
+                                        using (DefinitionsBO defObj = new DefinitionsBO())
+                                        {
+                                            var dbFirm = defObj.GetFirm(row["sip_musteri_kod"].ToString());
+                                            if (dbFirm != null)
+                                                firmId = dbFirm.Id;
+                                        }
+
+                                        dbItemOrder.FirmId = firmId;
 
                                         //if (dbItemOrder.OrderStatus != (int)OrderStatusType.Created)
                                         //    isLockedOrder = true;
