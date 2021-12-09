@@ -95,6 +95,8 @@
     <Compile Include="Context\Models\ItemWarehouse.cs" />
     <Compile Include="Context\Models\LayoutItem.cs" />
     <Compile Include="Context\Models\LayoutObjectType.cs" />
+    <Compile Include="Context\Models\LogisticsOrder.cs" />
+    <Compile Include="Context\Models\LogisticsOrderProductDetail.cs" />
     <Compile Include="Context\Models\Machine.cs" />
     <Compile Include="Context\Models\MachineGroup.cs" />
     <Compile Include="Context\Models\MachineMaintenanceInstruction.cs" />
