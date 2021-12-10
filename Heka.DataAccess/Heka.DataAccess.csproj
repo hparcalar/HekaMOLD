@@ -182,6 +182,14 @@
     <Compile Include="Migrations\202112100927255_UpdateMachine.designer.cs">
       <DependentUpon>202112100927255_UpdateMachine.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112100937411_UpdateItemModels.cs" />
+    <Compile Include="Migrations\202112100937411_UpdateItemModels.designer.cs">
+      <DependentUpon>202112100937411_UpdateItemModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112100938493_UpdateItem002.cs" />
+    <Compile Include="Migrations\202112100938493_UpdateItem002.designer.cs">
+      <DependentUpon>202112100938493_UpdateItem002.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -219,6 +227,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112100927255_UpdateMachine.resx">
       <DependentUpon>202112100927255_UpdateMachine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112100937411_UpdateItemModels.resx">
+      <DependentUpon>202112100937411_UpdateItemModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112100938493_UpdateItem002.resx">
+      <DependentUpon>202112100938493_UpdateItem002.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

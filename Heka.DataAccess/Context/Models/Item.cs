@@ -73,16 +73,16 @@ namespace Heka.DataAccess.Context
         public string Apparel { get; set; }
         //Kursun
         public string Bullet { get; set; }
-        public int CombWidth { get; set; }
+        public int? CombWidth { get; set; }
         //Atki Rapor Boyu
-        public int WeftReportLength { get; set; }
+        public int? WeftReportLength { get; set; }
         //Cozgu Rapor Boyu
-        public int WarpReportLength { get; set; }
+        public int? WarpReportLength { get; set; }
         //Atki Sikligi
-        public int WeftDensity { get; set; }
+        public int? WeftDensity { get; set; }
 
         [ForeignKey("Machine")]
-        public int MachineId { get; set; }
+        public int? MachineId { get; set; }
 
         [ForeignKey("ItemQualityType")]
         public int? ItemQualityTypeId { get; set; }
