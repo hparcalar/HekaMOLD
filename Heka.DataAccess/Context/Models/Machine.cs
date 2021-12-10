@@ -33,8 +33,9 @@ namespace Heka.DataAccess.Context
             this.UserWorkOrderHistory = new HashSet<UserWorkOrderHistory>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.ProductWastage = new HashSet<ProductWastage>();
+            this.Item = new HashSet<Item>();
         }
-    
+
         public int Id { get; set; }
         public string MachineCode { get; set; }
         public string MachineName { get; set; }
@@ -104,5 +105,7 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Machine")]
         public virtual ICollection<ProductWastage> ProductWastage { get; set; }
+        [InverseProperty("Machine")]
+        public virtual ICollection<Item> Item { get; set; }
     }
 }

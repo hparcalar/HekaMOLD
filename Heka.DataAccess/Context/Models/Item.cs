@@ -1,5 +1,6 @@
 namespace Heka.DataAccess.Context
 {
+    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -53,6 +54,38 @@ namespace Heka.DataAccess.Context
         public Nullable<int> MoldId { get; set; }
 
         public Nullable<int> TaxRate { get; set; }
+        //Desen
+        public int? Pattern { get; set; }
+        //Ham
+        public int? CrudeWidth { get; set; }
+        public decimal? CrudeGramaj { get; set; }
+        //Mamul En
+        public int? ProductWidth { get; set; }
+        public decimal? ProductGramaj { get; set; }
+        //Cozgu Tel sayisi
+        public int? WarpWireCount { get; set; }
+        public decimal? MeterGramaj { get; set; }
+        //Kesme	
+        public string Cutting { get; set; }
+        //Boyahane
+        public string Dyehouse { get; set; }
+        //konfeksiyon
+        public string Apparel { get; set; }
+        //Kursun
+        public string Bullet { get; set; }
+        public int CombWidth { get; set; }
+        //Atki Rapor Boyu
+        public int WeftReportLength { get; set; }
+        //Cozgu Rapor Boyu
+        public int WarpReportLength { get; set; }
+        //Atki Sikligi
+        public int WeftDensity { get; set; }
+
+        [ForeignKey("Machine")]
+        public int MachineId { get; set; }
+
+        [ForeignKey("ItemQualityType")]
+        public int? ItemQualityTypeId { get; set; }
 
 
         [InverseProperty("Item")]
@@ -62,6 +95,8 @@ namespace Heka.DataAccess.Context
         public virtual ItemGroup ItemGroup { get; set; }
         public virtual Mold Mold { get; set; }
         public virtual Plant Plant { get; set; }
+        public virtual ItemQualityType ItemQualityType { get; set; }
+        public virtual Machine Machine { get; set; }
 
         [InverseProperty("Item")]
         public virtual ICollection<ItemLiveStatus> ItemLiveStatus { get; set; }

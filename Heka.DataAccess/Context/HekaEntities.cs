@@ -1,10 +1,7 @@
 ﻿namespace Heka.DataAccess.Context
 {
-    using Heka.DataAccess.Migrations;
-    using System;
+    using Heka.DataAccess.Context.Models;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Migrations;
     using System.Data.Entity.ModelConfiguration.Conventions;
 
     public partial class HekaEntities : DbContext
@@ -109,5 +106,9 @@
         public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
         public virtual DbSet<ProductWastage> ProductWastage { get; set; }
         public virtual DbSet<ContractWorkFlow> ContractWorkFlow { get; set; }
+        public virtual DbSet<YarnRecipe> YarnRecipe { get; set; }
+        public virtual DbSet<YarnRecipeType> YarnRecipeType { get; set; }
+        public virtual DbSet<ItemKnitDensity> ItemKnitDensity { get; set; }
+        
     }
 }

@@ -77,12 +77,14 @@
     <Compile Include="Context\Models\Item.cs" />
     <Compile Include="Context\Models\ItemCategory.cs" />
     <Compile Include="Context\Models\ItemGroup.cs" />
+    <Compile Include="Context\Models\ItemKnitDensity.cs" />
     <Compile Include="Context\Models\ItemLiveStatus.cs" />
     <Compile Include="Context\Models\ItemOrder.cs" />
     <Compile Include="Context\Models\ItemOrderConsume.cs" />
     <Compile Include="Context\Models\ItemOrderDetail.cs" />
     <Compile Include="Context\Models\ItemOrderItemNeeds.cs" />
     <Compile Include="Context\Models\ItemPrice.cs" />
+    <Compile Include="Context\Models\ItemQualityType.cs" />
     <Compile Include="Context\Models\ItemReceipt.cs" />
     <Compile Include="Context\Models\ItemReceiptConsume.cs" />
     <Compile Include="Context\Models\ItemReceiptDetail.cs" />
@@ -146,6 +148,8 @@
     <Compile Include="Context\Models\WorkOrderDetail.cs" />
     <Compile Include="Context\Models\WorkOrderItemNeeds.cs" />
     <Compile Include="Context\Models\WorkOrderSerial.cs" />
+    <Compile Include="Context\Models\YarnRecipe.cs" />
+    <Compile Include="Context\Models\YarnRecipeType.cs" />
     <Compile Include="Migrations\202112031032538_CodeFirstInitial.cs" />
     <Compile Include="Migrations\202112031032538_CodeFirstInitial.designer.cs">
       <DependentUpon>202112031032538_CodeFirstInitial.cs</DependentUpon>
@@ -157,6 +161,26 @@
     <Compile Include="Migrations\202112061028085_ContractWorkFlow.cs" />
     <Compile Include="Migrations\202112061028085_ContractWorkFlow.designer.cs">
       <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112100849567_YarnRecipe.cs" />
+    <Compile Include="Migrations\202112100849567_YarnRecipe.designer.cs">
+      <DependentUpon>202112100849567_YarnRecipe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112100911070_ItemKnitDensity.cs" />
+    <Compile Include="Migrations\202112100911070_ItemKnitDensity.designer.cs">
+      <DependentUpon>202112100911070_ItemKnitDensity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112100913192_YardRecipeType.cs" />
+    <Compile Include="Migrations\202112100913192_YardRecipeType.designer.cs">
+      <DependentUpon>202112100913192_YardRecipeType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112100918504_ItemQalityType.cs" />
+    <Compile Include="Migrations\202112100918504_ItemQalityType.designer.cs">
+      <DependentUpon>202112100918504_ItemQalityType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112100927255_UpdateMachine.cs" />
+    <Compile Include="Migrations\202112100927255_UpdateMachine.designer.cs">
+      <DependentUpon>202112100927255_UpdateMachine.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
@@ -180,6 +204,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112061028085_ContractWorkFlow.resx">
       <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112100849567_YarnRecipe.resx">
+      <DependentUpon>202112100849567_YarnRecipe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112100911070_ItemKnitDensity.resx">
+      <DependentUpon>202112100911070_ItemKnitDensity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112100913192_YardRecipeType.resx">
+      <DependentUpon>202112100913192_YardRecipeType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112100918504_ItemQalityType.resx">
+      <DependentUpon>202112100918504_ItemQalityType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112100927255_UpdateMachine.resx">
+      <DependentUpon>202112100927255_UpdateMachine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
