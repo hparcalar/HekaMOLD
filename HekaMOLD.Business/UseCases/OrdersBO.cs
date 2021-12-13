@@ -52,7 +52,7 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemOrder>();
 
-            return repo.Filter(d => d.OrderType == (int)orderType).ToList()
+            return repo.Filter(d => d.OrderType == (int)orderType && (d.SyncStatus == null || d.SyncStatus == 0)).ToList()
                 .Select(d => new ItemOrderModel
                 {
                     Id = d.Id,

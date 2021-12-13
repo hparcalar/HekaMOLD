@@ -347,8 +347,15 @@ namespace HekaMOLD.Business.UseCases
                     })
                     .OrderBy(d => d.ItemGroupId)
                     .ToArray();
+
+                data = data.Where(d => d.InQty - d.OutQty > 0).ToArray();
+
+                foreach (var item in data)
+                {
+                    item.TotalQty = item.InQty - item.OutQty;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
             }
@@ -403,6 +410,13 @@ namespace HekaMOLD.Business.UseCases
                     })
                     .OrderBy(d => d.ItemGroupId)
                     .ToArray();
+
+                data = data.Where(d => d.InQty - d.OutQty > 0).ToArray();
+
+                foreach (var item in data)
+                {
+                    item.TotalQty = item.InQty - item.OutQty;
+                }
             }
             catch (Exception)
             {

@@ -358,5 +358,12 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
             return result;
         }
+
+        public BusinessResult PullProductDeliveries(SyncPointModel syncPoint)
+        {
+            BusinessResult result = new BusinessResult();
+
+            return result;
+        }
     }
 }

@@ -108,12 +108,19 @@ namespace HekaMOLD.IntegrationService
                             AddLog(result.Result ? "Reçeteler transfer edildi." : "Reçete Transferi Hata: " + result.ErrorMessage);
 
                             result = entObj.PullSaleOrders(sync);
-                            AddLog(result.Result ? "Satış siparişleri transfer edildi." : "Satış Siparişi Transferi Hata: "
+                            AddLog(result.Result ? "Satış siparişleri (Hekaya) transfer edildi." : "Satış Siparişi (Hekaya) Transferi Hata: "
                                 + result.ErrorMessage);
 
-                            result = entObj.PushSaleOrders(sync);
-                            AddLog(result.Result ? "Satış siparişleri diğer uygulamaya transfer edildi." : "Satış Siparişi Transferi Hata: "
+                            result = entObj.PullProductDeliveries(sync);
+                            AddLog(result.Result ? "Satış irsaliyeleri (Hekaya) transfer edildi." : "Satış İrsaliyesi (Hekaya) Transferi Hata: "
                                 + result.ErrorMessage);
+
+                            if (sync.EnabledOnSalesOrders == true)
+                            {
+                                result = entObj.PushSaleOrders(sync);
+                                AddLog(result.Result ? "Satış siparişleri (Uygulamaya) transfer edildi." : "Satış Siparişi (Uygulamaya) Transferi Hata: "
+                                    + result.ErrorMessage);
+                            }
 
                             //if (entObj is MikroIntegrator)
                             //{
