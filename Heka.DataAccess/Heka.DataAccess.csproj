@@ -148,6 +148,9 @@
     <Compile Include="Context\Models\WorkOrderDetail.cs" />
     <Compile Include="Context\Models\WorkOrderItemNeeds.cs" />
     <Compile Include="Context\Models\WorkOrderSerial.cs" />
+    <Compile Include="Context\Models\YarnBreed.cs" />
+    <Compile Include="Context\Models\YarnColour.cs" />
+    <Compile Include="Context\Models\YarnColourGroup.cs" />
     <Compile Include="Context\Models\YarnRecipe.cs" />
     <Compile Include="Context\Models\YarnRecipeType.cs" />
     <Compile Include="Migrations\202112031032538_CodeFirstInitial.cs" />
@@ -189,6 +192,14 @@
     <Compile Include="Migrations\202112100938493_UpdateItem002.cs" />
     <Compile Include="Migrations\202112100938493_UpdateItem002.designer.cs">
       <DependentUpon>202112100938493_UpdateItem002.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112130958109_YarnColourAndYarnColourGroup.cs" />
+    <Compile Include="Migrations\202112130958109_YarnColourAndYarnColourGroup.designer.cs">
+      <DependentUpon>202112130958109_YarnColourAndYarnColourGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112131113334_AddColumnUser.cs" />
+    <Compile Include="Migrations\202112131113334_AddColumnUser.designer.cs">
+      <DependentUpon>202112131113334_AddColumnUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
@@ -233,6 +244,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112100938493_UpdateItem002.resx">
       <DependentUpon>202112100938493_UpdateItem002.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112130958109_YarnColourAndYarnColourGroup.resx">
+      <DependentUpon>202112130958109_YarnColourAndYarnColourGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112131113334_AddColumnUser.resx">
+      <DependentUpon>202112131113334_AddColumnUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

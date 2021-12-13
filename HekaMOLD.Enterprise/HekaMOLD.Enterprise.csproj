@@ -154,6 +154,7 @@
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
+    <Compile Include="Controllers\KnitController.cs" />
     <Compile Include="Controllers\LojisticOrderController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
@@ -191,6 +192,8 @@
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Controllers\UnitTypeController.cs" />
     <Compile Include="Controllers\WarehouseController.cs" />
+    <Compile Include="Controllers\YarnBreedController.cs" />
+    <Compile Include="Controllers\YarnRecipeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -4181,6 +4184,9 @@
     <Content Include="FrontEndLogic\WorkOrder\index.js" />
     <Content Include="FrontEndLogic\WorkOrder\list.js" />
     <Content Include="FrontEndLogic\WorkOrder\production-history.js" />
+    <Content Include="FrontEndLogic\YarnBreed\index.js" />
+    <Content Include="FrontEndLogic\YarnBreed\list.js" />
+    <Content Include="FrontEndLogic\YarnRecipe\index.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Helpers\FrontEnd\heka-ui-helpers.js" />
@@ -4639,6 +4645,11 @@
     <Content Include="Views\ContractWorks\Index.cshtml" />
     <Content Include="Views\LojisticOrder\Index.cshtml" />
     <Content Include="Views\LojisticOrder\List.cshtml" />
+    <Content Include="Views\Knit\Index.cshtml" />
+    <Content Include="Views\YarnRecipe\Index.cshtml" />
+    <Content Include="Views\YarnRecipe\List.cshtml" />
+    <Content Include="Views\YarnBreed\Index.cshtml" />
+    <Content Include="Views\YarnBreed\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

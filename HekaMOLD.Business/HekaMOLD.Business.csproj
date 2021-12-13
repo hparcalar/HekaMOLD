@@ -184,6 +184,7 @@
     <Compile Include="Models\DataTransfer\Production\WorkOrderItemNeedsModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderSerialModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\YarnBreedModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\EntryQualityDataDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\EntryQualityDataModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\EntryQualityPlanDetailModel.cs" />
