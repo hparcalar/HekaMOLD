@@ -2393,7 +2393,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult DeleteSerials(WorkOrderSerialModel[] model)
+        public BusinessResult DeleteSerials(WorkOrderSerialModel[] model, int userId)
         {
             BusinessResult result = new BusinessResult();
 
@@ -2406,7 +2406,10 @@ namespace HekaMOLD.Business.UseCases
                     var dbSerial = repo.Get(d => d.Id == item.Id);
                     if (dbSerial != null)
                     {
-                        repo.Delete(dbSerial);
+                        dbSerial.SerialStatus = (int)WorkOrderStatusType.Cancelled;
+                        dbSerial.UpdatedDate = DateTime.Now;
+                        dbSerial.UpdatedUserId = userId;
+                        //repo.Delete(dbSerial);
                     }
                 }
 

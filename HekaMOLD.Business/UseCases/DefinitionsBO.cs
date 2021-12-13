@@ -1441,6 +1441,9 @@ namespace HekaMOLD.Business.UseCases
                     PostureCount = postureData.Count(),
                 };
 
+                if (containerObj.MachineStats.AvgProductionCount < 0)
+                    containerObj.MachineStats.AvgProductionCount = 0;
+
                 // RESOLVE SHIFT STATS OF THAT MACHINE
                 List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
                 shiftList = shiftList.OrderBy(m => m.StartTime).ToArray();
@@ -1498,8 +1501,7 @@ namespace HekaMOLD.Business.UseCases
                     }
 
                     var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
-
-                    shiftStats.Add(new ShiftStatsModel
+                    var newShiftStat = new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
                         ChiefUserName = shift.User != null ? shift.User.UserName : "",
@@ -1510,7 +1512,12 @@ namespace HekaMOLD.Business.UseCases
                         WastageCount = shiftWastageCount,
                         LastProductName = lastProductName,
                         TargetCount = targetCount - Convert.ToInt32(shiftWastageCount),
-                    });
+                    };
+
+                    if (newShiftStat.AvgProductionCount < 0)
+                        newShiftStat.AvgProductionCount = 0;
+
+                    shiftStats.Add(newShiftStat);
                 }
 
                 containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
@@ -1597,20 +1604,26 @@ namespace HekaMOLD.Business.UseCases
                     PostureCount = postureData.Count(),
                 };
 
+                if (containerObj.MachineStats.AvgProductionCount < 0)
+                    containerObj.MachineStats.AvgProductionCount = 0;
+
                 // RESOLVE SHIFT STATS OF THAT MACHINE
                 List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
                 foreach (var shift in shiftList)
                 {
                     var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
-                    shiftStats.Add(new ShiftStatsModel
+                    var newShiftStat = new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
-                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count() 
+                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count()
                             - Convert.ToInt32(shiftWastageCount),
                         WastageCount = shiftWastageCount,
-                    });
+                    };
+                    if (newShiftStat.AvgProductionCount < 0)
+                        newShiftStat.AvgProductionCount = 0;
+                    shiftStats.Add(newShiftStat);
                 }
 
                 containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
