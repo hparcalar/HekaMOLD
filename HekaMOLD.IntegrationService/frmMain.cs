@@ -118,7 +118,7 @@ namespace HekaMOLD.IntegrationService
                             if (sync.EnabledOnSalesOrders == true)
                             {
                                 result = entObj.PushSaleOrders(sync);
-                                AddLog(result.Result ? "Satış siparişleri () transfer edildi." : "Satış Siparişi (Uygulamaya) Transferi Hata: "
+                                AddLog(result.Result ? "Satış siparişleri (Uygulamaya) transfer edildi." : "Satış Siparişi (Uygulamaya) Transferi Hata: "
                                     + result.ErrorMessage);
                             }
 
