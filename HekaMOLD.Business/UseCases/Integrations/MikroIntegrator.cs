@@ -1028,12 +1028,12 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 + "sip_iskonto1,sip_iskonto2,sip_iskonto3,sip_iskonto4,sip_iskonto5,sip_iskonto6, sip_masraf1,sip_masraf2,sip_masraf3,sip_masraf4, "
                                                 + "sip_vergi_pntr, sip_vergi, sip_masvergi_pntr,sip_masvergi,sip_opno, sip_aciklama, sip_b_fiyat, sip_depono,"
                                                 +" sip_stok_sormerk, sip_cari_sormerk,sip_harekettipi, sip_projekodu, sip_aciklama2,sip_vergisiz_fl,sip_kapat_fl,sip_promosyon_fl, "
-                                                +" sip_teslimturu, sip_cagrilabilir_fl, sip_durumu) "
+                                                +" sip_teslimturu, sip_cagrilabilir_fl, sip_durumu, sip_planlananmiktar) "
                                                 + " VALUES('0', 0, 16, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.OrderDate) + "', "
                                                 + "'0', '0', '"+ docText +"', '" + newReceiptNo + "', " + lineNumber + ", '', '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.OrderDate) + "', "
                                                 + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, '', '"+ rcp.FirmCode +"', 0, "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", " +
                                                    string.Format("{0:0.00}", rdt.Quantity ?? 0).Replace(",", ".") + " , 1, 0, 0,0,0,0,0,0, 0,0,0,0, 0,0, 0,0,0, '', " +
-                                                   string.Format("{0:0.00}", rdt.UnitPrice ?? 0).Replace(",", ".") +", 1, '','', 0, '','',0,0,0,'03',1,0)";
+                                                   string.Format("{0:0.00}", rdt.UnitPrice ?? 0).Replace(",", ".") +", 1, '','', 0, '','',0,0,0,'03',1,0,0)";
                                             SqlCommand cmd = new SqlCommand(sql, con);
                                             int affectedRows = cmd.ExecuteNonQuery();
                                             if (affectedRows > 0)
