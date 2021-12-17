@@ -391,6 +391,7 @@ namespace HekaMOLD.Business.UseCases
                             SyncStatus = 1,
                             SyncDate = null,
                             Details = consDetails.ToArray(),
+                            ReceiptStatus = (int)ReceiptStatusType.Created,
                         });
                     }
                     else

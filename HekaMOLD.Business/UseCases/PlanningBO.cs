@@ -15,7 +15,7 @@ namespace HekaMOLD.Business.UseCases
 {
     public class PlanningBO : CoreProductionBO
     {
-        #region PLANNING
+        #region PRODUCTION PLANNING
         /// <summary>
         /// CREATES WORK ORDER FROM SALE ORDER OR UPDATES IT
         /// </summary>
@@ -876,6 +876,165 @@ namespace HekaMOLD.Business.UseCases
                 //{
                 //    bObj.UpdateUserHistory(dbObj.MachineId ?? 0, userId ?? 0);
                 //}
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
+
+        #region ITEM ALLOCATION
+        public BusinessResult SaveAllocation(WorkOrderAllocationModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderAllocation>();
+                var dbAlloc = repo.Get(d => d.ItemReceiptDetailId == model.ItemReceiptDetailId
+                    && d.WorkOrderDetailId == model.WorkOrderDetailId);
+                if (dbAlloc == null)
+                {
+                    dbAlloc = new WorkOrderAllocation
+                    {
+                        ItemReceiptDetailId = model.ItemReceiptDetailId,
+                        WorkOrderDetailId = model.WorkOrderDetailId,
+                        Quantity = model.Quantity,
+                        CreatedDate = DateTime.Now,
+                        PackageQuantity = model.PackageQuantity,
+                    };
+                    repo.Add(dbAlloc);
+                }
+
+                dbAlloc.Quantity = model.Quantity;
+                dbAlloc.PackageQuantity = model.PackageQuantity;
+                dbAlloc.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbAlloc.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public WorkOrderAllocationModel[] GetAllocationList(int workOrderDetailId)
+        {
+            WorkOrderAllocationModel[] data = new WorkOrderAllocationModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var dbDetail = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbDetail == null)
+                    throw new Exception("İş emri kaydı bulunamadı.");
+
+                data = dbDetail.WorkOrderAllocation
+                    .Select(d => new WorkOrderAllocationModel
+                    {
+                        Id = d.Id,
+                        CreatedDate = d.CreatedDate,
+                        WorkOrderDetailId = d.WorkOrderDetailId,
+                        ItemReceiptDetailId = d.ItemReceiptDetailId,
+                        Quantity = d.Quantity,
+                        PackageQuantity = d.PackageQuantity,
+                        ItemReceiptNo = d.ItemReceiptDetail.ItemReceipt.ReceiptNo,
+                        ItemReceiptDocumentNo = d.ItemReceiptDetail.ItemReceipt.DocumentNo,
+                        ItemReceiptFirmCode = d.ItemReceiptDetail.ItemReceipt.Firm.FirmCode,
+                        ItemReceiptFirmName = d.ItemReceiptDetail.ItemReceipt.Firm.FirmName,
+                        ItemCode = d.ItemReceiptDetail.Item.ItemNo,
+                        ItemName = d.ItemReceiptDetail.Item.ItemName,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult CreateItemDeliveryToProduction(int itemReceiptDetailId, int targetMachineId, decimal quantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoMachine = _unitOfWork.GetRepository<Machine>();
+
+                var dbReceipt = repo.Get(d => d.Id == itemReceiptDetailId);
+                var dbMachine = repoMachine.Get(d => d.Id == targetMachineId);
+
+                if (dbReceipt == null)
+                    throw new Exception("İrsaliye kaydı bulunamadı.");
+
+                if (dbMachine == null)
+                    throw new Exception("Makine tanımı bulunamadı.");
+
+                if (dbReceipt.Quantity - (dbReceipt.ItemReceiptConsumeByConsumed.Sum(d => d.UsedQuantity) ?? 0)
+                    - quantity < 0)
+                    throw new Exception("Giriş irsaliyesindeki kalan miktar aşıldı. Bu miktar üretime teslim edilemez.");
+
+                MachinePlanModel activeWork = null;
+                using (ProductionBO prodBO = new ProductionBO())
+                {
+                    activeWork = prodBO.GetActiveWorkOrderOnMachine(targetMachineId);
+                }
+
+                if (activeWork == null)
+                    throw new Exception("Makinenin üzerinde aktif bir üretim bulunmamaktadır. Önce başlanacak işin üretim şefi tarafından seçilmesi gerekmektedir.");
+
+                using (ReceiptBO rcpBO = new ReceiptBO())
+                {
+                    result = rcpBO.SaveOrUpdateItemReceipt(new Models.DataTransfer.Receipt.ItemReceiptModel
+                    {
+                        CreatedDate = DateTime.Now,
+                        ReceiptDate = DateTime.Now,
+                        ReceiptNo = rcpBO.GetNextReceiptNo(dbReceipt.ItemReceipt.PlantId.Value, ItemReceiptType.DeliveryToProduction),
+                        ReceiptStatus = (int)ReceiptStatusType.Created,
+                        ReceiptType = (int)ItemReceiptType.DeliveryToProduction,
+                        InWarehouseId = dbReceipt.ItemReceipt.InWarehouseId,
+                        PlantId = dbReceipt.ItemReceipt.PlantId,
+                        Details = new Models.DataTransfer.Receipt.ItemReceiptDetailModel[]
+                        {
+                            new Models.DataTransfer.Receipt.ItemReceiptDetailModel
+                            {
+                                ItemId = dbReceipt.ItemId,
+                                UnitId = dbReceipt.UnitId,
+                                LineNumber = 1,
+                                Quantity = quantity,
+                                CreatedDate = DateTime.Now,
+                                NewDetail = true,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                            }
+                        }
+                    });
+
+                    // CREATE RECEIPT CONSUMPTION FROM ENTRY RECEIPT
+                    if (result.Result)
+                    {
+                        using (ReceiptBO cmpBO  = new ReceiptBO())
+                        {
+                            cmpBO.UpdateConsume(itemReceiptDetailId, result.DetailRecordId, quantity);
+                        }
+                    }
+                }
 
                 result.Result = true;
             }

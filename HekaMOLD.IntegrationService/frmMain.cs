@@ -93,7 +93,7 @@ namespace HekaMOLD.IntegrationService
                             else if (sync.SyncPointType == (int)SyncPointType.WebTicari)
                                 entObj = new WebTicariIntegrator();
 
-                            entObj.OnTransferError += EntObj_OnTransferError;
+                            entObj.OnTransferError += EntObj_OnTransferError;                  
 
                             var result = entObj.PullFirms(sync);
                             AddLog(result.Result ? "Firmalar transfer edildi." : "Firma Transferi Hata: " + result.ErrorMessage);
@@ -103,6 +103,9 @@ namespace HekaMOLD.IntegrationService
 
                             result = entObj.PullItems(sync);
                             AddLog(result.Result ? "Stoklar transfer edildi." : "Stok Transferi Hata: " + result.ErrorMessage);
+
+                            var resultX = entObj.PullEntryReceipts(sync);
+                            AddLog(resultX.Result ? "Giriş irsaliyeleri transfer edildi." : "Giriş irsaliyeleri Transferi Hata: " + resultX.ErrorMessage);
 
                             result = entObj.PullRecipes(sync);
                             AddLog(result.Result ? "Reçeteler transfer edildi." : "Reçete Transferi Hata: " + result.ErrorMessage);

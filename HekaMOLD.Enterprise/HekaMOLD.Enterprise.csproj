@@ -4113,6 +4113,7 @@
     <Content Include="FrontEndLogic\Mobile\fault-entry.js" />
     <Content Include="FrontEndLogic\Mobile\incident-history.js" />
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
+    <Content Include="FrontEndLogic\Mobile\item-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\machine-equipments.js" />
     <Content Include="FrontEndLogic\Mobile\manage-machines.js" />
     <Content Include="FrontEndLogic\Mobile\manage-shifts.js" />
@@ -4639,6 +4640,7 @@
     <Content Include="Views\ContractWorks\Index.cshtml" />
     <Content Include="Views\LojisticOrder\Index.cshtml" />
     <Content Include="Views\LojisticOrder\List.cshtml" />
+    <Content Include="Views\Mobile\ItemDelivery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

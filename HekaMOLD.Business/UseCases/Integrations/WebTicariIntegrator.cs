@@ -39,6 +39,9 @@ namespace HekaMOLD.Business.UseCases.Integrations
                     case "Password":
                         data.Password = pairParts[1];
                         break;
+                    case "BranchOfficeNo":
+                        data.BranchOfficeNo = pairParts[1];
+                        break;
                     default:
                         break;
                 }
@@ -69,7 +72,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                     {
                         foreach (var item in itemParent.Value)
                         {
-                            if (!string.IsNullOrEmpty(item.cr_no.Value))
+                            if (!string.IsNullOrEmpty(item.cr_no.Value) && item.cr_sube == loginConfig.BranchOfficeNo)
                             {
                                 using (DefinitionsBO bObj = new DefinitionsBO())
                                 {
@@ -115,7 +118,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
             try
             {
                 var loginConfig = ResolveLoginData(syncPoint.ConnectionString);
-                
+
                 using (WebticariService ws = new WebticariService())
                 {
                     var wsToken = ws.login(loginConfig.CustomerNo, loginConfig.Login, loginConfig.Password);
@@ -136,7 +139,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
                             using (DefinitionsBO bObj = new DefinitionsBO())
                             {
-                                if (!bObj.HasAnyItem(item.ur_kod.Value))
+                                if (item.ur_sube == loginConfig.BranchOfficeNo && !bObj.HasAnyItem(item.ur_kod.Value))
                                 {
                                     int? unitTypeId = null;
                                     #region RESOLVE SYSTEM UNIT TYPE
@@ -364,14 +367,100 @@ namespace HekaMOLD.Business.UseCases.Integrations
                     var wsToken = ws.login(loginConfig.CustomerNo, loginConfig.Login, loginConfig.Password);
                     string response = ws.exportDataXML(wsToken, 
                         "SELECT * FROM tbalis{donem},tbasepet{donem}, tbcari, tbpersonel,tbdepo WHERE "
-                        +" dp_no=sp_depo AND sp_satici=ps_no AND st_carino=cr_no AND st_id=sp_alisno");
+                        +" dp_no=sp_depo AND sp_satici=ps_no AND st_carino=cr_no AND st_id=sp_alisno AND cr_sube = " + loginConfig.BranchOfficeNo);
 
                     XmlDocument xmlResp = new XmlDocument();
                     xmlResp.LoadXml(response);
                     var jsonText = JsonConvert.SerializeXmlNode(xmlResp);
                     var jsonData = JsonConvert.DeserializeObject<dynamic>(jsonText);
 
-                    foreach (var itemParent in jsonData.table.rows) { }
+                    foreach (var itemParent in jsonData.table.rows)
+                    {
+                        foreach (var item in itemParent.Value)
+                        {
+                            if (item.st_belgeturu == "ALIŞ FATURASI")
+                            {
+                                using (DefinitionsBO bObj = new DefinitionsBO())
+                                {
+                                    var dbFirm = bObj.GetFirm(item.cr_kod.ToString());
+                                    var dbItem = bObj.GetItem(item.sp_urunkod.ToString());
+                                    var dbUnit = bObj.GetUnitType(item.sp_birim.ToString());
+                                    var dbWr = bObj.GetItemWarehouse();
+
+                                    int? unitId = null;
+                                    #region CHECK UNIT TYPE OR CREATE
+                                    if (dbUnit == null)
+                                    {
+                                        using (DefinitionsBO bObjDec = new DefinitionsBO())
+                                        {
+                                            var decResult = bObjDec.SaveOrUpdateUnitType(new UnitTypeModel
+                                            {
+                                                PlantId = syncPoint.PlantId,
+                                                UnitCode = item.sp_birim.ToString(),
+                                                UnitName = item.sp_birim.ToString(),
+                                            });
+
+                                            if (decResult.Result)
+                                                unitId = decResult.RecordId;
+                                        }
+                                    }
+                                    else
+                                        unitId = dbUnit.Id;
+                                    #endregion
+
+                                    if (dbFirm != null && dbItem != null && dbFirm.Id > 0 && dbItem.Id > 0)
+                                    {
+                                        var receiptNo = item.sp_alisno.ToString();
+                                        var receiptDate = DateTime.ParseExact(item.st_tarih.ToString(), "yyyy-MM-dd HH:mm:ss",
+                                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                                        var receiptQuantity = Convert.ToDecimal(Convert.ToSingle(item.sp_adet.ToString()));
+                                        using (ReceiptBO bObjReceipt = new ReceiptBO())
+                                        {
+                                            ItemReceiptModel dbReceipt = bObjReceipt.FindItemEntryReceipt(receiptNo);
+                                            if (dbReceipt == null)
+                                            {
+                                                dbReceipt = new ItemReceiptModel
+                                                {
+                                                    ReceiptDate = receiptDate,
+                                                    ReceiptType = (int)ItemReceiptType.ItemBuying,
+                                                    ReceiptNo = bObjReceipt.GetNextReceiptNo(syncPoint.PlantId.Value,
+                                                        ItemReceiptType.ItemBuying),
+                                                    PlantId = syncPoint.PlantId,
+                                                    CreatedDate = DateTime.Now,
+                                                    FirmId = dbFirm.Id,
+                                                    ReceiptStatus = (int)ReceiptStatusType.Created,
+                                                    SyncStatus = 1,
+                                                    SyncDate = DateTime.Now,
+                                                    InWarehouseId = dbWr.Id,
+                                                };
+                                            }
+
+                                            dbReceipt.Details = new ItemReceiptDetailModel[]
+                                            {
+                                                new ItemReceiptDetailModel
+                                                {
+                                                    ItemId = dbItem.Id,
+                                                    Quantity = receiptQuantity,
+                                                    UnitId = unitId,
+                                                    LineNumber = 1,
+                                                    CreatedDate = DateTime.Now,
+                                                    NewDetail = true,
+                                                    ReceiptStatus = (int)ReceiptStatusType.Created,
+                                                    SyncStatus = 1,
+                                                    SyncDate = DateTime.Now,
+                                                    TaxIncluded = false,
+                                                    TaxRate = 0,
+                                                    TaxAmount = 0,
+                                                }
+                                            };
+
+                                            bObjReceipt.SaveOrUpdateItemReceipt(dbReceipt);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
 
