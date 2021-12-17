@@ -350,5 +350,40 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
             return result;
         }
+
+        public BusinessResult PullEntryReceipts(SyncPointModel syncPoint)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var loginConfig = ResolveLoginData(syncPoint.ConnectionString);
+
+                using (WebticariService ws = new WebticariService())
+                {
+                    var wsToken = ws.login(loginConfig.CustomerNo, loginConfig.Login, loginConfig.Password);
+                    string response = ws.exportDataXML(wsToken, 
+                        "SELECT * FROM tbalis{donem},tbasepet{donem}, tbcari, tbpersonel,tbdepo WHERE "
+                        +" dp_no=sp_depo AND sp_satici=ps_no AND st_carino=cr_no AND st_id=sp_alisno");
+
+                    XmlDocument xmlResp = new XmlDocument();
+                    xmlResp.LoadXml(response);
+                    var jsonText = JsonConvert.SerializeXmlNode(xmlResp);
+                    var jsonData = JsonConvert.DeserializeObject<dynamic>(jsonText);
+
+                    foreach (var itemParent in jsonData.table.rows) { }
+                }
+
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
     }
 }

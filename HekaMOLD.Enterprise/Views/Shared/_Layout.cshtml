@@ -18,7 +18,7 @@
 <head>
     <base href="">
     <meta charset="utf-8" />
-    <title>@ViewBag.Title | Batusan Plastik</title>
+    <title>@ViewBag.Title</title>
     <meta name="description" content="Heka MOLD Enterprise Application" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="~/assets/media/logos/favicon.ico" />
@@ -85,7 +85,7 @@
                             <div class="menu menu-column menu-title-dark menu-state-title-dark menu-state-icon-dark menu-state-bullet-dark menu-arrow-dark-500" id="#kt_aside_menu" data-kt-menu="true">
                                 @* GENEL DURUM *@
                                 <div class="menu-item">
-                                    <a class="menu-link @(Regex.IsMatch(actn, "PlainDashboard$") && Regex.IsMatch(ctrl, "Home$") ? "active" : "")" href="@Url.Action("PlainDashboard","Home")">
+                                    <a class="menu-link @(Regex.IsMatch(actn, "Index") && Regex.IsMatch(ctrl, "Home$") ? "active" : "")" href="@Url.Action("Index","Home")">
                                         <span class="menu-icon">
                                             <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
                                             <span class="svg-icon svg-icon-dark svg-icon-2">
@@ -96,7 +96,7 @@
                                             </span>
                                             <!--end::Svg Icon-->
                                         </span>
-                                        <span class="menu-title">GENEL DURUM</span>
+                                        <span class="menu-title">TEKLİF YÖNETİMİ</span>
                                     </a>
                                 </div>
 

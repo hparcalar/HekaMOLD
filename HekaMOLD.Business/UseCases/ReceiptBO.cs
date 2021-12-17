@@ -385,6 +385,21 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public ItemReceiptModel GetConsumptionReceipt(int workOrderDetailId)
+        {
+            ItemReceiptModel data = new ItemReceiptModel();
+
+            var repo = _unitOfWork.GetRepository<ItemReceipt>();
+            var dbReceipt = repo.Filter(d => d.WorkOrderDetailId == workOrderDetailId && d.ReceiptType == (int)ItemReceiptType.Consumption)
+                .FirstOrDefault();
+            if (dbReceipt != null)
+                data = GetItemReceipt(dbReceipt.Id);
+            else
+                data = null;
+
+            return data;
+        }
+
         public ItemReceiptDetailModel CalculateReceiptDetail(ItemReceiptDetailModel model)
         {
             var repoItem = _unitOfWork.GetRepository<Item>();

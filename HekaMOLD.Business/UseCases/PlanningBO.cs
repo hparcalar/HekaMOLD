@@ -824,6 +824,8 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                     throw new Exception("Durumu değiştirilmek istenen iş emri kaydına ulaşılamadı.");
 
+                bool workOrderStarted = false;
+
                 if (dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Planned 
                     || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Created 
                     || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.OnHold)
@@ -847,6 +849,8 @@ namespace HekaMOLD.Business.UseCases
                     }
 
                     dbObj.WorkOrderStatus = (int)WorkOrderStatusType.InProgress;
+
+                    workOrderStarted = true;
                 }
                 else
                 {
@@ -857,6 +861,15 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 _unitOfWork.SaveChanges();
+
+                if (workOrderStarted)
+                {
+                    // CREATE PRODUCT RECIPE CONSUMPTION
+                    using (RecipeBO bObj = new RecipeBO())
+                    {
+                        bObj.CreateRecipeConsuption(workOrderDetailId);
+                    }
+                }
 
                 // MOVED TO USER LOGIN WITH MACHINE SELECTION
                 //using (ProductionBO bObj = new ProductionBO())
