@@ -5,9 +5,6 @@ using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
@@ -77,8 +74,13 @@ namespace HekaMOLD.Enterprise.Controllers
                 units = bObj.GetUnitTypeList();
             }
 
-            var jsonResult = Json(new { Categories=categories, 
-                Groups=groups, Firms=firms, Units=units }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new
+            {
+                Categories = categories,
+                Groups = groups,
+                Firms = firms,
+                Units = units
+            }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

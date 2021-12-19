@@ -9,25 +9,26 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class YarnBreedController : Controller
+    public class YarnColourGroupController : Controller
     {
-        // GET: YarnBreed
+        // GET: YarnColour
         public ActionResult Index()
         {
             return View();
         }
+
         public ActionResult List()
         {
             return View();
         }
         [HttpGet]
-        public JsonResult GetYarnBreedList()
+        public JsonResult GetYarnColourGroupList()
         {
-            YarnBreedModel[] result = new YarnBreedModel[0];
+            YarnColourGroupModel[] result = new YarnColourGroupModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetYarnBreedList();
+                result = bObj.GetYarnColourGroupList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -38,10 +39,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            YarnBreedModel model = null;
+            YarnColourGroupModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetYarnBreed(rid);
+                model = bObj.GetYarnColourGroup(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -55,7 +56,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteYarnBreed(rid);
+                    result = bObj.DeleteYarnColourGroup(rid);
                 }
 
                 if (result.Result)
@@ -70,14 +71,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(YarnBreedModel model)
+        public JsonResult SaveModel(YarnColourGroupModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateYarnBreed(model);
+                    result = bObj.SaveOrUpdateYarnColourGroup(model);
                 }
 
                 if (result.Result)

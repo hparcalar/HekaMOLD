@@ -20,6 +20,11 @@ namespace Heka.DataAccess.Context.Models
         [ForeignKey("YarnColourGroup")]
         public int YarnColourGroupId { get; set; }
 
+        public Nullable<int> PlantId { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
+        public Nullable<int> UpdatedUserId { get; set; }
         public virtual YarnColourGroup YarnColourGroup { get; set; }
 
         [InverseProperty("YarnColour")]

@@ -13,6 +13,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
         public int? ItemType { get; set; }
+        public int? ItemCutType { get; set; }
+        public int? ItemApparelType { get; set; }
+        public int? ItemBulletType { get; set; }
         public int? ItemCategoryId { get; set; }
         public int? ItemGroupId { get; set; }
         public int? SupplierFirmId { get; set; }
@@ -30,13 +33,15 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? WarpWireCount { get; set; }
         public decimal? MeterGramaj { get; set; }
         //Kesme	
-        public string Cutting { get; set; }
+        public string Cut { get; set; }
         //Boyahane
         public string Dyehouse { get; set; }
         //konfeksiyon
         public string Apparel { get; set; }
         //Kursun
         public string Bullet { get; set; }
+        public int? TestNo { get; set; }
+        //Tarak En
         public int? CombWidth { get; set; }
         //Atki Rapor Boyu
         public int? WeftReportLength { get; set; }
@@ -58,6 +63,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
 
         #region VISUAL ELEMENTS
         public string ItemTypeStr { get; set; }
+        public string ItemCutTypeStr { get; set; }
+        public string ItemBulletTypeStr { get; set; }
+        public string ItemApparelTypeStr { get; set; }
         public string CategoryName { get; set; }
         public string GroupName { get; set; }
         #endregion

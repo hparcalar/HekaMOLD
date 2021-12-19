@@ -1,4 +1,4 @@
-﻿app.controller('yarnBreedCtrl', function ($scope, $http) {
+﻿app.controller('yarnColourGroupCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
@@ -9,7 +9,7 @@
 
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu iplik cinsini silmek istediğinizden emin misiniz?",
+            message: "Bu iplik renk grubunu silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
                 confirm: {
@@ -24,7 +24,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'YarnBreed/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'YarnColourGroup/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -46,7 +46,7 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        $http.post(HOST_URL + 'YarnBreed/SaveModel', $scope.modelObject, 'json')
+        $http.post(HOST_URL + 'YarnColourGroup/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -63,7 +63,7 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'YarnBreed/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'YarnColourGroup/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;

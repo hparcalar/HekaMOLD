@@ -1,15 +1,30 @@
-﻿app.controller('yarnBreedCtrl', function ($scope, $http) {
+﻿app.controller('yarnColourCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
+    $scope.categoryList = [];
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
     }
+    // GET SELECTABLE DATA
+    $scope.loadSelectables = function () {
+        alert("hakan");
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'YarnColour/GetYarnColourGroupList', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.categoryList = resp.data;
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
 
+        return prmReq;
+    }
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu iplik cinsini silmek istediğinizden emin misiniz?",
+            message: "Bu iplik renk kodunu silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
                 confirm: {
@@ -24,7 +39,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'YarnBreed/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'YarnColour/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -46,7 +61,7 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        $http.post(HOST_URL + 'YarnBreed/SaveModel', $scope.modelObject, 'json')
+        $http.post(HOST_URL + 'YarnColour/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -63,7 +78,7 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'YarnBreed/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'YanrColor/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;

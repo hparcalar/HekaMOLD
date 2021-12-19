@@ -27,6 +27,8 @@ namespace Heka.DataAccess.Context
             this.ItemSerial = new HashSet<ItemSerial>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.ProductWastage = new HashSet<ProductWastage>();
+            this.FabricRecipe = new HashSet<FabricRecipe>();
+            this.ItemKnitDensity = new HashSet<ItemKnitDensity>();
         }
     
         public int Id { get; set; }
@@ -45,10 +47,6 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("Plant")]
         public Nullable<int> PlantId { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<int> CreatedUserId { get; set; }
-        public Nullable<System.DateTime> UpdatedDate { get; set; }
-        public Nullable<int> UpdatedUserId { get; set; }
 
         [ForeignKey("Mold")]
         public Nullable<int> MoldId { get; set; }
@@ -66,13 +64,15 @@ namespace Heka.DataAccess.Context
         public int? WarpWireCount { get; set; }
         public decimal? MeterGramaj { get; set; }
         //Kesme	
-        public string Cutting { get; set; }
+        public Nullable<int> ItemCutType { get; set; }
+
         //Boyahane
         public string Dyehouse { get; set; }
         //konfeksiyon
-        public string Apparel { get; set; }
+        public Nullable<int> ItemApparelType { get; set; }
         //Kursun
-        public string Bullet { get; set; }
+        public Nullable<int> ItemBulletType { get; set; }
+        public int? TestNo { get; set; }
         public int? CombWidth { get; set; }
         //Atki Rapor Boyu
         public int? WeftReportLength { get; set; }
@@ -86,10 +86,11 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("ItemQualityType")]
         public int? ItemQualityTypeId { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
+        public Nullable<int> UpdatedUserId { get; set; }
 
-
-        [InverseProperty("Item")]
-        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
         public virtual Firm Firm { get; set; }
         public virtual ItemCategory ItemCategory { get; set; }
         public virtual ItemGroup ItemGroup { get; set; }
@@ -146,5 +147,13 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Item")]
         public virtual ICollection<ItemPrice> ItemPrice { get; set; }
+
+        [InverseProperty("Item")]
+        public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
+
+        [InverseProperty("Item")]
+        public virtual ICollection<FabricRecipe> FabricRecipe { get; set; }
+        [InverseProperty("Item")]
+        public virtual ICollection<ItemKnitDensity> ItemKnitDensity { get; set; }
     }
 }

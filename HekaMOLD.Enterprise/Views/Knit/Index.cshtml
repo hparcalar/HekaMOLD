@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Dokuma Tanımları";
+    ViewBag.Title = "Dokuma Desen Tanımları";
 }
 
-<div ng-controller="itemCtrl">
+<div ng-controller="knitCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -31,7 +31,7 @@
             <div class="d-flex align-items-center py-1">
                 <!--begin::Wrapper-->
                 <div class="me-4">
-                    <a href="@Url.Action("Extract","Item")?rid={{modelObject.Id}}" class="btn btn-sm btn-flex btn-primary fw-bolder">
+                    <a href="@Url.Action("Extract","Knit")?rid={{modelObject.Id}}" class="btn btn-sm btn-flex btn-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -60,7 +60,7 @@
                         Teknik Resimler
                     </a>
 
-                    <a href="@Url.Action("List","Item")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                    <a href="@Url.Action("List","Knit")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -131,53 +131,154 @@
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
-                <div class="col-xxl-6">
+                <div class="col-xxl-4">
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Stok No</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.ItemNo" placeholder="" />
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Desen No</label>
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.ItemNo" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Deneme No</label>
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.TestNo" placeholder="" />
+                            </div>
+                        </div>
                     </div>
-
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Stok Adı</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.ItemName" placeholder="" />
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ham En</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.CrudeWidth" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ham Gramaj</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.CrudeGramaj" placeholder="" />
+                            </div>
+                        </div>
                     </div>
-
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Stok Türü</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <select aria-label="Stok Türü" ng-options="item.Text for item in itemTypeList"
-                                ng-model="selectedItemType" class="form-select form-select-solid">
-                        </select>
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Mamul En</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.ProductWidth" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Mamul Gramaj</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.ProductGramaj" placeholder="" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--end::Col-->
-
-                <div class="col-xxl-6">
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kategori</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <select aria-label="Kategori" ng-options="item.ItemCategoryName for item in categoryList"
-                                ng-model="selectedCategory" class="form-select form-select-solid">
-                        </select>
+                <!--begin::Col-->
+                <div class="col-xxl-4">
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çözgü Tel Sayısı</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">m² Gramaj </label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kesme</label>
+                            <div class="mb-5">
+                                <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in KnitCutTypeList"
+                                        ng-model="selectedKnitCutType" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Boyahane</label>
+                            <div class="mb-5">
+                                <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in DyehouseList"
+                                        ng-model="selectedDyehouse" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Konfeksiyon</label>
+                            <div class="mb-5">
+                                <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in KnitApparelTypeList"
+                                        ng-model="selectedKnitApparelType" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kurşun</label>
+                            <div class="mb-5">
+                                <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in KnitBulletTypeList"
+                                        ng-model="selectedKnitBulletType" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Grup</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <select aria-label="Grup" ng-options="item.ItemGroupName for item in groupList"
-                                ng-model="selectedGroup" class="form-select form-select-solid">
-                        </select>
-                    </div>
-
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tedarikçi</label>
-                    <!--begin::Input group-->
-                    <select class="form-select form-select-solid" data-allow-clear="true"
-                            ng-options="item.FirmCode + ' / ' + item.FirmName for item in firmList" ng-model="selectedFirm"
-                            data-control="select2" data-placeholder="-- Seçiniz --"></select>
                 </div>
+                <!--begin::Col-->
+                <!--begin::Col-->
+                <div class="col-xxl-4">
+                    <!--begin::Input group-->
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kalite Tür</label>
+                    <div class="mb-5">
+                        <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in KnitQualityTypeList"
+                                ng-model="selectedKnitQualityType" class="form-select form-select-solid">
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-xxl-4">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tarak En</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.CombWidth" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-4">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Atkı Rapor Boy</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.WeftReportLength" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-4">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çöz. Rapor Boy</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.WarpReportLength" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+                    <!--begin::Input group-->
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine</label>
+                    <select class="form-select form-select-solid" data-allow-clear="true"
+                            ng-options="Knit.MachineCode + ' / ' + Knit.Machine for Knit in firmMachine" ng-model="selectedMachine"
+                            data-control="select2" data-placeholder="-- Seçiniz --">
+                    </select>
+
+                </div>
+                <!--begin::Col-->
             </div>
             <!--end::Row-->
 
@@ -185,7 +286,7 @@
                 <div class="col-xxl-6">
                     <div class="card card-px-0">
                         <div class="card-header">
-                            <h6 class="card-title">Depo Parametreleri</h6>
+                            <h6 class="card-title">Çözgü İplikler</h6>
                         </div>
                         <div class="card-body">
                             <div class="dx-viewport">
@@ -197,7 +298,7 @@
                 <div class="col-xxl-6">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="card-title">Birimler</h6>
+                            <h6 class="card-title">Atkı İplikler</h6>
                         </div>
                         <div class="card-body">
                             <div class="dx-viewport">
@@ -222,5 +323,5 @@
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/Components/Controllers/attachment-list.js"></script>
-    <script src="~/FrontEndLogic/Item/index.js"></script>
+    <script src="~/FrontEndLogic/Knit/index.js"></script>
 }

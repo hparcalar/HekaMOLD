@@ -67,6 +67,7 @@
     <Compile Include="Context\Models\EntryQualityPlanDetail.cs" />
     <Compile Include="Context\Models\Equipment.cs" />
     <Compile Include="Context\Models\EquipmentCategory.cs" />
+    <Compile Include="Context\Models\FabricRecipe.cs" />
     <Compile Include="Context\Models\Firm.cs" />
     <Compile Include="Context\Models\FirmAuthor.cs" />
     <Compile Include="Context\Models\ForexHistory.cs" />
@@ -152,7 +153,6 @@
     <Compile Include="Context\Models\YarnColour.cs" />
     <Compile Include="Context\Models\YarnColourGroup.cs" />
     <Compile Include="Context\Models\YarnRecipe.cs" />
-    <Compile Include="Context\Models\YarnRecipeType.cs" />
     <Compile Include="Migrations\202112031032538_CodeFirstInitial.cs" />
     <Compile Include="Migrations\202112031032538_CodeFirstInitial.designer.cs">
       <DependentUpon>202112031032538_CodeFirstInitial.cs</DependentUpon>
@@ -200,6 +200,30 @@
     <Compile Include="Migrations\202112131113334_AddColumnUser.cs" />
     <Compile Include="Migrations\202112131113334_AddColumnUser.designer.cs">
       <DependentUpon>202112131113334_AddColumnUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112140738346_FabricRecipe.cs" />
+    <Compile Include="Migrations\202112140738346_FabricRecipe.designer.cs">
+      <DependentUpon>202112140738346_FabricRecipe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112141024173_YarnColourGroup.cs" />
+    <Compile Include="Migrations\202112141024173_YarnColourGroup.designer.cs">
+      <DependentUpon>202112141024173_YarnColourGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112160929180_ItemAdded%28Field-TestNo%29.cs" />
+    <Compile Include="Migrations\202112160929180_ItemAdded%28Field-TestNo%29.designer.cs">
+      <DependentUpon>202112160929180_ItemAdded%28Field-TestNo%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112160931582_ItemAdded%28Field-TestNo%292.cs" />
+    <Compile Include="Migrations\202112160931582_ItemAdded%28Field-TestNo%292.designer.cs">
+      <DependentUpon>202112160931582_ItemAdded%28Field-TestNo%292.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112160939233_ItemUpdate%28Field-Cut%29.cs" />
+    <Compile Include="Migrations\202112160939233_ItemUpdate%28Field-Cut%29.designer.cs">
+      <DependentUpon>202112160939233_ItemUpdate%28Field-Cut%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112161230199_CutType-BulletType-ApparelType-Added.cs" />
+    <Compile Include="Migrations\202112161230199_CutType-BulletType-ApparelType-Added.designer.cs">
+      <DependentUpon>202112161230199_CutType-BulletType-ApparelType-Added.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
@@ -250,6 +274,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112131113334_AddColumnUser.resx">
       <DependentUpon>202112131113334_AddColumnUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112140738346_FabricRecipe.resx">
+      <DependentUpon>202112140738346_FabricRecipe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112141024173_YarnColourGroup.resx">
+      <DependentUpon>202112141024173_YarnColourGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112160929180_ItemAdded%28Field-TestNo%29.resx">
+      <DependentUpon>202112160929180_ItemAdded%28Field-TestNo%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112160931582_ItemAdded%28Field-TestNo%292.resx">
+      <DependentUpon>202112160931582_ItemAdded%28Field-TestNo%292.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112160939233_ItemUpdate%28Field-Cut%29.resx">
+      <DependentUpon>202112160939233_ItemUpdate%28Field-Cut%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112161230199_CutType-BulletType-ApparelType-Added.resx">
+      <DependentUpon>202112161230199_CutType-BulletType-ApparelType-Added.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

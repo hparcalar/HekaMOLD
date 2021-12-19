@@ -84,10 +84,13 @@
     <Compile Include="Helpers\ConstantHelper.cs" />
     <Compile Include="Helpers\Mapper.cs" />
     <Compile Include="Models\Constants\FirmType.cs" />
+    <Compile Include="Models\Constants\ItemApparelType.cs" />
+    <Compile Include="Models\Constants\ItemBulletType.cs" />
     <Compile Include="Models\Constants\ItemCriticalBehaviourType.cs" />
     <Compile Include="Models\Constants\ItemReceiptType.cs" />
     <Compile Include="Models\Constants\ItemOrderType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
+    <Compile Include="Models\Constants\KnitCutType.cs" />
     <Compile Include="Models\Constants\MachineStatusType.cs" />
     <Compile Include="Models\Constants\MoldStatus.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
@@ -185,6 +188,8 @@
     <Compile Include="Models\DataTransfer\Production\WorkOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderSerialModel.cs" />
     <Compile Include="Models\DataTransfer\Production\YarnBreedModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\YarnColourGroupModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\YarnColourModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\EntryQualityDataDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\EntryQualityDataModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\EntryQualityPlanDetailModel.cs" />

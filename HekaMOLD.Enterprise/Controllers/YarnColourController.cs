@@ -1,6 +1,7 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,25 +10,27 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class YarnBreedController : Controller
+    public class YarnColourController : Controller
     {
-        // GET: YarnBreed
+        // GET: YarnColour
         public ActionResult Index()
         {
             return View();
         }
+
         public ActionResult List()
         {
             return View();
         }
+
         [HttpGet]
-        public JsonResult GetYarnBreedList()
+        public JsonResult GetYarnColourList()
         {
-            YarnBreedModel[] result = new YarnBreedModel[0];
+            YarnColourModel[] result = new YarnColourModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetYarnBreedList();
+                result = bObj.GetYarnColourList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -38,10 +41,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            YarnBreedModel model = null;
+            YarnColourModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetYarnBreed(rid);
+                model = bObj.GetYarnColour(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -55,7 +58,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteYarnBreed(rid);
+                    result = bObj.DeleteYarnColour(rid);
                 }
 
                 if (result.Result)
@@ -70,14 +73,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(YarnBreedModel model)
+        public JsonResult SaveModel(YarnColourModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateYarnBreed(model);
+                    result = bObj.SaveOrUpdateYarnColour(model);
                 }
 
                 if (result.Result)
@@ -89,9 +92,20 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
-
-
         }
+        [FreeAction]
+        public JsonResult GetYarnColourGroupList()
+        {
+            YarnColourGroupModel[] data = new YarnColourGroupModel[0];
+
+            using (DefinitionsBO dObj = new DefinitionsBO())
+            {
+                data = dObj.GetYarnColourGroupList();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
 
     }
 }

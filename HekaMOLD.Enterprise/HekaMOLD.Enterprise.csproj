@@ -193,6 +193,8 @@
     <Compile Include="Controllers\UnitTypeController.cs" />
     <Compile Include="Controllers\WarehouseController.cs" />
     <Compile Include="Controllers\YarnBreedController.cs" />
+    <Compile Include="Controllers\YarnColourController.cs" />
+    <Compile Include="Controllers\YarnColourGroupController.cs" />
     <Compile Include="Controllers\YarnRecipeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -4103,6 +4105,8 @@
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\extract.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
+    <Content Include="FrontEndLogic\Knit\index.js" />
+    <Content Include="FrontEndLogic\Knit\list.js" />
     <Content Include="FrontEndLogic\LayoutObjectType\index.js" />
     <Content Include="FrontEndLogic\LayoutObjectType\list.js" />
     <Content Include="FrontEndLogic\Layout\index.js" />
@@ -4186,6 +4190,10 @@
     <Content Include="FrontEndLogic\WorkOrder\production-history.js" />
     <Content Include="FrontEndLogic\YarnBreed\index.js" />
     <Content Include="FrontEndLogic\YarnBreed\list.js" />
+    <Content Include="FrontEndLogic\YarnColourGroup\index.js" />
+    <Content Include="FrontEndLogic\YarnColourGroup\list.js" />
+    <Content Include="FrontEndLogic\YarnColour\index.js" />
+    <Content Include="FrontEndLogic\YarnColour\list.js" />
     <Content Include="FrontEndLogic\YarnRecipe\index.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -4650,6 +4658,11 @@
     <Content Include="Views\YarnRecipe\List.cshtml" />
     <Content Include="Views\YarnBreed\Index.cshtml" />
     <Content Include="Views\YarnBreed\List.cshtml" />
+    <Content Include="Views\YarnColourGroup\Index.cshtml" />
+    <Content Include="Views\YarnColourGroup\List.cshtml" />
+    <Content Include="Views\YarnColour\Index.cshtml" />
+    <Content Include="Views\YarnColour\List.cshtml" />
+    <Content Include="Views\Knit\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

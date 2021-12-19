@@ -16,6 +16,11 @@ namespace Heka.DataAccess.Context.Models
         public int Id { get; set; }
         public string YarnColourGroupCode { get; set; }
         public string YarnColourGroupName { get; set; }
+        public Nullable<int> PlantId { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
+        public Nullable<int> UpdatedUserId { get; set; }
 
 
         [InverseProperty("YarnColourGroup")]

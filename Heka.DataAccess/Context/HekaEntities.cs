@@ -107,11 +107,11 @@
         public virtual DbSet<ProductWastage> ProductWastage { get; set; }
         public virtual DbSet<ContractWorkFlow> ContractWorkFlow { get; set; }
         public virtual DbSet<YarnRecipe> YarnRecipe { get; set; }
-        public virtual DbSet<YarnRecipeType> YarnRecipeType { get; set; }
         public virtual DbSet<ItemKnitDensity> ItemKnitDensity { get; set; }
         public virtual DbSet<YarnBreed> YarnBreed { get; set; }
         public virtual DbSet<YarnColour> YarnColour { get; set; }
         public virtual DbSet<YarnColourGroup> YarnColourGroup { get; set; }
+        public virtual DbSet<FabricRecipe> FabricRecipe { get; set; }
 
     }
 }

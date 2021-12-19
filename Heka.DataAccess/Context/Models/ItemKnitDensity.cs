@@ -12,11 +12,9 @@ namespace Heka.DataAccess.Context.Models
         [ForeignKey("Item")]
         public int ItemId { get; set; }
 
-        [ForeignKey("YarnRecipeType")]
-        public int YarnRecipeTypeId { get; set; }
+        public string YarnRecipeType { get; set; }
         public int Density { get; set; }
 
-        public virtual YarnRecipeType YarnRecipeType { get; set; }
         public virtual Item Item { get; set; }
 
 

@@ -14,21 +14,13 @@ namespace Heka.DataAccess.Context.Models
 
         }
         public int Id { get; set; }
-
-        [ForeignKey("Item")]
-        public int? ItemId { get; set; }
-
         public string YarnRecipeCode { get; set; }
         public string YarnRecipeName { get; set; }
 
         [ForeignKey("YarnBreed")]
         public int YarnBreedId { get; set; }
+        public int? Denier { get; set; }
 
-        [ForeignKey("Firm")]
-        public int? FirmId { get; set; }
-
-        [ForeignKey("YarnRecipeType")]
-        public int YarnRecipeTypeId { get; set; }
         //Katsayi
         public int? Factor { get; set; }
         //Bukum
@@ -37,18 +29,19 @@ namespace Heka.DataAccess.Context.Models
         public bool? Center { get; set; }
         //Karisim 
         public bool? Mix { get; set; }
+        public Nullable<int> PlantId { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
+        public Nullable<int> UpdatedUserId { get; set; }
 
         [ForeignKey("YarnColour")]
         public int YarnColourId { get; set; }
-        public int YarnLot { get; set; }
-        public int? Denier { get; set; }
-        public int? ReportWireCount { get; set; }
-        public int? MeterWireCount { get; set; }
-        public decimal? Gramaj { get; set; }
 
+        [ForeignKey("Firm")]
+        public int? FirmId { get; set; }
+        public int YarnLot { get; set; }
         public virtual Firm Firm { get; set; }
-        public virtual Item Item { get; set; }
-        public virtual YarnRecipeType YarnRecipeType { get; set; }
         public virtual YarnBreed YarnBreed { get; set; }
         public virtual YarnColour YarnColour { get; set; }
 

@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using Heka.DataAccess.Context.Models;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -2864,6 +2865,321 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        #endregion
+
+        #region YARN BREED BUSUNESS
+        public YarnBreedModel[] GetYarnBreedList()
+        {
+            List<YarnBreedModel> data = new List<YarnBreedModel>();
+
+            var repo = _unitOfWork.GetRepository<YarnBreed>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                YarnBreedModel containerObj = new YarnBreedModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateYarnBreed(YarnBreedModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.YarnBreedCode))
+                    throw new Exception("Cins kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.YarnBreedName))
+                    throw new Exception("Cins adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<YarnBreed>();
+
+                if (repo.Any(d => (d.YarnBreedCode == model.YarnBreedCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir iplik cinsi mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new YarnBreed();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteYarnBreed(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<YarnBreed>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public YarnBreedModel GetYarnBreed(int id)
+        {
+            YarnBreedModel model = new YarnBreedModel { };
+
+            var repo = _unitOfWork.GetRepository<YarnBreed>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        #endregion
+
+        #region YARNCOLOURGROUP BUSINESS
+        public YarnColourGroupModel[] GetYarnColourGroupList()
+        {
+            List<YarnColourGroupModel> data = new List<YarnColourGroupModel>();
+
+            var repo = _unitOfWork.GetRepository<YarnColourGroup>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                YarnColourGroupModel containerObj = new YarnColourGroupModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateYarnColourGroup(YarnColourGroupModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.YarnColourGroupCode))
+                    throw new Exception("Grup kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.YarnColourGroupName))
+                    throw new Exception("Grup adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<YarnColourGroup>();
+
+                if (repo.Any(d => (d.YarnColourGroupCode == model.YarnColourGroupCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir grup mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new YarnColourGroup();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteYarnColourGroup(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<YarnColourGroup>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public YarnColourGroupModel GetYarnColourGroup(int id)
+        {
+            YarnColourGroupModel model = new YarnColourGroupModel { };
+
+            var repo = _unitOfWork.GetRepository<YarnColourGroup>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        #endregion
+
+        #region YARNCOLOUR BUSINESS
+        public YarnColourModel[] GetYarnColourList()
+        {
+            List<YarnColourModel> data = new List<YarnColourModel>();
+
+            var repo = _unitOfWork.GetRepository<YarnColour>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                YarnColourModel containerObj = new YarnColourModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateYarnColour(YarnColourModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.YarnColourCode))
+                    throw new Exception("Kod girilmelidir.");
+                if (string.IsNullOrEmpty(model.YarnColourName))
+                    throw new Exception("Ad girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<YarnColour>();
+
+                if (repo.Any(d => (d.YarnColourCode == model.YarnColourCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir kayıt mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new YarnColour();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteYarnColour(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<YarnColour>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public YarnColourModel GetYarnColour(int id)
+        {
+            YarnColourModel model = new YarnColourModel { };
+
+            var repo = _unitOfWork.GetRepository<YarnColour>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
         #endregion
 
         #region WORK ORDER CATEGORY BUSINESS

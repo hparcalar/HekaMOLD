@@ -1,20 +1,45 @@
-﻿app.controller('yarnRecipeCtrl', function ($scope, $http) {
+﻿app.controller('knitCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
 
-    $scope.selectedyarnRecipeType = {};
-    $scope.yarnRecipeTypeList = [{ Id: 1, Text: 'Çözgü' },
-    { Id: 2, Text: 'Atkı' }];
+    $scope.selectedGroup = {};
+    $scope.groupList = [];
+
+    $scope.selectedKnitCutType = {};
+    $scope.KnitCutTypeList = [{ Id: 1, Text: 'Var' },
+        { Id: 2, Text: 'Yok' }];
+
+    $scope.selectedKnitApparelType = {};
+    $scope.KnitApparelTypeList = [{ Id: 1, Text: 'Var' },
+        { Id: 2, Text: 'Yok' }];
+
+    $scope.selectedKnitBulletType = {};
+    $scope.KnitBulletTypeList = [{ Id: 1, Text: 'Var' },
+    { Id: 2, Text: 'Yok' }];
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
         $scope.selectedyarnRecipeType = {};
     }
+    // GET SELECTABLE DATA
+    $scope.loadSelectables = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Knit/GetSelectables', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.groupList = resp.data.Groups;
 
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prmReq;
+    }
     $scope.performDelete = function () {
         bootbox.conyarnRecipe({
-            message: "Bu iplik tanımını silmek istediğinizden emin misiniz?",
+            message: "Bu Dokuma tanımını silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
                 conyarnRecipe: {
@@ -29,7 +54,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'YarnRecipe/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'Knit/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -51,13 +76,23 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        //if (typeof $scope.selectedFirmType != 'undefined' && $scope.selectedFirmType != null) {
-        //    $scope.modelObject.FirmType = $scope.selectedFirmType.Id;
+        if (typeof $scope.selectedKnitCutType != 'undefined' && $scope.selectedKnitCutType != null)
+            $scope.modelObject.KnitCutType = $scope.selectedKnitCutType.Id;
+        else
+            $scope.modelObject.KnitCutType = null;
+        if (typeof $scope.selectedKnitApparelType != 'undefined' && $scope.selectedKnitApparelType != null)
+            $scope.modelObject.KnitApparelType = $scope.selectedKnitApparelType.Id;
+        else
+            $scope.modelObject.KnitApparelType = null;
+        if (typeof $scope.selectedKnitBulletType != 'undefined' && $scope.selectedKnitBulletType != null)
+            $scope.modelObject.KnitBulletType = $scope.selectedKnitBulletType.Id;
+        else
+            $scope.modelObject.KnitCutType = null;
         //}
         //else
         //    $scope.modelObject.FirmType = null;
 
-        $http.post(HOST_URL + 'YarnRecipe/SaveModel', $scope.modelObject, 'json')
+        $http.post(HOST_URL + 'Knit/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -74,7 +109,7 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'YarnRecipe/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'Knit/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
