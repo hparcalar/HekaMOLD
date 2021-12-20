@@ -14,24 +14,34 @@
         $http.get(HOST_URL + 'Machine/GetMachineStatsForDashboard', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    if ($scope.profileList.length > 0) {
-                        for (var i = 0; i < resp.data.length; i++) {
-                            var cMac = resp.data[i];
-                            var relatedProfile = $scope.profileList.find(d => d.Id == cMac.WorkingUserId);
-                            if (relatedProfile != null) {
-                                cMac.ProfileImageBase64 = relatedProfile.ProfileImageBase64;
+
+                    try {
+                        if ($scope.profileList.length > 0) {
+                            for (var i = 0; i < resp.data.length; i++) {
+                                var cMac = resp.data[i];
+                                var relatedProfile = $scope.profileList.find(d => d.Id == cMac.WorkingUserId);
+                                if (relatedProfile != null) {
+                                    cMac.ProfileImageBase64 = relatedProfile.ProfileImageBase64;
+                                }
+                                else
+                                    cMac.ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
                             }
-                            else
-                                cMac.ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
                         }
-                    }
-                    else {
-                        for (var i = 0; i < resp.data.length; i++) {
-                            resp.data[i].ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
+                        else {
+                            for (var i = 0; i < resp.data.length; i++) {
+                                resp.data[i].ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
+                            }
                         }
+                    } catch (e) {
+
                     }
 
                     $scope.machineList = resp.data;
+                    for (var i = 0; i < $scope.machineList.length; i++) {
+                        var cMac = $scope.machineList[i];
+                        cMac.MachineStats.ShiftStats = cMac.MachineStats.ShiftStats.filter(d => d.IsCurrentShift == true);
+                    }
+
                     $scope.getUserProfiles();
                     $scope.isBindingModel = false;
                 }

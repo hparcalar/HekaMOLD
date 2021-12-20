@@ -39,7 +39,9 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("Warehouse")]
         public Nullable<int> TargetWarehouseId { get; set; }
-    
+
+        public Nullable<DateTime> ShiftBelongsToDate { get; set; }
+
         public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
         public virtual Shift Shift { get; set; }
         public virtual Warehouse Warehouse { get; set; }

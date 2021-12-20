@@ -95,25 +95,51 @@ namespace HekaMOLD.IntegrationService
 
                             entObj.OnTransferError += EntObj_OnTransferError;
 
-                            var result = entObj.PullFirms(sync);
-                            AddLog(result.Result ? "Firmalar transfer edildi." : "Firma Transferi Hata: " + result.ErrorMessage);
+                            BusinessResult result = new BusinessResult();
 
-                            result = entObj.PullUnits(sync);
-                            AddLog(result.Result ? "Birimler transfer edildi." : "Birim Transferi Hata: " + result.ErrorMessage);
+                            if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
+                                || !(entObj is MikroIntegrator))
+                            {
+                                result = entObj.PullFirms(sync);
+                                AddLog(result.Result ? "Firmalar transfer edildi." : "Firma Transferi Hata: " + result.ErrorMessage);
+                            }
 
-                            result = entObj.PullItems(sync);
-                            AddLog(result.Result ? "Stoklar transfer edildi." : "Stok Transferi Hata: " + result.ErrorMessage);
+                            if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroMaster)
+                                || !(entObj is MikroIntegrator))
+                            {
+                                result = entObj.PullUnits(sync);
+                                AddLog(result.Result ? "Birimler transfer edildi." : "Birim Transferi Hata: " + result.ErrorMessage);
+                            }
 
-                            result = entObj.PullRecipes(sync);
-                            AddLog(result.Result ? "Reçeteler transfer edildi." : "Reçete Transferi Hata: " + result.ErrorMessage);
+                            if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
+                                || !(entObj is MikroIntegrator))
+                            {
+                                result = entObj.PullItems(sync);
+                                AddLog(result.Result ? "Stoklar transfer edildi." : "Stok Transferi Hata: " + result.ErrorMessage);
+                            }
 
-                            result = entObj.PullSaleOrders(sync);
-                            AddLog(result.Result ? "Satış siparişleri (Hekaya) transfer edildi." : "Satış Siparişi (Hekaya) Transferi Hata: "
-                                + result.ErrorMessage);
+                            if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
+                                || !(entObj is MikroIntegrator))
+                            {
+                                result = entObj.PullRecipes(sync);
+                                AddLog(result.Result ? "Reçeteler transfer edildi." : "Reçete Transferi Hata: " + result.ErrorMessage);
+                            }
 
-                            result = entObj.PullProductDeliveries(sync);
-                            AddLog(result.Result ? "Satış irsaliyeleri (Hekaya) transfer edildi." : "Satış İrsaliyesi (Hekaya) Transferi Hata: "
-                                + result.ErrorMessage);
+                            if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
+                                || !(entObj is MikroIntegrator))
+                            {
+                                result = entObj.PullSaleOrders(sync);
+                                AddLog(result.Result ? "Satış siparişleri (Hekaya) transfer edildi." : "Satış Siparişi (Hekaya) Transferi Hata: "
+                                    + result.ErrorMessage);
+                            }
+
+                            if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
+                                || !(entObj is MikroIntegrator))
+                            {
+                                result = entObj.PullProductDeliveries(sync);
+                                AddLog(result.Result ? "Satış irsaliyeleri (Hekaya) transfer edildi." : "Satış İrsaliyesi (Hekaya) Transferi Hata: "
+                                    + result.ErrorMessage);
+                            }
 
                             if (sync.EnabledOnSalesOrders == true)
                             {
@@ -122,11 +148,11 @@ namespace HekaMOLD.IntegrationService
                                     + result.ErrorMessage);
                             }
 
-                            //if (entObj is MikroIntegrator)
-                            //{
-                            //    var pResult = ((MikroIntegrator)entObj).PushProductions(sync);
-                            //    AddLog(pResult.Result ? "Üretimler transfer edildi." : "Üretim Transferi Hata: " + pResult.ErrorMessage);
-                            //}
+                            if (sync.EnabledOnConsumptionReceipts == true && entObj is MikroIntegrator)
+                            {
+                                var pResult = ((MikroIntegrator)entObj).PushProductions(sync);
+                                AddLog(pResult.Result ? "Üretimler transfer edildi." : "Üretim Transferi Hata: " + pResult.ErrorMessage);
+                            }
                         }
                     }
                 }

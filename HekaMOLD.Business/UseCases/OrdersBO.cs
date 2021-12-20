@@ -104,7 +104,7 @@ namespace HekaMOLD.Business.UseCases
                         ItemName = m.Item != null ? m.Item.ItemName : "",
                         UnitCode = m.UnitType != null ? m.UnitType.UnitCode : "",
                         UnitName = m.UnitType != null ? m.UnitType.UnitName : "",
-                    }).ToArray(),
+                    }).OrderBy(m => m.LineNumber).ToArray(),
                 })
                 .OrderByDescending(d => d.OrderDate)
                 .ToArray();
@@ -130,6 +130,41 @@ namespace HekaMOLD.Business.UseCases
                 {
                     dbObj.ItemOrder.SyncDate = DateTime.Now;
                     dbObj.ItemOrder.SyncStatus = 1;
+                }
+
+                newUof.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult SignDetailAsSent(int receiptDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                IUnitOfWork newUof = new EFUnitOfWork();
+                var repo = newUof.GetRepository<ItemOrderDetail>();
+
+                var dbObj = repo.Get(d => d.Id == receiptDetailId);
+                if (dbObj == null)
+                    throw new Exception("Sipariş kalem kaydı bulunamadı.");
+
+                dbObj.SyncDate = DateTime.Now;
+                dbObj.SyncStatus = 2;
+
+                if (!dbObj.ItemOrder.ItemOrderDetail.Any(d => d.SyncStatus != 2))
+                {
+                    dbObj.ItemOrder.SyncDate = DateTime.Now;
+                    dbObj.ItemOrder.SyncStatus = 2;
                 }
 
                 newUof.SaveChanges();
@@ -208,6 +243,9 @@ namespace HekaMOLD.Business.UseCases
                     if (item.NewDetail)
                         item.Id = 0;
                 }
+
+                if (model.Details.GroupBy(m => m.ForexId).Count() > 1)
+                    throw new Exception("Aynı siparişte farklı para birimleri seçilemez.");
 
                 if (dbObj.OrderStatus != (int)OrderStatusType.Completed &&
                     dbObj.OrderStatus != (int)OrderStatusType.Cancelled)
@@ -557,23 +595,24 @@ namespace HekaMOLD.Business.UseCases
                 model.ForexUnitPrice = model.UnitPrice / model.ForexRate;
             }
 
-            decimal? overallTotal = 0;
             decimal? taxExtractedUnitPrice = 0;
+            decimal? subTotal = 0;
 
             if (model.TaxIncluded == true)
             {
                 decimal? taxIncludedUnitPrice = (model.UnitPrice / (1 + (model.TaxRate / 100m)));
-                overallTotal = taxIncludedUnitPrice * model.Quantity;
                 taxExtractedUnitPrice = taxIncludedUnitPrice;
+                subTotal = taxExtractedUnitPrice * model.Quantity;
             }
             else
             {
-                overallTotal = model.UnitPrice * model.Quantity;
+                subTotal = model.UnitPrice * model.Quantity;
                 taxExtractedUnitPrice = model.UnitPrice;
             }
 
-            model.OverallTotal = overallTotal;
-            model.TaxAmount = overallTotal * model.TaxRate / 100.0m;
+            model.SubTotal = subTotal;
+            model.TaxAmount = subTotal * model.TaxRate / 100.0m;
+            model.OverallTotal = subTotal + model.TaxAmount;
 
             return model;
         }

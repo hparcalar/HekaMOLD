@@ -49,10 +49,12 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repoMold = _unitOfWork.GetRepository<Mold>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
                 var repoReceipt = _unitOfWork.GetRepository<ItemReceiptDetail>();
 
                 var dbMold = repoMold.Get(d => d.Id == moldId);
-                data = repoReceipt.Filter(d => d.ItemId == dbMold.MoldItemId).ToList()
+                var dbItem = repoItem.Get(d => d.ItemNo == dbMold.MoldCode);
+                data = repoReceipt.Filter(d => d.ItemId == dbItem.Id).ToList()
                     .Select(d => new MoldMoveHistory
                     {
                         ItemReceiptDetailId = d.Id,

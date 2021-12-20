@@ -828,6 +828,7 @@ namespace HekaMOLD.Business.UseCases
                         IsGeneratedBySignal = false,
                         LiveQuantity = inPackageQuantity > 0 ? inPackageQuantity : dbObj.InPackageQuantity,
                         SerialNo = !string.IsNullOrEmpty(barcode) ? barcode : GetNextSerialNo(),
+                        ShiftBelongsToDate = currentShift != null ? currentShift.ShiftBelongsToDate : DateTime.Now,
                         SerialStatus = (int)SerialStatusType.Created,
                         SerialType = (int)serialType,
                         WorkOrderDetail = dbObj,
@@ -2174,6 +2175,9 @@ namespace HekaMOLD.Business.UseCases
                             d.WorkOrderDetail.Machine.MachineName : "",
                         QualityStatus = d.QualityStatus ?? 0,
                         QualityStatusText = ((QualityStatusType)(d.QualityStatus ?? 0)).ToCaption(),
+                        ShiftBelongsToDate = d.ShiftBelongsToDate,
+                        ShiftBelongsToDateStr = d.ShiftBelongsToDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ShiftBelongsToDate) : "",
                         FirstQuantity = d.FirstQuantity,
                         QualityExplanation = d.QualityExplanation,
                         InPackageQuantity = d.InPackageQuantity,
@@ -2287,6 +2291,9 @@ namespace HekaMOLD.Business.UseCases
                         InPackageQuantity = d.InPackageQuantity,
                         ShiftId = d.ShiftId,
                         ShiftCode = d.Shift != null ? d.Shift.ShiftCode : "",
+                        ShiftBelongsToDate = d.ShiftBelongsToDate,
+                        ShiftBelongsToDateStr = d.ShiftBelongsToDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ShiftBelongsToDate) : "",
                         QualityExplanation = d.QualityExplanation,
                         ShiftName = d.Shift != null ? d.Shift.ShiftName : "",
                         IsGeneratedBySignal = d.IsGeneratedBySignal,
@@ -2393,7 +2400,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult DeleteSerials(WorkOrderSerialModel[] model)
+        public BusinessResult DeleteSerials(WorkOrderSerialModel[] model, int userId)
         {
             BusinessResult result = new BusinessResult();
 
@@ -2406,7 +2413,10 @@ namespace HekaMOLD.Business.UseCases
                     var dbSerial = repo.Get(d => d.Id == item.Id);
                     if (dbSerial != null)
                     {
-                        repo.Delete(dbSerial);
+                        dbSerial.SerialStatus = (int)SerialStatusType.Cancelled;
+                        dbSerial.UpdatedDate = DateTime.Now;
+                        dbSerial.UpdatedUserId = userId;
+                        //repo.Delete(dbSerial);
                     }
                 }
 
@@ -2492,6 +2502,7 @@ namespace HekaMOLD.Business.UseCases
                             SerialNo = item.SerialNo,
                             SerialStatus = (int)SerialStatusType.Placed,
                             WorkOrderDetailId = item.WorkOrderDetailId,
+                            ShiftBelongsToDate = item.ShiftBelongsToDate,
                         });
                         //relatedDetail.Serials.Add(item);
 

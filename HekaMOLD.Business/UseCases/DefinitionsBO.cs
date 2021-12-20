@@ -1383,6 +1383,7 @@ namespace HekaMOLD.Business.UseCases
             var repoShift = _unitOfWork.GetRepository<Shift>();
             var repoUser = _unitOfWork.GetRepository<User>();
             var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+            var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
 
             var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
             var repoIncident = _unitOfWork.GetRepository<Incident>();
@@ -1392,6 +1393,7 @@ namespace HekaMOLD.Business.UseCases
 
             // PRODUCTION BO FOR ACTIVE WORK ORDERS ON MACHINES
             ProductionBO prodBO = new ProductionBO();
+            var currentShift = prodBO.GetCurrentShift();
 
             repo.GetAll().ToList().ForEach(d =>
             {
@@ -1446,6 +1448,7 @@ namespace HekaMOLD.Business.UseCases
                 shiftList = shiftList.OrderBy(m => m.StartTime).ToArray();
                 foreach (var shift in shiftList)
                 {
+                    #region CALCULATION OF TARGETS
                     // CALCULATE TARGET COUNT
                     DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
                     DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
@@ -1453,55 +1456,116 @@ namespace HekaMOLD.Business.UseCases
                     if (shift.StartTime > shift.EndTime)
                         endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
 
-                    var totalBreakTimeSeconds = 75 * 60;
+                    var totalBreakTimeSeconds = 60 * 60;
                     var totalShiftTime = (endTime - startTime).TotalSeconds;
                     var netShiftTime = totalShiftTime - totalBreakTimeSeconds;
 
                     // GET ACTIVE PLANS CYCLE TIME
                     string lastProductName = "";
-                    decimal avgCycleTime = 0;
                     int targetCount = 0;
 
-                    var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
-                        && m.WorkOrderDetailId != null
-                        && m.ShiftId == shift.Id)
-                        .OrderByDescending(m => m.Id).FirstOrDefault();
-                    if (lastSignal != null)
+                    var shiftSignals = signalData.Where(m => m.MachineId == d.Id &&
+                        m.WorkOrderDetailId != null && m.ShiftId == shift.Id);
+                    //var workList = shiftSignals
+                    //    .GroupBy(m => m.WorkOrderDetailId).ToArray();
+                    var workList = d.MachinePlan.OrderBy(m => m.OrderNo).Select(m => m.WorkOrderDetailId).ToArray();
+                    var remainingShiftTime = netShiftTime;
+                    foreach (var item in workList)
                     {
-                        lastProductName = lastSignal.WorkOrderDetail.Item != null ?
-                            lastSignal.WorkOrderDetail.Item.ItemName : lastSignal.WorkOrderDetail.TrialProductName;
-                        if (lastSignal.WorkOrderDetail.Item != null)
+                        var workDetail = d.WorkOrderDetail.FirstOrDefault(m => m.Id == item);
+                        var completeCount = workDetail.MachineSignal.Where(m => m.ShiftBelongsToDate < dt1).Count();
+                        var remainingCount = workDetail.Quantity - completeCount;
+
+                        if (workDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
+                            lastProductName = workDetail.Item != null ? workDetail.Item.ItemName : workDetail.TrialProductName;
+
+                        if (remainingCount <= 0)
+                            continue;
+
+                        // CHECK WORK ORDER
+                        bool targetTimeFound = false;
+                        int cycleTime = 0;
+
+                        if (workDetail.Item != null)
                         {
-                            var dbMoldTest = repoMoldTest.Get(m => m.ProductCode == lastSignal.WorkOrderDetail.Item.ItemNo);
-                            if (dbMoldTest != null)
-                                avgCycleTime = dbMoldTest.TotalTimeSeconds ?? 0;
+                            var moldTest = repoMoldTest.Get(m => m.ProductCode == workDetail.Item.ItemNo);
+                            if (moldTest != null && moldTest.TotalTimeSeconds > 0)
+                            {
+                                cycleTime = moldTest.TotalTimeSeconds.Value;
+                                targetTimeFound = true;
+                            }
                         }
+
+                        // FIND THE CYCLE OVER HISTORY
+                        if (!targetTimeFound)
+                        {
+                            cycleTime = repoSignal.Filter(m => m.WorkOrderDetailId == workDetail.Id && m.SignalStatus == 1)
+                                .OrderByDescending(m => m.Id)
+                                .Select(m => m.Duration)
+                                .FirstOrDefault() ?? 0;
+                        }
+
+                        // CALCULATE TARGET AND FILL REMAINING SHIFT TIME
+                        if (cycleTime > 0 && remainingShiftTime > 0)
+                        {
+                            var producableCount = remainingShiftTime / cycleTime;
+                            if (producableCount > Convert.ToDouble(remainingCount ?? 0))
+                                producableCount = Convert.ToDouble(remainingCount);
+
+                            targetCount += Convert.ToInt32(producableCount);
+                            remainingShiftTime -= cycleTime * producableCount;
+                        }
+                        
                     }
 
-                    // IF NO CYCLE TIME FOUND THEN CALCULATE OVER HISTORY
-                    if (avgCycleTime <= 0)
-                    {
-                        avgCycleTime = Convert.ToDecimal(repoSignal.Filter(m => m.MachineId == d.Id && m.ShiftId == shift.Id)
-                            .Average(m => m.Duration) ?? 0);
-                    }
+                    // OLD AVERAGE CALCULATION -- CHANGED SINCE 20.12.2021
+                    //var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
+                    //    && m.WorkOrderDetailId != null
+                    //    && m.ShiftId == shift.Id)
+                    //    .OrderByDescending(m => m.Id).FirstOrDefault();
+                    //if (lastSignal != null)
+                    //{
+                    //    lastProductName = lastSignal.WorkOrderDetail.Item != null ?
+                    //        lastSignal.WorkOrderDetail.Item.ItemName : lastSignal.WorkOrderDetail.TrialProductName;
+                    //    if (lastSignal.WorkOrderDetail.Item != null)
+                    //    {
+                    //        var dbMoldTest = repoMoldTest.Get(m => m.ProductCode == lastSignal.WorkOrderDetail.Item.ItemNo);
+                    //        if (dbMoldTest != null)
+                    //            avgCycleTime = dbMoldTest.TotalTimeSeconds ?? 0;
+                    //    }
+                    //}
 
-                    if (avgCycleTime > 0)
-                    {
-                        try
-                        {
-                            targetCount = Convert.ToInt32(Convert.ToDecimal(netShiftTime) / avgCycleTime);
-                        }
-                        catch (Exception)
-                        {
+                    //// IF NO CYCLE TIME FOUND THEN CALCULATE OVER HISTORY
+                    //if (avgCycleTime <= 0)
+                    //{
+                    //    //avgCycleTime = Convert.ToDecimal(repoSignal.Filter(m => m.MachineId == d.Id && m.ShiftId == shift.Id)
+                    //    //    .Average(m => m.Duration) ?? 0);
+                    //    targetCount = 0;
+                    //}
 
-                        }
-                    }
+                    //if (avgCycleTime > 0)
+                    //{
+                    //    try
+                    //    {
+                    //        targetCount = Convert.ToInt32(Convert.ToDecimal(netShiftTime) / avgCycleTime);
+                    //    }
+                    //    catch (Exception)
+                    //    {
+
+                    //    }
+                    //}
+                    #endregion
 
                     var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
+
+                    bool isCurrentShift = false;
+                    if (currentShift != null && currentShift.Id == shift.Id)
+                        isCurrentShift = true;
 
                     shiftStats.Add(new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
+                        IsCurrentShift = isCurrentShift,
                         ChiefUserName = shift.User != null ? shift.User.UserName : "",
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),

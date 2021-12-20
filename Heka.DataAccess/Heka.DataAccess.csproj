@@ -167,6 +167,14 @@
     <Compile Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.designer.cs">
       <DependentUpon>202112090847474_QualityUserAndMachineSignalOperator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.cs" />
+    <Compile Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.designer.cs">
+      <DependentUpon>202112200924410_WorkOrderSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.cs" />
+    <Compile Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.designer.cs">
+      <DependentUpon>202112200929417_ItemSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -195,6 +203,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.resx">
       <DependentUpon>202112090847474_QualityUserAndMachineSignalOperator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.resx">
+      <DependentUpon>202112200924410_WorkOrderSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.resx">
+      <DependentUpon>202112200929417_ItemSerial_ShiftBelongsToDate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

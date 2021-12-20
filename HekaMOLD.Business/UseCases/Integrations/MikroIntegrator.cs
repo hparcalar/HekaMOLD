@@ -623,6 +623,9 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     var dbItemOrder = subObj.GetItemOrder(intOrderNo, ItemOrderType.Sale);
                                     if (dbItemOrder != null)
                                     {
+                                        if (dbItemOrder.SyncStatus == 2)
+                                            continue;
+
                                         lastOrderId = dbItemOrder.Id;
 
                                         int? firmId = null;
@@ -642,7 +645,15 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         if (!isLockedOrder)
                                         {
                                             // MEVCUT SİPARİŞ İSE GÜNCELLE VE TÜM DETAYLARINI SİL, AŞAĞIDA YENİDEN EKLENECEK
-                                            dbItemOrder.DateOfNeed = (DateTime)row["sip_teslim_tarih"];
+                                            try
+                                            {
+                                                dbItemOrder.DateOfNeed = (DateTime)row["sip_teslim_tarih"];
+                                            }
+                                            catch (Exception)
+                                            {
+
+                                            }
+                                            
                                             dbItemOrder.OrderDate = (DateTime)row["sip_tarih"];
                                             dbItemOrder.Details = new ItemOrderDetailModel[0];
                                             subObj.SaveOrUpdateItemOrder(dbItemOrder, detailCanBeNull: true);
@@ -831,9 +842,23 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
             try
             {
+                DateTime dtMinProd = DateTime.MinValue;
                 using (ReceiptBO bObj = new ReceiptBO())
                 {
-                    var receipts = bObj.GetNonSyncProductions();
+                    var minDeliveryDate = bObj.GetParameter("MinimumProductionDate", syncPoint.PlantId.Value);
+                    if (minDeliveryDate != null && !string.IsNullOrEmpty(minDeliveryDate.PrmValue))
+                    {
+                        dtMinProd = DateTime.ParseExact(minDeliveryDate.PrmValue, "dd.MM.yyyy",
+                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                    }
+                }
+
+                if (dtMinProd == DateTime.MinValue)
+                    throw new Exception("Üretim fişlerinin MİKRO'ya aktarımı için minimum başlangıç tarihi sistem parametreleri içerisinde belirtilmemiş.");
+
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    var receipts = bObj.GetNonSyncProductions().Where(d => d.ReceiptDate >= dtMinProd).ToArray();
                     if (receipts != null)
                     {
                         foreach (var rcp in receipts)
@@ -876,14 +901,14 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 + "sth_otvvergisiz_fl, sth_oiv_pntr, sth_oiv_vergi, sth_oivvergisiz_fl, sth_fiyat_liste_no, sth_oivtutari, sth_Tevkifat_turu, sth_nakliyedeposu, "
                                                 + "sth_nakliyedurumu, sth_yetkili_uid, sth_taxfree_fl, sth_ilave_edilecek_kdv, sth_ismerkezi_kodu,sth_HareketGrupKodu1,sth_HareketGrupKodu2,sth_HareketGrupKodu3, "
                                                 + "sth_Olcu1,sth_Olcu2,sth_Olcu3,sth_Olcu4,sth_Olcu5, sth_FormulMiktarNo,sth_FormulMiktar,sth_eirs_senaryo,sth_eirs_tipi, sth_teslim_tarihi, "
-                                                + "sth_matbu_fl, sth_satis_fiyat_doviz_cinsi, sth_satis_fiyat_doviz_kuru) "
+                                                + "sth_matbu_fl, sth_satis_fiyat_doviz_cinsi, sth_satis_fiyat_doviz_kuru, sth_alt_doviz_kuru) "
                                                 + " VALUES('0', 0, 16, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) +"', "
                                                 +"'0', '7', '0', '7', 'QQ', '"+ newReceiptNo +"', "+ rdt.LineNumber +", '', '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', "
                                                 +"'"+ rdt.ItemNo +"', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0, 0, 0, '', 0, '', 0, 1, 0, 1, "+ 
                                                    string.Format("{0:0.00}", rdt.Quantity).Replace(",", ".") + " ,0, 1, 0, 0,0,0,0,0,0, 0,0,0,0, 0,0, 0,0,0,0, '', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', "
                                                    +"1, 1, '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', '','', '1899-12-30 00:00:00', 0, 0, 0,0,0, 0, '"+ rdt.ItemNo +"', "
                                                    + "'0', '00000000-0000-0000-0000-000000000000', '', '', 0,0,0,0,0,0,0,0,0,0,0,0,0,0, '00000000-0000-0000-0000-000000000000', 0,0, "
-                                                   +"'','','','', 0,0,0,0,0, 0,0,0,0, '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', 0, 0,0)";
+                                                   +"'','','','', 0,0,0,0,0, 0,0,0,0, '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', 0, 0,0,0)";
                                             SqlCommand cmd = new SqlCommand(sql, con);
                                             int affectedRows = cmd.ExecuteNonQuery();
                                             if (affectedRows > 0)
@@ -973,7 +998,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         newReceiptNo = lastReceiptNo + 1;
                                     }
 
-                                    int lineNumber = 1;
+                                    int lineNumber = 0;
                                     foreach (var rdt in rcp.Details)
                                     {
                                         if (rdt.Quantity <= 0)
@@ -1019,6 +1044,8 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             }
                                             #endregion
 
+                                            var cariGrupNo = mikroForexId > 0 ? 2 : 1;
+
                                             string sql = "INSERT INTO SIPARISLER(sip_SpecRECno, sip_iptal, sip_fileid, sip_hidden, sip_kilitli, sip_degisti, sip_checksum, sip_create_user, sip_lastup_user, "
                                                 + "sip_special1, sip_special2, sip_special3, sip_firmano, sip_subeno, sip_tarih, sip_tip, sip_cins, "
                                                 + "sip_evrakno_seri, sip_evrakno_sira, sip_satirno, sip_belgeno, sip_belge_tarih, sip_stok_kod, sip_iskonto_1, sip_iskonto_2, sip_iskonto_3, sip_iskonto_4, sip_iskonto_5, sip_iskonto_6, sip_masraf_1, sip_masraf_2, sip_masraf_3, sip_masraf_4, "
@@ -1028,17 +1055,26 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 + "sip_iskonto1,sip_iskonto2,sip_iskonto3,sip_iskonto4,sip_iskonto5,sip_iskonto6, sip_masraf1,sip_masraf2,sip_masraf3,sip_masraf4, "
                                                 + "sip_vergi_pntr, sip_vergi, sip_masvergi_pntr,sip_masvergi,sip_opno, sip_aciklama, sip_b_fiyat, sip_depono,"
                                                 +" sip_stok_sormerk, sip_cari_sormerk,sip_harekettipi, sip_projekodu, sip_aciklama2,sip_vergisiz_fl,sip_kapat_fl,sip_promosyon_fl, "
-                                                +" sip_teslimturu, sip_cagrilabilir_fl, sip_durumu, sip_planlananmiktar) "
-                                                + " VALUES('0', 0, 16, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.OrderDate) + "', "
+                                                +" sip_teslimturu, sip_cagrilabilir_fl, sip_durumu, sip_planlananmiktar, sip_OnaylayanKulNo, sip_cari_grupno, sip_adresno, sip_alt_doviz_kuru, sip_prosip_uid, "
+                                                +" sip_Exp_Imp_Kodu, sip_kar_orani, sip_stal_uid, sip_teklif_uid, sip_parti_kodu, sip_lot_no, sip_fiyat_liste_no, sip_Otv_Pntr, "
+                                                +" sip_Otv_Vergi, sip_otvtutari, sip_OtvVergisiz_Fl, sip_paket_kod, sip_Rez_uid, sip_yetkili_uid, sip_kapatmanedenkod, "
+                                                +" sip_gecerlilik_tarihi, sip_onodeme_evrak_tip, sip_onodeme_evrak_seri, sip_rezervasyon_miktari, sip_rezerveden_teslim_edilen, "
+                                                + " sip_HareketGrupKodu1,sip_HareketGrupKodu2,sip_HareketGrupKodu3, sip_Olcu1,sip_Olcu2,sip_Olcu3,sip_Olcu4,sip_Olcu5, "
+                                                +" sip_FormulMiktarNo, sip_FormulMiktar, sip_satis_fiyat_doviz_cinsi, sip_satis_fiyat_doviz_kuru, sip_eticaret_kanali, sip_onodeme_evrak_sira) "
+                                                + " VALUES('0', 0, 21, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.OrderDate) + "', "
                                                 + "'0', '0', '"+ docText +"', '" + newReceiptNo + "', " + lineNumber + ", '', '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.OrderDate) + "', "
-                                                + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, '', '"+ rcp.FirmCode +"', 0, "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", " +
+                                                + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 'SATIŞ02', '" + rcp.FirmCode +"', 0, "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", " +
                                                    string.Format("{0:0.00}", rdt.Quantity ?? 0).Replace(",", ".") + " , 1, 0, 0,0,0,0,0,0, 0,0,0,0, 0,0, 0,0,0, '', " +
-                                                   string.Format("{0:0.00}", rdt.UnitPrice ?? 0).Replace(",", ".") +", 1, '','', 0, '','',0,0,0,'03',1,0,0)";
+                                                   string.Format("{0:0.00}", rdt.UnitPrice ?? 0).Replace(",", ".") +", 1, '','', 0, '','',0,0,0,'03',1,0,0,0, '"+ cariGrupNo + "', '1', '0', '00000000-0000-0000-0000-000000000000', "
+                                                   + " '', '0', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', '0', '0', '0', "
+                                                   + " '0', '0', '0', '', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', "
+                                                   + " '1899-12-30 00:00:00', '0', '', '0', '0', '','','', 0,0,0,0,0, '0', '0', "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", "
+                                                   +" '0', '0')";
                                             SqlCommand cmd = new SqlCommand(sql, con);
                                             int affectedRows = cmd.ExecuteNonQuery();
                                             if (affectedRows > 0)
                                             {
-                                                bObj.SignDetailAsSynced(rdt.Id);
+                                                bObj.SignDetailAsSent(rdt.Id);
                                             }
                                         }
                                         catch (Exception ex)
@@ -1248,7 +1284,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     var dbNewReceipt = receiptBO.GetItemReceipt(lastReceiptId);
                                     if (dbNewReceipt.Details.Any(m => m.ItemId == itemId))
                                     {
-                                        var existingDetail = dbNewReceipt.Details.FirstOrDefault(m => m.ItemId == itemId);
+                                        var existingDetail = dbNewReceipt.Details.FirstOrDefault(m => m.ItemId == itemId && m.LineNumber == lineNumber);
                                         if (existingDetail != null)
                                         {
                                             existingDetail.Quantity = Decimal.Parse(row["sth_miktar"].ToString(), System.Globalization.NumberStyles.Float);
