@@ -1565,7 +1565,7 @@ namespace HekaMOLD.Business.UseCases
                     if (currentShift != null && currentShift.Id == shift.Id)
                         isCurrentShift = true;
 
-                    shiftStats.Add(new ShiftStatsModel
+                    var newShiftStat = new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
                         IsCurrentShift = isCurrentShift,
@@ -1578,6 +1578,8 @@ namespace HekaMOLD.Business.UseCases
                         LastProductName = lastProductName,
                         TargetCount = targetCount - Convert.ToInt32(shiftWastageCount),
                     };
+
+                    shiftStats.Add(newShiftStat);
 
                     if (newShiftStat.AvgProductionCount < 0)
                         newShiftStat.AvgProductionCount = 0;
