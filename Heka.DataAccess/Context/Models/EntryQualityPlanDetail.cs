@@ -34,7 +34,10 @@ namespace Heka.DataAccess.Context
         public string ControlDevice { get; set; }
         public string Method { get; set; }
         public string Responsible { get; set; }
-    
+        public Nullable<int> CheckType { get; set; }
+        public Nullable<decimal> ToleranceMin { get; set; }
+        public Nullable<decimal> ToleranceMax { get; set; }
+
         [InverseProperty("EntryQualityPlanDetail")]
         public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
         

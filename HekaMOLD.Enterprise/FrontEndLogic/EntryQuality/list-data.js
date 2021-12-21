@@ -39,7 +39,7 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'ControlDateStr', caption: 'Kontrol Tarihi' },
+                { dataField: 'CreatedDateStr', caption: 'Kontrol Tarihi' },
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'ItemNo', caption: 'Malzeme Kodu' },
                 { dataField: 'ItemName', caption: 'Malzeme Adı' },

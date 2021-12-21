@@ -21,6 +21,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public DateTime? OwnedDate { get; set; }
         public int? MoldStatus { get; set; }
         public string Explanation { get; set; }
+        public int? InWarehouseId { get; set; }
         public MoldProductModel[] Products { get; set; }
 
         #region VISUAL ELEMENTS
@@ -31,6 +32,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
         public string MoldStatusText { get; set; }
+        public string WarehouseCode { get; set; }
+        public string WarehouseName { get; set; }
         #endregion
     }
 }

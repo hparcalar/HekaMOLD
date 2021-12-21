@@ -7,7 +7,10 @@
     $scope.productList = [];
     $scope.selectedFirm = {};
     $scope.selectedProduct = {};
+
+    // MODEL CHANGE FLAGS
     $scope.lastProductId = 0;
+    $scope.modelHasChanged = false;
 
     $scope.saveStatus = 0;
 
@@ -16,6 +19,7 @@
     }
 
     $scope.onItemChanged = function (e) {
+        $scope.modelHasChanged = true;
         $scope.lastProductId = $scope.selectedProduct.Id;
         $scope.bindModel(0);
     }
@@ -80,25 +84,63 @@
         });
     }
 
-    $scope.getQualityValue = function (planId, hourNo) {
+    $scope.toggleQualityValue = function (planId, hourNo, checkType) {
+        try {
+            var qData = $scope.modelObject.Details.find(d => d.EntryQualityPlanDetailId == planId &&
+                d.OrderNo == hourNo);
+
+            if (typeof qData == 'undefined' || qData == null) {
+                qData = {
+                    EntryQualityPlanDetailId: planId,
+                    NumericResult: null,
+                    IsOk: false,
+                    OrderNo: hourNo,
+                    NewDetail: true,
+                };
+                $scope.modelObject.Details.push(qData);
+            }
+
+            if (typeof qData != 'undefined' && qData != null) {
+                if (checkType == 1) {
+                    if (qData.NumericResult == null || qData.NumericResult == 0)
+                        qData.NumericResult = 1;
+                    else if (qData.NumericResult == 1) // ok
+                        qData.NumericResult = 2;
+                    else if (qData.NumericResult == 2) // nok
+                        qData.NumericResult = 3;
+                    else if (qData.NumericResult == 3) // none
+                        qData.NumericResult = null; // empty
+                }
+            }
+        } catch (e) {
+
+        }
+    }
+
+    $scope.getQualityValue = function (planId, hourNo, checkType) {
         try {
             var qData = $scope.modelObject.Details.find(d => d.EntryQualityPlanDetailId == planId &&
                 d.OrderNo == hourNo);
 
             if (typeof qData != 'undefined' && qData != null) {
-                return qData.SampleQuantity;
+                if (checkType == 1) {
+                    return qData.NumericResult == null ? 0 :
+                        qData.NumericResult;
+                }
+                else
+                    return qData.NumericResult;
             }
         } catch (e) {
 
         }
 
-        return null;
+        return checkType == 1 ? false : 0;
     }
 
     $scope.getFaultValue = function (planId, hourNo) {
         try {
             var qData = $scope.modelObject.Details.find(d => d.EntryQualityPlanDetailId == planId &&
-                d.OrderNo == hourNo);
+                d.FaultExplanation != null && d.FaultExplanation.length > 0);
 
             if (typeof qData != 'undefined' && qData != null) {
                 return qData.FaultExplanation;
@@ -118,24 +160,23 @@
             var planId = parseInt($(elm).attr('data-plan-id'));
             var hourData = parseInt($(elm).attr('data-hour'));
 
-            var faultExp = '';
-            if (hourData == 1) {
-                faultExp = $('input.fault-exp[data-plan-id="' + planId + '"]').val();
-            }
+            var faultExp = $('input.fault-exp[data-plan-id="' + planId + '"]').val();
 
             if (hourData > 0) {
                 var existingData = $scope.modelObject.Details.find(d => d.EntryQualityPlanDetailId == planId &&
                     d.OrderNo == hourData);
                 if (typeof existingData != 'undefined' && existingData != null) {
-                    existingData.SampleQuantity = parseFloat($(elm).val());
+                    existingData.NumericResult = parseFloat($(elm).val());
                     existingData.FaultExplanation = faultExp;
+                    existingData.IsOk = true;
                 }
                 else {
                     var newData = {
                         EntryQualityPlanDetailId: planId,
-                        SampleQuantity: parseFloat($(elm).val()),
+                        NumericResult: parseFloat($(elm).val()),
                         FaultExplanation: faultExp,
                         OrderNo: hourData,
+                        IsOk: true,
                         NewDetail: true,
                     };
                     $scope.modelObject.Details.push(newData);
@@ -173,6 +214,8 @@
         $http.get(HOST_URL + 'EntryQuality/BindPlanFormModel?rid=' + id + '&sid=' + $scope.selectedProduct.Id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
+                    var exObj = $scope.modelObject;
+
                     $scope.modelObject = resp.data.Model;
 
                     if ($scope.lastProductId > 0) {
@@ -189,6 +232,8 @@
                             $scope.modelObject.CreatedDateStr = moment().format('DD.MM.YYYY');
                     }
 
+                    var exFirm = $scope.selectedFirm;
+
                     if (typeof $scope.modelObject.FirmId != 'undefined' && $scope.modelObject.FirmId != null)
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
                     else
@@ -199,10 +244,24 @@
                     else
                         $scope.selectedProduct = $scope.productList[0];
 
+                    if ($scope.modelHasChanged)
+                        $scope.selectedFirm = exFirm;
+
                     refreshArray($scope.firmList);
                     refreshArray($scope.productList);
 
                     $scope.planList = resp.data.Plans;
+
+                    if ($scope.modelHasChanged) {
+                        $scope.modelObject.FirmId = $scope.selectedFirm.Id;
+                        $scope.modelObject.WaybillNo = exObj.WaybillNo;
+                        $scope.modelObject.EntryQuantity = exObj.EntryQuantity;
+                        $scope.modelObject.CheckQuantity = exObj.CheckQuantity;
+                        $scope.modelObject.LotNumbers = exObj.LotNumbers;
+                        $scope.modelObject.SampleQuantity = exObj.SampleQuantity;
+
+                        $scope.modelHasChanged = false;
+                    }
                 }
 
                 $scope.hourList.splice(0, $scope.hourList.length);
@@ -214,7 +273,7 @@
                         HourNo: i + 1
                     });
                 }
-            }).catch(function (err) { });
+            }).catch(function (err) { console.log(err); });
     }
 
     // ON LOAD EVENTS

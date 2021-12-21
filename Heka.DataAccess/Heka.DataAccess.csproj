@@ -105,6 +105,7 @@
     <Compile Include="Context\Models\MachineSignal.cs" />
     <Compile Include="Context\Models\Mold.cs" />
     <Compile Include="Context\Models\MoldProduct.cs" />
+    <Compile Include="Context\Models\MoldRevisionOperation.cs" />
     <Compile Include="Context\Models\MoldTest.cs" />
     <Compile Include="Context\Models\Notification.cs" />
     <Compile Include="Context\Models\Plant.cs" />
@@ -175,6 +176,14 @@
     <Compile Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.designer.cs">
       <DependentUpon>202112200929417_ItemSerial_ShiftBelongsToDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112202006183_MoldRevisions.cs" />
+    <Compile Include="Migrations\202112202006183_MoldRevisions.designer.cs">
+      <DependentUpon>202112202006183_MoldRevisions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112211044232_EntryQualityUpdate.cs" />
+    <Compile Include="Migrations\202112211044232_EntryQualityUpdate.designer.cs">
+      <DependentUpon>202112211044232_EntryQualityUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -209,6 +218,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.resx">
       <DependentUpon>202112200929417_ItemSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112202006183_MoldRevisions.resx">
+      <DependentUpon>202112202006183_MoldRevisions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112211044232_EntryQualityUpdate.resx">
+      <DependentUpon>202112211044232_EntryQualityUpdate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

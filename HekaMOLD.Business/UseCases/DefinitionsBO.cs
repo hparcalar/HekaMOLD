@@ -2196,6 +2196,9 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                if (model.MoldStatus == null)
+                    model.MoldStatus = (int)MoldStatus.Active;
+
                 model.MoldStatusText = ((MoldStatus)(model.MoldStatus ?? 1)).ToCaption();
                 model.CreatedDateStr = model.CreatedDate != null ?
                     string.Format("{0:dd.MM.yyyy}", model.CreatedDate) : "";

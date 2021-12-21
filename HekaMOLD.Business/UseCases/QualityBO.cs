@@ -36,7 +36,8 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.Details = d.EntryQualityPlanDetail.Select(m => new EntryQualityPlanDetailModel
                 {
                     Id = m.Id,
-                    CheckProperty = m.CheckProperty
+                    CheckProperty = m.CheckProperty,
+                    CheckType = m.CheckType,
                 }).ToArray();
 
                 string checkList = "";
@@ -70,7 +71,8 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.Details = d.EntryQualityPlanDetail.Select(m => new EntryQualityPlanDetailModel
                 {
                     Id = m.Id,
-                    CheckProperty = m.CheckProperty
+                    CheckProperty = m.CheckProperty,
+                    CheckType = m.CheckType,
                 }).ToArray();
 
                 string checkList = "";

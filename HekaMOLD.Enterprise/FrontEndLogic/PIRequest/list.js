@@ -39,8 +39,8 @@
             },
             columns: [
                 { dataField: 'RequestNo', caption: 'Talep No' },
-                { dataField: 'CreatedDateStr', caption: 'Talep Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'DateOfNeedStr', caption: 'İhtiyaç Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'CreatedDateStr', caption: 'Talep Tarihi' },
+                { dataField: 'DateOfNeedStr', caption: 'İhtiyaç Tarihi' },
                 { dataField: 'RequestStatusStr', caption: 'Durum' },
                 { dataField: 'RequestCategoryName', caption: 'Kategori' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
