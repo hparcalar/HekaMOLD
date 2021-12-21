@@ -186,6 +186,10 @@
     <Compile Include="Migrations\202112211044232_EntryQualityUpdate.designer.cs">
       <DependentUpon>202112211044232_EntryQualityUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.cs" />
+    <Compile Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.designer.cs">
+      <DependentUpon>202112211323379_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -209,8 +213,8 @@
     <EmbeddedResource Include="Migrations\202112061028085_ContractWorkFlow.resx">
       <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112170630011_RecipeConsumptionWorkOrderRelation.resx">
-      <DependentUpon>202112170630011_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.resx">
+      <DependentUpon>202112211323379_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
