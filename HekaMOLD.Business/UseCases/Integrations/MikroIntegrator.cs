@@ -1370,5 +1370,10 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
             return result;
         }
+
+        public BusinessResult PullEntryReceipts(SyncPointModel syncPoint)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

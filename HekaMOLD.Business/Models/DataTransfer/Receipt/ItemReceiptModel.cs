@@ -25,6 +25,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public decimal? SubTotal { get; set; }
         public decimal? TaxPrice { get; set; }
         public decimal? OverallTotal { get; set; }
+        public int? WorkOrderDetailId { get; set; }
         public int? SyncStatus { get; set; }
         public int? SyncPointId { get; set; }
         public DateTime? SyncDate { get; set; }

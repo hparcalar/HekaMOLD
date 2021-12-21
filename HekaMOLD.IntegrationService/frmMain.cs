@@ -93,7 +93,7 @@ namespace HekaMOLD.IntegrationService
                             else if (sync.SyncPointType == (int)SyncPointType.WebTicari)
                                 entObj = new WebTicariIntegrator();
 
-                            entObj.OnTransferError += EntObj_OnTransferError;
+                            entObj.OnTransferError += EntObj_OnTransferError;                  
 
                             BusinessResult result = new BusinessResult();
 

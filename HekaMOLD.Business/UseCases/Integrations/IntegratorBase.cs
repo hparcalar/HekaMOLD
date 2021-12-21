@@ -24,5 +24,6 @@ namespace HekaMOLD.Business.UseCases.Integrations
         BusinessResult PushFinishedProducts(SyncPointModel syncPoint, WorkOrderModel[] workOrders);
         BusinessResult PushDeliveryReceipts(SyncPointModel syncPoint, ItemReceiptModel[] receipts);
         BusinessResult PushSaleOrders(SyncPointModel syncPoint);
+        BusinessResult PullEntryReceipts(SyncPointModel syncPoint);
     }
 }

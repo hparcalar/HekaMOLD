@@ -23,6 +23,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { ItemReceiptType.WarehouseOutput, "Depo Çıkış Fişi" },
             { ItemReceiptType.ToContractor, "Fasona Çıkış" },
             { ItemReceiptType.FromContractor, "Fasondan Giriş" },
+            { ItemReceiptType.DeliveryToProduction, "Üretime Çıkış Fişi" },
         };
 
         public static Dictionary<int, string> 
@@ -63,6 +64,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
             (int)ItemReceiptType.Wastage,
             (int)ItemReceiptType.WarehouseInput,
             (int)ItemReceiptType.WarehouseOutput,
+            (int)ItemReceiptType.DeliveryToProduction,
             (int)ItemReceiptType.EntryFromProduction,
             (int)ItemReceiptType.ToContractor,
             (int)ItemReceiptType.FromContractor,
@@ -89,6 +91,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
             (int)ItemReceiptType.Consumption,
             (int)ItemReceiptType.Wastage,
             (int)ItemReceiptType.ToContractor,
+            (int)ItemReceiptType.DeliveryToProduction,
         };
     }
 }

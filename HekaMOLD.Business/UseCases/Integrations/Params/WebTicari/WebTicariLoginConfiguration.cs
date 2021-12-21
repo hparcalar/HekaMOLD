@@ -11,5 +11,6 @@ namespace HekaMOLD.Business.UseCases.Integrations.Params.WebTicari
         public string CustomerNo { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public string BranchOfficeNo { get; set; }
     }
 }

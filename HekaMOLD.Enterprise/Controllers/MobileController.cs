@@ -815,6 +815,61 @@ namespace HekaMOLD.Enterprise.Controllers
         }
         #endregion
 
+        #region ITEM DELIVERY TO PRODUCTION
+        public ActionResult ItemDelivery()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult SaveItemDelivery(int itemReceiptDetailId, decimal quantity)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                int defaultMachineId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    defaultMachineId = bObj.GetMachineList()[0].Id;
+                }
+
+                using (PlanningBO bObj = new PlanningBO())
+                {
+                    result = bObj.CreateItemDeliveryToProduction(itemReceiptDetailId, defaultMachineId, quantity);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetItemsForDelivery()
+        {
+            ItemReceiptDetailModel[] result = new ItemReceiptDetailModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.GetOpenItemEntries();
+            }
+
+            var jsonResult = Json(new
+            {
+                Serials = result,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
+
         public ActionResult SettingsMobile()
         {
             return View();

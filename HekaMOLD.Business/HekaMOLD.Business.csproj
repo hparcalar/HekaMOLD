@@ -105,6 +105,7 @@
     <Compile Include="Models\Constants\SerialStatusType.cs" />
     <Compile Include="Models\Constants\SubscriptionCategory.cs" />
     <Compile Include="Models\Constants\SyncPointType.cs" />
+    <Compile Include="Models\Constants\UploadType.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\Constants\WorkOrderSerialType.cs" />
     <Compile Include="Models\Constants\WorkOrderStatusType.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Models\DataTransfer\Labels\ProductLabel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutItemModel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutObjectTypeModel.cs" />
+    <Compile Include="Models\DataTransfer\Lojistics\LogisticsOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
