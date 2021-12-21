@@ -1,7 +1,9 @@
 ﻿using Heka.DataAccess.Context;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
+using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core;
 using System;
@@ -323,6 +325,94 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<ProductRecipe>();
             return repo.Any(d => d.ProductRecipeCode == recipeCode);
+        }
+        #endregion
+
+        #region PRODUCT RECIPE CONSUMPTIONS
+        public BusinessResult CreateRecipeConsuption(int workOrderDetailId, int? warehouseId = null)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoRecipeDetail = _unitOfWork.GetRepository<ProductRecipeDetail>();
+                var repoWr = _unitOfWork.GetRepository<Warehouse>();
+
+                var dbWorkDetail = repoWorkDetail.Get(d => d.Id == workOrderDetailId);
+                if (dbWorkDetail == null)
+                    throw new Exception("İş emri bilgisine ulaşılamadı.");
+
+                var recipeDetails = repoRecipeDetail.Filter(d => d.ProductRecipe.ProductId == dbWorkDetail.ItemId);
+                List<ItemReceiptDetailModel> consDetails = new List<ItemReceiptDetailModel>();
+
+                int lineNumber = 1;
+                foreach (var item in recipeDetails)
+                {
+                    consDetails.Add(new ItemReceiptDetailModel
+                    {
+                        ItemId = item.ItemId,
+                        Quantity = item.Quantity * dbWorkDetail.Quantity / 100.0m,
+                        UnitId = item.UnitId,
+                        LineNumber = lineNumber,
+                        CreatedDate = DateTime.Now,
+                        NewDetail = true,
+                        ReceiptStatus = (int)ReceiptStatusType.Created,
+                        SyncStatus = 1,
+                        TaxIncluded = false,
+                        TaxRate = 0,
+                        TaxAmount = 0,
+                    });
+
+                    lineNumber++;
+                }
+
+                BusinessResult recipeCreationResult = new BusinessResult { Result = false };
+
+                var wrRecord = repoWr.Get(d => (warehouseId == null || d.Id == warehouseId) && d.WarehouseType ==
+                    (int)WarehouseType.ItemWarehouse);
+                if (wrRecord == null)
+                    throw new Exception("Malzeme sarfiyatları için uygun depo tanımı bulunamadı.");
+
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    var currentConsReceipt = bObj.GetConsumptionReceipt(workOrderDetailId);
+                    if (currentConsReceipt == null)
+                    {
+                        recipeCreationResult = bObj.SaveOrUpdateItemReceipt(new ItemReceiptModel
+                        {
+                            CreatedDate = DateTime.Now,
+                            ReceiptDate = DateTime.Now,
+                            ReceiptNo = bObj.GetNextReceiptNo(dbWorkDetail.WorkOrder.PlantId.Value, ItemReceiptType.Consumption),
+                            ReceiptType = (int)ItemReceiptType.Consumption,
+                            InWarehouseId = wrRecord.Id,
+                            WorkOrderDetailId = workOrderDetailId,
+                            PlantId = dbWorkDetail.WorkOrder.PlantId,
+                            SyncStatus = 1,
+                            SyncDate = null,
+                            Details = consDetails.ToArray(),
+                            ReceiptStatus = (int)ReceiptStatusType.Created,
+                        });
+                    }
+                    else
+                    {
+                        currentConsReceipt.Details = consDetails.ToArray();
+                        recipeCreationResult = bObj.SaveOrUpdateItemReceipt(currentConsReceipt);
+                    }
+
+                    if (!recipeCreationResult.Result)
+                        throw new Exception("Tüketim oluşturulurken bir hata meydana geldi.");
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
         #endregion
     }

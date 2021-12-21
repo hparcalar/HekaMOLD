@@ -118,6 +118,7 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 List<int> itemsMustBeUpdated = new List<int>();
+                ItemReceiptDetail firstNewDetail = null;
 
                 #region SAVE DETAILS
                 if (model.Details == null)
@@ -167,6 +168,9 @@ namespace HekaMOLD.Business.UseCases
                             };
 
                             repoDetail.Add(dbDetail);
+
+                            if (firstNewDetail == null)
+                                firstNewDetail = dbDetail;
                         }
 
                         item.MapTo(dbDetail);
@@ -268,6 +272,9 @@ namespace HekaMOLD.Business.UseCases
 
                 result.Result = true;
                 result.RecordId = dbObj.Id;
+
+                if (firstNewDetail != null)
+                    result.DetailRecordId = firstNewDetail.Id;
             }
             catch (Exception ex)
             {
@@ -385,6 +392,35 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public ItemReceiptModel FindItemEntryReceipt(string documentNo)
+        {
+            ItemReceiptModel data = new ItemReceiptModel();
+
+            var repo = _unitOfWork.GetRepository<ItemReceipt>();
+            var dbReceipt = repo.Get(d => d.DocumentNo == documentNo && d.ReceiptType == (int)ItemReceiptType.ItemBuying);
+            if (dbReceipt != null)
+                data = GetItemReceipt(dbReceipt.Id);
+            else
+                data = null;
+
+            return data;
+        }
+
+        public ItemReceiptModel GetConsumptionReceipt(int workOrderDetailId)
+        {
+            ItemReceiptModel data = new ItemReceiptModel();
+
+            var repo = _unitOfWork.GetRepository<ItemReceipt>();
+            var dbReceipt = repo.Filter(d => d.WorkOrderDetailId == workOrderDetailId && d.ReceiptType == (int)ItemReceiptType.Consumption)
+                .FirstOrDefault();
+            if (dbReceipt != null)
+                data = GetItemReceipt(dbReceipt.Id);
+            else
+                data = null;
+
+            return data;
+        }
+
         public ItemReceiptDetailModel CalculateReceiptDetail(ItemReceiptDetailModel model)
         {
             var repoItem = _unitOfWork.GetRepository<Item>();
@@ -450,6 +486,43 @@ namespace HekaMOLD.Business.UseCases
                         Quantity = d.Quantity,
                         InQuantity = d.ItemReceipt.ReceiptType < 100 ? d.Quantity : (decimal?)null,
                         OutQuantity = d.ItemReceipt.ReceiptType > 100 ? d.Quantity : (decimal?)null,
+                        ReceiptDateStr = d.ItemReceipt.ReceiptDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
+                        ReceiptTypeStr = ((ItemReceiptType)d.ItemReceipt.ReceiptType).ToCaption(),
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return extract;
+        }
+
+        public ItemReceiptDetailModel[] GetOpenItemEntries()
+        {
+            ItemReceiptDetailModel[] extract = new ItemReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                extract = repo.Filter(d => d.Item.ItemType != (int)ItemType.Product 
+                    && d.ReceiptStatus != (int)ReceiptStatusType.Closed
+                    && d.ReceiptStatus != (int)ReceiptStatusType.Blocked
+                    && d.Item.ItemType != (int)ItemType.SemiProduct
+                    && d.Quantity > 0
+                    ).ToList()
+                    .Select(d => new ItemReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        ItemReceiptId = d.ItemReceiptId,
+                        ItemNo = d.Item.ItemNo,
+                        ItemName = d.Item.ItemName,
+                        FirmCode = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        WarehouseCode = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseCode : "",
+                        WarehouseName = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseName : "",
+                        Quantity = d.Quantity - (d.ItemReceiptConsumeByConsumed.Sum(m => m.UsedQuantity) ?? 0),
                         ReceiptDateStr = d.ItemReceipt.ReceiptDate != null ?
                             string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
                         ReceiptTypeStr = ((ItemReceiptType)d.ItemReceipt.ReceiptType).ToCaption(),

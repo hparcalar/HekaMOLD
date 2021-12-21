@@ -20,7 +20,10 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { ItemReceiptType.Consumption, "Sarf Fişi" },
             { ItemReceiptType.Wastage, "Fire Fişi" },
             { ItemReceiptType.WarehouseInput, "Depo Giriş Fişi" },
-            { ItemReceiptType.WarehouseOutput, "Depo Çıkış Fişi" }
+            { ItemReceiptType.WarehouseOutput, "Depo Çıkış Fişi" },
+            { ItemReceiptType.ToContractor, "Fasona Çıkış" },
+            { ItemReceiptType.FromContractor, "Fasondan Giriş" },
+            { ItemReceiptType.DeliveryToProduction, "Üretime Çıkış Fişi" },
         };
 
         public static Dictionary<int, string> 
@@ -60,7 +63,8 @@ namespace HekaMOLD.Business.Models.Dictionaries
             (int)ItemReceiptType.Wastage,
             (int)ItemReceiptType.WarehouseInput,
             (int)ItemReceiptType.WarehouseOutput,
-            (int)ItemReceiptType.EntryFromProduction
+            (int)ItemReceiptType.EntryFromProduction,
+            (int)ItemReceiptType.DeliveryToProduction,
         };
 
         public static int[] SalesTypes = new int[] { 
@@ -81,7 +85,8 @@ namespace HekaMOLD.Business.Models.Dictionaries
             (int)ItemReceiptType.ItemBuyingReturn,
             (int)ItemReceiptType.WarehouseOutput,
             (int)ItemReceiptType.Consumption,
-            (int)ItemReceiptType.Wastage
+            (int)ItemReceiptType.Wastage,
+            (int)ItemReceiptType.DeliveryToProduction,
         };
     }
 }

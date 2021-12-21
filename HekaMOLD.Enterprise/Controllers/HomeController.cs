@@ -26,6 +26,10 @@ namespace HekaMOLD.Enterprise.Controllers
         #region LOGIN PROCESS
         public ActionResult Login()
         {
+            // CHECK & RUN MIGRATION SCRTIPS
+            HekaBO hekaBase = new HekaBO();
+            hekaBase.RunMigrations();
+
             return View();
         }
 
@@ -124,10 +128,6 @@ namespace HekaMOLD.Enterprise.Controllers
                     redirectionResult = RedirectToAction("Index", "Mobile");
                 else
                     redirectionResult = RedirectToAction("Index", "Home");
-
-                // CHECK & RUN MIGRATION SCRTIPS
-                //HekaBO hekaBase = new HekaBO();
-                //hekaBase.RunMigrations();
 
                 return redirectionResult;
             }

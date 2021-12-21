@@ -836,5 +836,10 @@ namespace HekaMOLD.Business.UseCases.Integrations
         {
             throw new NotImplementedException();
         }
+
+        public BusinessResult PullEntryReceipts(SyncPointModel syncPoint)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

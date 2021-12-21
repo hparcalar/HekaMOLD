@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -25,13 +26,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetItemGroupList()
+        public JsonResult GetWorkOrderCategoryList()
         {
-            ItemGroupModel[] result = new ItemGroupModel[0];
+            WorkOrderCategoryModel[] result = new WorkOrderCategoryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetItemGroupList();
+                result = bObj.GetWorkOrderCategoryList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -42,10 +43,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ItemGroupModel model = null;
+            WorkOrderCategoryModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetItemGroup(rid);
+                model = bObj.GetWorkOrderCategory(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -59,7 +60,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteItemGroup(rid);
+                    result = bObj.DeleteWorkOrderCategory(rid);
                 }
 
                 if (result.Result)
@@ -74,14 +75,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemGroupModel model)
+        public JsonResult SaveModel(WorkOrderCategoryModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateItemGroup(model);
+                    result = bObj.SaveOrUpdateWorkOrderCategory(model);
                 }
 
                 if (result.Result)

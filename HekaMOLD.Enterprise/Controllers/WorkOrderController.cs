@@ -65,6 +65,7 @@ namespace HekaMOLD.Enterprise.Controllers
             ForexTypeModel[] forexes = new ForexTypeModel[0];
             MoldModel[] molds = new MoldModel[0];
             MoldTestModel[] moldTests = new MoldTestModel[0];
+            WorkOrderCategoryModel[] workCategories = new WorkOrderCategoryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -73,6 +74,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
                 molds = bObj.GetMoldList();
+                workCategories = bObj.GetWorkOrderCategoryList();
             }
 
             using (MoldBO bObj = new MoldBO())
@@ -83,6 +85,7 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(new { Items = items, Units = units, 
                 Firms = firms, Forexes = forexes,
                 Molds = molds, MoldTests = moldTests,
+                WorkCategories = workCategories,
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
@@ -145,6 +148,9 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (ProductionBO bObj = new ProductionBO())
                 {
+                    int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                    model.PlantId = plantId;
+
                     result = bObj.SaveOrUpdateWorkOrder(model);
                 }
 

@@ -93,6 +93,7 @@
     <Compile Include="Context\Models\ActualRouteHistory.cs" />
     <Compile Include="Context\Models\AllocatedCode.cs" />
     <Compile Include="Context\Models\Attachment.cs" />
+    <Compile Include="Context\Models\ContractWorkFlow.cs" />
     <Compile Include="Context\Models\DeliveryPlan.cs" />
     <Compile Include="Context\Models\Dye.cs" />
     <Compile Include="Context\Models\EntryQualityData.cs" />
@@ -129,6 +130,8 @@
     <Compile Include="Context\Models\ItemWarehouse.cs" />
     <Compile Include="Context\Models\LayoutItem.cs" />
     <Compile Include="Context\Models\LayoutObjectType.cs" />
+    <Compile Include="Context\Models\LogisticsOrder.cs" />
+    <Compile Include="Context\Models\LogisticsOrderProductDetail.cs" />
     <Compile Include="Context\Models\Machine.cs" />
     <Compile Include="Context\Models\MachineGroup.cs" />
     <Compile Include="Context\Models\MachineMaintenanceInstruction.cs" />
@@ -186,6 +189,14 @@
     <Compile Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.designer.cs">
       <DependentUpon>202112042047139_ItemPricesAndItemTaxDefinition.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112061028085_ContractWorkFlow.cs" />
+    <Compile Include="Migrations\202112061028085_ContractWorkFlow.designer.cs">
+      <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112170630011_RecipeConsumptionWorkOrderRelation.cs" />
+    <Compile Include="Migrations\202112170630011_RecipeConsumptionWorkOrderRelation.designer.cs">
+      <DependentUpon>202112170630011_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -205,6 +216,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.resx">
       <DependentUpon>202112042047139_ItemPricesAndItemTaxDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112061028085_ContractWorkFlow.resx">
+      <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112170630011_RecipeConsumptionWorkOrderRelation.resx">
+      <DependentUpon>202112170630011_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

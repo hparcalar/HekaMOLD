@@ -5,12 +5,13 @@
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Collections.Generic;
 
     internal sealed class Configuration : DbMigrationsConfiguration<Heka.DataAccess.Context.HekaEntities>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(Heka.DataAccess.Context.HekaEntities context)
@@ -18,59 +19,115 @@
             try
             {
                 #region CREATE DEFAULT PLANT
-                var defaultPlan = context.Plant.FirstOrDefault();
+                var defaultPlant = context.Plant.FirstOrDefault();
                 if (!context.Plant.Any())
                 {
-                    defaultPlan = new Plant
+                    defaultPlant = new Plant
                     {
                         PlantCode = "001",
                         PlantName = "PLANT",
                     };
-                    context.Plant.Add(defaultPlan);
+                    context.Plant.Add(defaultPlant);
                 }
                 #endregion
 
                 #region CREATE USER AUTH TYPES
+                List<UserAuthType> currentAuthTypes = context.UserAuthType.ToList();
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "POApproval"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "POApproval", AuthTypeName = "Satınalma Talep Onayı" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "POApproval", AuthTypeName = "Satınalma Talep Onayı" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
+
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "POPriceApproval"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "POPriceApproval", AuthTypeName = "Satınalma Sipariş Fiyat Onayı" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "POPriceApproval", AuthTypeName = "Satınalma Sipariş Fiyat Onayı" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
+
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "PWOApproval"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "PWOApproval", AuthTypeName = "Satınalma İrsaliye - Sipariş Onayı" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "PWOApproval", AuthTypeName = "Satınalma İrsaliye - Sipariş Onayı" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "POCreate"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "POCreate", AuthTypeName = "Satınalma Sipariş Oluşturma" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "POCreate", AuthTypeName = "Satınalma Sipariş Oluşturma" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "MobileProductionUser"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "MobileProductionUser", AuthTypeName = "Mobil Üretim Terminali" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "MobileProductionUser", AuthTypeName = "Mobil Üretim Terminali" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "MobileMechanicUser"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "MobileMechanicUser", AuthTypeName = "Mobil Bakım Terminali" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "MobileMechanicUser", AuthTypeName = "Mobil Bakım Terminali" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "MobileWarehouseUser"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "MobileWarehouseUser", AuthTypeName = "Mobil Depo Terminali" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "MobileWarehouseUser", AuthTypeName = "Mobil Depo Terminali" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "ModuleQuality"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "ModuleQuality", AuthTypeName = "Kalite Modülü" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "ModuleQuality", AuthTypeName = "Kalite Modülü" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "ModuleItems"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "ModuleItems", AuthTypeName = "Stok Modülü" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "ModuleItems", AuthTypeName = "Stok Modülü" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "ModuleProduction"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "ModuleProduction", AuthTypeName = "Üretim Modülü" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "ModuleProduction", AuthTypeName = "Üretim Modülü" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "ModuleDefinitions"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "ModuleDefinitions", AuthTypeName = "Tanımlar" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "ModuleDefinitions", AuthTypeName = "Tanımlar" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "IsSystemAdmin"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "IsSystemAdmin", AuthTypeName = "Sistem Yöneticisi" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "IsSystemAdmin", AuthTypeName = "Sistem Yöneticisi" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 if (!context.UserAuthType.Any(d => d.AuthTypeCode == "IsProductionChief"))
-                    context.UserAuthType.Add(new UserAuthType { AuthTypeCode = "IsProductionChief", AuthTypeName = "Üretim Şefi" });
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "IsProductionChief", AuthTypeName = "Üretim Şefi" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 #endregion
 
                 #region CREATE SYSTEM ADMIN ROLE & USER
+                UserRole adminRole = context.UserRole.FirstOrDefault(d => d.RoleName == "System Admin");
                 if (!context.UserRole.Any(d => d.RoleName == "System Admin"))
                 {
-                    var adminRole = new UserRole
+                    adminRole = new UserRole
                     {
-                        Plant = defaultPlan,
+                        Plant = defaultPlant,
                         RoleName = "System Admin",
                     };
 
                     context.UserRole.Add(adminRole);
 
-                    foreach (var item in context.UserAuthType)
+                    foreach (var item in currentAuthTypes)
                     {
                         if (item.AuthTypeCode.Contains("Mobile"))
                             continue;
@@ -89,22 +146,20 @@
                     context.User.Add(new User
                     {
                         UserCode = "SysAdmin",
-                        Plant = defaultPlan,
+                        Plant = defaultPlant,
                         Login = "SysAdmin",
                         UserName = "SysAdmin",
                         Password = "root",
                         CreatedDate = DateTime.Now,
-                        UserRole = context.UserRole.FirstOrDefault(m => m.RoleName == "System Admin"),
+                        UserRole = adminRole,
                     });
-
-
                 }
                 #endregion
 
                 if (context.ChangeTracker.HasChanges())
                     context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
             }
