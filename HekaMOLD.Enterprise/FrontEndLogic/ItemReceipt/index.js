@@ -8,6 +8,8 @@
     $scope.unitList = [];
     $scope.forexList = [];
 
+    $scope.selectedRow = { Id: 0 };
+
     $scope.selectedFirm = {Id:0, FirmCode:''};
     $scope.firmList = [];
 
@@ -156,7 +158,7 @@
 
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
-            dropDownOptions: { width: 500 },
+            dropDownOptions: { width: 600 },
             dataSource: $scope.itemList,
             value: cellInfo.value,
             valueExpr: "Id",
@@ -223,6 +225,11 @@
             }).catch(function (err) { });
     }
 
+    $scope.refreshDetailChanges = function () {
+        var dataGrid = $("#dataList").dxDataGrid("instance");
+        dataGrid.refresh(true);
+    }
+
     $scope.calculateRow = function (row) {
         if (typeof row != 'undefined' && row != null) {
             try {
@@ -235,6 +242,7 @@
                             row.ForexUnitPrice = resp.data.ForexUnitPrice;
                             row.NetQuantity = resp.data.NetQuantity;
 
+                            $scope.refreshDetailChanges();
                             $scope.calculateHeader();
                         }
                     }).catch(function (err) { });
@@ -301,7 +309,7 @@
                             var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
 
                             $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
-                                + '&forexDate=' + $scope.modelObject.OrderDate, {}, 'json')
+                                + '&forexDate=' + $scope.modelObject.ReceiptDate, {}, 'json')
                                 .then(function (resp) {
                                     if (typeof resp.data != 'undefined' && resp.data != null) {
                                         if (typeof resp.data.SalesForexRate != 'undefined') {
@@ -375,7 +383,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 400,
+            height: 250,
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
@@ -415,7 +423,12 @@
                         displayExpr: "UnitCode"
                     }
                 },
-                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                {
+                    dataField: 'Quantity', caption: 'Miktar', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                    validationRules: [{ type: "required" }]
+                },
                 { dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
                     dataField: 'TaxIncluded', caption: 'Kdv D/H',
@@ -427,7 +440,12 @@
                     },
                     validationRules: [{ type: "required" }]
                 },
-                { dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                {
+                    dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                    validationRules: [{ type: "required" }]
+                },
                 {
                     dataField: 'ForexId', caption: 'Döviz Cinsi',
                     allowSorting: false,
@@ -437,11 +455,36 @@
                         displayExpr: "ForexTypeCode"
                     }
                 },
-                { dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                {
+                    dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } }
+                },
+                {
+                    dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } }
+                },
                 { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'Explanation', caption: 'Açıklama' }
+                { dataField: 'Explanation', caption: 'Açıklama' },
+                {
+                    type: "buttons",
+                    buttons: [
+                        {
+                            name: 'delete', cssClass: '', text: '', onClick: function (e) {
+                                $('#dataList').dxDataGrid('instance').deleteRow(e.row.rowIndex);
+                            }
+                        },
+                        {
+                            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: '...', onClick: function (e) {
+                                var dataGrid = $("#dataList").dxDataGrid("instance");
+                                $scope.selectedRow = e.row.data;
+                                $scope.showRowMenu();
+                            }
+                        }
+                    ]
+                }
             ]
         });
     }
@@ -496,6 +539,22 @@
         });
 
         return prms;
+    }
+
+    // ROW MENU ACTIONS
+    $scope.showRowMenu = function () {
+        if ($scope.selectedRow && $scope.selectedRow.Id > 0) {
+            //$('#dial-row-menu').dialog({
+            //    width: 300,
+            //    //height: window.innerHeight * 0.6,
+            //    hide: true,
+            //    modal: true,
+            //    resizable: false,
+            //    show: true,
+            //    draggable: false,
+            //    closeText: "KAPAT"
+            //});
+        }
     }
 
     // INFORMATIONS

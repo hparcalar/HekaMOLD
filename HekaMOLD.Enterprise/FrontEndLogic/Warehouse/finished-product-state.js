@@ -21,6 +21,10 @@
             showColumnLines: false,
             showRowLines: true,
             rowAlternationEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             allowColumnResizing: true,
             wordWrapEnabled: true,
             focusedRowEnabled: true,

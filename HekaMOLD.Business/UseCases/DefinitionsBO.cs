@@ -1598,8 +1598,6 @@ namespace HekaMOLD.Business.UseCases
 
                     if (newShiftStat.AvgProductionCount < 0)
                         newShiftStat.AvgProductionCount = 0;
-
-                    shiftStats.Add(newShiftStat);
                 }
 
                 containerObj.MachineStats.ShiftStats = shiftStats.ToArray();

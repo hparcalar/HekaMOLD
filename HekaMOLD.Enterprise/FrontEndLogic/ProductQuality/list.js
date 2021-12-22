@@ -17,6 +17,10 @@
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             allowColumnResizing: true,
             wordWrapEnabled: true,
             filterRow: {

@@ -18,6 +18,10 @@
             wordWrapEnabled: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             showBorders: true,
             wordWrapEnabled: true,
             filterRow: {

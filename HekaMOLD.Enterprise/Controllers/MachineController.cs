@@ -126,7 +126,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 //}
             }
 
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Data=result, Shift= shiftData }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

@@ -6,18 +6,31 @@
     <!--begin::Post-->
     <div class="post flex-fill d-flex flex-column" id="kt_post">
         <!--begin::Container-->
-        <div id="kt_content_container" class="container-fluid flex-fill d-flex flex-column my-0 px-1 h-100">
+        <div id="kt_content_container" class="container-fluid flex-fill d-flex flex-column my-0 px-0 h-100">
+            <div class="d-flex flex-row px-0 bg-dark">
+                <div id="clock" class="dark">
+                    <div class="display">
+                        <div class="weekdays"></div>
+                        <div class="ampm"></div>
+                        <div class="alarm"></div>
+                        <div class="digits"></div>
+                    </div>
+                </div>
+                
+                <div class="d-flex flex-column flex-fill">
+                    <h1 class="text-center mt-0 py-3 bg-light-primary text-dark fs-1" ng-bind="activeShift.ShiftCode + ' VARDİYASI'"></h1>
+                    <h1 class="text-light text-center mt-4" ng-bind="activeShift.ChiefName"></h1>
+                </div>
+            </div>
             <!--begin::Row-->
-            <div class="row flex-fill h-100" style="background-color:#555;">
+            <div class="row flex-fill" style="background-color:#555;">
                 <!--begin::Col-->
-                <div class="col-sm-3 col-md-3 col-xxl-3 px-1 py-0"
+                <div class="col-sm-3 col-md-3 col-xxl-3 px-1 py-0 h-50 d-flex flex-column"
                      ng-repeat="item in machineList">
-                    <div class="rounded-1 py-0 px-0 my-0 d-flex flex-column" style="background-color:#cecece;"
-                         ng-cloak
-                         @*ng-class="{'bg-light-dark': item.BackColor == null || item.BackColor.length == 0}"
-                         ng-style="item.BackColor != null && item.BackColor.length > 0 && {'background-color': item.BackColor}"*@>
+                    <div class="rounded-1 py-0 px-0 my-0 d-flex flex-column flex-fill"
+                         ng-cloak>
                         <div class="m-0 border-0 rounded-1 px-0 py-0 d-flex flex-column"
-                              ng-class="{'bg-danger': item.ActivePlan.WorkOrder == null, 
+                             ng-class="{'bg-danger': item.ActivePlan.WorkOrder == null,
                                             'bg-success': item.ActivePlan.WorkOrder != null && !item.IsInIncident,
                                             'bg-warning': item.IsInIncident}">
                             <div class="row min-h-125px">
@@ -31,7 +44,7 @@
                                 <div class="col-sm-6 col-md-6 col-xxl-6">
                                     <h4 class="text-center bg-secondary rounded px-2 py-0 mb-1 border-1 border-dark fw-boldest"
                                         style="font-size:48px;"
-                                        ng-class="{'bg-danger': item.ActivePlan.WorkOrder == null, 
+                                        ng-class="{'bg-danger': item.ActivePlan.WorkOrder == null,
                                             'bg-success': item.ActivePlan.WorkOrder != null && !item.IsInIncident,
                                             'bg-warning': item.IsInIncident}">
                                         <svg width="64px" height="64px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -49,18 +62,11 @@
 
                                     </h4>
                                     <div ng-if="item.IsInIncident"
-                                          class="text-center fs-2 fw-bolder bg-warning text-dark mt-1 rounded px-2 py-2 border-1 border-dark">
+                                         class="text-center fs-2 fw-bolder bg-warning text-dark mt-1 rounded px-2 py-2 border-1 border-dark">
                                         {{'BAKIM'}}
                                     </div>
                                 </div>
-                               
-                            </div>
-                            
-                            <div class="text-center py-0 min-h-30px h-30px w-100">
-                                <h5 ng-if="item.WorkingUserId > 0"
-                                    class="text-center bg-success text-dark mt-1 rounded px-2 py-2 border-1 border-dark">
-                                    {{ item.WorkingUserName }}
-                                </h5>
+
                             </div>
                             <div class="general-avg text-center flex-fill py-0 d-flex flex-column">
                                 <div class="flex-fill d-flex flex-row">
@@ -68,7 +74,7 @@
                                          ng-style="($index == 0 && {'background-color':'#FFFFFF;'}) ||
                                             ($index == 1 && {'background-color':'#666666;'})"
                                          ng-repeat="shift in item.MachineStats.ShiftStats track by $index">
-                                        <h3 class="my-0 bg-primary text-light fw-boldest rounded-1 p-2">{{shift.ShiftCode}} - {{ shift.ChiefUserName }}</h3>
+                                        <h3 class="my-0 bg-primary text-light fw-boldest rounded-1 p-2 h-30px min-h-30px">{{ item.WorkingUserName }}</h3>
                                         <div class="text-center py-0 min-h-75px h-75px w-100">
                                             <p class="py-0 my-0 fw-boldest fs-4"
                                                ng-class="{'text-dark': $index == 0, 'text-light': $index == 1}"
@@ -77,35 +83,9 @@
                                                 {{shift.LastProductName}}
                                             </p>
                                         </div>
-                                        @*<h2 class="mt-0 mb-0 bg-warning py-1" style="font-size:24px;">HEDEF</h2>*@
                                         <h2 class="mt-0 mb-0 bg-dark text-warning py-0" style="font-size:40px;" ng-bind="'H: ' + shift.TargetCount"></h2>
-                                        @*<h2 class="mt-0 mb-0 bg-success py-1" style="font-size:24px;">ÜRETİM</h2>*@
                                         <h2 class="mt-0 mb-0 bg-dark text-success py-0" style="font-size:40px;" ng-bind="'Ü: ' + shift.AvgProductionCount"></h2>
-                                        @*<h2 class="mt-0 mb-0 bg-danger py-1" style="font-size:24px;">FİRE</h2>*@
                                         <h2 class="mt-0 mb-0 bg-dark text-danger py-0" style="font-size:40px;" ng-bind="'F: ' + shift.WastageCount"></h2>
-                                        @*<h2 class="mt-0 mb-0 py-0" ng-style="($index == 0 && {'background-color':'#cde9fe;'})
-                                             || ($index == 1 && {'background-color':'#666666;'})">
-                                            <span ng-if="$index == 0"
-                                                  class="svg-icon svg-icon-2hx svg-icon-warning">
-                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                    <g id="Stockholm-icons-/-Weather-/-Sun" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                                                        <path d="M12,15 C10.3431458,15 9,13.6568542 9,12 C9,10.3431458 10.3431458,9 12,9 C13.6568542,9 15,10.3431458 15,12 C15,13.6568542 13.6568542,15 12,15 Z" id="Oval-8" fill="#000000" fill-rule="nonzero"></path>
-                                                        <path d="M19.5,10.5 L21,10.5 C21.8284271,10.5 22.5,11.1715729 22.5,12 C22.5,12.8284271 21.8284271,13.5 21,13.5 L19.5,13.5 C18.6715729,13.5 18,12.8284271 18,12 C18,11.1715729 18.6715729,10.5 19.5,10.5 Z M16.0606602,5.87132034 L17.1213203,4.81066017 C17.7071068,4.22487373 18.6568542,4.22487373 19.2426407,4.81066017 C19.8284271,5.39644661 19.8284271,6.34619408 19.2426407,6.93198052 L18.1819805,7.99264069 C17.5961941,8.57842712 16.6464466,8.57842712 16.0606602,7.99264069 C15.4748737,7.40685425 15.4748737,6.45710678 16.0606602,5.87132034 Z M16.0606602,18.1819805 C15.4748737,17.5961941 15.4748737,16.6464466 16.0606602,16.0606602 C16.6464466,15.4748737 17.5961941,15.4748737 18.1819805,16.0606602 L19.2426407,17.1213203 C19.8284271,17.7071068 19.8284271,18.6568542 19.2426407,19.2426407 C18.6568542,19.8284271 17.7071068,19.8284271 17.1213203,19.2426407 L16.0606602,18.1819805 Z M3,10.5 L4.5,10.5 C5.32842712,10.5 6,11.1715729 6,12 C6,12.8284271 5.32842712,13.5 4.5,13.5 L3,13.5 C2.17157288,13.5 1.5,12.8284271 1.5,12 C1.5,11.1715729 2.17157288,10.5 3,10.5 Z M12,1.5 C12.8284271,1.5 13.5,2.17157288 13.5,3 L13.5,4.5 C13.5,5.32842712 12.8284271,6 12,6 C11.1715729,6 10.5,5.32842712 10.5,4.5 L10.5,3 C10.5,2.17157288 11.1715729,1.5 12,1.5 Z M12,18 C12.8284271,18 13.5,18.6715729 13.5,19.5 L13.5,21 C13.5,21.8284271 12.8284271,22.5 12,22.5 C11.1715729,22.5 10.5,21.8284271 10.5,21 L10.5,19.5 C10.5,18.6715729 11.1715729,18 12,18 Z M4.81066017,4.81066017 C5.39644661,4.22487373 6.34619408,4.22487373 6.93198052,4.81066017 L7.99264069,5.87132034 C8.57842712,6.45710678 8.57842712,7.40685425 7.99264069,7.99264069 C7.40685425,8.57842712 6.45710678,8.57842712 5.87132034,7.99264069 L4.81066017,6.93198052 C4.22487373,6.34619408 4.22487373,5.39644661 4.81066017,4.81066017 Z M4.81066017,19.2426407 C4.22487373,18.6568542 4.22487373,17.7071068 4.81066017,17.1213203 L5.87132034,16.0606602 C6.45710678,15.4748737 7.40685425,15.4748737 7.99264069,16.0606602 C8.57842712,16.6464466 8.57842712,17.5961941 7.99264069,18.1819805 L6.93198052,19.2426407 C6.34619408,19.8284271 5.39644661,19.8284271 4.81066017,19.2426407 Z" id="Oval" fill="#000000" fill-rule="nonzero" opacity="0.3"></path>
-                                                    </g>
-                                                </svg>
-                                            </span>
-
-                                            <span ng-if="$index == 1"
-                                                  class="svg-icon svg-icon-2hx svg-icon-light">
-                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                    <g id="Stockholm-icons-/-Weather-/-Moon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                                                        <path d="M12.0700837,4.0003006 C11.3895108,5.17692613 11,6.54297551 11,8 C11,12.3948932 14.5439081,15.9620623 18.9299163,15.9996994 C17.5467214,18.3910707 14.9612535,20 12,20 C7.581722,20 4,16.418278 4,12 C4,7.581722 7.581722,4 12,4 C12.0233848,4 12.0467462,4.00010034 12.0700837,4.0003006 Z" id="Combined-Shape" fill="#000000"></path>
-                                                    </g>
-                                                </svg>
-                                            </span>
-                                        </h2>*@
                                     </div>
                                 </div>
                             </div>
@@ -135,6 +115,8 @@
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <link href="~/Content/heka-clock.css" rel="stylesheet" />
+    <script src="~/FrontEndLogic/Home/heka-clock.js"></script>
     <script src="~/Components/Controllers/machine-incidents.js"></script>
     <script src="~/Components/Controllers/machine-postures.js"></script>
 }

@@ -187,6 +187,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult ProductPlanList()
+        {
+            return View();
+        }
+
         [HttpPost]
         public JsonResult SaveShift(ShiftModel model)
         {
