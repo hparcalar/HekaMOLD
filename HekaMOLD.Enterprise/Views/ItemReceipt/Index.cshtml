@@ -100,18 +100,18 @@
                     </a>
 
                     @*<a class="btn btn-sm btn-secondary" ng-click="printTemplate()">
-                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
-                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Stockholm-icons-/-General-/-Other2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                                    <circle id="Oval-67" fill="#000000" cx="5" cy="12" r="2"></circle>
-                                    <circle id="Oval-67-Copy" fill="#000000" cx="12" cy="12" r="2"></circle>
-                                    <circle id="Oval-67-Copy-2" fill="#000000" cx="19" cy="12" r="2"></circle>
-                                </g>
-                            </svg>
-                        </span>
-                        Çeki Listesi
-                    </a>*@
+                            <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g id="Stockholm-icons-/-General-/-Other2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                        <circle id="Oval-67" fill="#000000" cx="5" cy="12" r="2"></circle>
+                                        <circle id="Oval-67-Copy" fill="#000000" cx="12" cy="12" r="2"></circle>
+                                        <circle id="Oval-67-Copy-2" fill="#000000" cx="19" cy="12" r="2"></circle>
+                                    </g>
+                                </svg>
+                            </span>
+                            Çeki Listesi
+                        </a>*@
 
                     <!--begin::Separator-->
                     <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
@@ -297,31 +297,8 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
+
     @* DIALOG FORMS *@
-    <div id="dial-firm" title="Firma Seçimi" style="display:none;">
-        <div class="mb-5 input-group">
-            <input type="text" class="form-control form-control-solid" ng-model="firmFilter" placeholder="" />
-            <div class="input-group-append">
-                <button id="btnSelectFirm" class="btn btn-primary" type="button" ng-click="showFirmDialog()">
-                    <i class="fas fa-filter"></i>
-                </button>
-            </div>
-        </div>
-
-        <table class="table table-dark table-borderless table-dialog">
-            <tbody>
-                <tr class="trow-table-dialog" ng-repeat="item in firmList | filter:firmFilter">
-                    <td class="w-75 bg-transparent"><span class="label-table-dialog pt-2">{{item.FirmName}}</span></td>
-                    <td class="w-25 bg-transparent">
-                        <button class="btn btn-sm btn-light-primary btn-block" ng-click="selectFirm(item)">
-                            <i class="fas fa-check-circle"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
     <div id="dial-orderlist" title="Açık Siparişler" style="display:none;">
         <ng-include src="'Components/Views/OpenPoList.html'"></ng-include>
     </div>
@@ -329,12 +306,32 @@
     <div id="dial-related-orders" title="İlgili Siparişler" style="display:none;">
         <ng-include src="'Components/Views/RelatedOrderList.html'"></ng-include>
     </div>
+
+    <div id="dial-reports" title="Yazdırma Şablon Listesi" style="display:none;">
+        <ng-include src="'../Components/Views/ReportTemplateList.html'"></ng-include>
+    </div>
+
+    <div id="dial-print-options" title="Yazdırma Seçenekleri" style="display:none;">
+        <ng-include src="'../Components/Views/PrintOptions.html'"></ng-include>
+    </div>
+
+    <div id="dial-row-menu" title="İrsaliye Satır İşlemleri" style="display:none;">
+        <div class="d-flex flex-column">
+            <button class="btn btn-primary btn-sm" ng-click="printMaterialLabel()">
+                <i class="fas fa-print"></i>
+                Etiket Yazdır
+            </button>
+        </div>
+    </div>
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+
+    <script src="~/Components/Controllers/print-options.js"></script>
+    <script src="~/Components/Controllers/report-template-list.js"></script>
     <script src="~/FrontEndLogic/ItemReceipt/index.js"></script>
     <script src="~/Components/Controllers/open-po-list.js"></script>
     <script src="~/Components/Controllers/related-order-list.js"></script>

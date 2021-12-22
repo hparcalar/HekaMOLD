@@ -113,5 +113,7 @@
         public virtual DbSet<MachinePreProcess> MachinePreProcess { get; set; }
         public virtual DbSet<MachinePreProcessHistory> MachinePreProcessHistory { get; set; }
         public virtual DbSet<MoldRevisionOperation> MoldRevisionOperation { get; set; }
+        public virtual DbSet<Pallet> Pallet { get; set; }
+        public virtual DbSet<UserShortcut> UserShortcut { get; set; }
     }
 }

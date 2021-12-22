@@ -110,6 +110,7 @@
     <Compile Include="Context\Models\MoldRevisionOperation.cs" />
     <Compile Include="Context\Models\MoldTest.cs" />
     <Compile Include="Context\Models\Notification.cs" />
+    <Compile Include="Context\Models\Pallet.cs" />
     <Compile Include="Context\Models\Plant.cs" />
     <Compile Include="Context\Models\PostureCategory.cs" />
     <Compile Include="Context\Models\PreProcessType.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Context\Models\UserAuthType.cs" />
     <Compile Include="Context\Models\UserRole.cs" />
     <Compile Include="Context\Models\UserRoleSubscription.cs" />
+    <Compile Include="Context\Models\UserShortcut.cs" />
     <Compile Include="Context\Models\UserWorkOrderHistory.cs" />
     <Compile Include="Context\Models\Warehouse.cs" />
     <Compile Include="Context\Models\WorkOrder.cs" />
@@ -190,6 +192,14 @@
     <Compile Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.designer.cs">
       <DependentUpon>202112211323379_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112221732124_PalletStructure.cs" />
+    <Compile Include="Migrations\202112221732124_PalletStructure.designer.cs">
+      <DependentUpon>202112221732124_PalletStructure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112221743586_UserShortcuts.cs" />
+    <Compile Include="Migrations\202112221743586_UserShortcuts.designer.cs">
+      <DependentUpon>202112221743586_UserShortcuts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -215,6 +225,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.resx">
       <DependentUpon>202112211323379_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221732124_PalletStructure.resx">
+      <DependentUpon>202112221732124_PalletStructure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221743586_UserShortcuts.resx">
+      <DependentUpon>202112221743586_UserShortcuts.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

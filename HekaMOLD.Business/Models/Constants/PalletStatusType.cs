@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.Models.Constants
 {
-    public enum RecordType
+    public enum PalletStatusType
     {
-        Order=1,
-        Item=2,
-        MoldTest=3,
-        SerialItem=4,
-        DeliveryList=5,
-        ItemReceiptDetail=6,
+        Exists=0,
+        Delivered=1,
     }
 }

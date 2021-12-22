@@ -21,6 +21,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public int? InPackageQuantity { get; set; }
         public int? SerialType { get; set; }
         public DateTime? ShiftBelongsToDate { get; set; }
+        public int? PalletId { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemNo { get; set; }
@@ -31,6 +32,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string MachineName { get; set; }
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
+        public string PalletNo { get; set; }
         #endregion
     }
 }

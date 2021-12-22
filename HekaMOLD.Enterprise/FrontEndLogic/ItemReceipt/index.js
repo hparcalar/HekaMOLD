@@ -4,9 +4,11 @@
         Details: [], ReceiptStatus: 0, ReceiptType:0
     };
 
+    // #region PAGE VARIABLES
     $scope.itemList = [];
     $scope.unitList = [];
     $scope.forexList = [];
+    $scope.reportTemplateId = 0;
 
     $scope.selectedRow = { Id: 0 };
 
@@ -21,8 +23,9 @@
 
     $scope.receiptCategory = null;
     $scope.saveStatus = 0;
+    // #endregion
 
-    // RECEIPT FUNCTIONS
+    // #region CRUD AND RECEIPT LOGIC INTERACTIONS
     $scope.getNextReceiptNo = function () {
         var prms = new Promise(function (resolve, reject) {
             $http.get(HOST_URL + 'ItemReceipt/GetNextReceiptNo?receiptType='
@@ -43,27 +46,6 @@
         return prms;
     }
 
-    // SELECTABLES
-    $scope.showFirmDialog = function () {
-        $('#dial-firm').dialog({
-            position: { my: 'left top', at: 'right top', of: $('#btnSelectFirm') },
-            hide: true,
-            modal: false,
-            resizable: false,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
-        });
-    }
-    $scope.selectFirm = function (item) {
-        $scope.modelObject.FirmId = item.Id;
-        $scope.modelObject.FirmCode = item.FirmCode;
-        $scope.modelObject.FirmName = item.FirmName;
-
-        $('#dial-firm').dialog("close");
-    }
-
-    // CRUD
     $scope.openNewRecord = function () {
         $scope.modelObject = {
             Id: 0, ReceiptDate: moment().format('DD.MM.YYYY'),
@@ -540,24 +522,122 @@
 
         return prms;
     }
+    // #endregion
 
-    // ROW MENU ACTIONS
+    // #region ROW MENU ACTIONS
     $scope.showRowMenu = function () {
         if ($scope.selectedRow && $scope.selectedRow.Id > 0) {
-            //$('#dial-row-menu').dialog({
-            //    width: 300,
-            //    //height: window.innerHeight * 0.6,
-            //    hide: true,
-            //    modal: true,
-            //    resizable: false,
-            //    show: true,
-            //    draggable: false,
-            //    closeText: "KAPAT"
-            //});
+            $('#dial-row-menu').dialog({
+                width: 300,
+                //height: window.innerHeight * 0.6,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
         }
     }
 
-    // INFORMATIONS
+    $scope.onRowMenuItemClicked = function () {
+        $('#dial-row-menu').dialog("close");
+    }
+    // #endregion
+
+    // #region PRINTING LOGIC
+    $scope.showPrintTemplates = function () {
+        if ($scope.selectedRow.Id > 0) {
+            // DO BROADCAST
+            $scope.$broadcast('loadTemplateList', [6]);
+
+            $('#dial-reports').dialog({
+                width: window.innerWidth * 0.65,
+                height: window.innerHeight * 0.65,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+    }
+
+    $scope.showPrintOptions = function () {
+        $scope.$broadcast('showPrintOptions');
+
+        $('#dial-print-options').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: 300,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    // RECEIVE EMIT REPORT PRINT DATA
+    $scope.$on('printTemplate', function (e, d) {
+        if (d.templateId > 0) {
+            $scope.reportTemplateId = d.templateId;
+
+            if (d.exportType == 'PDF') {
+                try {
+                    $http.post(HOST_URL + 'Printing/ExportAsPdf', {
+                        objectId: $scope.selectedRow.Id,
+                        reportId: $scope.reportTemplateId,
+                        reportType: 6,
+                    }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                window.open(HOST_URL + 'Outputs/' + resp.data.Path);
+                            }
+                        }).catch(function (err) { });
+                } catch (e) {
+
+                }
+            }
+            else {
+                $scope.showPrintOptions();
+            }
+        }
+
+        $('#dial-reports').dialog('close');
+    });
+
+    // RECEIVE EMIT PRINTING OPTIONS DATA
+    $scope.$on('printOptionsApproved', function (e, d) {
+        $('#dial-print-options').dialog('close');
+
+        try {
+            $http.post(HOST_URL + 'Printing/AddToPrintQueue', {
+                objectId: $scope.selectedRow.Id,
+                reportId: $scope.reportTemplateId,
+                printerId: d.PrinterId,
+                recordType: 6, // item receipt detail type
+            }, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Status == 1)
+                            toastr.success('İstek yazıcıya iletildi.', 'Bilgilendirme');
+                        else
+                            toastr.error('Hata: ' + resp.data.ErrorMessage, 'Uyarı');
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    });
+
+    $scope.printMaterialLabel = function () {
+        $scope.onRowMenuItemClicked();
+        $scope.showPrintTemplates();
+    }
+    // #endregion
+
+    // #region INFORMATIONS
     $scope.showRecordInformation = function () {
         $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType:'ItemReceipt' });
     }
@@ -576,8 +656,9 @@
             closeText: "KAPAT"
         });
     }
+    // #endregion
 
-    // APPROVALS
+    // #region TRANSFER ORDERS TO RECEIPT
     $scope.showItemOrderList = function () {
         // DO BROADCAST
         $scope.$broadcast('loadOpenPoList');
@@ -629,6 +710,7 @@
 
         $('#dial-orderlist').dialog('close');
     });
+    // #endregion
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
