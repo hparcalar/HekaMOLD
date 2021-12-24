@@ -105,6 +105,7 @@
     <Compile Include="Context\Models\MachinePreProcess.cs" />
     <Compile Include="Context\Models\MachinePreProcessHistory.cs" />
     <Compile Include="Context\Models\MachineSignal.cs" />
+    <Compile Include="Context\Models\MaintenancePlan.cs" />
     <Compile Include="Context\Models\Mold.cs" />
     <Compile Include="Context\Models\MoldProduct.cs" />
     <Compile Include="Context\Models\MoldRevisionOperation.cs" />
@@ -200,6 +201,10 @@
     <Compile Include="Migrations\202112221743586_UserShortcuts.designer.cs">
       <DependentUpon>202112221743586_UserShortcuts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112230736363_MaintenancePlan.cs" />
+    <Compile Include="Migrations\202112230736363_MaintenancePlan.designer.cs">
+      <DependentUpon>202112230736363_MaintenancePlan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -231,6 +236,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112221743586_UserShortcuts.resx">
       <DependentUpon>202112221743586_UserShortcuts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112230736363_MaintenancePlan.resx">
+      <DependentUpon>202112230736363_MaintenancePlan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

@@ -797,6 +797,15 @@
                                                     <span class="menu-title">Duruş Listesi</span>
                                                 </a>
                                             </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "Maintenance$") && Regex.IsMatch(actn, "Planning$") ? "active" : "")"
+                                                   href="@Url.Action("Planning", "Maintenance")">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Bakım Planı</span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 }

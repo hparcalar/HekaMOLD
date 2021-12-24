@@ -161,6 +161,13 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(MaintenancePlanStatusType))
+                {
+                    return DictMaintenancePlanStatusType.Values
+                        .Where(d => d.Key == (MaintenancePlanStatusType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception)
             {

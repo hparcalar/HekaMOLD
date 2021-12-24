@@ -89,6 +89,7 @@
     <Compile Include="Models\Constants\ItemOrderType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
     <Compile Include="Models\Constants\MachineStatusType.cs" />
+    <Compile Include="Models\Constants\MaintenancePlanStatusType.cs" />
     <Compile Include="Models\Constants\MoldRevisionResultType.cs" />
     <Compile Include="Models\Constants\MoldRevisionStatusType.cs" />
     <Compile Include="Models\Constants\MoldStatus.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Models\DataTransfer\Maintenance\EndPostureParam.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionEntryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionModel.cs" />
+    <Compile Include="Models\DataTransfer\Maintenance\MaintenancePlanModel.cs" />
     <Compile Include="Models\DataTransfer\MoldTrace\MoldMoveHistory.cs" />
     <Compile Include="Models\DataTransfer\MoldTrace\MoldRevisionOperationModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderConsumeModel.cs" />
@@ -219,6 +221,7 @@
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
     <Compile Include="Models\Dictionaries\DictItemOrderType.cs" />
     <Compile Include="Models\Dictionaries\DictMachineStatusType.cs" />
+    <Compile Include="Models\Dictionaries\DictMaintenancePlanStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictMoldRevisionResultType.cs" />
     <Compile Include="Models\Dictionaries\DictMoldRevisionStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictMoldStatus.cs" />
@@ -267,6 +270,7 @@
     <Compile Include="UseCases\Integrations\Params\WebTicari\WebTicariLoginConfiguration.cs" />
     <Compile Include="UseCases\Integrations\WebTicariIntegrator.cs" />
     <Compile Include="UseCases\LayoutBO.cs" />
+    <Compile Include="UseCases\MaintenanceBO.cs" />
     <Compile Include="UseCases\MoldBO.cs" />
     <Compile Include="UseCases\OrdersBO.cs" />
     <Compile Include="UseCases\PlanningBO.cs" />
