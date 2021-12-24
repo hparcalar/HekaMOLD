@@ -1398,6 +1398,7 @@ namespace HekaMOLD.Business.UseCases
             var repoShift = _unitOfWork.GetRepository<Shift>();
             var repoUser = _unitOfWork.GetRepository<User>();
             var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+            var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
 
             var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
             var repoIncident = _unitOfWork.GetRepository<Incident>();
@@ -1407,6 +1408,7 @@ namespace HekaMOLD.Business.UseCases
 
             // PRODUCTION BO FOR ACTIVE WORK ORDERS ON MACHINES
             ProductionBO prodBO = new ProductionBO();
+            var currentShift = prodBO.GetCurrentShift();
 
             repo.GetAll().ToList().ForEach(d =>
             {
@@ -1456,11 +1458,15 @@ namespace HekaMOLD.Business.UseCases
                     PostureCount = postureData.Count(),
                 };
 
+                if (containerObj.MachineStats.AvgProductionCount < 0)
+                    containerObj.MachineStats.AvgProductionCount = 0;
+
                 // RESOLVE SHIFT STATS OF THAT MACHINE
                 List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
                 shiftList = shiftList.OrderBy(m => m.StartTime).ToArray();
                 foreach (var shift in shiftList)
                 {
+                    #region CALCULATION OF TARGETS
                     // CALCULATE TARGET COUNT
                     DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
                     DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
@@ -1468,55 +1474,116 @@ namespace HekaMOLD.Business.UseCases
                     if (shift.StartTime > shift.EndTime)
                         endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
 
-                    var totalBreakTimeSeconds = 75 * 60;
+                    var totalBreakTimeSeconds = 60 * 60;
                     var totalShiftTime = (endTime - startTime).TotalSeconds;
                     var netShiftTime = totalShiftTime - totalBreakTimeSeconds;
 
                     // GET ACTIVE PLANS CYCLE TIME
                     string lastProductName = "";
-                    decimal avgCycleTime = 0;
                     int targetCount = 0;
 
-                    var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
-                        && m.WorkOrderDetailId != null
-                        && m.ShiftId == shift.Id)
-                        .OrderByDescending(m => m.Id).FirstOrDefault();
-                    if (lastSignal != null)
+                    var shiftSignals = signalData.Where(m => m.MachineId == d.Id &&
+                        m.WorkOrderDetailId != null && m.ShiftId == shift.Id);
+                    //var workList = shiftSignals
+                    //    .GroupBy(m => m.WorkOrderDetailId).ToArray();
+                    var workList = d.MachinePlan.OrderBy(m => m.OrderNo).Select(m => m.WorkOrderDetailId).ToArray();
+                    var remainingShiftTime = netShiftTime;
+                    foreach (var item in workList)
                     {
-                        lastProductName = lastSignal.WorkOrderDetail.Item != null ?
-                            lastSignal.WorkOrderDetail.Item.ItemName : lastSignal.WorkOrderDetail.TrialProductName;
-                        if (lastSignal.WorkOrderDetail.Item != null)
+                        var workDetail = d.WorkOrderDetail.FirstOrDefault(m => m.Id == item);
+                        var completeCount = workDetail.MachineSignal.Where(m => m.ShiftBelongsToDate < dt1).Count();
+                        var remainingCount = workDetail.Quantity - completeCount;
+
+                        if (workDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
+                            lastProductName = workDetail.Item != null ? workDetail.Item.ItemName : workDetail.TrialProductName;
+
+                        if (remainingCount <= 0)
+                            continue;
+
+                        // CHECK WORK ORDER
+                        bool targetTimeFound = false;
+                        int cycleTime = 0;
+
+                        if (workDetail.Item != null)
                         {
-                            var dbMoldTest = repoMoldTest.Get(m => m.ProductCode == lastSignal.WorkOrderDetail.Item.ItemNo);
-                            if (dbMoldTest != null)
-                                avgCycleTime = dbMoldTest.TotalTimeSeconds ?? 0;
+                            var moldTest = repoMoldTest.Get(m => m.ProductCode == workDetail.Item.ItemNo);
+                            if (moldTest != null && moldTest.TotalTimeSeconds > 0)
+                            {
+                                cycleTime = moldTest.TotalTimeSeconds.Value;
+                                targetTimeFound = true;
+                            }
                         }
+
+                        // FIND THE CYCLE OVER HISTORY
+                        if (!targetTimeFound)
+                        {
+                            cycleTime = repoSignal.Filter(m => m.WorkOrderDetailId == workDetail.Id && m.SignalStatus == 1)
+                                .OrderByDescending(m => m.Id)
+                                .Select(m => m.Duration)
+                                .FirstOrDefault() ?? 0;
+                        }
+
+                        // CALCULATE TARGET AND FILL REMAINING SHIFT TIME
+                        if (cycleTime > 0 && remainingShiftTime > 0)
+                        {
+                            var producableCount = remainingShiftTime / cycleTime;
+                            if (producableCount > Convert.ToDouble(remainingCount ?? 0))
+                                producableCount = Convert.ToDouble(remainingCount);
+
+                            targetCount += Convert.ToInt32(producableCount);
+                            remainingShiftTime -= cycleTime * producableCount;
+                        }
+                        
                     }
 
-                    // IF NO CYCLE TIME FOUND THEN CALCULATE OVER HISTORY
-                    if (avgCycleTime <= 0)
-                    {
-                        avgCycleTime = Convert.ToDecimal(repoSignal.Filter(m => m.MachineId == d.Id && m.ShiftId == shift.Id)
-                            .Average(m => m.Duration) ?? 0);
-                    }
+                    // OLD AVERAGE CALCULATION -- CHANGED SINCE 20.12.2021
+                    //var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
+                    //    && m.WorkOrderDetailId != null
+                    //    && m.ShiftId == shift.Id)
+                    //    .OrderByDescending(m => m.Id).FirstOrDefault();
+                    //if (lastSignal != null)
+                    //{
+                    //    lastProductName = lastSignal.WorkOrderDetail.Item != null ?
+                    //        lastSignal.WorkOrderDetail.Item.ItemName : lastSignal.WorkOrderDetail.TrialProductName;
+                    //    if (lastSignal.WorkOrderDetail.Item != null)
+                    //    {
+                    //        var dbMoldTest = repoMoldTest.Get(m => m.ProductCode == lastSignal.WorkOrderDetail.Item.ItemNo);
+                    //        if (dbMoldTest != null)
+                    //            avgCycleTime = dbMoldTest.TotalTimeSeconds ?? 0;
+                    //    }
+                    //}
 
-                    if (avgCycleTime > 0)
-                    {
-                        try
-                        {
-                            targetCount = Convert.ToInt32(Convert.ToDecimal(netShiftTime) / avgCycleTime);
-                        }
-                        catch (Exception)
-                        {
+                    //// IF NO CYCLE TIME FOUND THEN CALCULATE OVER HISTORY
+                    //if (avgCycleTime <= 0)
+                    //{
+                    //    //avgCycleTime = Convert.ToDecimal(repoSignal.Filter(m => m.MachineId == d.Id && m.ShiftId == shift.Id)
+                    //    //    .Average(m => m.Duration) ?? 0);
+                    //    targetCount = 0;
+                    //}
 
-                        }
-                    }
+                    //if (avgCycleTime > 0)
+                    //{
+                    //    try
+                    //    {
+                    //        targetCount = Convert.ToInt32(Convert.ToDecimal(netShiftTime) / avgCycleTime);
+                    //    }
+                    //    catch (Exception)
+                    //    {
+
+                    //    }
+                    //}
+                    #endregion
 
                     var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
 
-                    shiftStats.Add(new ShiftStatsModel
+                    bool isCurrentShift = false;
+                    if (currentShift != null && currentShift.Id == shift.Id)
+                        isCurrentShift = true;
+
+                    var newShiftStat = new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
+                        IsCurrentShift = isCurrentShift,
                         ChiefUserName = shift.User != null ? shift.User.UserName : "",
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
@@ -1525,7 +1592,12 @@ namespace HekaMOLD.Business.UseCases
                         WastageCount = shiftWastageCount,
                         LastProductName = lastProductName,
                         TargetCount = targetCount - Convert.ToInt32(shiftWastageCount),
-                    });
+                    };
+
+                    shiftStats.Add(newShiftStat);
+
+                    if (newShiftStat.AvgProductionCount < 0)
+                        newShiftStat.AvgProductionCount = 0;
                 }
 
                 containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
@@ -1612,20 +1684,26 @@ namespace HekaMOLD.Business.UseCases
                     PostureCount = postureData.Count(),
                 };
 
+                if (containerObj.MachineStats.AvgProductionCount < 0)
+                    containerObj.MachineStats.AvgProductionCount = 0;
+
                 // RESOLVE SHIFT STATS OF THAT MACHINE
                 List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
                 foreach (var shift in shiftList)
                 {
                     var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
-                    shiftStats.Add(new ShiftStatsModel
+                    var newShiftStat = new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
-                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count() 
+                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count()
                             - Convert.ToInt32(shiftWastageCount),
                         WastageCount = shiftWastageCount,
-                    });
+                    };
+                    if (newShiftStat.AvgProductionCount < 0)
+                        newShiftStat.AvgProductionCount = 0;
+                    shiftStats.Add(newShiftStat);
                 }
 
                 containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
@@ -2131,6 +2209,9 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                if (model.MoldStatus == null)
+                    model.MoldStatus = (int)MoldStatus.Active;
+
                 model.MoldStatusText = ((MoldStatus)(model.MoldStatus ?? 1)).ToCaption();
                 model.CreatedDateStr = model.CreatedDate != null ?
                     string.Format("{0:dd.MM.yyyy}", model.CreatedDate) : "";
@@ -2966,6 +3047,101 @@ namespace HekaMOLD.Business.UseCases
             WorkOrderCategoryModel model = new WorkOrderCategoryModel { };
 
             var repo = _unitOfWork.GetRepository<WorkOrderCategory>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region PRE PROCESS TYPE BUSINESS
+        public PreProcessTypeModel[] GetPreProcessTypeList()
+        {
+            List<PreProcessTypeModel> data = new List<PreProcessTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                PreProcessTypeModel containerObj = new PreProcessTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdatePreProcessType(PreProcessTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.PreProcessCode))
+                    throw new Exception("Ön işlem kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.PreProcessName))
+                    throw new Exception("Ön işlem adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+                if (repo.Any(d => (d.PreProcessCode == model.PreProcessCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir ön işlem tanımı mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new PreProcessType();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePreProcessType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public PreProcessTypeModel GetPreProcessType(int id)
+        {
+            PreProcessTypeModel model = new PreProcessTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<PreProcessType>();
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {

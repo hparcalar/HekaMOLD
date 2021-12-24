@@ -23,7 +23,7 @@
                         file: $scope.selectedFile,
                         description: $scope.selectedDescription,
                         recordId: $scope.recordId,
-                        recordType: $scope.recordType
+                        recordType: $scope.recordType,
                     }
                 }).then(function (resp) {
                     $scope.loadAttachmentList();

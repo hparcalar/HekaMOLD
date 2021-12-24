@@ -50,6 +50,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string FirmName { get; set; }
         public string WarehouseCode { get; set; }
         public string WarehouseName { get; set; }
+        public string ReceiptNo { get; set; }
         public string ReceiptTypeStr { get; set; }
         public string ReceiptDateStr { get; set; }
         public decimal? InQuantity { get; set; }

@@ -187,6 +187,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult ProductPlanList()
+        {
+            return View();
+        }
+
         [HttpPost]
         public JsonResult SaveShift(ShiftModel model)
         {
@@ -546,6 +551,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 Serials = result,
                 Summaries = resultSum,
             }, JsonRequestBehavior.AllowGet);
+
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -617,9 +623,11 @@ namespace HekaMOLD.Enterprise.Controllers
 
             try
             {
+                int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
                 using (ProductionBO bObj = new ProductionBO())
                 {
-                    result = bObj.DeleteSerials(model);
+                    result = bObj.DeleteSerials(model, userId);
                 }
             }
             catch (Exception)

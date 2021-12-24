@@ -90,6 +90,9 @@
                         if (typeof values.ControlDevice != 'undefined') { obj.ControlDevice = values.ControlDevice; }
                         if (typeof values.Method != 'undefined') { obj.Method = values.Method; }
                         if (typeof values.Responsible != 'undefined') { obj.Responsible = values.Responsible; }
+                        if (typeof values.CheckType != 'undefined') { obj.CheckType = values.CheckType; }
+                        if (typeof values.ToleranceMin != 'undefined') { obj.ToleranceMin = values.ToleranceMin; }
+                        if (typeof values.ToleranceMax != 'undefined') { obj.ToleranceMax = values.ToleranceMax; }
                     }
                 },
                 remove: function (key) {
@@ -114,6 +117,9 @@
                         ControlDevice: values.ControlDevice,
                         Method: values.Method,
                         Responsible: values.Responsible,
+                        CheckType: values.CheckType,
+                        ToleranceMin: values.ToleranceMin,
+                        ToleranceMax: values.ToleranceMax,
                         IsRequired: false,
                         NewDetail: true
                     };
@@ -155,6 +161,17 @@
                 { dataField: 'ControlDevice', caption: 'Cihaz' },
                 { dataField: 'Method', caption: 'Yöntem' },
                 { dataField: 'Responsible', caption: 'Sorumlu' },
+                {
+                    dataField: 'CheckType', caption: 'Seçim Türü',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: [{ Id: 1, Text: 'Check' }, { Id: 2, Text: 'Sayısal' }],
+                        valueExpr: "Id",
+                        displayExpr: "Text"
+                    }
+                },
+                { dataField: 'ToleranceMin', caption: 'Tölerans Min', width: 75, dataType: 'number', format: { type: "fixedPoint", precision: 0 } },
+                { dataField: 'ToleranceMax', caption: 'Tölerans Max', width: 75, dataType: 'number', format: { type: "fixedPoint", precision: 0 } },
             ]
         });
     }

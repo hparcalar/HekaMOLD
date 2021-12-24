@@ -16,6 +16,12 @@
             showRowLines: true,
             rowAlternationEnabled: false,
             focusedRowEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             showBorders: true,
             filterRow: {
                 visible: true,
@@ -59,8 +65,8 @@
             columns: [
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
-                { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'DateOfNeedStr', caption: 'Termin Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi' },
+                { dataField: 'DateOfNeedStr', caption: 'Termin Tarihi' },
                 { dataField: 'FirmCode', caption: 'Firma Kodu' },
                 { dataField: 'FirmName', caption: 'Firma Adı' },
                 { dataField: 'OrderStatusStr', caption: 'Durum' },

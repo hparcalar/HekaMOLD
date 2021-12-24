@@ -16,6 +16,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Quality
         public string FaultExplanation { get; set; }
         public DateTime? CreatedDate { get; set; }
         public int? CreatedUserId { get; set; }
+        public Nullable<bool> CheckResult { get; set; }
+        public Nullable<decimal> NumericResult { get; set; }
+        public Nullable<bool> IsOk { get; set; }
         public bool NewDetail { get; set; }
     }
 }

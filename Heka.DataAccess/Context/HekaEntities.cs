@@ -109,5 +109,12 @@
         public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
         public virtual DbSet<ProductWastage> ProductWastage { get; set; }
         public virtual DbSet<ContractWorkFlow> ContractWorkFlow { get; set; }
+        public virtual DbSet<PreProcessType> PreProcessType { get; set; }
+        public virtual DbSet<MachinePreProcess> MachinePreProcess { get; set; }
+        public virtual DbSet<MachinePreProcessHistory> MachinePreProcessHistory { get; set; }
+        public virtual DbSet<MoldRevisionOperation> MoldRevisionOperation { get; set; }
+        public virtual DbSet<Pallet> Pallet { get; set; }
+        public virtual DbSet<UserShortcut> UserShortcut { get; set; }
+        public virtual DbSet<MaintenancePlan> MaintenancePlan { get; set; }
     }
 }

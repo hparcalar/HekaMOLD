@@ -10,6 +10,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.MoldTrace
     {
         public int? ItemReceiptDetailId { get; set; }
         public int? ItemReceiptId { get; set; }
+        public int? ReceiptCategory { get; set; }
         public int? InvoiceId { get; set; }
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
@@ -25,5 +26,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.MoldTrace
         public string ReceiptDocumentNo { get; set; }
         public string InvoiceNo { get; set; }
         public string InvoiceDocumentNo { get; set; }
+        public string WarehouseCode { get; set; }
+        public string WarehouseName { get; set; }
     }
 }

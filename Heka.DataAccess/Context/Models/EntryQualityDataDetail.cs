@@ -27,7 +27,10 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> SampleQuantity { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
-    
+        public Nullable<bool> CheckResult { get; set; }
+        public Nullable<decimal> NumericResult { get; set; }
+        public Nullable<bool> IsOk { get; set; }
+
         public virtual EntryQualityData EntryQualityData { get; set; }
         public virtual EntryQualityPlanDetail EntryQualityPlanDetail { get; set; }
     }

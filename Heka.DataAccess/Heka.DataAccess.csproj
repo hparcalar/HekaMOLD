@@ -137,13 +137,19 @@
     <Compile Include="Context\Models\MachineMaintenanceInstruction.cs" />
     <Compile Include="Context\Models\MachineMaintenanceInstructionEntry.cs" />
     <Compile Include="Context\Models\MachinePlan.cs" />
+    <Compile Include="Context\Models\MachinePreProcess.cs" />
+    <Compile Include="Context\Models\MachinePreProcessHistory.cs" />
     <Compile Include="Context\Models\MachineSignal.cs" />
+    <Compile Include="Context\Models\MaintenancePlan.cs" />
     <Compile Include="Context\Models\Mold.cs" />
     <Compile Include="Context\Models\MoldProduct.cs" />
+    <Compile Include="Context\Models\MoldRevisionOperation.cs" />
     <Compile Include="Context\Models\MoldTest.cs" />
     <Compile Include="Context\Models\Notification.cs" />
+    <Compile Include="Context\Models\Pallet.cs" />
     <Compile Include="Context\Models\Plant.cs" />
     <Compile Include="Context\Models\PostureCategory.cs" />
+    <Compile Include="Context\Models\PreProcessType.cs" />
     <Compile Include="Context\Models\PrinterQueue.cs" />
     <Compile Include="Context\Models\Process.cs" />
     <Compile Include="Context\Models\ProcessGroup.cs" />
@@ -171,6 +177,7 @@
     <Compile Include="Context\Models\UserAuthType.cs" />
     <Compile Include="Context\Models\UserRole.cs" />
     <Compile Include="Context\Models\UserRoleSubscription.cs" />
+    <Compile Include="Context\Models\UserShortcut.cs" />
     <Compile Include="Context\Models\UserWorkOrderHistory.cs" />
     <Compile Include="Context\Models\Warehouse.cs" />
     <Compile Include="Context\Models\WorkOrder.cs" />
@@ -193,9 +200,45 @@
     <Compile Include="Migrations\202112061028085_ContractWorkFlow.designer.cs">
       <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202112170630011_RecipeConsumptionWorkOrderRelation.cs" />
-    <Compile Include="Migrations\202112170630011_RecipeConsumptionWorkOrderRelation.designer.cs">
-      <DependentUpon>202112170630011_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    <Compile Include="Migrations\202112080853143_Machine_PreProcess.cs" />
+    <Compile Include="Migrations\202112080853143_Machine_PreProcess.designer.cs">
+      <DependentUpon>202112080853143_Machine_PreProcess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.cs" />
+    <Compile Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.designer.cs">
+      <DependentUpon>202112090847474_QualityUserAndMachineSignalOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.cs" />
+    <Compile Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.designer.cs">
+      <DependentUpon>202112200924410_WorkOrderSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.cs" />
+    <Compile Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.designer.cs">
+      <DependentUpon>202112200929417_ItemSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112202006183_MoldRevisions.cs" />
+    <Compile Include="Migrations\202112202006183_MoldRevisions.designer.cs">
+      <DependentUpon>202112202006183_MoldRevisions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112211044232_EntryQualityUpdate.cs" />
+    <Compile Include="Migrations\202112211044232_EntryQualityUpdate.designer.cs">
+      <DependentUpon>202112211044232_EntryQualityUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.cs" />
+    <Compile Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.designer.cs">
+      <DependentUpon>202112211323379_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112221732124_PalletStructure.cs" />
+    <Compile Include="Migrations\202112221732124_PalletStructure.designer.cs">
+      <DependentUpon>202112221732124_PalletStructure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112221743586_UserShortcuts.cs" />
+    <Compile Include="Migrations\202112221743586_UserShortcuts.designer.cs">
+      <DependentUpon>202112221743586_UserShortcuts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112230736363_MaintenancePlan.cs" />
+    <Compile Include="Migrations\202112230736363_MaintenancePlan.designer.cs">
+      <DependentUpon>202112230736363_MaintenancePlan.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
@@ -220,8 +263,17 @@
     <EmbeddedResource Include="Migrations\202112061028085_ContractWorkFlow.resx">
       <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112170630011_RecipeConsumptionWorkOrderRelation.resx">
-      <DependentUpon>202112170630011_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.resx">
+      <DependentUpon>202112211323379_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221732124_PalletStructure.resx">
+      <DependentUpon>202112221732124_PalletStructure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221743586_UserShortcuts.resx">
+      <DependentUpon>202112221743586_UserShortcuts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112230736363_MaintenancePlan.resx">
+      <DependentUpon>202112230736363_MaintenancePlan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

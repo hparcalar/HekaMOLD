@@ -8,6 +8,7 @@
     $scope.selectedMachine = {};
     $scope.selectedProduct = {};
     $scope.activeWorkOrder = {};
+    $scope.moldData = {};
 
     $scope.saveStatus = 0;
 
@@ -91,19 +92,33 @@
         );
     }
 
-    $scope.getDefaultValuesByMoldTest = function () {
-        // first, find mold test by product
-        $http.get(HOST_URL + 'Common/FindMoldTestByProduct?productCode=' + $scope.selectedProduct.ItemName, {}, 'json')
+    $scope.onProductChanged = function () {
+        $scope.findMoldTest();
+    }
+
+    $scope.getDefaultValuesByMoldTest = function (planId) {
+        var qData = $scope.planList.find(d => d.Id == planId);
+        if (typeof qData != 'undefined' && qData != null && qData.MoldTestFieldName != null) {
+            try {
+                return $scope.moldData[qData.MoldTestFieldName];
+            } catch (e) {
+
+            }
+        }
+    }
+
+    $scope.findMoldTest = function () {
+        $http.get(HOST_URL + 'Common/FindMoldTestByProduct?productCode=' + $scope.selectedProduct.ItemNo, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     var moldData = resp.data;
                     if (moldData.Id > 0) {
                         // get default values
-
+                        $scope.moldData = moldData;
                     }
                 }
             }
-        );
+            );
     }
 
     $scope.getQualityValue = function (planId, hourNo, checkType) {
@@ -114,7 +129,7 @@
             if (typeof qData != 'undefined' && qData != null) {
                 if (checkType == 1) {
                     return qData.NumericResult == null ? 0 :
-                        qData.NumericResult == 2 ? 2 : qData.NumericResult == 1 ? 1 : 0;
+                        qData.NumericResult;
                 }
                 else
                     return qData.NumericResult;
@@ -146,10 +161,12 @@
                 if (checkType == 1) {
                     if (qData.NumericResult == null || qData.NumericResult == 0)
                         qData.NumericResult = 1;
-                    else if (qData.NumericResult == 1)
+                    else if (qData.NumericResult == 1) // ok
                         qData.NumericResult = 2;
-                    else if (qData.NumericResult == 2)
-                        qData.NumericResult = null;
+                    else if (qData.NumericResult == 2) // nok
+                        qData.NumericResult = 3;
+                    else if (qData.NumericResult == 3) // none
+                        qData.NumericResult = null; // empty
                 }
             }
         } catch (e) {
@@ -267,6 +284,8 @@
 
                         refreshArray($scope.machineList);
                         refreshArray($scope.productList);
+
+                        $scope.findMoldTest();
                     }
 
                     $scope.planList = resp.data.Plans;

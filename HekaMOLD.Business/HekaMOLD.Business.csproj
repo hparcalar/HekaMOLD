@@ -89,8 +89,12 @@
     <Compile Include="Models\Constants\ItemOrderType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
     <Compile Include="Models\Constants\MachineStatusType.cs" />
+    <Compile Include="Models\Constants\MaintenancePlanStatusType.cs" />
+    <Compile Include="Models\Constants\MoldRevisionResultType.cs" />
+    <Compile Include="Models\Constants\MoldRevisionStatusType.cs" />
     <Compile Include="Models\Constants\MoldStatus.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
+    <Compile Include="Models\Constants\PalletStatusType.cs" />
     <Compile Include="Models\Constants\PostureStatusType.cs" />
     <Compile Include="Models\Constants\ProcessStatusType.cs" />
     <Compile Include="Models\Constants\QualityStatusType.cs" />
@@ -136,6 +140,7 @@
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserRoleSubscriptionModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
+    <Compile Include="Models\DataTransfer\Customization\UserShortcutModel.cs" />
     <Compile Include="Models\DataTransfer\EmployeeStats\UserWorkOrderHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
     <Compile Include="Models\DataTransfer\Finance\InvoiceModel.cs" />
@@ -149,7 +154,9 @@
     <Compile Include="Models\DataTransfer\Maintenance\EndPostureParam.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionEntryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionModel.cs" />
+    <Compile Include="Models\DataTransfer\Maintenance\MaintenancePlanModel.cs" />
     <Compile Include="Models\DataTransfer\MoldTrace\MoldMoveHistory.cs" />
+    <Compile Include="Models\DataTransfer\MoldTrace\MoldRevisionOperationModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
@@ -163,11 +170,14 @@
     <Compile Include="Models\DataTransfer\Production\MachineGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachinePreProcessHistoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachinePreProcessModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineSignalModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldProductModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldTestModel.cs" />
     <Compile Include="Models\DataTransfer\Production\PostureCategoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\PreProcessTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProcessGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProcessModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductionPostureModel.cs" />
@@ -207,9 +217,13 @@
     <Compile Include="Models\DataTransfer\Summary\ProductionHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\ReceiptConsumeSummary.cs" />
     <Compile Include="Models\DataTransfer\Summary\WorkOrderSerialSummary.cs" />
+    <Compile Include="Models\DataTransfer\Warehouse\PalletModel.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
     <Compile Include="Models\Dictionaries\DictItemOrderType.cs" />
     <Compile Include="Models\Dictionaries\DictMachineStatusType.cs" />
+    <Compile Include="Models\Dictionaries\DictMaintenancePlanStatusType.cs" />
+    <Compile Include="Models\Dictionaries\DictMoldRevisionResultType.cs" />
+    <Compile Include="Models\Dictionaries\DictMoldRevisionStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictMoldStatus.cs" />
     <Compile Include="Models\Dictionaries\DictPostureStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictProcessStatusType.cs" />
@@ -256,6 +270,7 @@
     <Compile Include="UseCases\Integrations\Params\WebTicari\WebTicariLoginConfiguration.cs" />
     <Compile Include="UseCases\Integrations\WebTicariIntegrator.cs" />
     <Compile Include="UseCases\LayoutBO.cs" />
+    <Compile Include="UseCases\MaintenanceBO.cs" />
     <Compile Include="UseCases\MoldBO.cs" />
     <Compile Include="UseCases\OrdersBO.cs" />
     <Compile Include="UseCases\PlanningBO.cs" />
@@ -300,6 +315,9 @@
   <ItemGroup>
     <EmbeddedResource Include="ReportDesign\DeliverySerialList.rdlc" />
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\DeliveryPalletLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\RawMaterialLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\ProductLabelWithoutFirm.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel_Backup.rdlc" />
   </ItemGroup>

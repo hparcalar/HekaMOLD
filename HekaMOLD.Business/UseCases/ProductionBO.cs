@@ -10,8 +10,10 @@ using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.UseCases.Core;
 using Microsoft.Reporting.WebForms;
+using Newtonsoft.Json;
 using QRCoder;
 using System;
 using System.Collections;
@@ -31,40 +33,42 @@ namespace HekaMOLD.Business.UseCases
         #region WORK ORDER & DETAILS
         public WorkOrderDetailModel[] GetWorkOrderDetailList()
         {
-            List<WorkOrderDetailModel> data = new List<WorkOrderDetailModel>();
+            WorkOrderDetailModel[] data = new WorkOrderDetailModel[0];
 
             var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
 
-            repo.GetAll().ToList().ForEach(d =>
-            {
-                WorkOrderDetailModel containerObj = new WorkOrderDetailModel();
-                d.MapTo(containerObj);
+            data = repo.GetAll().ToList()
+                .Select(d => new WorkOrderDetailModel
+                {
+                    Id = d.Id,
+                    CreatedDate = d.CreatedDate,
+                    CreatedUserId = d.CreatedUserId,
+                    ItemId = d.ItemId,
+                    ProductCode = d.Item != null ? d.Item.ItemNo : "",
+                    ProductName = d.Item != null ? d.Item.ItemName : d.TrialProductName,
+                    WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
+                        string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "",
+                    WorkOrderNo = d.WorkOrder.WorkOrderNo,
+                    FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "",
+                    FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : d.WorkOrder.TrialFirmName,
+                    DyeCode = d.Dye != null ? d.Dye.DyeCode : "",
+                    RalCode = d.Dye != null ? d.Dye.RalCode : "",
+                    DyeName = d.Dye != null ? d.Dye.DyeName : "",
+                    MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
+                    TrialProductName = d.TrialProductName,
+                    WorkOrderType = d.WorkOrderType,
+                    MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                    SaleOrderDocumentNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.DocumentNo : "",
+                    SaleOrderReceiptNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.OrderNo : "",
+                    SaleOrderDate = d.ItemOrderDetail != null ?
+                        string.Format("{0:dd.MM.yyyy}", d.ItemOrderDetail.ItemOrder.OrderDate) : "",
+                    SaleOrderDeadline = d.ItemOrderDetail != null ?
+                        string.Format("", d.ItemOrderDetail.ItemOrder.DateOfNeed) : ""
+                })
+                .OrderByDescending(d => d.CreatedDate)
+                .ToArray();
 
-                containerObj.ProductCode = d.Item != null ? d.Item.ItemNo : "";
-                containerObj.ProductName = d.Item != null ? d.Item.ItemName : d.TrialProductName;
-                containerObj.WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ? 
-                    string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "";
-                containerObj.WorkOrderNo = d.WorkOrder.WorkOrderNo;
-                containerObj.FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "";
-                containerObj.FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : d.WorkOrder.TrialFirmName;
-                containerObj.DyeCode = d.Dye != null ? d.Dye.DyeCode : "";
-                containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
-                containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
-                containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
-                containerObj.TrialProductName = d.TrialProductName;
-                containerObj.WorkOrderType = d.WorkOrderType;
-                containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
-                containerObj.SaleOrderDocumentNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.DocumentNo : "";
-                containerObj.SaleOrderReceiptNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.OrderNo : "";
-                containerObj.SaleOrderDate = d.ItemOrderDetail != null ?
-                    string.Format("{0:dd.MM.yyyy}", d.ItemOrderDetail.ItemOrder.OrderDate) : "";
-                containerObj.SaleOrderDeadline = d.ItemOrderDetail != null ?
-                    string.Format("", d.ItemOrderDetail.ItemOrder.DateOfNeed) : "";
-
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+            return data.OrderByDescending(d => d.CreatedDate).ToArray();
         }
 
         public WorkOrderDetailModel GetWorkOrderDetail(int workOrderDetailId)
@@ -826,6 +830,7 @@ namespace HekaMOLD.Business.UseCases
                         IsGeneratedBySignal = false,
                         LiveQuantity = inPackageQuantity > 0 ? inPackageQuantity : dbObj.InPackageQuantity,
                         SerialNo = !string.IsNullOrEmpty(barcode) ? barcode : GetNextSerialNo(),
+                        ShiftBelongsToDate = currentShift != null ? currentShift.ShiftBelongsToDate : DateTime.Now,
                         SerialStatus = (int)SerialStatusType.Created,
                         SerialType = (int)serialType,
                         WorkOrderDetail = dbObj,
@@ -859,7 +864,6 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
-
         public MachineStatusType GetMachineStatus(int machineId)
         {
             MachineStatusType status = MachineStatusType.Stopped;
@@ -876,7 +880,6 @@ namespace HekaMOLD.Business.UseCases
 
             return status;
         }
-
         public BusinessResult ToggleMachineStatus(int machineId)
         {
             BusinessResult result = new BusinessResult();
@@ -884,12 +887,29 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<Machine>();
+                var repoPosture = _unitOfWork.GetRepository<ProductionPosture>();
                 var dbObj = repo.Get(d => d.Id == machineId);
                 if (dbObj == null)
                     throw new Exception("Makine tanımı bulunamadı.");
 
                 dbObj.MachineStatus = (dbObj.MachineStatus ?? 0) == (int)MachineStatusType.Running ?
                         (int)MachineStatusType.Stopped : (int)MachineStatusType.Running;
+
+                // FINISH ALL ONGOING POSTURES IF MACHINE STATUS HAS CHANGED TO RUNNING
+                if (dbObj.MachineStatus == (int)MachineStatusType.Running)
+                {
+                    // CHECK IF THERE IS AN ONGOING POSTURE THEN STOP IT
+                    if (repoPosture.Any(d => d.MachineId == machineId && d.PostureStatus != (int)PostureStatusType.Resolved))
+                    {
+                        var dbOngoingPostureList = repoPosture.Filter(d => d.MachineId == machineId
+                            && d.PostureStatus != (int)PostureStatusType.Resolved).ToArray();
+                        foreach (var dbOngoingPosture in dbOngoingPostureList)
+                        {
+                            dbOngoingPosture.PostureStatus = (int)PostureStatusType.Resolved;
+                            dbOngoingPosture.EndDate = DateTime.Now;
+                        }
+                    }
+                }
 
                 _unitOfWork.SaveChanges();
 
@@ -952,6 +972,7 @@ namespace HekaMOLD.Business.UseCases
                     SignalStatus = 0,
                     ShiftId = currentShift != null ? currentShift.Id : (int?)null,
                     ShiftBelongsToDate = currentShift != null ? currentShift.ShiftBelongsToDate : null,
+                    OperatorId = dbMachine.WorkingUserId,
                     Duration = null,
                     EndDate = null,
                 };
@@ -2171,6 +2192,9 @@ namespace HekaMOLD.Business.UseCases
                             d.WorkOrderDetail.Machine.MachineName : "",
                         QualityStatus = d.QualityStatus ?? 0,
                         QualityStatusText = ((QualityStatusType)(d.QualityStatus ?? 0)).ToCaption(),
+                        ShiftBelongsToDate = d.ShiftBelongsToDate,
+                        ShiftBelongsToDateStr = d.ShiftBelongsToDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ShiftBelongsToDate) : "",
                         FirstQuantity = d.FirstQuantity,
                         QualityExplanation = d.QualityExplanation,
                         InPackageQuantity = d.InPackageQuantity,
@@ -2182,7 +2206,9 @@ namespace HekaMOLD.Business.UseCases
                         SerialNo = d.SerialNo,
                         FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "" : "",
                         FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName : "",
-                    }).ToArray();
+                    })
+                    .OrderByDescending(d => d.CreatedDate)
+                    .ToArray();
             }
             catch (Exception)
             {
@@ -2282,6 +2308,9 @@ namespace HekaMOLD.Business.UseCases
                         InPackageQuantity = d.InPackageQuantity,
                         ShiftId = d.ShiftId,
                         ShiftCode = d.Shift != null ? d.Shift.ShiftCode : "",
+                        ShiftBelongsToDate = d.ShiftBelongsToDate,
+                        ShiftBelongsToDateStr = d.ShiftBelongsToDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ShiftBelongsToDate) : "",
                         QualityExplanation = d.QualityExplanation,
                         ShiftName = d.Shift != null ? d.Shift.ShiftName : "",
                         IsGeneratedBySignal = d.IsGeneratedBySignal,
@@ -2388,7 +2417,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult DeleteSerials(WorkOrderSerialModel[] model)
+        public BusinessResult DeleteSerials(WorkOrderSerialModel[] model, int userId)
         {
             BusinessResult result = new BusinessResult();
 
@@ -2401,7 +2430,10 @@ namespace HekaMOLD.Business.UseCases
                     var dbSerial = repo.Get(d => d.Id == item.Id);
                     if (dbSerial != null)
                     {
-                        repo.Delete(dbSerial);
+                        dbSerial.SerialStatus = (int)SerialStatusType.Cancelled;
+                        dbSerial.UpdatedDate = DateTime.Now;
+                        dbSerial.UpdatedUserId = userId;
+                        //repo.Delete(dbSerial);
                     }
                 }
 
@@ -2487,6 +2519,7 @@ namespace HekaMOLD.Business.UseCases
                             SerialNo = item.SerialNo,
                             SerialStatus = (int)SerialStatusType.Placed,
                             WorkOrderDetailId = item.WorkOrderDetailId,
+                            ShiftBelongsToDate = item.ShiftBelongsToDate,
                         });
                         //relatedDetail.Serials.Add(item);
 
@@ -3321,6 +3354,16 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                     throw new Exception("Ürün giriş kaydına erişilemedi.");
 
+                string designFileName = "ProductLabel.rdlc";
+                if (!string.IsNullOrEmpty(dbObj.WorkOrderDetail.LabelConfig))
+                {
+                    LabelConfigModel labelData = JsonConvert.DeserializeObject<LabelConfigModel>(dbObj.WorkOrderDetail.LabelConfig);
+                    if (labelData != null && labelData.ShowFirm == false)
+                    {
+                        designFileName = "ProductLabelWithoutFirm.rdlc";
+                    }
+                }
+
                 // GENERATE BARCODE IMAGE
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(dbObj.SerialNo, QRCodeGenerator.ECCLevel.Q);
@@ -3346,7 +3389,7 @@ namespace HekaMOLD.Business.UseCases
                 };
 
                 LocalReport report = new LocalReport();
-                report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\ProductLabel.rdlc";
+                report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\" + designFileName;
 
                 report.DataSources.Add(new ReportDataSource("DS1", dataList));
                 Export(report, dbPrinter.PageWidth ?? 0, dbPrinter.PageHeight ?? 0); // (9.7m, 8)
@@ -3408,189 +3451,6 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return result;
-        }
-        #endregion
-
-        #region YAZDIRMAK İÇİN GEREKLİ STANDART METOTLAR
-        private int m_currentPageIndex;
-        private IList<Stream> m_streams;
-
-        private Stream CreateStream(string name,
-            string fileNameExtension, Encoding encoding,
-            string mimeType, bool willSeek)
-        {
-            Stream stream = new MemoryStream();
-            m_streams.Add(stream);
-            return stream;
-        }
-
-        // Export the given report as an EMF (Enhanced Metafile) file.
-        private void Export(LocalReport report, decimal pageWidth, decimal pageHeight)
-        {
-            string deviceInfo =
-          @"<DeviceInfo>
-                <OutputFormat>EMF</OutputFormat>
-                <PageWidth>{PageWidth}</PageWidth>
-                <PageHeight>{PageHeight}</PageHeight>
-                <MarginTop>{MarginTop}</MarginTop>
-                <MarginLeft>{MarginLeft}</MarginLeft>
-                <MarginRight>{MarginRight}</MarginRight>
-                <MarginBottom>{MarginBottom}</MarginBottom>
-             </DeviceInfo>"
-            .Replace("{PageWidth}", string.Format("{0:N2}", pageWidth).Replace(",", ".") + "cm")
-            .Replace("{PageHeight}", string.Format("{0:N2}", pageHeight).Replace(",", ".") + "cm")
-            .Replace("{MarginTop}", "0.0cm")
-            .Replace("{MarginLeft}", "0.0cm")
-            .Replace("{MarginRight}", "0.0cm")
-            .Replace("{MarginBottom}", "0.0cm");
-
-            Warning[] warnings;
-            m_streams = new List<Stream>();
-            report.Render("Image", deviceInfo, CreateStream,
-               out warnings);
-            foreach (Stream stream in m_streams)
-                stream.Position = 0;
-        }
-
-        private void ExportPdf(LocalReport report, string outputPath, string outputFileName)
-        {
-            string deviceInfo =
-          @"<DeviceInfo>
-                <OutputFormat>EMF</OutputFormat>
-                <PageWidth>{PageWidth}</PageWidth>
-                <PageHeight>{PageHeight}</PageHeight>
-                <MarginTop>{MarginTop}</MarginTop>
-                <MarginLeft>{MarginLeft}</MarginLeft>
-                <MarginRight>{MarginRight}</MarginRight>
-                <MarginBottom>{MarginBottom}</MarginBottom>
-             </DeviceInfo>"
-            .Replace("{PageWidth}", "21cm")
-            .Replace("{PageHeight}", "29.7cm")
-            .Replace("{MarginTop}", "0.2cm")
-            .Replace("{MarginLeft}", "0.0cm")
-            .Replace("{MarginRight}", "0.0cm")
-            .Replace("{MarginBottom}", "0.0cm");
-
-            Warning[] warnings;
-            //m_streams = new List<Stream>();
-            //report.Render("PDF", deviceInfo, CreateStream,
-            //   out warnings);
-            //foreach (Stream stream in m_streams)
-            //    stream.Position = 0;
-
-            string[] streamids;
-            string mimeType;
-            string encoding;
-            string filenameExtension;
-
-            byte[] bytes = report.Render(
-                "PDF", null, out mimeType, out encoding, out filenameExtension,
-                out streamids, out warnings);
-
-            using (FileStream fs = new FileStream(outputPath + outputFileName, FileMode.Create))
-            {
-                fs.Write(bytes, 0, bytes.Length);
-            }
-        }
-
-        private void ExportPdf(LocalReport report, string pageWidth, string pageHeight, string outputPath, string outputFileName)
-        {
-            string deviceInfo =
-          @"<DeviceInfo>
-                <OutputFormat>EMF</OutputFormat>
-                <PageWidth>{PageWidth}</PageWidth>
-                <PageHeight>{PageHeight}</PageHeight>
-                <MarginTop>{MarginTop}</MarginTop>
-                <MarginLeft>{MarginLeft}</MarginLeft>
-                <MarginRight>{MarginRight}</MarginRight>
-                <MarginBottom>{MarginBottom}</MarginBottom>
-             </DeviceInfo>"
-            .Replace("{PageWidth}", pageWidth)
-            .Replace("{PageHeight}", pageHeight)
-            .Replace("{MarginTop}", "0.2cm")
-            .Replace("{MarginLeft}", "0.0cm")
-            .Replace("{MarginRight}", "0.0cm")
-            .Replace("{MarginBottom}", "0.0cm");
-
-            Warning[] warnings;
-            //m_streams = new List<Stream>();
-            //report.Render("PDF", deviceInfo, CreateStream,
-            //   out warnings);
-            //foreach (Stream stream in m_streams)
-            //    stream.Position = 0;
-
-            string[] streamids;
-            string mimeType;
-            string encoding;
-            string filenameExtension;
-
-            byte[] bytes = report.Render(
-                "PDF", null, out mimeType, out encoding, out filenameExtension,
-                out streamids, out warnings);
-
-            using (FileStream fs = new FileStream(outputPath + outputFileName, FileMode.Create))
-            {
-                fs.Write(bytes, 0, bytes.Length);
-            }
-        }
-
-        // Handler for PrintPageEvents
-        private void PrintPage(object sender, PrintPageEventArgs ev)
-        {
-            try
-            {
-                Metafile pageImage = new
-               Metafile(m_streams[m_currentPageIndex]);
-
-                // Adjust rectangular area with printer margins.
-                System.Drawing.Rectangle adjustedRect = new System.Drawing.Rectangle(
-                    ev.PageBounds.Left - (int)ev.PageSettings.HardMarginX,
-                    ev.PageBounds.Top - (int)ev.PageSettings.HardMarginY,
-                    ev.PageBounds.Width,
-                    ev.PageBounds.Height);
-
-                // Draw a white background for the report
-                ev.Graphics.FillRectangle(System.Drawing.Brushes.White, adjustedRect);
-
-                // Draw the report content
-                ev.Graphics.DrawImage(pageImage, adjustedRect);
-
-                // Prepare for the next page. Make sure we haven't hit the end.
-                m_currentPageIndex++;
-                ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        private void Print(string printerName)
-        {
-            if (m_streams == null || m_streams.Count == 0)
-                throw new Exception("Error: no stream to print.");
-            PrintDocument printDoc = new PrintDocument();
-            // YAZICI ADI PARAMETRİK BELİRTİLEBİLİR
-            //printDoc.PrinterSettings.PrinterName = "Microsoft Print to PDF";
-            if (!printDoc.PrinterSettings.IsValid)
-            {
-                throw new Exception("Error: cannot find the default printer.");
-            }
-            else
-            {
-                printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
-                printDoc.PrinterSettings.PrinterName = printerName;
-                m_currentPageIndex = 0;
-                try
-                {
-                    printDoc.Print();
-                }
-                catch (Exception ex)
-                {
-
-                }
-
-            }
         }
         #endregion
 

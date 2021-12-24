@@ -134,7 +134,7 @@
                                 <tr ng-repeat="item in filteredPickupList"
                                     ng-show="modelObject.ShowOnlyOk == false || modelObject.ShowOnlyOk == true && (item.QualityStatus == 1)"
                                     ng-class="{'bg-warning': isSelectedProduct(item)}">
-                                    <td class="w-10 px-2">{{item.CreatedDateStr}}</td>
+                                    <td class="w-10 px-2">{{item.ShiftBelongsToDateStr}}</td>
                                     <td class="w-10 px-2">{{item.MachineCode}}</td>
                                     @*<td class="w-10 px-2">{{item.SerialNo}}</td>*@
                                     @*<td class="w-10 px-2">{{item.ItemNo}}</td>*@

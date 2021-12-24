@@ -20,15 +20,19 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public int? WorkOrderDetailId { get; set; }
         public int? InPackageQuantity { get; set; }
         public int? SerialType { get; set; }
+        public DateTime? ShiftBelongsToDate { get; set; }
+        public int? PalletId { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
         public string CreatedDateStr { get; set; }
+        public string ShiftBelongsToDateStr { get; set; }
         public string MachineCode { get; set; }
         public string MachineName { get; set; }
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
+        public string PalletNo { get; set; }
         #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿app.controller('dashboardCtrl', function ($scope, $http, $interval) {
     $scope.machineList = [];
     $scope.profileList = [];
+    $scope.activeShift = {};
 
     $scope.filterModel = { startDate: moment().format('DD.MM.YYYY'), endDate: moment().format('DD.MM.YYYY') };
 
@@ -14,24 +15,36 @@
         $http.get(HOST_URL + 'Machine/GetMachineStatsForDashboard', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    if ($scope.profileList.length > 0) {
-                        for (var i = 0; i < resp.data.length; i++) {
-                            var cMac = resp.data[i];
-                            var relatedProfile = $scope.profileList.find(d => d.Id == cMac.WorkingUserId);
-                            if (relatedProfile != null) {
-                                cMac.ProfileImageBase64 = relatedProfile.ProfileImageBase64;
+
+                    // RESOLVE PROFILE IMAGES
+                    try {
+                        if ($scope.profileList.length > 0) {
+                            for (var i = 0; i < resp.data.Data.length; i++) {
+                                var cMac = resp.data.Data[i];
+                                var relatedProfile = $scope.profileList.find(d => d.Id == cMac.WorkingUserId);
+                                if (relatedProfile != null) {
+                                    cMac.ProfileImageBase64 = relatedProfile.ProfileImageBase64;
+                                }
+                                else
+                                    cMac.ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
                             }
-                            else
-                                cMac.ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
                         }
-                    }
-                    else {
-                        for (var i = 0; i < resp.data.length; i++) {
-                            resp.data[i].ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
+                        else {
+                            for (var i = 0; i < resp.data.length; i++) {
+                                resp.data.Data[i].ProfileImageBase64 = HOST_URL + 'assets/media/avatars/blank.png';
+                            }
                         }
+                    } catch (e) {
+
                     }
 
-                    $scope.machineList = resp.data;
+                    $scope.activeShift = resp.data.Shift;
+                    $scope.machineList = resp.data.Data;
+                    for (var i = 0; i < $scope.machineList.length; i++) {
+                        var cMac = $scope.machineList[i];
+                        cMac.MachineStats.ShiftStats = cMac.MachineStats.ShiftStats.filter(d => d.IsCurrentShift == true);
+                    }
+
                     $scope.getUserProfiles();
                     $scope.isBindingModel = false;
                 }

@@ -3978,6 +3978,7 @@
     <Content Include="Components\Controllers\edit-plan.js" />
     <Content Include="Components\Controllers\machine-incidents.js" />
     <Content Include="Components\Controllers\machine-postures.js" />
+    <Content Include="Components\Controllers\maintenance-plan.js" />
     <Content Include="Components\Controllers\open-so-list.js" />
     <Content Include="Components\Controllers\planning-work-copy.js" />
     <Content Include="Components\Controllers\posture-category-selection.js" />
@@ -3993,11 +3994,13 @@
     <Content Include="Components\Controllers\related-request-list.js" />
     <Content Include="Components\Controllers\report-template-list.js" />
     <Content Include="Components\Controllers\shift-targets.js" />
+    <Content Include="Components\Controllers\to-contract.js" />
     <Content Include="Components\Controllers\trial-work-form.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
     <Content Include="Components\Views\MachineIncidents.html" />
     <Content Include="Components\Views\MachinePostures.html" />
+    <Content Include="Components\Views\MaintenancePlan.html" />
     <Content Include="Components\Views\OpenSoList.html" />
     <Content Include="Components\Views\PlanningWorkCopy.html" />
     <Content Include="Components\Views\PostureCategorySelection.html" />
@@ -4013,6 +4016,7 @@
     <Content Include="Components\Views\ProductionHistoryList.html" />
     <Content Include="Components\Views\ReportTemplateList.html" />
     <Content Include="Components\Views\ShiftTargets.html" />
+    <Content Include="Components\Views\ToContract.html" />
     <Content Include="Components\Views\TrialWorkForm.html" />
     <Content Include="Components\VisualMechanics\camera-manager.js" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -4062,6 +4066,7 @@
     <Content Include="Content\dx.softblue.compact.css" />
     <Content Include="Content\dx.softblue.css" />
     <Content Include="Content\fontawesome5.min.css" />
+    <Content Include="Content\heka-clock.css" />
     <Content Include="Content\heka-styles-red.css" />
     <Content Include="Content\heka-styles.css" />
     <Content Include="Content\images\close.png" />
@@ -4121,6 +4126,7 @@
     <Content Include="FrontEndLogic\Firm\approved-suppliers.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
     <Content Include="FrontEndLogic\Home\dashboard.js" />
+    <Content Include="FrontEndLogic\Home\heka-clock.js" />
     <Content Include="FrontEndLogic\Home\login.js" />
     <Content Include="FrontEndLogic\IncidentCategory\index.js" />
     <Content Include="FrontEndLogic\IncidentCategory\list.js" />
@@ -4155,6 +4161,7 @@
     <Content Include="FrontEndLogic\Mobile\posture-history.js" />
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\product-information.js" />
+    <Content Include="FrontEndLogic\Mobile\product-plan-list.js" />
     <Content Include="FrontEndLogic\Mobile\wastage-entry.js" />
     <Content Include="FrontEndLogic\Mobile\product-pickup.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
@@ -4480,9 +4487,11 @@
     <Content Include="Scripts\dx.viz.js" />
     <Content Include="Scripts\dx.web.debug.js" />
     <Content Include="Scripts\dx.web.js" />
+    <Content Include="Scripts\exceljs.min.js" />
     <Content Include="Scripts\FileAPI.flash.swf" />
     <Content Include="Scripts\FileAPI.js" />
     <Content Include="Scripts\FileAPI.min.js" />
+    <Content Include="Scripts\FileSaver.min.js" />
     <Content Include="Scripts\globalize.js" />
     <Content Include="Scripts\globalize\currency.js" />
     <Content Include="Scripts\globalize\date.js" />
@@ -4521,6 +4530,7 @@
     <Content Include="Scripts\ng-file-upload-shim.min.js" />
     <Content Include="Scripts\ng-file-upload.js" />
     <Content Include="Scripts\ng-file-upload.min.js" />
+    <Content Include="Scripts\pollyfill.min.js" />
     <Content Include="Scripts\printElement.js" />
     <Content Include="Scripts\push.min.js" />
     <Content Include="Scripts\serviceWorker.min.js" />
@@ -4676,6 +4686,8 @@
     <Content Include="Views\LojisticOrder\Index.cshtml" />
     <Content Include="Views\LojisticOrder\List.cshtml" />
     <Content Include="Views\Mobile\ItemDelivery.cshtml" />
+    <Content Include="Views\Mobile\ProductPlanList.cshtml" />
+    <Content Include="Views\Maintenance\Planning.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

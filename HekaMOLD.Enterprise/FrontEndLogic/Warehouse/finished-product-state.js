@@ -21,6 +21,10 @@
             showColumnLines: false,
             showRowLines: true,
             rowAlternationEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             allowColumnResizing: true,
             wordWrapEnabled: true,
             focusedRowEnabled: true,
@@ -31,7 +35,7 @@
             headerFilter: {
                 visible: true
             },
-            height: 700,
+            height: 500,
             groupPanel: {
                 visible: true
             },
@@ -42,22 +46,23 @@
             columns: [
                 /*{ dataField: 'ItemNo', caption: 'Ürün Kodu' },*/
                 { dataField: 'ItemName', caption: 'Ürün Adı' },
-                { dataField: 'InQty', caption: 'Giriş Miktar' },
-                { dataField: 'OutQty', caption: 'Çıkış Miktar' },
-                { dataField: 'TotalQty', caption: 'Mevcut Miktar' },
+                { dataField: 'ItemGroupName', caption: 'Grup' },
+                //{ dataField: 'InQty', caption: 'Giriş Miktar' },
+                //{ dataField: 'OutQty', caption: 'Çıkış Miktar' },
+                { dataField: 'TotalQty', caption: 'Miktar' },
             ],
             summary: {
                 totalItems: [{
-                    column: "InQty",
-                    summaryType: "sum",
-                }, {
-                    column: "OutQty",
-                    summaryType: "sum",
-                },
-                {
-                    column: "TotalQty",
-                    summaryType: "sum",
-                }
+                        column: "InQty",
+                        summaryType: "sum",
+                    }, {
+                        column: "OutQty",
+                        summaryType: "sum",
+                    },
+                    {
+                        column: "TotalQty",
+                        summaryType: "sum",
+                    }
                 ]
             }
         });

@@ -4,6 +4,9 @@
         Quantity: 0,
         CompleteQuantity: 0,
         WastageQuantity: 0,
+        LabelConfigData: {
+            ShowFirm:true,
+        }
     };
 
     $scope.save = function () {

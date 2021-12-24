@@ -33,6 +33,7 @@ namespace Heka.DataAccess.Context
             this.UserWorkOrderHistory = new HashSet<UserWorkOrderHistory>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.ProductWastage = new HashSet<ProductWastage>();
+            this.MachinePreProcess = new HashSet<MachinePreProcess>();
         }
     
         public int Id { get; set; }
@@ -104,5 +105,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Machine")]
         public virtual ICollection<ProductWastage> ProductWastage { get; set; }
+
+        [InverseProperty("Machine")]
+        public virtual ICollection<MachinePreProcess> MachinePreProcess { get; set; }
     }
 }

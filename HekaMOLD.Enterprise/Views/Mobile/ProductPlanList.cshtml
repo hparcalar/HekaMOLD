@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Üretim Planı";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+
+<div>
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="workOrderPlanningCtrl">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid d-flex flex-column">
+            <!--begin::PLANNING VIEW-->
+            <div class="row gy-5 gx-xl-8">
+                <!--begin::Col-->
+                <div class="col-xxl-12">
+
+                    <div class="d-flex flex-row flex-fill">
+                        <div class="d-flex flex-column flex-fill">
+                            <div class="d-flex flex-row flex-fill mt-2 py-0">
+                                <div class="d-flex flex-column flex-fill machine-box mr-1 mt-0 border-top-0 border-right-0 alert-secondary"
+                                     style="border: 1px solid #009EF7;"
+                                     ng-class="{'bg-light-primary': selectedSource.Id == machine.Id}"
+                                     ng-click="selectSource(machine.Id)"
+                                     ng-cloak
+                                     data-id="{{machine.Id}}"
+                                     ng-repeat="machine in selectedMachineList">
+                                    <h5 ng-cloak ng-bind="machine.MachineCode"></h5>
+                                    <h5 ng-cloak ng-if="machine.IsInIncident"
+                                        class="text-center bg-danger text-light mt-0  px-2 py-2 border-1 border-dark">
+                                        BAKIMDA
+                                    </h5>
+                                    <div class="d-flex flex-column overflow-auto" style="max-height:400px;">
+                                        @* GET ACTIVE PLANS OF MACHINE *@
+                                        <div class="plan-box" draggable="true"
+                                             data-plan-id="{{plan.Id}}"
+                                             ng-click="selectPlan(plan)"
+                                             ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6,
+                                                'plan-box-completed': plan.WorkOrder.WorkOrderStatus == 4,
+                                                'plan-box-progress': plan.WorkOrder.WorkOrderStatus == 3,
+                                                'plan-selected': plan.Id == selectedPlan.Id}"
+                                             ng-repeat="plan in getMachinePlans(machine, true)">
+
+                                            <p ng-cloak>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
+                                            <p><span ng-cloak class="plan-firm-name">{{plan.WorkOrder.FirmName}}</span>&nbsp;</p>
+                                            <p><b ng-cloak>{{showProperProductName(plan.WorkOrder)}}</b>&nbsp;</p>
+                                            <p ng-cloak>
+                                                {{plan.WorkOrder.CompleteQuantity}} /
+                                                {{plan.WorkOrder.Quantity}}
+                                            </p>
+                                            <p ng-cloak ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,
+                                               'label-wastage-count': plan.WorkOrder.WastageQuantity == 0}">
+                                                Fire: {{ plan.WorkOrder.WastageQuantity }}
+                                            </p>
+                                            <p ng-cloak ng-if="plan.WorkOrder.WorkOrderType == 2" class="bg-dark text-light py-1">
+                                                DENEME ÜRETİMİ
+                                            </p>
+                                        </div>
+
+                                        @* GET COMPLETED PLANS OF MACHINE *@
+                                        <div class="plan-box" draggable="true"
+                                             data-plan-id="{{plan.Id}}"
+                                             ng-cloak
+                                             ng-click="selectPlan(plan)"
+                                             ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6,
+                                                    'plan-box-completed': plan.WorkOrder.WorkOrderStatus == 4,
+                                                    'plan-box-progress': plan.WorkOrder.WorkOrderStatus == 3,
+                                                    'plan-selected': plan.Id == selectedPlan.Id}"
+                                             ng-repeat="plan in getMachinePlans(machine, false)">
+
+                                            <p ng-cloak>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
+                                            <p ng-cloak>{{plan.WorkOrder.FirmName}}&nbsp;</p>
+                                            <p><b ng-cloak>{{showProperProductName(plan.WorkOrder)}}</b>&nbsp;</p>
+                                            <p ng-cloak>
+                                                {{plan.WorkOrder.CompleteQuantity}} /
+                                                {{plan.WorkOrder.Quantity}}
+                                            </p>
+                                            <p ng-cloak ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,
+                                               'label-wastage-count': plan.WorkOrder.WastageQuantity == 0}">
+                                                Fire: {{ plan.WorkOrder.WastageQuantity }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--end::Col-->
+            </div>
+            <!--end::PLANNING VIEW-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/planning.css" rel="stylesheet" />
+    <script src="~/FrontEndLogic/Mobile/product-plan-list.js"></script>
+}

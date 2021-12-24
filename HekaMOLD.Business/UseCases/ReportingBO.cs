@@ -60,7 +60,7 @@ namespace HekaMOLD.Business.UseCases
             return null;
         }
         #endregion
-
+        
         public BusinessResult PrintReport<T>(int reportId, int printerId, T dataModel)
         {
             BusinessResult result = new BusinessResult();
@@ -179,144 +179,6 @@ namespace HekaMOLD.Business.UseCases
         }
         #endregion
 
-        #region REQUIRED RDLC NATIVE FUNCTIONS
-        private int m_currentPageIndex;
-        private IList<Stream> m_streams;
-
-        private Stream CreateStream(string name,
-            string fileNameExtension, Encoding encoding,
-            string mimeType, bool willSeek)
-        {
-            Stream stream = new MemoryStream();
-            m_streams.Add(stream);
-            return stream;
-        }
-
-        // Export the given report as an EMF (Enhanced Metafile) file.
-        private void Export(LocalReport report, decimal pageWidth, decimal pageHeight)
-        {
-            string deviceInfo =
-          @"<DeviceInfo>
-                <OutputFormat>EMF</OutputFormat>
-                <PageWidth>{PageWidth}</PageWidth>
-                <PageHeight>{PageHeight}</PageHeight>
-                <MarginTop>{MarginTop}</MarginTop>
-                <MarginLeft>{MarginLeft}</MarginLeft>
-                <MarginRight>{MarginRight}</MarginRight>
-                <MarginBottom>{MarginBottom}</MarginBottom>
-             </DeviceInfo>"
-            .Replace("{PageWidth}", string.Format("{0:N2}", pageWidth).Replace(",", ".") + "cm")
-            .Replace("{PageHeight}", string.Format("{0:N2}", pageHeight).Replace(",", ".") + "cm")
-            .Replace("{MarginTop}", "0.0cm")
-            .Replace("{MarginLeft}", "0.0cm")
-            .Replace("{MarginRight}", "0.0cm")
-            .Replace("{MarginBottom}", "0.0cm");
-
-            Warning[] warnings;
-            m_streams = new List<Stream>();
-            report.Render("Image", deviceInfo, CreateStream,
-               out warnings);
-            foreach (Stream stream in m_streams)
-                stream.Position = 0;
-        }
-
-        private void ExportPdf(LocalReport report, decimal pageWidth, decimal pageHeight,
-            string outputPath, string outputFileName)
-        {
-            string deviceInfo =
-          @"<DeviceInfo>
-                <OutputFormat>EMF</OutputFormat>
-                <PageWidth>{PageWidth}</PageWidth>
-                <PageHeight>{PageHeight}</PageHeight>
-                <MarginTop>{MarginTop}</MarginTop>
-                <MarginLeft>{MarginLeft}</MarginLeft>
-                <MarginRight>{MarginRight}</MarginRight>
-                <MarginBottom>{MarginBottom}</MarginBottom>
-             </DeviceInfo>"
-            .Replace("{PageWidth}", string.Format("{0:N2}", pageWidth).Replace(",", ".") + "cm")
-            .Replace("{PageHeight}", string.Format("{0:N2}", pageHeight).Replace(",", ".") + "cm")
-            .Replace("{MarginTop}", "0.2cm")
-            .Replace("{MarginLeft}", "0.0cm")
-            .Replace("{MarginRight}", "0.0cm")
-            .Replace("{MarginBottom}", "0.0cm");
-
-            Warning[] warnings;
-
-            string[] streamids;
-            string mimeType;
-            string encoding;
-            string filenameExtension;
-
-            byte[] bytes = report.Render(
-                "PDF", null, out mimeType, out encoding, out filenameExtension,
-                out streamids, out warnings);
-
-            using (FileStream fs = new FileStream(outputPath + outputFileName, FileMode.Create))
-            {
-                fs.Write(bytes, 0, bytes.Length);
-            }
-        }
-
-        // Handler for PrintPageEvents
-        private void PrintPage(object sender, PrintPageEventArgs ev)
-        {
-            try
-            {
-                Metafile pageImage = new
-               Metafile(m_streams[m_currentPageIndex]);
-
-                // Adjust rectangular area with printer margins.
-                System.Drawing.Rectangle adjustedRect = new System.Drawing.Rectangle(
-                    ev.PageBounds.Left - (int)ev.PageSettings.HardMarginX,
-                    ev.PageBounds.Top - (int)ev.PageSettings.HardMarginY,
-                    ev.PageBounds.Width,
-                    ev.PageBounds.Height);
-
-                // Draw a white background for the report
-                ev.Graphics.FillRectangle(System.Drawing.Brushes.White, adjustedRect);
-
-                // Draw the report content
-                ev.Graphics.DrawImage(pageImage, adjustedRect);
-
-                // Prepare for the next page. Make sure we haven't hit the end.
-                m_currentPageIndex++;
-                ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        private void Print(string printerName)
-        {
-            if (m_streams == null || m_streams.Count == 0)
-                throw new Exception("Error: no stream to print.");
-            PrintDocument printDoc = new PrintDocument();
-            // YAZICI ADI PARAMETRİK BELİRTİLEBİLİR
-            //printDoc.PrinterSettings.PrinterName = "Microsoft Print to PDF";
-            if (!printDoc.PrinterSettings.IsValid)
-            {
-                throw new Exception("Error: cannot find the default printer.");
-            }
-            else
-            {
-                printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
-                printDoc.PrinterSettings.PrinterName = printerName;
-                m_currentPageIndex = 0;
-                try
-                {
-                    printDoc.Print();
-                }
-                catch (Exception ex)
-                {
-
-                }
-
-            }
-        }
-        #endregion
-
         #region SYSTEM REPORTS
         public ItemStateModel[] GetItemStates(int[] warehouseList)
         {
@@ -337,13 +199,25 @@ namespace HekaMOLD.Business.UseCases
                         WarehouseId = d.Key.Warehouse.Id,
                         WarehouseCode = d.Key.Warehouse.WarehouseCode,
                         WarehouseName = d.Key.Warehouse.WarehouseName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
                         InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0,
                         OutQty = d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0,
                         TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0)
                             - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
-                    }).ToArray();
+                    })
+                    .OrderBy(d => d.ItemGroupId)
+                    .ToArray();
+
+                data = data.Where(d => d.InQty - d.OutQty > 0).ToArray();
+
+                foreach (var item in data)
+                {
+                    item.TotalQty = item.InQty - item.OutQty;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
             }
@@ -384,6 +258,9 @@ namespace HekaMOLD.Business.UseCases
                         WarehouseId = d.Key.Warehouse.Id,
                         WarehouseCode = d.Key.Warehouse.WarehouseCode,
                         WarehouseName = d.Key.Warehouse.WarehouseName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
                         InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100
                             && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd
                             ).Sum(m => m.Quantity) ?? 0,
@@ -392,7 +269,16 @@ namespace HekaMOLD.Business.UseCases
                         TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100
                             && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd).Sum(m => m.Quantity) ?? 0)
                             - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
-                    }).ToArray();
+                    })
+                    .OrderBy(d => d.ItemGroupId)
+                    .ToArray();
+
+                data = data.Where(d => d.InQty - d.OutQty > 0).ToArray();
+
+                foreach (var item in data)
+                {
+                    item.TotalQty = item.InQty - item.OutQty;
+                }
             }
             catch (Exception)
             {

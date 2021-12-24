@@ -147,7 +147,7 @@
                             {{ selectedProducts.length == filteredPickupList.length && selectedProducts.length > 0 ? 'Seçimi Kaldır' : 'Tümünü Seç' }}
                         </button>
                     </div>
-                    <table class="table table-bordered table-hk-md">
+                    <table class="table table-bordered table-hk-md-lh">
                         <thead>
                             <tr>
                                 <th class="w-10 px-2">Tarih</th>
@@ -164,12 +164,12 @@
                         </thead>
                     </table>
                     <div class="table-scroller-md">
-                        <table ng-cloak class="table table-bordered table-hk-md">
+                        <table ng-cloak class="table table-bordered table-hk-md-lg">
                             <tbody>
                                 <tr ng-repeat="item in filteredPickupList"
                                     ng-show="modelObject.ShowOnlyWaitings == false || modelObject.ShowOnlyWaitings == true && (item.QualityStatus == 0 || item.QualityStatus == 3)"
                                     ng-class="{'bg-warning': isSelectedProduct(item)}">
-                                    <td class="w-10 px-2">{{item.CreatedDateStr}}</td>
+                                    <td class="w-10 px-2">{{item.ShiftBelongsToDateStr}}</td>
                                     <td class="w-10 px-2">{{item.MachineCode}}</td>
                                     @*<td class="w-10 px-2">{{item.SerialNo}}</td>*@
                                     @*<td class="w-10 px-2">{{item.ItemNo}}</td>*@

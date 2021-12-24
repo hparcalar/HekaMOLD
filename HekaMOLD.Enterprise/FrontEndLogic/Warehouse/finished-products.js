@@ -18,6 +18,10 @@
             allowColumnResizing: true,
             wordWrapEnabled: true,
             focusedRowEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             showBorders: true,
             filterRow: {
                 visible: true
@@ -41,8 +45,9 @@
             columns: [
                 /*{ dataField: 'ItemNo', caption: 'Ürün Kodu' },*/
                 { dataField: 'ItemName', caption: 'Ürün Adı' },
-                { dataField: 'InQty', caption: 'Giriş Miktar' },
-                { dataField: 'OutQty', caption: 'Çıkış Miktar' },
+                { dataField: 'ItemGroupName', caption: 'Grup' },
+                //{ dataField: 'InQty', caption: 'Giriş Miktar' },
+                //{ dataField: 'OutQty', caption: 'Çıkış Miktar' },
                 { dataField: 'TotalQty', caption: 'Mevcut Miktar' },
                 //{
                 //    type: "buttons",

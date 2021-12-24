@@ -5,10 +5,12 @@
 
     $scope.itemList = [];
     $scope.firmList = [];
+    $scope.warehouseList = [];
     $scope.movementList = [];
     $scope.selectedFirm = {};
+    $scope.selectedWarehouse = {};
 
-    // CRUD
+    // #region CRUD
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, Products: [] };
     }
@@ -20,10 +22,15 @@
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.itemList = resp.data.Items;
                         $scope.firmList = resp.data.Firms;
+                        $scope.warehouseList = resp.data.Warehouses;
 
                         var emptyFirmObj = { Id: 0, FirmCode: '-- Seçiniz --' };
                         $scope.firmList.splice(0, 0, emptyFirmObj);
                         $scope.selectedFirm = emptyFirmObj;
+
+                        var emptyWrObj = { Id: 0, WarehouseName: '-- Seçiniz --' };
+                        $scope.warehouseList.splice(0, 0, emptyWrObj);
+                        $scope.selectedWarehouse = emptyWrObj;
 
                         resolve();
                     }
@@ -72,10 +79,16 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
+        // ASSIGN SELECTABLES TO STORE
         if (typeof $scope.selectedFirm != 'undefined' && $scope.selectedFirm != null && $scope.selectedFirm.Id > 0)
             $scope.modelObject.FirmId = $scope.selectedFirm.Id;
         else
             $scope.modelObject.FirmId = null;
+
+        if (typeof $scope.selectedWarehouse != 'undefined' && $scope.selectedWarehouse != null && $scope.selectedWarehouse.Id > 0)
+            $scope.modelObject.InWarehouseId = $scope.selectedWarehouse.Id;
+        else
+            $scope.modelObject.InWarehouseId = null;
 
         $http.post(HOST_URL + 'Mold/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -92,7 +105,179 @@
                 }
             }).catch(function (err) { });
     }
+    // #endregion
 
+    // #region MOLD STATUS MANAGEMENT
+    $scope.setMoldStatus = function (status) {
+        if (status != $scope.modelObject.MoldStatus) {
+            if (status == 2) { // IF NEW STATUS IS TO SEND FIRM FOR REVISIONS
+                var inputOpts = [];
+                for (var i = 0; i < $scope.firmList.length; i++) {
+                    var firm = $scope.firmList[i];
+
+                    if (typeof firm.FirmName != 'undefined') {
+                        inputOpts.push({
+                            text: firm.FirmName,
+                            value: firm.Id,
+                            group: '',
+                        });
+                    }
+                }
+
+                bootbox.prompt({
+                    title: "Kalıbı revizyon için göndereceğiniz firmayı seçin: ",
+                    inputType: 'select',
+                    inputOptions: inputOpts,
+                    closeButton: false,
+                    buttons: {
+                        confirm: {
+                            label: 'Devam Et',
+                            className: 'btn-primary'
+                        },
+                        cancel: {
+                            label: 'Vazgeç',
+                            className: 'btn-light'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result > 0) {
+                            bootbox.prompt({
+                                title: "Çıkış tarihi: ",
+                                inputType: 'date',
+                                value: moment().format('YYYY-MM-DD'),
+                                closeButton: false,
+                                buttons: {
+                                    confirm: {
+                                        label: 'Çıkış Yap',
+                                        className: 'btn-primary'
+                                    },
+                                    cancel: {
+                                        label: 'Vazgeç',
+                                        className: 'btn-light'
+                                    }
+                                },
+                                callback: function (resultDate) {
+                                    if (resultDate) {
+                                        $http.post(HOST_URL + 'Mold/SendToRevision',
+                                            { rid: $scope.modelObject.Id, firmId: result, moveDate: resultDate }, 'json')
+                                            .then(function (resp) {
+                                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                                    $scope.saveStatus = 0;
+
+                                                    if (resp.data.Status == 1) {
+                                                        toastr.success('Kalıp revizyona gönderildi.', 'Bilgilendirme');
+                                                        $scope.changeMoldStatus(status);
+                                                    }
+                                                    else
+                                                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                                                }
+                                            }).catch(function (err) { });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            } else {
+                if ($scope.modelObject.MoldStatus == 2) { // IF OLD STATUS IS WAITING AT FIRM FOR REVISIONS
+                    bootbox.confirm({
+                        message: "Bu kalıp revizyonda görünüyor. Durumunu değiştirerek firmadan teslim alındığını onaylıyor musunuz?",
+                        closeButton: false,
+                        buttons: {
+                            confirm: {
+                                label: 'Evet',
+                                className: 'btn-primary'
+                            },
+                            cancel: {
+                                label: 'Hayır',
+                                className: 'btn-light'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                bootbox.prompt({
+                                    title: "Giriş tarihi: ",
+                                    inputType: 'date',
+                                    value: moment().format('YYYY-MM-DD'),
+                                    closeButton: false,
+                                    buttons: {
+                                        confirm: {
+                                            label: 'Giriş Yap',
+                                            className: 'btn-primary'
+                                        },
+                                        cancel: {
+                                            label: 'Vazgeç',
+                                            className: 'btn-light'
+                                        }
+                                    },
+                                    callback: function (resultDate) {
+                                        if (resultDate) {
+                                            $http.post(HOST_URL + 'Mold/BackFromRevision',
+                                                { rid: $scope.modelObject.Id, moveDate: resultDate }, 'json')
+                                                .then(function (resp) {
+                                                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                                                        $scope.saveStatus = 0;
+
+                                                        if (resp.data.Status == 1) {
+                                                            toastr.success('Kalıp firmadan teslim alındı.', 'Bilgilendirme');
+                                                            $scope.changeMoldStatus(status);
+                                                        }
+                                                        else
+                                                            toastr.error(resp.data.ErrorMessage, 'Hata');
+                                                    }
+                                                }).catch(function (err) { });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    bootbox.confirm({
+                        message: "Bu kalıbın durumunu değiştirmek istediğinizden emin misiniz?",
+                        closeButton: false,
+                        buttons: {
+                            confirm: {
+                                label: 'Evet',
+                                className: 'btn-primary'
+                            },
+                            cancel: {
+                                label: 'Hayır',
+                                className: 'btn-light'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                $scope.changeMoldStatus(status);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    $scope.changeMoldStatus = function (status) {
+        $http.post(HOST_URL + 'Mold/ChangeMoldStatus',
+            { rid: $scope.modelObject.Id, status: status }, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.saveStatus = 0;
+
+                    if (resp.data.Status == 1) {
+                        toastr.success('Durum başarıyla değiştirildi.', 'Bilgilendirme');
+
+                        $scope.bindModel($scope.modelObject.Id);
+                    }
+                    else
+                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                }
+            }).catch(function (err) { });
+    }
+    // #endregion
+
+    // #region MOLD HISTORY
     $scope.showMoldHistory = function () {
         try {
             $http.get(HOST_URL + 'Mold/GetMoldMovementHistory?moldId=' + $scope.modelObject.Id, {}, 'json')
@@ -102,13 +287,16 @@
                     }
 
                     $('#dial-history').dialog({
-                        width: 700,
-                        height: window.innerHeight * 0.6,
+                        width: window.innerWidth * 0.9,
+                        height: window.innerHeight * 0.9,
                         hide: true,
                         modal: true,
                         resizable: false,
                         show: true,
                         draggable: false,
+                        open: function (event, ui) {
+                            $scope.bindHistoryTable();
+                        },
                         closeText: "KAPAT"
                     });
                 }).catch(function (err) { });
@@ -116,6 +304,80 @@
 
         }
     }
+
+    $scope.bindHistoryTable = function () {
+        $('#dtMovementHistory').dxDataGrid({
+            dataSource: {
+                load: function () {
+                    return $scope.movementList;
+                },
+                key: 'ItemReceiptDetailId'
+            },
+            showColumnLines: false,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            showBorders: true,
+            filterRow: {
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+            /*height: 400,*/
+            paging: {
+                enabled: false,
+                pageSize: 10,
+                pageIndex: 0
+            },
+            groupPanel: {
+                visible: true
+            },
+            editing: {
+                allowUpdating: false,
+                allowDeleting: false
+            },
+            columns: [
+                { dataField: 'ReceiptDateStr', caption: 'Tarih' },
+                { dataField: 'FirmName', caption: 'Firma' },
+                { dataField: 'WarehouseName', caption: 'Depo' },
+                { dataField: 'ReceiptTypeStr', caption: 'Hareket Türü', },
+                {
+                    type: "buttons",
+                    buttons: [
+                        {
+                            name: 'showoperations', cssClass: 'fas fa-list', text: '', onClick: function (e) {
+                                var dataGrid = $("#dtMovementHistory").dxDataGrid("instance");
+                                dataGrid.deselectAll();
+                                dataGrid.selectRowsByIndexes([e.row.rowIndex]);
+
+                                // e.row.data.Id
+                            },
+                        }
+                    ]
+                },
+                {
+                    type: "buttons",
+                    buttons: [
+                        {
+                            name: 'showreceipt', cssClass: 'fas fa-edit', text: '', onClick: function (e) {
+                                var dataGrid = $("#dtMovementHistory").dxDataGrid("instance");
+                                dataGrid.deselectAll();
+                                dataGrid.selectRowsByIndexes([e.row.rowIndex]);
+
+                                window.open(HOST_URL + 'ItemReceipt?rid=' + e.row.data.ItemReceiptId + '&receiptCategory=' +
+                                    e.row.data.ReceiptCategory, '_blank');
+                            }
+                        }
+                    ]
+                },
+                
+            ]
+        });
+    }
+    // #endregion
 
     $scope.printLabel = function () {
         $('#dial-print-label').dialog({
@@ -299,7 +561,7 @@
                             $scope.modelObject.CreatedDateStr = moment().format('DD.MM.YYYY');
                     }
 
-                    // BIND SELECTED FIRM
+                    // BIND SELECTED ITEMS
                     if (typeof $scope.modelObject.FirmId != 'undefined' && $scope.modelObject.FirmId != null)
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
                     else
@@ -307,10 +569,141 @@
 
                     refreshArray($scope.firmList);
 
+                    if (typeof $scope.modelObject.InWarehouseId != 'undefined' && $scope.modelObject.InWarehouseId != null)
+                        $scope.selectedWarehouse = $scope.warehouseList.find(d => d.Id == $scope.modelObject.InWarehouseId);
+                    else
+                        $scope.selectedWarehouse = $scope.warehouseList[0];
+
+                    refreshArray($scope.warehouseList);
+
                     $scope.bindDetails();
                 }
             }).catch(function (err) { });
     }
+
+    // #region MNT CALENDAR
+    $scope.showMntCalendar = function () {
+        $('#dial-mnt-calendar').dialog({
+            width: window.innerWidth * 0.9,
+            height: window.innerHeight * 0.9,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            open: function (event, ui) {
+                $scope.loadScheduler();
+            },
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.mntData = [];
+
+    $scope.isWeekEnd = function (date) {
+        var day = date.getDay();
+        return day === 0 || day === 6;
+    }
+
+    $scope.loadScheduler = function () {
+        $("#schedulerContainer").html('');
+
+        $("#schedulerContainer").dxScheduler({
+            dataSource: $scope.mntData,
+            currentDate: moment(),
+            views: ["month"],
+            currentView: "month",
+            firstDayOfWeek: 1,
+            startDayHour: 8,
+            endDayHour: 18,
+            showAllDayPanel: false,
+            height: 600,
+            onAppointmentAdded: function (e) {
+                $scope.saveWork(e.appointmentData);
+            },
+            onAppointmentUpdated: function (e) {
+                $scope.saveWork(e.appointmentData);
+            },
+            onAppointmentDeleted: function (e) {
+                if (typeof e.appointmentData != 'undefined')
+                    $scope.deleteWork(e.appointmentData.Id);
+            },
+            onInitialized: function (objE) {
+            },
+            //resources: [
+            //    {
+            //        fieldExpr: "AssigneeId",
+            //        allowMultiple: false,
+            //        dataSource: $scope.schedulerEmployees,
+            //        label: "Personel"
+            //    }
+            //],
+            //resourceCellTemplate: function (cellData) {
+            //    var name = $("<div>")
+            //        .addClass("name")
+            //        .css({ backgroundColor: cellData.color })
+            //        .append($("<h2>")
+            //            .text(" "));
+
+            //    var avatar = $("<div>")
+            //        .addClass("avatar")
+            //        .html("<img class=\"rounded\" height=\"120\" src=\"" + (cellData.data.PictureBase64.length > 0 ? cellData.data.PictureBase64 : "") + "\">")
+            //        .attr("title", cellData.text);
+
+            //    var info = $("<div>")
+            //        .addClass("info")
+            //        .css({ color: cellData.color })
+            //        .html("Adı: " + cellData.data.EmployeeName + " " + cellData.data.EmployeeSurname + "<br/><b>" + cellData.data.UserGroupName + "</b>");
+
+            //    return $("<div>").append([name, avatar, info]);
+            //},
+            //dataCellTemplate: function (cellData, index, container) {
+            //    var employeeID = cellData.groups.AssigneeId,
+            //        currentWork = $scope.getCurrentWork(cellData.startDate.getDate(), employeeID);
+
+            //    var wrapper = $("<div>")
+            //        .toggleClass("employee-weekend-" + employeeID, $scope.isWeekEnd(cellData.startDate)).appendTo(container)
+            //        .addClass("employee-" + employeeID)
+            //        .addClass("dx-template-wrapper");
+
+            //    wrapper.append($("<div>")
+            //        .text(cellData.text)
+            //        .addClass(currentWork)
+            //        .addClass("day-cell")
+            //    );
+
+            //}
+        });
+    }
+
+    $scope.saveWork = function (dataModel) {
+        var foundData = null;
+
+        $scope.mntData.push(dataModel);
+        //if (typeof dataModel.Id == 'undefined' || dataModel.Id == 0) {
+        //    foundData = {
+        //        Id: 0,
+        //        StartDate: dataModel.startDate,
+        //        EndDate: dataModel.endDate,
+        //        Explanation: dataModel.text
+        //    };
+        //}
+        //else {
+        //    dataModel.StartDate = dataModel.startDate;
+        //    dataModel.EndDate = dataModel.endDate;
+        //    dataModel.Explanation = dataModel.text;
+
+        //    foundData = dataModel;
+        //}
+
+        //delete foundData.startDate;
+        //delete foundData.endDate;
+    }
+
+    $scope.deleteWork = function (dataId) {
+        
+    }
+    // #endregion
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');

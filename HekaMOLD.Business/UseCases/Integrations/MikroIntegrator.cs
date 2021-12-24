@@ -4,12 +4,15 @@ using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.Operational;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases.Integrations
@@ -162,6 +165,21 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
             try
             {
+                SystemParameterModel groupParams = null;
+                Dictionary<string, int> groupKeys = null;
+                
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var allParams = bObj.GetAllParameters(syncPoint.PlantId.Value);
+                    if (allParams.Any(d => d.PrmCode == "IntegrationItemGroups"))
+                        groupParams = allParams.First(d => d.PrmCode == "IntegrationItemGroups");
+                }
+
+                if (groupParams != null && !string.IsNullOrEmpty(groupParams.PrmValue))
+                {
+                    groupKeys = JsonConvert.DeserializeObject<Dictionary<string, int>>(groupParams.PrmValue);
+                }
+
                 DataTable dTable = new DataTable();
                 using (SqlConnection con = new SqlConnection(syncPoint.ConnectionString))
                 {
@@ -185,6 +203,14 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                 else if (Convert.ToInt32(row["sto_cins"]) == 4
                                     || Convert.ToInt32(row["sto_cins"]) == 5 || Convert.ToInt32(row["sto_cins"]) == 10)
                                     itemType = (int)ItemType.Product;
+
+                                // SYSTEM PARAMETER GROUP ASSIGNMENT BY MIKRO ITEM CODE
+                                int? properGroupId = null;
+                                if (groupKeys.Any(d => row["sto_kod"].ToString().StartsWith(d.Key)))
+                                {
+                                    var properGroupKey = groupKeys.First(d => row["sto_kod"].ToString().StartsWith(d.Key));
+                                    properGroupId = properGroupKey.Value;
+                                }
 
                                 int? categoryId = null;
                                 // FETCH & UPDATE ITEM CATEGORY
@@ -331,12 +357,35 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     ItemType = itemType,
                                     PlantId = syncPoint.PlantId,
                                     ItemCategoryId = categoryId,
-                                    ItemGroupId = groupId,
+                                    ItemGroupId = properGroupId != null ? properGroupId : groupId,
                                     Units = itemUnits.ToArray(),
                                 });
 
                                 if (!itemResult.Result && row["sto_kod"].ToString() == "152.02.9002.2009.1003")
                                     OnTransferError?.Invoke((string)row["sto_kod"] + ": " + itemResult.ErrorMessage, null);
+                            }
+                            else
+                            {
+                                using (DefinitionsBO bObjEx = new DefinitionsBO())
+                                {
+                                    var dbItem = bObjEx.GetItem(row["sto_kod"].ToString());
+                                    if (dbItem != null)
+                                    {
+                                        // SYSTEM PARAMETER GROUP ASSIGNMENT BY MIKRO ITEM CODE
+                                        int? properGroupId = null;
+                                        if (groupKeys.Any(d => row["sto_kod"].ToString().StartsWith(d.Key)))
+                                        {
+                                            var properGroupKey = groupKeys.First(d => row["sto_kod"].ToString().StartsWith(d.Key));
+                                            properGroupId = properGroupKey.Value;
+                                        }
+
+                                        if (dbItem.ItemGroupId != properGroupId && properGroupId != null)
+                                        {
+                                            dbItem.ItemGroupId = properGroupId;
+                                            bObjEx.SaveOrUpdateItem(dbItem);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -370,6 +419,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
                     string lastRecipeNo = "";
                     int lastRecipeId = 0;
+                    List<int> processedRecipes = new List<int>();
 
                     foreach (DataRow row in dTable.Rows)
                     {
@@ -457,6 +507,36 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     });
                                 }
                             }
+
+                            // SİSTEMDEKİ REÇETE OLUP, MİKRODA OLMAYAN MALZEME VARSA; SİSTEMDEN SİL
+                            if (!processedRecipes.Contains(lastRecipeId))
+                            {
+                                using (RecipeBO bObj = new RecipeBO())
+                                {
+                                    var dbRecipe = bObj.GetProductRecipe(lastRecipeId);
+                                    if (dbRecipe != null)
+                                    {
+                                        var mikroItems = dTable.Select("[rec_anakod] = '" + row["rec_anakod"].ToString() + "'")
+                                            .Select(d => d["rec_tuketim_kod"].ToString()).ToArray();
+
+                                        var currentItems = dbRecipe.Details.ToList();
+                                        var nonExistingItems = dbRecipe.Details.Where(d => !mikroItems.Contains(d.ItemNo))
+                                            .ToArray();
+                                        if (nonExistingItems.Length > 0)
+                                        {
+                                            foreach (var nonExsItem in nonExistingItems)
+                                            {
+                                                currentItems.Remove(nonExsItem);
+                                            }
+                                            dbRecipe.Details = currentItems.ToArray();
+
+                                            bObj.SaveOrUpdateProductRecipe(dbRecipe);
+                                        }
+                                    }
+                                }
+
+                                processedRecipes.Add(lastRecipeId);
+                            }
                         }
                     }
                 }
@@ -528,6 +608,8 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             PlantId = syncPoint.PlantId,
                                             OrderDate = (DateTime)row["sip_tarih"],
                                             OrderStatus = (int)OrderStatusType.Created,
+                                            //SyncDate = DateTime.Now,
+                                            //SyncStatus = 1,
                                             CreatedDate = DateTime.Now,
                                             Details = new ItemOrderDetailModel[0]
                                         }, detailCanBeNull: true);
@@ -541,7 +623,21 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     var dbItemOrder = subObj.GetItemOrder(intOrderNo, ItemOrderType.Sale);
                                     if (dbItemOrder != null)
                                     {
+                                        if (dbItemOrder.SyncStatus == 2)
+                                            continue;
+
                                         lastOrderId = dbItemOrder.Id;
+
+                                        int? firmId = null;
+
+                                        using (DefinitionsBO defObj = new DefinitionsBO())
+                                        {
+                                            var dbFirm = defObj.GetFirm(row["sip_musteri_kod"].ToString());
+                                            if (dbFirm != null)
+                                                firmId = dbFirm.Id;
+                                        }
+
+                                        dbItemOrder.FirmId = firmId;
 
                                         //if (dbItemOrder.OrderStatus != (int)OrderStatusType.Created)
                                         //    isLockedOrder = true;
@@ -549,7 +645,15 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         if (!isLockedOrder)
                                         {
                                             // MEVCUT SİPARİŞ İSE GÜNCELLE VE TÜM DETAYLARINI SİL, AŞAĞIDA YENİDEN EKLENECEK
-                                            dbItemOrder.DateOfNeed = (DateTime)row["sip_teslim_tarih"];
+                                            try
+                                            {
+                                                dbItemOrder.DateOfNeed = (DateTime)row["sip_teslim_tarih"];
+                                            }
+                                            catch (Exception)
+                                            {
+
+                                            }
+                                            
                                             dbItemOrder.OrderDate = (DateTime)row["sip_tarih"];
                                             dbItemOrder.Details = new ItemOrderDetailModel[0];
                                             subObj.SaveOrUpdateItemOrder(dbItemOrder, detailCanBeNull: true);
@@ -738,9 +842,23 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
             try
             {
+                DateTime dtMinProd = DateTime.MinValue;
                 using (ReceiptBO bObj = new ReceiptBO())
                 {
-                    var receipts = bObj.GetNonSyncProductions();
+                    var minDeliveryDate = bObj.GetParameter("MinimumProductionDate", syncPoint.PlantId.Value);
+                    if (minDeliveryDate != null && !string.IsNullOrEmpty(minDeliveryDate.PrmValue))
+                    {
+                        dtMinProd = DateTime.ParseExact(minDeliveryDate.PrmValue, "dd.MM.yyyy",
+                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                    }
+                }
+
+                if (dtMinProd == DateTime.MinValue)
+                    throw new Exception("Üretim fişlerinin MİKRO'ya aktarımı için minimum başlangıç tarihi sistem parametreleri içerisinde belirtilmemiş.");
+
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    var receipts = bObj.GetNonSyncProductions().Where(d => d.ReceiptDate >= dtMinProd).ToArray();
                     if (receipts != null)
                     {
                         foreach (var rcp in receipts)
@@ -783,14 +901,14 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 + "sth_otvvergisiz_fl, sth_oiv_pntr, sth_oiv_vergi, sth_oivvergisiz_fl, sth_fiyat_liste_no, sth_oivtutari, sth_Tevkifat_turu, sth_nakliyedeposu, "
                                                 + "sth_nakliyedurumu, sth_yetkili_uid, sth_taxfree_fl, sth_ilave_edilecek_kdv, sth_ismerkezi_kodu,sth_HareketGrupKodu1,sth_HareketGrupKodu2,sth_HareketGrupKodu3, "
                                                 + "sth_Olcu1,sth_Olcu2,sth_Olcu3,sth_Olcu4,sth_Olcu5, sth_FormulMiktarNo,sth_FormulMiktar,sth_eirs_senaryo,sth_eirs_tipi, sth_teslim_tarihi, "
-                                                + "sth_matbu_fl, sth_satis_fiyat_doviz_cinsi, sth_satis_fiyat_doviz_kuru) "
+                                                + "sth_matbu_fl, sth_satis_fiyat_doviz_cinsi, sth_satis_fiyat_doviz_kuru, sth_alt_doviz_kuru) "
                                                 + " VALUES('0', 0, 16, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) +"', "
                                                 +"'0', '7', '0', '7', 'QQ', '"+ newReceiptNo +"', "+ rdt.LineNumber +", '', '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', "
                                                 +"'"+ rdt.ItemNo +"', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0, 0, 0, '', 0, '', 0, 1, 0, 1, "+ 
                                                    string.Format("{0:0.00}", rdt.Quantity).Replace(",", ".") + " ,0, 1, 0, 0,0,0,0,0,0, 0,0,0,0, 0,0, 0,0,0,0, '', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', "
                                                    +"1, 1, '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', '','', '1899-12-30 00:00:00', 0, 0, 0,0,0, 0, '"+ rdt.ItemNo +"', "
                                                    + "'0', '00000000-0000-0000-0000-000000000000', '', '', 0,0,0,0,0,0,0,0,0,0,0,0,0,0, '00000000-0000-0000-0000-000000000000', 0,0, "
-                                                   +"'','','','', 0,0,0,0,0, 0,0,0,0, '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', 0, 0,0)";
+                                                   +"'','','','', 0,0,0,0,0, 0,0,0,0, '"+ string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', 0, 0,0,0)";
                                             SqlCommand cmd = new SqlCommand(sql, con);
                                             int affectedRows = cmd.ExecuteNonQuery();
                                             if (affectedRows > 0)
@@ -835,6 +953,422 @@ namespace HekaMOLD.Business.UseCases.Integrations
         public BusinessResult PushPurchasingWaybills(SyncPointModel syncPoint, ItemReceiptModel[] receipts)
         {
             throw new NotImplementedException();
+        }
+
+        public BusinessResult PushSaleOrders(SyncPointModel syncPoint)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                using (OrdersBO bObj = new OrdersBO())
+                {
+                    var receipts = bObj.GetNonSyncOrders(ItemOrderType.Sale);
+                    if (receipts != null)
+                    {
+                        foreach (var rcp in receipts)
+                        {
+                            if (rcp.Details != null && rcp.Details.Length > 0)
+                            {
+                                if (string.IsNullOrEmpty(rcp.DocumentNo))
+                                    continue;
+
+                                string docText = Regex.Match(rcp.DocumentNo, "[A-Z]+").Value;
+                                string numericText = Regex.Match(rcp.DocumentNo, "[0-9]+").Value;
+                                if (string.IsNullOrEmpty(docText))
+                                    continue;
+                                if (!string.IsNullOrEmpty(numericText))
+                                    continue;
+
+                                DataTable dTable = new DataTable();
+                                using (SqlConnection con = new SqlConnection(syncPoint.ConnectionString))
+                                {
+                                    con.Open();
+                                    
+                                    SqlDataAdapter dAdapter =
+                                        new SqlDataAdapter("SELECT TOP 1 sip_evrakno_sira FROM SIPARISLER WHERE sip_tip=0 AND sip_evrakno_seri='"+ docText +"'" +
+                                            " ORDER BY sip_evrakno_sira DESC", con);
+                                    dAdapter.Fill(dTable);
+                                    dAdapter.Dispose();
+
+                                    int newReceiptNo = 1;
+                                    if (dTable.Rows.Count > 0 && dTable.Rows[0][0] != DBNull.Value)
+                                    {
+                                        var lastReceiptNo = Convert.ToInt32(dTable.Rows[0][0]);
+                                        newReceiptNo = lastReceiptNo + 1;
+                                    }
+
+                                    int lineNumber = 0;
+                                    foreach (var rdt in rcp.Details)
+                                    {
+                                        if (rdt.Quantity <= 0)
+                                        {
+                                            lineNumber++;
+                                            continue;
+                                        }
+
+                                        try
+                                        {
+                                            int mikroForexId = 0;
+                                            decimal forexRate = 1;
+
+                                            #region RESOLVE MIKRO FOREX ID
+                                            if ((rdt.ForexId ?? 0) > 0)
+                                            {
+                                                string forexTypeCode = "TL";
+
+                                                using (DefinitionsBO bObjDef = new DefinitionsBO())
+                                                {
+                                                    var dbForexType = bObjDef.GetForexType(rdt.ForexId.Value);
+                                                    if (dbForexType != null)
+                                                    {
+                                                        forexTypeCode = dbForexType.ForexTypeCode;
+                                                        forexRate = rdt.ForexRate ?? 1;
+                                                    }
+                                                }
+
+                                                switch (forexTypeCode)
+                                                {
+                                                    case "TL":
+                                                        mikroForexId = 0;
+                                                        break;
+                                                    case "USD":
+                                                        mikroForexId = 1;
+                                                        break;
+                                                    case "EUR":
+                                                        mikroForexId = 2;
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                            }
+                                            #endregion
+
+                                            var cariGrupNo = mikroForexId > 0 ? 2 : 1;
+
+                                            string sql = "INSERT INTO SIPARISLER(sip_SpecRECno, sip_iptal, sip_fileid, sip_hidden, sip_kilitli, sip_degisti, sip_checksum, sip_create_user, sip_lastup_user, "
+                                                + "sip_special1, sip_special2, sip_special3, sip_firmano, sip_subeno, sip_tarih, sip_tip, sip_cins, "
+                                                + "sip_evrakno_seri, sip_evrakno_sira, sip_satirno, sip_belgeno, sip_belge_tarih, sip_stok_kod, sip_iskonto_1, sip_iskonto_2, sip_iskonto_3, sip_iskonto_4, sip_iskonto_5, sip_iskonto_6, sip_masraf_1, sip_masraf_2, sip_masraf_3, sip_masraf_4, "
+                                                + "sip_isk1, sip_isk2,sip_isk3,sip_isk4,sip_isk5,sip_isk6,sip_mas1,sip_mas2,sip_mas3,sip_mas4, "
+                                                + "sip_satici_kod, sip_musteri_kod, sip_teslim_miktar,"
+                                                + "sip_doviz_cinsi, sip_doviz_kuru, sip_miktar, sip_birim_pntr, sip_tutar, "
+                                                + "sip_iskonto1,sip_iskonto2,sip_iskonto3,sip_iskonto4,sip_iskonto5,sip_iskonto6, sip_masraf1,sip_masraf2,sip_masraf3,sip_masraf4, "
+                                                + "sip_vergi_pntr, sip_vergi, sip_masvergi_pntr,sip_masvergi,sip_opno, sip_aciklama, sip_b_fiyat, sip_depono,"
+                                                +" sip_stok_sormerk, sip_cari_sormerk,sip_harekettipi, sip_projekodu, sip_aciklama2,sip_vergisiz_fl,sip_kapat_fl,sip_promosyon_fl, "
+                                                +" sip_teslimturu, sip_cagrilabilir_fl, sip_durumu, sip_planlananmiktar, sip_OnaylayanKulNo, sip_cari_grupno, sip_adresno, sip_alt_doviz_kuru, sip_prosip_uid, "
+                                                +" sip_Exp_Imp_Kodu, sip_kar_orani, sip_stal_uid, sip_teklif_uid, sip_parti_kodu, sip_lot_no, sip_fiyat_liste_no, sip_Otv_Pntr, "
+                                                +" sip_Otv_Vergi, sip_otvtutari, sip_OtvVergisiz_Fl, sip_paket_kod, sip_Rez_uid, sip_yetkili_uid, sip_kapatmanedenkod, "
+                                                +" sip_gecerlilik_tarihi, sip_onodeme_evrak_tip, sip_onodeme_evrak_seri, sip_rezervasyon_miktari, sip_rezerveden_teslim_edilen, "
+                                                + " sip_HareketGrupKodu1,sip_HareketGrupKodu2,sip_HareketGrupKodu3, sip_Olcu1,sip_Olcu2,sip_Olcu3,sip_Olcu4,sip_Olcu5, "
+                                                +" sip_FormulMiktarNo, sip_FormulMiktar, sip_satis_fiyat_doviz_cinsi, sip_satis_fiyat_doviz_kuru, sip_eticaret_kanali, sip_onodeme_evrak_sira) "
+                                                + " VALUES('0', 0, 21, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '" + string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "', "
+                                                + "'0', '0', '"+ docText +"', '" + newReceiptNo + "', " + lineNumber + ", '', '" + string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "', "
+                                                + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 'SATIŞ02', '" + rcp.FirmCode +"', 0, "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", " +
+                                                   string.Format("{0:0.00}", rdt.Quantity ?? 0).Replace(",", ".") + " , 1, 0, 0,0,0,0,0,0, 0,0,0,0, 0,0, 0,0,0, '', " +
+                                                   string.Format("{0:0.00}", rdt.UnitPrice ?? 0).Replace(",", ".") +", 1, '','', 0, '','',0,0,0,'03',1,0,0,0, '"+ cariGrupNo + "', '1', '0', '00000000-0000-0000-0000-000000000000', "
+                                                   + " '', '0', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', '0', '0', '0', "
+                                                   + " '0', '0', '0', '', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', "
+                                                   + " '1899-12-30 00:00:00', '0', '', '0', '0', '','','', 0,0,0,0,0, '0', '0', "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", "
+                                                   +" '0', '0')";
+                                            SqlCommand cmd = new SqlCommand(sql, con);
+                                            int affectedRows = cmd.ExecuteNonQuery();
+                                            if (affectedRows > 0)
+                                            {
+                                                bObj.SignDetailAsSent(rdt.Id);
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+
+                                        }
+
+                                        lineNumber++;
+                                    }
+
+                                    using (OrdersBO bObjHeader = new OrdersBO())
+                                    {
+                                        var orderHeader = bObjHeader.GetItemOrder(rcp.Id);
+                                        orderHeader.DocumentNo = docText + newReceiptNo.ToString();
+                                        bObjHeader.SaveOrUpdateItemOrder(orderHeader);
+                                    }
+
+                                    con.Close();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult PullProductDeliveries(SyncPointModel syncPoint)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                DateTime dtMinDelivery = DateTime.MinValue;
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    var minDeliveryDate = bObj.GetParameter("MinimumProductDeliveryDate", syncPoint.PlantId.Value);
+                    if (minDeliveryDate != null && !string.IsNullOrEmpty(minDeliveryDate.PrmValue))
+                    {
+                        dtMinDelivery = DateTime.ParseExact(minDeliveryDate.PrmValue, "dd.MM.yyyy",
+                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                    }
+                }
+
+                if (dtMinDelivery == DateTime.MinValue)
+                    throw new Exception("Ürün çıkış irsaliyeleri için minimum başlangıç tarihi sistem parametreleri içerisinde belirtilmemiş.");
+
+                using (SqlConnection con = new SqlConnection(syncPoint.ConnectionString))
+                {
+                    con.Open();
+
+                    DataTable dTable = new DataTable();
+                    string sql = "SELECT * FROM STOK_HAREKETLERI WHERE sth_tip=1 AND sth_cins IN(0,1,2) AND sth_normal_iade=0 " +
+                                            "AND sth_evraktip=1 AND sth_tarih >= '" + string.Format("{0:yyyy-MM-dd} ", dtMinDelivery) + "' "
+                                            + "ORDER BY sth_evrakno_seri, sth_evrakno_sira, sth_satirno";
+                    SqlDataAdapter dAdapter =
+                                        new SqlDataAdapter(sql, con);
+                    dAdapter.Fill(dTable);
+                    dAdapter.Dispose();
+
+                    if (dTable.Rows.Count > 0)
+                    {
+                        string lastReceiptNo = "";
+                        int lastReceiptId = 0;
+                        int lineNumber = 1;
+
+                        foreach (DataRow row in dTable.Rows)
+                        {
+                            string intReceiptNo = row["sth_evrakno_seri"].ToString() + row["sth_evrakno_sira"].ToString();
+
+                            int productWarehouse = 0;
+                            // ÜRÜN SATIRI DEĞİLSE ATLA VE DEVAM ET
+                            bool isProductRow = true;
+                            using (DefinitionsBO dfObj = new DefinitionsBO())
+                            {
+                                var productData = dfObj.GetItem(row["sth_stok_kod"].ToString());
+                                if (productData == null || productData.ItemType != (int)ItemType.Product)
+                                    isProductRow = false;
+
+                                var prodWarehouseData = dfObj.GetProductWarehouse();
+                                if (prodWarehouseData != null)
+                                    productWarehouse = prodWarehouseData.Id;
+                            }
+
+                            if (!isProductRow)
+                                continue;
+
+                            // YENİ SEVK İRSALİYESİ BAŞLIĞI EKLENDİ VEYA GÜNCELLENDİ
+                            if (lastReceiptNo != intReceiptNo)
+                            {
+                                lastReceiptId = 0;
+                                lineNumber = 1;
+
+                                using (ReceiptBO subObj = new ReceiptBO())
+                                {
+                                    if (!subObj.HasAnySaleReceipt(intReceiptNo))
+                                    {
+                                        int? firmId = null;
+
+                                        using (DefinitionsBO defObj = new DefinitionsBO())
+                                        {
+                                            var dbFirm = defObj.GetFirm(row["sth_cari_kodu"].ToString());
+                                            if (dbFirm != null)
+                                                firmId = dbFirm.Id;
+                                        }
+
+                                        if (firmId != null)
+                                        {
+                                            var receiptResult = subObj.SaveOrUpdateItemReceipt(new ItemReceiptModel
+                                            {
+                                                ReceiptNo = subObj.GetNextReceiptNo(syncPoint.PlantId.Value, ItemReceiptType.ItemSelling),
+                                                DocumentNo = intReceiptNo.ToString(),
+                                                ReceiptType = (int)ItemReceiptType.ItemSelling,
+                                                FirmId = firmId,
+                                                PlantId = syncPoint.PlantId,
+                                                ReceiptDate = (DateTime)row["sth_tarih"],
+                                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                                                InWarehouseId = productWarehouse,
+                                                //SyncDate = DateTime.Now,
+                                                //SyncStatus = 1,
+                                                CreatedDate = DateTime.Now,
+                                                Details = new ItemReceiptDetailModel[0]
+                                            }, detailCanBeNull: true);
+
+                                            if (receiptResult.Result)
+                                                lastReceiptId = receiptResult.RecordId;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var dbItemReceipt = subObj.GetItemReceipt(intReceiptNo, ItemReceiptType.ItemSelling);
+                                        if (dbItemReceipt != null)
+                                        {
+                                            lastReceiptId = dbItemReceipt.Id;
+
+                                            int? firmId = null;
+
+                                            using (DefinitionsBO defObj = new DefinitionsBO())
+                                            {
+                                                var dbFirm = defObj.GetFirm(row["sth_cari_kodu"].ToString());
+                                                if (dbFirm != null)
+                                                    firmId = dbFirm.Id;
+                                            }
+
+                                            dbItemReceipt.FirmId = firmId;
+
+                                            // MEVCUT SEVK İRSALİYESİ İSE BAŞLIK BİLGİLERİNİ GÜNCELLE VE DETAYLARA DOKUNMA
+                                            dbItemReceipt.ReceiptDate = (DateTime)row["sth_tarih"];
+                                            dbItemReceipt.Details = new ItemReceiptDetailModel[0];
+                                            subObj.SaveOrUpdateItemReceipt(dbItemReceipt, detailCanBeNull: true, dontChangeDetails: true);
+                                        }
+                                    }
+                                }
+
+                                lastReceiptNo = intReceiptNo;
+                            }
+
+                            // İRSALİYE DETAYLARINI GÜNCELLE
+                            using (ReceiptBO receiptBO = new ReceiptBO())
+                            {
+                                int? itemId = null, unitTypeId = null, forexId = null;
+                                using (DefinitionsBO defObj = new DefinitionsBO())
+                                {
+                                    var dbItem = defObj.GetItem(row["sth_stok_kod"].ToString());
+                                    if (dbItem != null)
+                                    {
+                                        itemId = dbItem.Id;
+                                        unitTypeId = dbItem.Units != null ? dbItem.Units
+                                            .Where(d => d.IsMainUnit == true)
+                                            .Select(d => d.UnitId).FirstOrDefault() : null;
+                                    }
+
+                                    if (Convert.ToInt32(row["sth_har_doviz_cinsi"]) > 0)
+                                    {
+                                        string forexTypeCode = "TL";
+                                        switch (Convert.ToInt32(row["sth_har_doviz_cinsi"]))
+                                        {
+                                            case 0:
+                                                forexTypeCode = "TL";
+                                                break;
+                                            case 1:
+                                                forexTypeCode = "USD";
+                                                break;
+                                            case 2:
+                                                forexTypeCode = "EUR";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+
+                                        var dbForex = defObj.GetForexType(forexTypeCode);
+                                        if (dbForex != null)
+                                            forexId = dbForex.Id;
+                                    }
+                                }
+
+                                if (itemId != null)
+                                {
+                                    var dbNewReceipt = receiptBO.GetItemReceipt(lastReceiptId);
+                                    if (dbNewReceipt.Details.Any(m => m.ItemId == itemId))
+                                    {
+                                        var existingDetail = dbNewReceipt.Details.FirstOrDefault(m => m.ItemId == itemId && m.LineNumber == lineNumber);
+                                        if (existingDetail != null)
+                                        {
+                                            existingDetail.Quantity = Decimal.Parse(row["sth_miktar"].ToString(), System.Globalization.NumberStyles.Float);
+                                            existingDetail.SubTotal = Decimal.Parse(row["sth_tutar"].ToString(), System.Globalization.NumberStyles.Float);
+                                            existingDetail.TaxAmount = Decimal.Parse(row["sth_vergi"].ToString(), System.Globalization.NumberStyles.Float);
+                                            existingDetail.ForexRate = Decimal.Parse(row["sth_har_doviz_kuru"].ToString(), System.Globalization.NumberStyles.Float);
+                                            existingDetail.ForexId = forexId;
+                                            try
+                                            {
+                                                existingDetail.UnitPrice = existingDetail.SubTotal / existingDetail.Quantity;
+                                            }
+                                            catch (Exception)
+                                            {
+
+                                            }
+
+                                            // IF THERE IS A FOREX TYPE, CONVERT UNIT PRICE BY FOREX
+                                            if (existingDetail.ForexId > 0)
+                                            {
+                                                existingDetail.ForexUnitPrice = existingDetail.UnitPrice;
+                                                existingDetail.UnitPrice = existingDetail.ForexUnitPrice * existingDetail.ForexRate;
+                                            }
+
+                                            receiptBO.UpdateReceiptDetail(existingDetail);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var newReceiptDetail = new ItemReceiptDetailModel
+                                        {
+                                            ItemId = itemId,
+                                            UnitId = unitTypeId,
+                                            LineNumber = lineNumber,
+                                            ReceiptStatus = (int)ReceiptStatusType.Created,
+                                            //UnitPrice = Decimal.Parse(row["sip_b_fiyat"].ToString(), System.Globalization.NumberStyles.Float),
+                                            Quantity = Decimal.Parse(row["sth_miktar"].ToString(), System.Globalization.NumberStyles.Float),
+                                            SubTotal = Decimal.Parse(row["sth_tutar"].ToString(), System.Globalization.NumberStyles.Float),
+                                            TaxAmount = Decimal.Parse(row["sth_vergi"].ToString(), System.Globalization.NumberStyles.Float),
+                                            TaxIncluded = false,
+                                            NewDetail = true,
+                                            SyncDate = DateTime.Now,
+                                            SyncStatus = 1,
+                                            ForexId = forexId,
+                                            ForexRate = Decimal.Parse(row["sth_har_doviz_kuru"].ToString(), System.Globalization.NumberStyles.Float),
+                                            CreatedDate = DateTime.Now,
+                                        };
+
+                                        try
+                                        {
+                                            newReceiptDetail.UnitPrice = newReceiptDetail.SubTotal / newReceiptDetail.Quantity;
+                                        }
+                                        catch (Exception)
+                                        {
+
+                                        }
+
+                                        // IF THERE IS A FOREX TYPE, CONVERT UNIT PRICE BY FOREX
+                                        if (newReceiptDetail.ForexId > 0)
+                                        {
+                                            newReceiptDetail.ForexUnitPrice = newReceiptDetail.UnitPrice;
+                                            newReceiptDetail.UnitPrice = newReceiptDetail.ForexUnitPrice * newReceiptDetail.ForexRate;
+                                        }
+
+                                        var dResult = receiptBO.AddReceiptDetail(lastReceiptId, newReceiptDetail);
+                                    }
+
+                                    lineNumber++;
+                                }
+                            }
+                        }
+                    }
+
+                    con.Close();
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
 
         public BusinessResult PullEntryReceipts(SyncPointModel syncPoint)

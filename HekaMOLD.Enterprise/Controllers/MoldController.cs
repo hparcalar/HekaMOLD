@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+﻿using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.MoldTrace;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
@@ -73,17 +74,20 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             ItemModel[] items = new ItemModel[0];
             FirmModel[] firms = new FirmModel[0];
+            WarehouseModel[] warehouses = new WarehouseModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 items = bObj.GetItemList();
-                firms = bObj.GetFirmList();
+                firms = bObj.GetFirmList().OrderBy(d => d.FirmName).ToArray();
+                warehouses = bObj.GetWarehouseList();
             }
 
             var jsonResult = Json(new
             {
                 Items = items,
                 Firms = firms,
+                Warehouses = warehouses,
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
@@ -127,6 +131,91 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        public JsonResult ChangeMoldStatus(int rid, int status)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+                using (MoldBO bObj = new MoldBO())
+                {
+                    result = bObj.SetMoldStatus(rid, (MoldStatus)status, userId);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1 });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult SendToRevision(int rid, int firmId, string moveDate)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+                using (MoldBO bObj = new MoldBO())
+                {
+                    DateTime dtMove = DateTime.Now;
+                    if (!string.IsNullOrEmpty(moveDate))
+                        dtMove = DateTime.ParseExact(moveDate, "yyyy-MM-dd",
+                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                    result = bObj.SendToRevision(rid, firmId, userId, dtMove);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1 });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult BackFromRevision(int rid, string moveDate)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+                using (MoldBO bObj = new MoldBO())
+                {
+                    DateTime dtMove = DateTime.Now;
+                    if (!string.IsNullOrEmpty(moveDate))
+                        dtMove = DateTime.ParseExact(moveDate, "yyyy-MM-dd",
+                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                    result = bObj.BackFromRevision(rid, userId, dtMove);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1 });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpPost]
         public JsonResult SaveModel(MoldModel model)
         {
             try
@@ -134,6 +223,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
+                    model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
                     result = bObj.SaveOrUpdateMold(model);
                 }
 

@@ -96,6 +96,10 @@
             showRowLines: true,
             rowAlternationEnabled: true,
             allowColumnResizing: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             wordWrapEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,

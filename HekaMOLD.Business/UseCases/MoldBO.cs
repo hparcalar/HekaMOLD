@@ -49,14 +49,19 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repoMold = _unitOfWork.GetRepository<Mold>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
                 var repoReceipt = _unitOfWork.GetRepository<ItemReceiptDetail>();
 
                 var dbMold = repoMold.Get(d => d.Id == moldId);
-                data = repoReceipt.Filter(d => d.ItemId == dbMold.MoldItemId).ToList()
+                var dbItem = repoItem.Get(d => d.ItemNo == dbMold.MoldCode);
+                data = repoReceipt.Filter(d => d.ItemId == dbItem.Id).ToList()
                     .Select(d => new MoldMoveHistory
                     {
                         ItemReceiptDetailId = d.Id,
                         ItemReceiptId = d.ItemReceiptId,
+                        ReceiptCategory = (int)ReceiptCategoryType.ItemManagement,
+                        WarehouseCode = d.ItemReceipt.Warehouse.WarehouseCode,
+                        WarehouseName = d.ItemReceipt.Warehouse.WarehouseName,
                         InvoiceId = d.ItemReceipt != null ? d.ItemReceipt.InvoiceId : (int?)null,
                         FirmCode = d.ItemReceipt != null && d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
                         FirmName = d.ItemReceipt != null && d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
@@ -72,8 +77,11 @@ namespace HekaMOLD.Business.UseCases
                         ReceiptDateStr = d.ItemReceipt != null ?
                             string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
                         ReceiptNo = d.ItemReceipt != null ? d.ItemReceipt.ReceiptNo : "",
+                        ReceiptDate = d.ItemReceipt != null ? d.ItemReceipt.ReceiptDate : null,
                         ReceiptDocumentNo = d.ItemReceipt != null ? d.ItemReceipt.DocumentNo : "",
-                    }).ToArray();
+                    })
+                    .OrderByDescending(d => d.ReceiptDate)
+                    .ToArray();
             }
             catch (Exception)
             {
@@ -81,6 +89,177 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return data;
+        }
+
+        public BusinessResult SetMoldStatus(int moldId, MoldStatus status, int? userId = null)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Mold>();
+                var dbMold = repo.Get(d => d.Id == moldId);
+                if (dbMold == null)
+                    throw new Exception("Kalıp tanımı bulunamadı.");
+
+                dbMold.MoldStatus = (int)status;
+                dbMold.UpdatedDate = DateTime.Now;
+                dbMold.UpdatedUserId = userId;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbMold.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult SendToRevision(int moldId, int firmId, int? userId = null, DateTime? moveDate = null)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Mold>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
+
+                var dbMold = repo.Get(d => d.Id == moldId);
+                if (dbMold == null)
+                    throw new Exception("Kalıp tanımı bulunamadı.");
+
+                bool moldItemSet = false;
+                if (dbMold.ItemMold == null)
+                {
+                    var dbItem = repoItem.Get(d => d.ItemNo == dbMold.MoldCode);
+                    if (dbItem != null)
+                    {
+                        dbMold.MoldItemId = dbItem.Id;
+                        moldItemSet = true;
+                    }
+                }
+
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    result = bObj.SaveOrUpdateItemReceipt(new Models.DataTransfer.Receipt.ItemReceiptModel
+                    {
+                        ReceiptDate = moveDate ?? DateTime.Now,
+                        ReceiptType = (int)ItemReceiptType.WarehouseOutput,
+                        ReceiptNo = bObj.GetNextReceiptNo(dbMold.PlantId.Value, ItemReceiptType.WarehouseOutput),
+                        PlantId = dbMold.PlantId,
+                        CreatedUserId = userId,
+                        CreatedDate = DateTime.Now,
+                        InWarehouseId = dbMold.InWarehouseId,
+                        FirmId = firmId,
+                        ReceiptStatus = (int)ReceiptStatusType.Created,
+                        Details = new Models.DataTransfer.Receipt.ItemReceiptDetailModel[] { 
+                            new Models.DataTransfer.Receipt.ItemReceiptDetailModel
+                            {
+                                NewDetail = true,
+                                Quantity = 1,
+                                UnitId = null,
+                                LineNumber = 1,
+                                CreatedDate = DateTime.Now,
+                                CreatedUserId = userId,
+                                ItemId = dbMold.MoldItemId,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                                UnitPrice = 0,
+                            }
+                        },
+                    });
+                }
+
+                // SAVE CHANGES FOR UPDATING MOLD ITEM RELATION
+                if (moldItemSet)
+                    _unitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult BackFromRevision(int moldId, int? userId = null, DateTime? moveDate = null)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Mold>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
+                var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var dbMold = repo.Get(d => d.Id == moldId);
+                if (dbMold == null)
+                    throw new Exception("Kalıp tanımı bulunamadı.");
+
+                bool moldItemSet = false;
+                if (dbMold.ItemMold == null)
+                {
+                    var dbItem = repoItem.Get(d => d.ItemNo == dbMold.MoldCode);
+                    if (dbItem != null)
+                    {
+                        dbMold.MoldItemId = dbItem.Id;
+                        moldItemSet = true;
+                    }
+                }
+
+                var dbSentReceipt = repoReceiptDetail.Filter(d => d.ItemId == dbMold.MoldItemId &&
+                    d.ItemReceipt.ReceiptType > 100).OrderByDescending(d => d.ItemReceipt.ReceiptDate)
+                    .FirstOrDefault();
+
+                if (dbSentReceipt == null)
+                    throw new Exception("Revizyona gönderilen kayıt bilgisi bulunamadı.");
+
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    result = bObj.SaveOrUpdateItemReceipt(new Models.DataTransfer.Receipt.ItemReceiptModel
+                    {
+                        ReceiptDate = moveDate ?? DateTime.Now,
+                        ReceiptType = (int)ItemReceiptType.WarehouseInput,
+                        ReceiptNo = bObj.GetNextReceiptNo(dbMold.PlantId.Value, ItemReceiptType.WarehouseInput),
+                        PlantId = dbMold.PlantId,
+                        CreatedUserId = userId,
+                        CreatedDate = DateTime.Now,
+                        InWarehouseId = dbSentReceipt.ItemReceipt.InWarehouseId,
+                        FirmId = dbSentReceipt.ItemReceipt.FirmId,
+                        ReceiptStatus = (int)ReceiptStatusType.Created,
+                        Details = new Models.DataTransfer.Receipt.ItemReceiptDetailModel[] {
+                            new Models.DataTransfer.Receipt.ItemReceiptDetailModel
+                            {
+                                NewDetail = true,
+                                Quantity = 1,
+                                UnitId = null,
+                                LineNumber = 1,
+                                CreatedDate = DateTime.Now,
+                                CreatedUserId = userId,
+                                ItemId = dbMold.MoldItemId,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                                UnitPrice = 0,
+                            }
+                        },
+                    });
+                }
+
+                // SAVE CHANGES FOR UPDATING MOLD ITEM RELATION
+                if (moldItemSet)
+                    _unitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
         #endregion
 

@@ -150,6 +150,28 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        public JsonResult PrintMaterialLabel(int receiptDetailId)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                var printerId = bObj.GetParameter("DefaultProductPrinter", Convert.ToInt32(Request.Cookies["PlantId"].Value));
+
+                result = bObj.AddToPrintQueue(new PrinterQueueModel
+                {
+                    PrinterId = Convert.ToInt32(printerId),
+                    RecordType = (int)RecordType.ItemReceiptDetail,
+                    RecordId = receiptDetailId,
+                    CreatedDate = DateTime.Now,
+                    
+                });
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
         public JsonResult SaveModel(ItemReceiptModel model)
         {
             try

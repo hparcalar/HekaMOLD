@@ -247,10 +247,11 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             BusinessResult result = null;
             int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.ApproveSerials(model, plantId);
+                result = bObj.ApproveSerials(model, plantId, userId);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
@@ -260,10 +261,11 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult DenySerials(WorkOrderSerialModel[] model)
         {
             BusinessResult result = null;
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.DenySerials(model);
+                result = bObj.DenySerials(model, userId);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
@@ -273,10 +275,11 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult WaitSerials(WorkOrderSerialModel[] model)
         {
             BusinessResult result = null;
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.WaitSerials(model);
+                result = bObj.WaitSerials(model, userId);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
@@ -286,10 +289,11 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult SendToWastage(WorkOrderSerialModel[] model)
         {
             BusinessResult result = null;
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.SendToWastage(model);
+                result = bObj.SendToWastage(model, userId);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
@@ -300,10 +304,11 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             BusinessResult result = null;
             int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.ConditionalApproveSerials(model, plantId);
+                result = bObj.ConditionalApproveSerials(model, plantId, userId);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });

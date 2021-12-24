@@ -28,5 +28,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Summary
         public string ChiefUserName { get; set; }
         public int TargetCount { get; set; }
         public string LastProductName { get; set; }
+        public bool IsCurrentShift { get; set; } = false;
     }
 }
