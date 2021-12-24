@@ -57,5 +57,11 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public decimal? OutQuantity { get; set; }
         public bool NewDetail { get; set; }
         #endregion
+
+        #region LABEL ELEMENTS
+        public byte[] BarcodeImage { get; set; }
+        public string QuantityStr { get; set; }
+        public string CreatedDateStr { get; set; }
+        #endregion
     }
 }

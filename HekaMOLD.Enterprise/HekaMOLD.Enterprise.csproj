@@ -4715,8 +4715,14 @@
     <Content Include="ReportDesign\DeliverySerialList.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="ReportDesign\DeliveryPalletLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\ProductLabelWithoutFirm.rdlc" />
+    <EmbeddedResource Include="ReportDesign\ProductLabel_Backup.rdlc" />
+    <Content Include="ReportDesign\RawMaterialLabel.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,5 +1,7 @@
 ﻿using Heka.DataAccess.Context;
+using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Filters;
@@ -48,6 +50,39 @@ namespace HekaMOLD.Business.UseCases
                                 dbObj.Firm.Address : "",
                         });
                     }
+
+                    return data;
+                }
+                else if (reportType == ReportType.RawMaterialLabel)
+                {
+                    var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                    var dbObj = repo.Get(d => d.Id == objectId);
+                    if (dbObj == null)
+                        throw new Exception("İrsaliye kaydı bulunamadi.");
+
+                    List<ItemReceiptDetailModel> data = new List<ItemReceiptDetailModel>();
+                    var modelDetail = new ItemReceiptDetailModel();
+                    dbObj.MapTo(modelDetail);
+
+                    modelDetail.ItemNo = dbObj.Item != null ? dbObj.Item.ItemNo : "";
+                    modelDetail.ItemName = dbObj.Item != null ? dbObj.Item.ItemName : "";
+                    modelDetail.FirmCode = dbObj.ItemReceipt.Firm != null ? dbObj.ItemReceipt.Firm.FirmCode : "";
+                    modelDetail.FirmName = dbObj.ItemReceipt.Firm != null ? dbObj.ItemReceipt.Firm.FirmName : "";
+                    modelDetail.QuantityStr = string.Format("{0:N2}", dbObj.Quantity ?? 0);
+                    modelDetail.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now);
+
+                    // GENERATE BARCODE IMAGE
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(dbObj.Id.ToString(), QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    System.Drawing.Bitmap qrCodeImage = qrCode.GetGraphic(100);
+
+                    System.Drawing.ImageConverter converter = new System.Drawing.ImageConverter();
+                    var imgBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                    modelDetail.BarcodeImage = imgBytes;
+
+                    data.Add(modelDetail);
 
                     return data;
                 }

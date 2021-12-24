@@ -109,29 +109,6 @@
     padding-bottom: 3px !important;
 }
 
-/* MEDIUM LIGHT TABLE */
-.table-hk-md-lh {
-    font-size: small;
-    /*font-weight: bold !important;*/
-}
-
-    .table-hk-md-lh .btn {
-        padding: 6px !important;
-        min-height: 0px !important;
-        font-size: small !important;
-    }
-
-    .table-hk-md-lh input {
-        padding: 2px !important;
-        min-height: 0px !important;
-        font-size: small !important;
-    }
-
-    .table-hk-md-lh td {
-        padding-top: 3px !important;
-        padding-bottom: 3px !important;
-    }
-
 /* MEDIUM TABLE */
 .table-hk-md {
     font-size: medium;

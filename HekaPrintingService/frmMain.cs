@@ -14,6 +14,7 @@ using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 
 namespace HekaPrintingService
 {
@@ -147,6 +148,21 @@ namespace HekaPrintingService
                                     var reportData = (List<DeliverySerialListModel>)rObj
                                         .PrepareReportData(queueModel.RecordId.Value, ReportType.DeliverySerialList);
                                     rObj.PrintReport<List<DeliverySerialListModel>>(allocData.ReportTemplateId.Value, 
+                                        printerId, reportData);
+                                }
+
+                                bObj.SetElementAsPrinted(queueModel.Id);
+                            }
+                            else if (queueModel.RecordType == (int)RecordType.ItemReceiptDetail)
+                            {
+                                using (ReportingBO rObj = new ReportingBO())
+                                {
+                                    var allocData = Newtonsoft.Json
+                                       .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
+
+                                    var reportData = (List<ItemReceiptDetailModel>)rObj
+                                        .PrepareReportData(queueModel.RecordId.Value, ReportType.RawMaterialLabel);
+                                    rObj.PrintReport<List<ItemReceiptDetailModel>>(allocData.ReportTemplateId.Value,
                                         printerId, reportData);
                                 }
 

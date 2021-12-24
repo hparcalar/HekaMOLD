@@ -17,14 +17,13 @@
           </Border>
         </Style>
       </Image>
-      <Textbox Name="Textbox4">
-        <CanGrow>true</CanGrow>
+      <Textbox Name="Textbox8">
         <KeepTogether>true</KeepTogether>
         <Paragraphs>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Ürün Adı: </Value>
+                <Value>Miktar :</Value>
                 <Style>
                   <FontSize>9pt</FontSize>
                 </Style>
@@ -34,10 +33,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>2.41539cm</Top>
+        <Top>2.8078cm</Top>
         <Left>0.42721cm</Left>
-        <Height>0.45183cm</Height>
-        <Width>2.119cm</Width>
+        <Height>0.48358cm</Height>
+        <Width>2.35183cm</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -49,14 +48,13 @@
           <PaddingBottom>1pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox6">
-        <CanGrow>true</CanGrow>
+      <Textbox Name="Textbox9">
         <KeepTogether>true</KeepTogether>
         <Paragraphs>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Ürün Kodu: </Value>
+                <Value>Tarih :</Value>
                 <Style>
                   <FontSize>9pt</FontSize>
                 </Style>
@@ -66,10 +64,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>2.94837cm</Top>
+        <Top>3.39721cm</Top>
         <Left>0.42721cm</Left>
-        <Height>0.42008cm</Height>
-        <Width>2.119cm</Width>
+        <Height>0.48358cm</Height>
+        <Width>2.35183cm</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -81,14 +79,13 @@
           <PaddingBottom>1pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox8">
-        <CanGrow>true</CanGrow>
+      <Textbox Name="Textbox10">
         <KeepTogether>true</KeepTogether>
         <Paragraphs>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Koli İçi Adet: </Value>
+                <Value>Firma :</Value>
                 <Style>
                   <FontSize>9pt</FontSize>
                 </Style>
@@ -98,10 +95,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>3.4428cm</Top>
+        <Top>3.89138cm</Top>
         <Left>0.42721cm</Left>
-        <Height>0.48358cm</Height>
-        <Width>2.119cm</Width>
+        <Height>0.45183cm</Height>
+        <Width>2.35183cm</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>
@@ -113,16 +110,16 @@
           <PaddingBottom>1pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox10">
-        <CanGrow>true</CanGrow>
+      <Textbox Name="Textbox13">
         <KeepTogether>true</KeepTogether>
         <Paragraphs>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Firma: </Value>
+                <Value>=First(Fields!QuantityStr.Value, "DS1")</Value>
                 <Style>
                   <FontSize>9pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
                 </Style>
               </TextRun>
             </TextRuns>
@@ -130,10 +127,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>4.52638cm</Top>
-        <Left>0.42721cm</Left>
+        <Top>2.83955cm</Top>
+        <Left>2.95543cm</Left>
         <Height>0.45183cm</Height>
-        <Width>2.119cm</Width>
+        <Width>6.45231cm</Width>
         <ZIndex>4</ZIndex>
         <Style>
           <Border>
@@ -145,14 +142,13 @@
           <PaddingBottom>1pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox5">
-        <CanGrow>true</CanGrow>
+      <Textbox Name="Textbox14">
         <KeepTogether>true</KeepTogether>
         <Paragraphs>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=First(Fields!ProductName.Value, "DS1")</Value>
+                <Value>=First(Fields!CreatedDateStr.Value, "DS1")</Value>
                 <Style>
                   <FontSize>9pt</FontSize>
                   <FontWeight>Bold</FontWeight>
@@ -163,77 +159,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>2.4154cm</Top>
-        <Left>2.7226cm</Left>
+        <Top>3.40427cm</Top>
+        <Left>2.95543cm</Left>
         <Height>0.45183cm</Height>
-        <Width>6.68514cm</Width>
+        <Width>6.45231cm</Width>
         <ZIndex>5</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>1pt</PaddingLeft>
-          <PaddingRight>1pt</PaddingRight>
-          <PaddingTop>1pt</PaddingTop>
-          <PaddingBottom>1pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox11">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!ProductCode.Value, "DS1")</Value>
-                <Style>
-                  <FontSize>9pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>2.91662cm</Top>
-        <Left>2.7226cm</Left>
-        <Height>0.45183cm</Height>
-        <Width>6.68514cm</Width>
-        <ZIndex>6</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>1pt</PaddingLeft>
-          <PaddingRight>1pt</PaddingRight>
-          <PaddingTop>1pt</PaddingTop>
-          <PaddingBottom>1pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox13">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!InPackageQuantity.Value, "DS1")</Value>
-                <Style>
-                  <FontSize>9pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>3.47455cm</Top>
-        <Left>2.7226cm</Left>
-        <Height>0.45183cm</Height>
-        <Width>6.68514cm</Width>
-        <ZIndex>7</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -261,11 +191,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>4.56519cm</Top>
-        <Left>2.7226cm</Left>
+        <Top>3.93019cm</Top>
+        <Left>2.95543cm</Left>
         <Height>0.45183cm</Height>
-        <Width>6.68514cm</Width>
-        <ZIndex>8</ZIndex>
+        <Width>6.45231cm</Width>
+        <ZIndex>6</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -281,7 +211,7 @@
         <Left>0.25082cm</Left>
         <Height>0cm</Height>
         <Width>9.33331cm</Width>
-        <ZIndex>9</ZIndex>
+        <ZIndex>7</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -293,7 +223,7 @@
         <Left>0.25082cm</Left>
         <Height>2.80623cm</Height>
         <Width>0cm</Width>
-        <ZIndex>10</ZIndex>
+        <ZIndex>8</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -305,7 +235,7 @@
         <Left>0.25082cm</Left>
         <Height>0cm</Height>
         <Width>9.33331cm</Width>
-        <ZIndex>11</ZIndex>
+        <ZIndex>9</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -317,13 +247,77 @@
         <Left>9.58413cm</Left>
         <Height>2.80624cm</Height>
         <Width>0cm</Width>
-        <ZIndex>12</ZIndex>
+        <ZIndex>10</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
           </Border>
         </Style>
       </Line>
+      <Textbox Name="Textbox12">
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!ItemNo.Value, "DS1")</Value>
+                <Style>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox4</rd:DefaultName>
+        <Top>0.25543cm</Top>
+        <Left>0.25082cm</Left>
+        <Height>0.45183cm</Height>
+        <Width>5.90198cm</Width>
+        <ZIndex>11</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>1pt</PaddingLeft>
+          <PaddingRight>1pt</PaddingRight>
+          <PaddingTop>1pt</PaddingTop>
+          <PaddingBottom>1pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox7">
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!ItemName.Value, "DS1")</Value>
+                <Style>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox4</rd:DefaultName>
+        <Top>0.84837cm</Top>
+        <Left>0.25082cm</Left>
+        <Height>1.26809cm</Height>
+        <Width>5.90198cm</Width>
+        <ZIndex>12</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>1pt</PaddingLeft>
+          <PaddingRight>1pt</PaddingRight>
+          <PaddingTop>1pt</PaddingTop>
+          <PaddingBottom>1pt</PaddingBottom>
+        </Style>
+      </Textbox>
     </ReportItems>
     <Height>6cm</Height>
     <Style />
@@ -362,12 +356,12 @@
           <DataField>Id</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="ProductCode">
-          <DataField>ProductCode</DataField>
+        <Field Name="ItemNo">
+          <DataField>ItemNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ProductName">
-          <DataField>ProductName</DataField>
+        <Field Name="ItemName">
+          <DataField>ItemName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="CreatedDateStr">
@@ -378,16 +372,8 @@
           <DataField>FirmName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="InPackageQuantity">
-          <DataField>InPackageQuantity</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Weight">
-          <DataField>Weight</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShiftName">
-          <DataField>ShiftName</DataField>
+        <Field Name="QuantityStr">
+          <DataField>QuantityStr</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="BarcodeImage">
