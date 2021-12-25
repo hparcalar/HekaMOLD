@@ -113,6 +113,8 @@
     <Compile Include="Context\Models\ItemCategory.cs" />
     <Compile Include="Context\Models\ItemGroup.cs" />
     <Compile Include="Context\Models\ItemLiveStatus.cs" />
+    <Compile Include="Context\Models\ItemOffer.cs" />
+    <Compile Include="Context\Models\ItemOfferDetail.cs" />
     <Compile Include="Context\Models\ItemOrder.cs" />
     <Compile Include="Context\Models\ItemOrderConsume.cs" />
     <Compile Include="Context\Models\ItemOrderDetail.cs" />
@@ -240,6 +242,10 @@
     <Compile Include="Migrations\202112230736363_MaintenancePlan.designer.cs">
       <DependentUpon>202112230736363_MaintenancePlan.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112250936387_ItemOffers.cs" />
+    <Compile Include="Migrations\202112250936387_ItemOffers.designer.cs">
+      <DependentUpon>202112250936387_ItemOffers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -263,22 +269,22 @@
     <EmbeddedResource Include="Migrations\202112061028085_ContractWorkFlow.resx">
       <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Migrations\202112080853143_Machine_PreProcess.resx">
+    <EmbeddedResource Include="Migrations\202112080853143_Machine_PreProcess.resx">
       <DependentUpon>202112080853143_Machine_PreProcess.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.resx">
+    <EmbeddedResource Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.resx">
       <DependentUpon>202112090847474_QualityUserAndMachineSignalOperator.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.resx">
+    <EmbeddedResource Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.resx">
       <DependentUpon>202112200924410_WorkOrderSerial_ShiftBelongsToDate.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.resx">
+    <EmbeddedResource Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.resx">
       <DependentUpon>202112200929417_ItemSerial_ShiftBelongsToDate.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Migrations\202112202006183_MoldRevisions.resx">
+    <EmbeddedResource Include="Migrations\202112202006183_MoldRevisions.resx">
       <DependentUpon>202112202006183_MoldRevisions.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Migrations\202112211044232_EntryQualityUpdate.resx">
+    <EmbeddedResource Include="Migrations\202112211044232_EntryQualityUpdate.resx">
       <DependentUpon>202112211044232_EntryQualityUpdate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.resx">
@@ -292,6 +298,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112230736363_MaintenancePlan.resx">
       <DependentUpon>202112230736363_MaintenancePlan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112250936387_ItemOffers.resx">
+      <DependentUpon>202112250936387_ItemOffers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

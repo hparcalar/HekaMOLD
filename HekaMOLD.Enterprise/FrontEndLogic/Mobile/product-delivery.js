@@ -18,7 +18,8 @@
         $http.get(HOST_URL + 'Mobile/GetProductsForDelivery', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data.Serials;
+                    $scope.pickupList = resp.data.Pallets; // .Serials
+                    console.log(resp.data);
                     $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
                 }
@@ -50,7 +51,7 @@
     }
 
     $scope.processBarcodeResult = function (barcode) {
-        var product = $scope.pickupList.find(d => d.SerialNo == barcode);
+        var product = $scope.pickupList.find(d => d.PalletNo == barcode);
         if (product != null && typeof product != 'undefined') {
             $scope.selectProduct(product);
             $scope.isBarcodeRead = true;

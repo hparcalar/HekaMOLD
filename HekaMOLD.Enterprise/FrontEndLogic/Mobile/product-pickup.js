@@ -294,7 +294,7 @@
 
     $scope.approveItemEntry = function () {
         bootbox.confirm({
-            message: "Bu ürün teslimatını onaylıyor musunuz?",
+            message: "Bu ürün girişini onaylıyor musunuz?",
             closeButton: false,
             buttons: {
                 confirm: {

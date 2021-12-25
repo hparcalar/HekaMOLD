@@ -61,12 +61,16 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-    
+
+        [ForeignKey("ItemOfferDetail")]
+        public Nullable<int> ItemOfferDetailId { get; set; }
+
         public virtual ForexType ForexType { get; set; }
         public virtual Item Item { get; set; }
         public virtual ItemOrder ItemOrder { get; set; }
         public virtual ItemRequestDetail ItemRequestDetail { get; set; }
         public virtual UnitType UnitType { get; set; }
+        public virtual ItemOfferDetail ItemOfferDetail { get; set; }
 
         [InverseProperty("ItemOrderDetail")]
         public virtual ICollection<ItemOrderItemNeeds> ItemOrderItemNeeds { get; set; }

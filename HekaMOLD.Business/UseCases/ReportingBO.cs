@@ -4,6 +4,7 @@ using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using HekaMOLD.Business.Models.DataTransfer.Warehouse;
 using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core.Base;
@@ -74,6 +75,34 @@ namespace HekaMOLD.Business.UseCases
                     // GENERATE BARCODE IMAGE
                     QRCodeGenerator qrGenerator = new QRCodeGenerator();
                     QRCodeData qrCodeData = qrGenerator.CreateQrCode(dbObj.Id.ToString(), QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    System.Drawing.Bitmap qrCodeImage = qrCode.GetGraphic(100);
+
+                    System.Drawing.ImageConverter converter = new System.Drawing.ImageConverter();
+                    var imgBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                    modelDetail.BarcodeImage = imgBytes;
+
+                    data.Add(modelDetail);
+
+                    return data;
+                }
+                else if (reportType == ReportType.PalletLabel)
+                {
+                    var repo = _unitOfWork.GetRepository<Pallet>();
+                    var dbObj = repo.Get(d => d.Id == objectId);
+                    if (dbObj == null)
+                        throw new Exception("Palet kaydı bulunamadi.");
+
+                    List<PalletModel> data = new List<PalletModel>();
+                    var modelDetail = new PalletModel();
+                    dbObj.MapTo(modelDetail);
+
+                    modelDetail.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now);
+
+                    // GENERATE BARCODE IMAGE
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(dbObj.PalletNo, QRCodeGenerator.ECCLevel.Q);
                     QRCode qrCode = new QRCode(qrCodeData);
                     System.Drawing.Bitmap qrCodeImage = qrCode.GetGraphic(100);
 

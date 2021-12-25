@@ -157,6 +157,8 @@
     <Compile Include="Models\DataTransfer\Maintenance\MaintenancePlanModel.cs" />
     <Compile Include="Models\DataTransfer\MoldTrace\MoldMoveHistory.cs" />
     <Compile Include="Models\DataTransfer\MoldTrace\MoldRevisionOperationModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
@@ -272,6 +274,7 @@
     <Compile Include="UseCases\LayoutBO.cs" />
     <Compile Include="UseCases\MaintenanceBO.cs" />
     <Compile Include="UseCases\MoldBO.cs" />
+    <Compile Include="UseCases\OffersBO.cs" />
     <Compile Include="UseCases\OrdersBO.cs" />
     <Compile Include="UseCases\PlanningBO.cs" />
     <Compile Include="UseCases\ProductionBO.cs" />
@@ -316,6 +319,7 @@
     <EmbeddedResource Include="ReportDesign\DeliverySerialList.rdlc" />
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\DeliveryPalletLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\PalletLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\RawMaterialLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabelWithoutFirm.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />

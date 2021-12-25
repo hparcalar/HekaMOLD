@@ -5,7 +5,7 @@
         Barcode: '',
         PrinterId: 0,
         IsProdChief: false,
-        PrintLabel: false,
+        PrintLabel: true,
     };
 
     $scope.activeDetails = [];

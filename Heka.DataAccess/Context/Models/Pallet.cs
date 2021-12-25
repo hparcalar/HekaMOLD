@@ -27,5 +27,8 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UpdatedUserId { get; set; }
 
         public virtual Plant Plant { get; set; }
+
+        [InverseProperty("Pallet")]
+        public virtual ICollection<ItemSerial> ItemSerial { get; set; }
     }
 }

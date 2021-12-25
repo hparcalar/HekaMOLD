@@ -82,6 +82,29 @@ namespace HekaMOLD.Business.UseCases.Core
             return default;
         }
 
+        public string GetNextPalletNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Pallet>();
+                string lastSerialNo = repo.GetAll()
+                    .OrderByDescending(d => d.PalletNo)
+                    .Select(d => d.PalletNo)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(lastSerialNo))
+                    lastSerialNo = "0";
+
+                return string.Format("{0:00000000}", Convert.ToInt64(lastSerialNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+
         public ShiftModel GetCurrentShift()
         {
             ShiftModel data = new ShiftModel();

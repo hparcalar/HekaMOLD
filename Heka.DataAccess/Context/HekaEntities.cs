@@ -116,5 +116,7 @@
         public virtual DbSet<Pallet> Pallet { get; set; }
         public virtual DbSet<UserShortcut> UserShortcut { get; set; }
         public virtual DbSet<MaintenancePlan> MaintenancePlan { get; set; }
+        public virtual DbSet<ItemOffer> ItemOffer { get; set; }
+        public virtual DbSet<ItemOfferDetail> ItemOfferDetail { get; set; }
     }
 }

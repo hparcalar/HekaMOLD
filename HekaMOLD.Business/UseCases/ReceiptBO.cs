@@ -3,6 +3,7 @@ using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
+using HekaMOLD.Business.Models.DataTransfer.Warehouse;
 using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core;
@@ -341,7 +342,7 @@ namespace HekaMOLD.Business.UseCases
 
                 var dbDetail = repoReceiptDetail.Get(d => d.Id == model.Id);
                 if (dbDetail == null)
-                    throw new Exception("İrsaliye kalem bilgisi HEKA yazılımında bulunamadı.");
+                    throw new Exception("İrsaliye kalem bilgisi bulunamadı.");
 
                 dbDetail.Quantity = model.Quantity;
                 dbDetail.UnitPrice = model.UnitPrice;
@@ -350,9 +351,44 @@ namespace HekaMOLD.Business.UseCases
                 dbDetail.ForexRate = model.ForexRate;
                 dbDetail.ForexId = model.ForexId;
 
+                // GET CONSUMED LIST
+                List<int> consumedDetails = new List<int>();
+                if (dbDetail.ItemReceiptConsumeByConsumer.Any())
+                {
+                    var consumeList = dbDetail.ItemReceiptConsumeByConsumer.ToArray();
+                    foreach (var consuming in consumeList)
+                    {
+                        if (!consumedDetails.Contains(consuming.ConsumedReceiptDetailId ?? 0))
+                            consumedDetails.Add(consuming.ConsumedReceiptDetailId ?? 0);
+                    }
+                }
+
                 _unitOfWork.SaveChanges();
 
+                // TRIGGER POINT: UPDATE ITEM TOTALS
                 base.UpdateItemStats(new int[] { dbDetail.ItemId.Value });
+
+                // TRIGGER POINT: UPDATE CONSUMINGS
+                foreach (var item in consumedDetails)
+                {
+                    if (item > 0)
+                    {
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.UpdateConsume(item, dbDetail.Id, model.Quantity ?? 0);
+                        }
+
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.CheckReceiptDetailStatus(item);
+                        }
+                    }
+                }
+
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    bObj.CheckReceiptDetailStatus(dbDetail.Id);
+                }
 
                 result.Result = true;
             }
@@ -456,6 +492,74 @@ namespace HekaMOLD.Business.UseCases
                 // TRG-POINT-ITEM-STATUS
                 if (itemsMustBeUpdated.Count() > 0)
                     base.UpdateItemStats(itemsMustBeUpdated.ToArray());
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteReceiptDetail(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoReceipt = _unitOfWork.GetRepository<ItemReceipt>();
+                var repoConsume = _unitOfWork.GetRepository<ItemReceiptConsume>();
+
+                var dbDetail = repo.Get(d => d.Id == id);
+                if (dbDetail == null)
+                    throw new Exception("İrsaliye detay bilgisi bulunamadı.");
+
+                var itemId = dbDetail.ItemId ?? 0;
+
+                var dbReceipt = dbDetail.ItemReceipt;
+
+                // DELETE CONSUMINGS
+                List<int> consumedDetails = new List<int>();
+                if (dbDetail.ItemReceiptConsumeByConsumer.Any())
+                {
+                    var consumeList = dbDetail.ItemReceiptConsumeByConsumer.ToArray();
+                    foreach (var consuming in consumeList)
+                    {
+                        if (!consumedDetails.Contains(consuming.ConsumedReceiptDetailId ?? 0))
+                            consumedDetails.Add(consuming.ConsumedReceiptDetailId ?? 0);
+
+                        repoConsume.Delete(consuming);
+                    }
+                }
+
+                // DELETE HEADER IF NOT ANY OTHER DETAIL EXISTS
+                if (!dbReceipt.ItemReceiptDetail.Any(d => d.Id != dbDetail.Id))
+                {
+                    repoReceipt.Delete(dbReceipt);
+                }
+
+                // DELETE DETAIL
+                repo.Delete(dbDetail);
+
+                _unitOfWork.SaveChanges();
+
+                // TRIGGER POINT: CHECK NEW STATUS FOR DETAILS
+                foreach (var item in consumedDetails)
+                {
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        if (item > 0)
+                            bObj.CheckReceiptDetailStatus(item);
+                    }
+                }
+
+                // TRIGGER POINT: UPDATE ITEM TOTALS
+                if (itemId > 0)
+                    base.UpdateItemStats(new int[] { itemId });
 
                 result.Result = true;
             }

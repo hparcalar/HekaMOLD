@@ -126,7 +126,7 @@
 
                         $scope.warehouseList = resp.data.Warehouses;
 
-                        var emptyWrObj = { Id: 0, WarehouseName: '-- Seçiniz --' };
+                        var emptyWrObj = { Id: 0, WarehouseName: '-- Depo Seçiniz --' };
                         $scope.warehouseList.splice(0, 0, emptyWrObj);
                         $scope.selectedWarehouse = emptyWrObj;
 

@@ -132,6 +132,20 @@
         });
     }
 
+    $scope.showDeliveryForm = function () {
+        $scope.$broadcast('loadItemDeliveries', $scope.modelObject.Id);
+        $('#dial-deliveries').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: window.innerWidth * 0.95,
+            height: window.innerHeight * 0.95,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
     $scope.$on('printOptionsApproved', function (e, d) {
         $('#dial-print-options').dialog('close');
 

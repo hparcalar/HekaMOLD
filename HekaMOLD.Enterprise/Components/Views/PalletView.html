@@ -1,0 +1,38 @@
+﻿<div ng-controller="palletViewCtrl" class="bg-light">
+    <table class="table table-bordered table-hk-md">
+        <thead>
+            <tr>
+                <th class="w-10 px-2">Gir. Tar.</th>
+                <th class="w-10 px-2">Koli No</th>
+                <th class="w-25 px-2">Ürün Adı</th>
+                <th class="w-25 px-2">Firma</th>
+                <th class="w-10 px-2">Koli İçi Adet</th>
+                <th class="w-10 px-2">#</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="table-scroller-md">
+        <table ng-cloak class="table table-bordered table-hk-md table-striped table-hk-sm">
+            <tbody>
+                <tr ng-repeat="item in boxesOfPallet">
+                    <td class="w-10 px-2">{{item.CreatedDateStr}}</td>
+                    <td class="w-10 px-2">{{item.SerialNo}}</td>
+                    <td class="w-25 px-2">{{item.ItemName}}</td>
+                    <td class="w-25 px-2">{{item.FirmName}}</td>
+                    <td class="w-10 px-2">
+                        <input type="number"
+                               class="form-control form-control-sm"
+                               readonly="readonly"
+                               ng-model="item.FirstQuantity" />
+                    </td>
+                    <td class="w-10 px-2">
+                        <button type="button" ng-click="removeFromPallet(item)"
+                                class="btn btn-sm btn-danger">
+                            Çıkart
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

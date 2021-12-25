@@ -13,5 +13,13 @@ namespace HekaMOLD.Business.Models.DataTransfer.Warehouse
         public string PalletNo { get; set; }
         public int PalletStatus { get; set; }
         public Nullable<int> PlantId { get; set; }
+
+        #region VISUAL ELEMENTS
+        public string CreatedDateStr { get; set; }
+        public int BoxCount { get; set; }
+        public decimal? Quantity { get; set; }
+        public string QuantityStr { get; set; }
+        public byte[] BarcodeImage { get; set; }
+        #endregion
     }
 }

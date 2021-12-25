@@ -1,10 +1,7 @@
-﻿using HekaMOLD.Business.Models.Constants;
-using HekaMOLD.Business.Models.DataTransfer.Core;
-using HekaMOLD.Business.Models.DataTransfer.Order;
-using HekaMOLD.Business.Models.DataTransfer.Request;
+﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Offers;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
-using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -15,9 +12,8 @@ using System.Web.Mvc;
 namespace HekaMOLD.Enterprise.Controllers
 {
     [UserAuthFilter]
-    public class SIOrderController : Controller
+    public class SIOfferController : Controller
     {
-        // GET: SIOrder
         public ActionResult Index()
         {
             return View();
@@ -33,9 +29,9 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             string receiptNo = "";
 
-            using (OrdersBO bObj = new OrdersBO())
+            using (OffersBO bObj = new OffersBO())
             {
-                receiptNo = bObj.GetNextOrderNo(Convert.ToInt32(Request.Cookies["PlantId"].Value), ItemOrderType.Sale);
+                receiptNo = bObj.GetNextOfferNo();
             }
 
             var jsonResult = Json(new { Result = !string.IsNullOrEmpty(receiptNo), ReceiptNo = receiptNo }, JsonRequestBehavior.AllowGet);
@@ -47,37 +43,27 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult GetSelectables()
         {
             ItemModel[] items = new ItemModel[0];
-            UnitTypeModel[] units = new UnitTypeModel[0];
             FirmModel[] firms = new FirmModel[0];
-            ForexTypeModel[] forexes = new ForexTypeModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 items = bObj.GetItemList();
-                units = bObj.GetUnitTypeList();
                 firms = bObj.GetFirmList();
-                forexes = bObj.GetForexTypeList();
             }
 
-            var jsonResult = Json(new { Items = items, Units = units, Firms = firms, Forexes = forexes }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Items = items, Firms = firms, }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
 
         [HttpGet]
-        public JsonResult GetItemOrderList()
+        public JsonResult GetItemOfferList()
         {
-            ItemOrderModel[] result = new ItemOrderModel[0];
+            ItemOfferModel[] result = new ItemOfferModel[0];
 
-            using (OrdersBO bObj = new OrdersBO())
+            using (OffersBO bObj = new OffersBO())
             {
-                result = bObj.GetItemOrderList(ItemOrderType.Sale);
-
-                foreach (var item in result)
-                {
-                    if (item.OrderStatus == (int)OrderStatusType.Approved || item.OrderStatus == (int)OrderStatusType.Created)
-                        item.OrderStatusStr = "Planlanması bekleniyor";
-                }
+                result = bObj.GetItemOfferList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -88,10 +74,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ItemOrderModel model = null;
-            using (OrdersBO bObj = new OrdersBO())
+            ItemOfferModel model = null;
+            using (OffersBO bObj = new OffersBO())
             {
-                model = bObj.GetItemOrder(rid);
+                model = bObj.GetItemOffer(rid);
             }
 
             var jsonResponse = Json(model, JsonRequestBehavior.AllowGet);
@@ -106,9 +92,9 @@ namespace HekaMOLD.Enterprise.Controllers
             try
             {
                 BusinessResult result = null;
-                using (OrdersBO bObj = new OrdersBO())
+                using (OffersBO bObj = new OffersBO())
                 {
-                    result = bObj.DeleteItemOrder(rid);
+                    result = bObj.DeleteItemOffer(rid);
                 }
 
                 if (result.Result)
@@ -123,20 +109,20 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemOrderModel model)
+        public JsonResult SaveModel(ItemOfferModel model)
         {
             try
             {
                 BusinessResult result = null;
-                using (OrdersBO bObj = new OrdersBO())
+                using (OffersBO bObj = new OffersBO())
                 {
                     if (!Request.Cookies.AllKeys.Contains("PlantId") || Request.Cookies["PlantId"] == null)
                         throw new Exception("Sisteme yeniden giriş yapmanız gerekmektedir.");
 
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
 
-                    model.OrderType = (int)ItemOrderType.Sale;
-                    result = bObj.SaveOrUpdateItemOrder(model);
+                    model.OfferType = 1;
+                    result = bObj.SaveOrUpdateItemOffer(model);
                 }
 
                 if (result.Result)
@@ -151,56 +137,36 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult ApproveOrderPrice(int rid)
+        public JsonResult CreateSaleOrder(int rid)
         {
-            BusinessResult result = new BusinessResult();
-
-            using (OrdersBO bObj = new OrdersBO())
+            try
             {
-                result = bObj.ApproveItemOrderPrice(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+                BusinessResult result = null;
+                using (OffersBO bObj = new OffersBO())
+                {
+                    result = bObj.CreateSaleOrder(rid);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
             }
-
-            return Json(result);
-        }
-
-        [HttpPost]
-        public JsonResult ToggleOrderDetailStatus(int detailId)
-        {
-            BusinessResult result = null;
-
-            using (OrdersBO bObj = new OrdersBO())
+            catch (Exception ex)
             {
-                result = bObj.ToggleOrderDetailStatus(detailId);
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
-
-            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
-        }
-
-        [HttpGet]
-        [FreeAction]
-        public JsonResult GetOpenOrderDetails()
-        {
-            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
-
-            using (OrdersBO bObj = new OrdersBO())
-            {
-                result = bObj.GetOpenSaleOrderDetails(Convert.ToInt32(Request.Cookies["PlantId"].Value));
-            }
-
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
         }
 
         #region CALCULATIONS
         [HttpPost]
-        public JsonResult CalculateRow(ItemOrderDetailModel model)
+        public JsonResult CalculateRow(ItemOfferDetailModel model)
         {
-            ItemOrderDetailModel result = new ItemOrderDetailModel();
+            ItemOfferDetailModel result = new ItemOfferDetailModel();
 
-            using (OrdersBO bObj = new OrdersBO())
+            using (OffersBO bObj = new OffersBO())
             {
-                result = bObj.CalculateOrderDetail(model);
+                result = bObj.CalculateOfferDetail(model);
             }
 
             return Json(result);

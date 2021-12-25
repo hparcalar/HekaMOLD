@@ -165,10 +165,23 @@
                                                 </span>
                                                 <!--end::Svg Icon-->
                                             </span>
-                                            <span class="menu-title">SATIŞ SİPARİŞ YÖNETİMİ</span>
+                                            <span class="menu-title">SATIŞ YÖNETİMİ</span>
                                             <span class="menu-arrow"></span>
                                         </span>
                                         <div class="menu-sub menu-sub-accordion">
+                                            <div class="menu-item">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "SIOffer$") ? "active" : "")" href="@Url.Action("List", "SIOffer")">
+                                                    <span class="menu-bullet">
+                                                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                            <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                                <rect id="Rectangle" fill="#000000" x="4" y="4" width="16" height="16" rx="2"></rect>
+                                                            </g>
+                                                        </svg>
+                                                    </span>
+                                                    <span class="menu-title">Teklif</span>
+                                                </a>
+                                            </div>
                                             <div class="menu-item">
                                                 <a class="menu-link @(Regex.IsMatch(ctrl, "SIOrder$") ? "active" : "")" href="@Url.Action("List", "SIOrder")">
                                                     <span class="menu-bullet">
@@ -193,7 +206,7 @@
                                                             </g>
                                                         </svg>
                                                     </span>
-                                                    <span class="menu-title">Çeki Listesi</span>
+                                                    <span class="menu-title">İrsaliye</span>
                                                 </a>
                                             </div>
                                         </div>

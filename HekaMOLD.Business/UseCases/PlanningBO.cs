@@ -3,6 +3,7 @@ using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.UseCases.Core;
@@ -442,7 +443,6 @@ namespace HekaMOLD.Business.UseCases
                         WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
                         WastageQuantity = d.WorkOrderDetail.ProductWastage.Sum(m => m.Quantity) ?? 0,
                         CompleteQuantity = Convert.ToInt32(d.WorkOrderDetail.WorkOrderSerial
-                            .Where(m => m.QualityStatus == (int)QualityStatusType.Ok)
                             .Sum(m => m.FirstQuantity) ?? 0),
                         WorkOrderType = d.WorkOrderDetail.WorkOrderType ?? 1,
                     }
@@ -1025,6 +1025,8 @@ namespace HekaMOLD.Business.UseCases
                         ReceiptStatus = (int)ReceiptStatusType.Created,
                         ReceiptType = (int)ItemReceiptType.DeliveryToProduction,
                         InWarehouseId = dbReceipt.ItemReceipt.InWarehouseId,
+                        WorkOrderDetailId = activeWork.WorkOrderDetailId,
+                        FirmId = dbReceipt.ItemReceipt.FirmId,
                         PlantId = dbReceipt.ItemReceipt.PlantId,
                         Details = new Models.DataTransfer.Receipt.ItemReceiptDetailModel[]
                         {
@@ -1063,6 +1065,42 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return result;
+        }
+
+        public ItemReceiptDetailModel[] GetDeliveredItems(int workOrderDetailId)
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var dbObj = repo.Get(d => d.Id == workOrderDetailId);
+
+                data = repoReceiptDetail.Filter(d => d.ItemReceipt.WorkOrderDetailId == workOrderDetailId
+                    && d.ItemReceipt.ReceiptType == (int)ItemReceiptType.DeliveryToProduction)
+                    .ToList()
+                    .Select(d => new ItemReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        UnitId = d.UnitId,
+                        UnitPrice = d.UnitPrice,
+                        ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate),
+                        ReceiptNo = d.ItemReceipt.ReceiptNo,
+                        Quantity = d.Quantity,
+                        FirmCode = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        ItemNo = d.Item.ItemNo,
+                        ItemName = d.Item.ItemName,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
         }
         #endregion
     }

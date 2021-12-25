@@ -8,6 +8,7 @@ using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using HekaMOLD.Business.Models.DataTransfer.Warehouse;
 using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.Virtual;
@@ -2482,6 +2483,8 @@ namespace HekaMOLD.Business.UseCases
                         if (dbSerial.WorkOrderDetail.ItemId == null)
                             continue;
 
+                        dbSerial.SerialStatus = (int)SerialStatusType.Approved;
+
                         var relatedDetail = receiptDetails.FirstOrDefault(d => d.ItemId == dbSerial.WorkOrderDetail.ItemId);
                         if (relatedDetail == null)
                         {
@@ -2590,7 +2593,8 @@ namespace HekaMOLD.Business.UseCases
                         ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
                         CreatedDate = d.CreatedDate,
                         CreatedDateStr = d.CreatedDate != null ?
-                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "",
+                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : 
+                            string.Format("{0:dd.MM.yyyy}", d.ItemReceiptDetail.ItemReceipt.ReceiptDate),
                         MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
                             d.WorkOrderDetail.Machine.MachineCode : "",
                         MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
@@ -2599,6 +2603,8 @@ namespace HekaMOLD.Business.UseCases
                         InPackageQuantity = d.InPackageQuantity,
                         LiveQuantity = d.LiveQuantity,
                         SerialNo = d.SerialNo,
+                        PalletId = d.PalletId,
+                        PalletNo = d.Pallet != null ? d.Pallet.PalletNo : "",
                         FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
                         FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
                     }).ToArray();
@@ -2618,7 +2624,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ItemSerial>();
                 data = repo.Filter(d => d.SerialStatus == (int)SerialStatusType.Placed
-                    && d.ItemReceiptDetailId != null
+                    && d.ItemReceiptDetailId != null && d.PalletId != null
                     && d.SerialNo != null && d.SerialNo.Length > 0)
                     .ToList()
                     .Select(d => new ItemSerialModel
@@ -2648,6 +2654,254 @@ namespace HekaMOLD.Business.UseCases
                         SerialSum = d.Sum(m => m.FirstQuantity),
                     })
                     .ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ItemSerialModel[] GetBoxesWithoutPallet()
+        {
+            ItemSerialModel[] data = new ItemSerialModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemSerial>();
+                data = repo.Filter(d => d.SerialStatus == (int)SerialStatusType.Placed
+                    && d.PalletId == null
+                    && d.ItemReceiptDetailId != null
+                    && d.SerialNo != null && d.SerialNo.Length > 0)
+                    .ToList()
+                    .Select(d => new ItemSerialModel
+                    {
+                        Id = d.Id,
+                        ItemId = d.ItemReceiptDetail != null ? d.ItemReceiptDetail.ItemId : (int?)null,
+                        ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                        ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
+                        CreatedDate = d.CreatedDate,
+                        CreatedDateStr = d.CreatedDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) :
+                            string.Format("{0:dd.MM.yyyy}", d.ItemReceiptDetail.ItemReceipt.ReceiptDate),
+                        MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineCode : "",
+                        MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineName : "",
+                        FirstQuantity = d.FirstQuantity,
+                        InPackageQuantity = d.InPackageQuantity,
+                        LiveQuantity = d.LiveQuantity,
+                        SerialNo = d.SerialNo,
+                        FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public PalletModel[] GetWaitingPallets()
+        {
+            PalletModel[] data = new PalletModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Pallet>();
+                data = repo.Filter(d => d.PalletStatus == 0)
+                    .ToList()
+                    .Select(d => new PalletModel
+                    {
+                        Id = d.Id,
+                        CreatedDate = d.CreatedDate,
+                        PalletNo = d.PalletNo,
+                        PalletStatus = d.PalletStatus,
+                        PlantId = d.PlantId,
+                        CreatedDateStr = d.CreatedDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "",
+                        BoxCount = d.ItemSerial.Count(),
+                        Quantity = d.ItemSerial.Sum(m => m.FirstQuantity) ?? 0,
+                    })
+                    .OrderByDescending(d => d.Id)
+                    .ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult AddToPallet(int itemSerialId, int palletId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Pallet>();
+                var repoSerial = _unitOfWork.GetRepository<ItemSerial>();
+
+                var dbPallet = repo.Get(d => d.Id == palletId);
+                if (dbPallet == null)
+                    throw new Exception("Palet tanımı bulunamadı.");
+
+                var dbSerial = repoSerial.Get(d => d.Id == itemSerialId);
+                if (dbSerial == null)
+                    throw new Exception("Koli tanımı bulunamadı.");
+
+                dbSerial.PalletId = dbPallet.Id;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbSerial.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult RemoveFromPallet(int itemSerialId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemSerial>();
+
+                var dbSerial = repo.Get(d => d.Id == itemSerialId);
+                if (dbSerial == null)
+                    throw new Exception("Koli tanımı bulunamadı.");
+
+                dbSerial.PalletId = null;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbSerial.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public BusinessResult CreatePallet()
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoSerial = _unitOfWork.GetRepository<Pallet>();
+                var repoAllocCode = _unitOfWork.GetRepository<AllocatedCode>();
+
+                var pallet = new Pallet
+                {
+                    CreatedDate = DateTime.Now,
+                    PalletNo = GetNextPalletNo(),
+                    PalletStatus = (int)PalletStatusType.Exists,
+                };
+
+                var dbAllocated = repoAllocCode.Get(d => d.ObjectType == (int)RecordType.Pallet
+                    && d.AllocatedCode1 == pallet.PalletNo);
+                if (dbAllocated != null)
+                    repoAllocCode.Delete(dbAllocated);
+
+                repoSerial.Add(pallet);
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = pallet.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePallet(int palletId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Pallet>();
+                var repoBoxes = _unitOfWork.GetRepository<ItemSerial>();
+
+                var existingBoxes = repoBoxes.Filter(d => d.PalletId == palletId).ToArray();
+                foreach (var item in existingBoxes)
+                {
+                    repoBoxes.Delete(item);
+                }
+
+                var dbPallet = repo.Get(d => d.Id == palletId);
+                if (dbPallet == null)
+                    throw new Exception("Palet bilgisine ulaşılamadı.");
+
+                repo.Delete(dbPallet);
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbPallet.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ItemSerialModel[] GetBoxesInPallet(int palletId)
+        {
+            ItemSerialModel[] data = new ItemSerialModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemSerial>();
+                data = repo.Filter(d => d.SerialStatus == (int)SerialStatusType.Placed
+                    && d.PalletId == palletId
+                    && d.ItemReceiptDetailId != null
+                    && d.SerialNo != null && d.SerialNo.Length > 0)
+                    .ToList()
+                    .Select(d => new ItemSerialModel
+                    {
+                        Id = d.Id,
+                        ItemId = d.ItemReceiptDetail != null ? d.ItemReceiptDetail.ItemId : (int?)null,
+                        ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                        ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
+                        CreatedDate = d.CreatedDate,
+                        CreatedDateStr = d.CreatedDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) :
+                            string.Format("{0:dd.MM.yyyy}", d.ItemReceiptDetail.ItemReceipt.ReceiptDate),
+                        MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineCode : "",
+                        MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineName : "",
+                        FirstQuantity = d.FirstQuantity,
+                        InPackageQuantity = d.InPackageQuantity,
+                        LiveQuantity = d.LiveQuantity,
+                        SerialNo = d.SerialNo,
+                        FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                    }).ToArray();
             }
             catch (Exception)
             {
@@ -3384,7 +3638,9 @@ namespace HekaMOLD.Business.UseCases
                         Weight = "",
                         ShiftName = dbObj.Shift != null ? dbObj.Shift.ShiftCode : "",
                         CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", dbObj.CreatedDate),
-                        BarcodeImage = imgBytes
+                        BarcodeImage = imgBytes,
+                        ItemVisual = dbObj.WorkOrderDetail.ItemOrderDetail != null && dbObj.WorkOrderDetail.ItemOrderDetail.ItemOfferDetail != null ?
+                            dbObj.WorkOrderDetail.ItemOrderDetail.ItemOfferDetail.ItemVisual : null,
                     }
                 };
 

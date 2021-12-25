@@ -108,6 +108,9 @@
     <Content Include="ReportDesign\ProductLabel.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ReportDesign\PalletLabel.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="ReportDesign\ProductLabelWithoutFirm.rdlc" />
     <Content Include="ReportDesign\RawMaterialLabel.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

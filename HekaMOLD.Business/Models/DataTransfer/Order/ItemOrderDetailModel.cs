@@ -33,6 +33,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public int? SyncStatus { get; set; }
         public DateTime? SyncDate { get; set; }
         public int? ItemRequestDetailId { get; set; }
+        public int? ItemOfferDetailId { get; set; }
 
         #region HEADER DATA
         public int? FirmId { get; set; }

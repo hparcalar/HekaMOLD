@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Sevkiyat Çeki Listesi";
+    ViewBag.Title = "Ürün Sevkiyatı";
     Layout = "~/Views/Shared/_LayoutMobile.cshtml";
 }
 
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-2 col-xs-2 col-xxl-2">
+                @*<div class="col-sm-2 col-xs-2 col-xxl-2">
                     <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-warning" ng-click="showDeliveryPlan()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -85,9 +85,9 @@
                         <br />
                         <span style="display:block;margin-top:10px;">Sevkiyat Planı</span>
                     </a>
-                </div>
+                </div>*@
 
-                <div class="col-sm-2 col-xs-2 col-xxl-2">
+                <div class="col-sm-4 col-xs-4 col-xxl-4">
                     <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-success" ng-click="approveDelivery()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -105,19 +105,16 @@
 
             <!--begin::DETAIL TABLE-->
             <div class="row gy-5 mt-4 gx-xl-8 bg-white">
-                @* KOLİ TABLOSU *@
+                @* PALET TABLOSU *@
                 <div class="col-xxl-8 col-sm-8">
-                    <h5 class="hk-title-mobile">Koli Listesi</h5>
+                    <h5 class="hk-title-mobile">Palet Listesi</h5>
                     <table class="table table-bordered table-hk-md">
                         <thead>
                             <tr>
-                                <th class="w-10 px-2">Gir. Tar.</th>
-                                <th class="w-10 px-2">Makine</th>
-                                <th class="w-10 px-2">Koli No</th>
-                                <th class="w-25 px-2">Ürün Adı</th>
-                                <th class="w-25 px-2">Firma</th>
-                                <th class="w-10 px-2">Koli İçi Adet</th>
-                                <th class="w-10 px-2">#</th>
+                                <th class="w-20 px-2">Palet No</th>
+                                <th class="w-15 px-2">Koli Adedi</th>
+                                <th class="w-15 px-2">Miktar</th>
+                                <th class="w-50 px-2">#</th>
                             </tr>
                         </thead>
                     </table>
@@ -126,17 +123,10 @@
                             <tbody>
                                 <tr ng-repeat="item in filteredPickupList"
                                     ng-class="{'bg-warning': isSelectedProduct(item)}">
-                                    <td class="w-10 px-2">{{item.CreatedDateStr}}</td>
-                                    <td class="w-10 px-2">{{item.MachineCode}}</td>
-                                    <td class="w-10 px-2">{{item.SerialNo}}</td>
-                                    <td class="w-25 px-2">{{item.ItemName}}</td>
-                                    <td class="w-25 px-2">{{item.FirmName}}</td>
-                                    <td class="w-10 px-2">
-                                        <input type="number"
-                                               class="form-control form-control-sm"
-                                               ng-model="item.FirstQuantity" />
-                                    </td>
-                                    <td class="w-10 px-2">
+                                    <td class="w-20 px-2">{{item.PalletNo}}</td>
+                                    <td class="w-15 px-2">{{item.BoxCount}}</td>
+                                    <td class="w-15 px-2">{{item.Quantity}}</td>
+                                    <td class="w-50 px-2">
                                         <button type="button" ng-click="selectProduct(item)"
                                                 class="btn btn-sm btn-primary">
                                             {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}

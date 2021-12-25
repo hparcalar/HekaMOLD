@@ -201,6 +201,7 @@
     <Compile Include="Controllers\ProductQualityController.cs" />
     <Compile Include="Controllers\ReportTemplateController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
+    <Compile Include="Controllers\SIOfferController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
     <Compile Include="Controllers\WorkOrderCategoryController.cs" />
@@ -3976,10 +3977,12 @@
     <Content Include="assets\plugins\global\plugins.bundle.js" />
     <Content Include="Components\Controllers\delivery-plan-list.js" />
     <Content Include="Components\Controllers\edit-plan.js" />
+    <Content Include="Components\Controllers\item-delivery-list.js" />
     <Content Include="Components\Controllers\machine-incidents.js" />
     <Content Include="Components\Controllers\machine-postures.js" />
     <Content Include="Components\Controllers\maintenance-plan.js" />
     <Content Include="Components\Controllers\open-so-list.js" />
+    <Content Include="Components\Controllers\pallet-view.js" />
     <Content Include="Components\Controllers\planning-work-copy.js" />
     <Content Include="Components\Controllers\posture-category-selection.js" />
     <Content Include="Components\Controllers\incident-category-selection.js" />
@@ -3998,10 +4001,12 @@
     <Content Include="Components\Controllers\trial-work-form.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
+    <Content Include="Components\Views\ItemDeliveryList.html" />
     <Content Include="Components\Views\MachineIncidents.html" />
     <Content Include="Components\Views\MachinePostures.html" />
     <Content Include="Components\Views\MaintenancePlan.html" />
     <Content Include="Components\Views\OpenSoList.html" />
+    <Content Include="Components\Views\PalletView.html" />
     <Content Include="Components\Views\PlanningWorkCopy.html" />
     <Content Include="Components\Views\PostureCategorySelection.html" />
     <Content Include="Components\Views\IncidentCategorySelection.html" />
@@ -4157,6 +4162,7 @@
     <Content Include="FrontEndLogic\Mobile\item-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\machine-equipments.js" />
     <Content Include="FrontEndLogic\Mobile\manage-machines.js" />
+    <Content Include="FrontEndLogic\Mobile\manage-pallets.js" />
     <Content Include="FrontEndLogic\Mobile\manage-shifts.js" />
     <Content Include="FrontEndLogic\Mobile\posture-history.js" />
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
@@ -4201,6 +4207,8 @@
     <Content Include="FrontEndLogic\ReportTemplate\list.js" />
     <Content Include="FrontEndLogic\Shift\index.js" />
     <Content Include="FrontEndLogic\Shift\list.js" />
+    <Content Include="FrontEndLogic\SIOffer\index.js" />
+    <Content Include="FrontEndLogic\SIOffer\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
     <Content Include="FrontEndLogic\SIOrder\list.js" />
     <Content Include="FrontEndLogic\SystemPrinter\index.js" />
@@ -4688,6 +4696,9 @@
     <Content Include="Views\Mobile\ItemDelivery.cshtml" />
     <Content Include="Views\Mobile\ProductPlanList.cshtml" />
     <Content Include="Views\Maintenance\Planning.cshtml" />
+    <Content Include="Views\Mobile\ManagePallets.cshtml" />
+    <Content Include="Views\SIOffer\List.cshtml" />
+    <Content Include="Views\SIOffer\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4717,6 +4728,7 @@
     </Content>
     <EmbeddedResource Include="ReportDesign\DeliveryPalletLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\PalletLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabelWithoutFirm.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel_Backup.rdlc" />

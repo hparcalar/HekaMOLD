@@ -37,6 +37,29 @@ namespace HekaMOLD.Business.UseCases.Core
             return default;
         }
 
+        public string GetNextOfferNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOffer>();
+                string lastReceiptNo = repo.GetAll()
+                    .OrderByDescending(d => d.OfferNo)
+                    .Select(d => d.OfferNo)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(lastReceiptNo))
+                    lastReceiptNo = "0";
+
+                return string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+
         public string GetNextRequestNo(int plantId)
         {
             try

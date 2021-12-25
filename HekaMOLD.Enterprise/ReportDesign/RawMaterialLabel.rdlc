@@ -319,13 +319,13 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>6cm</Height>
+    <Height>10cm</Height>
     <Style />
   </Body>
   <Width>10cm</Width>
   <Page>
-    <PageHeight>6cm</PageHeight>
-    <PageWidth>7.5cm</PageWidth>
+    <PageHeight>10cm</PageHeight>
+    <PageWidth>10cm</PageWidth>
     <InteractiveHeight>7.5cm</InteractiveHeight>
     <InteractiveWidth>10cm</InteractiveWidth>
     <LeftMargin>0cm</LeftMargin>

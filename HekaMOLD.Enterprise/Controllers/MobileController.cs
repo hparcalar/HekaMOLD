@@ -15,6 +15,7 @@ using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Enterprise.Controllers.Attributes;
+using HekaMOLD.Business.Models.DataTransfer.Warehouse;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -583,12 +584,12 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 BusinessResult result = null;
 
-                //receiptModel.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
-                //if (receiptModel.Id == 0)
-                //{
-                //    receiptModel.CreatedDate = DateTime.Now;
-                //    receiptModel.CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
-                //}
+                receiptModel.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                if (receiptModel.Id == 0)
+                {
+                    receiptModel.CreatedDate = DateTime.Now;
+                    receiptModel.CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+                }
 
                 int wrId = 0;
                 using (DefinitionsBO bObj = new DefinitionsBO())
@@ -599,10 +600,12 @@ namespace HekaMOLD.Enterprise.Controllers
                         .FirstOrDefault();
                 }
 
+                receiptModel.InWarehouseId = wrId;
+
                 using (ProductionBO bObj = new ProductionBO())
                 {
-                    //result = bObj.MakeSerialPickupForProductWarehouse(receiptModel, model);
-                    result = bObj.ApproveProducedSerials(model, wrId); //receiptModel.InWarehouseId
+                    result = bObj.MakeSerialPickupForProductWarehouse(receiptModel, model);
+                    //result = bObj.ApproveProducedSerials(model, wrId); //receiptModel.InWarehouseId
                 }
 
                 if (result.Result)
@@ -694,6 +697,7 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             ItemSerialModel[] result = new ItemSerialModel[0];
             ItemSerialSummary[] resultSum = new ItemSerialSummary[0];
+            PalletModel[] pallets = new PalletModel[0];
 
             using (ProductionBO bObj = new ProductionBO())
             {
@@ -701,10 +705,61 @@ namespace HekaMOLD.Enterprise.Controllers
                 resultSum = bObj.GetSerialsWaitingForDeliverySummary();
             }
 
+            result = result.Where(d => d.PalletId != null).ToArray();
+
+            pallets = result.GroupBy(d => new { Id= d.PalletId, d.PalletNo })
+                .Select(d => new PalletModel
+                {
+                    Id = d.Key.Id ?? 0,
+                    PalletNo = d.Key.PalletNo,
+                    BoxCount = d.Count(),
+                    Quantity = d.Sum(m => m.FirstQuantity) ?? 0,
+                }).ToArray();
+
             var jsonResult = Json(new
             {
                 Serials = result,
                 Summaries = resultSum,
+                Pallets = pallets,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetBoxesWithoutPallet()
+        {
+            ItemSerialModel[] boxes = new ItemSerialModel[0];
+            PalletModel[] pallets = new PalletModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                boxes = bObj.GetBoxesWithoutPallet();
+                pallets = bObj.GetWaitingPallets();
+            }
+
+            var jsonResult = Json(new
+            {
+                Boxes = boxes,
+                Pallets = pallets,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetBoxesOfPallet(int palletId)
+        {
+            ItemSerialModel[] boxes = new ItemSerialModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                boxes = bObj.GetBoxesInPallet(palletId);
+            }
+
+            var jsonResult = Json(new
+            {
+                Boxes = boxes,
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
@@ -727,7 +782,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
         [HttpPost]
         public JsonResult SaveProductDelivery(ItemReceiptModel receiptModel, 
-            ItemSerialModel[] model, 
+            PalletModel[] model, 
             int[] orderDetails = null)
         {
             try
@@ -743,7 +798,27 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 using (ProductionBO bObj = new ProductionBO())
                 {
-                    result = bObj.CreateSerialDelivery(receiptModel, model, orderDetails);
+                    List<ItemSerialModel> serials = new List<ItemSerialModel>();
+
+                    foreach (var item in model)
+                    {
+                        var boxes = bObj.GetBoxesInPallet(item.Id);
+                        if (boxes != null && boxes.Length > 0)
+                            serials.AddRange(boxes);
+                    }
+
+                    result = bObj.CreateSerialDelivery(receiptModel, serials.ToArray(), orderDetails);
+                }
+
+                if (result.Result)
+                {
+                    foreach (var item in model)
+                    {
+                        using (ProductionBO bObj = new ProductionBO())
+                        {
+                            bObj.DeletePallet(item.Id);
+                        }
+                    }
                 }
 
                 if (result.Result)
@@ -772,6 +847,103 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
+        }
+
+        public ActionResult ManagePallets()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult CreatePallet()
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.CreatePallet();
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult DeletePallet(int palletId)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.DeletePallet(palletId);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult AddToPallet(int itemSerialId, int palletId)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.AddToPallet(itemSerialId, palletId);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult RemoveFromPallet(int itemSerialId)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.RemoveFromPallet(itemSerialId);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
         }
         #endregion
 
