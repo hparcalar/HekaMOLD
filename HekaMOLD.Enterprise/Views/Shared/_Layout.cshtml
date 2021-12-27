@@ -980,7 +980,7 @@
                                                 </span>
                                                 <div class="menu-sub menu-sub-accordion">
                                                     <div class="menu-item">
-                                                        <a class="menu-link @(Regex.IsMatch(ctrl, "Knit") ? "active" : "")" href="@Url.Action("List","Knit")">
+                                                        <a class="menu-link @(Regex.IsMatch(ctrl, "Knit$") ? "active" : "")" href="@Url.Action("List","Knit")">
                                                             <span class="menu-bullet">
                                                                 <span class="bullet bullet-dot"></span>
                                                             </span>
@@ -1002,7 +1002,8 @@
                                                             </span>
                                                             <span class="menu-title">İplik Cinsi</span>
                                                         </a>
-                                                    </div>                                                   <div class="menu-item">
+                                                    </div>
+                                                    <div class="menu-item">
                                                         <a class="menu-link @(Regex.IsMatch(ctrl, "YarnColour$") ? "active" : "")" href="@Url.Action("List","YarnColour")">
                                                             <span class="menu-bullet">
                                                                 <span class="bullet bullet-dot"></span>

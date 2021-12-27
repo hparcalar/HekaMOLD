@@ -35,6 +35,7 @@
         public virtual DbSet<IncidentCategory> IncidentCategory { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<Item> Item { get; set; }
+        public virtual DbSet<ItemQualityType> ItemQualityType { get; set; }
         public virtual DbSet<ItemPrice> ItemPrice { get; set; }
         public virtual DbSet<ItemCategory> ItemCategory { get; set; }
         public virtual DbSet<ItemGroup> ItemGroup { get; set; }
@@ -112,6 +113,8 @@
         public virtual DbSet<YarnColour> YarnColour { get; set; }
         public virtual DbSet<YarnColourGroup> YarnColourGroup { get; set; }
         public virtual DbSet<FabricRecipe> FabricRecipe { get; set; }
+        public virtual DbSet<KnitYarn> KnitYarn { get; set; }
+
 
     }
 }

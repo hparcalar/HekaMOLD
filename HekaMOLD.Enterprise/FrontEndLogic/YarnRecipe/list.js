@@ -1,4 +1,4 @@
-﻿app.controller('yarnColourListCtrl', function ($scope, $http) {
+﻿app.controller('yarnRecipeListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS
@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'YarnColour/GetYarnColourList', function (data) {
+                    return $.getJSON(HOST_URL + 'YarnRecipe/GetYarnRecipeList', function (data) {
 
                     });
                 },
@@ -36,9 +36,16 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'YarnColourCode', caption: 'Renk Kodu' },
-                { dataField: 'YarnColourName', caption: 'Renk Adı' },
-                { dataField: 'GroupName', caption: 'Renk Grup' },
+                { dataField: 'YarnRecipeCode', caption: 'İpik Kodu' },
+                { dataField: 'YarnRecipeName', caption: 'İplik Adı' },
+                { dataField: 'YarnBreedName', caption: 'İplik Cinsi' },
+                { dataField: 'FirmName', caption: 'Firma' },
+                { dataField: 'YarnColourName', caption: 'Renk' },
+                { dataField: 'Denier', caption: 'Denye' },
+                { dataField: 'Factor', caption: 'Katsayı' },
+                { dataField: 'Twist', caption: 'Büküm' },
+                { dataField: 'Center', caption: 'Punta' },
+                { dataField: 'Mix', caption: 'Karışım' },
                {
                     type: "buttons",
                     buttons: [
@@ -48,7 +55,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'YarnColour?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'YarnRecipe?rid=' + e.row.data.Id;
                             }
                         }
                     ]

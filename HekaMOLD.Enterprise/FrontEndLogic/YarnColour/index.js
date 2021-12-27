@@ -2,19 +2,23 @@
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
-    $scope.categoryList = [];
+
+    $scope.selectedGroup = {};
+    $scope.groupList = [];
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
     }
+
     // GET SELECTABLE DATA
     $scope.loadSelectables = function () {
-        alert("hakan");
         var prmReq = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'YarnColour/GetYarnColourGroupList', {}, 'json')
+            $http.get(HOST_URL + 'YarnColour/GetSelectables', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
-                        $scope.categoryList = resp.data;
+
+                        $scope.groupList = resp.data.ColourGroups;
+
                         resolve(resp.data);
                     }
                 }).catch(function (err) { });
@@ -22,12 +26,13 @@
 
         return prmReq;
     }
+
     $scope.performDelete = function () {
-        bootbox.confirm({
-            message: "Bu iplik renk kodunu silmek istediğinizden emin misiniz?",
+        bootbox.conyarnRecipe({
+            message: "Bu iplik tanımını silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
-                confirm: {
+                conyarnRecipe: {
                     label: 'Evet',
                     className: 'btn-primary'
                 },
@@ -61,6 +66,13 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
+        if (typeof $scope.selectedGroup != 'undefined' && $scope.selectedGroup != null) {
+            $scope.modelObject.YarnColourGroupId = $scope.selectedGroup.Id;
+            alert("asd:" + $scope.modelObject.YarnColourGroupId);
+        }
+        else
+            $scope.modelObject.YarnColourGroupId = null;
+
         $http.post(HOST_URL + 'YarnColour/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -76,17 +88,65 @@
                 }
             }).catch(function (err) { });
     }
+    // YARCOLOUR FUNCTIONS
+    $scope.updateCode = function () {
+
+        //$scope.getNextReceiptNo().then(function (rNo) {
+        //    $scope.modelObject.YarnColourCode = rNo;
+        //});
+        $scope.modelObject.YarnColourCode = $scope.selectedGroup.YarnColourGroupCode;
+        alert("asd:" + $scope.selectedGroup.YarnColourGroupCode);
+
+    };
+    $scope.getNextYarnColourNo = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'YarnColour/GetNextYarnColourNo', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            resolve(resp.data.ReceiptNo);
+                        }
+                        else {
+                            toastr.error('Sıradaki sipariş numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prms;
+    }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'YanrColor/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'YarnColour/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
+
+                    // BIND EXTERNAL 
+
+                    if ($scope.modelObject.YarnColourGroupId > 0) {
+                        $scope.selectedGroup = $scope.groupList.find(d => d.Id == $scope.modelObject.YarnColourGroupId);
+                    }
+                    else {
+                        $scope.selectedGroup = {};
+                    }
+
+                    $scope.bindAuthorList();
                 }
             }).catch(function (err) { });
     }
 
     // ON LOAD EVENTS
-    if (PRM_ID > 0)
-        $scope.bindModel(PRM_ID);
+    DevExpress.localization.locale('tr');
+    $scope.loadSelectables().then(function (data) {
+        if (PRM_ID > 0)
+            $scope.bindModel(PRM_ID);
+        else {
+            $scope.getNextReceiptNo().then(function (rNo) {
+                $scope.modelObject.YarnColourCode = rNo;
+                $scope.bindModel(0);
+            });
+        }
+    });
 });

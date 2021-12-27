@@ -190,14 +190,14 @@
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çözgü Tel Sayısı</label>
                             <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.WarpWireCount" placeholder="" />
                             </div>
                         </div>
                         <div class="col-xxl-6">
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">m² Gramaj </label>
                             <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.MeterGramaj" placeholder="" />
                             </div>
                         </div>
                     </div>
@@ -206,15 +206,15 @@
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kesme</label>
                             <div class="mb-5">
-                                <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in KnitCutTypeList"
-                                        ng-model="selectedKnitCutType" class="form-select form-select-solid">
+                                <select aria-label="İplik Tip" ng-options="item.Text for item in cutTypeList"
+                                        ng-model="selectedCutType" class="form-select form-select-solid">
                                 </select>
                             </div>
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Boyahane</label>
                             <div class="mb-5">
-                                <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in DyehouseList"
-                                        ng-model="selectedDyehouse" class="form-select form-select-solid">
+                                <select aria-label="İplik Tip" ng-options="item.Text for item in dyeHouseList"
+                                        ng-model="selectedDyeHouse" class="form-select form-select-solid">
                                 </select>
                             </div>
                         </div>
@@ -222,15 +222,15 @@
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Konfeksiyon</label>
                             <div class="mb-5">
-                                <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in KnitApparelTypeList"
-                                        ng-model="selectedKnitApparelType" class="form-select form-select-solid">
+                                <select aria-label="İplik Tip" ng-options="item.Text for item in apparelTypeList"
+                                        ng-model="selectedApparelType" class="form-select form-select-solid">
                                 </select>
                             </div>
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kurşun</label>
                             <div class="mb-5">
-                                <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in KnitBulletTypeList"
-                                        ng-model="selectedKnitBulletType" class="form-select form-select-solid">
+                                <select aria-label="İplik Tip" ng-options="item.Text for item in bulletTypeList"
+                                        ng-model="selectedBulletType" class="form-select form-select-solid">
                                 </select>
                             </div>
                         </div>
@@ -243,8 +243,8 @@
                     <!--begin::Input group-->
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kalite Tür</label>
                     <div class="mb-5">
-                        <select aria-label="İplik Tip" ng-options="Knit.Text for Knit in KnitQualityTypeList"
-                                ng-model="selectedKnitQualityType" class="form-select form-select-solid">
+                        <select aria-label="İplik Tip" ng-options="item.ItemQualityTypeName for item in qualityTypeList"
+                                ng-model="selectedQualityType" class="form-select form-select-solid">
                         </select>
                     </div>
                     <div class="row">
@@ -273,7 +273,7 @@
                     <!--begin::Input group-->
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine</label>
                     <select class="form-select form-select-solid" data-allow-clear="true"
-                            ng-options="Knit.MachineCode + ' / ' + Knit.Machine for Knit in firmMachine" ng-model="selectedMachine"
+                            ng-options="item.MachineName for item in machineList" ng-model="selectedMachine"
                             data-control="select2" data-placeholder="-- Seçiniz --">
                     </select>
 
@@ -290,7 +290,7 @@
                         </div>
                         <div class="card-body">
                             <div class="dx-viewport">
-                                <div id="warehouseList"></div>
+                                <div id="warpYarnList"></div>
                             </div>
                         </div>
                     </div>
@@ -302,7 +302,7 @@
                         </div>
                         <div class="card-body">
                             <div class="dx-viewport">
-                                <div id="unitList"></div>
+                                <div id="weftYarnList"></div>
                             </div>
                         </div>
                     </div>
@@ -313,9 +313,7 @@
     </div>
     <!--end::Post-->
 
-    <div id="dial-attachments" title="Teklifler" style="display:none;">
-        <ng-include src="'Components/Views/AttachmentList.html'"></ng-include>
-    </div>
+   
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>

@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "İplik Tanımları";
+    ViewBag.Title = "İplik Tanımı";
 }
 
-<div ng-controller="yarnCtrl">
+<div ng-controller="yarnRecipeCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -136,72 +136,39 @@
                     <!--begin::Input group-->
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Kodu</label>
                     <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeNo" placeholder="" />
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeCode" placeholder="" />
                     </div>
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Fiili Denye</label>
-                    <div class="mb-5">
-                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Fiili Denye</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Denier" placeholder="" />
+                            </div>
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Katsayı</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Factor" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Büküm</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Twist" placeholder="" />
+                            </div>
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Lot</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnLot" placeholder="" />
+                            </div>
+                        </div>
                     </div>
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Katsayı</label>
-                    <div class="mb-5">
-                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
-                    </div>
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Lot</label>
-                    <div class="mb-5">
-                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
-                    </div>
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Rapor Tel Sayısı</label>
-                    <div class="mb-5">
-                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
-                    </div>
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Metrede Tel Sayısı</label>
-                    <div class="mb-5">
-                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
-                    </div>
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gramaj</label>
-                    <div class="mb-5">
-                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
-                    </div>
-                </div>
-                <!--end::Col-->
-
-                <div class="col-xxl-6">
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Adı</label>
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
-                    </div>
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Tipi</label>
-                    <div class="mb-5">
-                        <select aria-label="İplik Tip" ng-options="YarnRecipe.Text for YarnRecipe in YarnRecipeTypeList"
-                                ng-model="selectedYarnRecipeType" class="form-select form-select-solid">
-                        </select>
-                    </div>
-
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tedarikçi</label>
-                    <select class="form-select form-select-solid" data-allow-clear="true"
-                            ng-options="YarnRecipe.FirmCode + ' / ' + YarnRecipe.FirmName for YarnRecipe in firmList" ng-model="selectedFirm"
-                            data-control="select2" data-placeholder="-- Seçiniz --">
-                    </select>
-                    <!--begin::Input group-->
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Renk</label>
-                    <select class="form-select form-select-solid" data-allow-clear="true"
-                            ng-options="YarnRecipe.FirmCode + ' / ' + YarnRecipe.FirmName for YarnRecipe in firmList" ng-model="selectedFirm"
-                            data-control="select2" data-placeholder="-- Seçiniz --">
-                    </select>
                     <row class="d-flex flex-row">
                         <!--begin::Input group-->
                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">&nbsp;</label>
                         <label class="form-check form-check-custom form-check-solid w-50 mt-3">
-                            <input class="form-check-input" type="checkbox" ng-model="modelObject.IsApproved" />
+                            <input class="form-check-input" type="checkbox" ng-model="modelObject.Center" />
                             <span class="form-check-label">
                                 Punta
                             </span>
@@ -209,16 +176,44 @@
                         <!--begin::Input group-->
                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">&nbsp;</label>
                         <label class="form-check form-check-custom form-check-solid w-50 mt-3">
-                            <input class="form-check-input" type="checkbox" ng-model="modelObject.IsApproved" />
+                            <input class="form-check-input" type="checkbox" ng-model="modelObject.Mix" />
                             <span class="form-check-label">
                                 Karışım
                             </span>
                         </label>
                     </row>
-
-
                 </div>
-            </div>
+                    <!--end::Col-->
+
+                    <div class="col-xxl-6">
+                        <!--begin::Input group-->
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Adı</label>
+                        <div class="mb-5">
+                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeName" placeholder="" />
+                        </div>
+                        <!--begin::Input group-->
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Tipi</label>
+                        <div class="mb-5">
+                            <select aria-label="İplik Tip" ng-options="item.YarnBreedName for item in yarnBreedList"
+                                    ng-model="selectedYarnBreed" class="form-select form-select-solid">
+                            </select>
+                        </div>
+
+                        <!--begin::Input group-->
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tedarikçi</label>
+                        <select class="form-select form-select-solid" data-allow-clear="true"
+                                ng-options="item.FirmName for item in firmList" ng-model="selectedFirm"
+                                data-control="select2" data-placeholder="-- Seçiniz --">
+                        </select>
+                        <!--begin::Input group-->
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Renk</label>
+                        <select class="form-select form-select-solid" data-allow-clear="true"
+                                ng-options="item.YarnColourName for item in yarnColourList" ng-model="selectedYarnColour"
+                                data-control="select2" data-placeholder="-- Seçiniz --">
+                        </select>
+
+                    </div>
+                </div>
             <!--end::Row-->
 
             <div class="row gy-5 gx-xl-8 bg-white">

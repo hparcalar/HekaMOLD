@@ -36,11 +36,24 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'KnitCode', caption: 'Desen No' },
-                { dataField: 'Name', caption: 'Ham En' },
-                { dataField: 'FirmTypeStr', caption: 'Ham Gramaj' },
-                { dataField: 'IsApproved', caption: 'Mamül En' },
-                {
+                { dataField: 'ItemNo', caption: 'Desen No' },
+                { dataField: 'TestNo', caption: 'Deneme No' },
+                { dataField: 'QualityTypeName', caption: 'Kalite Türü' },
+                { dataField: 'MachineName', caption: 'Makine' },
+                //{ dataField: 'CrudeWidth', caption: 'Ham En' },
+               // { dataField: 'CrudeGramaj', caption: 'Ham Gramaj' },
+               // { dataField: 'ProductWidth', caption: 'Mamül En' },
+              //  { dataField: 'ProductGramaj', caption: 'Mamül Gramaj' },
+               // { dataField: 'WapWireCount', caption: 'Çözgü Tel Sayısı' },
+                //{ dataField: 'MeterGramaj', caption: 'm² Gramaj' },
+                { dataField: 'ItemCutTypeStr', caption: 'Kesme' },
+                { dataField: 'ItemBulletTypeStr', caption: 'Kurşun' },
+                { dataField: 'ItemApparelTypeStr', caption: 'Konfeksiyon' },
+                { dataField: 'ItemDyeHouseTypeStr', caption: 'Boyahane' },
+                { dataField: 'CombWidth', caption: 'Atkı En' },
+                { dataField: 'WeftReportLength', caption: 'Atkı Rapor Boyu' },
+                { dataField: 'WapReportLength', caption: 'Çözgü Rapor Boyu' },
+              {
                     type: "buttons",
                     buttons: [
                         {

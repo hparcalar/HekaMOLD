@@ -3,13 +3,42 @@
 
     $scope.saveStatus = 0;
 
-    $scope.selectedyarnRecipeType = {};
-    $scope.yarnRecipeTypeList = [{ Id: 1, Text: 'Çözgü' },
-    { Id: 2, Text: 'Atkı' }];
+    $scope.selectedYarnBreed = {};
+    $scope.yarnBreedList = [];
+
+    $scope.selectedFirm = { };
+    $scope.firmList = [];
+
+    $scope.selectedYarnColour = {};
+    $scope.yarnColourList = [];
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
-        $scope.selectedyarnRecipeType = {};
+    }
+
+    // GET SELECTABLE DATA
+    $scope.loadSelectables = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'YarnRecipe/GetSelectables', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+
+                        $scope.firmList = resp.data.Firms;
+                        $scope.yarnColourList = resp.data.Colours;
+                        $scope.yarnBreedList = resp.data.YarnBreed;
+
+                        //var emptyMcObj = { Id: 0, MachineName: '-- Seçiniz --' };
+                        //$scope.machineList.splice(0, 0, emptyMcObj);
+                        //$scope.selectedMachine = emptyMcObj;
+                        //$scope.firmList = resp.data.Firms;
+                        //$scope.unitList = resp.data.Units;
+
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prmReq;
     }
 
     $scope.performDelete = function () {
@@ -51,11 +80,25 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        //if (typeof $scope.selectedFirmType != 'undefined' && $scope.selectedFirmType != null) {
-        //    $scope.modelObject.FirmType = $scope.selectedFirmType.Id;
-        //}
-        //else
-        //    $scope.modelObject.FirmType = null;
+        if (typeof $scope.selectedFirm != 'undefined' && $scope.selectedFirm != null) {
+            $scope.modelObject.FirmId = $scope.selectedFirm.Id;
+        }
+        else
+            $scope.modelObject.FirmId = null;
+
+        if (typeof $scope.selectedYarnBreed != 'undefined' && $scope.selectedYarnBreed != null) {
+            $scope.modelObject.YarnBreedId = $scope.selectedYarnBreed.Id;
+        }
+        else
+            $scope.modelObject.YarnBreedId = null;
+
+        if (typeof $scope.selectedYarnColour != 'undefined' && $scope.selectedYarnColour != null) {
+            $scope.modelObject.YarnColourId = $scope.selectedYarnColour.Id;
+        }
+        else
+            $scope.modelObject.YarnBreedId = null;
+
+    
 
         $http.post(HOST_URL + 'YarnRecipe/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -80,13 +123,25 @@
                     $scope.modelObject = resp.data;
 
                     // BIND EXTERNAL FIRM TYPE
-                    //if ($scope.modelObject.FirmType > 0) {
-                    //    $scope.selectedFirmType = $scope.firmTypeList.find(d => d.Id == $scope.modelObject.FirmType);
-                    //}
-                    //else {
-                    //    $scope.selectedFirmType = {};
-                    //}
 
+                    if ($scope.modelObject.FirmId > 0) {
+                        $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
+                    }
+                    else {
+                        $scope.selectedFirm = {};
+                    }
+                    if ($scope.modelObject.YarnColourId > 0) {
+                        $scope.selectedYarnColour = $scope.yarnColourList.find(d => d.Id == $scope.modelObject.YarnColourId);
+                    }
+                    else {
+                        $scope.selectedYarnColour = {};
+                    }
+                    if ($scope.modelObject.YarnBreedId > 0) {
+                        $scope.selectedYarnBreed = $scope.yarnBreedList.find(d => d.Id == $scope.modelObject.YarnBreedId);
+                    }
+                    else {
+                        $scope.selectedYarnBreed = {};
+                    }
                     $scope.bindAuthorList();
                 }
             }).catch(function (err) { });
@@ -171,6 +226,10 @@
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
-    if (PRM_ID > 0)
-        $scope.bindModel(PRM_ID);
+    $scope.loadSelectables().then(function (data) {
+        if (PRM_ID > 0)
+            $scope.bindModel(PRM_ID);
+        else
+            $scope.bindModel(0);
+    });
 });

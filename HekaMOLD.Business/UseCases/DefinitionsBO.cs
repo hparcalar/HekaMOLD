@@ -92,8 +92,7 @@ namespace HekaMOLD.Business.UseCases
                     model.Authors = new FirmAuthorModel[0];
 
                 var toBeRemovedAuthors = dbObj.FirmAuthor
-                    .Where(d => !model.Authors.Where(m => m.NewDetail == false)
-                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    .Where(d => !model.Authors.Where(m => m.NewDetail == false).Select(m => m.Id).ToArray().Contains(d.Id)
                     ).ToArray();
                 foreach (var item in toBeRemovedAuthors)
                 {
@@ -218,7 +217,7 @@ namespace HekaMOLD.Business.UseCases
 
             return repo.GetAll().Select(d => new ItemModel
             {
-                Id=d.Id,
+                Id = d.Id,
                 ItemNo = d.ItemNo,
                 ItemName = d.ItemName,
                 ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
@@ -231,7 +230,6 @@ namespace HekaMOLD.Business.UseCases
                 //TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
             }).ToArray();
         }
-
         public ItemModel[] GetItemListWithStates()
         {
             var repo = _unitOfWork.GetRepository<Item>();
@@ -251,7 +249,6 @@ namespace HekaMOLD.Business.UseCases
                 //TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
             }).ToArray();
         }
-
         public ItemModel[] GetItemListJustNames()
         {
             var repo = _unitOfWork.GetRepository<Item>();
@@ -263,47 +260,42 @@ namespace HekaMOLD.Business.UseCases
                 ItemName = d.ItemName,
             }).ToArray();
         }
-
         public ItemModel[] GetProductList()
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
             return repo.Filter(d => d.ItemType == (int)ItemType.Product
                 || d.ItemType == (int)ItemType.SemiProduct).ToList().Select(d => new ItemModel
-            {
-                Id = d.Id,
-                ItemNo = d.ItemNo,
-                ItemName = d.ItemName,
-                ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
+                {
+                    Id = d.Id,
+                    ItemNo = d.ItemNo,
+                    ItemName = d.ItemName,
+                    ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
                         d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "",
-                ItemType = d.ItemType,
-                CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
-                GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
-                TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
-                TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
-                TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
-            }).ToArray();
+                    ItemType = d.ItemType,
+                    CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
+                    GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
+                    TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
+                    TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
+                    TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
+                }).ToArray();
         }
-
         public BusinessResult SaveOrUpdateItem(ItemModel model)
         {
             BusinessResult result = new BusinessResult();
-
             try
             {
                 if (string.IsNullOrEmpty(model.ItemNo))
                     throw new Exception("Stok numarası girilmelidir.");
                 if (string.IsNullOrEmpty(model.ItemName))
                     throw new Exception("Stok adı girilmelidir.");
-
                 var repo = _unitOfWork.GetRepository<Item>();
                 var repoWarehouses = _unitOfWork.GetRepository<ItemWarehouse>();
                 var repoUnits = _unitOfWork.GetRepository<ItemUnit>();
 
-                if (repo.Any(d => (d.ItemNo == model.ItemNo) 
+                if (repo.Any(d => (d.ItemNo == model.ItemNo)
                     && d.Id != model.Id))
                     throw new Exception("Aynı numaraya sahip başka bir stok mevcuttur. Lütfen farklı bir numara giriniz.");
-
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
@@ -312,14 +304,11 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedUserId = model.CreatedUserId;
                     repo.Add(dbObj);
                 }
-
                 var crDate = dbObj.CreatedDate;
-
                 model.MapTo(dbObj);
 
                 if (dbObj.CreatedDate == null)
                     dbObj.CreatedDate = crDate;
-
                 dbObj.UpdatedDate = DateTime.Now;
 
                 #region SAVE WAREHOUSE PRM
@@ -383,9 +372,7 @@ namespace HekaMOLD.Business.UseCases
                     }
                 }
                 #endregion
-
                 _unitOfWork.SaveChanges();
-
                 result.Result = true;
                 result.RecordId = dbObj.Id;
             }
@@ -398,10 +385,8 @@ namespace HekaMOLD.Business.UseCases
                 else
                     result.ErrorMessage = ex.Message;
             }
-
             return result;
         }
-
         public BusinessResult DeleteItem(int id)
         {
             BusinessResult result = new BusinessResult();
@@ -439,10 +424,10 @@ namespace HekaMOLD.Business.UseCases
 
                 #region WAREHOUSE RESTRICTIONS BY ITEM TYPE
                 var warehouseList = repoWarehouse.Filter(d =>
-                    ((model.ItemType == (int)ItemType.RawMaterials || model.ItemType == (int)ItemType.Commercial) 
+                    ((model.ItemType == (int)ItemType.RawMaterials || model.ItemType == (int)ItemType.Commercial)
                         && d.WarehouseType == (int)WarehouseType.ItemWarehouse)
                     ||
-                    ((model.ItemType == (int)ItemType.SemiProduct) && 
+                    ((model.ItemType == (int)ItemType.SemiProduct) &&
                         (d.WarehouseType == (int)WarehouseType.ItemWarehouse || d.WarehouseType == (int)WarehouseType.ProductWarehouse))
                     ||
                     (model.ItemType == (int)ItemType.Product && d.WarehouseType == (int)WarehouseType.ProductWarehouse)
@@ -458,7 +443,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         ItemId = model.Id,
                         WarehouseId = item.Id,
-                        IsAllowed=true,
+                        IsAllowed = true,
                         MaximumQuantity = null,
                         WarehouseCode = item.WarehouseCode,
                         WarehouseName = item.WarehouseName,
@@ -494,13 +479,11 @@ namespace HekaMOLD.Business.UseCases
                 model.TotalInQuantity = dbObj.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0;
                 model.TotalOutQuantity = dbObj.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0;
                 model.TotalOverallQuantity = dbObj.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0;
-
                 model.Warehouses = warehousePrmList.ToArray();
             }
 
             return model;
         }
-
         public ItemModel GetItem(string itemNo)
         {
             ItemModel model = new ItemModel { };
@@ -620,11 +603,205 @@ namespace HekaMOLD.Business.UseCases
 
             return warehousePrmList.ToArray();
         }
-
         public bool HasAnyItem(string itemCode)
         {
             var repo = _unitOfWork.GetRepository<Item>();
             return repo.Any(d => d.ItemNo == itemCode);
+        }
+        #endregion
+
+        #region KNIT BUSINESS
+        public ItemModel[] GetKnitList()
+        {
+            var repo = _unitOfWork.GetRepository<Item>();
+
+            return repo.GetAll().Select(d => new ItemModel
+            {
+                Id = d.Id,
+                ItemNo = d.ItemNo,
+                TestNo = d.TestNo,
+                ItemCutTypeStr = d.ItemCutType == 1 ? "Var" : d.ItemCutType == 2 ? "Yok" : "",
+                ItemBulletTypeStr = d.ItemBulletType == 1 ? "Var" : d.ItemBulletType == 2 ? "Yok" : "",
+                ItemApparelTypeStr = d.ItemApparelType == 1 ? "Var" : d.ItemApparelType == 2 ? "Yok" : "",
+                ItemDyeHouseTypeStr = d.ItemDyeHouseType == 1 ? "FR - FİKSE" : "",
+                CrudeWidth = d.CrudeWidth,
+                CrudeGramaj = d.CrudeGramaj,
+                ProductWidth = d.ProductWidth,
+                ProductGramaj = d.ProductGramaj,
+                WarpWireCount = d.WarpWireCount,
+                MeterGramaj = d.MeterGramaj,
+                QualityTypeName = d.ItemQualityType != null ? d.ItemQualityType.ItemQualityTypeName : "",
+                CombWidth = d.CombWidth,
+                WeftReportLength = d.WeftReportLength,
+                WarpReportLength = d.WarpReportLength,
+                MachineName = d.Machine != null ? d.Machine.MachineName : "",
+                WeftDensity = d.WeftDensity,
+            }).ToArray();
+        }
+
+        public ItemModel GetKnit(int id)
+        {
+            ItemModel model = new ItemModel { };
+
+            var repo = _unitOfWork.GetRepository<Item>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+                #region GET KNITYARN LIST
+                List<KnitYarnModel> knitYarnList = new List<KnitYarnModel>();
+                dbObj.KnitYarn.ToList().ForEach(d =>
+                {
+                    KnitYarnModel knitYarnModel = new KnitYarnModel();
+                    knitYarnModel.Denier = d.YarnRecipe != null ? d.YarnRecipe.Denier : 0;
+                    knitYarnModel.YarnRecipeCode = d.YarnRecipe != null ? d.YarnRecipe.YarnRecipeCode : "";
+                    knitYarnModel.YarnRecipeName = d.YarnRecipe != null ? d.YarnRecipe.YarnRecipeName : "";
+                    knitYarnModel.FirmName = d.Firm != null ? d.Firm.FirmName : "";
+                    knitYarnModel.FirmCode = d.Firm != null ? d.Firm.FirmCode : "";
+                    knitYarnModel.YarnTypeStr = d.YarnType != null ? ((YarnType)d.YarnType.Value).ToCaption() : null;
+
+                    d.MapTo(knitYarnModel);
+                    knitYarnList.Add(knitYarnModel);
+                });
+                model.KnitYarns = knitYarnList.ToArray();
+                #endregion
+            }
+
+            return model;
+        }
+
+        public BusinessResult SaveOrUpdateKnit(ItemModel model)
+        {
+            BusinessResult result = new BusinessResult();
+            try
+            {
+                if (string.IsNullOrEmpty(model.ItemNo))
+                    throw new Exception("Dokuma Desen numarası girilmelidir.");
+                var repo = _unitOfWork.GetRepository<Item>();
+                var repoKnitYarns = _unitOfWork.GetRepository<KnitYarn>();
+
+
+                if (repo.Any(d => (d.ItemNo == model.ItemNo)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı numaraya sahip başka bir Dokuma Desen mevcuttur. Lütfen farklı bir numara giriniz.");
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Item();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+                var crDate = dbObj.CreatedDate;
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+                dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE WAREHOUSE PRM
+                //if (model.Warehouses == null)
+                //    model.Warehouses = new ItemWarehouseModel[0];
+
+                //var toBeRemovedWarehouses = dbObj.ItemWarehouse
+                //    .Where(d => !model.Warehouses.Select(m => m.Id).ToArray().Contains(d.Id))
+                //    .ToArray();
+                //foreach (var item in toBeRemovedWarehouses)
+                //{
+                //    repoWarehouses.Delete(item);
+                //}
+
+                //foreach (var item in model.Warehouses
+                //    .Where(d => !toBeRemovedWarehouses.Any(m => m.WarehouseId == d.WarehouseId)))
+                //{
+                //    var dbItemWr = repoWarehouses.GetById(item.Id);
+                //    if (dbItemWr == null || item.Id == 0)
+                //    {
+                //        dbItemWr = new ItemWarehouse();
+                //        item.MapTo(dbItemWr);
+                //        dbItemWr.Item = dbObj;
+                //        repoWarehouses.Add(dbItemWr);
+                //    }
+                //    else
+                //    {
+                //        item.MapTo(dbItemWr);
+                //        dbItemWr.Item = dbObj;
+                //    }
+                //}
+                #endregion
+
+                #region SAVE KNITYARN
+                if (model.KnitYarns == null)
+                    model.KnitYarns = new KnitYarnModel[0];
+
+                var toBeRemovedKnitYarns = dbObj.KnitYarn
+                    .Where(d => !model.KnitYarns.Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+
+                foreach (var item in toBeRemovedKnitYarns)
+                {
+                    repoKnitYarns.Delete(item);
+                }
+
+                foreach (var item in model.KnitYarns
+                    .Where(a => !toBeRemovedKnitYarns.Any(m => m.YarnRecipeId == a.YarnRecipeId)))
+                {
+                    var dbKnitYarnWr = repoKnitYarns.GetById(item.Id);
+                    if (dbKnitYarnWr == null || item.Id == 0)
+                    {
+                        dbKnitYarnWr = new KnitYarn();
+                        item.MapTo(dbKnitYarnWr);
+                        dbKnitYarnWr.Item = dbObj;
+                        repoKnitYarns.Add(dbKnitYarnWr);
+                    }
+                    else
+                    {
+                        item.MapTo(dbKnitYarnWr);
+                        dbKnitYarnWr.Item = dbObj;
+                    }
+                }
+
+                #endregion
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+
+                if (ex.InnerException != null)
+                    result.ErrorMessage = ex.InnerException.Message;
+                else
+                    result.ErrorMessage = ex.Message;
+            }
+            return result;
+
+        } 
+
+        public BusinessResult DeleteKnit(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Item>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+
         }
         #endregion
 
@@ -3080,20 +3257,17 @@ namespace HekaMOLD.Business.UseCases
         #region YARNCOLOUR BUSINESS
         public YarnColourModel[] GetYarnColourList()
         {
-            List<YarnColourModel> data = new List<YarnColourModel>();
-
             var repo = _unitOfWork.GetRepository<YarnColour>();
 
-            repo.GetAll().ToList().ForEach(d =>
+          return  repo.GetAll().Select(d => new YarnColourModel
             {
-                YarnColourModel containerObj = new YarnColourModel();
-                d.MapTo(containerObj);
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+                Id = d.Id,
+                YarnColourCode = d.YarnColourCode,
+                YarnColourName = d.YarnColourName,
+                YarnColourGroupId = d.YarnColourGroupId,
+                GroupName = d.YarnColourGroup != null ? d.YarnColourGroup.YarnColourGroupName :"",
+            }).ToArray();
         }
-
         public BusinessResult SaveOrUpdateYarnColour(YarnColourModel model)
         {
             BusinessResult result = new BusinessResult();
@@ -3121,7 +3295,6 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 var crDate = dbObj.CreatedDate;
-
                 model.MapTo(dbObj);
 
                 if (dbObj.CreatedDate == null)
@@ -3180,6 +3353,24 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        #endregion
+
+        #region YARN QUALITY BUSINESS
+        public ItemQualityTypeModel[] GetItemQualityTypeList()
+        {
+            List<ItemQualityTypeModel> data = new List<ItemQualityTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemQualityType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ItemQualityTypeModel containerObj = new ItemQualityTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
         #endregion
 
         #region WORK ORDER CATEGORY BUSINESS
@@ -3274,6 +3465,113 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return model;
+        }
+        #endregion
+
+        #region YARNRECIPE BUSINESS
+        public YarnRecipeModel[] GetYarnRecipeList()
+        {
+            var repo = _unitOfWork.GetRepository<YarnRecipe>();
+
+            return repo.GetAll().Select(d => new YarnRecipeModel
+            {
+                Id = d.Id,
+                YarnRecipeCode = d.YarnRecipeCode,
+                YarnRecipeName = d.YarnRecipeName,
+                Denier = d.Denier ,
+                Factor = d.Factor,
+                Twist = d.Twist,
+                Center = d.Center,
+                Mix = d.Mix,
+                YarnLot = d.YarnLot,
+                FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                YarnBreedName = d.YarnBreed != null ? d.YarnBreed.YarnBreedName : "",
+                YarnColourName = d.YarnColour != null ? d.YarnColour.YarnColourName :"",
+            }).ToArray();
+        }
+        public YarnRecipeModel GetYarnRecipe(int id)
+        {
+            YarnRecipeModel model = new YarnRecipeModel { };
+
+            var repo = _unitOfWork.GetRepository<YarnRecipe>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        public BusinessResult SaveOrUpdateYarnRecipe(YarnRecipeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.YarnRecipeCode))
+                    throw new Exception("İplik kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.YarnRecipeName))
+                    throw new Exception("İplik adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<YarnRecipe>();
+
+                if (repo.Any(d => (d.YarnRecipeCode == model.YarnRecipeCode || d.YarnRecipeName == model.YarnRecipeName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir iplik mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new YarnRecipe();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+
+        }
+        public BusinessResult DeleteYarnRecipe(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<YarnRecipe>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
         #endregion
     }

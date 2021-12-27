@@ -4195,6 +4195,7 @@
     <Content Include="FrontEndLogic\YarnColour\index.js" />
     <Content Include="FrontEndLogic\YarnColour\list.js" />
     <Content Include="FrontEndLogic\YarnRecipe\index.js" />
+    <Content Include="FrontEndLogic\YarnRecipe\list.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Helpers\FrontEnd\heka-ui-helpers.js" />

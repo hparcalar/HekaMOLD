@@ -1,4 +1,5 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.Context.Models;
 using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Models.Constants;
@@ -59,7 +60,28 @@ namespace HekaMOLD.Business.UseCases.Core
 
             return default;
         }
+        public string GetNextYarnColourNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<YarnColour>();
+                int lastReceiptNo = repo.Filter(d => d.Id >0)
+                    .OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
 
+                if (string.IsNullOrEmpty(Convert.ToString( lastReceiptNo)))
+                    lastReceiptNo = 0;
+
+                return string.Format("{0:000000}", lastReceiptNo + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
         public string GetNextReceiptNo(int plantId, ItemReceiptType receiptType)
         {
             try

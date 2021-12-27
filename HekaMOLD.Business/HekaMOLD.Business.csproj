@@ -111,6 +111,7 @@
     <Compile Include="Models\Constants\WorkOrderSerialType.cs" />
     <Compile Include="Models\Constants\WorkOrderStatusType.cs" />
     <Compile Include="Models\Constants\WorkOrderType.cs" />
+    <Compile Include="Models\Constants\YarnType.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserRoleModel.cs" />
@@ -121,8 +122,10 @@
     <Compile Include="Models\DataTransfer\Core\ForexTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemGroupModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\ItemKnitDensityModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemLiveStatusModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\ItemQualityTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemUnitModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemWarehouseModel.cs" />
     <Compile Include="Models\DataTransfer\Core\NotificationModel.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserRoleSubscriptionModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\YarnRecipeModel.cs" />
     <Compile Include="Models\DataTransfer\EmployeeStats\UserWorkOrderHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
     <Compile Include="Models\DataTransfer\Finance\InvoiceModel.cs" />
@@ -163,6 +167,7 @@
     <Compile Include="Models\DataTransfer\Production\IncidentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\IncidentModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ItemOrderItemNeedsModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\KnitYarnModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />

@@ -1,11 +1,7 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
-using HekaMOLD.Enterprise.Controllers.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
@@ -93,17 +89,37 @@ namespace HekaMOLD.Enterprise.Controllers
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
         }
-        [FreeAction]
-        public JsonResult GetYarnColourGroupList()
+        [HttpGet]
+        public JsonResult GetSelectables()
         {
-            YarnColourGroupModel[] data = new YarnColourGroupModel[0];
+            YarnColourGroupModel[] colourGroups = new YarnColourGroupModel[0];
 
-            using (DefinitionsBO dObj = new DefinitionsBO())
+            using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                data = dObj.GetYarnColourGroupList();
+                colourGroups = bObj.GetYarnColourGroupList();
             }
 
-            return Json(data, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new
+            {
+                ColourGroups = colourGroups,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetNextYarnColourNo()
+        {
+            string receiptNo = "";
+
+            using (RequestBO bObj = new RequestBO())
+            {
+                receiptNo = bObj.GetNextYarnColourNo();
+            }
+
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(receiptNo), ReceiptNo = receiptNo }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
 

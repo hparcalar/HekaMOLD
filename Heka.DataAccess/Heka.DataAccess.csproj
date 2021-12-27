@@ -96,6 +96,7 @@
     <Compile Include="Context\Models\ItemSerial.cs" />
     <Compile Include="Context\Models\ItemUnit.cs" />
     <Compile Include="Context\Models\ItemWarehouse.cs" />
+    <Compile Include="Context\Models\KnitYarn.cs" />
     <Compile Include="Context\Models\LayoutItem.cs" />
     <Compile Include="Context\Models\LayoutObjectType.cs" />
     <Compile Include="Context\Models\LogisticsOrder.cs" />
@@ -225,6 +226,30 @@
     <Compile Include="Migrations\202112161230199_CutType-BulletType-ApparelType-Added.designer.cs">
       <DependentUpon>202112161230199_CutType-BulletType-ApparelType-Added.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112211212282_updateYarnBreed.cs" />
+    <Compile Include="Migrations\202112211212282_updateYarnBreed.designer.cs">
+      <DependentUpon>202112211212282_updateYarnBreed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112221026051_updateYarnRecipe.cs" />
+    <Compile Include="Migrations\202112221026051_updateYarnRecipe.designer.cs">
+      <DependentUpon>202112221026051_updateYarnRecipe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112221307363_updateYarnRecipe1.cs" />
+    <Compile Include="Migrations\202112221307363_updateYarnRecipe1.designer.cs">
+      <DependentUpon>202112221307363_updateYarnRecipe1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112251720361_updateItem dyehouse.cs" />
+    <Compile Include="Migrations\202112251720361_updateItem dyehouse.designer.cs">
+      <DependentUpon>202112251720361_updateItem dyehouse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112261047050_KnitYarn added.cs" />
+    <Compile Include="Migrations\202112261047050_KnitYarn added.designer.cs">
+      <DependentUpon>202112261047050_KnitYarn added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112271935420_update KnitYarn.cs" />
+    <Compile Include="Migrations\202112271935420_update KnitYarn.designer.cs">
+      <DependentUpon>202112271935420_update KnitYarn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -292,6 +317,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112161230199_CutType-BulletType-ApparelType-Added.resx">
       <DependentUpon>202112161230199_CutType-BulletType-ApparelType-Added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112211212282_updateYarnBreed.resx">
+      <DependentUpon>202112211212282_updateYarnBreed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221026051_updateYarnRecipe.resx">
+      <DependentUpon>202112221026051_updateYarnRecipe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221307363_updateYarnRecipe1.resx">
+      <DependentUpon>202112221307363_updateYarnRecipe1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112251720361_updateItem dyehouse.resx">
+      <DependentUpon>202112251720361_updateItem dyehouse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112261047050_KnitYarn added.resx">
+      <DependentUpon>202112261047050_KnitYarn added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112271935420_update KnitYarn.resx">
+      <DependentUpon>202112271935420_update KnitYarn.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

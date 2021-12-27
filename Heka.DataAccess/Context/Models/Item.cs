@@ -29,8 +29,9 @@ namespace Heka.DataAccess.Context
             this.ProductWastage = new HashSet<ProductWastage>();
             this.FabricRecipe = new HashSet<FabricRecipe>();
             this.ItemKnitDensity = new HashSet<ItemKnitDensity>();
+            this.KnitYarn = new HashSet<KnitYarn>();
         }
-    
+
         public int Id { get; set; }
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
@@ -67,7 +68,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> ItemCutType { get; set; }
 
         //Boyahane
-        public string Dyehouse { get; set; }
+        public Nullable<int> ItemDyeHouseType { get; set; }
         //konfeksiyon
         public Nullable<int> ItemApparelType { get; set; }
         //Kursun
@@ -153,7 +154,11 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Item")]
         public virtual ICollection<FabricRecipe> FabricRecipe { get; set; }
+
         [InverseProperty("Item")]
         public virtual ICollection<ItemKnitDensity> ItemKnitDensity { get; set; }
+
+        [InverseProperty("Item")]
+        public virtual ICollection<KnitYarn> KnitYarn { get; set; }
     }
 }

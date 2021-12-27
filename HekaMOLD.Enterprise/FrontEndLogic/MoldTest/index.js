@@ -1,7 +1,7 @@
 ﻿app.controller('moldTestCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
-    $scope.selectedMachine = { Id: 0, MachineName: '' };
+    $scope.selectedMachine = { Id: 0, MachineName: '-- Seçiniz --'};
     $scope.machineList = [];
 
     $scope.saveStatus = 0;
