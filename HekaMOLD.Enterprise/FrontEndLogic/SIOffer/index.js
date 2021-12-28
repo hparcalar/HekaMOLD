@@ -226,6 +226,14 @@ function ($scope, $http, Upload) {
         else
             $scope.modelObject.FirmId = null;
 
+        for (var i = 0; i < $scope.modelObject.Details.length; i++) {
+            var dtObj = $scope.modelObject.Details[i];
+            if (dtObj.ItemVisualStr != null && dtObj.ItemVisualStr.indexOf('"') > 0) {
+                var badIndex = dtObj.ItemVisualStr.indexOf('"');
+                dtObj.ItemVisualStr = dtObj.ItemVisualStr.substr(0, badIndex);
+            }
+        }
+
         $http.post(HOST_URL + 'SIOffer/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {

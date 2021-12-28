@@ -20,15 +20,16 @@ namespace HekaMOLD.Enterprise.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("List", "SIOffer");
+            //return View();
         }
 
         #region LOGIN PROCESS
         public ActionResult Login()
         {
             // CHECK & RUN MIGRATION SCRTIPS
-            //HekaBO hekaBase = new HekaBO();
-            //hekaBase.RunMigrations();
+            HekaBO hekaBase = new HekaBO();
+            hekaBase.RunMigrations();
 
             return View();
         }
