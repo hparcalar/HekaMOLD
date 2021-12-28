@@ -396,7 +396,7 @@ namespace HekaMOLD.Business.UseCases
             ).ToList().Select(d => new ItemOrderDetailModel { 
                 Id = d.Id,
                 OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
-                
+                OrderDate = d.ItemOrder.OrderDate,
                 ItemNo = d.Item != null ? d.Item.ItemNo : "",
                 ItemName = d.Item != null ? d.Item.ItemName : "",
                 FirmName = d.ItemOrder.Firm != null ? 
@@ -404,7 +404,9 @@ namespace HekaMOLD.Business.UseCases
                 Quantity = d.Quantity,
                 DeadlineDateStr = d.ItemOrder.DateOfNeed != null ?
                     string.Format("{0:dd.MM.yyyy}", d.ItemOrder.DateOfNeed) : "",
-            }).ToArray();
+            })
+            .OrderByDescending(d => d.OrderDate)
+            .ToArray();
 
             return data;
         }

@@ -110,6 +110,36 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        [FreeAction]
+        public JsonResult PrintItemLabel(int itemId, decimal? quantity, int labelCount)
+        {
+            BusinessResult result = new BusinessResult();
+
+            for (int i = 0; i < labelCount; i++)
+            {
+                using (PlanningBO bObj = new PlanningBO())
+                {
+                    int printerId = Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter",
+                        Convert.ToInt32(Request.Cookies["PlantId"].Value)).PrmValue);
+
+                    var model = new PrinterQueueModel();
+                    model.AllocatedPrintData = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    {
+                        ItemId = itemId,
+                        Code = "",
+                        Quantity = quantity,
+                    });
+                    model.PrinterId = printerId;
+                    model.RecordType = 8;
+                    model.RecordId = itemId;
+                    result = bObj.AddToPrintQueue(model);
+                }
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
         public JsonResult AllocateAndPrintLabel(PrinterQueueModel model, int labelCount, int workOrderDetailId)
         {
             BusinessResult result = new BusinessResult();

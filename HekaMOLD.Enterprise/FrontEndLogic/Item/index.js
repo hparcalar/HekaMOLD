@@ -347,6 +347,23 @@
         });
     }
 
+    $scope.showPrintLabelDialog = function () {
+        $scope.$broadcast('showItemPrinting',
+            $scope.modelObject.Id);
+
+        $('#dial-printing').dialog({
+            width: 500,
+            height: 400,
+            //height: window.innerHeight * 0.6,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
     $scope.loadSelectables().then(function (data) {

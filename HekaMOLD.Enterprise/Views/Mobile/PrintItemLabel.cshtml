@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Etiket Yazdır";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+
+<div>
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="printItemsCtrl">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+
+            <div class="dx-viewport">
+                <div id="itemList"></div>
+            </div>
+
+        </div>
+        <!--end::Container-->
+
+        <div id="dial-printing" title="Açık Siparişler" style="display:none;">
+            <ng-include src="'../Components/Views/PrintItemLabel.html'"></ng-include>
+        </div>
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+
+    <script src="~/FrontEndLogic/Mobile/print-label.js"></script>
+    <script src="~/Components/Controllers/print-item-label.js"></script>
+}

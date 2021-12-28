@@ -1491,48 +1491,60 @@ namespace HekaMOLD.Business.UseCases
                     foreach (var item in workList)
                     {
                         var workDetail = d.WorkOrderDetail.FirstOrDefault(m => m.Id == item);
-                        var completeCount = workDetail.MachineSignal.Where(m => m.ShiftBelongsToDate < dt1).Count();
-                        var remainingCount = workDetail.Quantity - completeCount;
-
-                        if (workDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
-                            lastProductName = workDetail.Item != null ? workDetail.Item.ItemName : workDetail.TrialProductName;
-
-                        if (remainingCount <= 0)
-                            continue;
-
-                        // CHECK WORK ORDER
-                        bool targetTimeFound = false;
-                        int cycleTime = 0;
-
-                        if (workDetail.Item != null)
+                        if (workDetail != null)
                         {
-                            var moldTest = repoMoldTest.Get(m => m.ProductCode == workDetail.Item.ItemNo);
-                            if (moldTest != null && moldTest.TotalTimeSeconds > 0)
+                            try
                             {
-                                cycleTime = moldTest.TotalTimeSeconds.Value;
-                                targetTimeFound = true;
+                                var completeCount = workDetail.MachineSignal.Where(m => m.ShiftBelongsToDate < dt1).Count();
+                                var remainingCount = workDetail.Quantity - completeCount;
+
+                                if (workDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
+                                    lastProductName = workDetail.Item != null ? workDetail.Item.ItemName : workDetail.TrialProductName;
+
+                                if (remainingCount <= 0)
+                                    continue;
+
+                                // CHECK WORK ORDER
+                                bool targetTimeFound = false;
+                                int cycleTime = 0;
+
+                                if (workDetail.Item != null)
+                                {
+                                    var moldTest = repoMoldTest.Get(m => m.ProductCode == workDetail.Item.ItemNo);
+                                    if (moldTest != null && moldTest.TotalTimeSeconds > 0)
+                                    {
+                                        cycleTime = moldTest.TotalTimeSeconds.Value;
+                                        targetTimeFound = true;
+                                    }
+                                }
+
+                                // FIND THE CYCLE OVER HISTORY
+                                if (!targetTimeFound)
+                                {
+                                    cycleTime = repoSignal.Filter(m => m.WorkOrderDetailId == workDetail.Id && m.SignalStatus == 1)
+                                        .OrderByDescending(m => m.Id)
+                                        .Select(m => m.Duration)
+                                        .FirstOrDefault() ?? 0;
+                                }
+
+                                // CALCULATE TARGET AND FILL REMAINING SHIFT TIME
+                                if (cycleTime > 0 && remainingShiftTime > 0)
+                                {
+                                    var producableCount = remainingShiftTime / cycleTime;
+                                    if (producableCount > Convert.ToDouble(remainingCount ?? 0))
+                                        producableCount = Convert.ToDouble(remainingCount);
+
+                                    targetCount += Convert.ToInt32(producableCount);
+                                    remainingShiftTime -= cycleTime * producableCount;
+                                }
                             }
-                        }
+                            catch (Exception)
+                            {
 
-                        // FIND THE CYCLE OVER HISTORY
-                        if (!targetTimeFound)
-                        {
-                            cycleTime = repoSignal.Filter(m => m.WorkOrderDetailId == workDetail.Id && m.SignalStatus == 1)
-                                .OrderByDescending(m => m.Id)
-                                .Select(m => m.Duration)
-                                .FirstOrDefault() ?? 0;
+                            }
+                            
                         }
-
-                        // CALCULATE TARGET AND FILL REMAINING SHIFT TIME
-                        if (cycleTime > 0 && remainingShiftTime > 0)
-                        {
-                            var producableCount = remainingShiftTime / cycleTime;
-                            if (producableCount > Convert.ToDouble(remainingCount ?? 0))
-                                producableCount = Convert.ToDouble(remainingCount);
-
-                            targetCount += Convert.ToInt32(producableCount);
-                            remainingShiftTime -= cycleTime * producableCount;
-                        }
+                        
                         
                     }
 

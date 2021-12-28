@@ -14,6 +14,7 @@ using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
+using HekaMOLD.Business.Models.DataTransfer.Labels;
 
 namespace HekaPrintingService
 {
@@ -136,6 +137,38 @@ namespace HekaPrintingService
                                 bObj.SetElementAsPrinted(queueModel.Id);
 
                                 //AddLog(_printerNames[printerId] + " yazıcısına gönderildi.");
+                            }
+                            else if (queueModel.RecordType == (int)RecordType.ItemLabel)
+                            {
+                                if (queueModel.RecordId != null)
+                                {
+                                    ProductLabel labelData = new ProductLabel();
+
+                                    using (DefinitionsBO dObj = new DefinitionsBO())
+                                    {
+                                        var dbItem = dObj.GetItem(queueModel.RecordId.Value);
+                                        if (dbItem != null && dbItem.Id > 0)
+                                        {
+                                            labelData.ProductCode = dbItem.ItemNo;
+                                            labelData.ProductName = dbItem.ItemName;
+                                            labelData.Id = dbItem.Id;
+                                        }
+                                    }
+
+                                    using (ReportingBO rObj = new ReportingBO())
+                                    {
+                                        var allocData = Newtonsoft.Json
+                                            .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
+
+                                        labelData.InPackageQuantity = string.Format("{0:N2}", allocData.Quantity ?? 0);
+                                        labelData.BarcodeContent = labelData.Id + "XX" + labelData.InPackageQuantity;
+                                        labelData.BarcodeImage = rObj.GenerateQRCode(labelData.BarcodeContent);
+
+                                        rObj.PrintReport<List<ProductLabel>>(-1, printerId, new List<ProductLabel>() { labelData });
+                                    }
+                                }
+
+                                bObj.SetElementAsPrinted(queueModel.Id);
                             }
                             else if (queueModel.RecordType == (int)RecordType.DeliveryList)
                             {

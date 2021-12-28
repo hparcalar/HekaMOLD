@@ -3952,6 +3952,7 @@
     <Content Include="Components\Controllers\open-po-list.js" />
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
     <Content Include="Components\Controllers\attachment-list.js" />
+    <Content Include="Components\Controllers\print-item-label.js" />
     <Content Include="Components\Controllers\print-options.js" />
     <Content Include="Components\Controllers\production-history-list.js" />
     <Content Include="Components\Controllers\recipe-revisions.js" />
@@ -3973,6 +3974,7 @@
     <Content Include="Components\Views\MachineSelection.html" />
     <Content Include="Components\Views\OpenPoList.html" />
     <Content Include="Components\Views\AttachmentList.html" />
+    <Content Include="Components\Views\PrintItemLabel.html" />
     <Content Include="Components\Views\PrintOptions.html" />
     <Content Include="Components\Views\RecipeRevisions.html" />
     <Content Include="Components\Views\RelatedOrderList.html" />
@@ -4124,6 +4126,7 @@
     <Content Include="FrontEndLogic\Mobile\manage-machines.js" />
     <Content Include="FrontEndLogic\Mobile\manage-shifts.js" />
     <Content Include="FrontEndLogic\Mobile\posture-history.js" />
+    <Content Include="FrontEndLogic\Mobile\print-label.js" />
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\product-information.js" />
     <Content Include="FrontEndLogic\Mobile\product-plan-list.js" />
@@ -4653,6 +4656,7 @@
     <Content Include="Views\Mobile\ItemDelivery.cshtml" />
     <Content Include="Views\Mobile\ProductPlanList.cshtml" />
     <Content Include="Views\Maintenance\Planning.cshtml" />
+    <Content Include="Views\Mobile\PrintItemLabel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

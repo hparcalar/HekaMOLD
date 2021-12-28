@@ -9,6 +9,8 @@ namespace HekaMOLD.Business.Models.Virtual
     public class AllocatedPrintDataModel
     {
         public int? WorkOrderDetailId { get; set; }
+        public int? ItemId { get; set; }
+        public decimal? Quantity { get; set; }
         public string Code { get; set; }
         public int? ReportTemplateId { get; set; }
     }

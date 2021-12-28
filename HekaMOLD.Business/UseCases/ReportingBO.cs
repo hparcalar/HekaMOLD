@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.IO;
@@ -60,7 +61,28 @@ namespace HekaMOLD.Business.UseCases
             return null;
         }
         #endregion
-        
+        public byte[] GenerateQRCode(string content)
+        {
+            try
+            {
+                // GENERATE BARCODE IMAGE
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
+                QRCode qrCode = new QRCode(qrCodeData);
+                Bitmap qrCodeImage = qrCode.GetGraphic(100);
+
+                ImageConverter converter = new ImageConverter();
+                var imgBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                return imgBytes;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return null;
+        }
         public BusinessResult PrintReport<T>(int reportId, int printerId, T dataModel)
         {
             BusinessResult result = new BusinessResult();
@@ -72,10 +94,12 @@ namespace HekaMOLD.Business.UseCases
 
                 var dbPrinter = repoPrinter.Get(d => d.Id == printerId);
                 var dbTemplate = repo.Get(d => d.Id == reportId);
-                if (dbTemplate == null)
+                if (dbTemplate == null && reportId != -1)
                     throw new Exception("Rapor şablonu bulunamadı.");
 
-                PrintReportTemplate<T>(dataModel, dbTemplate.FileName, dbPrinter.PageWidth ?? 0, 
+                string templateName = dbTemplate != null ? dbTemplate.FileName : "ProductLabel.rdlc";
+
+                PrintReportTemplate<T>(dataModel, templateName, dbPrinter.PageWidth ?? 0, 
                     dbPrinter.PageHeight ?? 0, dbPrinter.AccessPath);
 
                 result.Result = true;

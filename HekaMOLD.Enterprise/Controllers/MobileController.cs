@@ -875,6 +875,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
         #endregion
 
+        #region ITEM LABELS
+        public ActionResult PrintItemLabel()
+        {
+            return View();
+        }
+        #endregion
+
         public ActionResult SettingsMobile()
         {
             return View();

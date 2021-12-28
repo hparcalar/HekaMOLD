@@ -14,6 +14,7 @@ namespace HekaMOLD.Business.Models.Constants
         WorkOrderDetail=4,
         WorkOrderSerial=5,
         RawMaterialLabel = 6,
-        PalletLabel = 7
+        PalletLabel = 7,
+        ItemLabel=8,
     }
 }

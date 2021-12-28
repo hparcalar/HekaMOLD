@@ -1044,6 +1044,16 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             }
                                             #endregion
 
+                                            int taxRateId = 1;
+                                            #region RESOLVE TAX RATE
+                                            if (rdt.TaxRate == 1)
+                                                taxRateId = 2;
+                                            else if (rdt.TaxRate == 8)
+                                                taxRateId = 3;
+                                            else if (rdt.TaxRate == 18)
+                                                taxRateId = 4;
+                                            #endregion
+
                                             var cariGrupNo = mikroForexId > 0 ? 2 : 1;
 
                                             string sql = "INSERT INTO SIPARISLER(sip_SpecRECno, sip_iptal, sip_fileid, sip_hidden, sip_kilitli, sip_degisti, sip_checksum, sip_create_user, sip_lastup_user, "
@@ -1060,16 +1070,16 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 +" sip_Otv_Vergi, sip_otvtutari, sip_OtvVergisiz_Fl, sip_paket_kod, sip_Rez_uid, sip_yetkili_uid, sip_kapatmanedenkod, "
                                                 +" sip_gecerlilik_tarihi, sip_onodeme_evrak_tip, sip_onodeme_evrak_seri, sip_rezervasyon_miktari, sip_rezerveden_teslim_edilen, "
                                                 + " sip_HareketGrupKodu1,sip_HareketGrupKodu2,sip_HareketGrupKodu3, sip_Olcu1,sip_Olcu2,sip_Olcu3,sip_Olcu4,sip_Olcu5, "
-                                                +" sip_FormulMiktarNo, sip_FormulMiktar, sip_satis_fiyat_doviz_cinsi, sip_satis_fiyat_doviz_kuru, sip_eticaret_kanali, sip_onodeme_evrak_sira) "
+                                                + " sip_FormulMiktarNo, sip_FormulMiktar, sip_satis_fiyat_doviz_cinsi, sip_satis_fiyat_doviz_kuru, sip_eticaret_kanali, sip_onodeme_evrak_sira, sip_teslim_tarih) "
                                                 + " VALUES('0', 0, 21, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '" + string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "', "
                                                 + "'0', '0', '"+ docText +"', '" + newReceiptNo + "', " + lineNumber + ", '', '" + string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "', "
                                                 + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 'SATIŞ02', '" + rcp.FirmCode +"', 0, "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", " +
-                                                   string.Format("{0:0.00}", rdt.Quantity ?? 0).Replace(",", ".") + " , 1, 0, 0,0,0,0,0,0, 0,0,0,0, 0,0, 0,0,0, '', " +
+                                                   string.Format("{0:0.00}", rdt.Quantity ?? 0).Replace(",", ".") + " , 1, 0, 0,0,0,0,0,0, 0,0,0,0, "+ taxRateId.ToString() +",0, 0,0,0, '', " +
                                                    string.Format("{0:0.00}", rdt.UnitPrice ?? 0).Replace(",", ".") +", 1, '','', 0, '','',0,0,0,'03',1,0,0,0, '"+ cariGrupNo + "', '1', '0', '00000000-0000-0000-0000-000000000000', "
                                                    + " '', '0', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', '0', '0', '0', "
                                                    + " '0', '0', '0', '', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', "
                                                    + " '1899-12-30 00:00:00', '0', '', '0', '0', '','','', 0,0,0,0,0, '0', '0', "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", "
-                                                   +" '0', '0')";
+                                                   +" '0', '0', '"+ string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "')";
                                             SqlCommand cmd = new SqlCommand(sql, con);
                                             int affectedRows = cmd.ExecuteNonQuery();
                                             if (affectedRows > 0)
