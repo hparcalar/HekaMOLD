@@ -158,6 +158,7 @@
     <Compile Include="Models\DataTransfer\MoldTrace\MoldMoveHistory.cs" />
     <Compile Include="Models\DataTransfer\MoldTrace\MoldRevisionOperationModel.cs" />
     <Compile Include="Models\DataTransfer\Offers\ItemOfferDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferDetailRoutePricingModel.cs" />
     <Compile Include="Models\DataTransfer\Offers\ItemOfferModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />

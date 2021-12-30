@@ -115,6 +115,7 @@
     <Compile Include="Context\Models\ItemLiveStatus.cs" />
     <Compile Include="Context\Models\ItemOffer.cs" />
     <Compile Include="Context\Models\ItemOfferDetail.cs" />
+    <Compile Include="Context\Models\ItemOfferDetailRoutePricing.cs" />
     <Compile Include="Context\Models\ItemOrder.cs" />
     <Compile Include="Context\Models\ItemOrderConsume.cs" />
     <Compile Include="Context\Models\ItemOrderDetail.cs" />
@@ -246,6 +247,14 @@
     <Compile Include="Migrations\202112250936387_ItemOffers.designer.cs">
       <DependentUpon>202112250936387_ItemOffers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112292252414_SaleOfferRoutePrice.cs" />
+    <Compile Include="Migrations\202112292252414_SaleOfferRoutePrice.designer.cs">
+      <DependentUpon>202112292252414_SaleOfferRoutePrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112301047125_ProcessAndRoutePricingUsedByOffers.cs" />
+    <Compile Include="Migrations\202112301047125_ProcessAndRoutePricingUsedByOffers.designer.cs">
+      <DependentUpon>202112301047125_ProcessAndRoutePricingUsedByOffers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -301,6 +310,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112250936387_ItemOffers.resx">
       <DependentUpon>202112250936387_ItemOffers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112292252414_SaleOfferRoutePrice.resx">
+      <DependentUpon>202112292252414_SaleOfferRoutePrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112301047125_ProcessAndRoutePricingUsedByOffers.resx">
+      <DependentUpon>202112301047125_ProcessAndRoutePricingUsedByOffers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

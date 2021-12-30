@@ -599,6 +599,9 @@ namespace HekaMOLD.Business.UseCases
                     detailContainerObj.ItemName = d.Item != null ? d.Item.ItemName : "";
                     detailContainerObj.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
                     detailContainerObj.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
+                    detailContainerObj.MainUnitStr = d.Item.ItemUnit.Any(m => m.IsMainUnit == true) ?
+                        d.Item.ItemUnit.Where(m => m.IsMainUnit == true)
+                        .Select(m => m.UnitType.UnitCode).FirstOrDefault() : "";
                     detailContainerObj.NewDetail = false;
                     detailContainers.Add(detailContainerObj);
                 });
@@ -685,7 +688,7 @@ namespace HekaMOLD.Business.UseCases
             var dbItem = repoItem.Get(d => d.Id == model.ItemId);
             if (dbItem != null)
             {
-                var selUnit = dbItem.ItemUnit.FirstOrDefault(d => d.Id == model.UnitId);
+                var selUnit = dbItem.ItemUnit.FirstOrDefault(d => d.UnitId == model.UnitId);
                 if (selUnit != null)
                 {
                     mFactor = selUnit.MultiplierFactor ?? 1;
@@ -700,23 +703,24 @@ namespace HekaMOLD.Business.UseCases
                 model.ForexUnitPrice = model.UnitPrice / model.ForexRate;
             }
 
-            decimal? overallTotal = 0;
             decimal? taxExtractedUnitPrice = 0;
+            decimal? subTotal = 0;
 
             if (model.TaxIncluded == true)
             {
                 decimal? taxIncludedUnitPrice = (model.UnitPrice / (1 + (model.TaxRate / 100m)));
-                overallTotal = taxIncludedUnitPrice * model.Quantity;
                 taxExtractedUnitPrice = taxIncludedUnitPrice;
+                subTotal = taxExtractedUnitPrice * model.Quantity;
             }
             else
             {
-                overallTotal = model.UnitPrice * model.Quantity;
+                subTotal = model.UnitPrice * model.Quantity;
                 taxExtractedUnitPrice = model.UnitPrice;
             }
 
-            model.OverallTotal = overallTotal;
-            model.TaxAmount = overallTotal * model.TaxRate / 100.0m;
+            model.SubTotal = subTotal;
+            model.TaxAmount = subTotal * model.TaxRate / 100.0m;
+            model.OverallTotal = subTotal + model.TaxAmount;
 
             return model;
         }

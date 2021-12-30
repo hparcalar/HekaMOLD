@@ -203,6 +203,7 @@
                     refreshArray($scope.warehouseList);
 
                     $scope.bindDetails();
+                    $scope.calculateHeader();
                 }
             }).catch(function (err) { });
     }
@@ -223,6 +224,7 @@
                             row.TaxAmount = resp.data.TaxAmount;
                             row.ForexUnitPrice = resp.data.ForexUnitPrice;
                             row.NetQuantity = resp.data.NetQuantity;
+                            row.SubTotal = resp.data.SubTotal;
 
                             $scope.refreshDetailChanges();
                             $scope.calculateHeader();
@@ -235,7 +237,7 @@
     }
 
     $scope.calculateHeader = function () {
-        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
+        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.SubTotal).reduce((n, x) => n + x);
         $scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
         $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
     }
@@ -269,7 +271,7 @@
                         if (typeof values.UnitId != 'undefined') {
                             var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                             obj.UnitId = unitObj.Id;
-                            obj.UnitName = itemObj.UnitCode;
+                            obj.UnitName = unitObj.UnitCode;
                             calculateRowAgain = true;
                         }
 
@@ -407,9 +409,14 @@
                 },
                 {
                     dataField: 'Quantity', caption: 'Miktar', dataType: 'number',
-                    format: { type: "fixedPoint", precision: 2 },
+                    format: { type: "fixedPoint", precision: 2 }, allowEditing:true,
                     editorOptions: { format: { type: "fixedPoint", precision: 2 } },
                     validationRules: [{ type: "required" }]
+                },
+                {
+                    cssClass:'bg-secondary',
+                    dataField: 'NetQuantity', allowEditing: false, caption: 'Net Miktar', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
                 },
                 { dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
@@ -448,7 +455,7 @@
                     editorOptions: { format: { type: "fixedPoint", precision: 2 } }
                 },
                 { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'SubTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {
                     type: "buttons",

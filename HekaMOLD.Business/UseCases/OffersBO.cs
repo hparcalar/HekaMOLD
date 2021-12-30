@@ -112,6 +112,46 @@ namespace HekaMOLD.Business.UseCases
                     item.MapTo(dbDetail);
                     dbDetail.ItemOffer = dbObj;
 
+                    // FIND OR CREATE ITEM FROM ITEM-EXPLANATION
+                    if (dbDetail.ItemId == null)
+                    {
+                        using (DefinitionsBO defBO = new DefinitionsBO())
+                        {
+                            var explanationForItemName = dbDetail.ItemExplanation
+                                .Replace(".dft", "")
+                                .Replace(".DFT", "");
+
+                            var foundItem = defBO.FindItem(explanationForItemName);
+                            if (foundItem != null && foundItem.Id > 0)
+                                dbDetail.ItemId = foundItem.Id;
+                            else
+                            {
+                                var crItemResult = defBO.SaveOrUpdateItem(new Models.DataTransfer.Core.ItemModel
+                                {
+                                    ItemName = explanationForItemName,
+                                    PlantId = dbObj.PlantId,
+                                    ItemType = (int)ItemType.Product,
+                                    Units = new Models.DataTransfer.Core.ItemUnitModel[] { 
+                                        new Models.DataTransfer.Core.ItemUnitModel
+                                        {
+                                            IsMainUnit = true,
+                                            DividerFactor = 1,
+                                            MultiplierFactor = 1,
+                                            UnitId = 1, // ADT
+                                        }
+                                    },
+                                    ItemNo = "",
+                                    CreatedDate = DateTime.Now,
+                                });
+
+                                if (crItemResult.Result)
+                                {
+                                    dbDetail.ItemId = crItemResult.RecordId;
+                                }
+                            }
+                        }
+                    }
+
                     if (!string.IsNullOrEmpty(item.ItemVisualStr))
                     {
                         dbDetail.ItemVisual = Convert.FromBase64String(item.ItemVisualStr);

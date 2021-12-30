@@ -14,6 +14,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -570,6 +572,47 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return model;
+        }
+
+        public ItemModel FindItem(string itemName)
+        {
+            var repo = _unitOfWork.GetRepository<Item>();
+            var dbItem = repo.Get(d => d.ItemName == itemName);
+            if (dbItem != null)
+                return GetItem(dbItem.ItemName);
+
+            return new ItemModel();
+        }
+
+        public string GenerateProductNoFromName(string itemName)
+        {
+            var generatedNo = string.Empty;
+
+            try
+            {
+                var nameHeaderCriteria = itemName.Contains("-") || itemName.Contains(" ") ?
+                    (itemName.IndexOf('-') > itemName.IndexOf(' ') ?
+                    itemName.Split(' ')[0] : itemName.Split('-')[0]) : itemName;
+
+                nameHeaderCriteria = nameHeaderCriteria.ToUpper();
+
+                var repo = _unitOfWork.GetRepository<Item>();
+                var lastItemNo = repo.Filter(d => DbFunctions.Like(d.ItemNo, nameHeaderCriteria + "-%"))
+                    .OrderByDescending(d => d.ItemNo)
+                    .Select(d => d.ItemNo)
+                    .FirstOrDefault();
+
+                if (lastItemNo != null && lastItemNo.Length > 0)
+                {
+
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return generatedNo;
         }
 
         public ItemWarehouseModel[] GetProperWarehouses(ItemType itemType, int? itemId)
@@ -3146,6 +3189,264 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region PROCESS BUSINESS
+        public ProcessModel[] GetProcessList()
+        {
+            List<ProcessModel> data = new List<ProcessModel>();
+
+            var repo = _unitOfWork.GetRepository<Process>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ProcessModel containerObj = new ProcessModel();
+                d.MapTo(containerObj);
+                containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateProcess(ProcessModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.ProcessCode))
+                    throw new Exception("Proses kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.ProcessName))
+                    throw new Exception("Proses adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Process>();
+
+                if (repo.Any(d => (d.ProcessCode == model.ProcessCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir proses mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Process();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteProcess(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Process>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ProcessModel GetProcess(int id)
+        {
+            ProcessModel model = new ProcessModel { };
+
+            var repo = _unitOfWork.GetRepository<Process>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region ROUTE BUSINESS
+        public RouteModel[] GetRouteList()
+        {
+            List<RouteModel> data = new List<RouteModel>();
+
+            var repo = _unitOfWork.GetRepository<Route>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                RouteModel containerObj = new RouteModel();
+                d.MapTo(containerObj);
+                containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateRoute(RouteModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.RouteCode))
+                    throw new Exception("Rota kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.RouteName))
+                    throw new Exception("Rota adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Route>();
+                var repoRouteItems = _unitOfWork.GetRepository<RouteItem>();
+
+                if (repo.Any(d => (d.RouteCode == model.RouteCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir rota mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Route();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE ROUTE ITEMS
+                if (model.RouteItems == null)
+                    model.RouteItems = new RouteItemModel[0];
+
+                var toBeRemovedItems = dbObj.RouteItem
+                    .Where(d => !model.RouteItems.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedItems)
+                {
+                    repoRouteItems.Delete(item);
+                }
+
+                foreach (var item in model.RouteItems)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemAu = new RouteItem();
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Route = dbObj;
+                        repoRouteItems.Add(dbItemAu);
+                    }
+                    else if (!toBeRemovedItems.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemAu = repoRouteItems.GetById(item.Id);
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Route = dbObj;
+                    }
+                }
+                #endregion
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteRoute(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Route>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public RouteModel GetRoute(int id)
+        {
+            RouteModel model = new RouteModel { };
+
+            var repo = _unitOfWork.GetRepository<Route>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+                #region GET ROUTE ITEMS
+                List<RouteItemModel> itemList = new List<RouteItemModel>();
+                dbObj.RouteItem.ToList().ForEach(d =>
+                {
+                    RouteItemModel itemModel = new RouteItemModel();
+                    d.MapTo(itemModel);
+                    itemModel.ProcessCode = d.Process != null ? d.Process.ProcessCode : "";
+                    itemModel.ProcessName = d.Process != null ? d.Process.ProcessName : "";
+                    itemModel.ProcessUnitPrice = d.Process != null ? d.Process.UnitPrice : null;
+                    itemModel.ProcessForexType = d.Process != null && d.Process.ForexType != null ?
+                        d.Process.ForexType.ForexTypeCode : "";
+                    itemList.Add(itemModel);
+                });
+                model.RouteItems = itemList.ToArray();
+                #endregion
             }
 
             return model;

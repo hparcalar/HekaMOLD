@@ -28,8 +28,8 @@ namespace HekaMOLD.Enterprise.Controllers
         public ActionResult Login()
         {
             // CHECK & RUN MIGRATION SCRTIPS
-            HekaBO hekaBase = new HekaBO();
-            hekaBase.RunMigrations();
+            //HekaBO hekaBase = new HekaBO();
+            //hekaBase.RunMigrations();
 
             return View();
         }

@@ -196,10 +196,12 @@
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
     <Compile Include="Controllers\PrintingController.cs" />
+    <Compile Include="Controllers\ProcessController.cs" />
     <Compile Include="Controllers\ProcessGroupController.cs" />
     <Compile Include="Controllers\ProductionNeedsController.cs" />
     <Compile Include="Controllers\ProductQualityController.cs" />
     <Compile Include="Controllers\ReportTemplateController.cs" />
+    <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\SIOfferController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
@@ -4192,6 +4194,8 @@
     <Content Include="FrontEndLogic\Posture\list.js" />
     <Content Include="FrontEndLogic\ProcessGroup\index.js" />
     <Content Include="FrontEndLogic\ProcessGroup\list.js" />
+    <Content Include="FrontEndLogic\Process\index.js" />
+    <Content Include="FrontEndLogic\Process\list.js" />
     <Content Include="FrontEndLogic\ProductionNeeds\list.js" />
     <Content Include="FrontEndLogic\ProductQuality\conditional-approvals.js" />
     <Content Include="FrontEndLogic\ProductQuality\index-data.js" />
@@ -4205,6 +4209,8 @@
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\ReportTemplate\index.js" />
     <Content Include="FrontEndLogic\ReportTemplate\list.js" />
+    <Content Include="FrontEndLogic\Route\index.js" />
+    <Content Include="FrontEndLogic\Route\list.js" />
     <Content Include="FrontEndLogic\Shift\index.js" />
     <Content Include="FrontEndLogic\Shift\list.js" />
     <Content Include="FrontEndLogic\SIOffer\index.js" />
@@ -4699,6 +4705,10 @@
     <Content Include="Views\Mobile\ManagePallets.cshtml" />
     <Content Include="Views\SIOffer\List.cshtml" />
     <Content Include="Views\SIOffer\Index.cshtml" />
+    <Content Include="Views\Process\List.cshtml" />
+    <Content Include="Views\Process\Index.cshtml" />
+    <Content Include="Views\Route\List.cshtml" />
+    <Content Include="Views\Route\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

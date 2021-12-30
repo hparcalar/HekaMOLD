@@ -118,5 +118,6 @@
         public virtual DbSet<MaintenancePlan> MaintenancePlan { get; set; }
         public virtual DbSet<ItemOffer> ItemOffer { get; set; }
         public virtual DbSet<ItemOfferDetail> ItemOfferDetail { get; set; }
+        public virtual DbSet<ItemOfferDetailRoutePricing> ItemOfferDetailRoutePricing { get; set; }
     }
 }

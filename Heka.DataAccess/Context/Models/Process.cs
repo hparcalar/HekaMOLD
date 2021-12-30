@@ -37,10 +37,15 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public Nullable<decimal> UnitPrice { get; set; }
+        
+        [ForeignKey("ForexType")]
+        public Nullable<int> ForexId { get; set; }
 
         [InverseProperty("Process")]
         public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
         public virtual Plant Plant { get; set; }
+        public virtual ForexType ForexType { get; set; }
         public virtual ProcessGroup ProcessGroup { get; set; }
 
         [InverseProperty("Process")]

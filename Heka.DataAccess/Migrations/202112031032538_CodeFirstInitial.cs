@@ -1751,7 +1751,7 @@
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        AllocatedCode1 = c.String(),
+                        AllocatedCode = c.String(),
                         ObjectType = c.Int(),
                         CreatedDate = c.DateTime(),
                     })

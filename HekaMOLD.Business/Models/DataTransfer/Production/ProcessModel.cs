@@ -15,6 +15,12 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? PlantId { get; set; }
         public bool? IsActive { get; set; }
         public decimal? TheoreticalDuration { get; set; }
+        public decimal? UnitPrice { get; set; }
+        public int? ForexId { get; set; }
         public int? ProcessGroupId { get; set; }
+
+        #region VISUAL ELEMENTS
+        public string ForexTypeCode { get; set; }
+        #endregion
     }
 }

@@ -32,9 +32,13 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-    
+        public Nullable<decimal> UnitPrice { get; set; }
+        [ForeignKey("ForexType")]
+        public Nullable<int> ForexId { get; set; }
+
         public virtual Plant Plant { get; set; }
-        
+        public virtual ForexType ForexType { get; set; }
+
         [InverseProperty("Route")]
         public virtual ICollection<RouteItem> RouteItem { get; set; }
     }

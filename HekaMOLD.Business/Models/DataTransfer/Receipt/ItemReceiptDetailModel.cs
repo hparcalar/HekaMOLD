@@ -55,6 +55,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string ReceiptDateStr { get; set; }
         public decimal? InQuantity { get; set; }
         public decimal? OutQuantity { get; set; }
+        public string MainUnitStr { get; set; }
         public bool NewDetail { get; set; }
         #endregion
 

@@ -9,6 +9,10 @@ namespace Heka.DataAccess.Context
 {
     public partial class ItemOfferDetail
     {
+        public ItemOfferDetail()
+        {
+            this.ItemOfferDetailRoutePricing = new HashSet<ItemOfferDetailRoutePricing>();
+        }
         public int Id { get; set; }
 
         [ForeignKey("ItemOffer")]
@@ -31,8 +35,15 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreditMonths { get; set; }
         public Nullable<int> CreditRate { get; set; }
 
+        [ForeignKey("Route")]
+        public Nullable<int> RouteId { get; set; }
+
         public virtual ItemOffer ItemOffer { get; set; }
+        public virtual Route Route { get; set; }
         public virtual Item Item { get; set; }
+
+        [InverseProperty("ItemOfferDetail")]
+        public virtual ICollection<ItemOfferDetailRoutePricing> ItemOfferDetailRoutePricing { get; set; }
 
     }
 }
