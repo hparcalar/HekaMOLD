@@ -773,6 +773,196 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        #region WAREHOUSE COUNTING BUSINESS
+        public BusinessResult AddBarcodeToCounting(string barcode, int warehouseId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CountingReceipt>();
+                var repoDetail = _unitOfWork.GetRepository<CountingReceiptDetail>();
+                var repoSerial = _unitOfWork.GetRepository<CountingReceiptSerial>();
+
+                var dbOpenCounting = repo.Get(d => (d.CountingStatus ?? 0) == 0);
+                if (dbOpenCounting == null)
+                    throw new Exception("Başlatılan bir sayım süreci bulunamadı.");
+
+                // PARSE BARCODE
+                string[] barcodeParts = System.Text.RegularExpressions.Regex.Split(barcode, "XX");
+                int itemId = Convert.ToInt32(barcodeParts[0]);
+
+                //if (barcodeParts[1].Contains(".") && barcodeParts[1].Contains(","))
+                //    barcodeParts[1] = barcodeParts[1].Replace(".", "").Replace(",", ".");
+
+                
+
+                decimal quantity = Decimal.Parse(barcodeParts[1], System.Globalization.NumberStyles.Currency,
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                //Convert.ToDecimal(Convert.ToSingle( barcodeParts[1].Replace(",",".") ));
+
+                // SAVE BARCODE
+                var dbSerial = new CountingReceiptSerial
+                {
+                    ItemId = itemId,
+                    Barcode = barcode,
+                    Quantity = quantity,
+                };
+                repoSerial.Add(dbSerial);
+
+                // UPDATE DETAIL
+                var relatedDetail = repoDetail.Get(d => d.CountingReceiptId == dbOpenCounting.Id
+                    && d.ItemId == itemId && d.WarehouseId == warehouseId);
+                if (relatedDetail == null)
+                {
+                    relatedDetail = new CountingReceiptDetail
+                    {
+                        CountingReceipt = dbOpenCounting,
+                        ItemId = itemId,
+                        Quantity = quantity,
+                        WarehouseId = warehouseId,
+                        PackageQuantity = 1,
+                    };
+                    repoDetail.Add(relatedDetail);
+                }
+                else
+                {
+                    relatedDetail.PackageQuantity++;
+                    relatedDetail.Quantity += quantity;
+                }
+
+                dbSerial.CountingReceiptDetail = relatedDetail;
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbSerial.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult RemoveBarcodeFromCounting(int serialId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CountingReceipt>();
+                var repoDetail = _unitOfWork.GetRepository<CountingReceiptDetail>();
+                var repoSerial = _unitOfWork.GetRepository<CountingReceiptSerial>();
+
+                var dbOpenCounting = repo.Get(d => (d.CountingStatus ?? 0) == 0);
+                if (dbOpenCounting == null)
+                    throw new Exception("Başlatılan bir sayım süreci bulunamadı.");
+
+                // SAVE BARCODE
+                var dbSerial = repoSerial.Get(d => d.Id == serialId);
+                if (dbSerial == null)
+                    throw new Exception("Barkod kaydı bulunamadı.");
+
+                // UPDATE DETAIL
+                var relatedDetail = dbSerial.CountingReceiptDetail;
+                if (relatedDetail != null)
+                {
+                    relatedDetail.PackageQuantity--;
+                    relatedDetail.Quantity -= dbSerial.Quantity;
+
+                    if (relatedDetail.Quantity < 0)
+                        relatedDetail.Quantity = 0;
+                }
+
+                repoSerial.Delete(dbSerial);                
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public CountingReceiptDetailModel[] GetActiveCountingDetails(int warehouseId)
+        {
+            CountingReceiptDetailModel[] data = new CountingReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CountingReceipt>();
+                var dbOpenCounting = repo.Get(d => (d.CountingStatus ?? 0) == 0);
+                if (dbOpenCounting == null)
+                    throw new Exception("Başlatılan bir sayım süreci bulunamadı.");
+
+                var repoDetail = _unitOfWork.GetRepository<CountingReceiptDetail>();
+                data = repoDetail.Filter(d => d.WarehouseId == warehouseId
+                    && d.CountingReceiptId == dbOpenCounting.Id)
+                    .Select(d => new CountingReceiptDetailModel { 
+                        Id = d.Id,
+                        CountingReceiptId = d.CountingReceiptId,
+                        ItemId = d.ItemId,
+                        ItemNo = d.Item.ItemNo,
+                        ItemName = d.Item.ItemName,
+                        PackageQuantity = d.CountingReceiptSerial.Count(),
+                        Quantity = d.Quantity,
+                        WarehouseCode = d.Warehouse.WarehouseCode,
+                        WarehouseName = d.Warehouse.WarehouseName,
+                        WarehouseId = d.WarehouseId,
+                    })
+                    .OrderByDescending(d => d.Id)
+                    .ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public CountingReceiptSerialModel[] GetActiveCountingSerials(int warehouseId)
+        {
+            CountingReceiptSerialModel[] data = new CountingReceiptSerialModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CountingReceipt>();
+                var dbOpenCounting = repo.Get(d => (d.CountingStatus ?? 0) == 0);
+                if (dbOpenCounting == null)
+                    throw new Exception("Başlatılan bir sayım süreci bulunamadı.");
+
+                var repoSerial = _unitOfWork.GetRepository<CountingReceiptSerial>();
+                data = repoSerial.Filter(d => d.CountingReceiptDetail.CountingReceiptId == dbOpenCounting.Id
+                    && d.CountingReceiptDetail.WarehouseId == warehouseId)
+                    .Select(d => new CountingReceiptSerialModel
+                    {
+                        Id = d.Id,
+                        Barcode = d.Barcode,
+                        ItemId = d.ItemId,
+                        Quantity = d.Quantity,
+                        ItemNo = d.Item.ItemNo,
+                        ItemName = d.Item.ItemName,
+                        CountingReceiptDetailId = d.CountingReceiptDetailId,
+                    })
+                    .OrderByDescending(d => d.Id)
+                    .ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        #endregion
+
         #region STATUS VALIDATIONS
         public BusinessResult CheckReceiptDetailStatus(int itemReceiptDetailId)
         {

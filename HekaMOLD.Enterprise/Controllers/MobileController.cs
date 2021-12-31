@@ -640,6 +640,59 @@ namespace HekaMOLD.Enterprise.Controllers
 
         #endregion
 
+        #region COUNTING SERIALS
+        public ActionResult CountingForm()
+        {
+            return View();
+        }
+        [HttpPost]
+        public JsonResult AddCountingBarcode(string barcode, int warehouseId)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.AddBarcodeToCounting(barcode, warehouseId);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteCountingBarcode(int serialId)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.RemoveBarcodeFromCounting(serialId);
+            }
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public JsonResult GetActiveCountingData(int warehouseId)
+        {
+            CountingReceiptDetailModel[] details = new CountingReceiptDetailModel[0];
+            CountingReceiptSerialModel[] serials = new CountingReceiptSerialModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                details = bObj.GetActiveCountingDetails(warehouseId);
+                serials = bObj.GetActiveCountingSerials(warehouseId);
+            }
+
+            var jsonResult = Json(new
+            {
+                Details = details,
+                Serials = serials,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
+
         #region PRODUCT WASTAGE
         public ActionResult WastageEntry()
         {
