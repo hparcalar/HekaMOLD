@@ -244,13 +244,13 @@
                     var obj = $scope.modelObject.KnitYarns.find(d => d.Id == key);
                     if (obj != null) {
                         let calculateRowAgain = false;
+
                         if (typeof values.YarnRecipeId != 'undefined') {
                             var yarnRecipeObj = $scope.yarnRecipeList.find(d => d.Id == values.YarnRecipeId);
                             obj.YarnRecipeId = yarnRecipeObj.Id;
                             obj.YarnRecipeCode = yarnRecipeObj.YarnRecipeCode;
                             obj.YarnRecipeName = yarnRecipeObj.YarnRecipeName;
                             obj.Denier = yarnRecipeObj.Denier;
-                            obj.FirmId = yarnRecipeObj.FirmId;
                             obj.FirmName = yarnRecipeObj.FirmName;
                             calculateRowAgain = true;
                         }
@@ -375,7 +375,6 @@
 
                         if (typeof values.ReportWireCount != 'undefined') { obj.ReportWireCount = values.ReportWireCount; calculateRowAgain = true; }
                         if (typeof values.MeterWireCount != 'undefined') { obj.MeterWireCount = values.MeterWireCount; calculateRowAgain = true; }
-
                         if (typeof values.Gramaj != 'undefined') { obj.Gramaj = values.Gramaj; calculateRowAgain = true; }
                         if (typeof values.Density != 'undefined') { obj.Density = values.Density; calculateRowAgain = true; }
                         if (calculateRowAgain)
@@ -487,7 +486,7 @@
     $scope.calculateWarpRow = function (row) {
 
         row.MeterWireCount = row.ReportWireCount * parseFloat(100 / $scope.modelObject.WarpReportLength);
-        $scope.modelObject.KnitYarns.forEach(element => { crudeGramaj += parseFloat(element.Gramaj != null ? element.Gramaj : 0); });
+        row.Gramaj = $scope.modelObject.WarpWireCount * row.Denier / 9000;
         $scope.calculatorCrudeGramaj();
     }
     $scope.calculateWeftRow = function (row) {
@@ -499,11 +498,9 @@
         let crudeGramaj = 0;
         $scope.modelObject.KnitYarns.forEach(element => { crudeGramaj += parseFloat(element.Gramaj != null ? element.Gramaj : 0); });
         $scope.modelObject.CrudeGramaj = crudeGramaj;
-        alert($scope.modelObject.CrudeGramaj);
         let meterGramaj = 0;
         meterGramaj = crudeGramaj / ($scope.modelObject.CombWidth / 100);
         $scope.modelObject.MeterGramaj = meterGramaj;
-        alert(meterGramaj);
     }
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
