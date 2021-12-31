@@ -111,6 +111,7 @@
     <Compile Include="Models\Constants\WorkOrderSerialType.cs" />
     <Compile Include="Models\Constants\WorkOrderStatusType.cs" />
     <Compile Include="Models\Constants\WorkOrderType.cs" />
+    <Compile Include="Models\Constants\YarnCenterType.cs" />
     <Compile Include="Models\Constants\YarnType.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserAuthTypeModel.cs" />

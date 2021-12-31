@@ -1,20 +1,18 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.Context.Models;
 using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
-using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Maintenance;
+using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using HekaMOLD.Business.Models.DataTransfer.Summary;
-using Heka.DataAccess.Context.Models;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -657,10 +655,10 @@ namespace HekaMOLD.Business.UseCases
                     knitYarnModel.Denier = d.YarnRecipe != null ? d.YarnRecipe.Denier : 0;
                     knitYarnModel.YarnRecipeCode = d.YarnRecipe != null ? d.YarnRecipe.YarnRecipeCode : "";
                     knitYarnModel.YarnRecipeName = d.YarnRecipe != null ? d.YarnRecipe.YarnRecipeName : "";
-                    knitYarnModel.FirmName = d.Firm != null ? d.Firm.FirmName : "";
-                    knitYarnModel.FirmCode = d.Firm != null ? d.Firm.FirmCode : "";
-                    knitYarnModel.YarnTypeStr = d.YarnType != null ? ((YarnType)d.YarnType.Value).ToCaption() : null;
-
+                    knitYarnModel.FirmName = d.YarnRecipe != null ? d.Firm.FirmName : "";
+                    knitYarnModel.FirmCode = d.YarnRecipe != null ? d.Firm.FirmCode : "";
+                    knitYarnModel.Gramaj = d.YarnRecipe != null ? d.Gramaj : 0;
+                    knitYarnModel.Density = d.YarnRecipe != null ? d.Density : 0;
                     d.MapTo(knitYarnModel);
                     knitYarnList.Add(knitYarnModel);
                 });
@@ -736,29 +734,27 @@ namespace HekaMOLD.Business.UseCases
                     model.KnitYarns = new KnitYarnModel[0];
 
                 var toBeRemovedKnitYarns = dbObj.KnitYarn
-                    .Where(d => !model.KnitYarns.Select(m => m.Id).ToArray().Contains(d.Id)
+                    .Where(d => !model.KnitYarns.Where(m => m.NewDetail == false).Select(m => m.Id).ToArray().Contains(d.Id)
                     ).ToArray();
-
                 foreach (var item in toBeRemovedKnitYarns)
                 {
                     repoKnitYarns.Delete(item);
                 }
 
-                foreach (var item in model.KnitYarns
-                    .Where(a => !toBeRemovedKnitYarns.Any(m => m.YarnRecipeId == a.YarnRecipeId)))
+                foreach (var item in model.KnitYarns)
                 {
-                    var dbKnitYarnWr = repoKnitYarns.GetById(item.Id);
-                    if (dbKnitYarnWr == null || item.Id == 0)
+                    if (item.NewDetail == true)
                     {
-                        dbKnitYarnWr = new KnitYarn();
-                        item.MapTo(dbKnitYarnWr);
-                        dbKnitYarnWr.Item = dbObj;
-                        repoKnitYarns.Add(dbKnitYarnWr);
+                        var dbKnitYarn = new KnitYarn();
+                        item.MapTo(dbKnitYarn);
+                        dbKnitYarn.Item = dbObj;
+                        repoKnitYarns.Add(dbKnitYarn);
                     }
-                    else
+                    else if (!toBeRemovedKnitYarns.Any(d => d.Id == item.Id))
                     {
-                        item.MapTo(dbKnitYarnWr);
-                        dbKnitYarnWr.Item = dbObj;
+                        var dbKnitYarn = repoKnitYarns.GetById(item.Id);
+                        item.MapTo(dbKnitYarn);
+                        dbKnitYarn.Item = dbObj;
                     }
                 }
 
@@ -778,7 +774,7 @@ namespace HekaMOLD.Business.UseCases
             }
             return result;
 
-        } 
+        }
 
         public BusinessResult DeleteKnit(int id)
         {
@@ -802,6 +798,33 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
 
+        }
+        public KnitYarnModel CalculateOrderDetail(KnitYarnModel model)
+        {
+            //if (model.ForexId > 0 && model.ForexRate > 0)
+            //{
+            //    model.ForexUnitPrice = model.UnitPrice / model.ForexRate;
+            //}
+
+            //decimal? overallTotal = 0;
+            //decimal? taxExtractedUnitPrice = 0;
+
+            //if (model.TaxIncluded == true)
+            //{
+            //    decimal? taxIncludedUnitPrice = (model.UnitPrice / (1 + (model.TaxRate / 100m)));
+            //    overallTotal = taxIncludedUnitPrice * model.Quantity;
+            //    taxExtractedUnitPrice = taxIncludedUnitPrice;
+            //}
+            //else
+            //{
+            //    overallTotal = model.UnitPrice * model.Quantity;
+            //    taxExtractedUnitPrice = model.UnitPrice;
+            //}
+
+            //model.OverallTotal = overallTotal;
+            //model.TaxAmount = overallTotal * model.TaxRate / 100.0m;
+
+            return model;
         }
         #endregion
 
@@ -1336,7 +1359,8 @@ namespace HekaMOLD.Business.UseCases
             var dataList = repo.GetAll();
 
             List<ForexTypeModel> modelList = new List<ForexTypeModel>();
-            dataList.ToList().ForEach(d => {
+            dataList.ToList().ForEach(d =>
+            {
                 var containerObj = new ForexTypeModel();
                 modelList.Add(d.MapTo(containerObj));
             });
@@ -1543,11 +1567,11 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
-        
+
         public MachineModel[] GetMachineStats(string startDate, string endDate)
         {
             List<MachineModel> data = new List<MachineModel>();
-            
+
             if (string.IsNullOrEmpty(startDate))
                 startDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now.AddMonths(-1));
             if (string.IsNullOrEmpty(endDate))
@@ -1575,7 +1599,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 MachineModel containerObj = new MachineModel();
                 d.MapTo(containerObj);
-                
+
                 if (d.WorkingUserId != null)
                 {
                     var dbUser = repoUser.Get(m => m.Id == d.WorkingUserId);
@@ -1640,7 +1664,7 @@ namespace HekaMOLD.Business.UseCases
                     decimal avgCycleTime = 0;
                     int targetCount = 0;
 
-                    var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
+                    var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id
                         && m.WorkOrderDetailId != null
                         && m.ShiftId == shift.Id)
                         .OrderByDescending(m => m.Id).FirstOrDefault();
@@ -1785,7 +1809,7 @@ namespace HekaMOLD.Business.UseCases
                         ShiftId = shift.Id,
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
-                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count() 
+                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count()
                             - Convert.ToInt32(shiftWastageCount),
                         WastageCount = shiftWastageCount,
                     });
@@ -2130,7 +2154,7 @@ namespace HekaMOLD.Business.UseCases
                 MoldName = d.MoldName,
                 FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                 FirmName = d.Firm != null ? d.Firm.FirmName : "",
-                OwnedDateStr = d.OwnedDate != null ? 
+                OwnedDateStr = d.OwnedDate != null ?
                     string.Format("{0:dd.MM.yyyy}", d.OwnedDate) : "",
                 LifeTimeTicks = d.LifeTimeTicks,
                 CurrentTicks = d.CurrentTicks,
@@ -2663,7 +2687,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
                 containerObj.UserCode = d.User != null ? d.User.UserCode : "";
                 containerObj.UserName = d.User != null ? d.User.UserName : "";
-                
+
                 data.Add(containerObj);
             });
 
@@ -3259,13 +3283,13 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<YarnColour>();
 
-          return  repo.GetAll().Select(d => new YarnColourModel
+            return repo.GetAll().Select(d => new YarnColourModel
             {
                 Id = d.Id,
                 YarnColourCode = d.YarnColourCode,
                 YarnColourName = d.YarnColourName,
                 YarnColourGroupId = d.YarnColourGroupId,
-                GroupName = d.YarnColourGroup != null ? d.YarnColourGroup.YarnColourGroupName :"",
+                GroupName = d.YarnColourGroup != null ? d.YarnColourGroup.YarnColourGroupName : "",
             }).ToArray();
         }
         public BusinessResult SaveOrUpdateYarnColour(YarnColourModel model)
@@ -3478,15 +3502,15 @@ namespace HekaMOLD.Business.UseCases
                 Id = d.Id,
                 YarnRecipeCode = d.YarnRecipeCode,
                 YarnRecipeName = d.YarnRecipeName,
-                Denier = d.Denier ,
+                Denier = d.Denier,
                 Factor = d.Factor,
                 Twist = d.Twist,
-                Center = d.Center,
+                CenterTypeStr =  d.CenterType ==1 ? "Kuvvetli Punta" : d.CenterType ==2 ? "Seyrek Punta":"",
                 Mix = d.Mix,
                 YarnLot = d.YarnLot,
                 FirmName = d.Firm != null ? d.Firm.FirmName : "",
                 YarnBreedName = d.YarnBreed != null ? d.YarnBreed.YarnBreedName : "",
-                YarnColourName = d.YarnColour != null ? d.YarnColour.YarnColourName :"",
+                YarnColourName = d.YarnColour != null ? d.YarnColour.YarnColourName : "",
             }).ToArray();
         }
         public YarnRecipeModel GetYarnRecipe(int id)

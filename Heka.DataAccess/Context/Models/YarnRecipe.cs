@@ -26,7 +26,7 @@ namespace Heka.DataAccess.Context.Models
         //Bukum
         public int? Twist { get; set; }
         //Punta
-        public bool? Center { get; set; }
+        public int? CenterType { get; set; }
         //Karisim 
         public bool? Mix { get; set; }
         public int? YarnRecipeType { get; set; }

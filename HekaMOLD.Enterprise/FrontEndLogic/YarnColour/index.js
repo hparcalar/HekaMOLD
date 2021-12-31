@@ -91,9 +91,9 @@
     // YARCOLOUR FUNCTIONS
     $scope.updateCode = function () {
 
-        //$scope.getNextReceiptNo().then(function (rNo) {
-        //    $scope.modelObject.YarnColourCode = rNo;
-        //});
+        $scope.getNextReceiptNo().then(function (rNo) {
+            $scope.modelObject.YarnColourCode = rNo;
+        });
         $scope.modelObject.YarnColourCode = $scope.selectedGroup.YarnColourGroupCode;
         alert("asd:" + $scope.selectedGroup.YarnColourGroupCode);
 
@@ -113,7 +113,6 @@
                     }
                 }).catch(function (err) { });
         });
-
         return prms;
     }
 
@@ -143,10 +142,12 @@
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
         else {
-            $scope.getNextReceiptNo().then(function (rNo) {
-                $scope.modelObject.YarnColourCode = rNo;
-                $scope.bindModel(0);
-            });
+            $scope.bindModel(0);
+            //$scope.getNextReceiptNo().then(function (rNo) {
+            //    alert(rNo);
+            //    $scope.modelObject.YarnColourCode = rNo;
+           
+            //});
         }
     });
 });

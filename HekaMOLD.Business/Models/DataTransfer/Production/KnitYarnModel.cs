@@ -15,10 +15,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? YarnType { get; set; }
 
         //Rapor Tel Sayisi
-        public int? ReportWireCount { get; set; }
+        public decimal? ReportWireCount { get; set; }
 
         //Metre Tel Sayisi
-        public int? MeterWireCount { get; set; }
+        public decimal? MeterWireCount { get; set; }
         public decimal? Gramaj { get; set; }
         public int? Density { get; set; }
 
@@ -29,6 +29,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string FirmName { get; set; }
         public int? Denier { get; set; }
         public string YarnTypeStr { get; set; }
+
+        #region VISUAL ELEMENTS
+        public bool NewDetail { get; set; }
+        #endregion
 
     }
 }

@@ -56,13 +56,13 @@ namespace Heka.DataAccess.Context
         //Desen
         public int? Pattern { get; set; }
         //Ham
-        public int? CrudeWidth { get; set; }
+        public decimal? CrudeWidth { get; set; }
         public decimal? CrudeGramaj { get; set; }
         //Mamul En
-        public int? ProductWidth { get; set; }
+        public decimal? ProductWidth { get; set; }
         public decimal? ProductGramaj { get; set; }
         //Cozgu Tel sayisi
-        public int? WarpWireCount { get; set; }
+        public decimal? WarpWireCount { get; set; }
         public decimal? MeterGramaj { get; set; }
         //Kesme	
         public Nullable<int> ItemCutType { get; set; }
@@ -74,11 +74,11 @@ namespace Heka.DataAccess.Context
         //Kursun
         public Nullable<int> ItemBulletType { get; set; }
         public int? TestNo { get; set; }
-        public int? CombWidth { get; set; }
+        public decimal? CombWidth { get; set; }
         //Atki Rapor Boyu
-        public int? WeftReportLength { get; set; }
+        public decimal? WeftReportLength { get; set; }
         //Cozgu Rapor Boyu
-        public int? WarpReportLength { get; set; }
+        public decimal? WarpReportLength { get; set; }
         //Atki Sikligi
         public int? WeftDensity { get; set; }
 

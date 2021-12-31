@@ -23,10 +23,10 @@ namespace Heka.DataAccess.Context.Models
         public int? YarnType { get; set; }
 
         //Rapor Tel Sayisi
-        public int? ReportWireCount { get; set; }
+        public decimal? ReportWireCount { get; set; }
 
         //Metre Tel Sayisi
-        public int? MeterWireCount { get; set; }
+        public decimal? MeterWireCount { get; set; }
         public decimal? Gramaj { get; set; }
         public int? Density { get; set; }
 

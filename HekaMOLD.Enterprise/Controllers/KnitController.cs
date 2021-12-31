@@ -3,9 +3,6 @@ using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
@@ -116,6 +113,18 @@ namespace HekaMOLD.Enterprise.Controllers
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
 
+        }
+        [HttpPost]
+        public JsonResult CalculateRow(KnitYarnModel model)
+        {
+            KnitYarnModel result = new KnitYarnModel();
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                //result = bObj.CalculateOrderDetail(model);
+            }
+
+            return Json(result);
         }
     }
 }

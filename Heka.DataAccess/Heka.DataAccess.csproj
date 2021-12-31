@@ -250,6 +250,18 @@
     <Compile Include="Migrations\202112271935420_update KnitYarn.designer.cs">
       <DependentUpon>202112271935420_update KnitYarn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112291209219_intConvertDecimal-WeftReportLength.cs" />
+    <Compile Include="Migrations\202112291209219_intConvertDecimal-WeftReportLength.designer.cs">
+      <DependentUpon>202112291209219_intConvertDecimal-WeftReportLength.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112301040106_item and KnitYarn update.cs" />
+    <Compile Include="Migrations\202112301040106_item and KnitYarn update.designer.cs">
+      <DependentUpon>202112301040106_item and KnitYarn update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112302127509_updateYarnRecipe2.cs" />
+    <Compile Include="Migrations\202112302127509_updateYarnRecipe2.designer.cs">
+      <DependentUpon>202112302127509_updateYarnRecipe2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -335,6 +347,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112271935420_update KnitYarn.resx">
       <DependentUpon>202112271935420_update KnitYarn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112291209219_intConvertDecimal-WeftReportLength.resx">
+      <DependentUpon>202112291209219_intConvertDecimal-WeftReportLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112301040106_item and KnitYarn update.resx">
+      <DependentUpon>202112301040106_item and KnitYarn update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112302127509_updateYarnRecipe2.resx">
+      <DependentUpon>202112302127509_updateYarnRecipe2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

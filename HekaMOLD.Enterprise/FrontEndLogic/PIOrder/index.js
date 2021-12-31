@@ -249,7 +249,7 @@
                         if (typeof values.ForexUnitPrice != 'undefined') {
                             obj.ForexUnitPrice = values.ForexUnitPrice;
                             if (typeof obj.ForexId != 'undefined' && obj.ForexId != null) {
-                                obj.UnitPrice = obj.ForexUnitPrice * obj.ForexRate;
+                                obj.UnitPrice = obj.ForexUnitPrice * 10;
                                 calculateRowAgain = true;
                             }
                         }

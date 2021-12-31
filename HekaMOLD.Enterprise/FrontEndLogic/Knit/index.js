@@ -75,6 +75,7 @@
                     columns: [
                         { dataField: 'YarnRecipeCode', caption: 'İplik Kodu' },
                         { dataField: 'YarnRecipeName', caption: 'İplik Adı' },
+                        { dataField: 'FirmName', caption: 'Firma' },
                         { dataField: 'Denier', caption: 'Fiili Denye' },
                         { dataField: 'YarnColourName', caption: 'Renk Kodu' },
                         { dataField: 'Factor', caption: 'Katsayı' }
@@ -242,30 +243,31 @@
                 update: function (key, values) {
                     var obj = $scope.modelObject.KnitYarns.find(d => d.Id == key);
                     if (obj != null) {
-
+                        let calculateRowAgain = false;
                         if (typeof values.YarnRecipeId != 'undefined') {
                             var yarnRecipeObj = $scope.yarnRecipeList.find(d => d.Id == values.YarnRecipeId);
                             obj.YarnRecipeId = yarnRecipeObj.Id;
-                            obj.YarnRecipeCode = itemObj.YarnRecipeCode;
-                            obj.YarnRecipeName = itemObj.YarnRecipeName;
-                            obj.Denier = itemObj.Denier;
-                        }
-                        if (typeof values.FirmId != 'undefined') {
-                            var firmObj = $scope.firmList.find(d => d.Id == values.FirmId);
-                            obj.FirmId = firmObj.Id;
-                            obj.FirmName = firmObj.FirmName;
+                            obj.YarnRecipeCode = yarnRecipeObj.YarnRecipeCode;
+                            obj.YarnRecipeName = yarnRecipeObj.YarnRecipeName;
+                            obj.Denier = yarnRecipeObj.Denier;
+                            obj.FirmId = yarnRecipeObj.FirmId;
+                            obj.FirmName = yarnRecipeObj.FirmName;
+                            calculateRowAgain = true;
                         }
 
-                        if (typeof values.ReportWireCount != 'undefined') { obj.ReportWireCount = values.ReportWireCount; }
-                        if (typeof values.MeterWireCount != 'undefined') { obj.MeterWireCount = values.MeterWireCount; }
-                        if (typeof values.Gramaj != 'undefined') { obj.Gramaj = values.Gramaj; }
-
+                        if (typeof values.ReportWireCount != 'undefined') { obj.ReportWireCount = values.ReportWireCount; calculateRowAgain = true; }
+                        if (typeof values.MeterWireCount != 'undefined') { obj.MeterWireCount = values.MeterWireCount; calculateRowAgain = true; }
+                        if (typeof values.Gramaj != 'undefined') { obj.Gramaj = values.Gramaj; calculateRowAgain = true; }
+                        if (typeof values.Density != 'undefined') { obj.Density = values.Density; calculateRowAgain = true; }
+                        if (calculateRowAgain)
+                            $scope.calculateWeftRow(obj);
                     }
                 },
                 remove: function (key) {
                     var obj = $scope.modelObject.KnitYarns.find(d => d.Id == key);
                     if (obj != null) {
                         $scope.modelObject.KnitYarns.splice($scope.modelObject.KnitYarns.indexOf(obj), 1);
+                        $scope.calculatorCrudeGramaj();
                     }
                 },
                 insert: function (values) {
@@ -277,9 +279,7 @@
                     }
 
                     var yarnRecipeObj = $scope.yarnRecipeList.find(d => d.Id == values.YarnRecipeId);
-                    if (typeof values.FirmId != 'undefined') {
-                        firmObj = $scope.firmList.find(d => d.Id == values.FirmId);
-                    }
+
                     var newObj = {
                         Id: newId,
                         YarnRecipeId: yarnRecipeObj.Id,
@@ -287,20 +287,23 @@
                         YarnRecipeName: yarnRecipeObj.YarnRecipeName,
                         Denier: yarnRecipeObj.Denier,
                         YarnType: 2,
-                        FirmId: firmObj != null ? firmObj.id : null,
-                        FirmName: firmObj != null ? firmObj.FirmName : '',
+                        FirmName: yarnRecipeObj != null ? yarnRecipeObj.FirmName : '',
                         ReportWireCount: values.ReportWireCount,
                         MeterWireCount: values.MeterWireCount,
                         Gramaj: values.Gramaj,
+                        Density: values.Density,
+                        NewDetail: true
                     };
 
                     $scope.modelObject.KnitYarns.push(newObj);
-                    // $scope.calculateRow(newObj);
+                    $scope.calculateWeftRow(newObj);
+
                 },
                 key: 'Id'
             },
             showColumnLines: true,
             showRowLines: true,
+            
             rowAlternationEnabled: true,
             focusedRowEnabled: false,
             showBorders: true,
@@ -312,7 +315,14 @@
             onInitNewRow: function (e) { },
             columns: [
                 {
-                    dataField: 'YarnRecipeId', caption: 'İpik Kodu',
+                    caption: '#',
+                    cellTemplate: function (cellElement, cellInfo) {
+                        cellElement.text(cellInfo.row.rowIndex)
+                    },
+                    width: 30,
+                },
+                {
+                    dataField: 'YarnRecipeId', caption: 'İplik Kod',
                     lookup: {
                         dataSource: $scope.yarnRecipeList,
                         valueExpr: "Id",
@@ -331,21 +341,13 @@
                             container.text(options.displayValue);
                     }
                 },
-                { dataField: 'YarnRecipeName', caption: 'İplik Adı', allowEditing: false },
+                { dataField: 'YarnRecipeName', caption: 'İplik Ad', allowEditing: false },
                 { dataField: 'Denier', caption: 'Fiili Denye', allowEditing: false },
-                {
-                    dataField: 'FirmId', caption: 'Firma',
-                    allowSorting: false,
-                    lookup: {
-                        dataSource: $scope.firmList,
-                        valueExpr: "Id",
-                        displayExpr: "FirmName"
-                    }
-                },
-                { dataField: 'ReportWireCount', caption: 'Rapor Tel Sayısı', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'MeterWireCount', caption: 'Metre Tel Sayısı', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'Gramaj', caption: 'Gramaj', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'Density', caption: 'Sıklık', dataType: 'number', format: { type: "number", precision: 2 } },
+                { dataField: 'FirmName', caption: 'Firma', allowEditing: false,     },
+                { dataField: 'ReportWireCount', caption: 'Rapor Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                { dataField: 'MeterWireCount',  caption: 'Metre Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Gramaj', caption: 'Gramaj', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Density', caption: 'Sıklık', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
             ]
         });
     }
@@ -358,30 +360,33 @@
                 update: function (key, values) {
                     var obj = $scope.modelObject.KnitYarns.find(d => d.Id == key);
                     if (obj != null) {
+                        let calculateRowAgain = false;
 
                         if (typeof values.YarnRecipeId != 'undefined') {
                             var yarnRecipeObj = $scope.yarnRecipeList.find(d => d.Id == values.YarnRecipeId);
                             obj.YarnRecipeId = yarnRecipeObj.Id;
-                            obj.YarnRecipeCode = itemObj.YarnRecipeCode;
-                            obj.YarnRecipeName = itemObj.YarnRecipeName;
-                           obj.Denier = itemObj.Denier;
-                        }
-                        if (typeof values.FirmId != 'undefined') {
-                            var firmObj = $scope.firmList.find(d => d.Id == values.FirmId);
-                            obj.FirmId = firmObj.Id;
-                            obj.FirmName = firmObj.FirmName;
+                            obj.YarnRecipeCode = yarnRecipeObj.YarnRecipeCode;
+                            obj.YarnRecipeName = yarnRecipeObj.YarnRecipeName;
+                            obj.Denier = yarnRecipeObj.Denier;
+                            obj.FirmName = yarnRecipeObj.FirmName;
+                            calculateRowAgain = true;
+
                         }
 
-                        if (typeof values.ReportWireCount != 'undefined') { obj.ReportWireCount = values.ReportWireCount; }
-                        if (typeof values.MeterWireCount != 'undefined') { obj.MeterWireCount = values.MeterWireCount; }
-                        if (typeof values.Gramaj != 'undefined') { obj.Gramaj = values.Gramaj; }
+                        if (typeof values.ReportWireCount != 'undefined') { obj.ReportWireCount = values.ReportWireCount; calculateRowAgain = true; }
+                        if (typeof values.MeterWireCount != 'undefined') { obj.MeterWireCount = values.MeterWireCount; calculateRowAgain = true; }
 
+                        if (typeof values.Gramaj != 'undefined') { obj.Gramaj = values.Gramaj; calculateRowAgain = true; }
+                        if (typeof values.Density != 'undefined') { obj.Density = values.Density; calculateRowAgain = true; }
+                        if (calculateRowAgain)
+                            $scope.calculateWarpRow(obj);
                     }
                 },
                 remove: function (key) {
                     var obj = $scope.modelObject.KnitYarns.find(d => d.Id == key);
                     if (obj != null) {
                         $scope.modelObject.KnitYarns.splice($scope.modelObject.KnitYarns.indexOf(obj), 1);
+                        $scope.calculatorCrudeGramaj();
                     }
                 },
                 insert: function (values) {
@@ -393,9 +398,6 @@
                     }
                     
                     var yarnRecipeObj = $scope.yarnRecipeList.find(d => d.Id == values.YarnRecipeId);
-                    if (typeof values.FirmId != 'undefined') {
-                        firmObj = $scope.firmList.find(d => d.Id == values.FirmId);
-                    }
                     var newObj = {
                         Id: newId,
                         YarnRecipeId: yarnRecipeObj.Id,
@@ -403,15 +405,16 @@
                         YarnRecipeName: yarnRecipeObj.YarnRecipeName,
                         Denier: yarnRecipeObj.Denier,
                         YarnType: 1,
-                        FirmId: firmObj != null ? firmObj.id : null,
-                        FirmName: firmObj != null ? firmObj.FirmName : '',
+                        FirmName: yarnRecipeObj != null ? yarnRecipeObj.FirmName : '',
                         ReportWireCount: values.ReportWireCount,
                         MeterWireCount: values.MeterWireCount,
                         Gramaj: values.Gramaj,
+                        Density: values.Density,
+                        NewDetail: true
                     };
-
                     $scope.modelObject.KnitYarns.push(newObj);
-                    // $scope.calculateRow(newObj);
+                    $scope.calculateWarpRow(newObj);
+
                 },
                 key: 'Id'
             },
@@ -428,7 +431,14 @@
             onInitNewRow: function (e) { },
             columns: [
                 {
-                    dataField: 'YarnRecipeId', caption: 'İpik Kodu',
+                    caption: '#',
+                    cellTemplate: function (cellElement, cellInfo) {
+                        cellElement.text(cellInfo.row.rowIndex)
+                    },
+                    width:30,
+                },
+                {
+                    dataField: 'YarnRecipeId', caption: 'İplik Kod',
                     lookup: {
                         dataSource: $scope.yarnRecipeList,
                         valueExpr: "Id",
@@ -447,21 +457,13 @@
                             container.text(options.displayValue);
                     }
                 },
-                { dataField: 'YarnRecipeName', caption: 'İplik Adı', allowEditing: false },
+                { dataField: 'YarnRecipeName', caption: 'İplik Ad', allowEditing: false },
                 { dataField: 'Denier', caption: 'Fiili Denye', allowEditing: false },
-                {
-                    dataField: 'FirmId', caption: 'Firma',
-                    allowSorting: false,
-                    lookup: {
-                        dataSource: $scope.firmList,
-                        valueExpr: "Id",
-                        displayExpr: "FirmName"
-                    }
-                },
-                { dataField: 'ReportWireCount', caption: 'Rapor Tel Sayısı', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'MeterWireCount', caption: 'Metre Tel Sayısı', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'Gramaj', caption: 'Gramaj', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'Density', caption: 'Sıklık', dataType: 'number', format: { type: "number", precision: 2 } },
+                { dataField: 'FirmName', caption: 'Firma', allowEditing: false    },
+                { dataField: 'ReportWireCount', caption: 'Rapor Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                { dataField: 'MeterWireCount', caption: 'Metre Tel Say.',  dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Gramaj', caption: 'Gramaj', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Density', caption: 'Sıklık', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
             ]
         });
     }
@@ -482,7 +484,27 @@
             closeText: "KAPAT"
         });
     }
+    $scope.calculateWarpRow = function (row) {
 
+        row.MeterWireCount = row.ReportWireCount * parseFloat(100 / $scope.modelObject.WarpReportLength);
+        $scope.modelObject.KnitYarns.forEach(element => { crudeGramaj += parseFloat(element.Gramaj != null ? element.Gramaj : 0); });
+        $scope.calculatorCrudeGramaj();
+    }
+    $scope.calculateWeftRow = function (row) {
+        row.MeterWireCount = row.ReportWireCount * parseFloat(100 / $scope.modelObject.WeftReportLength);
+        row.Gramaj = row.ReportWireCount / $scope.modelObject.WeftReportLength * $scope.modelObject.CombWidth * row.Denier / 9000;
+        $scope.calculatorCrudeGramaj();
+    }
+    $scope.calculatorCrudeGramaj = function () {
+        let crudeGramaj = 0;
+        $scope.modelObject.KnitYarns.forEach(element => { crudeGramaj += parseFloat(element.Gramaj != null ? element.Gramaj : 0); });
+        $scope.modelObject.CrudeGramaj = crudeGramaj;
+        alert($scope.modelObject.CrudeGramaj);
+        let meterGramaj = 0;
+        meterGramaj = crudeGramaj / ($scope.modelObject.CombWidth / 100);
+        $scope.modelObject.MeterGramaj = meterGramaj;
+        alert(meterGramaj);
+    }
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
     $scope.loadSelectables().then(function (data) {

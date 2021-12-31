@@ -14,7 +14,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         //Bukum
         public int? Twist { get; set; }
         //Punta
-        public bool? Center { get; set; }
+        public int? CenterType { get; set; }
         //Karisim 
         public bool? Mix { get; set; }
         public int? YarnRecipeType { get; set; }
@@ -25,6 +25,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string YarnColourName { get; set; }
         public string YarnBreedName { get; set; }
         public string YarnRecipeTypeStr { get; set; }
+        public string CenterTypeStr { get; set; }
 
 
     }
