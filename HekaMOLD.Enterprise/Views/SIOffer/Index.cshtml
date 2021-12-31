@@ -11,7 +11,7 @@
         <!--begin::Container-->
         <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
             <!--begin::Page title-->
-            <div data-kt-place="true" data-kt-place-mode="prepend" 
+            <div data-kt-place="true" data-kt-place-mode="prepend"
                  data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
                  class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
                 <!--begin::Title-->
@@ -247,7 +247,7 @@
 
                     <div class="dx-viewport">
                         <div id="dataList">
-                            
+
                         </div>
                     </div>
 
@@ -278,7 +278,6 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
-
     @* DIALOG FORMS *@
     <div id="dial-firm" title="Firma Seçimi" style="display:none;">
         <div class="mb-5 input-group">
@@ -306,6 +305,10 @@
 
     <div id="dial-attachments" title="Ekler" style="display:none;">
         <ng-include src="'Components/Views/AttachmentList.html'"></ng-include>
+    </div>
+
+    <div id="dial-offer-process" title="Proses Fiyatları" style="display:none;">
+        <ng-include src="'Components/Views/OfferProcessList.html'"></ng-include>
     </div>
 
     <div class="modal fade" id="dial-offer" tabindex="-1" role="dialog" aria-labelledby=""
@@ -378,4 +381,5 @@
     <script src="~/FrontEndLogic/SIOffer/index.js"></script>
     <script src="~/FrontEndLogic/Core/record-manager.js"></script>
     <script src="~/Components/Controllers/attachment-list.js"></script>
+    <script src="~/Components/Controllers/offer-process-list.js"></script>
 }

@@ -47,6 +47,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ItemOffer>();
                 var repoDetail = _unitOfWork.GetRepository<ItemOfferDetail>();
+                var repoDetailRoute = _unitOfWork.GetRepository<ItemOfferDetailRoutePricing>();
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -88,10 +89,20 @@ namespace HekaMOLD.Business.UseCases
                         item.Id = 0;
                 }
 
+                // DELETED DETAILS
                 var newDetailIdList = model.Details.Select(d => d.Id).ToArray();
                 var deletedDetails = dbObj.ItemOfferDetail.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
                 foreach (var item in deletedDetails)
                 {
+                    if (item.ItemOfferDetailRoutePricing.Any())
+                    {
+                        var pricingList = item.ItemOfferDetailRoutePricing.ToArray();
+                        foreach (var pricingItem in pricingList)
+                        {
+                            repoDetailRoute.Delete(pricingItem);
+                        }
+                    }
+
                     repoDetail.Delete(item);
                 }
 
@@ -112,7 +123,7 @@ namespace HekaMOLD.Business.UseCases
                     item.MapTo(dbDetail);
                     dbDetail.ItemOffer = dbObj;
 
-                    // FIND OR CREATE ITEM FROM ITEM-EXPLANATION
+                    #region FIND OR CREATE ITEM FROM ITEM-EXPLANATION
                     if (dbDetail.ItemId == null)
                     {
                         using (DefinitionsBO defBO = new DefinitionsBO())
@@ -126,6 +137,10 @@ namespace HekaMOLD.Business.UseCases
                                 dbDetail.ItemId = foundItem.Id;
                             else
                             {
+                                var piecesTypeUnit = defBO.GetUnitType("ADET");
+                                if (piecesTypeUnit == null || piecesTypeUnit.Id <= 0)
+                                    piecesTypeUnit = defBO.GetUnitType("ADT");
+
                                 var crItemResult = defBO.SaveOrUpdateItem(new Models.DataTransfer.Core.ItemModel
                                 {
                                     ItemName = explanationForItemName,
@@ -137,10 +152,11 @@ namespace HekaMOLD.Business.UseCases
                                             IsMainUnit = true,
                                             DividerFactor = 1,
                                             MultiplierFactor = 1,
-                                            UnitId = 1, // ADT
+                                            UnitId = piecesTypeUnit.Id,
+                                            NewDetail = true,
                                         }
                                     },
-                                    ItemNo = "",
+                                    ItemNo = defBO.GenerateProductNoFromName(explanationForItemName),
                                     CreatedDate = DateTime.Now,
                                 });
 
@@ -151,6 +167,27 @@ namespace HekaMOLD.Business.UseCases
                             }
                         }
                     }
+                    #endregion
+
+                    #region SAVE ROUTE PRICINGS
+                    var exPricings = dbDetail.ItemOfferDetailRoutePricing.ToArray();
+                    foreach (var exPrc in exPricings)
+                    {
+                        repoDetailRoute.Delete(exPrc);
+                    }
+
+                    foreach (var nwPrc in item.ProcessList)
+                    {
+                        var dbNewPricing = new ItemOfferDetailRoutePricing
+                        {
+                            ItemOfferDetail = dbDetail,
+                            RouteItemId = nwPrc.RouteItemId,
+                            UnitPrice = nwPrc.UnitPrice,
+                            TotalPrice = nwPrc.TotalPrice,
+                        };
+                        repoDetailRoute.Add(dbNewPricing);
+                    }
+                    #endregion
 
                     if (!string.IsNullOrEmpty(item.ItemVisualStr))
                     {
@@ -176,6 +213,35 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return result;
+        }
+
+        public ItemOfferDetailRoutePricingModel[] GetPricingsByRoute(int routeId)
+        {
+            ItemOfferDetailRoutePricingModel[] data = new ItemOfferDetailRoutePricingModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<RouteItem>();
+                data = repo.Filter(d => d.RouteId == routeId)
+                    .OrderBy(d => d.LineNumber)
+                    .Select(d => new ItemOfferDetailRoutePricingModel
+                    {
+                        Id = 0,
+                        RouteItemId = d.Id,
+                        ProcessCode = d.Process.ProcessCode,
+                        ProcessName = d.Process.ProcessName,
+                        RouteCode = d.Route.RouteCode,
+                        RouteName = d.Route.RouteName,
+                        UnitPrice = d.Process.UnitPrice,
+                        TotalPrice = 0,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
         }
 
         public BusinessResult DeleteItemOffer(int id)
@@ -237,6 +303,8 @@ namespace HekaMOLD.Business.UseCases
                     {
                         Id = d.Id,
                         ItemId = d.ItemId,
+                        ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                        ItemName = d.Item != null ? d.Item.ItemName : "",
                         CreditMonths = d.CreditMonths,
                         CreditRate = d.CreditRate,
                         ItemExplanation = d.ItemExplanation,
@@ -245,14 +313,29 @@ namespace HekaMOLD.Business.UseCases
                         LaborCost = d.LaborCost,
                         NewDetail = false,
                         ProfitRate = d.ProfitRate,
+                        RoutePrice = d.RoutePrice,
                         QualityExplanation = d.QualityExplanation,
                         Quantity = d.Quantity,
                         SheetWeight = d.SheetWeight,
                         TotalPrice = d.TotalPrice,
                         UnitPrice = d.UnitPrice,
                         WastageWeight = d.WastageWeight,
+                        RouteCode = d.Route != null ? d.Route.RouteCode : "",
+                        RouteName = d.Route != null ? d.Route.RouteName : "",
                         ItemVisualStr = d.ItemVisual != null ?
                             (Convert.ToBase64String(d.ItemVisual)) : "",
+                        ProcessList = d.ItemOfferDetailRoutePricing
+                            .Select(m => new ItemOfferDetailRoutePricingModel
+                            {
+                                Id = m.Id,
+                                RouteItemId = m.RouteItemId,
+                                ProcessCode = m.RouteItem.Process.ProcessCode,
+                                ProcessName = m.RouteItem.Process.ProcessName,
+                                RouteCode = m.RouteItem.Route.RouteCode,
+                                RouteName = m.RouteItem.Route.RouteName,
+                                UnitPrice = m.UnitPrice,
+                                TotalPrice = m.TotalPrice,
+                            }).ToArray()
                     }).ToArray();
             }
 

@@ -1,5 +1,6 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Offers;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -44,14 +45,16 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             ItemModel[] items = new ItemModel[0];
             FirmModel[] firms = new FirmModel[0];
+            RouteModel[] routes = new RouteModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 items = bObj.GetItemList();
                 firms = bObj.GetFirmList();
+                routes = bObj.GetRouteList();
             }
 
-            var jsonResult = Json(new { Items = items, Firms = firms, }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Items = items, Firms = firms, Routes = routes }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -64,6 +67,21 @@ namespace HekaMOLD.Enterprise.Controllers
             using (OffersBO bObj = new OffersBO())
             {
                 result = bObj.GetItemOfferList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetProcessList(int routeId)
+        {
+            ItemOfferDetailRoutePricingModel[] result = new ItemOfferDetailRoutePricingModel[0];
+
+            using (OffersBO bObj = new OffersBO())
+            {
+                result = bObj.GetPricingsByRoute(routeId);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

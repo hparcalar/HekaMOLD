@@ -26,6 +26,7 @@ namespace Heka.DataAccess.Context
         public byte[] ItemVisual { get; set; }
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<decimal> UnitPrice { get; set; }
+        public Nullable<decimal> RoutePrice { get; set; }
         public Nullable<decimal> TotalPrice { get; set; }
 
         public Nullable<decimal> SheetWeight { get; set; }

@@ -16,6 +16,7 @@ using System.Xml;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity;
+using System.Text.RegularExpressions;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -579,7 +580,7 @@ namespace HekaMOLD.Business.UseCases
             var repo = _unitOfWork.GetRepository<Item>();
             var dbItem = repo.Get(d => d.ItemName == itemName);
             if (dbItem != null)
-                return GetItem(dbItem.ItemName);
+                return GetItem(dbItem.Id);
 
             return new ItemModel();
         }
@@ -591,7 +592,7 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var nameHeaderCriteria = itemName.Contains("-") || itemName.Contains(" ") ?
-                    (itemName.IndexOf('-') > itemName.IndexOf(' ') ?
+                    ((itemName.IndexOf('-') < 0 ? 9999 : itemName.IndexOf('-')) > (itemName.IndexOf(' ') < 0 ? 9999 : itemName.IndexOf(' ')) ?
                     itemName.Split(' ')[0] : itemName.Split('-')[0]) : itemName;
 
                 nameHeaderCriteria = nameHeaderCriteria.ToUpper();
@@ -604,8 +605,11 @@ namespace HekaMOLD.Business.UseCases
 
                 if (lastItemNo != null && lastItemNo.Length > 0)
                 {
-
+                    var numericPart = Regex.Match(lastItemNo.Split('-')[1], "[0-9]+").Value;
+                    generatedNo = nameHeaderCriteria + "-" + string.Format("{0:00000}", Convert.ToInt32(numericPart) + 1);
                 }
+                else
+                    generatedNo = nameHeaderCriteria + "-" + string.Format("{0:00000}", 1);
             }
             catch (Exception)
             {

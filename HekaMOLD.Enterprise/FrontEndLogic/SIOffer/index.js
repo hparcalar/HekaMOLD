@@ -7,6 +7,7 @@ function ($scope, $http, Upload) {
     $scope.unitList = [];
     $scope.firmList = [];
     $scope.forexList = [];
+    $scope.routeList = [];
 
     $scope.selectedDocx = null;
     $scope.selectedFirm = {};
@@ -352,6 +353,44 @@ function ($scope, $http, Upload) {
         });
     }
 
+    $scope.dropDownBoxEditorTemplateRoute = function (cellElement, cellInfo) {
+        return $("<div>").dxDropDownBox({
+            dropDownOptions: { width: 600 },
+            dataSource: $scope.routeList,
+            value: cellInfo.value,
+            valueExpr: "Id",
+            displayExpr: "RouteCode",
+            contentTemplate: function (e) {
+                return $("<div>").dxDataGrid({
+                    dataSource: $scope.routeList,
+                    remoteOperations: true,
+                    columns: [
+                        { dataField: 'RouteCode', caption: 'Rota Kodu' },
+                        { dataField: 'RouteName', caption: 'Rota Adı' },
+                    ],
+                    hoverStateEnabled: true,
+                    keyExpr: "Id",
+                    scrolling: { mode: "virtual" },
+                    height: 250,
+                    filterRow: { visible: true },
+                    selection: { mode: "single" },
+                    selectedRowKeys: [cellInfo.value],
+                    focusedRowEnabled: true,
+                    focusedRowKey: cellInfo.value,
+                    allowColumnResizing: true,
+                    wordWrapEnabled: true,
+                    onSelectionChanged: function (selectionChangedArgs) {
+                        e.component.option("value", selectionChangedArgs.selectedRowKeys[0]);
+                        cellInfo.setValue(selectionChangedArgs.selectedRowKeys[0]);
+                        if (selectionChangedArgs.selectedRowKeys.length > 0) {
+                            e.component.close();
+                        }
+                    }
+                });
+            },
+        });
+    }
+
     $scope.bindModel = function (id) {
         $http.get(HOST_URL + 'SIOffer/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
@@ -393,6 +432,23 @@ function ($scope, $http, Upload) {
         $scope.modelObject.TotalPrice = $scope.modelObject.Details.map(d => d.TotalPrice).reduce((n, x) => n + x);
     }
 
+    $scope.updateProcessListOfDetail = function (detailObj) {
+        try {
+            if (detailObj.RouteId != null && detailObj.RouteId > 0) {
+                $http.get(HOST_URL + 'SIOffer/GetProcessList?routeId=' + detailObj.RouteId, {}, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                            detailObj.ProcessList = resp.data;
+                        }
+                    }).catch(function (err) { });
+            }
+            else
+                detailObj.ProcessList = [];
+        } catch (e) {
+
+        }
+    }
+
     $scope.bindDetails = function () {
         $('#dataList').dxDataGrid({
             dataSource: {
@@ -417,6 +473,18 @@ function ($scope, $http, Upload) {
                             calculateRowAgain = true;
                         }
 
+                        let refreshProcessList = false;
+                        if (typeof values.RouteId != 'undefined') {
+                            if (obj.RouteId != values.RouteId)
+                                refreshProcessList = true;
+
+                            var itemObj = $scope.routeList.find(d => d.Id == values.RouteId);
+                            obj.RouteId = itemObj.Id;
+                            obj.RouteCode = itemObj.RouteCode;
+
+                            calculateRowAgain = true;
+                        }
+
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
                         if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
                         if (typeof values.ItemExplanation != 'undefined') { obj.ItemExplanation = values.ItemExplanation; }
@@ -427,6 +495,9 @@ function ($scope, $http, Upload) {
                         if (typeof values.ProfitRate != 'undefined') { obj.ProfitRate = values.ProfitRate; }
                         if (typeof values.CreditMonths != 'undefined') { obj.CreditMonths = values.CreditMonths; }
                         if (typeof values.CreditRate != 'undefined') { obj.CreditRate = values.CreditRate; }
+
+                        if (refreshProcessList)
+                            $scope.updateProcessListOfDetail(obj);
 
                         if (calculateRowAgain)
                             $scope.calculateRow(obj);
@@ -446,12 +517,15 @@ function ($scope, $http, Upload) {
                     }
 
                     var itemObj = $scope.itemList.find(d => d.Id == values.ItemId);
+                    var routeObj = $scope.routeList.find(d => d.Id == values.RouteId);
 
                     var newObj = {
                         Id: newId,
                         ItemId: itemObj.Id,
                         ItemNo: itemObj.ItemNo,
                         ItemName: itemObj.ItemName,
+                        RouteId: values.RouteId,
+                        RouteCode: routeObj != null ? routeObj.RouteCode : '',
                         ItemExplanation: itemObj.ItemExplanation,
                         QualityExplanation: itemObj.QualityExplanation,
                         SheetWeight: itemObj.SheetWeight,
@@ -463,11 +537,15 @@ function ($scope, $http, Upload) {
                         Quantity: values.Quantity,
                         ItemVisual: values.ItemVisual,
                         UnitPrice: values.UnitPrice,
+                        ProcessList: [],
                         NewDetail: true
                     };
 
                     $scope.modelObject.Details.push(newObj);
                     $scope.calculateRow(newObj);
+
+                    if (routeObj != null && routeObj.Id > 0)
+                        $scope.updateProcessListOfDetail(newObj);
                 },
                 key: 'Id'
             },
@@ -537,6 +615,24 @@ function ($scope, $http, Upload) {
                 { dataField: 'QualityExplanation', caption: 'Kalite', allowEditing: false },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
                 { dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
+                {
+                    dataField: 'RouteId', caption: 'Rota Kodu',
+                    lookup: {
+                        dataSource: $scope.routeList,
+                        valueExpr: "Id",
+                        displayExpr: "RouteCode"
+                    },
+                    allowSorting: false,
+                    editCellTemplate: $scope.dropDownBoxEditorTemplateRoute,
+                    cellTemplate: function (container, options) {
+                        if (typeof options.row.data.RouteCode != 'undefined'
+                            && options.row.data.RouteCode != null && options.row.data.RouteCode.length > 0)
+                            container.text(options.row.data.RouteCode);
+                        else
+                            container.text(options.displayValue);
+                    }
+                },
+                { dataField: 'RoutePrice', caption: 'Proses Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
                 //{ dataField: 'SheetWeight', caption: 'Sac Kg', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
                 //{ dataField: 'LaborCost', caption: 'İşçilik', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
                 //{ dataField: 'WastageWeight', caption: 'Hurda Kg', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
@@ -552,6 +648,11 @@ function ($scope, $http, Upload) {
                                 $('#dataList').dxDataGrid('instance').deleteRow(e.row.rowIndex);
                             }
                         },
+                        {
+                            name: 'routes', cssClass: 'fas fa-list', text: '', onClick: function (e) {
+                                $scope.showOfferProcess(e.row.data.ProcessList);
+                            }
+                        },
                     ]
                 }
             ]
@@ -565,6 +666,7 @@ function ($scope, $http, Upload) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.itemList = resp.data.Items;
                         $scope.firmList = resp.data.Firms;
+                        $scope.routeList = resp.data.Routes;
 
                         resolve();
                     }
@@ -572,6 +674,23 @@ function ($scope, $http, Upload) {
         });
 
         return prms;
+    }
+
+    // PROCESS LIST PRICING DIALOG
+    $scope.showOfferProcess = function (detailObj) {
+        $scope.$broadcast('loadProcessList', detailObj.ProcessList);
+
+        $('#dial-offer-process').dialog({
+            width: 600,
+            height: 400,
+            //height: window.innerHeight * 0.6,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
     }
 
     // INFORMATIONS & ATTACHMENTS

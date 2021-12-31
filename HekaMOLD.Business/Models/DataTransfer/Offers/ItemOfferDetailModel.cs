@@ -17,6 +17,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         public byte[] ItemVisual { get; set; }
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<decimal> UnitPrice { get; set; }
+        public Nullable<decimal> RoutePrice { get; set; }
         public Nullable<decimal> TotalPrice { get; set; }
 
         public Nullable<decimal> SheetWeight { get; set; }
@@ -27,8 +28,13 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         public Nullable<int> CreditRate { get; set; }
 
         #region VISUAL ELEMENTS
+        public ItemOfferDetailRoutePricingModel[] ProcessList { get; set; }
         public bool NewDetail { get; set; } = false;
+        public string ItemNo { get; set; }
+        public string ItemName { get; set; }
         public string ItemVisualStr { get; set; }
+        public string RouteCode { get; set; }
+        public string RouteName { get; set; }
         #endregion
     }
 }
