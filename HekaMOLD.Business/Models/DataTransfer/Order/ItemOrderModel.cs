@@ -42,6 +42,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string DateOfNeedStr { get; set; }
         public string OrderDateStr { get; set; }
         public string CreatedUserName { get; set; }
+        public int ItemOfferId { get; set; }
+        public string ItemOfferNo { get; set; }
         #endregion
     }
 }

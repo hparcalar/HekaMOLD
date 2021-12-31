@@ -150,8 +150,8 @@
 
                                 @if (Html.IsGranted("ModuleItems"))
                                 {
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "SIOrder$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "3") ? "show":"")">
-                                        <span class="menu-link @(Regex.IsMatch(ctrl, "SIOrder$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "3") ? "active" : "")">
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "SIOrder$|SIOffer$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "3") ? "show":"")">
+                                        <span class="menu-link @(Regex.IsMatch(ctrl, "SIOrder$|SIOffer$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "3") ? "active" : "")">
                                             <span class="menu-icon">
                                                 <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
                                                 <span class="svg-icon svg-icon-dark svg-icon-2">

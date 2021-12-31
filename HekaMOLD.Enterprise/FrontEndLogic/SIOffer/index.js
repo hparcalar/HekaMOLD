@@ -11,7 +11,8 @@ function ($scope, $http, Upload) {
 
     $scope.selectedDocx = null;
     $scope.selectedFirm = {};
-    $scope.selectedRow = { Id:0 };
+    $scope.selectedRow = { Id: 0 };
+    $scope.viewingRow = null;
 
     $scope.saveStatus = 0;
 
@@ -44,6 +45,10 @@ function ($scope, $http, Upload) {
         }
 
         return '';
+    }
+
+    $scope.redirectToOrder = function () {
+        window.location.href = HOST_URL + 'SIOrder?rid=' + $scope.modelObject.ItemOrderId;
     }
 
     // SELECTABLES
@@ -175,7 +180,7 @@ function ($scope, $http, Upload) {
                             }
                         });
 
-                        $scope.bindModel(resp.data.RecordId);
+                        $scope.bindModel($scope.modelObject.Id);
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
@@ -420,6 +425,9 @@ function ($scope, $http, Upload) {
                             row.UnitPrice = resp.data.UnitPrice;
 
                             $scope.calculateHeader();
+
+                            var gridInst = $('#dataList').dxDataGrid('instance');
+                            gridInst.refresh();
                         }
                     }).catch(function (err) { });
             } catch (e) {
@@ -496,8 +504,10 @@ function ($scope, $http, Upload) {
                         if (typeof values.CreditMonths != 'undefined') { obj.CreditMonths = values.CreditMonths; }
                         if (typeof values.CreditRate != 'undefined') { obj.CreditRate = values.CreditRate; }
 
-                        if (refreshProcessList)
+                        if (refreshProcessList) {
                             $scope.updateProcessListOfDetail(obj);
+                            obj.RoutePrice = 0;
+                        }
 
                         if (calculateRowAgain)
                             $scope.calculateRow(obj);
@@ -650,7 +660,7 @@ function ($scope, $http, Upload) {
                         },
                         {
                             name: 'routes', cssClass: 'fas fa-list', text: '', onClick: function (e) {
-                                $scope.showOfferProcess(e.row.data.ProcessList);
+                                $scope.showOfferProcess(e.row.data);
                             }
                         },
                     ]
@@ -678,6 +688,7 @@ function ($scope, $http, Upload) {
 
     // PROCESS LIST PRICING DIALOG
     $scope.showOfferProcess = function (detailObj) {
+        $scope.viewingRow = detailObj;
         $scope.$broadcast('loadProcessList', detailObj.ProcessList);
 
         $('#dial-offer-process').dialog({
@@ -692,6 +703,18 @@ function ($scope, $http, Upload) {
             closeText: "KAPAT"
         });
     }
+
+    $scope.$on('transferProcessList', function (e, d) {
+        try {
+            $scope.viewingRow.ProcessList = d;
+            $scope.viewingRow.RoutePrice = $scope.viewingRow.ProcessList.map(d => d.UnitPrice).reduce((n, x) => n + x);
+            $scope.calculateRow($scope.viewingRow);
+        } catch (e) {
+
+        }
+
+        $('#dial-offer-process').dialog('close');
+    });
 
     // INFORMATIONS & ATTACHMENTS
     $scope.showRecordInformation = function () {

@@ -176,16 +176,19 @@ namespace HekaMOLD.Business.UseCases
                         repoDetailRoute.Delete(exPrc);
                     }
 
-                    foreach (var nwPrc in item.ProcessList)
+                    if (item.ProcessList != null)
                     {
-                        var dbNewPricing = new ItemOfferDetailRoutePricing
+                        foreach (var nwPrc in item.ProcessList)
                         {
-                            ItemOfferDetail = dbDetail,
-                            RouteItemId = nwPrc.RouteItemId,
-                            UnitPrice = nwPrc.UnitPrice,
-                            TotalPrice = nwPrc.TotalPrice,
-                        };
-                        repoDetailRoute.Add(dbNewPricing);
+                            var dbNewPricing = new ItemOfferDetailRoutePricing
+                            {
+                                ItemOfferDetail = dbDetail,
+                                RouteItemId = nwPrc.RouteItemId,
+                                UnitPrice = nwPrc.UnitPrice,
+                                TotalPrice = nwPrc.TotalPrice,
+                            };
+                            repoDetailRoute.Add(dbNewPricing);
+                        }
                     }
                     #endregion
 
@@ -295,6 +298,7 @@ namespace HekaMOLD.Business.UseCases
                 model.OfferDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.OfferDate);
                 model.FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
                 model.FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
+                model.HasAnyOrder = dbObj.ItemOfferDetail.Any(m => m.ItemOrderDetail.Any());
 
                 model.Details =
                     repoDetails.Filter(d => d.ItemOfferId == dbObj.Id)
@@ -315,6 +319,7 @@ namespace HekaMOLD.Business.UseCases
                         ProfitRate = d.ProfitRate,
                         RoutePrice = d.RoutePrice,
                         QualityExplanation = d.QualityExplanation,
+                        RouteId = d.RouteId,
                         Quantity = d.Quantity,
                         SheetWeight = d.SheetWeight,
                         TotalPrice = d.TotalPrice,
@@ -337,6 +342,14 @@ namespace HekaMOLD.Business.UseCases
                                 TotalPrice = m.TotalPrice,
                             }).ToArray()
                     }).ToArray();
+
+                if (model.HasAnyOrder)
+                {
+                    var orderedOfferDetail = dbObj.ItemOfferDetail.FirstOrDefault(d => d.ItemOrderDetail.Any());
+                    var dbOrderDetail = orderedOfferDetail.ItemOrderDetail.FirstOrDefault();
+                    model.ItemOrderId = dbOrderDetail.ItemOrderId.Value;
+                    model.ItemOrderNo = dbOrderDetail.ItemOrder.OrderNo;
+                }
             }
 
             return model;
@@ -360,27 +373,37 @@ namespace HekaMOLD.Business.UseCases
 
                 int lineNumber = 1;
                 var offerDetails = dbOffer.ItemOfferDetail.ToArray();
-                foreach (var item in offerDetails)
+
+                using (OrdersBO bObj = new OrdersBO())
                 {
-                    if (item.ItemId == null)
-                        throw new Exception("Teklifi siparişe dönüştürebilmek için sistem üzerinde kayıtlı olan ürünlerden seçim yapmalısınız.");
-
-                    if (repoOrderDetail.Any(d => d.ItemOfferDetailId == item.Id))
-                        throw new Exception("Daha önce siparişe dönüştürülen bir teklif üzerinden yeniden transfer yapılamaz.");
-
-                    newOrderDetails.Add(new ItemOrderDetailModel
+                    foreach (var item in offerDetails)
                     {
-                        ItemOfferDetailId = item.Id,
-                        NewDetail=true,
-                        ItemId = item.ItemId,
-                        LineNumber = lineNumber,
-                        CreatedDate = DateTime.Now,
-                        UnitPrice = item.UnitPrice,
-                        SubTotal = item.TotalPrice,
-                        Quantity = item.Quantity,
-                    });
+                        if (item.ItemId == null)
+                            throw new Exception("Teklifi siparişe dönüştürebilmek için sistem üzerinde kayıtlı olan ürünlerden seçim yapmalısınız.");
 
-                    lineNumber++;
+                        if (repoOrderDetail.Any(d => d.ItemOfferDetailId == item.Id))
+                            throw new Exception("Daha önce siparişe dönüştürülen bir teklif üzerinden yeniden transfer yapılamaz.");
+
+                        var newDetail = new ItemOrderDetailModel
+                        {
+                            ItemOfferDetailId = item.Id,
+                            NewDetail = true,
+                            ItemId = item.ItemId,
+                            LineNumber = lineNumber,
+                            CreatedDate = DateTime.Now,
+                            UnitPrice = item.UnitPrice + (item.RoutePrice ?? 0),
+                            TaxIncluded = false,
+                            TaxRate = 18,
+                            SubTotal = item.TotalPrice,
+                            Quantity = item.Quantity,
+                        };
+
+                        newDetail = bObj.CalculateOrderDetail(newDetail);
+
+                        newOrderDetails.Add(newDetail);
+
+                        lineNumber++;
+                    }
                 }
 
                 using (OrdersBO bObj = new OrdersBO())
@@ -412,7 +435,7 @@ namespace HekaMOLD.Business.UseCases
         {
             decimal? subTotal = 0;
 
-            subTotal = model.UnitPrice * model.Quantity;
+            subTotal = (model.UnitPrice + (model.RoutePrice ?? 0)) * model.Quantity;
 
             model.TotalPrice = subTotal;
 

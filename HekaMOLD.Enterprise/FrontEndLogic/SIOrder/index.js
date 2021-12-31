@@ -40,6 +40,9 @@
 
         return '';
     }
+    $scope.redirectToOffer = function () {
+        window.location.href = HOST_URL + 'SIOffer?rid=' + $scope.modelObject.ItemOfferId;
+    }
 
     // SELECTABLES
     $scope.showFirmDialog = function () {

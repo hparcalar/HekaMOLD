@@ -12,7 +12,9 @@
                 update: function (key, values) {
                     var obj = $scope.offerProcessList.find(d => d.RouteItemId == key);
                     if (obj != null) {
-                        
+
+                        if (typeof values.UnitPrice != 'undefined' && values.UnitPrice != null)
+                            obj.UnitPrice = values.UnitPrice;
                     }
                 },
                 key: 'RouteItemId'

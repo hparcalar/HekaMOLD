@@ -23,10 +23,13 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         public Nullable<int> UpdatedUserId { get; set; }
 
         #region VISUAL ELEMENTS
+        public bool HasAnyOrder { get; set; } = false;
         public ItemOfferDetailModel[] Details { get; set; }
         public string OfferDateStr { get; set; }
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
+        public int ItemOrderId { get; set; }
+        public string ItemOrderNo { get; set; }
         #endregion
     }
 }

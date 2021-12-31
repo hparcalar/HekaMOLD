@@ -190,6 +190,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoRequestDetail = _unitOfWork.GetRepository<ItemRequestDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -290,6 +291,19 @@ namespace HekaMOLD.Business.UseCases
                         item.MapTo(dbDetail);
                         dbDetail.ItemOrder = dbObj;
 
+                        // ASSIGN ITEM'S MAIN UNIT TO THE DETAIL
+                        if (dbDetail.UnitId == null)
+                        {
+                            var dbItem = repoItem.Get(d => d.Id == dbDetail.ItemId);
+                            if (dbItem != null &&
+                                dbItem.ItemUnit.Any(m => m.IsMainUnit == true))
+                            {
+                                dbDetail.UnitId = dbItem.ItemUnit.Where(m => m.IsMainUnit == true)
+                                    .Select(m => m.UnitId).FirstOrDefault();
+                            }
+                        }
+
+                        // UPDATE ORDER DETAIL STATUS
                         if (dbDetail.OrderStatus == null || dbDetail.OrderStatus == (int)OrderStatusType.Approved)
                             dbDetail.OrderStatus = dbObj.OrderStatus;
                         if (dbObj.Id > 0)
@@ -500,6 +514,7 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemOrder>();
             var repoDetails = _unitOfWork.GetRepository<ItemOrderDetail>();
+            var repoOfferDetail = _unitOfWork.GetRepository<ItemOfferDetail>();
 
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
@@ -528,6 +543,7 @@ namespace HekaMOLD.Business.UseCases
                         GrossQuantity = d.GrossQuantity,
                         ItemOrderId = d.ItemOrderId,
                         ItemRequestDetailId = d.ItemRequestDetailId,
+                        ItemOfferDetailId = d.ItemOfferDetailId,
                         LineNumber = d.LineNumber,
                         NetQuantity = d.NetQuantity,
                         NewDetail = false,
@@ -547,6 +563,17 @@ namespace HekaMOLD.Business.UseCases
                         UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
                         UnitName = d.UnitType != null ? d.UnitType.UnitName : "",
                     }).ToArray();
+
+                // ASSIGN OFFER INFORMATION TO THE HEADER
+                if (model.Details.Any(d => d.ItemOfferDetailId > 0))
+                {
+                    var offerDetailId = model.Details.Where(d => d.ItemOfferDetailId > 0)
+                        .Select(d => d.ItemOfferDetailId).FirstOrDefault();
+
+                    var dbOfferDetail = repoOfferDetail.Get(d => d.Id == offerDetailId);
+                    model.ItemOfferId = dbOfferDetail.ItemOfferId.Value;
+                    model.ItemOfferNo = dbOfferDetail.ItemOffer.OfferNo;
+                }
             }
 
             return model;

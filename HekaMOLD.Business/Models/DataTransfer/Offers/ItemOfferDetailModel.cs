@@ -26,6 +26,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         public Nullable<decimal> ProfitRate { get; set; }
         public Nullable<int> CreditMonths { get; set; }
         public Nullable<int> CreditRate { get; set; }
+        public Nullable<int> RouteId { get; set; }
 
         #region VISUAL ELEMENTS
         public ItemOfferDetailRoutePricingModel[] ProcessList { get; set; }
