@@ -97,7 +97,7 @@ namespace HekaMOLD.Business.UseCases
                 if (dbTemplate == null && reportId != -1)
                     throw new Exception("Rapor şablonu bulunamadı.");
 
-                string templateName = dbTemplate != null ? dbTemplate.FileName : "ProductLabel.rdlc";
+                string templateName = dbTemplate != null ? dbTemplate.FileName : "ItemLabel.rdlc";
 
                 PrintReportTemplate<T>(dataModel, templateName, dbPrinter.PageWidth ?? 0, 
                     dbPrinter.PageHeight ?? 0, dbPrinter.AccessPath);
