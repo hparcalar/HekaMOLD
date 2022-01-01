@@ -774,7 +774,7 @@ namespace HekaMOLD.Business.UseCases
         }
 
         #region WAREHOUSE COUNTING BUSINESS
-        public BusinessResult AddBarcodeToCounting(string barcode, int warehouseId)
+        public BusinessResult AddBarcodeToCounting(string barcode, int warehouseId, int decreaseCount=0)
         {
             BusinessResult result = new BusinessResult();
 
@@ -799,6 +799,10 @@ namespace HekaMOLD.Business.UseCases
 
                 decimal quantity = Decimal.Parse(barcodeParts[1], System.Globalization.NumberStyles.Currency,
                     System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                quantity -= decreaseCount;
+                if (quantity < 0)
+                    quantity = 0;
+
                 //Convert.ToDecimal(Convert.ToSingle( barcodeParts[1].Replace(",",".") ));
 
                 // SAVE BARCODE

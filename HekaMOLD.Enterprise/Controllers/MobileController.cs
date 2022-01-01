@@ -646,13 +646,20 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
         [HttpPost]
-        public JsonResult AddCountingBarcode(string barcode, int warehouseId)
+        public JsonResult AddCountingBarcode(string barcode, int warehouseId, int readCount=1, int decreaseCount=0)
         {
             BusinessResult result = null;
 
-            using (ReceiptBO bObj = new ReceiptBO())
+            for (int i = 0; i < readCount; i++)
             {
-                result = bObj.AddBarcodeToCounting(barcode, warehouseId);
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    result = bObj.AddBarcodeToCounting(
+                        barcode, 
+                        warehouseId,
+                        i == (readCount - 1) ? decreaseCount : 0
+                        );
+                }
             }
 
             return Json(result);

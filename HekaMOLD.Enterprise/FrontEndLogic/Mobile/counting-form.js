@@ -3,6 +3,7 @@
         Id: 0,
         DocumentNo: '', FirmId: 0,
         FirmCode: '', FirmName: '',
+        ReadCount: 1, DecreaseCount:0,
         ShowOnlyOk: false,
         Details: []
     };
@@ -35,7 +36,12 @@
     $scope.processBarcodeResult = function (barcode) {
         $scope.isBarcodeRead = true;
         console.log('prc');
-        $http.post(HOST_URL + 'Mobile/AddCountingBarcode', { barcode: barcode, warehouseId: $scope.staticWarehouseId }, 'json')
+        $http.post(HOST_URL + 'Mobile/AddCountingBarcode', {
+            barcode: barcode,
+            warehouseId: $scope.staticWarehouseId,
+            readCount: $scope.modelObject.ReadCount,
+            decreaseCount: $scope.modelObject.DecreaseCount,
+        }, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -44,6 +50,10 @@
                         toastr.success('Barkod kaydedildi.', 'Bilgilendirme');
 
                         $scope.bindModel();
+
+                        // RESET PARAMETERS
+                        $scope.modelObject.ReadCount = 1;
+                        $scope.modelObject.DecreaseCount = 0;
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
