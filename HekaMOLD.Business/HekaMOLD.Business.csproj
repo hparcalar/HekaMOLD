@@ -143,6 +143,7 @@
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserRoleSubscriptionModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\YarnRecipeMixModel.cs" />
     <Compile Include="Models\DataTransfer\Core\YarnRecipeModel.cs" />
     <Compile Include="Models\DataTransfer\EmployeeStats\UserWorkOrderHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />

@@ -3522,6 +3522,20 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                #region GET YARNRECIPEMIX LIST
+                List<YarnRecipeMixModel> yarnRecipeMixList = new List<YarnRecipeMixModel>();
+                dbObj.YarnRecipeMix.ToList().ForEach(d =>
+                {
+                    YarnRecipeMixModel yarnRecipeMixModel = new YarnRecipeMixModel();
+                    yarnRecipeMixModel.YarnBreedCode = d.YarnBreed != null ? d.YarnBreed.YarnBreedCode : "";
+                    yarnRecipeMixModel.YarnBreedName = d.YarnBreed != null ? d.YarnBreed.YarnBreedName : "";
+                    yarnRecipeMixModel.Percentage = d.Percentage != null ? d.Percentage : 0;
+
+                    d.MapTo(yarnRecipeMixModel);
+                    yarnRecipeMixList.Add(yarnRecipeMixModel);
+                });
+                model.YarnRecipeMixes = yarnRecipeMixList.ToArray();
+                #endregion
             }
 
             return model;
@@ -3538,6 +3552,7 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("İplik adı girilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<YarnRecipe>();
+                var repoYarnRecipeMixes = _unitOfWork.GetRepository<YarnRecipeMix>();
 
                 if (repo.Any(d => (d.YarnRecipeCode == model.YarnRecipeCode || d.YarnRecipeName == model.YarnRecipeName)
                     && d.Id != model.Id))
@@ -3561,6 +3576,36 @@ namespace HekaMOLD.Business.UseCases
 
                 dbObj.UpdatedDate = DateTime.Now;
 
+                #region SAVE KNITYARN
+                if (model.YarnRecipeMixes == null)
+                    model.YarnRecipeMixes = new YarnRecipeMixModel[0];
+
+                var toBeRemovedYarnRecipeMixes = dbObj.YarnRecipeMix
+                    .Where(d => !model.YarnRecipeMixes.Where(m => m.NewDetail == false).Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedYarnRecipeMixes)
+                {
+                    repoYarnRecipeMixes.Delete(item);
+                }
+
+                foreach (var item in model.YarnRecipeMixes)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbYarnRecipeMix = new YarnRecipeMix();
+                        item.MapTo(dbYarnRecipeMix);
+                        dbYarnRecipeMix.YarnRecipe = dbObj;
+                        repoYarnRecipeMixes.Add(dbYarnRecipeMix);
+                    }
+                    else if (!toBeRemovedYarnRecipeMixes.Any(d => d.Id == item.Id))
+                    {
+                        var dbYarnRecipeMix = repoYarnRecipeMixes.GetById(item.Id);
+                        item.MapTo(dbYarnRecipeMix);
+                        dbYarnRecipeMix.YarnRecipe = dbObj;
+                    }
+                }
+
+                #endregion
                 _unitOfWork.SaveChanges();
 
                 result.Result = true;

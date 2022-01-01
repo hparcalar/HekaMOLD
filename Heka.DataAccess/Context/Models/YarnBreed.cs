@@ -9,6 +9,7 @@ namespace Heka.DataAccess.Context.Models
         public YarnBreed()
         {
             this.YarnRecipe = new HashSet<YarnRecipe>();
+            this.YarnRecipeMix = new HashSet<YarnRecipeMix>();
         }
         public int Id { get; set; }
         public string YarnBreedCode { get; set; }
@@ -23,6 +24,9 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("YarnBreed")]
         public virtual ICollection<YarnRecipe> YarnRecipe { get; set; }
+
+        [InverseProperty("YarnBreed")]
+        public virtual ICollection<YarnRecipeMix> YarnRecipeMix { get; set; }
     }
 }
 

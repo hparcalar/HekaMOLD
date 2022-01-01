@@ -1,19 +1,27 @@
 ﻿app.controller('yarnRecipeCtrl', function ($scope, $http) {
-    $scope.modelObject = {};
+    $scope.modelObject = { Id: 0, YarnRecipeMixes: [] };
 
     $scope.saveStatus = 0;
 
     $scope.selectedYarnBreed = {};
     $scope.yarnBreedList = [];
 
-    $scope.selectedFirm = { };
+    $scope.selectedFirm = {};
     $scope.firmList = [];
 
     $scope.selectedYarnColour = {};
     $scope.yarnColourList = [];
 
+    $scope.selectedCenterType = {};
+    $scope.centerTypeList = [{ Id: 1, Text: 'Kuvvetli Punta' },
+    { Id: 2, Text: 'Seyrek Punta' }];
+
+
     $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0 };
+        $scope.modelObject = { Id: 0, YarnRecipeMixes: [] };
+        $scope.selectedYarnBreed = {};
+        $scope.selectedFirm = {};
+        $scope.selectedCenterType = {};
     }
 
     // GET SELECTABLE DATA
@@ -26,13 +34,6 @@
                         $scope.firmList = resp.data.Firms;
                         $scope.yarnColourList = resp.data.Colours;
                         $scope.yarnBreedList = resp.data.YarnBreed;
-
-                        //var emptyMcObj = { Id: 0, MachineName: '-- Seçiniz --' };
-                        //$scope.machineList.splice(0, 0, emptyMcObj);
-                        //$scope.selectedMachine = emptyMcObj;
-                        //$scope.firmList = resp.data.Firms;
-                        //$scope.unitList = resp.data.Units;
-
                         resolve(resp.data);
                     }
                 }).catch(function (err) { });
@@ -79,6 +80,11 @@
 
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
+        if (typeof $scope.selectedCenterType != 'undefined' && $scope.selectedCenterType != null) {
+            $scope.modelObject.CenterType = $scope.selectedCenterType.Id;
+        }
+        else
+            $scope.modelObject.CenterType = null;
 
         if (typeof $scope.selectedFirm != 'undefined' && $scope.selectedFirm != null) {
             $scope.modelObject.FirmId = $scope.selectedFirm.Id;
@@ -98,7 +104,7 @@
         else
             $scope.modelObject.YarnBreedId = null;
 
-    
+
 
         $http.post(HOST_URL + 'YarnRecipe/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -114,6 +120,44 @@
                         toastr.error(resp.data.ErrorMessage, 'Hata');
                 }
             }).catch(function (err) { });
+    }
+    $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
+        return $("<div>").dxDropDownBox({
+            dropDownOptions: { width: 700 },
+            dataSource: $scope.yarnBreedList,
+            value: cellInfo.value,
+
+            valueExpr: "Id",
+            displayExpr: "YarnRecipeCode",
+            contentTemplate: function (e) {
+                return $("<div>").dxDataGrid({
+                    dataSource: $scope.yarnBreedList,
+                    remoteOperations: true,
+                    columns: [
+                        { dataField: 'YarnBreedCode', caption: 'Cins Kodu' },
+                        { dataField: 'YarnBreedName', caption: 'Cins Adı' }
+                    ],
+                    hoverStateEnabled: true,
+                    keyExpr: "Id",
+                    scrolling: { mode: "virtual" },
+                    height: 250,
+                    filterRow: { visible: true },
+                    selection: { mode: "single" },
+                    selectedRowKeys: [cellInfo.value],
+                    focusedRowEnabled: true,
+                    focusedRowKey: cellInfo.value,
+                    onSelectionChanged: function (selectionChangedArgs) {
+                        e.component.option("value", selectionChangedArgs.selectedRowKeys[0]);
+
+                        cellInfo.setValue(selectionChangedArgs.selectedRowKeys[0]);
+
+                        if (selectionChangedArgs.selectedRowKeys.length > 0) {
+                            e.component.close();
+                        }
+                    }
+                });
+            },
+        });
     }
 
     $scope.bindModel = function (id) {
@@ -142,51 +186,63 @@
                     else {
                         $scope.selectedYarnBreed = {};
                     }
-                    $scope.bindAuthorList();
+                    // BIND EXTERNAL CENTER TYPE
+                    if ($scope.modelObject.CenterType > 0) {
+                        $scope.selectedCenterType = $scope.centerTypeList.find(d => d.Id == $scope.modelObject.CenterType);
+                    }
+                    else {
+                        $scope.selectedCenterType = {};
+                    }
+                    $scope.bindMixList();
                 }
             }).catch(function (err) { });
     }
 
-    $scope.bindAuthorList = function () {
-        $('#authorList').dxDataGrid({
+    $scope.bindMixList = function () {
+        $('#mixList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $scope.modelObject.Authors;
+                    return $scope.modelObject.YarnRecipeMixes;
                 },
                 update: function (key, values) {
-                    var obj = $scope.modelObject.Authors.find(d => d.Id == key);
+                    var obj = $scope.modelObject.YarnRecipeMixes.find(d => d.Id == key);
                     if (obj != null) {
-                        if (typeof values.AuthorName != 'undefined') { obj.AuthorName = values.AuthorName; }
-                        if (typeof values.Title != 'undefined') { obj.Title = values.Title; }
-                        if (typeof values.Email != 'undefined') { obj.Email = values.Email; }
-                        if (typeof values.Phone != 'undefined') { obj.Phone = values.Phone; }
-                        if (typeof values.SendMailForPurchaseOrder != 'undefined') { obj.SendMailForPurchaseOrder = values.SendMailForPurchaseOrder; }
+                        if (typeof values.YarnBreedId != 'undefined') {
+                            var yarnBreedObj = $scope.yarnBreedList.find(d => d.Id == values.YarnBreedId);
+                            obj.YarnBreedId = yarnBreedObj.Id;
+                            obj.YarnBreedCode = yarnBreedObj.YarnBreedCode;
+                            obj.YarnBreedName = yarnBreedObj.YarnBreedName
+
+                        }
+
+                        if (typeof values.Percentage != 'undefined') { obj.Percentage = values.Percentage; }
+
                     }
                 },
                 remove: function (key) {
-                    var obj = $scope.modelObject.Authors.find(d => d.Id == key);
+                    var obj = $scope.modelObject.YarnRecipeMixes.find(d => d.Id == key);
                     if (obj != null) {
-                        $scope.modelObject.Authors.splice($scope.modelObject.Authors.indexOf(obj), 1);
+                        $scope.modelObject.YarnRecipeMixes.splice($scope.modelObject.YarnRecipeMixes.indexOf(obj), 1);
                     }
                 },
                 insert: function (values) {
                     var newId = 1;
-                    if ($scope.modelObject.Authors.length > 0) {
-                        newId = $scope.modelObject.Authors.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                    if ($scope.modelObject.YarnRecipeMixes.length > 0) {
+                        newId = $scope.modelObject.YarnRecipeMixes.map(d => d.Id).reduce((max, n) => n > max ? n : max)
                         newId++;
                     }
+                    var itemObj = $scope.yarnBreedList.find(d => d.Id == values.YarnBreedId);
 
                     var newObj = {
                         Id: newId,
-                        AuthorName: values.AuthorName,
-                        Title: values.Title,
-                        Email: values.Email,
-                        Phone: values.Phone,
-                        SendMailForPurchaseOrder: values.SendMailForPurchaseOrder,
+                        YarnBreedId: itemObj.Id,
+                        YarnBreedCode: itemObj.YarnBreedCode,
+                        YarnBreedName: itemObj.YarnBreedName,
+                        Percentage: values.Percentage,
                         NewDetail: true
                     };
 
-                    $scope.modelObject.Authors.push(newObj);
+                    $scope.modelObject.YarnRecipeMixes.push(newObj);
                 },
                 key: 'Id'
             },
@@ -215,11 +271,26 @@
                 mode: 'cell'
             },
             columns: [
-                { dataField: 'AuthorName', caption: 'Yetkili', validationRules: [{ type: "required" }] },
-                { dataField: 'Title', caption: 'Ünvan' },
-                { dataField: 'Email', caption: 'E-Posta' },
-                { dataField: 'Phone', caption: 'Telefon' },
-                { dataField: 'SendMailForPurchaseOrder', caption: 'Mail Gönder', dataType: 'boolean' },
+                {
+                    dataField: 'YarnBreedId', caption: 'Cins',
+                    lookup: {
+                        dataSource: $scope.yarnBreedList,
+                        valueExpr: "Id",
+                        displayExpr: "YarnBreedCode"
+                    },
+                    allowSorting: false,
+                    validationRules: [{ type: "required" }],
+                    editCellTemplate: $scope.dropDownBoxEditorTemplate,
+                    cellTemplate: function (container, options) {
+                        if (typeof options.row.data.YarnBreedCode != 'undefined'
+                            && options.row.data.YarnBreedCode != null && options.row.data.YarnBreedCode.length > 0)
+                            container.text(options.row.data.YarnBreedCode);
+                        else
+                            container.text(options.displayValue);
+                    }
+                },
+                { dataField: 'YarnBreedName', caption: 'Cins Ad', allowEditing: false },
+                { dataField: 'Percentage', caption: '% oran' }
             ]
         });
     }

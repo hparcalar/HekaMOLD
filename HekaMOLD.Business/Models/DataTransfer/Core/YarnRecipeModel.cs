@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Base;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 
 namespace HekaMOLD.Business.Models.DataTransfer.Core
 {
@@ -21,12 +22,16 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? YarnLot { get; set; }
         public int? YarnColourId { get; set; }
         public int? FirmId { get; set; }
+
+        public YarnRecipeMixModel[] YarnRecipeMixes { get; set; }
+
+        #region VISUAL ELEMENTS
         public string FirmName { get; set; }
         public string YarnColourName { get; set; }
         public string YarnBreedName { get; set; }
         public string YarnRecipeTypeStr { get; set; }
         public string CenterTypeStr { get; set; }
-
+        #endregion
 
     }
 }
