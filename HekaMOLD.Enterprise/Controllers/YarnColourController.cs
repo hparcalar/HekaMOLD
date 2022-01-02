@@ -1,6 +1,7 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Business.UseCases.Core;
 using System;
 using System.Web.Mvc;
 
@@ -121,7 +122,19 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+        [HttpGet]
+        public JsonResult GetYarnColorCode(string strParam)
+        {
+           string colorCode = "";
 
+            using (RequestBO bObj = new RequestBO())
+            {
+                colorCode = bObj.GetYarnColorCode(strParam);
+            }
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(colorCode), ColorCode = colorCode }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
 
     }
 }

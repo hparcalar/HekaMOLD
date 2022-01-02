@@ -3298,7 +3298,7 @@ namespace HekaMOLD.Business.UseCases
 
             try
             {
-                if (string.IsNullOrEmpty(model.YarnColourCode))
+                if (string.IsNullOrEmpty(Convert.ToString (model.YarnColourCode)))
                     throw new Exception("Kod girilmelidir.");
                 if (string.IsNullOrEmpty(model.YarnColourName))
                     throw new Exception("Ad girilmelidir.");

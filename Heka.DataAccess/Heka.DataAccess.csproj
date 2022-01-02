@@ -267,6 +267,10 @@
     <Compile Include="Migrations\202112312016194_YarnRecipeMixModeladded.designer.cs">
       <DependentUpon>202112312016194_YarnRecipeMixModeladded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201012056285_updateYarncolourModel.cs" />
+    <Compile Include="Migrations\202201012056285_updateYarncolourModel.designer.cs">
+      <DependentUpon>202201012056285_updateYarncolourModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -364,6 +368,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112312016194_YarnRecipeMixModeladded.resx">
       <DependentUpon>202112312016194_YarnRecipeMixModeladded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201012056285_updateYarncolourModel.resx">
+      <DependentUpon>202201012056285_updateYarncolourModel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

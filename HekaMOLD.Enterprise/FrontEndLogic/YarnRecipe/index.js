@@ -8,20 +8,18 @@
 
     $scope.selectedFirm = {};
     $scope.firmList = [];
-
     $scope.selectedYarnColour = {};
     $scope.yarnColourList = [];
-
     $scope.selectedCenterType = {};
     $scope.centerTypeList = [{ Id: 1, Text: 'Kuvvetli Punta' },
     { Id: 2, Text: 'Seyrek Punta' }];
-
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, YarnRecipeMixes: [] };
         $scope.selectedYarnBreed = {};
         $scope.selectedFirm = {};
         $scope.selectedCenterType = {};
+        $scope.selectedYarnColour = {};
     }
 
     // GET SELECTABLE DATA
@@ -77,7 +75,31 @@
             }
         });
     }
+    $scope.GenerateCode = function () {
+        var sBreedCode = $scope.selectedYarnBreed.YarnBreedCode;
+        var nDenier = $scope.modelObject.Denier;
+        var nColourCode = $scope.selectedYarnColour.YarnColourCode;
+        var sFirmCode = $scope.selectedFirm.FirmCode;
 
+        if (sBreedCode == null || sBreedCode == 'undefined') {
+            toastr.error("Lütfen İplik Cinsi Seçiniz", 'Hata');
+            return;
+        }
+        if (nDenier == null || nDenier == 'undefined') {
+            toastr.error("Lütfen İplik Denyesi Giriniz", 'Hata');
+            return;
+        }
+        if (nColourCode == null || nColourCode == 'undefined') {
+            toastr.error("Lütfen İplik Renk Kodu Seçiniz", 'Hata');
+            return;
+        }
+        if (sFirmCode == null || sFirmCode == 'undefined') {
+            toastr.error("Lütfen Firma Kodu Seçiniz", 'Hata');
+            return;
+        }
+
+        $scope.modelObject.YarnRecipeCode = sBreedCode + "-" + ("0000" + nDenier).slice(-4) + "-" + nColourCode + "-" + sFirmCode;
+    }
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
         if (typeof $scope.selectedCenterType != 'undefined' && $scope.selectedCenterType != null) {
@@ -272,7 +294,7 @@
             },
             columns: [
                 {
-                    dataField: 'YarnBreedId', caption: 'Cins',
+                    dataField: 'YarnBreedId', caption: 'Cins Kod',
                     lookup: {
                         dataSource: $scope.yarnBreedList,
                         valueExpr: "Id",

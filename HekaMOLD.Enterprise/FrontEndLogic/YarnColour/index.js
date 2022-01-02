@@ -8,6 +8,8 @@
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
+        $scope.selectedGroup = {};
+
     }
 
     // GET SELECTABLE DATA
@@ -68,7 +70,6 @@
 
         if (typeof $scope.selectedGroup != 'undefined' && $scope.selectedGroup != null) {
             $scope.modelObject.YarnColourGroupId = $scope.selectedGroup.Id;
-            alert("asd:" + $scope.modelObject.YarnColourGroupId);
         }
         else
             $scope.modelObject.YarnColourGroupId = null;
@@ -88,32 +89,22 @@
                 }
             }).catch(function (err) { });
     }
-    // YARCOLOUR FUNCTIONS
-    $scope.updateCode = function () {
 
-        $scope.getNextReceiptNo().then(function (rNo) {
-            $scope.modelObject.YarnColourCode = rNo;
-        });
-        $scope.modelObject.YarnColourCode = $scope.selectedGroup.YarnColourGroupCode;
-        alert("asd:" + $scope.selectedGroup.YarnColourGroupCode);
+    $scope.getNextYarnColourNo = function (strCode) {
+        $http.get(HOST_URL + 'YarnColour/GetYarnColorCode?strParam=' + $scope.selectedGroup.YarnColourGroupCode, {}, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
 
-    };
-    $scope.getNextYarnColourNo = function () {
-        var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'YarnColour/GetNextYarnColourNo', {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        if (resp.data.Result) {
-                            resolve(resp.data.ReceiptNo);
-                        }
-                        else {
-                            toastr.error('Sıradaki sipariş numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
-                            resolve('');
-                        }
+                    if (resp.data.Result) {
+                        $scope.modelObject.YarnColourCode = resp.data.ColorCode;
                     }
-                }).catch(function (err) { });
-        });
-        return prms;
+                    else {
+                        toastr.error('Sıradaki Renk Kodu üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+
+                    }
+                 
+                }
+            }).catch(function (err) { });
     }
 
     $scope.bindModel = function (id) {
@@ -143,11 +134,6 @@
             $scope.bindModel(PRM_ID);
         else {
             $scope.bindModel(0);
-            //$scope.getNextReceiptNo().then(function (rNo) {
-            //    alert(rNo);
-            //    $scope.modelObject.YarnColourCode = rNo;
-           
-            //});
         }
     });
 });

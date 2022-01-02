@@ -14,7 +14,7 @@ namespace Heka.DataAccess.Context.Models
             this.YarnRecipe = new HashSet<YarnRecipe>();   
         }
         public int Id { get; set; }
-        public string YarnColourCode { get; set; }
+        public int YarnColourCode { get; set; }
         public string YarnColourName { get; set; }
 
         [ForeignKey("YarnColourGroup")]

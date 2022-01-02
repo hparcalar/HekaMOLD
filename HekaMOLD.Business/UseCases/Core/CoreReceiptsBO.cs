@@ -104,7 +104,35 @@ namespace HekaMOLD.Business.UseCases.Core
 
             return default;
         }
-        
+        public string GetYarnColorCode(string param)
+        {
+            //1000-2000
+            string[] Request = param.Split('-');
+
+            var firstValue = Convert.ToInt32(Request[0]);
+            var lastValue = Convert.ToInt32(Request[1]);
+
+            try
+            {
+                List<YarnColour> tmpList = new List<YarnColour>();
+                var repo = _unitOfWork.GetRepository<YarnColour>();
+                tmpList = repo.Filter(x => x.YarnColourCode > firstValue && x.YarnColourCode < lastValue)
+                    .OrderByDescending(d => d.YarnColourCode).ToList();
+                var lastReceiptNo = 0;
+                if (tmpList.Count==0)
+                    lastReceiptNo = firstValue + 1;
+                else
+                {
+                    lastReceiptNo = tmpList.Max(d => d.YarnColourCode);
+                    lastReceiptNo += 1;
+                }  
+                return lastReceiptNo.ToString();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }         
+        }
         public BusinessResult UpdateConsume(int? consumedId, int? consumerId, decimal usedQuantity)
         {
             BusinessResult result = new BusinessResult();
