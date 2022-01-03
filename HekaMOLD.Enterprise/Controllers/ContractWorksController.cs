@@ -86,6 +86,21 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResp;
         }
 
+        [HttpGet]
+        public JsonResult GetContractDeliveries(int workOrderDetailId)
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                data = bObj.GetContractDeliveries(workOrderDetailId);
+            }
+
+            var jsonResp = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResp.MaxJsonLength = int.MaxValue;
+            return jsonResp;
+        }
+
         [HttpPost]
         public JsonResult CreateDelivery(ContractDeliveryModel model)
         {
@@ -94,6 +109,49 @@ namespace HekaMOLD.Enterprise.Controllers
             using (ContractWorksBO bObj = new ContractWorksBO())
             {
                 result = bObj.CreateDelivery(model);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteDelivery(int rid)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                var receiptId = bObj.GetReceiptIdOfDetail(rid);
+
+                result = bObj.DeleteItemReceipt(receiptId);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteEntry(int rid)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                var receiptId = bObj.GetReceiptIdOfDetail(rid);
+
+                result = bObj.DeleteItemReceipt(rid);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
+        public JsonResult CreateEntry(ContractDeliveryModel model)
+        {
+            BusinessResult result = null;
+
+            using (ContractWorksBO bObj = new ContractWorksBO())
+            {
+                result = bObj.CreateEntry(model);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });

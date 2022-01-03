@@ -3947,6 +3947,7 @@
     <Content Include="assets\plugins\global\plugins.bundle.js" />
     <Content Include="Components\Controllers\delivery-plan-list.js" />
     <Content Include="Components\Controllers\edit-plan.js" />
+    <Content Include="Components\Controllers\from-contract.js" />
     <Content Include="Components\Controllers\machine-incidents.js" />
     <Content Include="Components\Controllers\machine-postures.js" />
     <Content Include="Components\Controllers\open-so-list.js" />
@@ -3964,9 +3965,11 @@
     <Content Include="Components\Controllers\related-request-list.js" />
     <Content Include="Components\Controllers\report-template-list.js" />
     <Content Include="Components\Controllers\shift-targets.js" />
+    <Content Include="Components\Controllers\to-contract.js" />
     <Content Include="Components\Controllers\trial-work-form.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
+    <Content Include="Components\Views\FromContract.html" />
     <Content Include="Components\Views\MachineIncidents.html" />
     <Content Include="Components\Views\MachinePostures.html" />
     <Content Include="Components\Views\OpenSoList.html" />
@@ -3984,6 +3987,7 @@
     <Content Include="Components\Views\ProductionHistoryList.html" />
     <Content Include="Components\Views\ReportTemplateList.html" />
     <Content Include="Components\Views\ShiftTargets.html" />
+    <Content Include="Components\Views\ToContract.html" />
     <Content Include="Components\Views\TrialWorkForm.html" />
     <Content Include="Components\VisualMechanics\camera-manager.js" />
     <Content Include="Content\bootstrap-theme.css" />

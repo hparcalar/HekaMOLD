@@ -10,6 +10,7 @@ namespace HekaMOLD.Business.Models.Virtual
     {
         public int? FirmId { get; set; }
         public int? EntryReceiptDetailId { get; set; }
+        public int? DeliveryReceiptDetailId { get; set; }
         public decimal? Quantity { get; set; }
         public int? WorkOrderDetailId { get; set; }
         public string DeliveryDate { get; set; }

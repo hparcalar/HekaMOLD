@@ -42,6 +42,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         #endregion
 
         #region VISUAL ELEMENTS
+        public string ReceiptNo { get; set; }
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
         public string UnitCode { get; set; }

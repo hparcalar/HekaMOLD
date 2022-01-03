@@ -208,58 +208,11 @@
                 load: function () {
                     return $scope.entryList;
                 },
-                key: 'Id'
-            },
-            showColumnLines: true,
-            showRowLines: true,
-            rowAlternationEnabled: true,
-            allowColumnResizing: true,
-            wordWrapEnabled: true,
-            focusedRowEnabled: false,
-            showBorders: true,
-            filterRow: {
-                visible: true
-            },
-            headerFilter: {
-                visible: true
-            },
-            groupPanel: {
-                visible: false
-            },
-            scrolling: {
-                mode: "virtual"
-            },
-            height: 500,
-            editing: {
-                allowUpdating: false,
-                allowDeleting: false,
-                allowAdding: false,
-                mode: 'cell'
-            },
-            columns: [
-                { dataField: 'FlowDateStr', caption: 'Çıkış Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'ItemName', caption: 'Stok' },
-                { dataField: 'FirmName', caption: 'Firma' },
-                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                //{
-                //    type: "buttons",
-                //    buttons: [
-                //        {
-                //            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: 'Seç', onClick: function (e) {
-                //                var dataGrid = $("#dataList").dxDataGrid("instance");
-                //                $scope.selectedWorkOrder = e.row.data;
-                //                $scope.bindMovements();
-                //            }
-                //        }
-                //    ]
-                //}
-            ],
-        });
-
-        $('#deliveryList').dxDataGrid({
-            dataSource: {
-                load: function () {
-                    return $scope.deliveryList;
+                remove: function (key) {
+                    var obj = $scope.entryList.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.deleteEntryMovement(obj.ReceivedDetailId);
+                    }
                 },
                 key: 'Id'
             },
@@ -285,7 +238,7 @@
             height: 500,
             editing: {
                 allowUpdating: false,
-                allowDeleting: false,
+                allowDeleting: true,
                 allowAdding: false,
                 mode: 'cell'
             },
@@ -298,10 +251,65 @@
                 //    type: "buttons",
                 //    buttons: [
                 //        {
-                //            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: 'Seç', onClick: function (e) {
-                //                var dataGrid = $("#dataList").dxDataGrid("instance");
-                //                $scope.selectedWorkOrder = e.row.data;
-                //                $scope.bindMovements();
+                //            name: 'preview', cssClass: 'fas fa-trash', text: '', onClick: function (e) {
+                //                console.log(e.row.data);
+                //            }
+                //        }
+                //    ]
+                //}
+            ],
+        });
+
+        $('#deliveryList').dxDataGrid({
+            dataSource: {
+                load: function () {
+                    return $scope.deliveryList;
+                },
+                remove: function (key) {
+                    var obj = $scope.deliveryList.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.deleteDeliveryMovement(obj.DeliveredDetailId);
+                    }
+                },
+                key: 'Id'
+            },
+            showColumnLines: true,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            focusedRowEnabled: false,
+            showBorders: true,
+            filterRow: {
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+            groupPanel: {
+                visible: false
+            },
+            scrolling: {
+                mode: "virtual"
+            },
+            height: 500,
+            editing: {
+                allowUpdating: false,
+                allowDeleting: true,
+                allowAdding: false,
+                mode: 'cell'
+            },
+            columns: [
+                { dataField: 'FlowDateStr', caption: 'Çıkış Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'ItemName', caption: 'Stok' },
+                { dataField: 'FirmName', caption: 'Firma' },
+                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{
+                //    type: "buttons",
+                //    buttons: [
+                //        {
+                //            name: 'preview', cssClass: 'fas fa-trash', text: '', onClick: function (e) {
+                //                console.log(e.row.data);
                 //            }
                 //        }
                 //    ]
@@ -310,10 +318,63 @@
         });
     }
 
+    $scope.deleteDeliveryMovement = function (receiptId) {
+        try {
+            $http.post(HOST_URL + 'ContractWorks/DeleteDelivery', { rid: receiptId }, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Status == 1) {
+                            toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                            $scope.bindMovements();
+                        }
+                        else
+                            toastr.error(resp.data.ErrorMessage, 'Hata');
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
+    $scope.deleteEntryMovement = function (receiptId) {
+        try {
+            $http.post(HOST_URL + 'ContractWorks/DeleteEntry', { rid: receiptId }, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Status == 1) {
+                            toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                            $scope.bindMovements();
+                        }
+                        else
+                            toastr.error(resp.data.ErrorMessage, 'Hata');
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
     $scope.showToContract = function () {
         $scope.$broadcast('loadToContract', 0);
 
         $('#dial-entrylist').dialog({
+            width: window.innerWidth * 0.8,
+            height: window.innerHeight * 0.8,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.showFromContract = function () {
+        $scope.$broadcast('loadFromContract', $scope.selectedWorkOrder.Id);
+
+        $('#dial-from-contract').dialog({
             width: window.innerWidth * 0.8,
             height: window.innerHeight * 0.8,
             hide: true,
@@ -349,6 +410,32 @@
             }).catch(function (err) { });
 
         $('#dial-entrylist').dialog('close');
+    });
+
+    $scope.$on('endFromContract', function (e, d) {
+        $http.post(HOST_URL + 'ContractWorks/CreateEntry',
+            {
+                EntryReceiptDetailId: d.ReceiptDetailId,
+                Quantity: d.Quantity,
+                DeliveryDate: d.DeliveryDate,
+                DocumentNo: d.DocumentNo,
+                WorkOrderDetailId: $scope.selectedWorkOrder.Id,
+            }, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.saveStatus = 0;
+
+                    if (resp.data.Status == 1) {
+                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                        $scope.bindModel();
+                        $scope.bindMovements();
+                    }
+                    else
+                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                }
+            }).catch(function (err) { });
+
+        $('#dial-from-contract').dialog('close');
     });
 
     // ON LOAD EVENTS

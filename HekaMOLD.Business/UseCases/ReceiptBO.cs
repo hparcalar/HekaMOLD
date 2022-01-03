@@ -66,6 +66,13 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
+        public int GetReceiptIdOfDetail(int receiptDetailId)
+        {
+            var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+            var dbDetail = repo.Get(d => d.Id == receiptDetailId);
+            return dbDetail != null ? dbDetail.ItemReceiptId.Value : 0;
+        }
+
         public BusinessResult SaveOrUpdateItemReceipt(ItemReceiptModel model)
         {
             BusinessResult result = new BusinessResult();
@@ -118,6 +125,7 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 List<int> itemsMustBeUpdated = new List<int>();
+                ItemReceiptDetail savedDetail = null;
 
                 #region SAVE DETAILS
                 if (model.Details == null)
@@ -168,6 +176,9 @@ namespace HekaMOLD.Business.UseCases
 
                             repoDetail.Add(dbDetail);
                         }
+
+                        if (savedDetail == null)
+                            savedDetail = dbDetail;
 
                         item.MapTo(dbDetail);
                         dbDetail.ItemReceipt = dbObj;
@@ -266,6 +277,8 @@ namespace HekaMOLD.Business.UseCases
                 //}
                 #endregion
 
+                if (savedDetail != null)
+                    result.DetailRecordId = savedDetail.Id;
                 result.Result = true;
                 result.RecordId = dbObj.Id;
             }
@@ -278,6 +291,69 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public ItemReceiptDetailModel[] GetOpenWarehouseEntries()
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                data = repo.Filter(d => d.ReceiptStatus != (int)ReceiptStatusType.Closed
+                    && d.ItemReceipt.ReceiptType < 100)
+                    .ToList()
+                    .Select(d => new ItemReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate),
+                        WarehouseName = d.ItemReceipt.Warehouse.WarehouseName,
+                        ItemName = d.Item != null ? d.Item.ItemName : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        ReceiptNo = d.ItemReceipt.ReceiptNo,
+                        Quantity = d.Quantity,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ItemReceiptDetailModel[] GetContractDeliveries(int workOrderDetailId)
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoContract = _unitOfWork.GetRepository<ContractWorkFlow>();
+
+                var deliveredDetailIdList = repoContract.Filter(d => d.DeliveredDetailId != null && d.WorkOrderDetailId == workOrderDetailId)
+                    .Select(d => d.DeliveredDetailId).ToArray();
+
+                data = repo.Filter(d => d.ReceiptStatus != (int)ReceiptStatusType.Closed
+                    && deliveredDetailIdList.Contains(d.Id))
+                    .ToList()
+                    .Select(d => new ItemReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate),
+                        WarehouseName = d.ItemReceipt.Warehouse.WarehouseName,
+                        ItemName = d.Item != null ? d.Item.ItemName : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        ReceiptNo = d.ItemReceipt.ReceiptNo,
+                        Quantity = d.Quantity,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
         public BusinessResult DeleteItemReceipt(int id)
         {
             BusinessResult result = new BusinessResult();
@@ -287,6 +363,10 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemReceipt>();
                 var repoDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoConsume = _unitOfWork.GetRepository<ItemReceiptConsume>();
+                var repoContract = _unitOfWork.GetRepository<ContractWorkFlow>();
+
+                List<int> affectedConsumedList = new List<int>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
@@ -314,6 +394,31 @@ namespace HekaMOLD.Business.UseCases
                         }
                         #endregion
 
+                        #region CHECK CONSUMINGS
+                        if (item.ItemReceiptConsumeByConsumer.Any())
+                        {
+                            var consumingData = item.ItemReceiptConsumeByConsumer.ToArray();
+                            foreach (var consumeItem in consumingData)
+                            {
+                                if (!affectedConsumedList.Contains(consumeItem.ConsumedReceiptDetailId ?? 0))
+                                    affectedConsumedList.Add(consumeItem.ConsumedReceiptDetailId ?? 0);
+
+                                repoConsume.Delete(consumeItem);
+                            }
+                        }
+                        #endregion
+
+                        #region CHECK CONTRACT WORK FLOWS
+                        if (repoContract.Any(d => d.DeliveredDetailId == item.Id))
+                        {
+                            var contractData = repoContract.Filter(d => d.DeliveredDetailId == item.Id).ToArray();
+                            foreach (var contractItem in contractData)
+                            {
+                                repoContract.Delete(contractItem);
+                            }
+                        }
+                        #endregion
+
                         repoDetail.Delete(item);
                     }
                 }
@@ -332,6 +437,15 @@ namespace HekaMOLD.Business.UseCases
 
                 repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
+
+                // CHECK STATUS OF AFFECTED CONSUMED RECETIPS
+                foreach (var item in affectedConsumedList)
+                {
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        bObj.CheckReceiptDetailStatus(item);
+                    }
+                }
 
                 // TRG-POINT-ITEM-STATUS
                 if (itemsMustBeUpdated.Count() > 0)

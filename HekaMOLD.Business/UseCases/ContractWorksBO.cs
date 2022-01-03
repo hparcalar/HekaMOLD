@@ -69,9 +69,16 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
                 var selectedEntryDetail = repoReceiptDetail.Get(d => d.Id == model.EntryReceiptDetailId);
                 if (selectedEntryDetail == null)
                     throw new Exception("Seçilen irsaliye kaydı bulunamadı.");
+
+                var dbWorkDetail = repoWorkOrderDetail.Get(d => d.Id == model.WorkOrderDetailId);
+                if (dbWorkDetail == null)
+                    throw new Exception("Seçilen iş emri kaydına ulaşılamadı.");
+
+                model.FirmId = dbWorkDetail.WorkOrder.FirmId;
 
                 // CREATE DELIVERY ITEM RECEIPT
                 BusinessResult receiptResult = null;
@@ -93,6 +100,110 @@ namespace HekaMOLD.Business.UseCases
                             new Models.DataTransfer.Receipt.ItemReceiptDetailModel
                             {
                                 ItemId = selectedEntryDetail.ItemId,
+                                LineNumber = 1,
+                                CreatedDate = DateTime.Now,
+                                NewDetail = true,
+                                Quantity = model.Quantity,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                            }
+                        }
+                    });
+                }
+
+                if (receiptResult.Result)
+                {
+                    // CREATE CONSUMINGS
+                    BusinessResult consumptionResult = null;
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        consumptionResult = bObj.UpdateConsume(model.EntryReceiptDetailId, receiptResult.DetailRecordId, model.Quantity ?? 0);
+                    }
+
+                    if (consumptionResult.Result)
+                    {
+                        var repo = _unitOfWork.GetRepository<ContractWorkFlow>();
+                        var dbFlow = new ContractWorkFlow
+                        {
+                            WorkOrderDetailId = model.WorkOrderDetailId,
+                            DeliveredDetailId = receiptResult.DetailRecordId,
+                            ReceivedDetailId = null,
+                            FlowDate = deliveryDate,
+                        };
+                        repo.Add(dbFlow);
+                        _unitOfWork.SaveChanges();
+
+                        result.RecordId = dbFlow.Id;
+                    }
+                    else
+                    {
+                        // ROLLBACK RECEIPT
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.DeleteItemReceipt(receiptResult.RecordId);
+                        }
+
+                        throw new Exception(consumptionResult.ErrorMessage);
+                    }
+                }
+                else
+                    throw new Exception(receiptResult.ErrorMessage);
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult CreateEntry(ContractDeliveryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                DateTime deliveryDate = DateTime.Now;
+                if (!string.IsNullOrEmpty(model.DeliveryDate))
+                {
+                    deliveryDate = DateTime.ParseExact(model.DeliveryDate, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+
+                var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var selectedDeliveryDetail = repoReceiptDetail.Get(d => d.Id == model.DeliveryReceiptDetailId);
+                if (selectedDeliveryDetail == null)
+                    throw new Exception("Seçilen irsaliye kaydı bulunamadı.");
+
+                var dbWorkDetail = repoWorkOrderDetail.Get(d => d.Id == model.WorkOrderDetailId);
+                if (dbWorkDetail == null)
+                    throw new Exception("Seçilen iş emri kaydına ulaşılamadı.");
+
+                model.FirmId = dbWorkDetail.WorkOrder.FirmId;
+
+                // CREATE DELIVERY ITEM RECEIPT
+                BusinessResult receiptResult = null;
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    receiptResult = bObj.SaveOrUpdateItemReceipt(new Models.DataTransfer.Receipt.ItemReceiptModel
+                    {
+                        CreatedDate = DateTime.Now,
+                        ReceiptDate = deliveryDate,
+                        ReceiptType = (int)ItemReceiptType.FromContractor,
+                        FirmId = model.FirmId,
+                        DocumentNo = model.DocumentNo,
+                        InWarehouseId = selectedDeliveryDetail.ItemReceipt.InWarehouseId,
+                        PlantId = selectedDeliveryDetail.ItemReceipt.PlantId,
+                        ReceiptStatus = (int)ReceiptStatusType.Created,
+                        ReceiptNo = bObj.GetNextReceiptNo(selectedDeliveryDetail.ItemReceipt.PlantId ?? 1, ItemReceiptType.FromContractor),
+                        Details = new Models.DataTransfer.Receipt.ItemReceiptDetailModel[]
+                        {
+                            new Models.DataTransfer.Receipt.ItemReceiptDetailModel
+                            {
+                                ItemId = selectedDeliveryDetail.ItemId,
                                 LineNumber = 1,
                                 CreatedDate = DateTime.Now,
                                 NewDetail = true,
