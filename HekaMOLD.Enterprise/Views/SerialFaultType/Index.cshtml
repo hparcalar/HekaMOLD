@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Makine Cins Tanımları";
+    ViewBag.Title = "Hata Tanımları";
 }
 
-<div ng-controller="machineBreedCtrl">
+<div ng-controller="serialFaultTypeCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -31,7 +31,7 @@
             <div class="d-flex align-items-center py-1">
                 <!--begin::Wrapper-->
                 <div class="me-4">
-                    <a href="@Url.Action("List","MachineBreed")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                    <a href="@Url.Action("List","SerialFaultType")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -104,16 +104,16 @@
                 <!--begin::Col-->
                 <div class="col-xxl-6">
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Grup Kodu</label>
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Hata Kodu</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.MachineBreedCode" placeholder="" />
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.FaultCode" placeholder="" />
                     </div>
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Grup Adı</label>
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Hata Adı</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.MachineBreedName" placeholder="" />
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.FaultName" placeholder="" />
                     </div>
                 </div>
                 <!--end::Col-->
@@ -133,5 +133,5 @@
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/Components/Controllers/attachment-list.js"></script>
-    <script src="~/FrontEndLogic/MachineBreed/index.js"></script>
+    <script src="~/FrontEndLogic/SerialFaultType/index.js"></script>
 }

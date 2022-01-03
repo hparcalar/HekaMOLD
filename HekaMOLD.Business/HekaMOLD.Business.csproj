@@ -135,6 +135,7 @@
     <Compile Include="Models\DataTransfer\Core\RecordInformationModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ReportTemplateModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SectionSettingModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\SerialFaultTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SyncPointModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SystemParameterModel.cs" />
     <Compile Include="Models\DataTransfer\Core\SystemPrinterModel.cs" />

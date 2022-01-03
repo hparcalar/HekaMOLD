@@ -167,6 +167,7 @@
     <Compile Include="Controllers\ProductionNeedsController.cs" />
     <Compile Include="Controllers\ProductQualityController.cs" />
     <Compile Include="Controllers\ReportTemplateController.cs" />
+    <Compile Include="Controllers\SerialFaultTypeController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
@@ -4170,6 +4171,8 @@
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\ReportTemplate\index.js" />
     <Content Include="FrontEndLogic\ReportTemplate\list.js" />
+    <Content Include="FrontEndLogic\SerialFaultType\index.js" />
+    <Content Include="FrontEndLogic\SerialFaultType\list.js" />
     <Content Include="FrontEndLogic\Shift\index.js" />
     <Content Include="FrontEndLogic\Shift\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
@@ -4673,6 +4676,8 @@
     <Content Include="Views\Knit\List.cshtml" />
     <Content Include="Views\MachineBreed\Index.cshtml" />
     <Content Include="Views\MachineBreed\List.cshtml" />
+    <Content Include="Views\SerialFaultType\Index.cshtml" />
+    <Content Include="Views\SerialFaultType\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

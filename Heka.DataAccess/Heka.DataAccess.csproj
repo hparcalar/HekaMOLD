@@ -128,6 +128,7 @@
     <Compile Include="Context\Models\Route.cs" />
     <Compile Include="Context\Models\RouteItem.cs" />
     <Compile Include="Context\Models\SectionSetting.cs" />
+    <Compile Include="Context\Models\SerialFaultType.cs" />
     <Compile Include="Context\Models\Shift.cs" />
     <Compile Include="Context\Models\ShiftTarget.cs" />
     <Compile Include="Context\Models\SyncPoint.cs" />
@@ -288,6 +289,14 @@
     <Compile Include="Migrations\202201031102226_YarnItemRelation.designer.cs">
       <DependentUpon>202201031102226_YarnItemRelation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201031401280_SerialFaultTypeAdded.cs" />
+    <Compile Include="Migrations\202201031401280_SerialFaultTypeAdded.designer.cs">
+      <DependentUpon>202201031401280_SerialFaultTypeAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201031402567_SerialFaultTypeAdded2.cs" />
+    <Compile Include="Migrations\202201031402567_SerialFaultTypeAdded2.designer.cs">
+      <DependentUpon>202201031402567_SerialFaultTypeAdded2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -400,6 +409,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201031102226_YarnItemRelation.resx">
       <DependentUpon>202201031102226_YarnItemRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201031401280_SerialFaultTypeAdded.resx">
+      <DependentUpon>202201031401280_SerialFaultTypeAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201031402567_SerialFaultTypeAdded2.resx">
+      <DependentUpon>202201031402567_SerialFaultTypeAdded2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

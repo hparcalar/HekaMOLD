@@ -3760,5 +3760,111 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
         #endregion
+
+        #region SERIALFAULTTYPE BUSINESS
+        public SerialFaultTypeModel[] GetSerialFaultTypeList()
+        {
+            List<SerialFaultTypeModel> data = new List<SerialFaultTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<SerialFaultType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                SerialFaultTypeModel containerObj = new SerialFaultTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateSerialFaultType(SerialFaultTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.FaultCode))
+                    throw new Exception("Hata kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.FaultName))
+                    throw new Exception("Hata adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<SerialFaultType>();
+
+                if (repo.Any(d => (d.FaultCode == model.FaultName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir hata kodu mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new SerialFaultType();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteSerialFaultType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialFaultType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public SerialFaultTypeModel GetSerialFaultType(int id)
+        {
+            SerialFaultTypeModel model = new SerialFaultTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<SerialFaultType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+
+        #endregion
     }
 }

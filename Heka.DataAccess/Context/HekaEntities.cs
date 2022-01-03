@@ -114,6 +114,7 @@
         public virtual DbSet<YarnColourGroup> YarnColourGroup { get; set; }
         public virtual DbSet<FabricRecipe> FabricRecipe { get; set; }
         public virtual DbSet<KnitYarn> KnitYarn { get; set; }
+        public virtual DbSet<SerialFaultType> SerialFaultType { get; set; }
 
 
     }
