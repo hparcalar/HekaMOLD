@@ -367,6 +367,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoContract = _unitOfWork.GetRepository<ContractWorkFlow>();
 
                 List<int> affectedConsumedList = new List<int>();
+                List<int> affectedWorkOrders = new List<int>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
@@ -409,11 +410,15 @@ namespace HekaMOLD.Business.UseCases
                         #endregion
 
                         #region CHECK CONTRACT WORK FLOWS
-                        if (repoContract.Any(d => d.DeliveredDetailId == item.Id))
+                        if (repoContract.Any(d => d.DeliveredDetailId == item.Id || d.ReceivedDetailId == item.Id))
                         {
-                            var contractData = repoContract.Filter(d => d.DeliveredDetailId == item.Id).ToArray();
+                            var contractData = repoContract.Filter(d => d.DeliveredDetailId == item.Id
+                                || d.ReceivedDetailId == item.Id).ToArray();
                             foreach (var contractItem in contractData)
                             {
+                                if (!affectedWorkOrders.Contains(contractItem.WorkOrderDetailId ?? 0))
+                                    affectedWorkOrders.Add(contractItem.WorkOrderDetailId ?? 0);
+
                                 repoContract.Delete(contractItem);
                             }
                         }
@@ -444,6 +449,15 @@ namespace HekaMOLD.Business.UseCases
                     using (ReceiptBO bObj = new ReceiptBO())
                     {
                         bObj.CheckReceiptDetailStatus(item);
+                    }
+                }
+
+                // CHECK STATUS OF AFFECTED WORK ORDERS
+                foreach (var item in affectedWorkOrders)
+                {
+                    using (ContractWorksBO bObj = new ContractWorksBO())
+                    {
+                        bObj.CheckContractWorkOrderStatus(item);
                     }
                 }
 

@@ -1128,5 +1128,313 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
         #endregion
+
+        #region SERIAL WINDING QUALITY BUSINESS
+        public BusinessResult StartWinding(int workOrderDetailId, string serialNo, int userId, int? qualityMachineId = null)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialQualityWinding>();
+                var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+
+                var dbWorkDetail = repoWorkDetail.Get(d => d.Id == workOrderDetailId);
+                if (dbWorkDetail == null)
+                    throw new Exception("Seçilen iş emri kaydı bulunamadı.");
+
+                SerialQualityWinding dbModel = new SerialQualityWinding
+                {
+                    StartDate = DateTime.Now,
+                    OperatorId = userId > 0 ? userId : (int?)null,
+                    FaultCount = 0,
+                    IsOk = null,
+                    SerialNo = serialNo,
+                    WorkOrderDetailId = workOrderDetailId,
+                    EndDate = null,
+                };
+                repo.Add(dbModel);
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbModel.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult EndWinding(int windingId, decimal? meters, decimal? quantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialQualityWinding>();
+
+                var dbWinding = repo.Get(d => d.Id == windingId);
+                if (dbWinding == null)
+                    throw new Exception("Seçilen sarım kaydı bulunamadı.");
+
+                dbWinding.EndDate = DateTime.Now;
+                dbWinding.FaultCount = dbWinding.SerialQualityWindingFault.Count();
+                dbWinding.IsOk = dbWinding.SerialQualityWindingFault.Where(d => d.FaultStatus != 1).Count() > 0 ? false : true;
+                dbWinding.TotalMeters = meters;
+                dbWinding.TotalQuantity = quantity;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbWinding.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult AddFaultToWinding(int windingId, int faultTypeId, decimal? meter, decimal? quantity, bool isDotted=false, int? userId = null)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialQualityWindingFault>();
+                var repoWinding = _unitOfWork.GetRepository<SerialQualityWinding>();
+                var repoFaultType = _unitOfWork.GetRepository<SerialFaultType>();
+
+                var dbFaultType = repoFaultType.Get(d => d.Id == faultTypeId);
+                if (dbFaultType == null)
+                    throw new Exception("Bir hata tipi seçmelisiniz.");
+
+                var dbWinding = repoWinding.Get(d => d.Id == windingId);
+                if (dbWinding == null)
+                    throw new Exception("Bir sarım bilgisi seçmelisiniz.");
+
+                var dbModel = new SerialQualityWindingFault
+                {
+                    SerialQualityWindingId = windingId,
+                    FaultId = faultTypeId,
+                    CurrentMeter = meter,
+                    EndMeter = isDotted ? meter : null,
+                    CurrentQuantity = quantity,
+                    EndQuantity = isDotted ? quantity : null,
+                    OperatorId = userId,
+                    FaultDate = DateTime.Now,
+                    FaultStatus = 0, // unseen status
+                };
+                repo.Add(dbModel);
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbModel.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult EndFaultAtWinding(int windingId, int faultTypeId, decimal? meter, decimal? quantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoWinding = _unitOfWork.GetRepository<SerialQualityWinding>();
+                var repo = _unitOfWork.GetRepository<SerialQualityWindingFault>();
+
+                var dbWinding = repoWinding.Get(d => d.Id == windingId);
+                if (dbWinding == null)
+                    throw new Exception("Seçilen sarım kaydı bulunamadı.");
+
+                var ongoingFault = repo.Filter(d => d.SerialQualityWindingId == windingId
+                    && d.FaultId == faultTypeId && d.EndMeter == null)
+                    .OrderBy(d => d.Id)
+                    .FirstOrDefault();
+
+                if (ongoingFault == null)
+                    throw new Exception("Seçtiğiniz hata türüne ait devam eden bir kayıt buluanamadı.");
+
+                ongoingFault.EndMeter = meter;
+                ongoingFault.EndQuantity = quantity;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult SetFaultAsSeen(int windingFaultId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialQualityWindingFault>();
+                var dbFaultRecord = repo.Get(d => d.Id == windingFaultId);
+                if (dbFaultRecord == null)
+                    throw new Exception("Seçilen hata kaydı bulunamadı.");
+
+                dbFaultRecord.FaultStatus = 1;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbFaultRecord.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult SetFaultAsUnseen(int windingFaultId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialQualityWindingFault>();
+                var dbFaultRecord = repo.Get(d => d.Id == windingFaultId);
+                if (dbFaultRecord == null)
+                    throw new Exception("Seçilen hata kaydı bulunamadı.");
+
+                dbFaultRecord.FaultStatus = 0;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbFaultRecord.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult RemoveFault(int windingFaultId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialQualityWindingFault>();
+                var dbFaultRecord = repo.Get(d => d.Id == windingFaultId);
+                if (dbFaultRecord == null)
+                    throw new Exception("Seçilen hata kaydı bulunamadı.");
+
+                repo.Delete(dbFaultRecord);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public SerialQualityWindingFaultModel[] GetFaultsOfWinding(int windingId)
+        {
+            SerialQualityWindingFaultModel[] data = new SerialQualityWindingFaultModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialQualityWindingFault>();
+                data = repo.Filter(d => d.SerialQualityWindingId == windingId)
+                    .ToList()
+                    .Select(d => new SerialQualityWindingFaultModel
+                    {
+                        Id = d.Id,
+                        CurrentMeter = d.CurrentMeter,
+                        CurrentQuantity = d.CurrentQuantity,
+                        EndMeter = d.EndMeter,
+                        EndQuantity = d.EndQuantity,
+                        Explanation = d.Explanation,
+                        FaultDate = d.FaultDate,
+                        FaultId = d.FaultId,
+                        FaultStatus = d.FaultStatus,
+                        OperatorId = d.OperatorId,
+                        SerialQualityWindingId = d.SerialQualityWindingId,
+                        FaultCode = d.SerialFaultType.FaultCode,
+                        FaultName = d.SerialFaultType.FaultName,
+                        FaultDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.FaultDate),
+                        OperatorName = d.User != null ? d.User.UserName : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public SerialQualityWindingModel[] GetWindingList(int workOrderDetailId)
+        {
+            SerialQualityWindingModel[] data = new SerialQualityWindingModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialQualityWinding>();
+                data = repo.Filter(d => d.WorkOrderDetailId == workOrderDetailId)
+                    .ToList()
+                    .Select(d => new SerialQualityWindingModel
+                    {
+                        Id = d.Id,
+                        EndDate = d.EndDate,
+                        Explanation = d.Explanation,
+                        FaultCount = d.FaultCount,
+                        IsOk = d.IsOk,
+                        OperatorId = d.OperatorId,
+                        SerialNo = d.SerialNo,
+                        StartDate = d.StartDate,
+                        TotalMeters = d.TotalMeters,
+                        TotalQuantity = d.TotalQuantity,
+                        WorkOrderDetailId = d.WorkOrderDetailId,
+                        WorkOrderSerialId = d.WorkOrderSerialId,
+                        StartDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate),
+                        EndDateStr = d.EndDate != null ? string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
+                        OperatorName = d.User != null ? d.User.UserName : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        #endregion
     }
 }

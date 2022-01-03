@@ -13,6 +13,7 @@ namespace HekaMOLD.Business.Models.Virtual
         public int? DeliveryReceiptDetailId { get; set; }
         public decimal? Quantity { get; set; }
         public int? WorkOrderDetailId { get; set; }
+        public int? WarehouseId { get; set; }
         public string DeliveryDate { get; set; }
         public string DocumentNo { get; set; }
     }

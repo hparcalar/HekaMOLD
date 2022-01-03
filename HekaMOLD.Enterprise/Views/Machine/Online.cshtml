@@ -114,7 +114,7 @@
                                     <div class="py-0 my-1 flex-grow-1" ng-repeat="shift in item.MachineStats.ShiftStats">
                                         <hr class="my-1" />
                                         <h6 class="text-decoration-underline my-0">{{ shift.ShiftCode }} Vardiyası</h6>
-                                        <p class="py-0 my-0">Ort Şişirme: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
+                                        <p class="py-0 my-0">Ort Çevrim: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
                                         <p class="py-0 my-0">Üretim: <b>{{ shift.AvgProductionCount }} adet</b></p>
                                         <p class="py-0 my-0" ng-class="{'bg-danger': shift.WastageCount > 0}">Fire: <b>{{ shift.WastageCount }} adet</b></p>
                                     </div>
@@ -125,7 +125,7 @@
                                     class="text-decoration-underline my-0">
                                     Genel Ortalama
                                 </h6>
-                                <p class="py-0 my-0">Ort Şişirme: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
+                                <p class="py-0 my-0">Ort Çevrim: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
                                 <p class="py-0 my-0">Üretim: <b>{{item.MachineStats.AvgProductionCount}}</b> adet</p>
                                 <p class="py-0 my-0" ng-class="{'bg-danger': item.MachineStats.WastageCount > 0}">Fire: <b>{{item.MachineStats.WastageCount}}</b> adet</p>
                             </div>

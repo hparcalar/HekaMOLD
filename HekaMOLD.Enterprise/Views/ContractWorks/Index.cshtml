@@ -48,13 +48,13 @@
         <div id="kt_content_container" class="container-fluid">
 
             <div class="row gy-5 gx-xl-8 bg-white">
-                <div class="col-xxl-4">
+                <div class="col-xxl-5">
                     <div class="card card-px-0">
                         <div class="card-header">
                             <h6 class="card-title">
                                 İş Emirleri
 
-                                <button class="btn btn-primary px-2 py-1 mx-2">Yeni</button>
+                                <a target="_blank" href="@Url.Action("Index","WorkOrder", new { @rid=0 })" class="btn btn-primary px-2 py-1 mx-2">Yeni</a>
                                 <button ng-if="selectedWorkOrder.Id > 0"
                                         ng-click="showToContract()"
                                         class="btn btn-danger px-2 py-1 mx-2">
@@ -70,17 +70,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xxl-8">
+                <div class="col-xxl-7">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="card-title">Hareketler</h6>
+                            &nbsp;
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-xxl-6 col-sm-6 col-md-6">
+                                    <h6 class="bg-danger rounded py-3 px-1 text-center fw-bold text-light">Çıkışlar</h6>
                                     <div id="deliveryList"></div>
                                 </div>
                                 <div class="col-xxl-6 col-sm-6 col-md-6">
+                                    <h6 class="bg-success rounded py-3 px-1 text-center fw-bold text-light">Girişler</h6>
                                     <div id="entryList"></div>
                                 </div>
                             </div>

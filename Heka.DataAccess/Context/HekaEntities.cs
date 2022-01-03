@@ -115,7 +115,8 @@
         public virtual DbSet<FabricRecipe> FabricRecipe { get; set; }
         public virtual DbSet<KnitYarn> KnitYarn { get; set; }
         public virtual DbSet<SerialFaultType> SerialFaultType { get; set; }
-
+        public virtual DbSet<SerialQualityWinding> SerialQualityWinding { get; set; }
+        public virtual DbSet<SerialQualityWindingFault> SerialQualityWindingFault { get; set; }
 
     }
 }

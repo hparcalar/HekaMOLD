@@ -206,6 +206,8 @@
     <Compile Include="Models\DataTransfer\Quality\ProductQualityDataDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\ProductQualityDataModel.cs" />
     <Compile Include="Models\DataTransfer\Quality\ProductQualityPlanModel.cs" />
+    <Compile Include="Models\DataTransfer\Quality\SerialQualityWindingFaultModel.cs" />
+    <Compile Include="Models\DataTransfer\Quality\SerialQualityWindingModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptModel.cs" />

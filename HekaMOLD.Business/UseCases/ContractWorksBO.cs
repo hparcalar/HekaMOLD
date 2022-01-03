@@ -42,6 +42,8 @@ namespace HekaMOLD.Business.UseCases
                         ProductName = d.Item != null ? d.Item.ItemName : "",
                         Quantity = d.Quantity,
                         WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate),
+                        WorkOrderCategoryStr = d.WorkOrder.WorkOrderCategory != null ?
+                            d.WorkOrder.WorkOrderCategory.WorkOrderCategoryName : "",
                         Explanation = d.WorkOrder.Explanation,
                         WorkOrderStatus = d.WorkOrderStatus,
                         WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderStatus).ToCaption(),
@@ -70,6 +72,8 @@ namespace HekaMOLD.Business.UseCases
 
                 var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
                 var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoContracts = _unitOfWork.GetRepository<ContractWorkFlow>();
+
                 var selectedEntryDetail = repoReceiptDetail.Get(d => d.Id == model.EntryReceiptDetailId);
                 if (selectedEntryDetail == null)
                     throw new Exception("Seçilen irsaliye kaydı bulunamadı.");
@@ -77,6 +81,15 @@ namespace HekaMOLD.Business.UseCases
                 var dbWorkDetail = repoWorkOrderDetail.Get(d => d.Id == model.WorkOrderDetailId);
                 if (dbWorkDetail == null)
                     throw new Exception("Seçilen iş emri kaydına ulaşılamadı.");
+
+                var deliveredRawMaterialsForCurrentWorkOrder = repoContracts.Filter(d => d.WorkOrderDetailId == model.WorkOrderDetailId
+                    && d.DeliveredDetailId != null).Select(d => d.DeliveredReceiptDetail.Quantity).Sum() ?? 0;
+
+                if (dbWorkDetail.Quantity < deliveredRawMaterialsForCurrentWorkOrder)
+                    throw new Exception("Bu iş emri için yeterli miktarın çıkışı zaten yapılmış.");
+                else if (dbWorkDetail.Quantity < deliveredRawMaterialsForCurrentWorkOrder + model.Quantity)
+                    throw new Exception("Bu iş emri için çıkışı yapılabilecek miktar en fazla: " + 
+                        string.Format("{0:N2}", dbWorkDetail.Quantity - deliveredRawMaterialsForCurrentWorkOrder));
 
                 model.FirmId = dbWorkDetail.WorkOrder.FirmId;
 
@@ -132,6 +145,12 @@ namespace HekaMOLD.Business.UseCases
                         repo.Add(dbFlow);
                         _unitOfWork.SaveChanges();
 
+                        // TRIGGER POINT OF CHECKING WORK ORDER STATUS
+                        using (ContractWorksBO bObj = new ContractWorksBO())
+                        {
+                            bObj.CheckContractWorkOrderStatus(model.WorkOrderDetailId);
+                        }
+
                         result.RecordId = dbFlow.Id;
                     }
                     else
@@ -182,6 +201,9 @@ namespace HekaMOLD.Business.UseCases
                 if (dbWorkDetail == null)
                     throw new Exception("Seçilen iş emri kaydına ulaşılamadı.");
 
+                if (model.WarehouseId == null || model.WarehouseId == 0)
+                    throw new Exception("Giriş için depo seçmelisiniz.");
+
                 model.FirmId = dbWorkDetail.WorkOrder.FirmId;
 
                 // CREATE DELIVERY ITEM RECEIPT
@@ -195,7 +217,7 @@ namespace HekaMOLD.Business.UseCases
                         ReceiptType = (int)ItemReceiptType.FromContractor,
                         FirmId = model.FirmId,
                         DocumentNo = model.DocumentNo,
-                        InWarehouseId = selectedDeliveryDetail.ItemReceipt.InWarehouseId,
+                        InWarehouseId = model.WarehouseId,
                         PlantId = selectedDeliveryDetail.ItemReceipt.PlantId,
                         ReceiptStatus = (int)ReceiptStatusType.Created,
                         ReceiptNo = bObj.GetNextReceiptNo(selectedDeliveryDetail.ItemReceipt.PlantId ?? 1, ItemReceiptType.FromContractor),
@@ -220,7 +242,7 @@ namespace HekaMOLD.Business.UseCases
                     BusinessResult consumptionResult = null;
                     using (ReceiptBO bObj = new ReceiptBO())
                     {
-                        consumptionResult = bObj.UpdateConsume(model.EntryReceiptDetailId, receiptResult.DetailRecordId, model.Quantity ?? 0);
+                        consumptionResult = bObj.UpdateConsume(model.DeliveryReceiptDetailId, receiptResult.DetailRecordId, model.Quantity ?? 0);
                     }
 
                     if (consumptionResult.Result)
@@ -229,14 +251,20 @@ namespace HekaMOLD.Business.UseCases
                         var dbFlow = new ContractWorkFlow
                         {
                             WorkOrderDetailId = model.WorkOrderDetailId,
-                            DeliveredDetailId = receiptResult.DetailRecordId,
-                            ReceivedDetailId = null,
+                            DeliveredDetailId = null,
+                            ReceivedDetailId = receiptResult.DetailRecordId,
                             FlowDate = deliveryDate,
                         };
                         repo.Add(dbFlow);
                         _unitOfWork.SaveChanges();
 
                         result.RecordId = dbFlow.Id;
+
+                        // TRIGGER POINT OF CHECKING WORK ORDER STATUS
+                        using (ContractWorksBO bObj = new ContractWorksBO())
+                        {
+                            bObj.CheckContractWorkOrderStatus(model.WorkOrderDetailId);
+                        }
                     }
                     else
                     {
@@ -361,18 +389,27 @@ namespace HekaMOLD.Business.UseCases
                         FlowDate = d.FlowDate,
                         FlowDateStr = string.Format("{0:dd.MM.yyyy}", d.FlowDate),
                         WorkOrderDetailId = d.WorkOrderDetailId,
-                        ItemNo = d.DeliveredReceiptDetail.Item != null ?
-                                    d.DeliveredReceiptDetail.Item.ItemNo : "",
-                        ItemName = d.DeliveredReceiptDetail.Item != null ?
-                                    d.DeliveredReceiptDetail.Item.ItemName : "",
-                        FirmCode = d.DeliveredReceiptDetail.ItemReceipt.Firm != null ?
-                                    d.DeliveredReceiptDetail.ItemReceipt.Firm.FirmCode : "",
-                        FirmName = d.DeliveredReceiptDetail.ItemReceipt.Firm != null ?
-                                    d.DeliveredReceiptDetail.ItemReceipt.Firm.FirmName : "",
-                        Quantity = d.DeliveredReceiptDetail.Quantity,
+                        ItemNo = d.DeliveredReceiptDetail != null && d.DeliveredReceiptDetail.Item != null ?
+                                    d.DeliveredReceiptDetail.Item.ItemNo : 
+                                 d.ReceivedReceiptDetail != null && d.ReceivedReceiptDetail.Item != null ?
+                                    d.ReceivedReceiptDetail.Item.ItemNo : "",
+                        ItemName = d.DeliveredReceiptDetail != null && d.DeliveredReceiptDetail.Item != null ?
+                                    d.DeliveredReceiptDetail.Item.ItemName :
+                                    d.ReceivedReceiptDetail != null && d.ReceivedReceiptDetail.Item != null ?
+                                    d.ReceivedReceiptDetail.Item.ItemName : "",
+                        FirmCode = d.DeliveredReceiptDetail != null && d.DeliveredReceiptDetail.ItemReceipt.Firm != null ?
+                                    d.DeliveredReceiptDetail.ItemReceipt.Firm.FirmCode :
+                                    d.ReceivedReceiptDetail != null && d.ReceivedReceiptDetail.ItemReceipt.Firm != null ?
+                                    d.ReceivedReceiptDetail.ItemReceipt.Firm.FirmCode : "",
+                        FirmName = d.DeliveredReceiptDetail != null && d.DeliveredReceiptDetail.ItemReceipt.Firm != null ?
+                                    d.DeliveredReceiptDetail.ItemReceipt.Firm.FirmName :
+                                    d.ReceivedReceiptDetail != null && d.ReceivedReceiptDetail.ItemReceipt.Firm != null ?
+                                    d.ReceivedReceiptDetail.ItemReceipt.Firm.FirmName : "",
+                        Quantity = d.DeliveredDetailId != null ?
+                            d.DeliveredReceiptDetail.Quantity : d.ReceivedReceiptDetail != null ? d.ReceivedReceiptDetail.Quantity : 0,
                     }).ToArray();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
             }

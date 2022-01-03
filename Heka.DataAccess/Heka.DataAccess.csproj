@@ -129,6 +129,8 @@
     <Compile Include="Context\Models\RouteItem.cs" />
     <Compile Include="Context\Models\SectionSetting.cs" />
     <Compile Include="Context\Models\SerialFaultType.cs" />
+    <Compile Include="Context\Models\SerialQualityWinding.cs" />
+    <Compile Include="Context\Models\SerialQualityWindingFault.cs" />
     <Compile Include="Context\Models\Shift.cs" />
     <Compile Include="Context\Models\ShiftTarget.cs" />
     <Compile Include="Context\Models\SyncPoint.cs" />
@@ -297,6 +299,22 @@
     <Compile Include="Migrations\202201031402567_SerialFaultTypeAdded2.designer.cs">
       <DependentUpon>202201031402567_SerialFaultTypeAdded2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201032128119_SerialQualityWinding.cs" />
+    <Compile Include="Migrations\202201032128119_SerialQualityWinding.designer.cs">
+      <DependentUpon>202201032128119_SerialQualityWinding.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201032142562_SerialQualityFaultStatus.cs" />
+    <Compile Include="Migrations\202201032142562_SerialQualityFaultStatus.designer.cs">
+      <DependentUpon>202201032142562_SerialQualityFaultStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201032148190_SerialQualityFault_StartEndMeters.cs" />
+    <Compile Include="Migrations\202201032148190_SerialQualityFault_StartEndMeters.designer.cs">
+      <DependentUpon>202201032148190_SerialQualityFault_StartEndMeters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201032200427_SerialQualityWinding_TotalMetersAndQuantity.cs" />
+    <Compile Include="Migrations\202201032200427_SerialQualityWinding_TotalMetersAndQuantity.designer.cs">
+      <DependentUpon>202201032200427_SerialQualityWinding_TotalMetersAndQuantity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -415,6 +433,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201031402567_SerialFaultTypeAdded2.resx">
       <DependentUpon>202201031402567_SerialFaultTypeAdded2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201032128119_SerialQualityWinding.resx">
+      <DependentUpon>202201032128119_SerialQualityWinding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201032142562_SerialQualityFaultStatus.resx">
+      <DependentUpon>202201032142562_SerialQualityFaultStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201032148190_SerialQualityFault_StartEndMeters.resx">
+      <DependentUpon>202201032148190_SerialQualityFault_StartEndMeters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201032200427_SerialQualityWinding_TotalMetersAndQuantity.resx">
+      <DependentUpon>202201032200427_SerialQualityWinding_TotalMetersAndQuantity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

@@ -34,6 +34,8 @@
 
     $scope.onCategoryChanged = function () {
         $scope.bindModel();
+        $scope.selectedWorkOrder = { Id: 0 };
+        $scope.bindMovements();
     }
 
     // CRUD
@@ -185,6 +187,8 @@
                 { dataField: 'ProductName', caption: 'Stok Adı' },
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'WorkOrderCategoryStr', caption: 'Kategori' },
+                { dataField: 'WorkOrderStatusStr', caption: 'Durum' },
                 {
                     type: "buttons",
                     buttons: [
@@ -235,7 +239,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 500,
+            height: 457,
             editing: {
                 allowUpdating: false,
                 allowDeleting: true,
@@ -292,7 +296,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 500,
+            height: 457,
             editing: {
                 allowUpdating: false,
                 allowDeleting: true,
@@ -415,10 +419,11 @@
     $scope.$on('endFromContract', function (e, d) {
         $http.post(HOST_URL + 'ContractWorks/CreateEntry',
             {
-                EntryReceiptDetailId: d.ReceiptDetailId,
+                DeliveryReceiptDetailId: d.ReceiptDetailId,
                 Quantity: d.Quantity,
                 DeliveryDate: d.DeliveryDate,
                 DocumentNo: d.DocumentNo,
+                WarehouseId: d.WarehouseId,
                 WorkOrderDetailId: $scope.selectedWorkOrder.Id,
             }, 'json')
             .then(function (resp) {

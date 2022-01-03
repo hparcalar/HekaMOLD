@@ -6,6 +6,9 @@
         ReceiptDetailId: null,
     };
 
+    $scope.warehouseList = [];
+    $scope.selectedWarehouse = {};
+
     $scope.workOrderDetailId = 0;
 
     $scope.selectedDetail = null;
@@ -18,7 +21,23 @@
         }
 
         $scope.modelObject.ReceiptDetailId = $scope.selectedDetail.Id;
+        $scope.modelObject.WarehouseId = $scope.selectedWarehouse.Id;
         $scope.$emit('endFromContract', $scope.modelObject);
+    }
+
+    $scope.loadWarehouseList = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Common/GetWarehouseList', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.warehouseList = resp.data;
+
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prmReq;
     }
 
     $scope.bindReceiptDetails = function () {
@@ -81,6 +100,8 @@
     // ON LOAD EVENTS
     $scope.$on('loadFromContract', function (e, d) {
         $scope.workOrderDetailId = d;
-        $scope.bindReceiptDetails();
+        $scope.loadWarehouseList().then(function () {
+            $scope.bindReceiptDetails();
+        });
     });
 });

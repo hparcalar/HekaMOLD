@@ -25,6 +25,12 @@
                 <input type="number" class="form-control"
                        ng-model="modelObject.Quantity" placeholder="" />
             </div>
+
+            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Depo</label>
+            <!--begin::Input group-->
+            <select class="form-select" data-allow-clear="true"
+                    ng-options="item.WarehouseName for item in warehouseList" ng-model="selectedWarehouse"
+                    data-control="select2" data-placeholder="-- Seçiniz --"></select>
         </div>
 
         <div class="col-xxl-3 col-sm-3 col-md-3 px-1 py-1">
