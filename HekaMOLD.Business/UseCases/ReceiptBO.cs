@@ -774,6 +774,51 @@ namespace HekaMOLD.Business.UseCases
         }
 
         #region WAREHOUSE COUNTING BUSINESS
+        public CountingReceiptModel[] GetCountingReceiptList()
+        {
+            CountingReceiptModel[] data = new CountingReceiptModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CountingReceipt>();
+
+                data = repo.GetAll().ToList()
+                    .Select(d => new CountingReceiptModel
+                    {
+                        Id = d.Id,
+                        CountingDate = d.CountingDate,
+                        CountingDateStr = string.Format("{0:dd.MM.yyyy}", d.CountingDate),
+                        ReceiptNo = d.ReceiptNo,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public CountingReceiptModel GetCountingReceipt(int id)
+        {
+            CountingReceiptModel data = new CountingReceiptModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CountingReceipt>();
+                var dbModel = repo.Get(d => d.Id == id);
+                if (dbModel != null)
+                {
+                    dbModel.MapTo(data);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         public BusinessResult AddBarcodeToCounting(string barcode, int warehouseId, int decreaseCount=0)
         {
             BusinessResult result = new BusinessResult();
@@ -783,27 +828,44 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<CountingReceipt>();
                 var repoDetail = _unitOfWork.GetRepository<CountingReceiptDetail>();
                 var repoSerial = _unitOfWork.GetRepository<CountingReceiptSerial>();
+                var repoWorkSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
 
                 var dbOpenCounting = repo.Get(d => (d.CountingStatus ?? 0) == 0);
                 if (dbOpenCounting == null)
                     throw new Exception("Başlatılan bir sayım süreci bulunamadı.");
 
+                int itemId = 0;
+                decimal quantity = 0;
+
                 // PARSE BARCODE
-                string[] barcodeParts = System.Text.RegularExpressions.Regex.Split(barcode, "XX");
-                int itemId = Convert.ToInt32(barcodeParts[0]);
+                if (!barcode.Contains("XX"))
+                {
+                    var dbWorkSerial = repoWorkSerial.Get(d => d.SerialNo == barcode);
+                    if (dbWorkSerial != null)
+                    {
+                        quantity = dbWorkSerial.FirstQuantity ?? 0;
+                        itemId = dbWorkSerial.WorkOrderDetail.ItemId ?? 0;
+                    }
+                }
+                else
+                {
+                    string[] barcodeParts = System.Text.RegularExpressions.Regex.Split(barcode, "XX");
+                    itemId = Convert.ToInt32(barcodeParts[0]);
 
-                //if (barcodeParts[1].Contains(".") && barcodeParts[1].Contains(","))
-                //    barcodeParts[1] = barcodeParts[1].Replace(".", "").Replace(",", ".");
+                    //if (barcodeParts[1].Contains(".") && barcodeParts[1].Contains(","))
+                    //    barcodeParts[1] = barcodeParts[1].Replace(".", "").Replace(",", ".");
 
-                
+                    quantity = Decimal.Parse(barcodeParts[1], System.Globalization.NumberStyles.Currency,
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                    quantity -= decreaseCount;
+                    if (quantity < 0)
+                        quantity = 0;
 
-                decimal quantity = Decimal.Parse(barcodeParts[1], System.Globalization.NumberStyles.Currency,
-                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                quantity -= decreaseCount;
-                if (quantity < 0)
-                    quantity = 0;
+                    //Convert.ToDecimal(Convert.ToSingle( barcodeParts[1].Replace(",",".") ));
+                }
 
-                //Convert.ToDecimal(Convert.ToSingle( barcodeParts[1].Replace(",",".") ));
+                if (itemId == 0)
+                    throw new Exception("Barkoddan ürün bilgisine ulaşılamadı ya da bu bir deneme üretimi barkodudur.");
 
                 // SAVE BARCODE
                 var dbSerial = new CountingReceiptSerial
@@ -813,6 +875,7 @@ namespace HekaMOLD.Business.UseCases
                     Quantity = quantity,
                 };
                 repoSerial.Add(dbSerial);
+
 
                 // UPDATE DETAIL
                 var relatedDetail = repoDetail.Get(d => d.CountingReceiptId == dbOpenCounting.Id
@@ -915,6 +978,47 @@ namespace HekaMOLD.Business.UseCases
                         ItemNo = d.Item.ItemNo,
                         ItemName = d.Item.ItemName,
                         PackageQuantity = d.CountingReceiptSerial.Count(),
+                        Quantity = d.Quantity,
+                        WarehouseCode = d.Warehouse.WarehouseCode,
+                        WarehouseName = d.Warehouse.WarehouseName,
+                        WarehouseId = d.WarehouseId,
+                    })
+                    .OrderByDescending(d => d.Id)
+                    .ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public CountingReceiptDetailModel[] GetActiveCountingDetailsByReceiptId(int receiptId)
+        {
+            CountingReceiptDetailModel[] data = new CountingReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CountingReceipt>();
+                var dbOpenCounting = repo.Get(d => d.Id == receiptId);
+                if (dbOpenCounting == null)
+                    throw new Exception("Başlatılan bir sayım süreci bulunamadı.");
+
+                var repoDetail = _unitOfWork.GetRepository<CountingReceiptDetail>();
+                data = repoDetail.Filter(d => d.CountingReceiptId == dbOpenCounting.Id)
+                    .ToList()
+                    .Select(d => new CountingReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        CountingReceiptId = d.CountingReceiptId,
+                        ItemId = d.ItemId,
+                        ItemNo = d.Item.ItemNo,
+                        ItemName = d.Item.ItemName,
+                        PackageQuantity = d.CountingReceiptSerial.Count(),
+                        ItemTypeStr = ((ItemType)d.Item.ItemType).ToCaption(),
+                        CategoryName = d.Item.ItemCategory != null ? d.Item.ItemCategory.ItemCategoryName : "",
+                        GroupName = d.Item.ItemGroup != null ? d.Item.ItemGroup.ItemGroupName : "",
                         Quantity = d.Quantity,
                         WarehouseCode = d.Warehouse.WarehouseCode,
                         WarehouseName = d.Warehouse.WarehouseName,

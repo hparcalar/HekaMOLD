@@ -20,6 +20,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string ItemName { get; set; }
         public string WarehouseCode { get; set; }
         public string WarehouseName { get; set; }
+        public string ItemTypeStr { get; set; }
+        public string CategoryName { get; set; }
+        public string GroupName { get; set; }
         #endregion
     }
 }

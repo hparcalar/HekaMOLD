@@ -35,7 +35,7 @@
 
     $scope.processBarcodeResult = function (barcode) {
         $scope.isBarcodeRead = true;
-        console.log('prc');
+        
         $http.post(HOST_URL + 'Mobile/AddCountingBarcode', {
             barcode: barcode,
             warehouseId: $scope.staticWarehouseId,
