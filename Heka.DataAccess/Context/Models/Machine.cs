@@ -9,6 +9,7 @@
 
 namespace Heka.DataAccess.Context
 {
+    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -55,6 +56,11 @@ namespace Heka.DataAccess.Context
         public string BackColor { get; set; }
         public string ForeColor { get; set; }
         public Nullable<int> MachineStatus { get; set; }
+        public int? Width { get; set; }
+        public string NumberOfFramaes { get; set; }
+        //Tahar
+        public string WeavingDraft  { get; set; }
+        public int? MachineBreedId { get; set; }
 
         [ForeignKey("MachineGroup")]
         public Nullable<int> MachineGroupId { get; set; }
@@ -99,6 +105,7 @@ namespace Heka.DataAccess.Context
         [InverseProperty("Machine")]
         public virtual ICollection<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
         public virtual MachineGroup MachineGroup { get; set; }
+        public virtual MachineBreed MachineBreed { get; set; }
 
         [InverseProperty("Machine")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }

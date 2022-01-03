@@ -170,6 +170,7 @@
     <Compile Include="Models\DataTransfer\Production\IncidentModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ItemOrderItemNeedsModel.cs" />
     <Compile Include="Models\DataTransfer\Production\KnitYarnModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachineBreedModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />

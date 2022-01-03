@@ -4,11 +4,16 @@
     $scope.selectedMachineGroup = {};
     $scope.machineGroupList = [];
 
+    $scope.selectedMachineBreed = {};
+    $scope.machineBreedList = [];
+
     $scope.saveStatus = 0;
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, MachineGroupId: null };
         $scope.selectedMachineGroup = {};
+        $scope.selectedMachineBreed = {};
+
     }
 
     // GET SELECTABLE DATA
@@ -18,7 +23,7 @@
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.machineGroupList = resp.data.Groups;
-
+                        $scope.machineBreedList = resp.data.Breeds;
                         resolve(resp.data);
                     }
                 }).catch(function (err) { });
@@ -76,6 +81,11 @@
         else
             $scope.modelObject.MachineGroupId = null;
 
+        if (typeof $scope.selectedMachineBreed != 'undefined' && $scope.selectedMachineBreed != null)
+            $scope.modelObject.MachineBreedId = $scope.selectedMachineBreed.Id;
+        else
+            $scope.modelObject.MachineBreedId = null;
+
         $http.post(HOST_URL + 'Machine/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -104,6 +114,12 @@
                             .find(d => d.Id == $scope.modelObject.MachineGroupId);
                     else
                         $scope.selectedMachineGroup = {};
+
+                    if ($scope.modelObject.MachineBreedId > 0)
+                        $scope.selectedMachineBreed = $scope.machineBreedList
+                            .find(d => d.Id == $scope.modelObject.MachineBreedId);
+                    else
+                        $scope.selectedMachineBreed = {};
 
                     $("#back-color").spectrum("set", $scope.modelObject.BackColor);
                     $("#fore-color").spectrum("set", $scope.modelObject.ForeColor);

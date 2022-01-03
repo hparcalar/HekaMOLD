@@ -158,6 +158,7 @@
     <Compile Include="Controllers\LojisticOrderController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
+    <Compile Include="Controllers\MachineBreedController.cs" />
     <Compile Include="Controllers\MachineGroupController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
@@ -4110,6 +4111,8 @@
     <Content Include="FrontEndLogic\LayoutObjectType\index.js" />
     <Content Include="FrontEndLogic\LayoutObjectType\list.js" />
     <Content Include="FrontEndLogic\Layout\index.js" />
+    <Content Include="FrontEndLogic\MachineBreed\index.js" />
+    <Content Include="FrontEndLogic\MachineBreed\list.js" />
     <Content Include="FrontEndLogic\MachineGroup\index.js" />
     <Content Include="FrontEndLogic\MachineGroup\list.js" />
     <Content Include="FrontEndLogic\MachineOnline\online.js" />
@@ -4664,6 +4667,8 @@
     <Content Include="Views\YarnColour\Index.cshtml" />
     <Content Include="Views\YarnColour\List.cshtml" />
     <Content Include="Views\Knit\List.cshtml" />
+    <Content Include="Views\MachineBreed\Index.cshtml" />
+    <Content Include="Views\MachineBreed\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -2964,6 +2964,99 @@ namespace HekaMOLD.Business.UseCases
         }
         #endregion
 
+        #region MACHINE BREED BUSINESS
+        public MachineBreedModel[] GetMachineBreedList()
+        {
+            List<MachineBreedModel> data = new List<MachineBreedModel>();
+
+            var repo = _unitOfWork.GetRepository<MachineBreed>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                MachineBreedModel containerObj = new MachineBreedModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+        public BusinessResult SaveOrUpdateMachineBreed(MachineBreedModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.MachineBreedCode))
+                    throw new Exception("Cins kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.MachineBreedName))
+                    throw new Exception("Cins adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<MachineBreed>();
+
+                if (repo.Any(d => (d.MachineBreedCode == model.MachineBreedCode) && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir makine cinsi mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new MachineBreed();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteMachineBreed(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachineBreed>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public MachineBreedModel GetMachineBreed(int id)
+        {
+            MachineBreedModel model = new MachineBreedModel { };
+
+            var repo = _unitOfWork.GetRepository<MachineBreed>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
         #region PROCESS GROUP BUSINESS
         public ProcessGroupModel[] GetProcessGroupList()
         {

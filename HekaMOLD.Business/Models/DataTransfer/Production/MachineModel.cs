@@ -28,6 +28,12 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? MachineStatus { get; set; }
         public int? MachineGroupId { get; set; }
         public int? SignalEndDelay { get; set; }
+        public int? Width { get; set; }
+        public string NumberOfFramaes { get; set; }
+        //Tahar
+        public string WeavingDraft { get; set; }
+        public int? MachineBreedId { get; set; }
+
         public MachinePlanModel ActivePlan { get; set; }
         public MachinePlanModel[] Plans { get; set; }
         public MachineMaintenanceInstructionModel[] Instructions { get; set; }
@@ -46,6 +52,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public bool IsInPosture { get; set; }
         public string ActivePostureText { get; set; }
         public string ActiveIncidentText { get; set; }
+        public string MachineBreedCode { get; set; }
+        public string MachineBreedName { get; set; }
 
         #endregion
     }

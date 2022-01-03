@@ -142,10 +142,33 @@
                                 ng-model="selectedMachineGroup" class="form-select form-select-solid">
                         </select>
                     </div>
-
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine Grubu</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <select aria-label="Kategori" ng-options="item.MachineBreedName for item in machineBreedList"
+                                ng-model="selectedMachineBreed" class="form-select form-select-solid">
+                        </select>
+                    </div>
                 </div>
                 <!--end::Col-->
                 <div class="col-xxl-6">
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine En</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.Width" placeholder="" />
+                    </div>
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çerceve Sayısı</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.NumberOfFramaes" placeholder="" />
+                    </div>
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tahar</label>
+                    <!--begin::Input group-->
+                    <div class="mb-5">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.WeavingDraft" placeholder="" />
+                    </div>
                     <!--begin::Input group-->
                     <div class="mb-2">
                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">&nbsp;</label>
@@ -156,7 +179,6 @@
                             </span>
                         </label>
                     </div>
-
                     <label ng-show="modelObject.IsWatched == true" class="form-label fs-8 fw-bolder text-gray-700 mb-1">İzleme Çalışma Koşulu</label>
                     <!--begin::Input group-->
                     <div class="mb-5" ng-show="modelObject.IsWatched == true">

@@ -102,6 +102,7 @@
     <Compile Include="Context\Models\LogisticsOrder.cs" />
     <Compile Include="Context\Models\LogisticsOrderProductDetail.cs" />
     <Compile Include="Context\Models\Machine.cs" />
+    <Compile Include="Context\Models\MachineBreed.cs" />
     <Compile Include="Context\Models\MachineGroup.cs" />
     <Compile Include="Context\Models\MachineMaintenanceInstruction.cs" />
     <Compile Include="Context\Models\MachineMaintenanceInstructionEntry.cs" />
@@ -271,6 +272,18 @@
     <Compile Include="Migrations\202201012056285_updateYarncolourModel.designer.cs">
       <DependentUpon>202201012056285_updateYarncolourModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201030034219_update.cs" />
+    <Compile Include="Migrations\202201030034219_update.designer.cs">
+      <DependentUpon>202201030034219_update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201030919326_machineUpdate.cs" />
+    <Compile Include="Migrations\202201030919326_machineUpdate.designer.cs">
+      <DependentUpon>202201030919326_machineUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201031020575_machineUpdate1.cs" />
+    <Compile Include="Migrations\202201031020575_machineUpdate1.designer.cs">
+      <DependentUpon>202201031020575_machineUpdate1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -371,6 +384,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201012056285_updateYarncolourModel.resx">
       <DependentUpon>202201012056285_updateYarncolourModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201030034219_update.resx">
+      <DependentUpon>202201030034219_update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201030919326_machineUpdate.resx">
+      <DependentUpon>202201030919326_machineUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201031020575_machineUpdate1.resx">
+      <DependentUpon>202201031020575_machineUpdate1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
