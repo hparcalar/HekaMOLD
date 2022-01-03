@@ -747,6 +747,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         var dbKnitYarn = new KnitYarn();
                         item.MapTo(dbKnitYarn);
+                        dbKnitYarn.Firm = dbObj.Firm;
                         dbKnitYarn.Item = dbObj;
                         repoKnitYarns.Add(dbKnitYarn);
                     }
@@ -755,6 +756,7 @@ namespace HekaMOLD.Business.UseCases
                         var dbKnitYarn = repoKnitYarns.GetById(item.Id);
                         item.MapTo(dbKnitYarn);
                         dbKnitYarn.Item = dbObj;
+                        dbKnitYarn.Firm = dbObj.Firm;
                     }
                 }
 
@@ -3645,6 +3647,7 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("İplik adı girilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<YarnRecipe>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
                 var repoYarnRecipeMixes = _unitOfWork.GetRepository<YarnRecipeMix>();
 
                 if (repo.Any(d => (d.YarnRecipeCode == model.YarnRecipeCode || d.YarnRecipeName == model.YarnRecipeName)
@@ -3668,6 +3671,27 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedDate = crDate;
 
                 dbObj.UpdatedDate = DateTime.Now;
+
+                #region GENERATE ITEM MODEL OF CURRENT YARN
+                if (dbObj.Item == null)
+                {
+                    var existingItem = repoItem.Get(d => d.ItemName == dbObj.YarnRecipeName);
+                    if (existingItem == null)
+                    {
+                        existingItem = new Item
+                        {
+                            PlantId = dbObj.PlantId,
+                            ItemNo = dbObj.YarnRecipeName,
+                            ItemName = dbObj.YarnRecipeName,
+                            CreatedDate = DateTime.Now,
+                            ItemType = (int)ItemType.RawMaterials,
+                        };
+                        repoItem.Add(existingItem);
+                    }
+
+                    dbObj.Item = existingItem;
+                }
+                #endregion
 
                 #region SAVE KNITYARN
                 if (model.YarnRecipeMixes == null)

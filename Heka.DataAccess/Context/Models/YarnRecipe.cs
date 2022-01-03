@@ -41,6 +41,9 @@ namespace Heka.DataAccess.Context.Models
         [ForeignKey("Firm")]
         public int? FirmId { get; set; }
         public int? YarnLot { get; set; }
+
+        [ForeignKey("Item")]
+        public Nullable<int> ItemId { get; set; }
         public virtual Firm Firm { get; set; }
         public virtual YarnBreed YarnBreed { get; set; }
         public virtual YarnColour YarnColour { get; set; }
@@ -49,5 +52,6 @@ namespace Heka.DataAccess.Context.Models
         public virtual ICollection<KnitYarn> KnitYarn { get; set; }
         [InverseProperty("YarnRecipe")]
         public virtual ICollection<YarnRecipeMix> YarnRecipeMix { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

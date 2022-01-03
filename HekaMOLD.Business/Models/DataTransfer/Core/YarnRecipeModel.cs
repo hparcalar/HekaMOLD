@@ -22,6 +22,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? YarnLot { get; set; }
         public int? YarnColourId { get; set; }
         public int? FirmId { get; set; }
+        public int? ItemId { get; set; }
 
         public YarnRecipeMixModel[] YarnRecipeMixes { get; set; }
 
