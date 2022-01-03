@@ -33,19 +33,19 @@ namespace HekaMOLD.Business.UseCases
                    )
                     .ToList()
                     .Select(d => new WorkOrderDetailModel
-                   {
-                       Id = d.Id,
-                       WorkOrderNo = d.WorkOrder.WorkOrderNo,
-                       FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "",
-                       FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : "",
-                       ProductCode = d.Item != null ? d.Item.ItemNo : "",
-                       ProductName = d.Item != null ? d.Item.ItemName : "",
-                       Quantity = d.Quantity,
-                       WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate),
-                       Explanation = d.WorkOrder.Explanation,
-                       WorkOrderStatus = d.WorkOrderStatus,
-                       WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderStatus).ToCaption(),
-                   }).ToArray();
+                    {
+                        Id = d.Id,
+                        WorkOrderNo = d.WorkOrder.WorkOrderNo,
+                        FirmCode = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrder.Firm != null ? d.WorkOrder.Firm.FirmName : "",
+                        ProductCode = d.Item != null ? d.Item.ItemNo : "",
+                        ProductName = d.Item != null ? d.Item.ItemName : "",
+                        Quantity = d.Quantity,
+                        WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate),
+                        Explanation = d.WorkOrder.Explanation,
+                        WorkOrderStatus = d.WorkOrderStatus,
+                        WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderStatus).ToCaption(),
+                    }).ToArray();
             }
             catch (Exception)
             {
@@ -245,7 +245,7 @@ namespace HekaMOLD.Business.UseCases
                     .Select(d => new ContractWorkFlowModel
                     {
                         Id = d.Id,
-                        DeliveredDetailId= d.DeliveredDetailId,
+                        DeliveredDetailId = d.DeliveredDetailId,
                         ReceivedDetailId = d.ReceivedDetailId,
                         FlowDate = d.FlowDate,
                         FlowDateStr = string.Format("{0:dd.MM.yyyy}", d.FlowDate),

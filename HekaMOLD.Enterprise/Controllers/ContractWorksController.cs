@@ -1,5 +1,8 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
+using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.UseCases;
 using System;
 using System.Collections.Generic;
@@ -29,8 +32,11 @@ namespace HekaMOLD.Enterprise.Controllers
                 workCategories = bObj.GetWorkOrderCategoryList();
             }
 
-            var jsonResp = Json(new { Warehouses = warehouses,
-                WorkCategories = workCategories }, JsonRequestBehavior.AllowGet);
+            var jsonResp = Json(new
+            {
+                Warehouses = warehouses,
+                WorkCategories = workCategories
+            }, JsonRequestBehavior.AllowGet);
             jsonResp.MaxJsonLength = int.MaxValue;
             return jsonResp;
         }
@@ -63,6 +69,34 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResp = Json(data, JsonRequestBehavior.AllowGet);
             jsonResp.MaxJsonLength = int.MaxValue;
             return jsonResp;
+        }
+
+        [HttpGet]
+        public JsonResult GetWarehouseEntries()
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                data = bObj.GetOpenWarehouseEntries();
+            }
+
+            var jsonResp = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResp.MaxJsonLength = int.MaxValue;
+            return jsonResp;
+        }
+
+        [HttpPost]
+        public JsonResult CreateDelivery(ContractDeliveryModel model)
+        {
+            BusinessResult result = null;
+
+            using (ContractWorksBO bObj = new ContractWorksBO())
+            {
+                result = bObj.CreateDelivery(model);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
     }
 }
