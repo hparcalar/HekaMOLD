@@ -28,6 +28,25 @@
             }).catch(function (err) { });
     }
 
+    $scope.applyToWarehouse = function () {
+        $scope.saveStatus = 1;
+
+        $http.post(HOST_URL + 'Counting/ApplyToWarehouse', { rid: $scope.modelObject.Id }, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.saveStatus = 0;
+
+                    if (resp.data.Result == true) {
+                        toastr.success('Sayımın depo transfer işlemi başarılı.', 'Bilgilendirme');
+
+                        $scope.bindModel(resp.data.RecordId);
+                    }
+                    else
+                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                }
+            }).catch(function (err) { });
+    }
+
     $scope.bindModel = function (id) {
         $http.get(HOST_URL + 'Counting/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {

@@ -1103,18 +1103,74 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<CountingReceipt>();
+                var repoCountingDetail = _unitOfWork.GetRepository<CountingReceiptDetail>();
+                var repoWr = _unitOfWork.GetRepository<Warehouse>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
 
                 var dbObj = repo.Get(d => d.Id == countingReceiptId);
                 if (dbObj == null)
                     throw new Exception("Sayım kaydı bulunamadı.");
 
-                var entryReceipt = new ItemReceiptModel { };
-                var deliveryReceipt = new ItemReceiptModel { };
+                var dbWrItem = repoWr.Get(d => d.WarehouseType == (int)WarehouseType.ItemWarehouse);
+                var dbWrProduct = repoWr.Get(d => d.WarehouseType == (int)WarehouseType.ProductWarehouse);
+
+                var entryReceipt = new ItemReceiptModel { 
+                    ReceiptType = (int)ItemReceiptType.WarehouseInput,
+                    ReceiptNo = GetNextReceiptNo(dbObj.PlantId.Value, ItemReceiptType.WarehouseInput),
+                    PlantId = dbObj.PlantId,
+                    CreatedDate = DateTime.Now,
+                    ReceiptDate = DateTime.Now,
+                    FirmId = null,
+                    ReceiptStatus = (int)ReceiptStatusType.Created,
+                    SyncStatus = 1,
+                    InWarehouseId = dbWrItem.Id,
+                };
+                var deliveryReceipt = new ItemReceiptModel {
+                    ReceiptType = (int)ItemReceiptType.WarehouseOutput,
+                    ReceiptNo = GetNextReceiptNo(dbObj.PlantId.Value, ItemReceiptType.WarehouseOutput),
+                    PlantId = dbObj.PlantId,
+                    CreatedDate = DateTime.Now,
+                    ReceiptDate = DateTime.Now,
+                    FirmId = null,
+                    ReceiptStatus = (int)ReceiptStatusType.Created,
+                    SyncStatus = 1,
+                    InWarehouseId = dbWrItem.Id,
+                };
+                var entryReceiptProduct = new ItemReceiptModel
+                {
+                    ReceiptType = (int)ItemReceiptType.WarehouseInput,
+                    ReceiptNo = string.Format("{0:000000}", Convert.ToInt32(GetNextReceiptNo(dbObj.PlantId.Value, ItemReceiptType.WarehouseInput)) + 1),
+                    PlantId = dbObj.PlantId,
+                    CreatedDate = DateTime.Now,
+                    ReceiptDate = DateTime.Now,
+                    FirmId = null,
+                    ReceiptStatus = (int)ReceiptStatusType.Created,
+                    SyncStatus = 1,
+                    InWarehouseId = dbWrProduct.Id,
+                };
+                var deliveryReceiptProduct = new ItemReceiptModel
+                {
+                    ReceiptType = (int)ItemReceiptType.WarehouseOutput,
+                    ReceiptNo = string.Format("{0:000000}", Convert.ToInt32(GetNextReceiptNo(dbObj.PlantId.Value, ItemReceiptType.WarehouseOutput)) + 1),
+                    PlantId = dbObj.PlantId,
+                    CreatedDate = DateTime.Now,
+                    ReceiptDate = DateTime.Now,
+                    FirmId = null,
+                    ReceiptStatus = (int)ReceiptStatusType.Created,
+                    SyncStatus = 1,
+                    InWarehouseId = dbWrProduct.Id,
+                };
+
                 List<ItemReceiptDetailModel> entryDetails = new List<ItemReceiptDetailModel>();
                 List<ItemReceiptDetailModel> deliveryDetails = new List<ItemReceiptDetailModel>();
+                List<ItemReceiptDetailModel> entryDetailsProduct = new List<ItemReceiptDetailModel>();
+                List<ItemReceiptDetailModel> deliveryDetailsProduct = new List<ItemReceiptDetailModel>();
 
-                var countingDetails = dbObj.CountingReceiptDetail.ToArray();
+                var existingItems = repoCountingDetail.Filter(d => d.CountingReceiptId == dbObj.Id).Select(d => d.ItemId).Distinct().ToArray();
+                var notExistsItems = repoItem.Filter(d => !existingItems.Contains(d.Id)).ToArray();
+                var countingDetails = repoCountingDetail.Filter(d => d.CountingReceiptId == dbObj.Id).ToArray();
 
+                // ADD COUNTED ITEMS
                 foreach (var item in countingDetails)
                 {
                     if (item.ItemId > 0)
@@ -1124,7 +1180,7 @@ namespace HekaMOLD.Business.UseCases
 
                         if (countingQuantity > currentQuantity) // will be positive movement
                         {
-                            entryDetails.Add(new ItemReceiptDetailModel
+                            var nDetail = new ItemReceiptDetailModel
                             {
                                 ItemId = item.ItemId,
                                 LineNumber = entryDetails.Count() + 1,
@@ -1143,11 +1199,16 @@ namespace HekaMOLD.Business.UseCases
                                 OverallTotal = 0,
                                 SyncStatus = 1,
                                 ReceiptStatus = (int)ReceiptStatusType.Created,
-                            });
+                            };
+
+                            if (item.Item.ItemNo.StartsWith("152"))
+                                entryDetailsProduct.Add(nDetail);
+                            else
+                                entryDetails.Add(nDetail);
                         }
                         else if (countingQuantity < currentQuantity) // will be negative movement
                         {
-                            deliveryDetails.Add(new ItemReceiptDetailModel
+                            var nDetail = new ItemReceiptDetailModel
                             {
                                 ItemId = item.ItemId,
                                 LineNumber = entryDetails.Count() + 1,
@@ -1166,10 +1227,87 @@ namespace HekaMOLD.Business.UseCases
                                 OverallTotal = 0,
                                 SyncStatus = 1,
                                 ReceiptStatus = (int)ReceiptStatusType.Created,
-                            });
+                            };
+
+                            if (item.Item.ItemNo.StartsWith("152"))
+                                deliveryDetailsProduct.Add(nDetail);
+                            else
+                                deliveryDetails.Add(nDetail);
                         }
                     }
                 }
+
+                // ADD NON EXISTING ITEMS
+                foreach (var item in notExistsItems)
+                {
+                    if (item.Id > 0)
+                    {
+                        var currentQuantity = GetItemQuantity(item.Id);
+                        var countingQuantity = 0;
+
+                        if (countingQuantity > currentQuantity) // will be positive movement
+                        {
+                            var nDetail = new ItemReceiptDetailModel
+                            {
+                                ItemId = item.Id,
+                                LineNumber = entryDetails.Count() + 1,
+                                Quantity = countingQuantity - currentQuantity,
+                                CreatedDate = DateTime.Now,
+                                NetQuantity = countingQuantity - currentQuantity,
+                                UnitId = item.ItemUnit.Where(m => m.IsMainUnit == true).Select(m => m.UnitId).FirstOrDefault(),
+                                UnitPrice = 0,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                                SubTotal = 0,
+                                DiscountRate = 0,
+                                DiscountAmount = 0,
+                                NewDetail = true,
+                                OverallTotal = 0,
+                                SyncStatus = 1,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                            };
+
+                            if (item.ItemNo.StartsWith("152"))
+                                entryDetailsProduct.Add(nDetail);
+                            else
+                                entryDetails.Add(nDetail);
+                        }
+                        else if (countingQuantity < currentQuantity) // will be negative movement
+                        {
+                            var nDetail = new ItemReceiptDetailModel
+                            {
+                                ItemId = item.Id,
+                                LineNumber = entryDetails.Count() + 1,
+                                Quantity = currentQuantity - countingQuantity,
+                                CreatedDate = DateTime.Now,
+                                NetQuantity = currentQuantity - countingQuantity,
+                                UnitId = item.ItemUnit.Where(m => m.IsMainUnit == true).Select(m => m.UnitId).FirstOrDefault(),
+                                UnitPrice = 0,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                                SubTotal = 0,
+                                DiscountRate = 0,
+                                DiscountAmount = 0,
+                                NewDetail = true,
+                                OverallTotal = 0,
+                                SyncStatus = 1,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                            };
+
+                            if (item.ItemNo.StartsWith("152"))
+                                deliveryDetailsProduct.Add(nDetail);
+                            else
+                                deliveryDetails.Add(nDetail);
+                        }
+                    }
+                }
+
+                entryReceipt.Details = entryDetails.ToArray();
+                deliveryReceipt.Details = deliveryDetails.ToArray();
+                entryReceiptProduct.Details = entryDetailsProduct.ToArray();
+                deliveryReceiptProduct.Details = deliveryDetailsProduct.ToArray();
 
                 #region SAVE ENTRY & DELIVERY RECEIPTS
                 int entryReceiptId = 0;
@@ -1181,12 +1319,22 @@ namespace HekaMOLD.Business.UseCases
                     entryReceiptId = result.RecordId;
                 }
 
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    result = bObj.SaveOrUpdateItemReceipt(entryReceiptProduct);
+                }
+
                 if (result.Result)
                 {
                     using (ReceiptBO bObj = new ReceiptBO())
                     {
                         result = bObj.SaveOrUpdateItemReceipt(deliveryReceipt);
                         deliveryReceiptId = result.RecordId;
+                    }
+
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        result = bObj.SaveOrUpdateItemReceipt(deliveryReceiptProduct);
                     }
                 }
                 else

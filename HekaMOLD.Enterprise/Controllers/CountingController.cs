@@ -113,16 +113,16 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult ApplyToWarehouse()
+        public JsonResult ApplyToWarehouse(int rid)
         {
             BusinessResult result = null;
 
             using (ReceiptBO bObj = new ReceiptBO())
             {
-
+                result = bObj.ApplyCountingToWarehouse(rid);
             }
 
-            return Json(null);
+            return Json(result);
         }
     }
 }
