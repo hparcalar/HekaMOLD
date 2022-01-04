@@ -1069,6 +1069,157 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
+
+        public decimal GetItemQuantity(int itemId)
+        {
+            decimal quantity = 0;
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var entries = repo.Filter(d => d.ItemId == itemId
+                    && d.ItemReceipt != null && d.ItemReceipt.ReceiptType < 100)
+                    .Select(d => d.Quantity).Sum() ?? 0;
+
+                var deliveries = repo.Filter(d => d.ItemId == itemId
+                    && d.ItemReceipt != null && d.ItemReceipt.ReceiptType > 100)
+                    .Select(d => d.Quantity).Sum() ?? 0;
+
+                return entries - deliveries;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return quantity;
+        }
+
+        public BusinessResult ApplyCountingToWarehouse(int countingReceiptId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CountingReceipt>();
+
+                var dbObj = repo.Get(d => d.Id == countingReceiptId);
+                if (dbObj == null)
+                    throw new Exception("Sayım kaydı bulunamadı.");
+
+                var entryReceipt = new ItemReceiptModel { };
+                var deliveryReceipt = new ItemReceiptModel { };
+                List<ItemReceiptDetailModel> entryDetails = new List<ItemReceiptDetailModel>();
+                List<ItemReceiptDetailModel> deliveryDetails = new List<ItemReceiptDetailModel>();
+
+                var countingDetails = dbObj.CountingReceiptDetail.ToArray();
+
+                foreach (var item in countingDetails)
+                {
+                    if (item.ItemId > 0)
+                    {
+                        var currentQuantity = GetItemQuantity(item.ItemId.Value);
+                        var countingQuantity = item.Quantity ?? 0;
+
+                        if (countingQuantity > currentQuantity) // will be positive movement
+                        {
+                            entryDetails.Add(new ItemReceiptDetailModel
+                            {
+                                ItemId = item.ItemId,
+                                LineNumber = entryDetails.Count() + 1,
+                                Quantity = countingQuantity - currentQuantity,
+                                CreatedDate = DateTime.Now,
+                                NetQuantity = countingQuantity - currentQuantity,
+                                UnitId = item.Item.ItemUnit.Where(m => m.IsMainUnit == true).Select(m => m.UnitId).FirstOrDefault(),
+                                UnitPrice = 0,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                                SubTotal = 0,
+                                DiscountRate = 0,
+                                DiscountAmount = 0,
+                                NewDetail = true,
+                                OverallTotal = 0,
+                                SyncStatus = 1,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                            });
+                        }
+                        else if (countingQuantity < currentQuantity) // will be negative movement
+                        {
+                            deliveryDetails.Add(new ItemReceiptDetailModel
+                            {
+                                ItemId = item.ItemId,
+                                LineNumber = entryDetails.Count() + 1,
+                                Quantity = currentQuantity - countingQuantity,
+                                CreatedDate = DateTime.Now,
+                                NetQuantity = currentQuantity - countingQuantity,
+                                UnitId = item.Item.ItemUnit.Where(m => m.IsMainUnit == true).Select(m => m.UnitId).FirstOrDefault(),
+                                UnitPrice = 0,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                                SubTotal = 0,
+                                DiscountRate = 0,
+                                DiscountAmount = 0,
+                                NewDetail = true,
+                                OverallTotal = 0,
+                                SyncStatus = 1,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                            });
+                        }
+                    }
+                }
+
+                #region SAVE ENTRY & DELIVERY RECEIPTS
+                int entryReceiptId = 0;
+                int deliveryReceiptId = 0;
+
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    result = bObj.SaveOrUpdateItemReceipt(entryReceipt);
+                    entryReceiptId = result.RecordId;
+                }
+
+                if (result.Result)
+                {
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        result = bObj.SaveOrUpdateItemReceipt(deliveryReceipt);
+                        deliveryReceiptId = result.RecordId;
+                    }
+                }
+                else
+                    throw new Exception("Giriş fişinde hata: " + result.ErrorMessage);
+
+                if (result.Result)
+                {
+                    dbObj.CountingStatus = 1;
+                    _unitOfWork.SaveChanges();
+                }
+                else
+                {
+                    // ROLLBACK ENTRY RECEIPT
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        bObj.DeleteItemReceipt(entryReceiptId);
+                    }
+
+                    throw new Exception("Çıkış fişinde hata: " + result.ErrorMessage);
+                }
+                #endregion
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         #endregion
 
         #region STATUS VALIDATIONS

@@ -111,5 +111,18 @@ namespace HekaMOLD.Enterprise.Controllers
 
 
         }
+
+        [HttpPost]
+        public JsonResult ApplyToWarehouse()
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+
+            }
+
+            return Json(null);
+        }
     }
 }
