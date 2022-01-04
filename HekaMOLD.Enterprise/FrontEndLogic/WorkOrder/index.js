@@ -440,44 +440,6 @@
                 //    }
                 //},
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                {
-                    dataField: 'MoldId', caption: 'Kalıp Kodu',
-                    lookup: {
-                        dataSource: $scope.moldList,
-                        valueExpr: "Id",
-                        displayExpr: "MoldCode"
-                    },
-                    allowSorting: false,
-                    editCellTemplate: $scope.dropDownBoxEditorTemplateMolds,
-                    cellTemplate: function (container, options) {
-                        if (typeof options.row.data.MoldCode != 'undefined'
-                            && options.row.data.MoldCode != null && options.row.data.MoldCode.length > 0)
-                            container.text(options.row.data.MoldCode);
-                        else
-                            container.text(options.displayValue);
-                    }
-                },
-                { dataField: 'MoldName', caption: 'Kalıp Adı', allowEditing: false },
-                {
-                    dataField: 'MoldTestId', caption: 'Kalıp Deneme',
-                    lookup: {
-                        dataSource: $scope.moldTestList,
-                        valueExpr: "Id",
-                        displayExpr: "ProductDescription"
-                    },
-                    allowSorting: false,
-                    editCellTemplate: $scope.dropDownBoxEditorTemplateMoldTests,
-                    cellTemplate: function (container, options) {
-                        if (typeof options.row.data.ProductDescription != 'undefined'
-                            && options.row.data.ProductDescription != null && options.row.data.ProductDescription.length > 0)
-                            container.text(options.row.data.ProductDescription);
-                        else
-                            container.text(options.displayValue);
-                    }
-                },
-                { dataField: 'InflationTimeSeconds', caption: 'Şişirme Zamanı (sn)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'RawGr', caption: 'Hammadde Gr', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'RawGrToleration', caption: 'Hammadde Gr Töl.', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Explanation', caption: 'Açıklama' }
             ]
         });
