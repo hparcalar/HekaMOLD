@@ -300,6 +300,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [FreeAction]
+        public JsonResult GetSerialFaultTypeList()
+        {
+            SerialFaultTypeModel[] data = new SerialFaultTypeModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetSerialFaultTypeList();
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [FreeAction]
         public JsonResult GetIncidentCategoryList()
         {
             IncidentCategoryModel[] data = new IncidentCategoryModel[0];

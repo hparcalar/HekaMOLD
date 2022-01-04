@@ -193,6 +193,7 @@ namespace HekaMOLD.Business.UseCases
 
                 var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
                 var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoContracts = _unitOfWork.GetRepository<ContractWorkFlow>();
                 var selectedDeliveryDetail = repoReceiptDetail.Get(d => d.Id == model.DeliveryReceiptDetailId);
                 if (selectedDeliveryDetail == null)
                     throw new Exception("Seçilen irsaliye kaydı bulunamadı.");
@@ -205,6 +206,15 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Giriş için depo seçmelisiniz.");
 
                 model.FirmId = dbWorkDetail.WorkOrder.FirmId;
+
+                var receivedQtyForCurrentWorkOrder = repoContracts.Filter(d => d.WorkOrderDetailId == model.WorkOrderDetailId
+                    && d.ReceivedDetailId != null).Select(d => d.ReceivedReceiptDetail.Quantity).Sum() ?? 0;
+
+                if (dbWorkDetail.Quantity < receivedQtyForCurrentWorkOrder)
+                    throw new Exception("Bu iş emri için yeterli miktarın girişi zaten yapılmış.");
+                else if (dbWorkDetail.Quantity < receivedQtyForCurrentWorkOrder + model.Quantity)
+                    throw new Exception("Bu iş emri için giriş yapılabilecek miktar en fazla: " +
+                        string.Format("{0:N2}", dbWorkDetail.Quantity - receivedQtyForCurrentWorkOrder));
 
                 // CREATE DELIVERY ITEM RECEIPT
                 BusinessResult receiptResult = null;
@@ -225,7 +235,7 @@ namespace HekaMOLD.Business.UseCases
                         {
                             new Models.DataTransfer.Receipt.ItemReceiptDetailModel
                             {
-                                ItemId = selectedDeliveryDetail.ItemId,
+                                ItemId = dbWorkDetail.ItemId,
                                 LineNumber = 1,
                                 CreatedDate = DateTime.Now,
                                 NewDetail = true,

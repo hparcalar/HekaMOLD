@@ -168,6 +168,7 @@
     <Compile Include="Controllers\ProductQualityController.cs" />
     <Compile Include="Controllers\ReportTemplateController.cs" />
     <Compile Include="Controllers\SerialFaultTypeController.cs" />
+    <Compile Include="Controllers\SerialWindingController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
@@ -3952,6 +3953,7 @@
     <Content Include="Components\Controllers\machine-incidents.js" />
     <Content Include="Components\Controllers\machine-postures.js" />
     <Content Include="Components\Controllers\open-so-list.js" />
+    <Content Include="Components\Controllers\open-work-order-list.js" />
     <Content Include="Components\Controllers\planning-work-copy.js" />
     <Content Include="Components\Controllers\posture-category-selection.js" />
     <Content Include="Components\Controllers\incident-category-selection.js" />
@@ -3965,6 +3967,7 @@
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
     <Content Include="Components\Controllers\report-template-list.js" />
+    <Content Include="Components\Controllers\serial-fault-selection.js" />
     <Content Include="Components\Controllers\shift-targets.js" />
     <Content Include="Components\Controllers\to-contract.js" />
     <Content Include="Components\Controllers\trial-work-form.js" />
@@ -3974,6 +3977,7 @@
     <Content Include="Components\Views\MachineIncidents.html" />
     <Content Include="Components\Views\MachinePostures.html" />
     <Content Include="Components\Views\OpenSoList.html" />
+    <Content Include="Components\Views\OpenWoList.html" />
     <Content Include="Components\Views\PlanningWorkCopy.html" />
     <Content Include="Components\Views\PostureCategorySelection.html" />
     <Content Include="Components\Views\IncidentCategorySelection.html" />
@@ -3987,6 +3991,7 @@
     <Content Include="Components\Views\ApprovedItemRequestDetails.html" />
     <Content Include="Components\Views\ProductionHistoryList.html" />
     <Content Include="Components\Views\ReportTemplateList.html" />
+    <Content Include="Components\Views\SerialFaultSelection.html" />
     <Content Include="Components\Views\ShiftTargets.html" />
     <Content Include="Components\Views\ToContract.html" />
     <Content Include="Components\Views\TrialWorkForm.html" />
@@ -4173,6 +4178,7 @@
     <Content Include="FrontEndLogic\ReportTemplate\list.js" />
     <Content Include="FrontEndLogic\SerialFaultType\index.js" />
     <Content Include="FrontEndLogic\SerialFaultType\list.js" />
+    <Content Include="FrontEndLogic\SerialWinding\index.js" />
     <Content Include="FrontEndLogic\Shift\index.js" />
     <Content Include="FrontEndLogic\Shift\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
@@ -4678,6 +4684,7 @@
     <Content Include="Views\MachineBreed\List.cshtml" />
     <Content Include="Views\SerialFaultType\Index.cshtml" />
     <Content Include="Views\SerialFaultType\List.cshtml" />
+    <Content Include="Views\SerialWinding\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

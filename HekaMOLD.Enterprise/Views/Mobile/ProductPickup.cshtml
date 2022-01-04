@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="col-sm-4 col-xs-4 col-xxl-4">
-                    <label class="mt-0" ng-cloak><b>Seçilen <u>Koli:</u> {{ selectedProducts.length }} / <u>Adet:</u> {{ getListSum(selectedProducts, 'FirstQuantity') }}</b></label>
+                    <label class="mt-0" ng-cloak><b>Seçilen <u>Top:</u> {{ selectedProducts.length }} / <u>Metre:</u> {{ getListSum(selectedProducts, 'FirstQuantity') }}</b></label>
                     <div class="d-flex flex-row">
                         <a class="btn btn-sm btn-block flex-fill me-1 h-50 mt-1 btn-success" ng-click="approveItemEntry()">
                             <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
@@ -105,7 +105,7 @@
             <div class="row gy-5 mt-4 gx-xl-8 bg-white">
                 @* KOLİ TABLOSU *@
                 <div class="col-xxl-8 col-sm-8">
-                    <h5 class="hk-title-mobile">Koli Listesi</h5>
+                    <h5 class="hk-title-mobile">Kumaş Listesi</h5>
                     <div class="d-flex flex-row justify-content-end">
                         <button type="button" class="btn btn-primary mx-1" ng-cloak
                                 ng-click="selectAll(item)">
@@ -123,7 +123,7 @@
                                 <th class="w-15 px-2">Firma</th>
                                 <th class="w-10 px-1">Vardiya</th>
                                 <th class="w-15 px-2">Durum</th>
-                                <th class="w-15 px-2">Koli İçi Adet</th>
+                                <th class="w-15 px-2">Metre</th>
                                 <th class="w-15 px-2">#</th>
                             </tr>
                         </thead>
@@ -170,8 +170,8 @@
                         <tfoot>
                             <tr class="bg-primary text-white">
                                 <th class="w-50 px-2 py-1"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ filteredPickupList.length }} KOLİ</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredPickupList, 'FirstQuantity') }} ADET</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ filteredPickupList.length }} TOP</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredPickupList, 'FirstQuantity') }} METRE</b></th>
                                 <th class="w-10 px-2 py-1"></th>
                             </tr>
                         </tfoot>
@@ -192,8 +192,8 @@
                             <tr>
                                 <th class="w-50 px-2">Ürün</th>
                                 <th class="w-10 px-1">Vardiya</th>
-                                <th class="w-20 px-2">Koli Adedi</th>
-                                <th class="w-20 px-2">Ürün Adedi</th>
+                                <th class="w-20 px-2">Top Adedi</th>
+                                <th class="w-20 px-2">Metre</th>
                                 <th class="w-10 px-2">#</th>
                             </tr>
                         </thead>
@@ -220,14 +220,14 @@
                         <tfoot>
                             <tr class="bg-primary text-white" ng-repeat="item in shiftList">
                                 <th class="w-50 px-2 py-1"><b>{{ item.ShiftCode }} Vardiyası</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialCount') }} KOLİ</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialSum') }} ADET</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialCount') }} TOP</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialSum') }} METRE</b></th>
                                 <th class="w-10 px-2 py-1"></th>
                             </tr>
                             <tr class="bg-primary text-white">
                                 <th class="w-50 px-2 py-1"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialCount') }} KOLİ</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialSum') }} ADET</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialCount') }} TOP</b></th>
+                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialSum') }} METRE</b></th>
                                 <th class="w-10 px-2 py-1"></th>
                             </tr>
                         </tfoot>

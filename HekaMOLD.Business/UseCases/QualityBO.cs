@@ -1130,6 +1130,28 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region SERIAL WINDING QUALITY BUSINESS
+        public string GetNextSerialNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<SerialQualityWinding>();
+                string lastSerialNo = repo.GetAll()
+                    .OrderByDescending(d => d.SerialNo)
+                    .Select(d => d.SerialNo)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(lastSerialNo))
+                    lastSerialNo = "0";
+
+                return string.Format("{0:00000000}", Convert.ToInt64(lastSerialNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
         public BusinessResult StartWinding(int workOrderDetailId, string serialNo, int userId, int? qualityMachineId = null)
         {
             BusinessResult result = new BusinessResult();
@@ -1142,6 +1164,11 @@ namespace HekaMOLD.Business.UseCases
                 var dbWorkDetail = repoWorkDetail.Get(d => d.Id == workOrderDetailId);
                 if (dbWorkDetail == null)
                     throw new Exception("Seçilen iş emri kaydı bulunamadı.");
+
+                if (string.IsNullOrEmpty(serialNo))
+                {
+                    serialNo = GetNextSerialNo();
+                }
 
                 SerialQualityWinding dbModel = new SerialQualityWinding
                 {
@@ -1414,7 +1441,7 @@ namespace HekaMOLD.Business.UseCases
                         Id = d.Id,
                         EndDate = d.EndDate,
                         Explanation = d.Explanation,
-                        FaultCount = d.FaultCount,
+                        FaultCount = d.SerialQualityWindingFault.Count(),
                         IsOk = d.IsOk,
                         OperatorId = d.OperatorId,
                         SerialNo = d.SerialNo,
