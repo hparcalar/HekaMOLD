@@ -53,7 +53,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                items = bObj.GetItemList();
+                items = bObj.GetItemList().Where(a=>a.ItemType == (int)ItemType.Product).ToArray();
                 units = bObj.GetUnitTypeList();
                 firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();

@@ -613,7 +613,7 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
-            return repo.GetAll().Select(d => new ItemModel
+            return repo.GetAll().Where(d=> d.ItemType ==(int)ItemType.Product).Select(d => new ItemModel
             {
                 Id = d.Id,
                 ItemNo = d.ItemNo,
@@ -691,7 +691,13 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedUserId = model.CreatedUserId;
                     repo.Add(dbObj);
                 }
+                if (dbObj.ItemName == null)
+                {
+                    model.ItemName = model.ItemNo;
+                }
                 var crDate = dbObj.CreatedDate;
+                dbObj.ItemType = model.ItemType;
+
                 model.MapTo(dbObj);
 
                 if (dbObj.CreatedDate == null)
@@ -747,7 +753,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         var dbKnitYarn = new KnitYarn();
                         item.MapTo(dbKnitYarn);
-                        dbKnitYarn.Firm = dbObj.Firm;
+                        //dbKnitYarn.Firm = dbObj.Firm;
                         dbKnitYarn.Item = dbObj;
                         repoKnitYarns.Add(dbKnitYarn);
                     }
@@ -756,7 +762,7 @@ namespace HekaMOLD.Business.UseCases
                         var dbKnitYarn = repoKnitYarns.GetById(item.Id);
                         item.MapTo(dbKnitYarn);
                         dbKnitYarn.Item = dbObj;
-                        dbKnitYarn.Firm = dbObj.Firm;
+                        //dbKnitYarn.Firm = dbObj.Firm;
                     }
                 }
 
@@ -1564,6 +1570,9 @@ namespace HekaMOLD.Business.UseCases
                 UpdatedUserId = d.UpdatedUserId,
                 WatchCycleStartCondition = d.WatchCycleStartCondition,
                 WorkingUserId = d.WorkingUserId,
+                Width= d.Width,
+                NumberOfFramaes= d.NumberOfFramaes,
+                WeavingDraft= d.WeavingDraft,
                 SignalEndDelay = d.SignalEndDelay,
             }).ToArray();
 
@@ -3603,6 +3612,7 @@ namespace HekaMOLD.Business.UseCases
                 CenterTypeStr =  d.CenterType ==1 ? "Kuvvetli Punta" : d.CenterType ==2 ? "Seyrek Punta":"",
                 Mix = d.Mix,
                 YarnLot = d.YarnLot,
+                FirmId=d.Firm != null ? d.Firm.Id:0,
                 FirmName = d.Firm != null ? d.Firm.FirmName : "",
                 YarnBreedName = d.YarnBreed != null ? d.YarnBreed.YarnBreedName : "",
                 YarnColourName = d.YarnColour != null ? d.YarnColour.YarnColourName : "",

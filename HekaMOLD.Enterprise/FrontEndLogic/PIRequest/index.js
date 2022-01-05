@@ -101,7 +101,7 @@
 
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
-            dropDownOptions: { width: 500 },
+            dropDownOptions: { width: 900 },
             dataSource: $scope.itemList,
             value: cellInfo.value,
             valueExpr: "Id",

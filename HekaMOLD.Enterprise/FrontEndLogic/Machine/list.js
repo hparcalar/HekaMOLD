@@ -38,7 +38,10 @@
             columns: [
                 { dataField: 'MachineCode', caption: 'Makine Kodu' },
                 { dataField: 'MachineName', caption: 'Makine Adı' },
-                {
+                { dataField: 'Width', caption: 'En' },
+                { dataField: 'NumberOfFramaes', caption: 'Çerceve Sayısı' },
+                { dataField: 'WeavingDraft', caption: 'Tahar' },
+               {
                     type: "buttons",
                     buttons: [
                         {
