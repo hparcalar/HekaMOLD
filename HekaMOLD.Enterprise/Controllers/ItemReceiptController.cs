@@ -198,6 +198,19 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        public JsonResult CreateConsumption(int productionReceiptId)
+        {
+            BusinessResult result = null;
+
+            using (RecipeBO bObj = new RecipeBO())
+            {
+                result = bObj.CreateRecipeConsumption(productionReceiptId);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
         public JsonResult TestPrintDelivery(int receiptId)
         {
             string outputFile = Session.SessionID + ".pdf";

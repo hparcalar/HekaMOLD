@@ -19,15 +19,15 @@ namespace HekaMOLD.Business.UseCases
         public ItemReceiptModel[] GetItemReceiptList(ReceiptCategoryType receiptCategory,
             ItemReceiptType? receiptType)
         {
-            List<ItemReceiptModel> data = new List<ItemReceiptModel>();
+            ItemReceiptModel[] data = new ItemReceiptModel[0];
 
             var repo = _unitOfWork.GetRepository<ItemReceipt>();
 
-            repo.Filter(d =>
+            data = repo.Filter(d =>
                 d.ReceiptType != null &&
                 (receiptCategory == ReceiptCategoryType.All
                 ||
-                (receiptCategory == ReceiptCategoryType.Purchasing 
+                (receiptCategory == ReceiptCategoryType.Purchasing
                     && DictItemReceiptType.PurchasingTypes.Contains(d.ReceiptType.Value))
                 ||
                 (receiptCategory == ReceiptCategoryType.ItemManagement
@@ -46,24 +46,36 @@ namespace HekaMOLD.Business.UseCases
                     receiptType == null || d.ReceiptType == (int?)receiptType
                 )
             )
-                .ToList().ForEach(d =>
-            {
-                ItemReceiptModel containerObj = new ItemReceiptModel();
-                d.MapTo(containerObj);
-                containerObj.TotalQuantity = d.ItemReceiptDetail.Sum(m => m.Quantity);
-                containerObj.ReceiptStatusStr = ((ReceiptStatusType)d.ReceiptStatus.Value).ToCaption();
-                containerObj.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate);
-                containerObj.ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ReceiptDate);
-                containerObj.FirmCode = d.Firm != null ? d.Firm.FirmCode : "";
-                containerObj.FirmName = d.Firm != null ? d.Firm.FirmName : "";
-                containerObj.WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "";
-                containerObj.WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "";
-                containerObj.ReceiptTypeStr = ((ItemReceiptType)d.ReceiptType.Value).ToCaption();
+                .ToList()
+                .Select(d => new ItemReceiptModel
+                {
+                    Id = d.Id,
+                    ConsumptionReceiptId = d.ConsumptionReceiptId,
+                    ConsumptionReceiptNo = d.ConsumptionReceipt != null ? d.ConsumptionReceipt.ReceiptNo : "",
+                    CreatedDate = d.CreatedDate,
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                    CreatedUserId = d.CreatedUserId,
+                    DocumentNo = d.DocumentNo,
+                    Explanation = d.Explanation,
+                    FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                    FirmId = d.FirmId,
+                    FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    InWarehouseId = d.InWarehouseId,
+                    ItemOrderId = d.ItemOrderId,
+                    OutWarehouseId = d.OutWarehouseId,
+                    PlantId = d.PlantId,
+                    ReceiptDate = d.ReceiptDate,
+                    ReceiptNo = d.ReceiptNo,
+                    ReceiptStatus = d.ReceiptStatus,
+                    ReceiptType = d.ReceiptType,
+                    ReceiptStatusStr = ((ReceiptStatusType)d.ReceiptStatus.Value).ToCaption(),
+                    ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ReceiptDate),
+                    WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "",
+                    WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "",
+                    ReceiptTypeStr = ((ItemReceiptType)d.ReceiptType.Value).ToCaption()
+                }).ToArray();
 
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+            return data;
         }
 
         public ItemReceiptDetailModel[] GetOpenWarehouseEntries()
@@ -138,6 +150,12 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.ReceiptStatus = (int)ReceiptStatusType.Created;
                     repo.Add(dbObj);
                     newRecord = true;
+                }
+
+                if (!string.IsNullOrEmpty(model.ReceiptDateStr))
+                {
+                    model.ReceiptDate = DateTime.ParseExact(model.ReceiptDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
 
                 var crDate = dbObj.CreatedDate;
@@ -331,6 +349,34 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult UpdateDocumentNo(int receiptId, string documentNo)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceipt>();
+
+                var dbObj = repo.Get(d => d.Id == receiptId);
+                if (dbObj == null)
+                    throw new Exception("İrsaliye kaydı bulunamadı.");
+
+                dbObj.DocumentNo = documentNo;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public BusinessResult UpdateReceiptDetail(ItemReceiptDetailModel model)
         {
             BusinessResult result = new BusinessResult();
@@ -485,6 +531,7 @@ namespace HekaMOLD.Business.UseCases
                 model.WarehouseCode = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseCode : "";
                 model.WarehouseName = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseName : "";
                 model.ReceiptTypeStr = ((ItemReceiptType)dbObj.ReceiptType.Value).ToCaption();
+                model.ConsumptionReceiptNo = dbObj.ConsumptionReceipt != null ? dbObj.ConsumptionReceipt.ReceiptNo : "";
 
                 List<ItemReceiptDetailModel> detailContainers = new List<ItemReceiptDetailModel>();
                 dbObj.ItemReceiptDetail.ToList().ForEach(d =>
@@ -581,7 +628,7 @@ namespace HekaMOLD.Business.UseCases
             var dbItem = repoItem.Get(d => d.Id == model.ItemId);
             if (dbItem != null)
             {
-                var selUnit = dbItem.ItemUnit.FirstOrDefault(d => d.Id == model.UnitId);
+                var selUnit = dbItem.ItemUnit.FirstOrDefault(d => d.UnitId == model.UnitId);
                 if (selUnit != null)
                 {
                     mFactor = selUnit.MultiplierFactor ?? 1;
@@ -596,23 +643,24 @@ namespace HekaMOLD.Business.UseCases
                 model.ForexUnitPrice = model.UnitPrice / model.ForexRate;
             }
 
-            decimal? overallTotal = 0;
             decimal? taxExtractedUnitPrice = 0;
+            decimal? subTotal = 0;
 
             if (model.TaxIncluded == true)
             {
                 decimal? taxIncludedUnitPrice = (model.UnitPrice / (1 + (model.TaxRate / 100m)));
-                overallTotal = taxIncludedUnitPrice * model.Quantity;
                 taxExtractedUnitPrice = taxIncludedUnitPrice;
+                subTotal = taxExtractedUnitPrice * model.Quantity;
             }
             else
             {
-                overallTotal = model.UnitPrice * model.Quantity;
+                subTotal = model.UnitPrice * model.Quantity;
                 taxExtractedUnitPrice = model.UnitPrice;
             }
 
-            model.OverallTotal = overallTotal;
-            model.TaxAmount = overallTotal * model.TaxRate / 100.0m;
+            model.SubTotal = subTotal;
+            model.TaxAmount = subTotal * model.TaxRate / 100.0m;
+            model.OverallTotal = subTotal + model.TaxAmount;
 
             return model;
         }
@@ -694,7 +742,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ItemReceipt>();
                 data = repo.Filter(d => (d.SyncStatus == null || d.SyncStatus == 0)
-                        && d.ReceiptType == (int)ItemReceiptType.WarehouseInput)
+                        && d.ReceiptType == (int)ItemReceiptType.WarehouseInput && d.Warehouse.WarehouseType == (int)WarehouseType.ProductWarehouse)
                     .ToList()
                     .Select(d => new ItemReceiptModel
                     {
@@ -719,6 +767,61 @@ namespace HekaMOLD.Business.UseCases
                                 UnitId = m.UnitId,
                                 UnitCode = m.UnitType != null ? m.UnitType.UnitCode : "",
                                 UnitName = m.UnitType != null ? m.UnitType.UnitName : "",
+                                Quantity = m.Quantity,
+                                LineNumber = m.LineNumber,
+                                UnitPrice = m.UnitPrice,
+                                OverallTotal = m.OverallTotal,
+                                SubTotal = m.SubTotal,
+                                TaxAmount = m.TaxAmount,
+                                TaxIncluded = m.TaxIncluded,
+                                TaxRate = m.TaxRate,
+                            }).ToArray()
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ItemReceiptModel[] GetNonSyncPurchasedItems()
+        {
+            ItemReceiptModel[] data = new ItemReceiptModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceipt>();
+                data = repo.Filter(d => (d.SyncStatus == null || d.SyncStatus == 0)
+                        && d.ReceiptType == (int)ItemReceiptType.ItemBuying)
+                    .ToList()
+                    .Select(d => new ItemReceiptModel
+                    {
+                        Id = d.Id,
+                        WarehouseCode = d.Warehouse.WarehouseCode,
+                        WarehouseName = d.Warehouse.WarehouseName,
+                        DocumentNo = d.DocumentNo,
+                        Explanation = d.Explanation,
+                        FirmId = d.FirmId,
+                        FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                        FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                        ReceiptDate = d.ReceiptDate,
+                        ReceiptNo = d.ReceiptNo,
+                        ReceiptType = d.ReceiptType,
+                        Details = d.ItemReceiptDetail.Where(m => m.SyncStatus == null || m.SyncStatus == 0)
+                            .Select(m => new ItemReceiptDetailModel
+                            {
+                                Id = m.Id,
+                                ItemId = m.ItemId,
+                                ItemNo = m.Item != null ? m.Item.ItemNo : "",
+                                ItemName = m.Item != null ? m.Item.ItemName : "",
+                                UnitId = m.UnitId,
+                                UnitCode = m.UnitType != null ? m.UnitType.UnitCode : "",
+                                UnitName = m.UnitType != null ? m.UnitType.UnitName : "",
+                                ForexId = m.ForexId,
+                                ForexRate = m.ForexRate,
+                                ForexUnitPrice = m.ForexUnitPrice,
                                 Quantity = m.Quantity,
                                 LineNumber = m.LineNumber,
                                 UnitPrice = m.UnitPrice,

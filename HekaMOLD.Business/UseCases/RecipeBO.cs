@@ -329,7 +329,7 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region PRODUCT RECIPE CONSUMPTIONS
-        public BusinessResult CreateRecipeConsuption(int workOrderDetailId, int? warehouseId = null)
+        public BusinessResult CreateRecipeConsumption(int workOrderDetailId, int? warehouseId = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -352,7 +352,7 @@ namespace HekaMOLD.Business.UseCases
                     consDetails.Add(new ItemReceiptDetailModel
                     {
                         ItemId = item.ItemId,
-                        Quantity = item.Quantity * dbWorkDetail.Quantity / 100.0m,
+                        Quantity = item.Quantity * dbWorkDetail.Quantity,
                         UnitId = item.UnitId,
                         LineNumber = lineNumber,
                         CreatedDate = DateTime.Now,
@@ -413,6 +413,129 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return result;
+        }
+
+        public BusinessResult CreateRecipeConsumption(int productionReceiptId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoReceipt = _unitOfWork.GetRepository<ItemReceipt>();
+                var repoRecipeDetail = _unitOfWork.GetRepository<ProductRecipeDetail>();
+                var repoWr = _unitOfWork.GetRepository<Warehouse>();
+
+                var dbProdReceipt = repoReceipt.Get(d => d.Id == productionReceiptId);
+                if (dbProdReceipt == null)
+                    throw new Exception("Üretim fişi bilgisine ulaşılamadı.");
+
+                List<ItemReceiptDetailModel> consDetails = new List<ItemReceiptDetailModel>();
+                int lineNumber = 1;
+                var prodReceiptDetails = dbProdReceipt.ItemReceiptDetail.ToArray();
+
+                foreach (var prodItem in prodReceiptDetails)
+                {
+                    var recipeDetails = repoRecipeDetail.Filter(d => d.ProductRecipe.ProductId == prodItem.ItemId);
+
+                    foreach (var item in recipeDetails)
+                    {
+                        consDetails.Add(new ItemReceiptDetailModel
+                        {
+                            ItemId = item.ItemId,
+                            Quantity = item.Quantity * prodItem.Quantity,
+                            UnitId = item.UnitId,
+                            LineNumber = lineNumber,
+                            CreatedDate = DateTime.Now,
+                            NewDetail = true,
+                            ReceiptStatus = (int)ReceiptStatusType.Created,
+                            SyncStatus = 1,
+                            TaxIncluded = false,
+                            TaxRate = 0,
+                            TaxAmount = 0,
+                        });
+
+                        lineNumber++;
+                    }
+                }
+
+                BusinessResult recipeCreationResult = new BusinessResult { Result = false };
+
+                var wrRecord = repoWr.Get(d => d.WarehouseType ==
+                    (int)WarehouseType.ItemWarehouse);
+                if (wrRecord == null)
+                    throw new Exception("Malzeme sarfiyatları için uygun depo tanımı bulunamadı.");
+
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    var currentConsReceipt = bObj.GetItemReceipt(dbProdReceipt.ConsumptionReceiptId ?? 0); //bObj.GetConsumptionReceipt(workOrderDetailId);
+                    if (currentConsReceipt == null || currentConsReceipt.Id <= 0)
+                    {
+                        recipeCreationResult = bObj.SaveOrUpdateItemReceipt(new ItemReceiptModel
+                        {
+                            CreatedDate = DateTime.Now,
+                            ReceiptDate = DateTime.Now,
+                            ReceiptNo = bObj.GetNextReceiptNo(dbProdReceipt.PlantId.Value, ItemReceiptType.Consumption),
+                            ReceiptType = (int)ItemReceiptType.Consumption,
+                            InWarehouseId = wrRecord.Id,
+                            PlantId = dbProdReceipt.PlantId,
+                            SyncStatus = 1,
+                            SyncDate = null,
+                            Details = consDetails.ToArray(),
+                            ReceiptStatus = (int)ReceiptStatusType.Created,
+                        });
+                    }
+                    else
+                    {
+                        currentConsReceipt.Details = consDetails.ToArray();
+                        recipeCreationResult = bObj.SaveOrUpdateItemReceipt(currentConsReceipt);
+                    }
+
+                    if (!recipeCreationResult.Result)
+                        throw new Exception("Tüketim oluşturulurken bir hata meydana geldi.");
+                    else
+                    {
+                        if (dbProdReceipt.ConsumptionReceiptId == null)
+                        {
+                            dbProdReceipt.ConsumptionReceiptId = recipeCreationResult.RecordId;
+                            _unitOfWork.SaveChanges();
+                        }
+                    }
+                }
+
+                result.RecordId = dbProdReceipt.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ItemReceiptModel GetConsumptionReceipt(int productionReceiptId)
+        {
+            ItemReceiptModel model = null;
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceipt>();
+                var dbProdReceipt = repo.Get(d => d.Id == productionReceiptId);
+                if (dbProdReceipt != null)
+                {
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        model = bObj.GetItemReceipt(dbProdReceipt.ConsumptionReceiptId ?? 0);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return model;
         }
         #endregion
     }

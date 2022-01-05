@@ -797,6 +797,15 @@ namespace HekaMOLD.Business.UseCases
                         PlantId = plantId,
                         InWarehouseId = warehouseId,
                     }, model);
+
+                    // CREATE RECIPE CONSUMPTION
+                    if (result.Result)
+                    {
+                        using (RecipeBO rObj = new RecipeBO())
+                        {
+                            rObj.CreateRecipeConsumption(result.RecordId);
+                        }
+                    }
                 }
             }
             catch (Exception ex)

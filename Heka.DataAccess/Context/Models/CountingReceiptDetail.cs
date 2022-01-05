@@ -31,6 +31,6 @@ namespace Heka.DataAccess.Context
         public virtual CountingReceipt CountingReceipt { get; set; }
 
         [InverseProperty("CountingReceiptDetail")]
-        public ICollection<CountingReceiptSerial> CountingReceiptSerial { get; set; }
+        public virtual ICollection<CountingReceiptSerial> CountingReceiptSerial { get; set; }
     }
 }

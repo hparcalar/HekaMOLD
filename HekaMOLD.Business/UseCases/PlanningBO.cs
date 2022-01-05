@@ -884,11 +884,11 @@ namespace HekaMOLD.Business.UseCases
 
                 if (workOrderStarted)
                 {
-                    // CREATE PRODUCT RECIPE CONSUMPTION
-                    using (RecipeBO bObj = new RecipeBO())
-                    {
-                        bObj.CreateRecipeConsuption(workOrderDetailId);
-                    }
+                    // CREATE PRODUCT RECIPE CONSUMPTION -- MOVED TO PRODUCT ENTRY TO WAREHOUSE
+                    //using (RecipeBO bObj = new RecipeBO())
+                    //{
+                    //    bObj.CreateRecipeConsumption(workOrderDetailId, warehouseId: null);
+                    //}
                 }
 
                 // MOVED TO USER LOGIN WITH MACHINE SELECTION

@@ -24,6 +24,6 @@ namespace Heka.DataAccess.Context
         public virtual Plant Plant { get; set; }
 
         [InverseProperty("CountingReceipt")]
-        public ICollection<CountingReceiptDetail> CountingReceiptDetail { get; set; }
+        public virtual ICollection<CountingReceiptDetail> CountingReceiptDetail { get; set; }
     }
 }

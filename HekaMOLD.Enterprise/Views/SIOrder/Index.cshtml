@@ -228,21 +228,21 @@
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ara Toplam</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <input type="text" class="form-control" readonly="readonly" ng-value="getToFixed(modelObject.SubTotal, 2)" placeholder="" />
+                                <input type="text" class="form-control" readonly="readonly" ng-value="formatNumber(modelObject.SubTotal)" placeholder="" />
                             </div>
                         </div>
                         <div class="col-xxl-4">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kdv Toplam</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <input type="text" class="form-control" readonly="readonly" ng-value="getToFixed(modelObject.TaxPrice, 2)" placeholder="" />
+                                <input type="text" class="form-control" readonly="readonly" ng-value="formatNumber(modelObject.TaxPrice)" placeholder="" />
                             </div>
                         </div>
                         <div class="col-xxl-4">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Genel Toplam</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <input type="text" class="form-control" readonly="readonly" ng-value="getToFixed(modelObject.OverallTotal, 2)" placeholder="" />
+                                <input type="text" class="form-control" readonly="readonly" ng-value="formatNumber(modelObject.OverallTotal)" placeholder="" />
                             </div>
                         </div>
                     </div>

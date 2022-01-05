@@ -107,6 +107,29 @@
             }).catch(function (err) { });
     }
 
+    $scope.createConsumption = function () {
+        $scope.saveStatus = 1;
+
+        $http.post(HOST_URL + 'ItemReceipt/CreateConsumption', { productionReceiptId: $scope.modelObject.Id }, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.saveStatus = 0;
+
+                    if (resp.data.Status == 1) {
+                        toastr.success('Kayıt başarılı.', 'Bilgilendirme');
+                        $scope.bindModel($scope.modelObject.Id);
+                    }
+                    else
+                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                }
+            }).catch(function (err) { });
+    }
+
+    $scope.showConsumptionReceipt = function () {
+        window.location.href = HOST_URL + 'ItemReceipt?rid=' + $scope.modelObject.ConsumptionReceiptId
+            + '&receiptCategory=' + $scope.receiptCategory;
+    }
+
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
@@ -203,6 +226,7 @@
                     refreshArray($scope.warehouseList);
 
                     $scope.bindDetails();
+                    $scope.calculateHeader();
                 }
             }).catch(function (err) { });
     }
@@ -291,7 +315,7 @@
                             var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
 
                             $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
-                                + '&forexDate=' + $scope.modelObject.ReceiptDate, {}, 'json')
+                                + '&forexDate=' + $scope.modelObject.ReceiptDateStr, {}, 'json')
                                 .then(function (resp) {
                                     if (typeof resp.data != 'undefined' && resp.data != null) {
                                         if (typeof resp.data.SalesForexRate != 'undefined') {
@@ -469,6 +493,19 @@
                 }
             ]
         });
+    }
+
+    $scope.formatNumber = function (numberData) {
+        try {
+            var formatter = new Intl.NumberFormat('tr', {
+                style: 'decimal',
+                currency: 'TRY',
+            });
+
+            return formatter.format(numberData);
+        } catch (e) {
+            return 0;
+        }
     }
 
     $scope.bindParameters = function () {

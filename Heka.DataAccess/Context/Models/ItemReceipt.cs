@@ -60,6 +60,9 @@ namespace Heka.DataAccess.Context
         [ForeignKey("WorkOrderDetail")]
         public Nullable<int> WorkOrderDetailId { get; set; }
 
+        [ForeignKey("ConsumptionReceipt")]
+        public Nullable<int> ConsumptionReceiptId { get; set; }
+
         public virtual Firm Firm { get; set; }
         public virtual Invoice Invoice { get; set; }
         public virtual ItemOrder ItemOrder { get; set; }
@@ -68,6 +71,7 @@ namespace Heka.DataAccess.Context
         public virtual Warehouse Warehouse { get; set; }
         public virtual Warehouse Warehouse1 { get; set; }
         public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual ItemReceipt ConsumptionReceipt { get; set; }
 
         [InverseProperty("ItemReceipt")]
         public virtual ICollection<ItemReceiptDetail> ItemReceiptDetail { get; set; }

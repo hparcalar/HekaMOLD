@@ -174,6 +174,19 @@
         });
     }
 
+    $scope.formatNumber = function (numberData) {
+        try {
+            var formatter = new Intl.NumberFormat('tr', {
+                style: 'decimal',
+                currency: 'TRY',
+            });
+
+            return formatter.format(numberData);
+        } catch (e) {
+            return 0;
+        }
+    }
+
     $scope.bindModel = function (id) {
         $http.get(HOST_URL + 'SIOrder/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
@@ -206,6 +219,9 @@
                             row.SubTotal = resp.data.SubTotal;
 
                             $scope.calculateHeader();
+
+                            var detailsGrid = $("#dataList").dxDataGrid("instance");
+                            detailsGrid.refresh();
                         }
                     }).catch(function (err) { });
             } catch (e) {
@@ -266,12 +282,13 @@
                                 calculateRowAgain = true;
                             }
                         }
+
                         if (typeof values.ForexId != 'undefined') {
                             obj.ForexId = values.ForexId;
                             var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
 
                             $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
-                                + '&forexDate=' + $scope.modelObject.OrderDate, {}, 'json')
+                                + '&forexDate=' + $scope.modelObject.OrderDateStr, {}, 'json')
                                 .then(function (resp) {
                                     if (typeof resp.data != 'undefined' && resp.data != null) {
                                         if (typeof resp.data.SalesForexRate != 'undefined') {
@@ -343,7 +360,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 280,
+            height: 350,
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
@@ -406,7 +423,12 @@
                     },
                     validationRules: [{ type: "required" }]
                 },
-                { dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                {
+                    dataField: 'UnitPrice', caption: 'Birim Fiyat',
+                    dataType: 'number', format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                    validationRules: [{ type: "required" }]
+                },
                 {
                     dataField: 'ForexId', caption: 'Döviz Cinsi',
                     allowSorting: false,
@@ -416,9 +438,18 @@
                         displayExpr: "ForexTypeCode"
                     }
                 },
-                { dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                {
+                    dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                },
+                {
+                    dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                },
+                {
+                    dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                },
                 { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {
@@ -434,6 +465,22 @@
                                 var dataGrid = $("#dataList").dxDataGrid("instance");
                                 $scope.selectedRow = e.row.data;
                                 $scope.showRowMenu();
+                            }
+                        },
+                        {
+                            name: 'clone', cssClass: 'fas fa-copy', text: '', onClick: function (e) {
+                                var dataGrid = $("#dataList").dxDataGrid("instance");
+                                $scope.selectedRow = e.row.data;
+
+                                var cloneRow = {};
+                                Object.assign(cloneRow, $scope.selectedRow);
+                                cloneRow.Id = 0;
+                                cloneRow.LineNumber++;
+                                cloneRow.NewDetail = true;
+
+                                $scope.modelObject.Details.push(cloneRow);
+
+                                dataGrid.refresh();
                             }
                         }
                     ]
