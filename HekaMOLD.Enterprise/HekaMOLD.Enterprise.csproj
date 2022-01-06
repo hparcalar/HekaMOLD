@@ -167,6 +167,7 @@
     <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
+    <Compile Include="Controllers\VehicleController.cs" />
     <Compile Include="Controllers\WorkOrderCategoryController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Controllers\MoldTestController.cs" />
@@ -4636,6 +4637,7 @@
     <Content Include="Views\WorkOrderCategory\List.cshtml" />
     <Content Include="Views\WorkOrderCategory\Index.cshtml" />
     <Content Include="Views\ContractWorks\Index.cshtml" />
+    <Content Include="Views\Vehicle\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

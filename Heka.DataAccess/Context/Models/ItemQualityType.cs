@@ -22,7 +22,7 @@ namespace Heka.DataAccess.Context.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
 
-        [InverseProperty("Item")]
+        [InverseProperty("ItemQualityType")]
         public virtual ICollection<Item> Item { get; set; }
 
     }

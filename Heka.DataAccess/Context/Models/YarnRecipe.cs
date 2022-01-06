@@ -23,7 +23,8 @@ namespace Heka.DataAccess.Context.Models
 
         [ForeignKey("Firm")]
         public int? FirmId { get; set; }
-        public int YarnRecipeTypeId { get; set; }
+        [ForeignKey("YarnRecipeType")]
+        public int? YarnRecipeTypeId { get; set; }
         public int? Denier { get; set; }
         public int? ReportWireCount { get; set; }
         public int? MeterWireCount { get; set; }
@@ -31,6 +32,7 @@ namespace Heka.DataAccess.Context.Models
 
         public virtual Firm Firm { get; set; }
         public virtual Item Item { get; set; }
+        public virtual YarnRecipeType YarnRecipeType { get; set; }
 
     }
 }

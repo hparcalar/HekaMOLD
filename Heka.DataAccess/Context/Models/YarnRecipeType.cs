@@ -23,7 +23,7 @@ namespace Heka.DataAccess.Context.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
 
-        [InverseProperty("YarnRecipe")]
+        [InverseProperty("YarnRecipeType")]
         public virtual ICollection<YarnRecipe> YarnRecipe { get; set; }
     }
 }

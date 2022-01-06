@@ -17,6 +17,7 @@ namespace Heka.DataAccess.Context.Models
         public int Density { get; set; }
 
         public virtual YarnRecipeType YarnRecipeType { get; set; }
+        public virtual Item Item { get; set; }
 
 
     }
