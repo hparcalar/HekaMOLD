@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using HekaMOLD.Business.Models.DataTransfer.Order;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -3162,6 +3163,102 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        #endregion
+
+        #region PAYMENT PLAN BUSINESS
+        public PaymentPlanModel[] GetPaymentPlanList()
+        {
+            List<PaymentPlanModel> data = new List<PaymentPlanModel>();
+
+            var repo = _unitOfWork.GetRepository<PaymentPlan>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                PaymentPlanModel containerObj = new PaymentPlanModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdatePaymentPlan(PaymentPlanModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.PaymentPlanCode))
+                    throw new Exception("Plan kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.PaymentPlanName))
+                    throw new Exception("Plan adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<PaymentPlan>();
+
+                if (repo.Any(d => (d.PaymentPlanCode == model.PaymentPlanCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir plan mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new PaymentPlan();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePaymentPlan(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<PaymentPlan>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public PaymentPlanModel GetPaymentPlan(int id)
+        {
+            PaymentPlanModel model = new PaymentPlanModel { };
+
+            var repo = _unitOfWork.GetRepository<PaymentPlan>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
         #endregion
     }
 }

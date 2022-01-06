@@ -5,8 +5,10 @@
     $scope.unitList = [];
     $scope.firmList = [];
     $scope.forexList = [];
+    $scope.paymentPlanList = [];
 
     $scope.selectedFirm = {};
+    $scope.selectedPaymentPlan = {};
     $scope.selectedRow = { Id:0 };
 
     $scope.saveStatus = 0;
@@ -117,6 +119,11 @@
         else
             $scope.modelObject.FirmId = null;
 
+        if (typeof $scope.selectedPaymentPlan != 'undefined' && $scope.selectedPaymentPlan != null)
+            $scope.modelObject.PaymentPlanId = $scope.selectedPaymentPlan.Id;
+        else
+            $scope.modelObject.PaymentPlanId = null;
+
         $http.post(HOST_URL + 'SIOrder/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -199,6 +206,11 @@
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
                     else
                         $scope.selectedFirm = {};
+
+                    if (typeof $scope.modelObject.PaymentPlanId != 'undefined' && $scope.modelObject.PaymentPlanId != null)
+                        $scope.selectedPaymentPlan = $scope.paymentPlanList.find(d => d.Id == $scope.modelObject.PaymentPlanId);
+                    else
+                        $scope.selectedPaymentPlan = {};
 
                     $scope.bindDetails();
                     $scope.calculateHeader();
@@ -498,6 +510,7 @@
                         $scope.unitList = resp.data.Units;
                         $scope.firmList = resp.data.Firms;
                         $scope.forexList = resp.data.Forexes;
+                        $scope.paymentPlanList = resp.data.PaymentPlans;
 
                         resolve();
                     }

@@ -119,5 +119,6 @@
         public virtual DbSet<CountingReceipt> CountingReceipt { get; set; }
         public virtual DbSet<CountingReceiptDetail> CountingReceiptDetail { get; set; }
         public virtual DbSet<CountingReceiptSerial> CountingReceiptSerial { get; set; }
+        public virtual DbSet<PaymentPlan> PaymentPlan { get; set; }
     }
 }

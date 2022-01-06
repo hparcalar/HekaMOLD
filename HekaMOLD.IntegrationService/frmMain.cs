@@ -111,7 +111,7 @@ namespace HekaMOLD.IntegrationService
                                     + result.ErrorMessage);
                             }
 
-                            if (sync.EnabeldOnPurchaseItemReceipts == true && entObj is MikroIntegrator)
+                            if (entObj is MikroIntegrator)
                             {
                                 var pResult = ((MikroIntegrator)entObj).PushPurchasedItems(sync);
                                 AddLog(pResult.Result ? "Satınalma irsaliyeleri transfer edildi." : "Satınalma İrsaliye Transferi Hata: " + pResult.ErrorMessage);
@@ -169,7 +169,7 @@ namespace HekaMOLD.IntegrationService
 
                 }
 
-                await Task.Delay(1000 * 60 * 10);
+                await Task.Delay(1000 * 60 * 3);
             }
         }
 

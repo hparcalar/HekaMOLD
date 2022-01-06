@@ -1004,6 +1004,9 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         newReceiptNo = lastReceiptNo + 1;
                                     }
 
+                                    string textPartOfDocument = Regex.Match(rcp.DocumentNo, "[A-Z]+").Value;
+                                    string numericPartOfDocument = Regex.Match(rcp.DocumentNo, "[0-9]+").Value;
+
                                     foreach (var rdt in rcp.Details)
                                     {
                                         try
@@ -1024,7 +1027,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 + "sth_Olcu1,sth_Olcu2,sth_Olcu3,sth_Olcu4,sth_Olcu5, sth_FormulMiktarNo,sth_FormulMiktar,sth_eirs_senaryo,sth_eirs_tipi, sth_teslim_tarihi, "
                                                 + "sth_matbu_fl, sth_satis_fiyat_doviz_cinsi, sth_satis_fiyat_doviz_kuru, sth_alt_doviz_kuru) "
                                                 + " VALUES('0', 0, 16, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', "
-                                                + "'0', '0', '0', '13', 'IRS', '" + newReceiptNo + "', " + rdt.LineNumber + ", '', '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', "
+                                                + "'0', '0', '0', '13', '"+ textPartOfDocument +"', '" + numericPartOfDocument + "', " + rdt.LineNumber + ", '', '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', "
                                                 + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0, 0, 0, '', 0, '', 0, 1, 0, 1, " +
                                                    string.Format("{0:0.00}", rdt.Quantity).Replace(",", ".") + " ,0, 1, 0, 0,0,0,0,0,0, 0,0,0,0, 0,0, 0,0,0,0, '', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', "
                                                    + "1, 1, '" + string.Format("{0:yyyy-MM-dd HH:mm}", rcp.ReceiptDate) + "', '','', '1899-12-30 00:00:00', 0, 0, 0,0,0, 0, '" + rdt.ItemNo + "', "
@@ -1046,10 +1049,10 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     con.Close();
 
                                     // UPDATE MIKRO DOCUMENT NO TO HEKA RECEIPT DOCUMENT NO
-                                    using (ReceiptBO rObj = new ReceiptBO())
-                                    {
-                                        rObj.UpdateDocumentNo(rcp.Id, "IRS" + newReceiptNo.ToString());
-                                    }
+                                    //using (ReceiptBO rObj = new ReceiptBO())
+                                    //{
+                                    //    rObj.UpdateDocumentNo(rcp.Id, "IRS" + newReceiptNo.ToString());
+                                    //}
                                 }
                             }
                         }
@@ -1184,6 +1187,8 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             var cariGrupNo = mikroForexId > 0 ? 2 : 1;
 
                                             string mikroSipCins = docText == "IHR" ? "3" : "0";
+                                            string paymentPlanCode = !string.IsNullOrEmpty(rcp.PaymentPlanCode) ?
+                                                rcp.PaymentPlanCode : "0";
 
                                             string sql = "INSERT INTO SIPARISLER(sip_SpecRECno, sip_iptal, sip_fileid, sip_hidden, sip_kilitli, sip_degisti, sip_checksum, sip_create_user, sip_lastup_user, "
                                                 + "sip_special1, sip_special2, sip_special3, sip_firmano, sip_subeno, sip_tarih, sip_tip, sip_cins, "
@@ -1203,7 +1208,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 + " VALUES('0', 0, 21, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '" + string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "', "
                                                 + "'0', '"+ mikroSipCins +"', '"+ docText +"', '" + newReceiptNo + "', " + lineNumber + ", '', '" + string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "', "
                                                 + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 'SATIŞ02', '" + rcp.FirmCode +"', 0, "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", " +
-                                                   string.Format("{0:0.00}", rdt.Quantity ?? 0).Replace(",", ".") + " , 1, '"+ string.Format("{0:0.00}", (rdt.UnitPrice) * rdt.Quantity).Replace(",",".") +"', 0,0,0,0,0,0, 0,0,0,0, "+ taxRateId.ToString() +",'"+ string.Format("{0:0.00}", rdt.TaxAmount).Replace(",", ".") + "', 0,0,0, '', " +
+                                                   string.Format("{0:0.00}", rdt.Quantity ?? 0).Replace(",", ".") + " , 1, '"+ string.Format("{0:0.00}", (rdt.UnitPrice) * rdt.Quantity).Replace(",",".") +"', 0,0,0,0,0,0, 0,0,0,0, "+ taxRateId.ToString() +",'"+ string.Format("{0:0.00}", rdt.TaxAmount).Replace(",", ".") + "', 0,0,'"+ paymentPlanCode +"', '', " +
                                                    string.Format("{0:0.00}", rdt.UnitPrice ?? 0).Replace(",", ".") +", 1, '','', 0, '','',0,0,0,'03',1,0,0,0, '"+ cariGrupNo + "', '1', '0', '00000000-0000-0000-0000-000000000000', "
                                                    + " '', '0', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', '0', '0', '0', "
                                                    + " '0', '0', '0', '', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', "

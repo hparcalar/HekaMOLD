@@ -160,6 +160,7 @@
     <Compile Include="Models\DataTransfer\Order\ItemOrderConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
+    <Compile Include="Models\DataTransfer\Order\PaymentPlanModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ActualRouteHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ContractWorkFlowModel.cs" />
     <Compile Include="Models\DataTransfer\Production\DeliveryPlanModel.cs" />

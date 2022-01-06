@@ -167,12 +167,19 @@
                                 <input type="text" class="form-control form-control-solid" readonly="readonly" ng-model="modelObject.OrderNo" placeholder="" />
                             </div>
                         </div>
-                        <div class="col-xxl-6">
+                        <div class="col-xxl-3">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Belge No</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
                                 <input type="text" class="form-control form-control-solid" ng-model="modelObject.DocumentNo" placeholder="" />
                             </div>
+                        </div>
+                        <div class="col-xxl-3">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ödeme Planı</label>
+                            <!--begin::Input group-->
+                            <select class="form-select form-select-solid" data-allow-clear="true"
+                                    ng-options="item.PaymentPlanCode + ' / ' + item.PaymentPlanName for item in paymentPlanList" ng-model="selectedPaymentPlan"
+                                    data-control="select2" data-placeholder="-- Seçiniz --"></select>
                         </div>
                     </div>
 

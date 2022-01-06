@@ -115,6 +115,7 @@
     <Compile Include="Context\Models\MoldTest.cs" />
     <Compile Include="Context\Models\Notification.cs" />
     <Compile Include="Context\Models\Pallet.cs" />
+    <Compile Include="Context\Models\PaymentPlan.cs" />
     <Compile Include="Context\Models\Plant.cs" />
     <Compile Include="Context\Models\PostureCategory.cs" />
     <Compile Include="Context\Models\PreProcessType.cs" />
@@ -224,6 +225,10 @@
     <Compile Include="Migrations\202201050758330_ConsumptionRelationToProductionReceipt.designer.cs">
       <DependentUpon>202201050758330_ConsumptionRelationToProductionReceipt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201061332474_PaymentPlan.cs" />
+    <Compile Include="Migrations\202201061332474_PaymentPlan.designer.cs">
+      <DependentUpon>202201061332474_PaymentPlan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -270,6 +275,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201050758330_ConsumptionRelationToProductionReceipt.resx">
       <DependentUpon>202201050758330_ConsumptionRelationToProductionReceipt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201061332474_PaymentPlan.resx">
+      <DependentUpon>202201061332474_PaymentPlan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

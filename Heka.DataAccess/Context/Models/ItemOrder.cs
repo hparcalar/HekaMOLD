@@ -51,6 +51,9 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+
+        [ForeignKey("PaymentPlan")]
+        public Nullable<int> PaymentPlanId { get; set; }
         public string SyncKey { get; set; }
     
         public virtual Firm Firm { get; set; }
@@ -59,6 +62,7 @@ namespace Heka.DataAccess.Context
         public virtual SyncPoint SyncPoint { get; set; }
         public virtual Warehouse Warehouse { get; set; }
         public virtual Warehouse Warehouse1 { get; set; }
+        public virtual PaymentPlan PaymentPlan { get; set; }
 
         [InverseProperty("ItemOrder")]
         public virtual ICollection<ItemOrderDetail> ItemOrderDetail { get; set; }
