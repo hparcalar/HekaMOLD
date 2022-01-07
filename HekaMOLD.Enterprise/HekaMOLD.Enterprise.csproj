@@ -4171,6 +4171,8 @@
     <Content Include="FrontEndLogic\User\notifications.js" />
     <Content Include="FrontEndLogic\User\index.js" />
     <Content Include="FrontEndLogic\User\list.js" />
+    <Content Include="FrontEndLogic\Vehicle\index.js" />
+    <Content Include="FrontEndLogic\Vehicle\list.js" />
     <Content Include="FrontEndLogic\Warehouse\finished-product-state.js" />
     <Content Include="FrontEndLogic\Warehouse\finished-products.js" />
     <Content Include="FrontEndLogic\Warehouse\index.js" />
@@ -4638,6 +4640,7 @@
     <Content Include="Views\WorkOrderCategory\Index.cshtml" />
     <Content Include="Views\ContractWorks\Index.cshtml" />
     <Content Include="Views\Vehicle\Index.cshtml" />
+    <Content Include="Views\Vehicle\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

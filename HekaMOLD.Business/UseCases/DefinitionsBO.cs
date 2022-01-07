@@ -14,6 +14,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using Heka.DataAccess.Context.Models;
+using HekaMOLD.Business.Models.DataTransfer.Vehicle;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -207,6 +209,24 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Firm>();
             return repo.Any(d => d.FirmCode == firmCode);
+        }
+        #endregion
+
+        #region VEHICLE BUSINESS
+        public FirmModel[] GetVehicleList()
+        {
+            var repo = _unitOfWork.GetRepository<Vehicle>();
+
+            return repo.GetAll()
+                .Select(d => new VehicleModel
+                {
+                    Id = d.Id,
+                    FirmCode = d.FirmCode,
+                    FirmName = d.FirmName,
+                    IsApproved = true,
+                    FirmType = d.FirmType,
+                    FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : "Tedarikçi + Müşteri",
+                }).ToArray();
         }
         #endregion
 
