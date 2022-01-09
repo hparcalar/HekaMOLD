@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class VehicleController : Controller
+    public class VehicleTypeController : Controller
     {
-        // GET: Vehicle
+        // GET: VehicleType
         public ActionResult Index()
         {
             return View();
@@ -17,35 +17,15 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
-        public ActionResult ApprovedSuppliers()
-        {
-            return View();
-        }
+
         [HttpGet]
-        public JsonResult GetSelectables()
+        public JsonResult GetVehicleTypeList()
         {
-            VehicleTypeModel[] vehicleTypes = new VehicleTypeModel[0];
+            VehicleTypeModel[] result = new VehicleTypeModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                vehicleTypes = bObj.GetVehicleTypeList();
-            }
-
-            var jsonResult = Json(new
-            {
-                VehicleTypes = vehicleTypes
-            }, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-        [HttpGet]
-        public JsonResult GetVehicleList()
-        {
-            VehicleModel[] result = new VehicleModel[0];
-
-            using (DefinitionsBO bObj = new DefinitionsBO())
-            {
-                result = bObj.GetVehicleList();
+                result = bObj.GetVehicleTypeList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -56,10 +36,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            VehicleModel model = null;
+            VehicleTypeModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetVehicle(rid);
+                model = bObj.GetVehicleType(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -88,14 +68,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(VehicleModel model)
+        public JsonResult SaveModel(VehicleTypeModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateVehicle(model);
+                    result = bObj.SaveOrUpdateVehicleType(model);
                 }
 
                 if (result.Result)

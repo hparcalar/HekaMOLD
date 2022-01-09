@@ -1,13 +1,9 @@
 ﻿using HekaMOLD.Business.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HekaMOLD.Business.Models.DataTransfer.Vehicle
+namespace HekaMOLD.Business.Models.DataTransfer.Logistics
 {
-    public class VehicleModel : IDataObject
+   public class VehicleModel: IDataObject
     {
         public int Id { get; set; }
         public string Plate { get; set; }
@@ -50,9 +46,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Vehicle
         public string ContractEndDateStr { get; set; }
         public string UnitCode { get; set; }
         public string UnitName { get; set; }
-
-
-
+        public string TrailerTypeStr { get; set; }
         #endregion
     }
 }

@@ -1,21 +1,19 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.Context.Models;
 using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
-using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.Models.DataTransfer.Maintenance;
+using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using HekaMOLD.Business.Models.DataTransfer.Summary;
-using Heka.DataAccess.Context.Models;
-using HekaMOLD.Business.Models.DataTransfer.Vehicle;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -211,9 +209,111 @@ namespace HekaMOLD.Business.UseCases
             return repo.Any(d => d.FirmCode == firmCode);
         }
         #endregion
+        #region VEHICLETYPE BUSINESS
+        public VehicleTypeModel[] GetVehicleTypeList()
+        {
+            List<VehicleTypeModel> data = new List<VehicleTypeModel>();
 
+            var repo = _unitOfWork.GetRepository<VehicleType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                VehicleTypeModel containerObj = new VehicleTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateVehicleType(VehicleTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.VehicleTypeCode))
+                    throw new Exception("Tip Kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.VehicleTypeCode))
+                    throw new Exception("Tip adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<VehicleType>();
+
+                if (repo.Any(d => (d.VehicleTypeCode == model.VehicleTypeCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir tip mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new VehicleType();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteVehicleType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<VehicleType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public VehicleTypeModel GetVehicleType(int id)
+        {
+            VehicleTypeModel model = new VehicleTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<VehicleType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
         #region VEHICLE BUSINESS
-        public FirmModel[] GetVehicleList()
+        public VehicleModel[] GetVehicleList()
         {
             var repo = _unitOfWork.GetRepository<Vehicle>();
 
@@ -221,12 +321,134 @@ namespace HekaMOLD.Business.UseCases
                 .Select(d => new VehicleModel
                 {
                     Id = d.Id,
-                    FirmCode = d.FirmCode,
-                    FirmName = d.FirmName,
-                    IsApproved = true,
-                    FirmType = d.FirmType,
-                    FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : "Tedarikçi + Müşteri",
+                    Plate = d.Plate,
+                    Mark = d.Mark,
+                    Model = d.Model,
+                    TrailerTypeStr = d.TrailerType == 1 ? "Çadırlı" : d.TrailerType == 2 ? "Frigo" : "Kapalı",
                 }).ToArray();
+        }
+        public BusinessResult SaveOrUpdateVehicle(VehicleModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.Plate))
+                    throw new Exception("Plaka girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Vehicle>();
+                //var repoAuthors = _unitOfWork.GetRepository<FirmAuthor>();
+
+                if (repo.Any(d => (d.Plate == model.Plate) && d.Id != model.Id))
+                    throw new Exception("Aynı plakaya sahip başka bir araç mevcuttur. Lütfen farklı bir plaka giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Vehicle();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE CARE LIST
+                //if (model.Authors == null)
+                //    model.Authors = new FirmAuthorModel[0];
+
+                //var toBeRemovedAuthors = dbObj.FirmAuthor
+                //    .Where(d => !model.Authors.Where(m => m.NewDetail == false)
+                //        .Select(m => m.Id).ToArray().Contains(d.Id)
+                //    ).ToArray();
+                //foreach (var item in toBeRemovedAuthors)
+                //{
+                //    repoAuthors.Delete(item);
+                //}
+
+                //foreach (var item in model.Authors)
+                //{
+                //    if (item.NewDetail == true)
+                //    {
+                //        var dbItemAu = new FirmAuthor();
+                //        item.MapTo(dbItemAu);
+                //        dbItemAu.Firm = dbObj;
+                //        repoAuthors.Add(dbItemAu);
+                //    }
+                //    else if (!toBeRemovedAuthors.Any(d => d.Id == item.Id))
+                //    {
+                //        var dbItemAu = repoAuthors.GetById(item.Id);
+                //        item.MapTo(dbItemAu);
+                //        dbItemAu.Firm = dbObj;
+                //    }
+                //}
+                #endregion
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public BusinessResult DeleteVehicle(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Vehicle>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        public VehicleModel GetVehicle(int id)
+        {
+            VehicleModel model = new VehicleModel { };
+
+            var repo = _unitOfWork.GetRepository<Vehicle>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+                #region GET CARE LIST
+                //List<FirmAuthorModel> authorList = new List<FirmAuthorModel>();
+                //dbObj.FirmAuthor.ToList().ForEach(d =>
+                //{
+                //    FirmAuthorModel authorModel = new FirmAuthorModel();
+                //    d.MapTo(authorModel);
+                //    authorList.Add(authorModel);
+                //});
+                //model.Authors = authorList.ToArray();
+                #endregion
+            }
+
+            return model;
         }
         #endregion
 
@@ -237,7 +459,7 @@ namespace HekaMOLD.Business.UseCases
 
             return repo.GetAll().Select(d => new ItemModel
             {
-                Id=d.Id,
+                Id = d.Id,
                 ItemNo = d.ItemNo,
                 ItemName = d.ItemName,
                 ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
@@ -289,19 +511,19 @@ namespace HekaMOLD.Business.UseCases
 
             return repo.Filter(d => d.ItemType == (int)ItemType.Product
                 || d.ItemType == (int)ItemType.SemiProduct).ToList().Select(d => new ItemModel
-            {
-                Id = d.Id,
-                ItemNo = d.ItemNo,
-                ItemName = d.ItemName,
-                ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
+                {
+                    Id = d.Id,
+                    ItemNo = d.ItemNo,
+                    ItemName = d.ItemName,
+                    ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
                         d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "",
-                ItemType = d.ItemType,
-                CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
-                GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
-                TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
-                TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
-                TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
-            }).ToArray();
+                    ItemType = d.ItemType,
+                    CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
+                    GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
+                    TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
+                    TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
+                    TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
+                }).ToArray();
         }
 
         public BusinessResult SaveOrUpdateItem(ItemModel model)
@@ -319,7 +541,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoWarehouses = _unitOfWork.GetRepository<ItemWarehouse>();
                 var repoUnits = _unitOfWork.GetRepository<ItemUnit>();
 
-                if (repo.Any(d => (d.ItemNo == model.ItemNo) 
+                if (repo.Any(d => (d.ItemNo == model.ItemNo)
                     && d.Id != model.Id))
                     throw new Exception("Aynı numaraya sahip başka bir stok mevcuttur. Lütfen farklı bir numara giriniz.");
 
@@ -458,10 +680,10 @@ namespace HekaMOLD.Business.UseCases
 
                 #region WAREHOUSE RESTRICTIONS BY ITEM TYPE
                 var warehouseList = repoWarehouse.Filter(d =>
-                    ((model.ItemType == (int)ItemType.RawMaterials || model.ItemType == (int)ItemType.Commercial) 
+                    ((model.ItemType == (int)ItemType.RawMaterials || model.ItemType == (int)ItemType.Commercial)
                         && d.WarehouseType == (int)WarehouseType.ItemWarehouse)
                     ||
-                    ((model.ItemType == (int)ItemType.SemiProduct) && 
+                    ((model.ItemType == (int)ItemType.SemiProduct) &&
                         (d.WarehouseType == (int)WarehouseType.ItemWarehouse || d.WarehouseType == (int)WarehouseType.ProductWarehouse))
                     ||
                     (model.ItemType == (int)ItemType.Product && d.WarehouseType == (int)WarehouseType.ProductWarehouse)
@@ -477,7 +699,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         ItemId = model.Id,
                         WarehouseId = item.Id,
-                        IsAllowed=true,
+                        IsAllowed = true,
                         MaximumQuantity = null,
                         WarehouseCode = item.WarehouseCode,
                         WarehouseName = item.WarehouseName,
@@ -1178,7 +1400,8 @@ namespace HekaMOLD.Business.UseCases
             var dataList = repo.GetAll();
 
             List<ForexTypeModel> modelList = new List<ForexTypeModel>();
-            dataList.ToList().ForEach(d => {
+            dataList.ToList().ForEach(d =>
+            {
                 var containerObj = new ForexTypeModel();
                 modelList.Add(d.MapTo(containerObj));
             });
@@ -1385,11 +1608,11 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
-        
+
         public MachineModel[] GetMachineStats(string startDate, string endDate)
         {
             List<MachineModel> data = new List<MachineModel>();
-            
+
             if (string.IsNullOrEmpty(startDate))
                 startDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now.AddMonths(-1));
             if (string.IsNullOrEmpty(endDate))
@@ -1417,7 +1640,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 MachineModel containerObj = new MachineModel();
                 d.MapTo(containerObj);
-                
+
                 if (d.WorkingUserId != null)
                 {
                     var dbUser = repoUser.Get(m => m.Id == d.WorkingUserId);
@@ -1482,7 +1705,7 @@ namespace HekaMOLD.Business.UseCases
                     decimal avgCycleTime = 0;
                     int targetCount = 0;
 
-                    var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
+                    var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id
                         && m.WorkOrderDetailId != null
                         && m.ShiftId == shift.Id)
                         .OrderByDescending(m => m.Id).FirstOrDefault();
@@ -1627,7 +1850,7 @@ namespace HekaMOLD.Business.UseCases
                         ShiftId = shift.Id,
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
-                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count() 
+                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count()
                             - Convert.ToInt32(shiftWastageCount),
                         WastageCount = shiftWastageCount,
                     });
@@ -1972,7 +2195,7 @@ namespace HekaMOLD.Business.UseCases
                 MoldName = d.MoldName,
                 FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                 FirmName = d.Firm != null ? d.Firm.FirmName : "",
-                OwnedDateStr = d.OwnedDate != null ? 
+                OwnedDateStr = d.OwnedDate != null ?
                     string.Format("{0:dd.MM.yyyy}", d.OwnedDate) : "",
                 LifeTimeTicks = d.LifeTimeTicks,
                 CurrentTicks = d.CurrentTicks,
@@ -2505,7 +2728,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
                 containerObj.UserCode = d.User != null ? d.User.UserCode : "";
                 containerObj.UserName = d.User != null ? d.User.UserName : "";
-                
+
                 data.Add(containerObj);
             });
 

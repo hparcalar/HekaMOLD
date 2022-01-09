@@ -7,13 +7,13 @@ namespace Heka.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class VehicleUpdate : IMigrationMetadata
+    public sealed partial class vehiclelmqwefwee : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(VehicleUpdate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(vehiclelmqwefwee));
         
         string IMigrationMetadata.Id
         {
-            get { return "202201071457353_VehicleUpdate"; }
+            get { return "202201081555394_vehiclelmqwefwee"; }
         }
         
         string IMigrationMetadata.Source

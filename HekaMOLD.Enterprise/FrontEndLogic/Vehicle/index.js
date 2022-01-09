@@ -2,7 +2,10 @@
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
-    
+
+    $scope.selectedVehicleType = {};
+    $scope.vehicleTypeList = [];
+
     $scope.selectedTrailerType = {};
     $scope.trailerTypeList = [{ Id: 1, Text: 'Çadırlı' },
         { Id: 2, Text: 'Frigo' }, { Id: 3, Text: 'Kapalı' }];
@@ -13,9 +16,25 @@
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
-        $scope.selectedFirmType = {};
-    }
+        $scope.selectedTrailerType = {};
+        $scope.selectedVehicleType = {};
+        $scope.selectedVehicleAllocationType = {};
 
+    }
+    $scope.loadSelectables = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Vehicle/GetSelectables', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.vehicleTypeList = resp.data.VehicleTypes;
+
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prmReq;
+    }
     $scope.performDelete = function () {
         bootbox.confirm({
             message: "Bu firma tanımını silmek istediğinizden emin misiniz?",
@@ -33,7 +52,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'Vahicle/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'Vehicle/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -55,17 +74,22 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        if (typeof $scope.selectedFirmType != 'undefined' && $scope.selectedFirmType != null) {
-            $scope.modelObject.FirmType = $scope.selectedFirmType.Id;
+        if (typeof $scope.selectedTrailerType != 'undefined' && $scope.selectedTrailerType != null) {
+            $scope.modelObject.TrailerType = $scope.selectedTrailerType.Id;
         }
         else
-            $scope.modelObject.FirmType = null;
+            $scope.modelObject.TrailerType = null;
 
+        if (typeof $scope.selectedVehicleAllocationType != 'undefined' && $scope.selectedVehicleAllocationType != null) {
+            $scope.modelObject.VehicleAllocationType = $scope.selectedVehicleAllocationType.Id;
+        }
+        else
+            $scope.modelObject.VehicleAllocationType = null;
+        alert($scope.modelObject.Plate);
         $http.post(HOST_URL + 'Vehicle/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
-
                     if (resp.data.Status == 1) {
                         toastr.success('Kayıt başarılı.', 'Bilgilendirme');
 
@@ -76,22 +100,26 @@
                 }
             }).catch(function (err) { });
     }
-
     $scope.bindModel = function (id) {
         $http.get(HOST_URL + 'Vehicle/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
-
-                    // BIND EXTERNAL FIRM TYPE
-                    if ($scope.modelObject.FirmType > 0) {
-                        $scope.selectedFirmType = $scope.firmTypeList.find(d => d.Id == $scope.modelObject.FirmType);
+                    if ($scope.modelObject.TrailerType > 0) {
+                        $scope.selectedTrailerType = $scope.trailerTypeList.find(d => d.Id == $scope.modelObject.TrailerType);
                     }
                     else {
-                        $scope.selectedFirmType = {};
+                        $scope.selectedTrailerType = {};
                     }
 
-                    $scope.bindAuthorList();
+                    if ($scope.modelObject.VehicleAllocationType > 0) {
+                        $scope.selectedVehicleAllocationType = $scope.vehicleAllocationTypeList.find(d => d.Id == $scope.modelObject.VehicleAllocationType);
+                    }
+                    else {
+                        $scope.selectedVehicleAllocationType = {};
+                    }
+
+                   // $scope.bindAuthorList();
                 }
             }).catch(function (err) { });
     }
@@ -175,6 +203,10 @@
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
-    if (PRM_ID > 0)
-        $scope.bindModel(PRM_ID);
+    $scope.loadSelectables().then(function (data) {
+        if (PRM_ID > 0)
+            $scope.bindModel(PRM_ID);
+        else
+            $scope.bindModel(0);
+    });
 });

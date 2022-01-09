@@ -156,17 +156,9 @@
     <Compile Include="Context\Models\WorkOrderSerial.cs" />
     <Compile Include="Context\Models\YarnRecipe.cs" />
     <Compile Include="Context\Models\YarnRecipeType.cs" />
-    <Compile Include="Migrations\202201060823544_test.cs" />
-    <Compile Include="Migrations\202201060823544_test.designer.cs">
-      <DependentUpon>202201060823544_test.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202201060849515_Vehicle.cs" />
-    <Compile Include="Migrations\202201060849515_Vehicle.designer.cs">
-      <DependentUpon>202201060849515_Vehicle.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202201071457353_VehicleUpdate.cs" />
-    <Compile Include="Migrations\202201071457353_VehicleUpdate.designer.cs">
-      <DependentUpon>202201071457353_VehicleUpdate.cs</DependentUpon>
+    <Compile Include="Migrations\202201081555394_vehiclelmqwefwee.cs" />
+    <Compile Include="Migrations\202201081555394_vehiclelmqwefwee.designer.cs">
+      <DependentUpon>202201081555394_vehiclelmqwefwee.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
@@ -182,14 +174,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202201060823544_test.resx">
-      <DependentUpon>202201060823544_test.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202201060849515_Vehicle.resx">
-      <DependentUpon>202201060849515_Vehicle.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202201071457353_VehicleUpdate.resx">
-      <DependentUpon>202201071457353_VehicleUpdate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202201081555394_vehiclelmqwefwee.resx">
+      <DependentUpon>202201081555394_vehiclelmqwefwee.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

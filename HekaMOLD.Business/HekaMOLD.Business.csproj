@@ -141,6 +141,8 @@
     <Compile Include="Models\DataTransfer\Labels\ProductLabel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutItemModel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutObjectTypeModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VehicleModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VehicleTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
@@ -205,7 +207,6 @@
     <Compile Include="Models\DataTransfer\Summary\ProductionHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\ReceiptConsumeSummary.cs" />
     <Compile Include="Models\DataTransfer\Summary\WorkOrderSerialSummary.cs" />
-    <Compile Include="Models\DataTransfer\Vehicle\VehicleModel.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
     <Compile Include="Models\Dictionaries\DictItemOrderType.cs" />
     <Compile Include="Models\Dictionaries\DictMachineStatusType.cs" />
