@@ -85,6 +85,9 @@ namespace Heka.DataAccess.Context
         [ForeignKey("Machine")]
         public int? MachineId { get; set; }
 
+        [ForeignKey("WeavingDraft")]
+        public int? WeavingDraftId { get; set; }
+
         [ForeignKey("ItemQualityType")]
         public int? ItemQualityTypeId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
@@ -99,6 +102,7 @@ namespace Heka.DataAccess.Context
         public virtual Plant Plant { get; set; }
         public virtual ItemQualityType ItemQualityType { get; set; }
         public virtual Machine Machine { get; set; }
+        public virtual WeavingDraft WeavingDraft { get; set; }
 
         [InverseProperty("Item")]
         public virtual ICollection<ItemLiveStatus> ItemLiveStatus { get; set; }

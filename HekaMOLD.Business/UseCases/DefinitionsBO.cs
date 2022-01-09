@@ -3615,6 +3615,7 @@ namespace HekaMOLD.Business.UseCases
                 FirmId=d.Firm != null ? d.Firm.Id:0,
                 FirmName = d.Firm != null ? d.Firm.FirmName : "",
                 YarnBreedName = d.YarnBreed != null ? d.YarnBreed.YarnBreedName : "",
+                YarnColourCode = d.YarnColour.YarnColourCode,
                 YarnColourName = d.YarnColour != null ? d.YarnColour.YarnColourName : "",
             }).ToArray();
         }

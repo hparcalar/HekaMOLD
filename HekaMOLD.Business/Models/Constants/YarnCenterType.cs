@@ -5,5 +5,6 @@
         PowerfulCenter = 1,
         //Seyrek
         RareCenter = 2,
+        None = 3,
     }
 }

@@ -14,6 +14,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? Factor { get; set; }
         //Bukum
         public int? Twist { get; set; }
+        public string TwistDirection { get; set; }
         //Punta
         public int? CenterType { get; set; }
         //Karisim 
@@ -28,6 +29,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
 
         #region VISUAL ELEMENTS
         public string FirmName { get; set; }
+        public int? YarnColourCode { get; set; }
         public string YarnColourName { get; set; }
         public string YarnBreedName { get; set; }
         public string YarnRecipeTypeStr { get; set; }

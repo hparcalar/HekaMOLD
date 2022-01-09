@@ -21,6 +21,20 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
         [HttpGet]
+        public JsonResult GetNextYarnBreedCode()
+        {
+            string receiptNo = "";
+
+            using (RequestBO bObj = new RequestBO())
+            {
+                receiptNo = bObj.GetNextYarnBreedCode();
+            }
+
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(receiptNo), ReceiptNo = receiptNo }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        [HttpGet]
         public JsonResult GetYarnBreedList()
         {
             YarnBreedModel[] result = new YarnBreedModel[0];

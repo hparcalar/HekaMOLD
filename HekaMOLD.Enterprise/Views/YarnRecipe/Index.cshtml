@@ -196,11 +196,12 @@
                                         ng-model="selectedYarnBreed" class="form-select form-select-solid">
                                 </select>
                             </div>
+
                             <!--begin::Input group-->
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Punta</label>
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Büküm Tipi</label>
                             <div class="mb-5">
-                                <select ng-options="item.Text for item in centerTypeList"
-                                        ng-model="selectedCenterType" class="form-select form-select-solid">
+                                <select ng-options="item.Text for item in twistDirectionTypeList"
+                                        ng-model="selectedTwistDirectionType" class="form-select form-select-solid">
                                 </select>
                             </div>
 
@@ -219,6 +220,13 @@
                                     ng-options="item.YarnColourName for item in yarnColourList" ng-model="selectedYarnColour"
                                     data-control="select2" data-placeholder="-- Seçiniz --">
                             </select>
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Punta</label>
+                            <div class="mb-5">
+                                <select ng-options="item.Text for item in centerTypeList"
+                                        ng-model="selectedCenterType" class="form-select form-select-solid"  data-placeholder="-- Seçiniz --">
+                                </select>
+                            </div>
                         </div>
 
                     </div>

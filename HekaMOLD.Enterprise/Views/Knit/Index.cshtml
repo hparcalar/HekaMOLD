@@ -283,7 +283,19 @@
             <!--end::Row-->
 
             <div class="row gy-5 gx-xl-8 bg-white">
-                <div class="col-xxl-6">
+                <div class="col-xxl-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Atkı İplikler</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="dx-viewport">
+                                <div id="weftYarnList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>               
+                <div class="col-xxl-12">
                     <div class="card card-px-0">
                         <div class="card-header card-px-0">
                             <h6 class="card-title">Çözgü İplikler</h6>
@@ -295,25 +307,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xxl-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title">Atkı İplikler</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="dx-viewport">
-                                <div id="weftYarnList"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
         <!--end::Container-->
     </div>
     <!--end::Post-->
 
-   
+
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>

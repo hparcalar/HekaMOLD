@@ -8,11 +8,15 @@
 
     $scope.selectedFirm = {};
     $scope.firmList = [];
-    $scope.selectedYarnColour = {};
+    $scope.selectedYarnColour = {}; 
     $scope.yarnColourList = [];
     $scope.selectedCenterType = {};
     $scope.centerTypeList = [{ Id: 1, Text: 'Kuvvetli Punta' },
-    { Id: 2, Text: 'Seyrek Punta' }];
+        { Id: 2, Text: 'Seyrek Punta' }, { Id: 3, Text: 'Yok' }];
+
+    $scope.selectedTwistDirectionType = {};
+    $scope.twistDirectionTypeList = [{ Id: 1, Text: 'Z' },
+        { Id: 2, Text: 'S' },{ Id: 3, Text: 'Yok' }];
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, YarnRecipeMixes: [] };
@@ -20,6 +24,7 @@
         $scope.selectedFirm = {};
         $scope.selectedCenterType = {};
         $scope.selectedYarnColour = {};
+        $scope.selectedTwistDirectionType = {};
     }
 
     // GET SELECTABLE DATA

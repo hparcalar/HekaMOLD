@@ -40,6 +40,7 @@
                 { dataField: 'YarnRecipeName', caption: 'İplik Adı' },
                 { dataField: 'YarnBreedName', caption: 'İplik Cinsi' },
                 { dataField: 'FirmName', caption: 'Firma' },
+                { dataField: 'YarnColourCode', caption: 'Renk Kodu' },
                 { dataField: 'YarnColourName', caption: 'Renk' },
                 { dataField: 'Denier', caption: 'Denye' },
                 { dataField: 'Factor', caption: 'Katsayı' },

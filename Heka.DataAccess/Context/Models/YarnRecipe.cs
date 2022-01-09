@@ -24,6 +24,7 @@ namespace Heka.DataAccess.Context.Models
         public int? Factor { get; set; }
         //Bukum
         public int? Twist { get; set; }
+        public string TwistDirection { get; set; }
         //Punta
         public int? CenterType { get; set; }
         //Karisim 

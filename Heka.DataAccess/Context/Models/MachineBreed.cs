@@ -9,6 +9,7 @@ namespace Heka.DataAccess.Context.Models
         public MachineBreed()
         {
             this.Machine =new  HashSet<Machine>();
+            this.WeavingDraft = new HashSet<WeavingDraft>();
         }
         public int Id { get; set; }
         public string MachineBreedCode { get; set; }
@@ -21,5 +22,7 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("MachineBreed")]
         public virtual ICollection<Machine> Machine { get; set; }
+        [InverseProperty("MachineBreed")]
+        public virtual ICollection<WeavingDraft> WeavingDraft { get; set; }
     }
 }

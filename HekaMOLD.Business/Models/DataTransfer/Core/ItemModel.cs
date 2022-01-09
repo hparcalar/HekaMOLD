@@ -40,7 +40,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? WeftDensity { get; set; }
 
         public int? MachineId { get; set; }
-
+        public int? WeavingDraftId { get; set; }
         public int? ItemQualityTypeId { get; set; }
 
         public ItemWarehouseModel[] Warehouses { get; set; }
@@ -63,6 +63,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string MachineCode { get; set; }
         public string MachineName { get; set; }
         public string QualityTypeName { get; set; }
+        public string WeavingDraftCode { get; set; }
+
         #endregion
     }
 }

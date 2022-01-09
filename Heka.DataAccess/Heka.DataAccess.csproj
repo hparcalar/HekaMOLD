@@ -146,6 +146,7 @@
     <Compile Include="Context\Models\UserRoleSubscription.cs" />
     <Compile Include="Context\Models\UserWorkOrderHistory.cs" />
     <Compile Include="Context\Models\Warehouse.cs" />
+    <Compile Include="Context\Models\WeavingDraft.cs" />
     <Compile Include="Context\Models\WorkOrder.cs" />
     <Compile Include="Context\Models\WorkOrderAllocation.cs" />
     <Compile Include="Context\Models\WorkOrderCategory.cs" />
@@ -315,6 +316,14 @@
     <Compile Include="Migrations\202201032200427_SerialQualityWinding_TotalMetersAndQuantity.designer.cs">
       <DependentUpon>202201032200427_SerialQualityWinding_TotalMetersAndQuantity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201092103506_YarnRecipeAdded%28TwistDirection%29.cs" />
+    <Compile Include="Migrations\202201092103506_YarnRecipeAdded%28TwistDirection%29.designer.cs">
+      <DependentUpon>202201092103506_YarnRecipeAdded%28TwistDirection%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201092221433_WeavingDraftAdded.cs" />
+    <Compile Include="Migrations\202201092221433_WeavingDraftAdded.designer.cs">
+      <DependentUpon>202201092221433_WeavingDraftAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -445,6 +454,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201032200427_SerialQualityWinding_TotalMetersAndQuantity.resx">
       <DependentUpon>202201032200427_SerialQualityWinding_TotalMetersAndQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201092103506_YarnRecipeAdded%28TwistDirection%29.resx">
+      <DependentUpon>202201092103506_YarnRecipeAdded%28TwistDirection%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201092221433_WeavingDraftAdded.resx">
+      <DependentUpon>202201092221433_WeavingDraftAdded.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

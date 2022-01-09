@@ -5,8 +5,30 @@
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
+        $scope.getNextOrderNo().then(function (rNo) {
+            $scope.modelObject.YarnBreedCode = rNo;
+            $scope.$apply();
+        });
     }
+    // RECEIPT FUNCTIONS
+    $scope.getNextOrderNo = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'YarnBreed/GetNextYarnBreedCode', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            resolve(resp.data.ReceiptNo);
+                        }
+                        else {
+                            toastr.error('Sıradaki cins numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
 
+        return prms;
+    }
     $scope.performDelete = function () {
         bootbox.confirm({
             message: "Bu iplik cinsini silmek istediğinizden emin misiniz?",
@@ -74,4 +96,11 @@
     // ON LOAD EVENTS
     if (PRM_ID > 0)
         $scope.bindModel(PRM_ID);
+    else {
+        $scope.getNextOrderNo().then(function (rNo) {
+            $scope.modelObject.YarnBreedCode = rNo;
+            $scope.$apply();
+        });
+    //    $scope.bindModel(0);
+    }
 });
