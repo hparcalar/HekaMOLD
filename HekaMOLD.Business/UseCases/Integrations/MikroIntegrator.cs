@@ -1279,7 +1279,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                     con.Open();
 
                     DataTable dTable = new DataTable();
-                    string sql = "SELECT * FROM STOK_HAREKETLERI WHERE sth_tip=1 AND sth_cins IN(0,1,2) AND sth_normal_iade=0 " +
+                    string sql = "SELECT * FROM STOK_HAREKETLERI WHERE sth_tip=1 AND sth_cins IN(0,1,2,12) AND sth_normal_iade=0 " +
                                             "AND sth_evraktip=1 AND sth_tarih >= '" + string.Format("{0:yyyy-MM-dd} ", dtMinDelivery) + "' "
                                             + "ORDER BY sth_evrakno_seri, sth_evrakno_sira, sth_satirno";
                     SqlDataAdapter dAdapter =
@@ -1303,7 +1303,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                             using (DefinitionsBO dfObj = new DefinitionsBO())
                             {
                                 var productData = dfObj.GetItem(row["sth_stok_kod"].ToString());
-                                if (productData == null || productData.ItemType != (int)ItemType.Product)
+                                if (productData == null)
                                     isProductRow = false;
 
                                 var prodWarehouseData = dfObj.GetProductWarehouse();

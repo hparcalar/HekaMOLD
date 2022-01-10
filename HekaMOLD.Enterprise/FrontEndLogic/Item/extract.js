@@ -55,20 +55,20 @@
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'InQuantity', caption: 'Giriş Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'OutQuantity', caption: 'Çıkış Miktar', format: { type: "fixedPoint", precision: 2 } },
-                //{
-                //    type: "buttons",
-                //    buttons: [
-                //        {
-                //            name: 'preview', cssClass: '', text: 'Göster', onClick: function (e) {
-                //                var dataGrid = $("#dataList").dxDataGrid("instance");
-                //                dataGrid.deselectAll();
-                //                dataGrid.selectRowsByIndexes([e.row.rowIndex]);
+                {
+                    type: "buttons",
+                    buttons: [
+                        {
+                            name: 'preview', cssClass: '', text: 'Göster', onClick: function (e) {
+                                var dataGrid = $("#dataList").dxDataGrid("instance");
+                                dataGrid.deselectAll();
+                                dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                //                window.location.href = HOST_URL + 'ItemReceipt?rid=' + e.row.data.ItemReceiptId;
-                //            }
-                //        }
-                //    ]
-                //}
+                                window.location.href = HOST_URL + 'ItemReceipt?rid=' + e.row.data.ItemReceiptId;
+                            }
+                        }
+                    ]
+                }
             ]
         });
     }

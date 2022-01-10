@@ -1593,6 +1593,10 @@ namespace HekaMOLD.Business.UseCases
                     if (currentShift != null && currentShift.Id == shift.Id)
                         isCurrentShift = true;
 
+                    var shiftTrg = targetCount - Convert.ToInt32(shiftWastageCount);
+                    if (shiftTrg < 0)
+                        shiftTrg = 0;
+
                     var newShiftStat = new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
@@ -1604,7 +1608,7 @@ namespace HekaMOLD.Business.UseCases
                             Convert.ToInt32(shiftWastageCount),
                         WastageCount = shiftWastageCount,
                         LastProductName = lastProductName,
-                        TargetCount = targetCount - Convert.ToInt32(shiftWastageCount),
+                        TargetCount = shiftTrg,
                     };
 
                     shiftStats.Add(newShiftStat);

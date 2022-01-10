@@ -43,6 +43,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string CreatedDateStr { get; set; }
         public string ReceiptDateStr { get; set; }
         public string ReceiptTypeStr { get; set; }
+        public int ReceiptCategory { get; set; }
         public string InvoiceNo { get; set; }
         public string InvoiceDateStr { get; set; }
         public string InvoiceDocumentNo { get; set; }

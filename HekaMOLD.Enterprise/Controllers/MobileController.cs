@@ -143,6 +143,12 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(model.DocumentNo))
+                    throw new Exception("Belge numarası boş bırakılamaz.");
+
+                if ((model.FirmId ?? 0) <= 0)
+                    throw new Exception("Firma seçmelisiniz.");
+
                 BusinessResult result = null;
                 using (ReceiptBO bObj = new ReceiptBO())
                 {

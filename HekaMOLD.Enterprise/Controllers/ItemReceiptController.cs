@@ -122,6 +122,33 @@ namespace HekaMOLD.Enterprise.Controllers
             using (ReceiptBO bObj = new ReceiptBO())
             {
                 model = bObj.GetItemReceipt(rid);
+                if (model != null)
+                {
+                    Dictionary<int, string> receiptTypes =
+                        DictItemReceiptType.GetReceiptTypes(ReceiptCategoryType.ItemManagement);
+                    if (receiptTypes.ContainsKey(model.ReceiptType ?? 0))
+                    {
+                        model.ReceiptCategory = (int)ReceiptCategoryType.ItemManagement;
+                    }
+                    else
+                    {
+                        receiptTypes =
+                            DictItemReceiptType.GetReceiptTypes(ReceiptCategoryType.Purchasing);
+                        if (receiptTypes.ContainsKey(model.ReceiptType ?? 0))
+                        {
+                            model.ReceiptCategory = (int)ReceiptCategoryType.Purchasing;
+                        }
+                        else
+                        {
+                            receiptTypes =
+                                DictItemReceiptType.GetReceiptTypes(ReceiptCategoryType.Sales);
+                            if (receiptTypes.ContainsKey(model.ReceiptType ?? 0))
+                            {
+                                model.ReceiptCategory = (int)ReceiptCategoryType.Sales;
+                            }
+                        }
+                    }
+                }
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);

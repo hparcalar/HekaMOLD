@@ -46,6 +46,36 @@ namespace HekaMOLD.Business.UseCases
                 .ToArray();
         }
 
+        public ItemOrderDetailModel[] GetOpenOrderDetailList(ItemOrderType orderType)
+        {
+            List<ItemOrderDetailModel> data = new List<ItemOrderDetailModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+            return repo.Filter(d => d.ItemOrder.OrderType == (int)orderType
+                && d.OrderStatus != (int)OrderStatusType.Completed && d.OrderStatus != (int)OrderStatusType.Cancelled).ToList()
+                .Select(d => new ItemOrderDetailModel
+                {
+                    Id = d.Id,
+                    ItemOrderId = d.ItemOrderId,
+                    OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.CreatedDate),
+                    DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.DateOfNeed),
+                    FirmCode = d.ItemOrder.Firm != null ? d.ItemOrder.Firm.FirmCode : "",
+                    FirmName = d.ItemOrder.Firm != null ? d.ItemOrder.Firm.FirmName : "",
+                    OrderNo = d.ItemOrder.OrderNo,
+                    OrderDate = d.ItemOrder.OrderDate,
+                    DocumentNo = d.ItemOrder.DocumentNo,
+                    Explanation = d.Explanation,
+                    OrderStatus = d.OrderStatus,
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    Quantity = d.Quantity,
+                })
+                .OrderByDescending(d => d.OrderDate)
+                .ToArray();
+        }
+
         public ItemOrderModel[] GetNonSyncOrders(ItemOrderType orderType)
         {
             List<ItemOrderModel> data = new List<ItemOrderModel>();
@@ -942,12 +972,45 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoOrderConsume = _unitOfWork.GetRepository<ItemOrderConsume>();
 
                 var dbDetail = repo.Get(d => d.Id == orderDetailId);
                 if (dbDetail == null)
                     throw new Exception("Sipariş kalemi bulunamadı.");
 
-                
+                if (dbDetail.ItemOrder.OrderType == (int)ItemOrderType.Purchase)
+                {
+                    var incomedQuantity = repoOrderConsume.Filter(d => d.ItemOrderDetailId == orderDetailId
+                        && d.ConsumerReceiptDetailId != null)
+                        .Select(d => d.UsedQuantity).Sum() ?? 0;
+
+                    if (dbDetail.Quantity > incomedQuantity && incomedQuantity > 0)
+                        dbDetail.OrderStatus = (int)OrderStatusType.Approved;
+                    else if (dbDetail.Quantity <= incomedQuantity && incomedQuantity > 0)
+                        dbDetail.OrderStatus = (int)OrderStatusType.Completed;
+                }
+                else if (dbDetail.ItemOrder.OrderType == (int)ItemOrderType.Sale)
+                {
+                    
+                }
+
+                // UPDATE ITEM ORDER HEADER TO ITS NEW STATUS
+                var dbHeader = dbDetail.ItemOrder;
+                if (dbHeader != null)
+                {
+                    if (dbDetail.OrderStatus == (int)OrderStatusType.Completed
+                        && !dbHeader.ItemOrderDetail.Any(d => d.OrderStatus != (int)OrderStatusType.Completed && d.Id != dbDetail.Id))
+                    {
+                        dbHeader.OrderStatus = (int)OrderStatusType.Completed;
+                    }
+                    else
+                    {
+                        if (dbHeader.OrderStatus == (int)OrderStatusType.Completed)
+                            dbHeader.OrderStatus = (int)OrderStatusType.Approved;
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
 
                 result.Result = false;
             }

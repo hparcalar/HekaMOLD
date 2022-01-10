@@ -73,7 +73,9 @@ namespace HekaMOLD.Business.UseCases
                     WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "",
                     WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "",
                     ReceiptTypeStr = ((ItemReceiptType)d.ReceiptType.Value).ToCaption()
-                }).ToArray();
+                })
+                .OrderByDescending(d => d.Id)
+                .ToArray();
 
             return data;
         }
@@ -134,6 +136,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
                 var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
                 var repoItemSerial = _unitOfWork.GetRepository<ItemSerial>();
+                var repoOrderConsume = _unitOfWork.GetRepository<ItemOrderConsume>();
 
                 if (model.FirmId == 0)
                     model.FirmId = null;
@@ -180,6 +183,7 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 List<int> itemsMustBeUpdated = new List<int>();
+                List<int> orderDetailsChecked = new List<int>();
                 ItemReceiptDetail firstNewDetail = null;
 
                 #region SAVE DETAILS
@@ -204,14 +208,26 @@ namespace HekaMOLD.Business.UseCases
                             if (!itemsMustBeUpdated.Any(d => d == item.ItemId))
                                 itemsMustBeUpdated.Add(item.ItemId.Value);
 
-                            //if (item.ItemReceiptDetail.Any())
-                            //    throw new Exception("İrsaliyesi girilmiş olan bir sipariş detayı silinemez.");
-
                             #region SET ORDER & DETAIL TO APPROVED
                             if (item.ItemOrderDetail != null)
                             {
                                 item.ItemOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
                                 item.ItemOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
+                            }
+                            #endregion
+
+                            #region CHECK ITEM ORDERS FOR PURCHASING
+                            if (item.ItemOrderDetailId != null)
+                            {
+                                if (!orderDetailsChecked.Contains(item.ItemOrderDetailId.Value))
+                                    orderDetailsChecked.Add(item.ItemOrderDetailId.Value);
+
+                                var consumeList = repoOrderConsume.Filter(d => d.ItemOrderDetailId == item.ItemOrderDetailId.Value
+                                    && d.ConsumerReceiptDetailId == item.Id).ToArray();
+                                foreach (var consumer in consumeList)
+                                {
+                                    repoOrderConsume.Delete(consumer);
+                                }
                             }
                             #endregion
 
@@ -296,7 +312,26 @@ namespace HekaMOLD.Business.UseCases
                             }
                             #endregion
 
-                            // WILL BE TRIGGER POINT TO CHECK ITEM ORDER STATUS
+                            #region CHECK ITEM ORDER DETAILS (PURCHASE)
+                            if (dbDetail.ItemOrderDetailId != null)
+                            {
+                                var consumedOrder = repoOrderConsume.Filter(d => d.ConsumerReceiptDetailId == dbDetail.Id &&
+                                    d.ItemOrderDetailId == dbDetail.ItemOrderDetailId).FirstOrDefault();
+                                if (consumedOrder == null)
+                                {
+                                    consumedOrder = new ItemOrderConsume
+                                    {
+                                        ItemReceiptDetailConsumer = dbDetail,
+                                        ItemOrderDetailId = dbDetail.ItemOrderDetailId,
+                                        UsedQuantity = dbDetail.Quantity,
+                                    };
+                                    repoOrderConsume.Add(consumedOrder);
+
+                                    if (!orderDetailsChecked.Contains(dbDetail.ItemOrderDetailId.Value))
+                                        orderDetailsChecked.Add(dbDetail.ItemOrderDetailId.Value);
+                                }
+                            }
+                            #endregion
 
                             lineNo++;
                         }
@@ -306,9 +341,46 @@ namespace HekaMOLD.Business.UseCases
 
                 _unitOfWork.SaveChanges();
 
-                // TRG-POINT-ITEM-STATUS
+                #region TRG-POINT-ITEM-STATUS
                 if (itemsMustBeUpdated.Count() > 0)
                     base.UpdateItemStats(itemsMustBeUpdated.ToArray());
+                #endregion
+
+                #region TRG-POINT-CHECK-RECEIPT-DETAILS
+                try
+                {
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        var dbReceipt = bObj.GetItemReceipt(dbObj.Id);
+                        if (dbReceipt.Details != null)
+                        {
+                            foreach (var rDetail in dbReceipt.Details)
+                            {
+                                using (ReceiptBO dObj = new ReceiptBO())
+                                {
+                                    dObj.CheckReceiptDetailStatus(rDetail.Id);
+                                }
+                            }
+                        }
+
+                        bObj.CheckReceiptStatus(dbReceipt.Id);
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+                #endregion
+
+                #region TRG-POINT-CHECK-ORDER-DETAILS
+                foreach (var item in orderDetailsChecked)
+                {
+                    using (OrdersBO bObj = new OrdersBO())
+                    {
+                        bObj.CheckOrderDetailStatus(item);
+                    }
+                }
+                #endregion
 
                 #region CREATE NOTIFICATION
                 //if (newRecord || !repoNotify.Any(d => d.RecordId == dbObj.Id && d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval))

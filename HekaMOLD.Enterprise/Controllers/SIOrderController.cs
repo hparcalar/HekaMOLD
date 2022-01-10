@@ -28,6 +28,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult OpenDetails()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetNextOrderNo()
         {
@@ -77,6 +82,27 @@ namespace HekaMOLD.Enterprise.Controllers
             using (OrdersBO bObj = new OrdersBO())
             {
                 result = bObj.GetItemOrderList(ItemOrderType.Sale);
+
+                foreach (var item in result)
+                {
+                    if (item.OrderStatus == (int)OrderStatusType.Approved || item.OrderStatus == (int)OrderStatusType.Created)
+                        item.OrderStatusStr = "Planlanması bekleniyor";
+                }
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetOpenOrderDetailList()
+        {
+            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                result = bObj.GetOpenOrderDetailList(ItemOrderType.Sale);
 
                 foreach (var item in result)
                 {

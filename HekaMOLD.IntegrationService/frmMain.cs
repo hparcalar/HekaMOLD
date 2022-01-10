@@ -131,8 +131,6 @@ namespace HekaMOLD.IntegrationService
                                 AddLog(result.Result ? "Stoklar transfer edildi." : "Stok Transferi Hata: " + result.ErrorMessage);
                             }
 
-                            
-
                             if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
                                 || !(entObj is MikroIntegrator))
                             {

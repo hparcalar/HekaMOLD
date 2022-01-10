@@ -207,6 +207,16 @@
                     $scope.modelObject = resp.data;
                     $scope.modelObject.ReceiptDate = $scope.modelObject.ReceiptDateStr;
 
+                    if (($scope.receiptCategory == null || $scope.receiptCategory == 0) && $scope.modelObject.ReceiptCategory > 0) {
+                        $scope.receiptCategory = $scope.modelObject.ReceiptCategory;
+                        console.log($scope.receiptCategory);
+                        $scope.loadSelectables().then(function () {
+                            $scope.bindModel(id);
+                        });
+
+                        return;
+                    }
+
                     if (typeof $scope.modelObject.FirmId != 'undefined' && $scope.modelObject.FirmId != null)
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
                     else
@@ -531,30 +541,36 @@
 
     $scope.loadSelectables = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'ItemReceipt/GetSelectables?receiptCategory=' +
-                $scope.receiptCategory, {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        $scope.itemList = resp.data.Items;
-                        $scope.unitList = resp.data.Units;
-                        $scope.forexList = resp.data.Forexes;
+            try {
+                $http.get(HOST_URL + 'ItemReceipt/GetSelectables?receiptCategory=' +
+                    $scope.receiptCategory, {}, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                            $scope.itemList = resp.data.Items;
+                            $scope.unitList = resp.data.Units;
+                            $scope.forexList = resp.data.Forexes;
 
-                        $scope.firmList = resp.data.Firms;
-                        var emptyFirmObj = { Id: 0, FirmCode: '-- Seçiniz --' };
-                        $scope.firmList.splice(0, 0, emptyFirmObj);
-                        $scope.selectedFirm = emptyFirmObj;
-                        
-                        $scope.warehouseList = resp.data.Warehouses;
-                        var emptyWrObj = { Id: 0, WarehouseName: '-- Seçiniz --' };
-                        $scope.warehouseList.splice(0, 0, emptyWrObj);
-                        $scope.selectedWarehouse = emptyWrObj;
+                            $scope.firmList = resp.data.Firms;
+                            var emptyFirmObj = { Id: 0, FirmCode: '-- Seçiniz --' };
+                            $scope.firmList.splice(0, 0, emptyFirmObj);
+                            $scope.selectedFirm = emptyFirmObj;
 
-                        $scope.receiptTypeList = resp.data.ReceiptTypes;
-                        $scope.selectedReceiptType = $scope.receiptTypeList[0];
+                            $scope.warehouseList = resp.data.Warehouses;
+                            var emptyWrObj = { Id: 0, WarehouseName: '-- Seçiniz --' };
+                            $scope.warehouseList.splice(0, 0, emptyWrObj);
+                            $scope.selectedWarehouse = emptyWrObj;
 
+                            $scope.receiptTypeList = resp.data.ReceiptTypes;
+                            $scope.selectedReceiptType = $scope.receiptTypeList[0];
+
+                            resolve();
+                        }
+                    }).catch(function (err) {
                         resolve();
-                    }
-                }).catch(function (err) { });
+                    });
+            } catch (e) {
+                resolve();
+            }
         });
 
         return prms;
