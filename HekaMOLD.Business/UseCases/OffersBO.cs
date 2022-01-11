@@ -299,6 +299,13 @@ namespace HekaMOLD.Business.UseCases
                 model.FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
                 model.FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
                 model.HasAnyOrder = dbObj.ItemOfferDetail.Any(m => m.ItemOrderDetail.Any());
+                model.CreatedUserName = dbObj.CreatedUser != null ? dbObj.CreatedUser.UserName : "";
+                model.FirmResponsible = dbObj.Firm != null ?
+                    (
+                        dbObj.Firm.FirmAuthor.Any() ? dbObj.Firm.FirmAuthor.Select(d => d.AuthorName).FirstOrDefault()
+                            : dbObj.Firm.FirmName
+                    ) 
+                    : "";
 
                 model.Details =
                     repoDetails.Filter(d => d.ItemOfferId == dbObj.Id)

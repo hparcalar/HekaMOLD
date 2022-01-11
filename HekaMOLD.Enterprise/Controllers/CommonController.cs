@@ -513,5 +513,59 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
         #endregion
+
+        #region OFFER CONSTANTS
+        [HttpGet]
+        public JsonResult GetOfferConstants()
+        {
+            string rawSheetPrice = "0";
+            string wastagePrice = "0";
+
+            int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                var prmRawSheet = bObj.GetParameter("RawSheetPrice", plantId);
+                var prmWastagePrice = bObj.GetParameter("WastagePrice", plantId);
+
+                if (prmRawSheet != null && !string.IsNullOrEmpty(prmRawSheet.PrmValue))
+                    rawSheetPrice = prmRawSheet.PrmValue;
+                if (prmWastagePrice != null && !string.IsNullOrEmpty(prmWastagePrice.PrmValue))
+                    wastagePrice = prmWastagePrice.PrmValue;
+            }
+
+            return Json(new { 
+                RawSheetPrice = rawSheetPrice,
+                WastagePrice = wastagePrice,
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult SaveOfferConstants(string rawSheetPrice, string wastagePrice)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    result = bObj.SetParameters(new SystemParameterModel[] {
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "RawSheetPrice", PrmValue = rawSheetPrice },
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "WastagePrice", PrmValue = wastagePrice }
+                    });
+                }
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = false, ErrorMessage = ex.Message });
+            }
+
+
+        }
+        #endregion
     }
 }

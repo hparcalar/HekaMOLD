@@ -104,6 +104,14 @@ namespace HekaMOLD.IntegrationService
                                 AddLog(result.Result ? "Firmalar transfer edildi." : "Firma Transferi Hata: " + result.ErrorMessage);
                             }
 
+                            // SİLİNECEK
+                            //if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroMaster)
+                            //    || !(entObj is MikroIntegrator))
+                            //{
+                            //    result = entObj.PullEntryReceipts(sync);
+                            //    AddLog(result.Result ? "Birimler transfer edildi." : "Birim Transferi Hata: " + result.ErrorMessage);
+                            //}
+
                             if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroMaster)
                                 || !(entObj is MikroIntegrator))
                             {
@@ -115,31 +123,38 @@ namespace HekaMOLD.IntegrationService
                                 || !(entObj is MikroIntegrator))
                             {
                                 result = entObj.PullItems(sync);
-                                AddLog(result.Result ? "Stoklar transfer edildi." : "Stok Transferi Hata: " + result.ErrorMessage);
+                                AddLog(result.Result ? "Stoklar (Hekaya) transfer edildi." : "Stok Transferi Hata: " + result.ErrorMessage);
                             }
 
                             if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
                                 || !(entObj is MikroIntegrator))
                             {
-                                result = entObj.PullRecipes(sync);
-                                AddLog(result.Result ? "Reçeteler transfer edildi." : "Reçete Transferi Hata: " + result.ErrorMessage);
+                                result = entObj.PushItems(sync);
+                                AddLog(result.Result ? "Stoklar (Uygulamaya) transfer edildi." : "Stok Transferi Hata: " + result.ErrorMessage);
                             }
 
-                            if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
-                                || !(entObj is MikroIntegrator))
-                            {
-                                result = entObj.PullSaleOrders(sync);
-                                AddLog(result.Result ? "Satış siparişleri (Hekaya) transfer edildi." : "Satış Siparişi (Hekaya) Transferi Hata: "
-                                    + result.ErrorMessage);
-                            }
+                            //if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
+                            //    || !(entObj is MikroIntegrator))
+                            //{
+                            //    result = entObj.PullRecipes(sync);
+                            //    AddLog(result.Result ? "Reçeteler transfer edildi." : "Reçete Transferi Hata: " + result.ErrorMessage);
+                            //}
 
-                            if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
-                                || !(entObj is MikroIntegrator))
-                            {
-                                result = entObj.PullProductDeliveries(sync);
-                                AddLog(result.Result ? "Satış irsaliyeleri (Hekaya) transfer edildi." : "Satış İrsaliyesi (Hekaya) Transferi Hata: "
-                                    + result.ErrorMessage);
-                            }
+                            //if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
+                            //    || !(entObj is MikroIntegrator))
+                            //{
+                            //    result = entObj.PullSaleOrders(sync);
+                            //    AddLog(result.Result ? "Satış siparişleri (Hekaya) transfer edildi." : "Satış Siparişi (Hekaya) Transferi Hata: "
+                            //        + result.ErrorMessage);
+                            //}
+
+                            //if ((entObj is MikroIntegrator && sync.SyncPointType == (int)SyncPointType.MikroWorkData)
+                            //    || !(entObj is MikroIntegrator))
+                            //{
+                            //    result = entObj.PullProductDeliveries(sync);
+                            //    AddLog(result.Result ? "Satış irsaliyeleri (Hekaya) transfer edildi." : "Satış İrsaliyesi (Hekaya) Transferi Hata: "
+                            //        + result.ErrorMessage);
+                            //}
 
                             if (sync.EnabledOnSalesOrders == true)
                             {

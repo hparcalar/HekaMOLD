@@ -259,6 +259,14 @@
     <Compile Include="Migrations\202112310843250_OfferRoutePriceColumn.designer.cs">
       <DependentUpon>202112310843250_OfferRoutePriceColumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201111710499_MigFix.cs" />
+    <Compile Include="Migrations\202201111710499_MigFix.designer.cs">
+      <DependentUpon>202201111710499_MigFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201112056055_ItemSyncStatus.cs" />
+    <Compile Include="Migrations\202201112056055_ItemSyncStatus.designer.cs">
+      <DependentUpon>202201112056055_ItemSyncStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -323,6 +331,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112310843250_OfferRoutePriceColumn.resx">
       <DependentUpon>202112310843250_OfferRoutePriceColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201111710499_MigFix.resx">
+      <DependentUpon>202201111710499_MigFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201112056055_ItemSyncStatus.resx">
+      <DependentUpon>202201112056055_ItemSyncStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

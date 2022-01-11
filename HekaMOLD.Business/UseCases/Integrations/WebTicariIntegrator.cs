@@ -215,6 +215,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         PlantId = syncPoint.PlantId,
                                         ItemType = itemTypeNo,
                                         ItemGroupId = itemGroupId,
+                                        SyncStatus = 1,
                                         // bi_alisfiyat,
                                         // bi_satisfiyat1, bi_satisfiyat5
                                         // kd_kdv,
@@ -307,6 +308,46 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
             try
             {
+                var loginConfig = ResolveLoginData(syncPoint.ConnectionString);
+
+                receipts = new ItemReceiptModel[0];
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    
+                }
+
+                string receiptsXml = "<hareketler>";
+                foreach (var item in receipts)
+                {
+                    string moveXml = "<hareket>"
+                            + "<dp_kod></dp_kod>"
+                            + "<sepet>";
+
+                    foreach (var detail in item.Details)
+                    {
+                        string detailXml = "<kalem>" +
+                                
+                            "</kalem>";
+
+                        moveXml += detailXml;
+                    }
+
+                    moveXml += "</sepet>";
+                    moveXml += "</hareket>";
+                    receiptsXml += moveXml;
+                }
+                receiptsXml += "</hareketler>";
+
+                using (WebticariService ws = new WebticariService())
+                {
+                    var wsToken = ws.login(loginConfig.CustomerNo, loginConfig.Login, loginConfig.Password);
+                    string response = ws.importSalesReceiptXML(wsToken, receiptsXml);
+                }
+
+                foreach (var item in receipts)
+                {
+                    
+                }
 
                 result.Result = true;
             }
@@ -486,6 +527,60 @@ namespace HekaMOLD.Business.UseCases.Integrations
         public BusinessResult PullProductDeliveries(SyncPointModel syncPoint)
         {
             BusinessResult result = new BusinessResult();
+
+            return result;
+        }
+
+        public BusinessResult PushItems(SyncPointModel syncPoint)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var loginConfig = ResolveLoginData(syncPoint.ConnectionString);
+
+                ItemModel[] nonSyncItems = new ItemModel[0];
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    nonSyncItems = bObj.GetNonSyncItemList();
+                }
+
+                string stockXml = "<stoklar>";
+                foreach (var item in nonSyncItems)
+                {
+                    string itemXml = "<stok>" +
+                            "<ur_kod>"+ item.ItemNo +"</ur_kod>" +
+                            "<ur_adi>"+ item.ItemName +"</ur_adi>" +
+                            "<ur_sube>"+ loginConfig.BranchOfficeNo +"</ur_sube>" +
+                            "<ur_kullbirim>"+ item.MainUnitCode +"</ur_kullbirim>" +
+                            "<bi_birim>"+ item.MainUnitCode +"</bi_birim>" +
+                        "</stok>";
+                    stockXml += itemXml;
+                }
+                stockXml += "</stoklar>";
+
+                using (WebticariService ws = new WebticariService())
+                {
+                    var wsToken = ws.login(loginConfig.CustomerNo, loginConfig.Login, loginConfig.Password);
+                    string response = ws.importStockXML(wsToken, stockXml);
+
+                }
+
+                foreach (var item in nonSyncItems)
+                {
+                    using (DefinitionsBO bObj = new DefinitionsBO())
+                    {
+                        bObj.SignItemAsSynced(item.Id);
+                    }
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
 
             return result;
         }

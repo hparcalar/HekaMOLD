@@ -9,6 +9,12 @@ function ($scope, $http, Upload) {
     $scope.forexList = [];
     $scope.routeList = [];
 
+    $scope.rawSheetPrice = 0;
+    $scope.wastagePrice = 0;
+
+    $scope.priceToleranceMin = 0;
+    $scope.priceToleranceMax = 0;
+
     $scope.selectedDocx = null;
     $scope.selectedFirm = {};
     $scope.selectedRow = { Id: 0 };
@@ -38,8 +44,14 @@ function ($scope, $http, Upload) {
 
     $scope.getToFixed = function(data, points) {
         try {
-            if (typeof data != 'undefined')
-                return data.toFixed(points);
+            var formatter = new Intl.NumberFormat('tr', {
+                style: 'decimal',
+            });
+
+            return formatter.format(data);
+
+            //if (typeof data != 'undefined')
+            //    return data.toFixed(points);
         } catch (e) {
             
         }
@@ -73,6 +85,8 @@ function ($scope, $http, Upload) {
 
     $scope.showOfferDialog = function () {
         $scope.offerModel.firmaismi = $scope.selectedFirm.FirmName;
+        $scope.offerModel.sackg = $scope.rawSheetPrice;
+        $scope.offerModel.hurdakg = $scope.wastagePrice;
         $("#dial-offer").modal("show");
     }
 
@@ -124,6 +138,7 @@ function ($scope, $http, Upload) {
                             TotalPrice: dataRow.maliyet,
                             QualityExplanation: dataRow.malzeme,
                             UnitPrice: parseFloat(dataRow["adet-fiyat"]),
+                            OrgUnitPrice: parseFloat(dataRow["adet-fiyat"]),
                             ItemVisualStr: visualData,
                         });
                     }
@@ -415,6 +430,20 @@ function ($scope, $http, Upload) {
             }).catch(function (err) { });
     }
 
+    $scope.bindConstants = function () {
+        try {
+            $http.get(HOST_URL + 'Common/GetOfferConstants', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.rawSheetPrice = resp.data.RawSheetPrice;
+                        $scope.wastagePrice = resp.data.WastagePrice;
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
     $scope.calculateRow = function (row) {
         if (typeof row != 'undefined' && row != null) {
             try {
@@ -462,7 +491,8 @@ function ($scope, $http, Upload) {
             dataSource: {
                 load: function () {
                     $scope.modelObject.Details.forEach(d => {
-                        
+                        if (typeof d.OrgUnitPrice == 'undefined' || d.OrgUnitPrice == null)
+                            d.OrgUnitPrice = d.UnitPrice;
                     });
 
                     return $scope.modelObject.Details;
@@ -493,8 +523,22 @@ function ($scope, $http, Upload) {
                             calculateRowAgain = true;
                         }
 
+                        let dontUpdateUnitPrice = false;
+                        if ($scope.priceToleranceMax > 0 && $scope.priceToleranceMin > 0 && obj.OrgUnitPrice > 0) {
+                            if (obj.OrgUnitPrice + (obj.OrgUnitPrice * $scope.priceToleranceMax / 100.0) < values.UnitPrice) {
+                                dontUpdateUnitPrice = true;
+                                toastr.error('Fiyat değişikliği maksimum töleransın(' + $scope.priceToleranceMax + '%) üzerindedir. '
+                                    + 'Bu kalem için girilebilecek en yüksek fiyat: ' + (obj.OrgUnitPrice + (obj.OrgUnitPrice * $scope.priceToleranceMax / 100.0)).toFixed(2));
+                            }
+                            else if (obj.OrgUnitPrice - (obj.OrgUnitPrice * $scope.priceToleranceMin / 100.0) > values.UnitPrice) {
+                                dontUpdateUnitPrice = true;
+                                toastr.error('Fiyat değişikliği minimum töleransın(' + $scope.priceToleranceMin + '%) üzerindedir. '
+                                    + 'Bu kalem için girilebilecek en düşük fiyat: ' + (obj.OrgUnitPrice - (obj.OrgUnitPrice * $scope.priceToleranceMin / 100.0)).toFixed(2));
+                            }
+                        }
+
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
-                        if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
+                        if (typeof values.UnitPrice != 'undefined' && !dontUpdateUnitPrice) { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
                         if (typeof values.ItemExplanation != 'undefined') { obj.ItemExplanation = values.ItemExplanation; }
                         if (typeof values.QualityExplanation != 'undefined') { obj.QualityExplanation = values.QualityExplanation; }
                         if (typeof values.SheetWeight != 'undefined') { obj.SheetWeight = values.SheetWeight; }
@@ -624,7 +668,11 @@ function ($scope, $http, Upload) {
                 { dataField: 'ItemExplanation', caption: 'Parça Adı', allowEditing: false },
                 { dataField: 'QualityExplanation', caption: 'Kalite', allowEditing: false },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
-                { dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
+                {
+                    dataField: 'UnitPrice', caption: 'Birim Fiyat',
+                    dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                },
                 {
                     dataField: 'RouteId', caption: 'Rota Kodu',
                     lookup: {
@@ -678,6 +726,9 @@ function ($scope, $http, Upload) {
                         $scope.firmList = resp.data.Firms;
                         $scope.routeList = resp.data.Routes;
 
+                        $scope.priceToleranceMin = resp.data.PriceToleranceMin;
+                        $scope.priceToleranceMax = resp.data.PriceToleranceMax;
+
                         resolve();
                     }
                 }).catch(function (err) { });
@@ -714,6 +765,29 @@ function ($scope, $http, Upload) {
         }
 
         $('#dial-offer-process').dialog('close');
+    });
+
+    // OFFER CONSTANT PRICES DIALOG
+    $scope.showOfferConstants = function () {
+        $scope.$broadcast('loadOfferConstants', null);
+
+        $('#dial-offer-constants').dialog({
+            width: 600,
+            height: 400,
+            //height: window.innerHeight * 0.6,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.$on('editOfferConstantsEnd', function (e, d) {
+        $scope.bindConstants();
+
+        $('#dial-offer-constants').dialog('close');
     });
 
     // INFORMATIONS & ATTACHMENTS

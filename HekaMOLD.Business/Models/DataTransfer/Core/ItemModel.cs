@@ -24,11 +24,13 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public decimal? TotalInQuantity { get; set; }
         public decimal? TotalOutQuantity { get; set; }
         public decimal? TotalOverallQuantity { get; set; }
+        public int? SyncStatus { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemTypeStr { get; set; }
         public string CategoryName { get; set; }
         public string GroupName { get; set; }
+        public string MainUnitCode { get; set; }
         #endregion
     }
 }

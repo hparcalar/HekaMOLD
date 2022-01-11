@@ -28,12 +28,15 @@ namespace Heka.DataAccess.Context
         [ForeignKey("Plant")]
         public Nullable<int> PlantId { get; set; }
         public Nullable<DateTime> CreatedDate { get; set; }
+
+        [ForeignKey("CreatedUser")]
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
 
         public virtual Firm Firm { get; set; }
         public virtual Plant Plant { get; set; }
+        public virtual User CreatedUser { get; set; }
 
         [InverseProperty("ItemOffer")]
         public virtual ICollection<ItemOfferDetail> ItemOfferDetail { get; set; }

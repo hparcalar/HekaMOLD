@@ -30,6 +30,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         public string FirmName { get; set; }
         public int ItemOrderId { get; set; }
         public string ItemOrderNo { get; set; }
+        public string CreatedUserName { get; set; }
+        public string FirmResponsible { get; set; }
         #endregion
     }
 }

@@ -32,8 +32,14 @@
     }
     $scope.getToFixed = function(data, points) {
         try {
-            if (typeof data != 'undefined')
-                return data.toFixed(points);
+            var formatter = new Intl.NumberFormat('tr', {
+                style: 'decimal',
+            });
+
+            return formatter.format(data);
+
+            //if (typeof data != 'undefined')
+            //    return data.toFixed(points);
         } catch (e) {
             
         }

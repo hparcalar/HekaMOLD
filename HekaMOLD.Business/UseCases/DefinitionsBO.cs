@@ -234,6 +234,29 @@ namespace HekaMOLD.Business.UseCases
             }).ToArray();
         }
 
+        public ItemModel[] GetNonSyncItemList()
+        {
+            var repo = _unitOfWork.GetRepository<Item>();
+
+            return repo.Filter(d => (d.SyncStatus ?? 0) == 0)
+                .ToList()
+                .Select(d => new ItemModel
+            {
+                Id = d.Id,
+                ItemNo = d.ItemNo,
+                ItemName = d.ItemName,
+                ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
+                        d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "",
+                ItemType = d.ItemType,
+                CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
+                GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
+                MainUnitCode = d.ItemUnit.Where(m => m.IsMainUnit == true).Select(m => m.UnitType.UnitCode).FirstOrDefault(),
+                //TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
+                //TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
+                //TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
+            }).ToArray();
+        }
+
         public ItemModel[] GetItemListWithStates()
         {
             var repo = _unitOfWork.GetRepository<Item>();
@@ -416,6 +439,33 @@ namespace HekaMOLD.Business.UseCases
                 repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
 
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult SignItemAsSynced(int itemId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Item>();
+                var dbObj = repo.Get(d => d.Id == itemId);
+                if (dbObj == null)
+                    throw new Exception("Stok tanımı bulunamadı.");
+
+                dbObj.SyncStatus = 1;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
                 result.Result = true;
             }
             catch (Exception ex)

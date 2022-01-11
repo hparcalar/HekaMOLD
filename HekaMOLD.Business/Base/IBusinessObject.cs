@@ -204,7 +204,7 @@ namespace HekaMOLD.Business.Base
                 var uof = new EFUnitOfWork();
                 var repo = uof.GetRepository<SystemParameter>();
 
-                string[] defParams = new string[] { "DefaultProductPrinter" };
+                string[] defParams = new string[] { "DefaultProductPrinter", "SaleOfferPriceToleranceMIN", "SaleOfferPriceToleranceMAX" };
 
                 foreach (var prm in defParams)
                 {

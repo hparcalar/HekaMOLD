@@ -43,18 +43,37 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult GetSelectables()
         {
+            int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+
             ItemModel[] items = new ItemModel[0];
             FirmModel[] firms = new FirmModel[0];
             RouteModel[] routes = new RouteModel[0];
+
+            int unitPriceTolMin = 0, unitPriceTolMax = 0;
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 items = bObj.GetItemList();
                 firms = bObj.GetFirmList();
                 routes = bObj.GetRouteList();
+
+                var prmTolMin = bObj.GetParameter("SaleOfferPriceToleranceMIN", plantId);
+                var prmTolMax = bObj.GetParameter("SaleOfferPriceToleranceMAX", plantId);
+
+                unitPriceTolMin = prmTolMin != null && !string.IsNullOrEmpty(prmTolMin.PrmValue) ?
+                    Convert.ToInt32(prmTolMin.PrmValue) : 0;
+
+                unitPriceTolMax = prmTolMax != null && !string.IsNullOrEmpty(prmTolMax.PrmValue) ?
+                    Convert.ToInt32(prmTolMax.PrmValue) : 0;
             }
 
-            var jsonResult = Json(new { Items = items, Firms = firms, Routes = routes }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { 
+                Items = items,
+                Firms = firms, 
+                Routes = routes, 
+                PriceToleranceMin = unitPriceTolMin,
+                PriceToleranceMax = unitPriceTolMax,
+            }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -137,7 +156,13 @@ namespace HekaMOLD.Enterprise.Controllers
                     if (!Request.Cookies.AllKeys.Contains("PlantId") || Request.Cookies["PlantId"] == null)
                         throw new Exception("Sisteme yeniden giriş yapmanız gerekmektedir.");
 
+                    int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                    if (model.CreatedUserId == null)
+                        model.CreatedUserId = userId;
+                    if (model.UpdatedUserId == null)
+                        model.UpdatedUserId = userId;
 
                     model.OfferType = 1;
                     result = bObj.SaveOrUpdateItemOffer(model);
