@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Heka.DataAccess.Context.Models
 {
-   public partial class Vehicle
+    public class Vehicle
     {
         public Vehicle()
         {
@@ -25,7 +25,7 @@ namespace Heka.DataAccess.Context.Models
 
         [ForeignKey("Firm")]
         public int? OwnerFirmId { get; set; }
-        public Nullable< DateTime> ContractStartDate { get; set; }
+        public Nullable<DateTime> ContractStartDate { get; set; }
         public Nullable<DateTime> ContractEndDate { get; set; }
         public int? KmHour { get; set; }
         public decimal? Price { get; set; }

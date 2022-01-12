@@ -11,7 +11,7 @@ namespace Heka.DataAccess.Context.Models
         }
         public int Id { get; set; }
 
-        public int? VehiceTireType { get; set; }
+        public int? VehicleTireType { get; set; }
         public string SeriNo { get; set; }
         //Yon tip kod
         public int? DirectionType { get; set; }

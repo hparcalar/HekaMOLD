@@ -160,6 +160,16 @@
     <Compile Include="Migrations\202201081555394_vehiclelmqwefwee.designer.cs">
       <DependentUpon>202201081555394_vehiclelmqwefwee.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201120203257_VehicleCareUpdate-VehicleType.cs" />
+    <Compile Include="Migrations\202201120203257_VehicleCareUpdate-VehicleType.designer.cs">
+      <DependentUpon>202201120203257_VehicleCareUpdate-VehicleType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201120334008_VehicleInsuranceUpdate.cs" />
+    <Compile Include="Migrations\202201120512407_VehicleInsuranceUpdate%28Unit-forex%29.cs" />
+    <Compile Include="Migrations\202201120838456_commit.cs" />
+    <Compile Include="Migrations\202201120838456_commit.designer.cs">
+      <DependentUpon>202201120838456_commit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -176,6 +186,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202201081555394_vehiclelmqwefwee.resx">
       <DependentUpon>202201081555394_vehiclelmqwefwee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201120203257_VehicleCareUpdate-VehicleType.resx">
+      <DependentUpon>202201120203257_VehicleCareUpdate-VehicleType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201120838456_commit.resx">
+      <DependentUpon>202201120838456_commit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

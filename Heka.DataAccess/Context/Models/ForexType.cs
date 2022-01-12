@@ -21,8 +21,9 @@ namespace Heka.DataAccess.Context
             this.ForexHistory = new HashSet<ForexHistory>();
             this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
+            this.VehicleInsurance = new HashSet<VehicleInsurance>();
         }
-    
+
         public int Id { get; set; }
         public string ForexTypeCode { get; set; }
         public Nullable<decimal> ActiveSalesRate { get; set; }
@@ -37,5 +38,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ForexType")]
         public virtual ICollection<ItemReceiptDetail> ItemReceiptDetail { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<VehicleInsurance> VehicleInsurance { get; set; }
     }
 }

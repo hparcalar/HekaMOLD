@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class VehicleController : Controller
+    public class VehicleInsuranceController : Controller
     {
-        // GET: Vehicle
+        // GET: VehicleInsurance
         public ActionResult Index()
         {
             return View();
@@ -17,32 +17,14 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
-
         [HttpGet]
-        public JsonResult GetSelectables()
+        public JsonResult GetVehicleInsuranceList()
         {
-            VehicleTypeModel[] vehicleTypes = new VehicleTypeModel[0];
+            VehicleInsuranceModel[] result = new VehicleInsuranceModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                vehicleTypes = bObj.GetVehicleTypeList();
-            }
-
-            var jsonResult = Json(new
-            {
-                VehicleTypes = vehicleTypes
-            }, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-        [HttpGet]
-        public JsonResult GetVehicleList()
-        {
-            VehicleModel[] result = new VehicleModel[0];
-
-            using (DefinitionsBO bObj = new DefinitionsBO())
-            {
-                result = bObj.GetVehicleList();
+                result = bObj.GetVehicleInsuranceList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -51,12 +33,31 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult BindModel(int rid)
+        public JsonResult GetSelectables()
         {
-            VehicleModel model = null;
+            VehicleModel[] vehicles = new VehicleModel[0];
+          //  VehicleInsuranceTypeModel[] machines = new VehicleInsuranceTypeModel[0];
+
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetVehicle(rid);
+                vehicles = bObj.GetVehicleList();
+            }
+
+            var jsonResult = Json(new
+            {
+                Vehicles = vehicles
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult BindModel(int rid)
+        {
+            VehicleInsuranceModel model = null;
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                model = bObj.GetVehicleInsurance(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -70,7 +71,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteVehicle(rid);
+                    result = bObj.DeleteVehicleInsurance(rid);
                 }
 
                 if (result.Result)
@@ -85,14 +86,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(VehicleModel model)
+        public JsonResult SaveModel(VehicleInsuranceModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateVehicle(model);
+                    result = bObj.SaveOrUpdateVehicleInsurance(model);
                 }
 
                 if (result.Result)

@@ -168,6 +168,7 @@
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
     <Compile Include="Controllers\VehicleController.cs" />
+    <Compile Include="Controllers\VehicleInsuranceController.cs" />
     <Compile Include="Controllers\VehicleTypeController.cs" />
     <Compile Include="Controllers\WorkOrderCategoryController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
@@ -4172,6 +4173,8 @@
     <Content Include="FrontEndLogic\User\notifications.js" />
     <Content Include="FrontEndLogic\User\index.js" />
     <Content Include="FrontEndLogic\User\list.js" />
+    <Content Include="FrontEndLogic\VehicleInsurance\index.js" />
+    <Content Include="FrontEndLogic\VehicleInsurance\list.js" />
     <Content Include="FrontEndLogic\VehicleType\index.js" />
     <Content Include="FrontEndLogic\VehicleType\list.js" />
     <Content Include="FrontEndLogic\Vehicle\index.js" />
@@ -4646,6 +4649,8 @@
     <Content Include="Views\Vehicle\List.cshtml" />
     <Content Include="Views\VehicleType\Index.cshtml" />
     <Content Include="Views\VehicleType\List.cshtml" />
+    <Content Include="Views\VehicleInsurance\Index.cshtml" />
+    <Content Include="Views\VehicleInsurance\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

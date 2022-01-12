@@ -141,6 +141,8 @@
     <Compile Include="Models\DataTransfer\Labels\ProductLabel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutItemModel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutObjectTypeModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VehicleCareModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VehicleInsuranceModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />

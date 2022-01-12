@@ -1,32 +1,20 @@
-﻿app.controller('vehicleCtrl', function ($scope, $http) {
+﻿app.controller('vehicleInsuranceCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
+    $scope.selectedVehicle= {};
+    $scope.vehicleList = [];
 
-    $scope.selectedVehicleType = {};
-    $scope.vehicleTypeList = [];
-
-    $scope.selectedTrailerType = {};
-    $scope.trailerTypeList = [{ Id: 1, Text: 'Çadırlı' },
-        { Id: 2, Text: 'Frigo' }, { Id: 3, Text: 'Kapalı' }];
-
-    $scope.selectedVehicleAllocationType = {};
-    $scope.vehicleAllocationTypeList = [{ Id: 1, Text: 'Satın Alma' },
-    { Id: 2, Text: 'Kiralık' }];
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
-        $scope.selectedTrailerType = {};
-        $scope.selectedVehicleType = {};
-        $scope.selectedVehicleAllocationType = {};
-
     }
     $scope.loadSelectables = function () {
         var prmReq = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'Vehicle/GetSelectables', {}, 'json')
+            $http.get(HOST_URL + 'VehicleInsurance/GetSelectables', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
-                        $scope.vehicleTypeList = resp.data.VehicleTypes;
+                        $scope.vehicleList = resp.data.Vehicles;
 
                         resolve(resp.data);
                     }
@@ -37,7 +25,7 @@
     }
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu firma tanımını silmek istediğinizden emin misiniz?",
+            message: "Bu araç sigorta bilgisini silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
                 confirm: {
@@ -52,7 +40,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'Vehicle/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'VehicleInsurance/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -73,9 +61,8 @@
 
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
-        alert($scope.modelObject.Plate);
-        alert($scope.modelObject.Model);
-        $http.post(HOST_URL + 'Vehicle/SaveModel', $scope.modelObject, 'json')
+
+        $http.post(HOST_URL + 'VehicleInsurance/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -90,8 +77,9 @@
                 }
             }).catch(function (err) { });
     }
+
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'Vehicle/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'VehicleInsurance/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
@@ -101,7 +89,7 @@
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
-    $scope.loadSelectables().then(function (data) {
+    $scope.loadSelectables().then(function () {
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
         else
