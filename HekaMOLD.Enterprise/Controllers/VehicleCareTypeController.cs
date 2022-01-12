@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class VehicleTypeController : Controller
+    public class VehicleCareTypeController : Controller
     {
-        // GET: VehicleType
+        // GET: VehicleCareType
         public ActionResult Index()
         {
             return View();
@@ -19,13 +19,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetVehicleTypeList()
+        public JsonResult GetVehicleCareTypeList()
         {
-            VehicleTypeModel[] result = new VehicleTypeModel[0];
+            VehicleCareTypeModel[] result = new VehicleCareTypeModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetVehicleTypeList();
+                result = bObj.GetVehicleCareTypeList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -36,10 +36,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            VehicleTypeModel model = null;
+            VehicleCareTypeModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetVehicleType(rid);
+                model = bObj.GetVehicleCareType(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -53,7 +53,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteVehicleType(rid);
+                    result = bObj.DeleteVehicleCareType(rid);
                 }
 
                 if (result.Result)
@@ -68,14 +68,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(VehicleTypeModel model)
+        public JsonResult SaveModel(VehicleCareTypeModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateVehicleType(model);
+                    result = bObj.SaveOrUpdateVehicleCareType(model);
                 }
 
                 if (result.Result)
@@ -87,8 +87,7 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
-
-
         }
+
     }
 }

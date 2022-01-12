@@ -12,14 +12,17 @@
 
     $scope.selectedVehicleAllocationType = {};
     $scope.vehicleAllocationTypeList = [{ Id: 1, Text: 'Satın Alma' },
-    { Id: 2, Text: 'Kiralık' }];
+        { Id: 2, Text: 'Kiralık' }];
+
+    $scope.selectedForexType = {};
+    $scope.forexTypeList = [];
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
         $scope.selectedTrailerType = {};
         $scope.selectedVehicleType = {};
         $scope.selectedVehicleAllocationType = {};
-
+        $scope.selectedForexType = {};
     }
     $scope.loadSelectables = function () {
         var prmReq = new Promise(function (resolve, reject) {

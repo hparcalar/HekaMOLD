@@ -170,6 +170,10 @@
     <Compile Include="Migrations\202201120838456_commit.designer.cs">
       <DependentUpon>202201120838456_commit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201121825187_VehicleCareUpdate-Genel.cs" />
+    <Compile Include="Migrations\202201121825187_VehicleCareUpdate-Genel.designer.cs">
+      <DependentUpon>202201121825187_VehicleCareUpdate-Genel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -192,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201120838456_commit.resx">
       <DependentUpon>202201120838456_commit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201121825187_VehicleCareUpdate-Genel.resx">
+      <DependentUpon>202201121825187_VehicleCareUpdate-Genel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

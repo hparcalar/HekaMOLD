@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Logistics;
+﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using System;
@@ -22,15 +23,18 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult GetSelectables()
         {
             VehicleTypeModel[] vehicleTypes = new VehicleTypeModel[0];
+            ForexTypeModel[] forexTypes = new ForexTypeModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 vehicleTypes = bObj.GetVehicleTypeList();
+                forexTypes = bObj.GetForexTypeList();
             }
 
             var jsonResult = Json(new
             {
-                VehicleTypes = vehicleTypes
+                VehicleTypes = vehicleTypes,
+                ForexTypes = forexTypes
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;

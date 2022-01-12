@@ -1,11 +1,9 @@
-﻿using Heka.DataAccess.Context.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Heka.DataAccess.Context
+namespace Heka.DataAccess.Context.Models
 {
-   public partial class VehicleInsurance
+    public partial class VehicleInsurance
     {
         public VehicleInsurance()
         {

@@ -209,6 +209,7 @@ namespace HekaMOLD.Business.UseCases
             return repo.Any(d => d.FirmCode == firmCode);
         }
         #endregion
+
         #region VEHICLETYPE BUSINESS
         public VehicleTypeModel[] GetVehicleTypeList()
         {
@@ -312,6 +313,7 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
         #endregion
+
         #region VEHICLE BUSINESS
         public VehicleModel[] GetVehicleList()
         {
@@ -456,6 +458,7 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
         #endregion
+
         #region VEHICLEINSURANCE BUSINESS
 
         public VehicleInsuranceModel[] GetVehicleInsuranceList()
@@ -482,7 +485,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 if (string.IsNullOrEmpty(model.Plate))
                     throw new Exception("Plaka girilmelidir.");
-                if (string.IsNullOrEmpty(Convert.ToString( model.StartDate)))
+                if (string.IsNullOrEmpty(Convert.ToString(model.StartDate)))
                     throw new Exception("Başlama tarihi girilmelidir.");
                 if (string.IsNullOrEmpty(Convert.ToString(model.EndDate)))
                     throw new Exception("Bitiş tarihi girilmelidir.");
@@ -562,6 +565,315 @@ namespace HekaMOLD.Business.UseCases
         }
 
         #endregion
+
+        #region VEHICLEINSURANCETYPE BUSINESS
+        public VehicleInsuranceTypeModel[] GetVehicleInsuranceTypeList()
+        {
+            List<VehicleInsuranceTypeModel> data = new List<VehicleInsuranceTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<VehicleInsuranceType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                VehicleInsuranceTypeModel containerObj = new VehicleInsuranceTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateVehicleInsuranceType(VehicleInsuranceTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.VehicleInsuranceTypeCode))
+                    throw new Exception("Plaka girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<VehicleInsuranceType>();
+
+                if (repo.Any(d => (d.VehicleInsuranceTypeCode == model.VehicleInsuranceTypeCode) && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir sigorta mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new VehicleInsuranceType();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteVehicleInsuranceType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<VehicleInsuranceType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public VehicleInsuranceTypeModel GetVehicleInsuranceType(int id)
+        {
+            VehicleInsuranceTypeModel model = new VehicleInsuranceTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<VehicleInsuranceType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region VEHICLECARE BUSINESS
+        public VehicleCareModel[] GetVehicleCareList()
+        {
+            List<VehicleCareModel> data = new List<VehicleCareModel>();
+
+            var repo = _unitOfWork.GetRepository<VehicleCare>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                VehicleCareModel containerObj = new VehicleCareModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateVehicleCare(VehicleCareModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.Plate))
+                    throw new Exception("Plaka girilmelidir.");
+                if (string.IsNullOrEmpty(model.VehicleCareTypeCode))
+                    throw new Exception("Bakım tip kod girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<VehicleCare>();
+
+                //if (repo.Any(d => (d.FirmCode == model.FirmCode) && d.Id != model.Id))
+                //    throw new Exception("Aynı koda sahip başka bir firma mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new VehicleCare();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteVehicleCare(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<VehicleCare>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public VehicleCareModel GetVehicleCare(int id)
+        {
+            VehicleCareModel model = new VehicleCareModel { };
+
+            var repo = _unitOfWork.GetRepository<VehicleCare>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+
+        #endregion
+
+        #region VEHICLECARETYPE BUSINESS
+        public VehicleCareTypeModel[] GetVehicleCareTypeList()
+        {
+            List<VehicleCareTypeModel> data = new List<VehicleCareTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<VehicleCareType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                VehicleCareTypeModel containerObj = new VehicleCareTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateVehicleCareType(VehicleCareTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.VehicleCareTypeCode))
+                    throw new Exception("Bakım tip Kodu girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<VehicleCareType>();
+
+                if (repo.Any(d => (d.VehicleCareTypeCode == model.VehicleCareTypeCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir sigorta tip mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new VehicleCareType();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteVehicleCareType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<VehicleCareType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public VehicleCareTypeModel GetVehicleCareType(int id)
+        {
+            VehicleCareTypeModel model = new VehicleCareTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<VehicleCareType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
         #region ITEM BUSINESS
         public ItemModel[] GetItemList()
         {

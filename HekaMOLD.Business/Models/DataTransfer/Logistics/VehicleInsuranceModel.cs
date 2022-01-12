@@ -3,7 +3,7 @@ using System;
 
 namespace HekaMOLD.Business.Models.DataTransfer.Logistics
 {
-    public class VehicleInsuranceModel : IDataObject
+   public class VehicleInsuranceModel : IDataObject
     {
         public int Id { get; set; }
         public int? VehicleInsuranceTypeId { get; set; }

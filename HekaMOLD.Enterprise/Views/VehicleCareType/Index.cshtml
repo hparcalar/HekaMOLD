@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Araç Tip Tanımları";
+    ViewBag.Title = "Araç Bakım Tip Tanımları";
 }
 
-<div ng-controller="vehicleTypeCtrl">
+<div ng-controller="vehicleCareTypeCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -31,7 +31,7 @@
             <div class="d-flex align-items-center py-1">
                 <!--begin::Wrapper-->
                 <div class="me-4">
-                    <a href="@Url.Action("List","VehicleType")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                    <a href="@Url.Action("List","VehicleCareType")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -104,17 +104,23 @@
                 <!--begin::Col-->
                 <div class="col-xxl-6">
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Tip Kodu</label>
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Bakım Tip Kodu</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.VehicleTypeCode" placeholder="" />
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.VehicleCareTypeCode" placeholder="" />
                     </div>
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Tip Adı</label>
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Bakım Tip Adı</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.VehicleTypeName" placeholder="" />
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.VehicleCareTypeName" placeholder="" />
                     </div>
+                    <label class="form-label fs-4 fw-bolder text-gray-700 mb-3">&nbsp;</label>
+                    <!--begin::Input group-->
+                    <label class="form-check form-check-custom form-check-solid w-80 mt-3">
+                        <input class="form-check-input" type="checkbox" ng-model="modelObject.Compulsory" />
+                        <span class="form-check-label">Zorunlu</span>
+                    </label>
                 </div>
                 <!--end::Col-->
             </div>
@@ -126,5 +132,5 @@
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
-    <script src="~/FrontEndLogic/VehicleType/index.js"></script>
+    <script src="~/FrontEndLogic/VehicleCareType/index.js"></script>
 }

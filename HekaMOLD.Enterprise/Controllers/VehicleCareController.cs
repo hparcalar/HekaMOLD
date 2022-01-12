@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Logistics;
+﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using System;
@@ -6,9 +7,9 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class VehicleTypeController : Controller
+    public class VehicleCareController : Controller
     {
-        // GET: VehicleType
+        // GET: VehicleCare
         public ActionResult Index()
         {
             return View();
@@ -17,15 +18,14 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
-
         [HttpGet]
-        public JsonResult GetVehicleTypeList()
+        public JsonResult GetVehicleCareList()
         {
-            VehicleTypeModel[] result = new VehicleTypeModel[0];
+            VehicleCareModel[] result = new VehicleCareModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetVehicleTypeList();
+                result = bObj.GetVehicleCareList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -34,12 +34,39 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult BindModel(int rid)
+        public JsonResult GetSelectables()
         {
-            VehicleTypeModel model = null;
+            VehicleModel[] vehicles = new VehicleModel[0];
+            VehicleCareTypeModel[] vehicleCareTypes = new VehicleCareTypeModel[0];
+            FirmModel[] fims = new FirmModel[0];
+            ForexTypeModel[] forexTypes = new ForexTypeModel[0];
+
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetVehicleType(rid);
+                vehicles = bObj.GetVehicleList();
+                vehicleCareTypes = bObj.GetVehicleCareTypeList();
+                fims = bObj.GetFirmList();
+                forexTypes = bObj.GetForexTypeList();
+            }
+
+            var jsonResult = Json(new
+            {
+                Vehicles = vehicles,
+                VehicleCareTypes = vehicleCareTypes,
+                Firms = fims,
+                ForexTypes = forexTypes
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult BindModel(int rid)
+        {
+            VehicleCareModel model = null;
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                model = bObj.GetVehicleCare(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -53,7 +80,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteVehicleType(rid);
+                    result = bObj.DeleteVehicleCare(rid);
                 }
 
                 if (result.Result)
@@ -68,14 +95,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(VehicleTypeModel model)
+        public JsonResult SaveModel(VehicleCareModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateVehicleType(model);
+                    result = bObj.SaveOrUpdateVehicleCare(model);
                 }
 
                 if (result.Result)
@@ -90,5 +117,6 @@ namespace HekaMOLD.Enterprise.Controllers
 
 
         }
+
     }
 }

@@ -990,11 +990,27 @@
                                                         </a>
                                                     </div>
                                                     <div class="menu-item">
+                                                        <a class="menu-link @(Regex.IsMatch(ctrl, "VehicleCareType$") ? "active" : "")" href="@Url.Action("List","VehicleCareType")">
+                                                            <span class="menu-bullet">
+                                                                <span class="bullet bullet-dot"></span>
+                                                            </span>
+                                                            <span class="menu-title">Araç Bakım Tip</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="menu-item">
                                                         <a class="menu-link @(Regex.IsMatch(ctrl, "VehicleInsurance$") ? "active" : "")" href="@Url.Action("List","VehicleInsurance")">
                                                             <span class="menu-bullet">
                                                                 <span class="bullet bullet-dot"></span>
                                                             </span>
                                                             <span class="menu-title">Araç Sigorta</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="menu-item">
+                                                        <a class="menu-link @(Regex.IsMatch(ctrl, "VehicleInsuranceType$") ? "active" : "")" href="@Url.Action("List","VehicleInsuranceType")">
+                                                            <span class="menu-bullet">
+                                                                <span class="bullet bullet-dot"></span>
+                                                            </span>
+                                                            <span class="menu-title">Araç Sigorta Tip</span>
                                                         </a>
                                                     </div>
                                                     <div class="menu-item">
@@ -1004,7 +1020,8 @@
                                                             </span>
                                                             <span class="menu-title">Araç Lastik</span>
                                                         </a>
-                                                    </div>                                                    <div class="menu-item">
+                                                    </div>
+                                                    <div class="menu-item">
                                                         <a class="menu-link @(Regex.IsMatch(ctrl, "UnitType$") ? "active" : "")" href="@Url.Action("List","UnitType")">
                                                             <span class="menu-bullet">
                                                                 <span class="bullet bullet-dot"></span>

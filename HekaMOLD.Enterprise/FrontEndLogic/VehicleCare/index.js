@@ -1,13 +1,13 @@
-﻿app.controller('vehicleInsuranceCtrl', function ($scope, $http) {
+﻿app.controller('vehicleCareCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
 
-    $scope.selectedVehicle= {};
+    $scope.selectedVehicle = {};
     $scope.vehicleList = [];
 
-    $scope.selectedVehicleInsuranceType = {};
-    $scope.vehicleInsuranceTypeList = [];
+    $scope.selectedVehicleCareType = {};
+    $scope.vehicleCareTypeList = [];
 
     $scope.selectedOperationFirm = {};
     $scope.operationFirmList = [];
@@ -24,13 +24,13 @@
     }
     $scope.loadSelectables = function () {
         var prmReq = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'VehicleInsurance/GetSelectables', {}, 'json')
+            $http.get(HOST_URL + 'VehicleCare/GetSelectables', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.vehicleList = resp.data.Vehicles;
-                        $scope.vehicleInsuranceTypeList = resp.data.VehicleInsuranceTypes;
+                        $scope.vehicleCareTypeList = resp.data.VehicleCareTypes;
                         $scope.operationFirmList = resp.data.Firms;
-
+                        $scope.forexTypeList = resp.data.ForexTypes;
                         resolve(resp.data);
                     }
                 }).catch(function (err) { });
@@ -40,7 +40,7 @@
     }
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu araç sigorta bilgisini silmek istediğinizden emin misiniz?",
+            message: "Bu araç bakım bilgisini silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
                 confirm: {
@@ -55,7 +55,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'VehicleInsurance/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'VehicleCare/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -76,8 +76,28 @@
 
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
-        console.log($scope.modelObject);
-        $http.post(HOST_URL + 'VehicleInsurance/SaveModel', $scope.modelObject, 'json')
+
+        if (typeof $scope.selectedVehicleCareType != 'undefined' && $scope.selectedVehicleCareType != null)
+            $scope.modelObject.VehicleCareTypeId = $scope.selectedVehicleCareType.Id;
+        else
+            $scope.modelObject.VehicleCareTypeId = null;
+
+        if (typeof $scope.selectedVehicle != 'undefined' && $scope.selectedVehicle != null)
+            $scope.modelObject.VehicleId = $scope.selectedVehicle.Id;
+        else
+            $scope.modelObject.VehicleId = null;
+
+        if (typeof $scope.selectedOperationFirm != 'undefined' && $scope.selectedOperationFirm != null)
+            $scope.modelObject.OperationFirmId = $scope.selectedOperationFirm.Id;
+        else
+            $scope.modelObject.OperationFirmId = null;
+
+        if (typeof $scope.selectedForexType != 'undefined' && $scope.selectedForexType != null)
+            $scope.modelObject.ForexTypeId = $scope.selectedForexType.Id;
+        else
+            $scope.modelObject.ForexTypeId = null;
+
+        $http.post(HOST_URL + 'VehicleCare/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -94,10 +114,31 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'VehicleInsurance/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'VehicleCare/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
+
+                    if ($scope.modelObject.ForexTypeId > 0)
+                        $scope.selectedForexType = $scope.forexTypeList.find(d => d.Id == $scope.modelObject.ForexTypeId);
+                    else
+                        $scope.selectedForexType = {};
+
+                    if ($scope.modelObject.VehicleId > 0)
+                        $scope.selectedVehicle = $scope.vehicleList.find(d => d.Id == $scope.modelObject.VehicleId);
+                    else
+                        $scope.selectedVehicle = {};
+
+                    if ($scope.modelObject.VehicleCareTypeId > 0)
+                        $scope.selectedVehicleCareType = $scope.vehicleCareTypeList.find(d => d.Id == $scope.modelObject.VehicleCareTypeId);
+                    else
+                        $scope.selectedVehicleCareType = {};
+
+                    if ($scope.modelObject.OperationFirmId > 0)
+                        $scope.selectedOperationFirm = $scope.operationFirmList.find(d => d.Id == $scope.modelObject.OperationFirmId);
+                    else
+                        $scope.selectedOperationFirm = {};
+
                 }
             }).catch(function (err) { });
     }

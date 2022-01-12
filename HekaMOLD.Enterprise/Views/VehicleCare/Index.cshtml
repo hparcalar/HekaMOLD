@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Araç Tip Tanımları";
+    ViewBag.Title = "Araç Bakım Tanımları";
 }
 
-<div ng-controller="vehicleTypeCtrl">
+<div ng-controller="vehicleCareCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -31,7 +31,7 @@
             <div class="d-flex align-items-center py-1">
                 <!--begin::Wrapper-->
                 <div class="me-4">
-                    <a href="@Url.Action("List","VehicleType")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                    <a href="@Url.Action("List","VehicleCare")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -104,19 +104,98 @@
                 <!--begin::Col-->
                 <div class="col-xxl-6">
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Tip Kodu</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.VehicleTypeCode" placeholder="" />
-                    </div>
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <select aria-label="Araç" ng-options="item.Plate for item in vehicleList"
+                                        ng-model="selectedVehicle" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                        </div>
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Tip Adı</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.VehicleTypeName" placeholder="" />
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sigorta Tip</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <select aria-label="Sigorta Tip" ng-options="item.VehicleCareTypeName for item in vehicleCareTypeList"
+                                        ng-model="selectedVehicleCareType" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşlem Firma</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <select aria-label="İşlem Firma" ng-options="item.FirmName for item in operationFirmList"
+                                        ng-model="selectedOperationFirm" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Personel</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <select aria-label="Personel" ng-options="item.UserCode + '/'+item.UserName for item in userList"
+                                        ng-model="selectedUser" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Bakım Tarihi</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.CareDate" placeholder="" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--end::Col-->
+                <div class="col-xxl-6">
+
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Km/Saat</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.KmHour" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Fiyat</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Amount" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Doviz Kodu</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <select aria-label="Doviz Kodu" ng-options="item.ForexTypeCode for item in forexTypeList"
+                                        ng-model="selectedForexType" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <textarea name="notes" class="form-control form-control-solid" ng-model="modelObject.Explanation" rows="3" placeholder=""></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
             <!--end::Row-->
         </div>
@@ -126,5 +205,8 @@
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
-    <script src="~/FrontEndLogic/VehicleType/index.js"></script>
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/FrontEndLogic/VehicleCare/index.js"></script>
 }

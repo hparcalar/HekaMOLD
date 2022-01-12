@@ -9,6 +9,7 @@
 
 namespace Heka.DataAccess.Context
 {
+    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -22,6 +23,7 @@ namespace Heka.DataAccess.Context
             this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
             this.VehicleInsurance = new HashSet<VehicleInsurance>();
+            this.VehicleCare = new HashSet<VehicleCare>();
         }
 
         public int Id { get; set; }
@@ -41,5 +43,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ForexType")]
         public virtual ICollection<VehicleInsurance> VehicleInsurance { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<VehicleCare> VehicleCare { get; set; }
     }
 }
