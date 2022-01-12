@@ -172,6 +172,7 @@
     <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
+    <Compile Include="Controllers\WeavingDraftController.cs" />
     <Compile Include="Controllers\WorkOrderCategoryController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Controllers\MoldTestController.cs" />
@@ -4199,6 +4200,8 @@
     <Content Include="FrontEndLogic\Warehouse\index.js" />
     <Content Include="FrontEndLogic\Warehouse\states.js" />
     <Content Include="FrontEndLogic\Warehouse\list.js" />
+    <Content Include="FrontEndLogic\WeavingDraft\index.js" />
+    <Content Include="FrontEndLogic\WeavingDraft\list.js" />
     <Content Include="FrontEndLogic\WorkOrderCategory\index.js" />
     <Content Include="FrontEndLogic\WorkOrderCategory\list.js" />
     <Content Include="FrontEndLogic\WorkOrder\index.js" />
@@ -4685,6 +4688,8 @@
     <Content Include="Views\SerialFaultType\Index.cshtml" />
     <Content Include="Views\SerialFaultType\List.cshtml" />
     <Content Include="Views\SerialWinding\Index.cshtml" />
+    <Content Include="Views\WeavingDraft\Index.cshtml" />
+    <Content Include="Views\WeavingDraft\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

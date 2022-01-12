@@ -324,6 +324,26 @@
     <Compile Include="Migrations\202201092221433_WeavingDraftAdded.designer.cs">
       <DependentUpon>202201092221433_WeavingDraftAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201101514583_ItemWeavingDraft.cs" />
+    <Compile Include="Migrations\202201101514583_ItemWeavingDraft.designer.cs">
+      <DependentUpon>202201101514583_ItemWeavingDraft.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201101617400_MachineWeavingDraft.cs" />
+    <Compile Include="Migrations\202201101617400_MachineWeavingDraft.designer.cs">
+      <DependentUpon>202201101617400_MachineWeavingDraft.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201102231072_UpdateYarnRecipe%28meterreportcount%29.cs" />
+    <Compile Include="Migrations\202201102231072_UpdateYarnRecipe%28meterreportcount%29.designer.cs">
+      <DependentUpon>202201102231072_UpdateYarnRecipe%28meterreportcount%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201110756231_ItemUpdate%28AvedateWeftDensity%29.cs" />
+    <Compile Include="Migrations\202201110756231_ItemUpdate%28AvedateWeftDensity%29.designer.cs">
+      <DependentUpon>202201110756231_ItemUpdate%28AvedateWeftDensity%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201111049594_ItemUpdate%28int-string TestNo%29.cs" />
+    <Compile Include="Migrations\202201111049594_ItemUpdate%28int-string TestNo%29.designer.cs">
+      <DependentUpon>202201111049594_ItemUpdate%28int-string TestNo%29.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -460,6 +480,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201092221433_WeavingDraftAdded.resx">
       <DependentUpon>202201092221433_WeavingDraftAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201101514583_ItemWeavingDraft.resx">
+      <DependentUpon>202201101514583_ItemWeavingDraft.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201101617400_MachineWeavingDraft.resx">
+      <DependentUpon>202201101617400_MachineWeavingDraft.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201102231072_UpdateYarnRecipe%28meterreportcount%29.resx">
+      <DependentUpon>202201102231072_UpdateYarnRecipe%28meterreportcount%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201110756231_ItemUpdate%28AvedateWeftDensity%29.resx">
+      <DependentUpon>202201110756231_ItemUpdate%28AvedateWeftDensity%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201111049594_ItemUpdate%28int-string TestNo%29.resx">
+      <DependentUpon>202201111049594_ItemUpdate%28int-string TestNo%29.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

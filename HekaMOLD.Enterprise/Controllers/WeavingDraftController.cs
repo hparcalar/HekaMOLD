@@ -1,16 +1,17 @@
-﻿using HekaMOLD.Business.Models.Constants;
-using HekaMOLD.Business.Models.DataTransfer.Core;
-using HekaMOLD.Business.Models.DataTransfer.Production;
+﻿using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class KnitController : Controller
+    public class WeavingDraftController : Controller
     {
-        // GET: Knit
+        // GET: WeavingDraft
         public ActionResult Index()
         {
             return View();
@@ -21,12 +22,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetKnitList()
+        public JsonResult GetWeavingDraftList()
         {
-            ItemModel[] result = new ItemModel[0];
+            WeavingDraftModel[] result = new WeavingDraftModel[0];
+
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetKnitList();
+                result = bObj.GetWeavingDraftList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -35,42 +37,17 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetSelectables()
-        {
-            ItemQualityTypeModel[] qualityType = new ItemQualityTypeModel[0];
-            WeavingDraftModel[] weavingDrafts = new WeavingDraftModel[0];
-            YarnRecipeModel[] yarnRecipes = new YarnRecipeModel[0];
-            FirmModel[] firms = new FirmModel[0];
-
-            using (DefinitionsBO bObj = new DefinitionsBO())
-            {
-                qualityType = bObj.GetItemQualityTypeList();
-                weavingDrafts = bObj.GetWeavingDraftList();
-                yarnRecipes = bObj.GetYarnRecipeList();
-                firms = bObj.GetFirmList();
-            }
-
-            var jsonResult = Json(new
-            {
-                QualityType = qualityType,
-                WeavingDrafts = weavingDrafts,
-                YarnRecipes = yarnRecipes,
-                Firms = firms,
-            }, JsonRequestBehavior.AllowGet); ;
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-        [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ItemModel model = null;
+            WeavingDraftModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetKnit(rid);
+                model = bObj.GetWeavingDraft(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public JsonResult DeleteModel(int rid)
         {
@@ -79,7 +56,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteKnit(rid);
+                    result = bObj.DeleteWeavingDraft(rid);
                 }
 
                 if (result.Result)
@@ -94,15 +71,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemModel model)
+        public JsonResult SaveModel(WeavingDraftModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    model.ItemType = (int)ItemType.Product;
-                    result = bObj.SaveOrUpdateKnit(model);
+                    result = bObj.SaveOrUpdateWeavingDraft(model);
                 }
 
                 if (result.Result)
@@ -114,19 +90,38 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
-
         }
-        [HttpPost]
-        public JsonResult CalculateRow(KnitYarnModel model)
+        [HttpGet]
+        public JsonResult GetSelectables()
         {
-            KnitYarnModel result = new KnitYarnModel();
+            MachineBreedModel[] machineBreeds = new MachineBreedModel[0];
 
-            using (OrdersBO bObj = new OrdersBO())
+            using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                //result = bObj.CalculateOrderDetail(model);
+                machineBreeds = bObj.GetMachineBreedList();
             }
 
-            return Json(result);
+            var jsonResult = Json(new
+            {
+                MachineBreeds = machineBreeds,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetNextWeavingDraftCode(string Code)
+        {
+            string receiptNo = "";
+
+            using (RequestBO bObj = new RequestBO())
+            {
+                receiptNo = bObj.GetNextWeavingDraftCode(Code);
+            }
+
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(receiptNo), ReceiptNo = receiptNo }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
     }
 }

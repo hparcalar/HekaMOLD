@@ -29,17 +29,18 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         //Cozgu Tel sayisi
         public decimal? WarpWireCount { get; set; }
         public decimal? MeterGramaj { get; set; }
-        public int? TestNo { get; set; }
+        public string TestNo { get; set; }
         //Tarak En
         public decimal? CombWidth { get; set; }
         //Atki Rapor Boyu
         public decimal? WeftReportLength { get; set; }
         //Cozgu Rapor Boyu
         public decimal? WarpReportLength { get; set; }
-        //Atki Sikligi
-        public int? WeftDensity { get; set; }
+        //Ortalama Atki Sikligi
+        public int? AverageWeftDensity { get; set; }
+        //Ortalama Cozgu Sikligi
+        public int? AverageWarpDensity { get; set; }
 
-        public int? MachineId { get; set; }
         public int? WeavingDraftId { get; set; }
         public int? ItemQualityTypeId { get; set; }
 
@@ -60,11 +61,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string ItemDyeHouseTypeStr { get; set; }
         public string CategoryName { get; set; }
         public string GroupName { get; set; }
-        public string MachineCode { get; set; }
-        public string MachineName { get; set; }
         public string QualityTypeName { get; set; }
         public string WeavingDraftCode { get; set; }
-
         #endregion
     }
 }

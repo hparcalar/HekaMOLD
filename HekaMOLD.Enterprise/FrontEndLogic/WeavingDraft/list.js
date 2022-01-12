@@ -1,4 +1,4 @@
-﻿app.controller('knitListCtrl', function sidebarCtrl($scope, $http) {
+﻿app.controller('weavingDraftListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS
@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'Knit/GetKnitList', function (data) {
+                    return $.getJSON(HOST_URL + 'WeavingDraft/GetWeavingDraftList', function (data) {
 
                     });
                 },
@@ -36,24 +36,13 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'ItemNo', caption: 'Desen No' },
-                { dataField: 'TestNo', caption: 'Deneme No' },
-                { dataField: 'QualityTypeName', caption: 'Kalite Türü' },
                 { dataField: 'WeavingDraftCode', caption: 'Tahar Kodu' },
-                { dataField: 'CrudeWidth', caption: 'Ham En' },
-                { dataField: 'CrudeGramaj', caption: 'Ham Gramaj' },
-                { dataField: 'ProductWidth', caption: 'Mamül En' },
-                { dataField: 'ProductGramaj', caption: 'Mamül Gramaj' },
-              //  { dataField: 'WapWireCount', caption: 'Çözgü Tel Sayısı' },
-                { dataField: 'MeterGramaj', caption: 'm² Gramaj' },
-                { dataField: 'ItemCutTypeStr', caption: 'Kesme' },
-                { dataField: 'ItemBulletTypeStr', caption: 'Kurşun' },
-                { dataField: 'ItemApparelTypeStr', caption: 'Konfeksiyon' },
-                { dataField: 'ItemDyeHouseTypeStr', caption: 'Boyahane' },
-               // { dataField: 'CombWidth', caption: 'Atkı En' },
-               // { dataField: 'WeftReportLength', caption: 'Atkı Rapor Boyu' },
-               // { dataField: 'WapReportLength', caption: 'Çözgü Rapor Boyu' },
-              {
+                { dataField: 'MachineBreedName', caption: 'Makine Cins' }, 
+                { dataField: 'NumberOfFramaes', caption: 'Çerceve Sayısı' },
+                { dataField: 'Report', caption: 'Rapor' },
+                { dataField: 'PlatinumNumber', caption: 'Platin Sayısı' },
+                { dataField: 'JakarReport', caption: 'Jakar Raporu' },
+               {
                     type: "buttons",
                     buttons: [
                         {
@@ -62,7 +51,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'Knit?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'WeavingDraft?rid=' + e.row.data.Id;
                             }
                         }
                     ]

@@ -153,7 +153,6 @@
     <Compile Include="Models\DataTransfer\Labels\ProductLabel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutItemModel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutObjectTypeModel.cs" />
-    <Compile Include="Models\DataTransfer\Lojistics\LogisticsOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
@@ -191,6 +190,7 @@
     <Compile Include="Models\DataTransfer\Production\RouteModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ShiftModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ShiftTargetModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\WeavingDraftModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderAllocationModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderDetailModel.cs" />

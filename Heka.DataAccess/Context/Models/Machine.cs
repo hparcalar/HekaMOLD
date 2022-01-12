@@ -34,7 +34,6 @@ namespace Heka.DataAccess.Context
             this.UserWorkOrderHistory = new HashSet<UserWorkOrderHistory>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.ProductWastage = new HashSet<ProductWastage>();
-            this.Item = new HashSet<Item>();
         }
 
         public int Id { get; set; }
@@ -59,12 +58,19 @@ namespace Heka.DataAccess.Context
         public int? Width { get; set; }
         public string NumberOfFramaes { get; set; }
         //Tahar
-        public string WeavingDraft  { get; set; }
+        public string WeavingDraftInfo  { get; set; }
         public int? MachineBreedId { get; set; }
 
         [ForeignKey("MachineGroup")]
         public Nullable<int> MachineGroupId { get; set; }
+        [ForeignKey("WeavingDraft")]
+        public Nullable<int> WeavingDraftId { get; set; }
+
         public Nullable<int> SignalEndDelay { get; set; }
+
+        public virtual MachineGroup MachineGroup { get; set; }
+        public virtual MachineBreed MachineBreed { get; set; }
+        public virtual WeavingDraft WeavingDraft { get; set; }
 
         [InverseProperty("Machine")]
         public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
@@ -104,15 +110,11 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Machine")]
         public virtual ICollection<UserWorkOrderHistory> UserWorkOrderHistory { get; set; }
-        public virtual MachineGroup MachineGroup { get; set; }
-        public virtual MachineBreed MachineBreed { get; set; }
 
         [InverseProperty("Machine")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
 
         [InverseProperty("Machine")]
         public virtual ICollection<ProductWastage> ProductWastage { get; set; }
-        [InverseProperty("Machine")]
-        public virtual ICollection<Item> Item { get; set; }
     }
 }

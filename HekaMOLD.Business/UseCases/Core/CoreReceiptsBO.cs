@@ -104,6 +104,29 @@ namespace HekaMOLD.Business.UseCases.Core
 
             return default;
         }
+        public string GetNextWeavingDraftCode(string Code)
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WeavingDraft>();
+                int lastReceiptNo = repo.Filter(d => d.Id > 0)
+                    .OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(Convert.ToString(lastReceiptNo)))
+                    lastReceiptNo = 0;
+
+                return Code +"-"+ string.Format("{0:0000}", lastReceiptNo + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+
         public string GetNextReceiptNo(int plantId, ItemReceiptType receiptType)
         {
             try

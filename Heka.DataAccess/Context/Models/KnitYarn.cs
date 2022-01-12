@@ -26,7 +26,7 @@ namespace Heka.DataAccess.Context.Models
         public decimal? ReportWireCount { get; set; }
 
         //Metre Tel Sayisi
-        public decimal? MeterWireCount { get; set; }
+        public int? MeterWireCount { get; set; }
         public decimal? Gramaj { get; set; }
         public int? Density { get; set; }
 

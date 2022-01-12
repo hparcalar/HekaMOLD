@@ -632,8 +632,9 @@ namespace HekaMOLD.Business.UseCases
                 CombWidth = d.CombWidth,
                 WeftReportLength = d.WeftReportLength,
                 WarpReportLength = d.WarpReportLength,
-                MachineName = d.Machine != null ? d.Machine.MachineName : "",
-                WeftDensity = d.WeftDensity,
+                WeavingDraftCode = d.WeavingDraft != null ? d.WeavingDraft.WeavingDraftCode : "",
+                AverageWarpDensity = d.AverageWarpDensity,
+                AverageWeftDensity = d.AverageWeftDensity,
             }).ToArray();
         }
 
@@ -674,8 +675,8 @@ namespace HekaMOLD.Business.UseCases
             BusinessResult result = new BusinessResult();
             try
             {
-                if (string.IsNullOrEmpty(model.ItemNo))
-                    throw new Exception("Dokuma Desen numarası girilmelidir.");
+                if (string.IsNullOrEmpty(model.ItemNo) && string.IsNullOrEmpty(model.TestNo))
+                    throw new Exception("Dokuma Desen veya Deneme numarası girilmelidir.");
                 var repo = _unitOfWork.GetRepository<Item>();
                 var repoKnitYarns = _unitOfWork.GetRepository<KnitYarn>();
 
@@ -1572,7 +1573,8 @@ namespace HekaMOLD.Business.UseCases
                 WorkingUserId = d.WorkingUserId,
                 Width= d.Width,
                 NumberOfFramaes= d.NumberOfFramaes,
-                WeavingDraft= d.WeavingDraft,
+                WeavingDraftInfo= d.WeavingDraftInfo,
+                WeavingDraftCode = d.WeavingDraft.WeavingDraftCode,
                 SignalEndDelay = d.SignalEndDelay,
             }).ToArray();
 
@@ -3875,6 +3877,108 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+
+        #endregion
+
+        #region WEAVINGDRAFT BUSINESS
+        public WeavingDraftModel[] GetWeavingDraftList()
+        {
+            var repo = _unitOfWork.GetRepository<WeavingDraft>();
+
+            return repo.GetAll().Select(d => new WeavingDraftModel
+            {
+                Id = d.Id,
+                WeavingDraftCode = d.WeavingDraftCode,
+                MachineBreedCode = d.MachineBreed !=null ? d.MachineBreed.MachineBreedCode : "",
+                MachineBreedName = d.MachineBreed != null ? d.MachineBreed.MachineBreedName : "",
+                NumberOfFramaes = d.NumberOfFramaes,
+                Report = d.Report,
+                PlatinumNumber = d.PlatinumNumber,
+                JakarReport = d.JakarReport,
+            }).ToArray();
+        }
+        public BusinessResult SaveOrUpdateWeavingDraft(WeavingDraftModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(Convert.ToString(model.WeavingDraftCode)))
+                    throw new Exception("Kod girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<WeavingDraft>();
+
+                if (repo.Any(d => (d.WeavingDraftCode == model.WeavingDraftCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir kayıt mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new WeavingDraft();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteWeavingDraft(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WeavingDraft>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public WeavingDraftModel GetWeavingDraft(int id)
+        {
+            WeavingDraftModel model = new WeavingDraftModel { };
+
+            var repo = _unitOfWork.GetRepository<WeavingDraft>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
 
         #endregion
     }

@@ -31,8 +31,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? Width { get; set; }
         public string NumberOfFramaes { get; set; }
         //Tahar
-        public string WeavingDraft { get; set; }
+        public string WeavingDraftInfo { get; set; }
         public int? MachineBreedId { get; set; }
+        public int? WeavingDraftId { get; set; }
 
         public MachinePlanModel ActivePlan { get; set; }
         public MachinePlanModel[] Plans { get; set; }
@@ -54,6 +55,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string ActiveIncidentText { get; set; }
         public string MachineBreedCode { get; set; }
         public string MachineBreedName { get; set; }
+        public string WeavingDraftCode { get; set; }
 
         #endregion
     }

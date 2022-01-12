@@ -73,17 +73,16 @@ namespace Heka.DataAccess.Context
         public Nullable<int> ItemApparelType { get; set; }
         //Kursun
         public Nullable<int> ItemBulletType { get; set; }
-        public int? TestNo { get; set; }
+        public string TestNo { get; set; }
         public decimal? CombWidth { get; set; }
         //Atki Rapor Boyu
         public decimal? WeftReportLength { get; set; }
         //Cozgu Rapor Boyu
         public decimal? WarpReportLength { get; set; }
-        //Atki Sikligi
-        public int? WeftDensity { get; set; }
-
-        [ForeignKey("Machine")]
-        public int? MachineId { get; set; }
+        //Ortalama Atki Sikligi
+        public int? AverageWeftDensity { get; set; }
+        //Ortalama Cozgu Sikligi
+        public int? AverageWarpDensity { get; set; }
 
         [ForeignKey("WeavingDraft")]
         public int? WeavingDraftId { get; set; }
@@ -101,7 +100,6 @@ namespace Heka.DataAccess.Context
         public virtual Mold Mold { get; set; }
         public virtual Plant Plant { get; set; }
         public virtual ItemQualityType ItemQualityType { get; set; }
-        public virtual Machine Machine { get; set; }
         public virtual WeavingDraft WeavingDraft { get; set; }
 
         [InverseProperty("Item")]

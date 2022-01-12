@@ -1,13 +1,13 @@
 ﻿app.controller('knitCtrl', function ($scope, $http) {
     $scope.modelObject = { Id: 0, KnitYarns:[]};
-
+    $scope.modelObjectTmp = { Id: 0, KnitYarns: [] };
     $scope.saveStatus = 0;
 
     $scope.yarnRecipeList = [];
     $scope.firmList = [];
 
-    $scope.selectedMachine = {};
-    $scope.machineList = [];
+    $scope.selectedWeavingDraft = {};
+    $scope.weavingDraftList = [];
 
     $scope.selectedQualityType = {};
     $scope.qualityTypeList = [];
@@ -36,7 +36,7 @@
                     if (typeof resp.data != 'undefined' && resp.data != null) {
 
                         $scope.qualityTypeList = resp.data.QualityType;
-                        $scope.machineList = resp.data.Machines;
+                        $scope.weavingDraftList = resp.data.WeavingDrafts;
                         $scope.yarnRecipeList = resp.data.YarnRecipes;
                         $scope.firmList = resp.data.Firms;
                         resolve(resp.data);
@@ -47,7 +47,23 @@
         return prmReq;
     }
 
-    // CRUD
+    $scope.valueChanged = function (oldValue,type) {
+
+        if (type == 1 && $scope.modelObject.CrudeGramaj != oldValue) {
+            let rate = $scope.modelObject.CrudeGramaj / oldValue;
+            $scope.modelObject.MeterGramaj = $scope.modelObject.MeterGramaj * rate;
+            $scope.modelObject.KnitYarns.forEach(element => { element.ReportWireCount = element.ReportWireCount * rate; element.Gramaj = element.Gramaj * rate; });
+            $scope.bindWarpYarnList();
+            $scope.bindWeftYarnList();
+
+        }
+        if (type == 3 && $scope.modelObject.MeterGramaj != oldValue) {
+            let rate = $scope.modelObject.MeterGramaj / oldValue;
+            $scope.modelObject.CrudeGramaj = $scope.modelObject.CrudeGramaj * rate;
+            $scope.modelObject.KnitYarns.forEach(element => { element.ReportWireCount = element.ReportWireCount * rate; element.Gramaj = element.Gramaj * rate; });
+            $scope.bindWarpYarnList();
+            $scope.bindWeftYarnList();        }
+    }
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0,  KnitYarns: [] };
         $scope.bindWeftYarnList();
@@ -62,7 +78,7 @@
 
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
-            dropDownOptions: { width: 700 },
+            dropDownOptions: { width: 1000 },
             dataSource: $scope.yarnRecipeList,
             value: cellInfo.value,
 
@@ -73,12 +89,11 @@
                     dataSource: $scope.yarnRecipeList,
                     remoteOperations: true,
                     columns: [
-                        { dataField: 'YarnRecipeCode', caption: 'İplik Kodu' },
-                        { dataField: 'YarnRecipeName', caption: 'İplik Adı' },
-                        { dataField: 'FirmName', caption: 'Firma' },
-                        { dataField: 'Denier', caption: 'Fiili Denye' },
-                        { dataField: 'YarnColourName', caption: 'Renk Kodu' },
-                        { dataField: 'Factor', caption: 'Katsayı' }
+                        { dataField: 'YarnRecipeCode', caption: 'İplik Kodu', width:200 },
+                        { dataField: 'YarnRecipeName', caption: 'İplik Adı', width: 350 },
+                        { dataField: 'FirmName', caption: 'Firma', width: 200},
+                        { dataField: 'Denier', caption: 'Fiili Denye', width: 100 },
+                        { dataField: 'YarnColourName', caption: 'Renk Kodu',width: 100 },
                     ],
                     hoverStateEnabled: true,
                     keyExpr: "Id",
@@ -167,10 +182,10 @@
         else
             $scope.modelObject.ItemApparelType = null;
 
-        if (typeof $scope.selectedMachine != 'undefined' && $scope.selectedMachine != null)
-            $scope.modelObject.MachineId = $scope.selectedMachine.Id;
+        if (typeof $scope.selectedWeavingDraft != 'undefined' && $scope.selectedWeavingDraft != null)
+            $scope.modelObject.WeavingDraftId = $scope.selectedWeavingDraft.Id;
         else
-            $scope.modelObject.MachineId = null;
+            $scope.modelObject.WeavingDraftId = null;
 
         $http.post(HOST_URL + 'Knit/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -193,12 +208,11 @@
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
-
                     // BIND EXTERNAL TYPES
-                    if ($scope.modelObject.MachineId > 0)
-                        $scope.selectedMachine = $scope.machineList.find(d => d.Id == $scope.modelObject.MachineId);
+                    if ($scope.modelObject.WeavingDraftId > 0)
+                        $scope.selectedWeavingDraft = $scope.weavingDraftList.find(d => d.Id == $scope.modelObject.WeavingDraftId);
                     else
-                        $scope.selectedMachine = {};
+                        $scope.selectedWeavingDraft = {};
 
                     if ($scope.modelObject.ItemQualityTypeId > 0)
                         $scope.selectedQualityType = $scope.qualityTypeList.find(d => d.Id == $scope.modelObject.ItemQualityTypeId);
@@ -311,7 +325,7 @@
             filterRow: { visible: false }, headerFilter: { visible: false },
             groupPanel: { visible: false },
             scrolling: { mode: "virtual" },
-            height: 420,
+            height: 300,
             editing: { allowUpdating: true, allowDeleting: true, allowAdding: true, mode: 'cell' },
             onInitNewRow: function (e) { },
             columns: [
@@ -341,14 +355,14 @@
                         else
                             container.text(options.displayValue);
                     }
-                },
-                { dataField: 'YarnRecipeName', caption: 'İplik Ad', allowEditing: false },
-                { dataField: 'Denier', caption: 'Fiili Denye', allowEditing: false },
-                { dataField: 'FirmName', caption: 'Firma', allowEditing: false,     },
-                { dataField: 'ReportWireCount', caption: 'Rapor Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'MeterWireCount',  caption: 'Metre Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'Gramaj', caption: 'Gramaj', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'Density', caption: 'Sıklık', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                    , width: 200},
+                { dataField: 'YarnRecipeName', caption: 'İplik Ad', allowEditing: false, width: 350 },
+                { dataField: 'Denier', caption: 'Fiili Denye', allowEditing: false, width: 100 },
+                { dataField: 'FirmName', caption: 'Firma', allowEditing: false, width: 150},
+                { dataField: 'ReportWireCount', caption: 'Rapor Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }], width: 100 },
+                { dataField: 'MeterWireCount', caption: 'Metre Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 100},
+                { dataField: 'Gramaj', caption: 'Gramaj', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 100},
+                { dataField: 'Density', caption: 'Sıklık', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 100},
             ]
         });
     }
@@ -427,7 +441,7 @@
             filterRow: { visible: false }, headerFilter: { visible: false },
             groupPanel: { visible: false },
             scrolling: { mode: "virtual" },
-            height: 420,
+            height: 300,
             editing: { allowUpdating: true, allowDeleting: true, allowAdding: true, mode: 'cell' },
             onInitNewRow: function (e) { },
             columns: [
@@ -457,14 +471,14 @@
                         else
                             container.text(options.displayValue);
                     }
-                },
-                { dataField: 'YarnRecipeName', caption: 'İplik Ad', allowEditing: false },
-                { dataField: 'Denier', caption: 'Fiili Denye', allowEditing: false },
-                { dataField: 'FirmName', caption: 'Firma', allowEditing: false    },
-                { dataField: 'ReportWireCount', caption: 'Rapor Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'MeterWireCount', caption: 'Metre Tel Say.',  dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'Gramaj', caption: 'Gramaj', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'Density', caption: 'Sıklık', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                    , width: 200},
+                { dataField: 'YarnRecipeName', caption: 'İplik Ad', allowEditing: false, width: 350},
+                { dataField: 'Denier', caption: 'Fiili Denye', allowEditing: false,  width: 100},
+                { dataField: 'FirmName', caption: 'Firma', allowEditing: false, width: 150  },
+                { dataField: 'ReportWireCount', caption: 'Rapor Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] ,width: 100},
+                { dataField: 'MeterWireCount', caption: 'Metre Tel Say.', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 100},
+                { dataField: 'Gramaj', caption: 'Gramaj', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 100},
+                { dataField: 'Density', caption: 'Sıklık', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 100},
             ]
         });
     }
@@ -487,14 +501,16 @@
     }
     $scope.calculateWarpRow = function (row) {
 
-        row.MeterWireCount = row.ReportWireCount * parseFloat(100 / $scope.modelObject.WarpReportLength);
-        row.Gramaj = $scope.modelObject.WarpWireCount * row.Denier / 9000;
+        row.MeterWireCount = parseInt(row.ReportWireCount * 100 / $scope.modelObject.WarpReportLength);
+        row.Gramaj = row.MeterWireCount * row.Denier * $scope.modelObject.CombWidth / 900000;
         $scope.calculatorCrudeGramaj();
+        $scope.calculatorWarpDensity();
     }
     $scope.calculateWeftRow = function (row) {
-        row.MeterWireCount = row.ReportWireCount * parseFloat(100 / $scope.modelObject.WeftReportLength);
-        row.Gramaj = row.ReportWireCount / $scope.modelObject.WeftReportLength * $scope.modelObject.CombWidth * row.Denier / 9000;
+        row.MeterWireCount = parseInt(row.ReportWireCount * 100 / $scope.modelObject.WeftReportLength);
+        row.Gramaj = row.MeterWireCount * row.Denier * $scope.modelObject.CombWidth  / 900000;
         $scope.calculatorCrudeGramaj();
+        $scope.calculatorWeftDensity();
     }
     $scope.calculatorCrudeGramaj = function () {
         let crudeGramaj = 0;
@@ -503,6 +519,21 @@
         let meterGramaj = 0;
         meterGramaj = crudeGramaj / ($scope.modelObject.CombWidth / 100);
         $scope.modelObject.MeterGramaj = meterGramaj;
+        $scope.calculatorWeftDensity();
+        $scope.calculatorWarpDensity();
+
+    }
+    $scope.calculatorWarpDensity = function () {
+        let averageWarpDensity = 0;
+        let count = 0;
+        $scope.modelObject.KnitYarns.filter(d => d.YarnType == 1).forEach(element => { averageWarpDensity += parseFloat(element.Density != null ? element.Density : 0); element.Density != null ? count++ : count; });
+        $scope.modelObject.AverageWarpDensity = parseInt(averageWarpDensity / count);
+    }
+    $scope.calculatorWeftDensity = function () {
+        let averageWeftDensity = 0;
+        let count = 0;
+        $scope.modelObject.KnitYarns.filter(d => d.YarnType == 2).forEach(element => { averageWeftDensity += parseFloat(element.Density != null ? element.Density : 0); element.Density != null ? count++ : count; });
+        $scope.modelObject.AverageWeftDensity = parseInt(averageWeftDensity / count);
     }
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');

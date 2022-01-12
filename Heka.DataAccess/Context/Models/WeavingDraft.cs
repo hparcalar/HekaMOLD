@@ -9,6 +9,7 @@ namespace Heka.DataAccess.Context.Models
         public WeavingDraft()
         {
             this.Item = new HashSet<Item>();
+            this.Machine = new HashSet<Machine>();
         }
         public int Id { get; set; }
         public string WeavingDraftCode { get; set; }
@@ -30,5 +31,8 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("WeavingDraft")]
         public virtual ICollection<Item> Item { get; set; }
+
+        [InverseProperty("WeavingDraft")]
+        public virtual ICollection<Machine> Machine { get; set; }
     }
 }

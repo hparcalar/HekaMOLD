@@ -4,6 +4,9 @@
     $scope.selectedMachineGroup = {};
     $scope.machineGroupList = [];
 
+    $scope.selectedWeavingDraft = {};
+    $scope.weavingDraftList = [];
+
     $scope.selectedMachineBreed = {};
     $scope.machineBreedList = [];
 
@@ -13,6 +16,7 @@
         $scope.modelObject = { Id: 0, MachineGroupId: null };
         $scope.selectedMachineGroup = {};
         $scope.selectedMachineBreed = {};
+        $scope.selectedWeavingDraft = {};
 
     }
 
@@ -24,6 +28,7 @@
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.machineGroupList = resp.data.Groups;
                         $scope.machineBreedList = resp.data.Breeds;
+                        $scope.weavingDraftList = resp.data.WeavingDrafts;
                         resolve(resp.data);
                     }
                 }).catch(function (err) { });
@@ -85,6 +90,10 @@
             $scope.modelObject.MachineBreedId = $scope.selectedMachineBreed.Id;
         else
             $scope.modelObject.MachineBreedId = null;
+        if (typeof $scope.selectedWeavingDraft != 'undefined' && $scope.selectedWeavingDraft != null)
+            $scope.modelObject.WeavingDraftId = $scope.selectedWeavingDraft.Id;
+        else
+            $scope.modelObject.WeavingDraftId = null;
 
         $http.post(HOST_URL + 'Machine/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -120,6 +129,12 @@
                             .find(d => d.Id == $scope.modelObject.MachineBreedId);
                     else
                         $scope.selectedMachineBreed = {};
+
+                    if ($scope.modelObject.WeavingDraftId > 0)
+                        $scope.selectedWeavingDraft = $scope.weavingDraftList
+                            .find(d => d.Id == $scope.modelObject.WeavingDraftId);
+                    else
+                        $scope.selectedWeavingDraft = {};
 
                     $("#back-color").spectrum("set", $scope.modelObject.BackColor);
                     $("#fore-color").spectrum("set", $scope.modelObject.ForeColor);

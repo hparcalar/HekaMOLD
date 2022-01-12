@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Makine Tanımları";
+    ViewBag.Title = "Tahar Tanımları";
 }
 
-<div ng-controller="machineCtrl">
+<div ng-controller="weavingDraftCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -31,7 +31,7 @@
             <div class="d-flex align-items-center py-1">
                 <!--begin::Wrapper-->
                 <div class="me-4">
-                    <a href="@Url.Action("List","Machine")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                    <a href="@Url.Action("List","WeavingDraft")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -98,135 +98,52 @@
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
-        <div id="kt_content_container" class="container-fluid dx-viewport">
+        <div id="kt_content_container" class="container-fluid">
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
                 <div class="col-xxl-6">
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine Kodu</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.MachineCode" placeholder="" />
-                    </div>
-
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine Adı</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.MachineName" placeholder="" />
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Arkaplan Rengi</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" id="back-color"
-                                       class="form-control form-control-solid" ng-model="modelObject.BackColor" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yazı Rengi</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" id="fore-color"
-                                       class="form-control form-control-solid" ng-model="modelObject.ForeColor" placeholder="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine Grubu</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <select aria-label="Kategori" ng-options="item.MachineGroupName for item in machineGroupList"
-                                ng-model="selectedMachineGroup" class="form-select form-select-solid">
-                        </select>
-                    </div>
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine Grubu</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <select aria-label="Kategori" ng-options="item.MachineBreedName for item in machineBreedList"
-                                ng-model="selectedMachineBreed" class="form-select form-select-solid">
-                        </select>
-                    </div>
-                </div>
-                <!--end::Col-->
-                <div class="col-xxl-6">
-
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine En</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.Width" placeholder="" />
-                    </div>
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çerceve Sayısı</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.NumberOfFramaes" placeholder="" />
-                    </div>
-
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tahar Bilgi</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.WeavingDraftInfo" placeholder="" />
-                    </div>
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tahar Kodu</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <select aria-label="Kategori" ng-options="item.WeavingDraftCode for item in weavingDraftList"
-                                ng-model="selectedWeavingDraft" class="form-select form-select-solid">
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.WeavingDraftCode" placeholder="" />
+                    </div>
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Makine Cins</label>
+                    <div class="mb-5">
+                        <select aria-label="Renk Grup" ng-options="item.MachineBreedName for item in machineBreedList"
+                                ng-model="selectedMachineBreed" class="form-select form-select-solid" ng-change="getNextWeavingDraftCode()">
                         </select>
                     </div>
-                    <!--begin::Input group-->
-                    <div class="mb-2">
-                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">&nbsp;</label>
-                        <label class="form-check form-check-custom form-check-solid w-50 mt-3">
-                            <input class="form-check-input" type="checkbox" ng-model="modelObject.IsWatched" />
-                            <span class="form-check-label">
-                                İzleme Aktif
-                            </span>
-                        </label>
-                    </div>
-                    <label ng-show="modelObject.IsWatched == true" class="form-label fs-8 fw-bolder text-gray-700 mb-1">İzleme Çalışma Koşulu</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5" ng-show="modelObject.IsWatched == true">
-                        <input type="text" class="form-control form-control-sm" ng-model="modelObject.WatchCycleStartCondition" placeholder="" />
-                    </div>
 
-                    <label ng-show="modelObject.IsWatched == true" class="form-label fs-8 fw-bolder text-gray-700 mb-1">Cihaz IP</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5" ng-show="modelObject.IsWatched == true">
-                        <input type="text" class="form-control form-control-sm" ng-model="modelObject.DeviceIp" placeholder="" />
-                    </div>
-
-                    <label ng-show="modelObject.IsWatched == true" class="form-label fs-8 fw-bolder text-gray-700 mb-1">Duruş İçin Döngü Adedi</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5" ng-show="modelObject.IsWatched == true">
-                        <input type="text" class="form-control form-control-sm" ng-model="modelObject.PostureExpirationCycleCount" placeholder="" />
-                    </div>
                 </div>
+                <div class="col-xxl-6">
+                    <div class="flex-fill px-5" ng-show="selectedMachineBreed.MachineBreedCode == 'A' || selectedMachineBreed.MachineBreedCode == 'DG' ">
 
-                @* INSTRUCTIONS GRID *@
-                <div class="col-xxl-6 mt-0">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title">Talimatlar</h6>
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çerceve Sayısı</label>
+                        <!--begin::Input group-->
+                        <div class="mb-5">
+                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.NumberOfFramaes" placeholder="" />
                         </div>
-                        <div class="card-body py-0 mb-4">
-                            <div id="instructionList"></div>
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Rapor</label>
+                        <!--begin::Input group-->
+                        <div class="mb-5">
+                            <textarea type="text" class="form-control form-control-solid" ng-model="modelObject.Report" placeholder=""></textarea>
                         </div>
                     </div>
-                </div>
-
-                @* EQUIPMENTS GRID *@
-                <div class="col-xxl-6 mt-0">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title">Ekipmanlar</h6>
+                    <div class="flex-fill px-5" ng-show="selectedMachineBreed.MachineBreedCode == 'J'">
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Platin Sayısı</label>
+                        <!--begin::Input group-->
+                        <div class="mb-5">
+                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.PlatinumNumber" placeholder="" />
                         </div>
-                        <div class="card-body py-0 mb-4">
-                            <div id="equipmentsList"></div>
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Jakar Raporu</label>
+                        <!--begin::Input group-->
+                        <div class="mb-5">
+                            <textarea type="text" class="form-control form-control-solid " ng-model="modelObject.JakarReport" placeholder="" ></textarea>
                         </div>
                     </div>
+                    <!--end::Col-->
                 </div>
             </div>
             <!--end::Row-->
@@ -238,9 +155,8 @@
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
-    <link href="~/Content/spectrum.min.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-    <script src="~/Scripts/spectrum.min.js"></script>
-    <script src="~/FrontEndLogic/Machine/index.js"></script>
+    <script src="~/Components/Controllers/attachment-list.js"></script>
+    <script src="~/FrontEndLogic/WeavingDraft/index.js"></script>
 }

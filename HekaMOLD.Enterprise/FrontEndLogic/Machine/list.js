@@ -40,7 +40,8 @@
                 { dataField: 'MachineName', caption: 'Makine Adı' },
                 { dataField: 'Width', caption: 'En' },
                 { dataField: 'NumberOfFramaes', caption: 'Çerceve Sayısı' },
-                { dataField: 'WeavingDraft', caption: 'Tahar' },
+                { dataField: 'WeavingDraftInfo', caption: 'Tahar Bilgi' },
+                { dataField: 'WeavingDraftCode', caption: 'Tahar Kodu' },
                {
                     type: "buttons",
                     buttons: [

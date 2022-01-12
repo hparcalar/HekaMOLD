@@ -53,17 +53,20 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             MachineGroupModel[] groups = new MachineGroupModel[0];
             MachineBreedModel[] breeds = new MachineBreedModel[0];
+            WeavingDraftModel[] weavingDrafts = new WeavingDraftModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 groups = bObj.GetMachineGroupList();
                 breeds = bObj.GetMachineBreedList();
+                weavingDrafts = bObj.GetWeavingDraftList();
             }
 
             var jsonResult = Json(new
             {
                 Groups = groups,
                 Breeds = breeds,
+                WeavingDrafts = weavingDrafts,
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
