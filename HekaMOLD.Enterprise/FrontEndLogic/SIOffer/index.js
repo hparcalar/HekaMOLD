@@ -11,6 +11,9 @@ function ($scope, $http, Upload) {
 
     $scope.rawSheetPrice = 0;
     $scope.wastagePrice = 0;
+    $scope.manPrice = 0;
+    $scope.profitRate = 0;
+    $scope.expirationVal = '';
 
     $scope.priceToleranceMin = 0;
     $scope.priceToleranceMax = 0;
@@ -87,6 +90,10 @@ function ($scope, $http, Upload) {
         $scope.offerModel.firmaismi = $scope.selectedFirm.FirmName;
         $scope.offerModel.sackg = $scope.rawSheetPrice;
         $scope.offerModel.hurdakg = $scope.wastagePrice;
+        $scope.offerModel.isci = $scope.manPrice;
+        $scope.offerModel.marj = $scope.profitRate;
+        $scope.offerModel.vadeyuzde = $scope.expirationVal;
+
         $("#dial-offer").modal("show");
     }
 
@@ -113,7 +120,7 @@ function ($scope, $http, Upload) {
                 $scope.uploadSent = false;
                 if (resp.data.status == true) {
                     var headerData = resp.data.mydata[0];
-                    $scope.modelObject.Explanation = headerData.vade;
+                    $scope.modelObject.Expiration = headerData.vade;
 
                     for (var i = 0; i < headerData.data.length; i++) {
                         var dataRow = headerData.data[i];
@@ -299,11 +306,11 @@ function ($scope, $http, Upload) {
 
         var calcObj = [{
             msg: 'ok', filename: 'wb.docx',
-            vade: $scope.modelObject.Explanation,
+            vade: $scope.modelObject.Expiration,
             total: $scope.modelObject.TotalPrice,
             "to-company": $scope.selectedFirm.FirmName,
             "from-company": 'London Metal',
-            "total-cur": formatter.format($scope.modelObject.TotalPrice),
+            "total-cur": $scope.modelObject.TotalPrice,
             data: calcDetails,
         }];
         // #endregion
@@ -437,6 +444,9 @@ function ($scope, $http, Upload) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.rawSheetPrice = resp.data.RawSheetPrice;
                         $scope.wastagePrice = resp.data.WastagePrice;
+                        $scope.manPrice = resp.data.ManPrice;
+                        $scope.profitRate = resp.data.ProfitRate;
+                        $scope.expirationVal = resp.data.ExpirationVal;
                     }
                 }).catch(function (err) { });
         } catch (e) {
@@ -513,15 +523,21 @@ function ($scope, $http, Upload) {
 
                         let refreshProcessList = false;
                         if (typeof values.RouteId != 'undefined') {
-                            if (obj.RouteId != values.RouteId)
+                            if (obj.RouteId != values.RouteId) {
                                 refreshProcessList = true;
+                            }
 
                             var itemObj = $scope.routeList.find(d => d.Id == values.RouteId);
                             obj.RouteId = itemObj.Id;
                             obj.RouteCode = itemObj.RouteCode;
 
+                            if (refreshProcessList == true)
+                                obj.RoutePrice = itemObj.UnitPrice;
+
                             calculateRowAgain = true;
                         }
+                        else
+                            obj.RoutePrice = 0;
 
                         let dontUpdateUnitPrice = false;
                         if ($scope.priceToleranceMax > 0 && $scope.priceToleranceMin > 0 && obj.OrgUnitPrice > 0) {
@@ -550,7 +566,6 @@ function ($scope, $http, Upload) {
 
                         if (refreshProcessList) {
                             $scope.updateProcessListOfDetail(obj);
-                            obj.RoutePrice = 0;
                         }
 
                         if (calculateRowAgain)
@@ -667,7 +682,7 @@ function ($scope, $http, Upload) {
                 { dataField: 'ItemName', caption: 'Stok Adı', allowEditing: false },
                 { dataField: 'ItemExplanation', caption: 'Parça Adı', allowEditing: false },
                 { dataField: 'QualityExplanation', caption: 'Kalite', allowEditing: false },
-                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
+                { dataField: 'Quantity', caption: 'Miktar', allowEditing:false, dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
                 {
                     dataField: 'UnitPrice', caption: 'Birim Fiyat',
                     dataType: 'number',
@@ -760,6 +775,9 @@ function ($scope, $http, Upload) {
             $scope.viewingRow.ProcessList = d;
             $scope.viewingRow.RoutePrice = $scope.viewingRow.ProcessList.map(d => d.UnitPrice).reduce((n, x) => n + x);
             $scope.calculateRow($scope.viewingRow);
+
+            var gridInst = $('#dataList').dxDataGrid('instance');
+            gridInst.refresh();
         } catch (e) {
 
         }

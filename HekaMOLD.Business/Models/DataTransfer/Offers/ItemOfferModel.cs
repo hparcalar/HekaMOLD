@@ -16,6 +16,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         public string Explanation { get; set; }
         public Nullable<decimal> TotalQuantity { get; set; }
         public Nullable<decimal> TotalPrice { get; set; }
+        public string Expiration { get; set; }
         public Nullable<int> PlantId { get; set; }
         public Nullable<DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }

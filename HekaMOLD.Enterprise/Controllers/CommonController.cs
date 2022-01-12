@@ -520,6 +520,9 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             string rawSheetPrice = "0";
             string wastagePrice = "0";
+            string manPrice = "0";
+            string profitRate = "0";
+            string expirationVal = "";
 
             int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
 
@@ -527,21 +530,33 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 var prmRawSheet = bObj.GetParameter("RawSheetPrice", plantId);
                 var prmWastagePrice = bObj.GetParameter("WastagePrice", plantId);
+                var prmManPrice = bObj.GetParameter("ManPrice", plantId);
+                var prmProfitRate = bObj.GetParameter("ProfitRate", plantId);
+                var prmExpirationVal = bObj.GetParameter("ExpirationVal", plantId);
 
                 if (prmRawSheet != null && !string.IsNullOrEmpty(prmRawSheet.PrmValue))
                     rawSheetPrice = prmRawSheet.PrmValue;
                 if (prmWastagePrice != null && !string.IsNullOrEmpty(prmWastagePrice.PrmValue))
                     wastagePrice = prmWastagePrice.PrmValue;
+                if (prmManPrice != null && !string.IsNullOrEmpty(prmManPrice.PrmValue))
+                    manPrice = prmManPrice.PrmValue;
+                if (prmProfitRate != null && !string.IsNullOrEmpty(prmProfitRate.PrmValue))
+                    profitRate = prmProfitRate.PrmValue;
+                if (prmExpirationVal != null && !string.IsNullOrEmpty(prmExpirationVal.PrmValue))
+                    expirationVal = prmExpirationVal.PrmValue;
             }
 
             return Json(new { 
                 RawSheetPrice = rawSheetPrice,
                 WastagePrice = wastagePrice,
+                ManPrice = manPrice,
+                ProfitRate = profitRate,
+                ExpirationVal = expirationVal,
             }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult SaveOfferConstants(string rawSheetPrice, string wastagePrice)
+        public JsonResult SaveOfferConstants(string rawSheetPrice, string wastagePrice, string manPrice, string profitRate, string expirationVal)
         {
             try
             {
@@ -553,7 +568,10 @@ namespace HekaMOLD.Enterprise.Controllers
                 {
                     result = bObj.SetParameters(new SystemParameterModel[] {
                         new SystemParameterModel{ PlantId = plantId, PrmCode = "RawSheetPrice", PrmValue = rawSheetPrice },
-                        new SystemParameterModel{ PlantId = plantId, PrmCode = "WastagePrice", PrmValue = wastagePrice }
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "WastagePrice", PrmValue = wastagePrice },
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "ManPrice", PrmValue = manPrice },
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "ProfitRate", PrmValue = profitRate },
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "ExpirationVal", PrmValue = expirationVal }
                     });
                 }
 

@@ -306,7 +306,7 @@
                 if (result) {
                     $scope.saveStatus = 1;
 
-                    $http.post(HOST_URL + 'Mobile/DeletePallet', {}, 'json')
+                    $http.post(HOST_URL + 'Mobile/DeletePallet', { palletId: pallet.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;

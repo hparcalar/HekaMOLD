@@ -139,10 +139,10 @@ namespace HekaMOLD.Business.UseCases
                 if (dbTemplate == null)
                     throw new Exception("Rapor şablonu bulunamadı.");
 
-                PrintReportTemplate<T>(dataModel, dbTemplate.FileName, dbPrinter.PageWidth ?? 0, 
+                result = PrintReportTemplate<T>(dataModel, dbTemplate.FileName, dbPrinter.PageWidth ?? 0, 
                     dbPrinter.PageHeight ?? 0, dbPrinter.AccessPath);
 
-                result.Result = true;
+                //result.Result = true;
             }
             catch (Exception ex)
             {
@@ -197,6 +197,7 @@ namespace HekaMOLD.Business.UseCases
                 report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\" + fileName;
 
                 report.DataSources.Add(new ReportDataSource("DS1", dataList));
+                
                 Export(report, pageWidth, pageHeight);
                 Print(printerName);
 

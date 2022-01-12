@@ -422,6 +422,7 @@ namespace HekaMOLD.Business.UseCases
                         CreatedDate = DateTime.Now,
                         OrderType = (int)ItemOrderType.Sale,
                         OrderStatus = 1,
+                        Explanation = dbOffer.Explanation,
                         FirmId = dbOffer.FirmId,
                         Details = newOrderDetails.ToArray(),
                     }, false);

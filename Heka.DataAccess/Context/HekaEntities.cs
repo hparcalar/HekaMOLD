@@ -12,7 +12,7 @@
         public HekaEntities()
             : base("name=HekaEntities")
         {
-            //Database.SetInitializer<HekaEntities>(null);
+            Database.SetInitializer<HekaEntities>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

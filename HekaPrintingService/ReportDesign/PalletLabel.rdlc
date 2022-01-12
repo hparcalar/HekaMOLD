@@ -7,10 +7,10 @@
         <Value>=First(Fields!BarcodeImage.Value, "DS1")</Value>
         <MIMEType>image/jpeg</MIMEType>
         <Sizing>Fit</Sizing>
-        <Top>4.10776cm</Top>
-        <Left>3.61552cm</Left>
-        <Height>1.86103cm</Height>
-        <Width>2.37853cm</Width>
+        <Top>2.90126cm</Top>
+        <Left>3.64727cm</Left>
+        <Height>3.23686cm</Height>
+        <Width>3.5427cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -36,8 +36,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>2.16043cm</Top>
-        <Left>1.99707cm</Left>
+        <Top>1.55718cm</Top>
+        <Left>2.47332cm</Left>
         <Height>1.108cm</Height>
         <Width>5.90198cm</Width>
         <ZIndex>1</ZIndex>
@@ -52,12 +52,12 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>10cm</Height>
+    <Height>7.5cm</Height>
     <Style />
   </Body>
   <Width>10cm</Width>
   <Page>
-    <PageHeight>10cm</PageHeight>
+    <PageHeight>7.5cm</PageHeight>
     <PageWidth>10cm</PageWidth>
     <InteractiveHeight>7.5cm</InteractiveHeight>
     <InteractiveWidth>10cm</InteractiveWidth>
