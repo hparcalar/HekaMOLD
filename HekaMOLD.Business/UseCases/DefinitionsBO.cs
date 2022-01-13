@@ -326,6 +326,7 @@ namespace HekaMOLD.Business.UseCases
                     Plate = d.Plate,
                     Mark = d.Mark,
                     Model = d.Model,
+                    KmHour=d.KmHour,                
                     TrailerTypeStr = d.TrailerType == 1 ? "Çadırlı" : d.TrailerType == 2 ? "Frigo" : "Kapalı",
                 }).ToArray();
         }
@@ -354,12 +355,10 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 var crDate = dbObj.CreatedDate;
-
                 model.MapTo(dbObj);
 
                 if (dbObj.CreatedDate == null)
                     dbObj.CreatedDate = crDate;
-
                 dbObj.UpdatedDate = DateTime.Now;
 
                 #region SAVE CARE LIST
@@ -670,18 +669,25 @@ namespace HekaMOLD.Business.UseCases
         #region VEHICLECARE BUSINESS
         public VehicleCareModel[] GetVehicleCareList()
         {
-            List<VehicleCareModel> data = new List<VehicleCareModel>();
 
             var repo = _unitOfWork.GetRepository<VehicleCare>();
 
-            repo.GetAll().ToList().ForEach(d =>
-            {
-                VehicleCareModel containerObj = new VehicleCareModel();
-                d.MapTo(containerObj);
-                data.Add(containerObj);
-            });
+            return repo.GetAll()
+                .Select(d => new VehicleCareModel
+                {
+                    Id = d.Id,
+                    Plate = d.Vehicle.Plate,
+                    VehicleCareTypeCode = d.VehicleCareType.VehicleCareTypeCode,
+                    VehicleCareTypeName = d.VehicleCareType.VehicleCareTypeName,
+                    FirmCode = d.Firm.FirmCode,
+                    FirmName = d.Firm.FirmName,
+                    KmHour = d.KmHour,
+                    ForexTypeCode = d.ForexType.ForexTypeCode,
+                    Amount = d.Amount,
+                    Explanation = d.Explanation,
+                    //CareDateStr = string.Format("{0:dd.MM.yyyy}", d.CareDate),
 
-            return data.ToArray();
+                }).ToArray(); ;
         }
 
         public BusinessResult SaveOrUpdateVehicleCare(VehicleCareModel model)
@@ -690,11 +696,11 @@ namespace HekaMOLD.Business.UseCases
 
             try
             {
-                if (string.IsNullOrEmpty(model.Plate))
+                if (string.IsNullOrEmpty(Convert.ToString( model.VehicleId)))
                     throw new Exception("Plaka girilmelidir.");
-                if (string.IsNullOrEmpty(model.VehicleCareTypeCode))
+                if (string.IsNullOrEmpty(Convert.ToString(model.VehicleCareTypeId)))
                     throw new Exception("Bakım tip kod girilmelidir.");
-
+        
                 var repo = _unitOfWork.GetRepository<VehicleCare>();
 
                 //if (repo.Any(d => (d.FirmCode == model.FirmCode) && d.Id != model.Id))
@@ -710,7 +716,11 @@ namespace HekaMOLD.Business.UseCases
                 }
 
                 var crDate = dbObj.CreatedDate;
-
+                if (!string.IsNullOrEmpty(model.CareDateStr))
+                {
+                    model.CareDate = DateTime.ParseExact(model.CareDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
                 model.MapTo(dbObj);
 
                 if (dbObj.CreatedDate == null)
@@ -872,6 +882,222 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        #endregion
+
+        #region VEHICLETIRE BUSINESS 
+        public VehicleTireModel[] GetVehicleTireList()
+        {
+            var repo = _unitOfWork.GetRepository<VehicleTire>();
+            return repo.GetAll()
+                .Select(d => new VehicleTireModel
+                {
+                    Id = d.Id,
+                    Plate = d.Vehicle.Plate,
+                    VehicleTireTypeStr = d.VehicleTireType == 1 ? "Değişim" : d.VehicleTireType == 2 ? "Onarım" :
+                        d.VehicleTireType == 3 ? "Bakım" : "",
+                    VehicleTireDirectionTypeName = d.VehicleTireDirectionType.VehicleTireDirectionTypeName !=null ? d.VehicleTireDirectionType.VehicleTireDirectionTypeName:"",
+                    FirmCode = d.Firm.FirmCode,
+                    FirmName = d.Firm.FirmName,
+                    KmHour = d.KmHour,
+                    ForexTypeCode = d.ForexType.ForexTypeCode,
+                    Amount = d.Amount,
+                    Explanation = d.Explanation,
+                    //TireDateStr = string.Format("{0:dd.MM.yyyy}", d.TireDate),
+
+                }).ToArray(); ;
+        }
+
+        public BusinessResult SaveOrUpdateVehicleTire(VehicleTireModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(Convert.ToString(model.VehicleId)))
+                    throw new Exception("Plaka girilmelidir.");
+                if (string.IsNullOrEmpty(Convert.ToString(model.MontageDate)))
+                    throw new Exception("Montaj tarihi girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<VehicleTire>();
+
+                //if (repo.Any(d => (d.MontageDate == model.MontageDat) && d.Id != model.Id))
+                //    throw new Exception("Aynı koda sahip başka bir firma mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new VehicleTire();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+                if (!string.IsNullOrEmpty(model.MontageDateStr))
+                {
+                    model.MontageDate = DateTime.ParseExact(model.MontageDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteVehicleTire(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<VehicleTire>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public VehicleTireModel GetVehicleTire(int id)
+        {
+            VehicleTireModel model = new VehicleTireModel { };
+
+            var repo = _unitOfWork.GetRepository<VehicleTire>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region VEHICLETIREDIRECTIONTYPE BUSINESS
+
+        public VehicleTireDirectionTypeModel[] GetVehicleTireDirectionTypeList()
+        {
+            List<VehicleTireDirectionTypeModel> data = new List<VehicleTireDirectionTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<VehicleTireDirectionType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                VehicleTireDirectionTypeModel containerObj = new VehicleTireDirectionTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateVehicleTireDirectionType(VehicleTireDirectionTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.VehicleTireDirectionTypeCode))
+                    throw new Exception("Kod girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<VehicleTireDirectionType>();
+
+                if (repo.Any(d => (d.VehicleTireDirectionTypeCode == model.VehicleTireDirectionTypeCode) && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir tip mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new VehicleTireDirectionType();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteVehicleTireDirectionType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<VehicleTireDirectionType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public VehicleTireDirectionTypeModel GetVehicleTireDirectionType(int id)
+        {
+            VehicleTireDirectionTypeModel model = new VehicleTireDirectionTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<VehicleTireDirectionType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
         #endregion
 
         #region ITEM BUSINESS

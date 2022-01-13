@@ -172,6 +172,8 @@
     <Compile Include="Controllers\VehicleController.cs" />
     <Compile Include="Controllers\VehicleInsuranceController.cs" />
     <Compile Include="Controllers\VehicleInsuranceTypeController.cs" />
+    <Compile Include="Controllers\VehicleTireController.cs" />
+    <Compile Include="Controllers\VehicleTireDirectionTypeController.cs" />
     <Compile Include="Controllers\VehicleTypeController.cs" />
     <Compile Include="Controllers\WorkOrderCategoryController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
@@ -4184,6 +4186,10 @@
     <Content Include="FrontEndLogic\VehicleInsuranceType\list.js" />
     <Content Include="FrontEndLogic\VehicleInsurance\index.js" />
     <Content Include="FrontEndLogic\VehicleInsurance\list.js" />
+    <Content Include="FrontEndLogic\VehicleTireDirectionType\index.js" />
+    <Content Include="FrontEndLogic\VehicleTireDirectionType\list.js" />
+    <Content Include="FrontEndLogic\VehicleTire\index.js" />
+    <Content Include="FrontEndLogic\VehicleTire\list.js" />
     <Content Include="FrontEndLogic\VehicleType\index.js" />
     <Content Include="FrontEndLogic\VehicleType\list.js" />
     <Content Include="FrontEndLogic\Vehicle\index.js" />
@@ -4666,6 +4672,10 @@
     <Content Include="Views\VehicleCareType\List.cshtml" />
     <Content Include="Views\VehicleCare\Index.cshtml" />
     <Content Include="Views\VehicleCare\List.cshtml" />
+    <Content Include="Views\VehicleTire\Index.cshtml" />
+    <Content Include="Views\VehicleTire\List.cshtml" />
+    <Content Include="Views\VehicleTireDirectionType\Index.cshtml" />
+    <Content Include="Views\VehicleTireDirectionType\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

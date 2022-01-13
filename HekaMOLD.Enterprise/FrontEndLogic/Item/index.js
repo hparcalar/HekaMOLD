@@ -5,7 +5,7 @@
 
     $scope.selectedItemType = {};
     $scope.itemTypeList = [{ Id: 1, Text: 'Hammadde' }, { Id: 2, Text: 'Ticari Mal' },
-        { Id: 3, Text: 'Yarı Mamul' }, { Id: 3, Text: 'Mamul' }];
+    { Id: 3, Text: 'Yarı Mamul' }, { Id: 3, Text: 'Mamul' }];
 
     $scope.selectedCategory = {};
     $scope.categoryList = [];
@@ -45,7 +45,7 @@
     $scope.performDelete = function () {
         bootbox.confirm({
             message: "Bu stok tanımını silmek istediğinizden emin misiniz?",
-            closeButton:false,
+            closeButton: false,
             buttons: {
                 confirm: {
                     label: 'Evet',
@@ -323,7 +323,7 @@
                         displayExpr: "UnitCode"
                     }
                 },
-                { dataField: 'IsMainUnit', caption: 'Ana Birim', dataType:'boolean' },
+                { dataField: 'IsMainUnit', caption: 'Ana Birim', dataType: 'boolean' },
                 { dataField: 'MultiplierFactor', caption: 'Çarpan', dataType: 'number', format: { type: "fixedPoint", precision: 0 } },
                 { dataField: 'DividerFactor', caption: 'Bölen', dataType: 'number', format: { type: "fixedPoint", precision: 0 } }
             ]

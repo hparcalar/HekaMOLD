@@ -29,6 +29,7 @@ namespace Heka.DataAccess.Context
             this.WorkOrder = new HashSet<WorkOrder>();
             this.VehicleInsurance = new HashSet<VehicleInsurance>();
             this.VehicleCare = new HashSet<VehicleCare>();
+            this.VehicleTire = new HashSet<VehicleTire>();
 
         }
 
@@ -89,5 +90,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Firm")]
         public virtual ICollection<VehicleCare> VehicleCare { get; set; }
+
+        [InverseProperty("Firm")]
+        public virtual ICollection<VehicleTire> VehicleTire { get; set; }
     }
 }

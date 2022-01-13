@@ -103,6 +103,7 @@
     <Compile Include="Models\Constants\SerialStatusType.cs" />
     <Compile Include="Models\Constants\SubscriptionCategory.cs" />
     <Compile Include="Models\Constants\SyncPointType.cs" />
+    <Compile Include="Models\Constants\VehicleTireType.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\Constants\WorkOrderSerialType.cs" />
     <Compile Include="Models\Constants\WorkOrderStatusType.cs" />
@@ -146,6 +147,8 @@
     <Compile Include="Models\DataTransfer\Logistics\VehicleInsuranceModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleInsuranceTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VehicleTireDirectionTypeModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VehicleTireModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentModel.cs" />

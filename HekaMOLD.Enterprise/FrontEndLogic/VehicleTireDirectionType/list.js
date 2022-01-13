@@ -1,4 +1,4 @@
-﻿app.controller('vehicleListCtrl', function sidebarCtrl($scope, $http) {
+﻿app.controller('vehicleTireDirectionTypeListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS
@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'Vehicle/GetVehicleList', function (data) {
+                    return $.getJSON(HOST_URL + 'VehicleTireDirectionType/GetVehicleTireDirectionTypeList', function (data) {
 
                     });
                 },
@@ -36,11 +36,9 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'Plate', caption: 'Plaka' },
-                { dataField: 'Mark', caption: 'Marka' },
-                { dataField: 'Model', caption: 'Model' },
-                { dataField: 'KmHour', caption: 'Km/Saat' },
-               {
+                { dataField: 'VehicleTireDirectionTypeCode', caption: 'Lastik Yön Kodu' },
+                { dataField: 'VehicleTireDirectionTypeName', caption: 'Lastik Yön Adı' },
+                {
                     type: "buttons",
                     buttons: [
                         {
@@ -49,7 +47,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'Vehicle?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'VehicleTireDirectionType?rid=' + e.row.data.Id;
                             }
                         }
                     ]

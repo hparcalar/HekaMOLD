@@ -144,6 +144,7 @@
     <Compile Include="Context\Models\VehicleInsuranceType.cs" />
     <Compile Include="Context\Models\VehicleNotification.cs" />
     <Compile Include="Context\Models\VehicleTire.cs" />
+    <Compile Include="Context\Models\VehicleTireDirectionType.cs" />
     <Compile Include="Context\Models\VehicleType.cs" />
     <Compile Include="Context\Models\Warehouse.cs" />
     <Compile Include="Context\Models\WorkOrder.cs" />
@@ -174,6 +175,14 @@
     <Compile Include="Migrations\202201121825187_VehicleCareUpdate-Genel.designer.cs">
       <DependentUpon>202201121825187_VehicleCareUpdate-Genel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201131608569_VehicleTireUpdate.cs" />
+    <Compile Include="Migrations\202201131608569_VehicleTireUpdate.designer.cs">
+      <DependentUpon>202201131608569_VehicleTireUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201132115020_VehicleTireDirectionType.cs" />
+    <Compile Include="Migrations\202201132115020_VehicleTireDirectionType.designer.cs">
+      <DependentUpon>202201132115020_VehicleTireDirectionType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -199,6 +208,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201121825187_VehicleCareUpdate-Genel.resx">
       <DependentUpon>202201121825187_VehicleCareUpdate-Genel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201131608569_VehicleTireUpdate.resx">
+      <DependentUpon>202201131608569_VehicleTireUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201132115020_VehicleTireDirectionType.resx">
+      <DependentUpon>202201132115020_VehicleTireDirectionType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

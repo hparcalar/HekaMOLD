@@ -17,8 +17,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public decimal? Amount { get; set; }
         public string Explanation { get; set; }
 
-
         #region VISUAL ELEMENTS
+
         public string VehicleInsuranceTypeCode { get; set; }
         public string VehicleInsuranceTypeName { get; set; }
         public string Plate { get; set; }
@@ -27,6 +27,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
         public string ForexTypeCode { get; set; }
+
         #endregion
     }
 }

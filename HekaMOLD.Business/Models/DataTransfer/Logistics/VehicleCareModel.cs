@@ -10,7 +10,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? VehicleId { get; set; }
         public int? OperationFirmId { get; set; }
         public int? PersonnelId { get; set; }
-        public Nullable<DateTime> CareDate { get; set; }
+        public DateTime? CareDate { get; set; }
         public int? KmHour { get; set; }
         public int? ForexTypeId { get; set; }
         //iptal
@@ -26,6 +26,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
         public string ForexTypeCode { get; set; }
+        public string CareDateStr { get; set; }
         #endregion
     }
 }
