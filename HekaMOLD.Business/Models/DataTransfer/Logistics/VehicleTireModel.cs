@@ -6,6 +6,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
    public class VehicleTireModel:IDataObject
     {
         public int Id { get; set; }
+        public int? VehicleTireDirectionTypeId { get; set; }
         public int? VehicleTireType { get; set; }
         public string SeriNo { get; set; }
         //Yon tip kod

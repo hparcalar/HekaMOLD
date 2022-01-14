@@ -131,9 +131,8 @@
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
-
-                    if ($scope.modelObject.VehicleTireDrectionTypeId > 0)
-                        $scope.selectedVehicleTireDrectionType = $scope.vehicleTireDrectionTypeList.find(d => d.Id == $scope.modelObject.VehicleTireDrectionTypeId);
+                    if ($scope.modelObject.VehicleTireDirectionTypeId > 0)
+                        $scope.selectedVehicleTireDirectionType = $scope.vehicleTireDirectionTypeList.find(d => d.Id == $scope.modelObject.VehicleTireDirectionTypeId);
                     else
                         $scope.selectedVehicleTireDrectionType = {};
 

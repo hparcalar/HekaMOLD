@@ -27,6 +27,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
         public string ForexTypeCode { get; set; }
+        public string StartDateStr { get; set; }
+        public string EndDateStr { get; set; }
 
         #endregion
     }

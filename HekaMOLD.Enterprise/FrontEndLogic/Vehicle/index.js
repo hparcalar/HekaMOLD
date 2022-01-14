@@ -142,7 +142,7 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka', validationRules: [{ type: "required" }] },
-                { dataField: 'CareDate', caption: 'Bakım Tarihi' },
+                { dataField: 'CareDate', caption: 'Bakım Tarihi', format: 'dd.MM.yyyy' },
                 { dataField: 'VehicleCareTypeName', caption: 'Bakım Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'Amount', caption: 'Fiyat'},
@@ -219,8 +219,8 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
-                { dataField: 'StartDate', caption: 'Başlangıç Tarihi' },
-                { dataField: 'EndDate', caption: 'Bitiş Tarihi' },
+                { dataField: 'StartDate', caption: 'Başlangıç Tarihi', format: 'dd.MM.yyyy' },
+                { dataField: 'EndDate', caption: 'Bitiş Tarihi', format: 'dd.MM.yyyy' },
                 { dataField: 'VehicleInsuranceTypeName', caption: 'Sigorta Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'Amount', caption: 'Fiyat' },
@@ -297,7 +297,7 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
-                { dataField: 'CareDate', caption: 'İşlem Tarihi' },
+                { dataField: 'CareDate', caption: 'İşlem Tarihi', format: 'dd.MM.yyyy'},
                 { dataField: 'VehicleTireDirectionTypeName', caption: 'Lastik Yön Tipi' },
                 { dataField: 'VehicleTireTypeStr', caption: 'Lastik İşlem Tipi' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },

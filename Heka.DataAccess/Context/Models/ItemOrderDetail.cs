@@ -39,6 +39,15 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> NetQuantity { get; set; }
         public Nullable<decimal> GrossQuantity { get; set; }
         public Nullable<decimal> UnitPrice { get; set; }
+        public int? ShortWidth { get; set; }
+        public int? LongWidth { get; set; }
+        public decimal? Volume { get; set; }
+        public int? Height { get; set; }
+        public int? Weight { get; set; }
+        //istiflenebilir
+        public bool? Stackable { get; set; }
+        public decimal? Dhl { get; set; }
+        public int? CalculationTypeEnum { get; set; }
         [ForeignKey("ForexType")]
         public Nullable<int> ForexId { get; set; }
         public Nullable<decimal> ForexRate { get; set; }

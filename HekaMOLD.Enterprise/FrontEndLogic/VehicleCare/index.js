@@ -1,5 +1,5 @@
 ﻿app.controller('vehicleCareCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id: 0, CareDateStr: moment().format('DD.MM.YYYY'),};
+    $scope.modelObject = { Id: 0};
 
     $scope.saveStatus = 0;
 

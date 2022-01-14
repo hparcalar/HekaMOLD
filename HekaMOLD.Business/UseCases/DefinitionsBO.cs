@@ -438,35 +438,59 @@ namespace HekaMOLD.Business.UseCases
             {
                 model = dbObj.MapTo(model);
                 #region GET VEHICLECARE 
-                List<VehicleCareModel> careModels = new List<VehicleCareModel>();
+                List<VehicleCareModel> vehicleCareList = new List<VehicleCareModel>();
                 dbObj.VehicleCare.ToList().ForEach(d =>
                 {
-                    VehicleCareModel careData = new VehicleCareModel();
-                    d.MapTo(careData);
-
-                    careModels.Add(careData);
+                    VehicleCareModel vehicleCareModel = new VehicleCareModel();
+                    vehicleCareModel.Plate = d.Vehicle != null ? d.Vehicle.Plate : "";
+                    vehicleCareModel.Amount = d.Amount;
+                    vehicleCareModel.FirmName = d.Firm != null ? d.Firm.FirmName : "";
+                    vehicleCareModel.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                    vehicleCareModel.KmHour = d.KmHour;
+                    vehicleCareModel.VehicleCareTypeName = d.VehicleCareType != null ? d.VehicleCareType.VehicleCareTypeName : "";
+                    vehicleCareModel.CareDateStr = string.Format("{0:dd.MM.yyyy}", d.CareDate);                   
+                    d.MapTo(vehicleCareModel);
+                    vehicleCareList.Add(vehicleCareModel);
                 });
-                model.VehicleCares = careModels.ToArray();
+                model.VehicleCares = vehicleCareList.ToArray();
                 #endregion
                 #region GET VEHICLEINSURANCE 
-                List<VehicleInsuranceModel> insuranceModels = new List<VehicleInsuranceModel>();
+                List<VehicleInsuranceModel> insuranceList = new List<VehicleInsuranceModel>();
                 dbObj.VehicleInsurance.ToList().ForEach(d =>
                 {
-                    VehicleInsuranceModel insuranceData = new VehicleInsuranceModel();
-                    d.MapTo(insuranceData);
-                    insuranceModels.Add(insuranceData);
+                    VehicleInsuranceModel insuranceModel = new VehicleInsuranceModel();
+                    insuranceModel.Amount = d.Amount;
+                    insuranceModel.StartDateStr = string.Format("{0:dd.MM.yyyy}", d.StartDate);
+                    insuranceModel.EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate);
+                    insuranceModel.FirmName = d.Firm != null ? d.Firm.FirmName : "";
+                    insuranceModel.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode :"";
+                    insuranceModel.KmHour = d.KmHour;
+                    insuranceModel.Plate = d.Vehicle != null ? d.Vehicle.Plate : "";
+                    insuranceModel.VehicleInsuranceTypeName = d.VehicleInsuranceType != null ? d.VehicleInsuranceType.VehicleInsuranceTypeName : "";
+                    d.MapTo(insuranceModel);
+                    insuranceList.Add(insuranceModel);
                 });
-                model.VehicleInsurances = insuranceModels.ToArray();
+                model.VehicleInsurances = insuranceList.ToArray();
                 #endregion
                 #region GET VEHICLETIRE
-                List<VehicleTireModel> tireModels = new List<VehicleTireModel>();
+                List<VehicleTireModel> tireList = new List<VehicleTireModel>();
                 dbObj.VehicleTire.ToList().ForEach(d =>
                 {
-                    VehicleTireModel tireData = new VehicleTireModel();
-                    d.MapTo(tireData);
-                    tireModels.Add(tireData);
+                    VehicleTireModel tireModel = new VehicleTireModel();
+                    tireModel.Amount = d.Amount;
+                    tireModel.DimensionsInfo = d.DimensionsInfo;
+                    tireModel.FirmName = d.Firm != null ? d.Firm.FirmName:"";
+                    tireModel.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                    tireModel.KmHour = d.KmHour;
+                    tireModel.MontageDateStr = string.Format("{0:dd.MM.yyyy}",d.MontageDate);
+                    tireModel.Plate = d.Vehicle != null ? d.Vehicle.Plate : "";
+                    tireModel.SeriNo = d.SeriNo;
+                    tireModel.VehicleTireDirectionTypeName = d.VehicleTireDirectionType != null ? d.VehicleTireDirectionType.VehicleTireDirectionTypeName : "";
+                    tireModel.VehicleTireTypeStr = d.VehicleTireType == 1 ? "Değişim" : d.VehicleTireType == 2 ? "Onarım" :  d.VehicleTireType == 3 ? "Bakım" : "";
+                    d.MapTo(tireModel);
+                    tireList.Add(tireModel);
                 });
-                model.VehicleTires = tireModels.ToArray();
+                model.VehicleTires = tireList.ToArray();
                 #endregion
             }
 
