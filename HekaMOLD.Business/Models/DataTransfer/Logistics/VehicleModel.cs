@@ -36,6 +36,11 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public bool? Invalidation { get; set; }
         public bool? KmHourControl { get; set; }
 
+        public VehicleCareModel[] VehicleCares { get; set; }
+        public VehicleInsuranceModel[] VehicleInsurances { get; set; }
+        public VehicleTireModel[] VehicleTires { get; set; }
+
+
         #region VISUAL ELEMENTS
         public String VehicleAllocationTypeStr { get; set; }
         public String VehicleTypeCode { get; set; }

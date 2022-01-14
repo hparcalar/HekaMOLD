@@ -38,12 +38,12 @@
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
                 { dataField: 'StartDate', caption: 'Başlangıç Tarihi' },
-                { dataField: 'StartDate', caption: 'Başlangıç Tarihi' },
+                { dataField: 'EndDate', caption: 'Bitiş Tarihi' },
                 { dataField: 'VehicleInsuranceTypeName', caption: 'Sigorta Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'KmHour', caption: 'Km/Saat' },
                 { dataField: 'Amount', caption: 'Fiyat' },
-                { dataField: 'ForexTypeCode', caption: 'Doviz Kodu' },
+                { dataField: 'ForexTypeCode', caption: 'Döviz Kodu' },
                {
                     type: "buttons",
                     buttons: [

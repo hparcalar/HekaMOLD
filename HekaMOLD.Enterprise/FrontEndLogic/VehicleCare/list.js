@@ -42,7 +42,7 @@
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'KmHour', caption: 'Km/Saat' },
                 { dataField: 'Amount', caption: 'Fiyat' },
-                { dataField: 'ForexTypeCode', caption: 'Doviz Kodu' },
+                { dataField: 'ForexTypeCode', caption: 'Döviz Kodu' },
                 {
                     type: "buttons",
                     buttons: [

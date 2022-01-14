@@ -437,20 +437,36 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                #region GET VEHICLECARE 
+                List<VehicleCareModel> careModels = new List<VehicleCareModel>();
+                dbObj.VehicleCare.ToList().ForEach(d =>
+                {
+                    VehicleCareModel careData = new VehicleCareModel();
+                    d.MapTo(careData);
 
-
-                #region GET ITEM UNITS
-                //List<ItemUnitModel> unitModels = new List<ItemUnitModel>();
-                //dbObj.ItemUnit.ToList().ForEach(d =>
-                //{
-                //    ItemUnitModel unitData = new ItemUnitModel();
-                //    d.MapTo(unitData);
-                //    unitData.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
-                //    unitData.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
-                //    unitData.NewDetail = false;
-                //    unitModels.Add(unitData);
-                //});
-                //model.Units = unitModels.ToArray();
+                    careModels.Add(careData);
+                });
+                model.VehicleCares = careModels.ToArray();
+                #endregion
+                #region GET VEHICLEINSURANCE 
+                List<VehicleInsuranceModel> insuranceModels = new List<VehicleInsuranceModel>();
+                dbObj.VehicleInsurance.ToList().ForEach(d =>
+                {
+                    VehicleInsuranceModel insuranceData = new VehicleInsuranceModel();
+                    d.MapTo(insuranceData);
+                    insuranceModels.Add(insuranceData);
+                });
+                model.VehicleInsurances = insuranceModels.ToArray();
+                #endregion
+                #region GET VEHICLETIRE
+                List<VehicleTireModel> tireModels = new List<VehicleTireModel>();
+                dbObj.VehicleTire.ToList().ForEach(d =>
+                {
+                    VehicleTireModel tireData = new VehicleTireModel();
+                    d.MapTo(tireData);
+                    tireModels.Add(tireData);
+                });
+                model.VehicleTires = tireModels.ToArray();
                 #endregion
             }
 
@@ -466,14 +482,20 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<VehicleInsurance>();
 
-            repo.GetAll().ToList().ForEach(d =>
-            {
-                VehicleInsuranceModel containerObj = new VehicleInsuranceModel();
-                d.MapTo(containerObj);
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+            return repo.GetAll()
+               .Select(d => new VehicleInsuranceModel
+               {
+                   Id = d.Id,
+                   FirmCode = d.Firm.FirmCode,
+                   FirmName = d.Firm.FirmName,
+                   Plate = d.Vehicle.Plate,
+                   Amount = d.Amount,
+                   StartDate = d.StartDate,
+                   EndDate = d.EndDate,
+                   ForexTypeCode = d.ForexType.ForexTypeCode,
+                   KmHour = d.KmHour,
+                   VehicleInsuranceTypeName = d.VehicleInsuranceType.VehicleInsuranceTypeName,
+               }).ToArray();
         }
 
         public BusinessResult SaveOrUpdateVehicleInsurance(VehicleInsuranceModel model)
