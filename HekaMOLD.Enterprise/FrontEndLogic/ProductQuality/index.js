@@ -10,6 +10,7 @@
         $scope.bindDetails();
     }
 
+
     $scope.performDelete = function () {
         bootbox.confirm({
             message: "Bu proses kalite planını silmek istediğinizden emin misiniz?",

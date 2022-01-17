@@ -12,6 +12,11 @@
 
     $scope.saveStatus = 0;
 
+
+    $scope.printPlans = function () {
+        window.print();
+    }
+
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, ControlDate: moment().format('DD.MM.YYYY'), Details: [] };
     }
