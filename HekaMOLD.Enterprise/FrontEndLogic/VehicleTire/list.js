@@ -37,7 +37,7 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
-                { dataField: 'CareDate', caption: 'İşlem Tarihi' },
+                { dataField: 'MontageDateStr', caption: 'İşlem Tarihi' },
                 { dataField: 'VehicleTireDirectionTypeName', caption: 'Lastik Yön Tipi' },
                 { dataField: 'VehicleTireTypeStr', caption: 'Lastik İşlem Tipi' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },

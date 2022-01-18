@@ -102,6 +102,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
+                    if (!string.IsNullOrEmpty(model.MontageDateStr))
+                        model.MontageDate = DateTime.ParseExact(model.MontageDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                     result = bObj.SaveOrUpdateVehicleTire(model);
                 }
 

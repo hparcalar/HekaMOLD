@@ -24,7 +24,8 @@ namespace Heka.DataAccess.Context
             this.Invoice = new HashSet<Invoice>();
             this.Item = new HashSet<Item>();
             this.ItemOrder = new HashSet<ItemOrder>();
-            this.ItemReceipt = new HashSet<ItemReceipt>();
+            //this.ItemOrder1 = new HashSet<ItemOrder>();
+            //this.ItemOrder2 = new HashSet<ItemOrder>();
             this.Mold = new HashSet<Mold>();
             this.WorkOrder = new HashSet<WorkOrder>();
             this.VehicleInsurance = new HashSet<VehicleInsurance>();
@@ -74,6 +75,10 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Firm")]
         public virtual ICollection<ItemOrder> ItemOrder { get; set; }
+        //[InverseProperty("Firm")]
+        //public virtual ICollection<ItemOrder> ItemOrder1 { get; set; }
+        //[InverseProperty("Firm")]
+        //public virtual ICollection<ItemOrder> ItemOrder2 { get; set; }
 
         [InverseProperty("Firm")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }

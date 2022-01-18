@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'SIOrder/GetItemOrderList', function (data) {
+                    return $.getJSON(HOST_URL + 'LOrder/GetItemOrderList', function (data) {
                             
                         });
                 },
@@ -61,8 +61,8 @@
                 { dataField: 'DocumentNo', caption: 'Belge No' },
                 { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'DateOfNeedStr', caption: 'Termin Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'FirmCode', caption: 'Firma Kodu' },
-                { dataField: 'FirmName', caption: 'Firma Adı' },
+                { dataField: 'CustomerFirmCode', caption: 'Müşteri Firma Kodu' },
+                { dataField: 'CustomerFirmName', caption: 'Müşteri Firma Adı' },
                 { dataField: 'OrderStatusStr', caption: 'Durum' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {
@@ -74,7 +74,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'SIOrder?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'LOrder?rid=' + e.row.data.Id;
                             }
                         }
                     ]

@@ -38,7 +38,7 @@
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
                 { dataField: 'Mark', caption: 'Marka' },
-                { dataField: 'Model', caption: 'Model' },
+                { dataField: 'Versiyon', caption: 'Model' },
                 { dataField: 'KmHour', caption: 'Km/Saat' },
                {
                     type: "buttons",

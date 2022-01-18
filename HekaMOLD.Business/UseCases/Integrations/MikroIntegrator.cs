@@ -524,7 +524,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             DocumentNo = intOrderNo.ToString(),
                                             OrderType = (int)ItemOrderType.Sale,
                                             DateOfNeed = (DateTime)row["sip_teslim_tarih"],
-                                            FirmId = firmId,
+                                            CustomerFirmId = firmId,
                                             PlantId = syncPoint.PlantId,
                                             OrderDate = (DateTime)row["sip_tarih"],
                                             OrderStatus = (int)OrderStatusType.Created,

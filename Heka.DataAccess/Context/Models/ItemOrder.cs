@@ -29,25 +29,31 @@ namespace Heka.DataAccess.Context
         public string DocumentNo { get; set; }
         public Nullable<System.DateTime> OrderDate { get; set; }
         public Nullable<int> OrderType { get; set; }
-        public int? OrderUploadType { get; set; }
-        public int? OrderTransactionDirectionType { get; set; }
         public Nullable<System.DateTime> DateOfNeed { get; set; }
-        [ForeignKey("CustomerFirm")]
-        public Nullable<int> CustomerFirmId { get; set; }
-        //Gönderici Firma
-        [ForeignKey("ShipperFirm")]
-        public int? ShipperFirmId { get; set; }
-        [ForeignKey("BuyerFirm")]
-        public int? BuyerFirmId { get; set; }
-
-        public decimal? TotalWeight { get; set; }
+        public int? OrderUploadType { get; set; }
+        public int? OrderUploadPointType { get; set; }
+        public int? OrderTransactionDirectionType { get; set; }
+        public decimal? OveralWeight { get; set; }
         //Toplam Hacim
-        public decimal? TotalVolume { get; set; }
+        public decimal? OveralVolume { get; set; }
         public bool? Closed { get; set; }
-        [ForeignKey("Customs1")]
-        public int? ExitCustomsId  { get; set; }
-        [ForeignKey("Customs")]
+
+        [ForeignKey("Firm")]
+        public Nullable<int> CustomerFirmId { get; set; }
+
+        ////Gönderici Firma
+        //[ForeignKey("Firm1")]
+        //public int? ShipperFirmId { get; set; }
+
+        //[ForeignKey("Firm2")]
+        //public int? BuyerFirmId { get; set; }
+
+        [ForeignKey("CustomsEntry")]
         public int? EntryCustomsId { get; set; }
+
+        [ForeignKey("CustomsExit")]
+        public int? ExitCustomsId { get; set; }
+
         [ForeignKey("Warehouse")]
         public Nullable<int> InWarehouseId { get; set; }
 
@@ -69,12 +75,13 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public string SyncKey { get; set; }
-    
-        public virtual Firm CustomerFirm { get; set; }
-        public virtual Firm ShipperFirm { get; set; }
-        public virtual Firm BuyerFirm { get; set; }
-        public virtual Customs Customs { get; set; }
-        public virtual Customs Customs1 { get; set; }
+
+        public virtual Firm Firm { get; set; }
+        //public virtual Firm Firm1 { get; set; }
+        //public virtual Firm Firm2 { get; set; }
+        public virtual Customs CustomsEntry { get; set; }
+        public virtual Customs CustomsExit { get; set; }
+        //public virtual Customs Customs1 { get; set; }
         public virtual ItemRequest ItemRequest { get; set; }
         public virtual Plant Plant { get; set; }
         public virtual SyncPoint SyncPoint { get; set; }

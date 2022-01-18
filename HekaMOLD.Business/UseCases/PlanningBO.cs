@@ -62,7 +62,7 @@ namespace HekaMOLD.Business.UseCases
                         DocumentNo = "",
                         Explanation = "",
                         WorkOrderStatus = (int)WorkOrderStatusType.Planned,
-                        FirmId = dbSaleOrderDetail.ItemOrder.FirmId,
+                        FirmId = dbSaleOrderDetail.ItemOrder.CustomerFirmId,
                         PlantId = dbSaleOrderDetail.ItemOrder.PlantId,
                     };
                     repo.Add(dbObjDetail.WorkOrder);

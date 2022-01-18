@@ -184,6 +184,30 @@
     <Compile Include="Migrations\202201132115020_VehicleTireDirectionType.designer.cs">
       <DependentUpon>202201132115020_VehicleTireDirectionType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201161132322_ItemOrderUpdateGeneric.cs" />
+    <Compile Include="Migrations\202201161132322_ItemOrderUpdateGeneric.designer.cs">
+      <DependentUpon>202201161132322_ItemOrderUpdateGeneric.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201162158483_ItemOrderDetails%28Dhl-deci%29.cs" />
+    <Compile Include="Migrations\202201162158483_ItemOrderDetails%28Dhl-deci%29.designer.cs">
+      <DependentUpon>202201162158483_ItemOrderDetails%28Dhl-deci%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.cs" />
+    <Compile Include="Migrations\202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.designer.cs">
+      <DependentUpon>202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201171926132_CustomsUpdate.cs" />
+    <Compile Include="Migrations\202201171926132_CustomsUpdate.designer.cs">
+      <DependentUpon>202201171926132_CustomsUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201172255155_UpdateVehicle%28Model-Versiyon%29.cs" />
+    <Compile Include="Migrations\202201172255155_UpdateVehicle%28Model-Versiyon%29.designer.cs">
+      <DependentUpon>202201172255155_UpdateVehicle%28Model-Versiyon%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201180834517_ItemOrderAdded%28OrderUploadPointType%29.cs" />
+    <Compile Include="Migrations\202201180834517_ItemOrderAdded%28OrderUploadPointType%29.designer.cs">
+      <DependentUpon>202201180834517_ItemOrderAdded%28OrderUploadPointType%29.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -215,6 +239,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201132115020_VehicleTireDirectionType.resx">
       <DependentUpon>202201132115020_VehicleTireDirectionType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201161132322_ItemOrderUpdateGeneric.resx">
+      <DependentUpon>202201161132322_ItemOrderUpdateGeneric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201162158483_ItemOrderDetails%28Dhl-deci%29.resx">
+      <DependentUpon>202201162158483_ItemOrderDetails%28Dhl-deci%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.resx">
+      <DependentUpon>202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201171926132_CustomsUpdate.resx">
+      <DependentUpon>202201171926132_CustomsUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201172255155_UpdateVehicle%28Model-Versiyon%29.resx">
+      <DependentUpon>202201172255155_UpdateVehicle%28Model-Versiyon%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201180834517_ItemOrderAdded%28OrderUploadPointType%29.resx">
+      <DependentUpon>202201180834517_ItemOrderAdded%28OrderUploadPointType%29.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

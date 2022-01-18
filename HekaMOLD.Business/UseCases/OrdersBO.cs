@@ -28,15 +28,13 @@ namespace HekaMOLD.Business.UseCases
                     OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
                     CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
                     DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
-                    FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
-                    FirmName = d.Firm != null ? d.Firm.FirmName : "",
-                    WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "",
-                    WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "",
+                    CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                    CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
                     OrderNo = d.OrderNo,
                     OrderDate = d.OrderDate,
                     DocumentNo = d.DocumentNo,
                     Explanation = d.Explanation,
-                    FirmId = d.FirmId,
+                    CustomerFirmId = d.CustomerFirmId,
                     OrderStatus = d.OrderStatus,
                     OrderType = d.OrderType,
                     PlantId = d.PlantId,
@@ -370,10 +368,8 @@ namespace HekaMOLD.Business.UseCases
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
                 model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate);
                 model.OrderStatusStr = ((OrderStatusType)model.OrderStatus).ToCaption();
-                model.FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
-                model.FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
-                model.WarehouseCode = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseCode : "";
-                model.WarehouseName = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseName : "";
+                model.CustomerFirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
+                model.CustomerFirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
 
                 model.Details =
                     repoDetails.Filter(d => d.ItemOrderId == dbObj.Id)
@@ -396,6 +392,13 @@ namespace HekaMOLD.Business.UseCases
                         OrderStatus = d.OrderStatus,
                         OverallTotal = d.OverallTotal,
                         Quantity = d.Quantity,
+                        ShortWidth=d.ShortWidth,
+                        LongWidth = d.LongWidth,
+                        Height = d.Height,
+                        Weight = d.Weight,
+                        Volume = d.Volume,
+                        Desi = d.Desi,
+                        Stackable = d.Stackable,
                         SubTotal = d.SubTotal,
                         TaxAmount = d.TaxAmount,
                         TaxIncluded = d.TaxIncluded,
@@ -426,8 +429,8 @@ namespace HekaMOLD.Business.UseCases
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
                 model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate);
                 model.OrderStatusStr = ((OrderStatusType)model.OrderStatus).ToCaption();
-                model.FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
-                model.FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
+                model.CustomerFirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
+                model.CustomerFirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
                 model.WarehouseCode = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseCode : "";
                 model.WarehouseName = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseName : "";
 
@@ -488,7 +491,7 @@ namespace HekaMOLD.Business.UseCases
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
-                    throw new Exception("Onaylanması beklenen satınalma sipariş kaydına ulaşılamadı.");
+                    throw new Exception("Onaylanması beklenen sipariş kaydına ulaşılamadı.");
 
                 if (dbObj.OrderStatus != (int)OrderStatusType.Created)
                     throw new Exception("Onay bekleyen durumunda olmayan bir sipariş onaylanamaz.");
@@ -529,6 +532,61 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+        public BusinessResult CancelledItemOrderPrice(int id, int userId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrder>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj == null)
+                    throw new Exception("Onaylanması beklenen sipariş kaydına ulaşılamadı.");
+
+                if (dbObj.OrderStatus == (int)OrderStatusType.Cancelled)
+                    throw new Exception("Bu sipariş daha önceden iptal edilmiştir.");
+
+                if (dbObj.OrderStatus == (int)OrderStatusType.Approved)
+                    throw new Exception("Onaylı siparişi iptal etmek için onayını kaldırmanız gerekmektedir.");
+
+                dbObj.OrderStatus = (int)OrderStatusType.Cancelled;
+                dbObj.UpdatedDate = DateTime.Now;
+                dbObj.UpdatedUserId = userId;
+
+                foreach (var item in dbObj.ItemOrderDetail)
+                {
+                    item.OrderStatus = (int)OrderStatusType.Cancelled;
+                }
+
+                _unitOfWork.SaveChanges();
+
+                #region CREATE NOTIFICATIONS
+                base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                {
+                    IsProcessed = false,
+                    Message = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed)
+                            + " tarihinde oluşturduğunuz satınalma siparişi iptal edildi.",
+                    //Title = NotifyType.ItemOrderIsApproved.ToCaption(),
+                    //NotifyType = (int)NotifyType.ItemOrderIsApproved,
+                    SeenStatus = 0,
+                    RecordId = dbObj.Id,
+                    UserId = dbObj.CreatedUserId
+                });
+                #endregion
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
 
         public BusinessResult ToggleOrderDetailStatus(int orderDetailId)
         {
@@ -686,8 +744,8 @@ namespace HekaMOLD.Business.UseCases
                         }
                     }
 
-                    model.FirmName = d.Firm != null ? d.Firm.FirmName : "";
-                    model.FirmCode = d.Firm != null ? d.Firm.FirmCode : "";
+                    model.CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "";
+                    model.CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "";
                     model.CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate);
                     model.OrderDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.OrderDate);
                     sumData.Add(model);
@@ -720,7 +778,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         Id = d.Id,
                         Quantity = d.Quantity,
-                        FirmId = d.ItemOrder.FirmId,
+                        FirmId = d.ItemOrder.CustomerFirmId,
                         FirmCode = d.ItemOrder.Firm != null ?
                             d.ItemOrder.Firm.FirmCode : "",
                         FirmName = d.ItemOrder.Firm != null ?
@@ -765,7 +823,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         Id = d.Id,
                         Quantity = d.Quantity,
-                        FirmId = d.ItemOrder.FirmId,
+                        FirmId = d.ItemOrder.CustomerFirmId,
                         FirmCode = d.ItemOrder.Firm != null ?
                             d.ItemOrder.Firm.FirmCode : "",
                         FirmName = d.ItemOrder.Firm != null ?

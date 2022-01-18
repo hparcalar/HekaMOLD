@@ -1,9 +1,5 @@
 ﻿using HekaMOLD.Business.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.Models.DataTransfer.Order
 {
@@ -15,7 +11,19 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public DateTime? OrderDate { get; set; }
         public int? OrderType { get; set; }
         public DateTime? DateOfNeed { get; set; }
-        public int? FirmId { get; set; }
+        public int? OrderUploadType { get; set; }
+        public int? OrderUploadPointType { get; set; }
+        public int? OrderTransactionDirectionType { get; set; }
+        public Nullable<int> CustomerFirmId { get; set; }
+        //Gönderici Firma
+        public int? ShipperFirmId { get; set; }
+        public int? BuyerFirmId { get; set; }
+        public decimal? OveralWeight { get; set; }
+        //Toplam Hacim
+        public decimal? OveralVolume { get; set; }
+        public bool? Closed { get; set; }
+        public int? ExitCustomsId { get; set; }
+        public int? EntryCustomsId { get; set; }
         public int? InWarehouseId { get; set; }
         public int? OutWarehouseId { get; set; }
         public int? PlantId { get; set; }
@@ -33,8 +41,12 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public ItemOrderDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS
-        public string FirmCode { get; set; }
-        public string FirmName { get; set; }
+        public string CustomerFirmCode { get; set; }
+        public string CustomerFirmName { get; set; }
+        public string ShipperFirmCode { get; set; }
+        public string ShipperFirmName { get; set; }
+        public string BuyerFirmCode { get; set; }
+        public string BuyerFirmName { get; set; }
         public string WarehouseCode { get; set; }
         public string WarehouseName { get; set; }
         public string OrderStatusStr { get; set; }
@@ -42,6 +54,11 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string DateOfNeedStr { get; set; }
         public string OrderDateStr { get; set; }
         public string CreatedUserName { get; set; }
+        public string OrderUploadTypeStr { get; set; }
+        public string OrderTransactionDirectionTypeStr { get; set; }
+        public string EntrycustomsName { get; set; }
+        public string ExitcustomsName { get; set; }
+
         #endregion
     }
 }

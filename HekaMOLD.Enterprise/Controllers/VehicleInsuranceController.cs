@@ -103,6 +103,14 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
+                    if (!string.IsNullOrEmpty(model.StartDateStr))
+                        model.StartDate = DateTime.ParseExact(model.StartDateStr, "dd.MM.yyyy",
+                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                    if (!string.IsNullOrEmpty(model.EndDateStr))
+                        model.EndDate = DateTime.ParseExact(model.EndDateStr, "dd.MM.yyyy",
+                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                     result = bObj.SaveOrUpdateVehicleInsurance(model);
                 }
 

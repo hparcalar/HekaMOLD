@@ -102,6 +102,10 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
+                    if (!string.IsNullOrEmpty(model.CareDateStr))
+                        model.CareDate = DateTime.ParseExact(model.CareDateStr, "dd.MM.yyyy",
+                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                     result = bObj.SaveOrUpdateVehicleCare(model);
                 }
 

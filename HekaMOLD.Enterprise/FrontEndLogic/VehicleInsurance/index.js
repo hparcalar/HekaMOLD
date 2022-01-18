@@ -30,7 +30,7 @@
                         $scope.vehicleList = resp.data.Vehicles;
                         $scope.vehicleInsuranceTypeList = resp.data.VehicleInsuranceTypes;
                         $scope.operationFirmList = resp.data.Firms;
-
+                        $scope.forexTypeList = resp.data.ForexTypes;
                         resolve(resp.data);
                     }
                 }).catch(function (err) { });
@@ -76,8 +76,20 @@
 
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
-        console.log($scope.modelObject);
-        $http.post(HOST_URL + 'VehicleInsurance/SaveModel', $scope.modelObject, 'json')
+        $http.post(HOST_URL + 'VehicleInsurance/SaveModel', {
+            Id: $scope.modelObject.Id,
+            Amount: $scope.modelObject.Amount,
+            StartDateStr: $scope.modelObject.StartDateStr,
+            EndDateStr: $scope.modelObject.EndDateStr,
+            Plate: $scope.selectedVehicle.Plate,
+            VehicleId: $scope.selectedVehicle.Id,
+            KmHour: $scope.selectedVehicle.KmHour,
+            OperationFirmId: $scope.selectedOperationFirm.Id,
+            VehicleInsuranceTypeId: $scope.selectedVehicleInsuranceType.Id,
+            ForexTypeId: $scope.selectedForexType.Id,
+            External: $scope.modelObject.External
+
+        }, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -98,6 +110,26 @@
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
+
+                        if ($scope.modelObject.ForexTypeId > 0)
+                            $scope.selectedForexType = $scope.forexTypeList.find(d => d.Id == $scope.modelObject.ForexTypeId);
+                        else
+                            $scope.selectedForexType = {};
+
+                        if ($scope.modelObject.VehicleId > 0)
+                            $scope.selectedVehicle = $scope.vehicleList.find(d => d.Id == $scope.modelObject.VehicleId);
+                        else
+                            $scope.selectedVehicle = {};
+
+                        if ($scope.modelObject.VehicleInsuranceTypeId > 0)
+                            $scope.selectedVehicleInsuranceType = $scope.vehicleInsuranceTypeList.find(d => d.Id == $scope.modelObject.VehicleInsuranceTypeId);
+                        else
+                            $scope.selectedVehicleInsuranceType = {};
+
+                        if ($scope.modelObject.OperationFirmId > 0)
+                            $scope.selectedOperationFirm = $scope.operationFirmList.find(d => d.Id == $scope.modelObject.OperationFirmId);
+                        else
+                            $scope.selectedOperationFirm = {};
                 }
             }).catch(function (err) { });
     }

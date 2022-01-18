@@ -46,7 +46,9 @@
 
         return prmReq;
     }
-    $scope.performDelete = function () {
+    $scope.performDelete = function ()
+
+    {
         bootbox.confirm({
             message: "Bu araç bakım bilgisini silmek istediğinizden emin misiniz?",
             closeButton: false,
@@ -110,7 +112,21 @@
         else
             $scope.modelObject.ForexTypeId = null;
 
-        $http.post(HOST_URL + 'VehicleTire/SaveModel', $scope.modelObject, 'json')
+        $http.post(HOST_URL + 'VehicleTire/SaveModel', {
+            Id: $scope.modelObject.Id,
+            VehicleId: $scope.selectedVehicle.Id,
+            OperationFirmId: $scope.selectedOperationFirm.Id,
+            VehicleTireDirectionTypeId: $scope.selectedVehicleTireDirectionType.Id,
+            VehicleTireType: $scope.selectedVehicleTireType.Id,
+            KmHour: $scope.modelObject.KmHour,
+            Amount: $scope.modelObject.Amount,
+            ForexTypeId: $scope.selectedForexType.Id,
+            SeriNo: $scope.modelObject.SeriNo,
+            DimensionsInfo: $scope.modelObject.DimensionsInfo,
+            MontageDate: $scope.modelObject.MontageDateStr,
+            Explanation: $scope.modelObject.Explanation
+
+        }, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;

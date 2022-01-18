@@ -4207,9 +4207,9 @@ textarea.form-control-lg {
 }
 
 .nav-pills .nav-link {
-  background: none;
-  border: 0;
-  border-radius: 0.475rem;
+    background: #e0e0e0;
+    border: 0;
+    border-radius: 0.475rem;
 }
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
@@ -4233,6 +4233,7 @@ textarea.form-control-lg {
 .nav-fill .nav-item .nav-link,
 .nav-justified .nav-item .nav-link {
   width: 100%;
+  
 }
 
 .tab-content > .tab-pane {

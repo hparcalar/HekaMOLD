@@ -93,6 +93,7 @@
     <Compile Include="Models\Constants\MoldStatus.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
     <Compile Include="Models\Constants\OrderTransactionDirectionType.cs" />
+    <Compile Include="Models\Constants\OrderUploadPointType.cs" />
     <Compile Include="Models\Constants\OrderUploadType.cs" />
     <Compile Include="Models\Constants\PostureStatusType.cs" />
     <Compile Include="Models\Constants\ProcessStatusType.cs" />

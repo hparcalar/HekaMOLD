@@ -37,7 +37,7 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
-                { dataField: 'CareDate', caption: 'Bakım Tarihi' },
+                { dataField: 'CareDateStr', caption: 'Bakım Tarihi' },
                 { dataField: 'VehicleCareTypeName', caption: 'Sigorta Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'KmHour', caption: 'Km/Saat' },

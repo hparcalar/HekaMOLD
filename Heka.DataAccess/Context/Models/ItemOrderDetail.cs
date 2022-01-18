@@ -46,7 +46,7 @@ namespace Heka.DataAccess.Context
         public int? Weight { get; set; }
         //istiflenebilir
         public bool? Stackable { get; set; }
-        public decimal? Dhl { get; set; }
+        public decimal? Desi { get; set; }
         public int? CalculationTypeEnum { get; set; }
         [ForeignKey("ForexType")]
         public Nullable<int> ForexId { get; set; }

@@ -325,7 +325,7 @@ namespace HekaMOLD.Business.UseCases
                     Id = d.Id,
                     Plate = d.Plate,
                     Mark = d.Mark,
-                    Model = d.Model,
+                    Versiyon = d.Versiyon,
                     KmHour=d.KmHour,                
                     TrailerTypeStr = d.TrailerType == 1 ? "Çadırlı" : d.TrailerType == 2 ? "Frigo" : "Kapalı",
                 }).ToArray();
@@ -337,6 +337,8 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 if (string.IsNullOrEmpty(model.Plate))
+
+
                     throw new Exception("Plaka girilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<Vehicle>();
@@ -437,6 +439,8 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                model.ContractStartDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ContractStartDate);
+                model.ContractEndDateStr = string.Format("{0:dd.MM.yyyy}",dbObj.ContractEndDate);
                 #region GET VEHICLECARE 
                 List<VehicleCareModel> vehicleCareList = new List<VehicleCareModel>();
                 dbObj.VehicleCare.ToList().ForEach(d =>
@@ -448,7 +452,7 @@ namespace HekaMOLD.Business.UseCases
                     vehicleCareModel.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
                     vehicleCareModel.KmHour = d.KmHour;
                     vehicleCareModel.VehicleCareTypeName = d.VehicleCareType != null ? d.VehicleCareType.VehicleCareTypeName : "";
-                    vehicleCareModel.CareDateStr = string.Format("{0:dd.MM.yyyy}", d.CareDate);                   
+                    vehicleCareModel.CareDateStr = string.Format("{0:dd.MM.yyyy}", d.CareDate);
                     d.MapTo(vehicleCareModel);
                     vehicleCareList.Add(vehicleCareModel);
                 });
@@ -507,18 +511,19 @@ namespace HekaMOLD.Business.UseCases
             var repo = _unitOfWork.GetRepository<VehicleInsurance>();
 
             return repo.GetAll()
+               .ToList()
                .Select(d => new VehicleInsuranceModel
                {
                    Id = d.Id,
-                   FirmCode = d.Firm.FirmCode,
-                   FirmName = d.Firm.FirmName,
+                   FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                   FirmName = d.Firm != null ? d.Firm.FirmName : "",
                    Plate = d.Vehicle.Plate,
                    Amount = d.Amount,
-                   StartDate = d.StartDate,
-                   EndDate = d.EndDate,
-                   ForexTypeCode = d.ForexType.ForexTypeCode,
+                   StartDateStr = string.Format("{0:dd.MM.yyyy}", d.StartDate),
+                   EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate),
+                   ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
                    KmHour = d.KmHour,
-                   VehicleInsuranceTypeName = d.VehicleInsuranceType.VehicleInsuranceTypeName,
+                   VehicleInsuranceTypeName = d.VehicleInsuranceType != null ? d.VehicleInsuranceType.VehicleInsuranceTypeName : "",
                }).ToArray();
         }
 
@@ -604,6 +609,9 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                model.StartDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.StartDate);
+                model.EndDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.EndDate);
+
             }
 
             return model;
@@ -718,20 +726,19 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<VehicleCare>();
 
-            return repo.GetAll()
+            return repo.GetAll().ToList()
                 .Select(d => new VehicleCareModel
                 {
                     Id = d.Id,
-                    Plate = d.Vehicle.Plate,
-                    VehicleCareTypeCode = d.VehicleCareType.VehicleCareTypeCode,
-                    VehicleCareTypeName = d.VehicleCareType.VehicleCareTypeName,
-                    FirmCode = d.Firm.FirmCode,
-                    FirmName = d.Firm.FirmName,
+                    Plate = d.Vehicle != null ? d.Vehicle.Plate :"",
+                    VehicleCareTypeName = d.VehicleCareType !=null ? d.VehicleCareType.VehicleCareTypeName : "",
+                    FirmCode = d.Firm != null ? d.Firm.FirmCode :"",
+                    FirmName = d.Firm != null ? d.Firm.FirmName : "",
                     KmHour = d.KmHour,
-                    ForexTypeCode = d.ForexType.ForexTypeCode,
+                    ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode:"",
                     Amount = d.Amount,
                     Explanation = d.Explanation,
-                    //CareDateStr = string.Format("{0:dd.MM.yyyy}", d.CareDate),
+                    CareDateStr = string.Format("{0:dd.MM.yyyy}", d.CareDate),
 
                 }).ToArray(); ;
         }
@@ -820,6 +827,8 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                model.CareDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.CareDate);
+
             }
 
             return model;
@@ -934,23 +943,23 @@ namespace HekaMOLD.Business.UseCases
         public VehicleTireModel[] GetVehicleTireList()
         {
             var repo = _unitOfWork.GetRepository<VehicleTire>();
-            return repo.GetAll()
+            return repo.GetAll().ToList()
                 .Select(d => new VehicleTireModel
                 {
                     Id = d.Id,
-                    Plate = d.Vehicle.Plate,
+                    Plate = d.Vehicle != null ? d.Vehicle.Plate:"",
                     VehicleTireTypeStr = d.VehicleTireType == 1 ? "Değişim" : d.VehicleTireType == 2 ? "Onarım" :
                         d.VehicleTireType == 3 ? "Bakım" : "",
                     VehicleTireDirectionTypeName = d.VehicleTireDirectionType.VehicleTireDirectionTypeName !=null ? d.VehicleTireDirectionType.VehicleTireDirectionTypeName:"",
-                    FirmCode = d.Firm.FirmCode,
-                    FirmName = d.Firm.FirmName,
+                    FirmCode = d.Firm != null ? d.Firm.FirmCode:"",
+                    FirmName = d.Firm != null ? d.Firm.FirmName:"",
                     KmHour = d.KmHour,
-                    ForexTypeCode = d.ForexType.ForexTypeCode,
+                    ForexTypeCode =d.ForexType != null ? d.ForexType.ForexTypeCode:"",
                     Amount = d.Amount,
                     Explanation = d.Explanation,
-                    //TireDateStr = string.Format("{0:dd.MM.yyyy}", d.TireDate),
+                    MontageDateStr = string.Format("{0:dd.MM.yyyy}", d.MontageDate),
 
-                }).ToArray(); ;
+                }).ToArray();
         }
 
         public BusinessResult SaveOrUpdateVehicleTire(VehicleTireModel model)
@@ -1037,6 +1046,7 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                model.MontageDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.MontageDate);
             }
 
             return model;
@@ -1144,6 +1154,110 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        #endregion
+
+        #region CUSTOMS BUSINESS
+        public CustomsModel[] GetCustomsList()
+        {
+            List<CustomsModel> data = new List<CustomsModel>();
+
+            var repo = _unitOfWork.GetRepository<Customs>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                CustomsModel containerObj = new CustomsModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateCustoms(CustomsModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.CustomsCode))
+                    throw new Exception("Gümrük kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.CustomsName))
+                    throw new Exception("Gümrük adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Customs>();
+
+                if (repo.Any(d => (d.CustomsCode == model.CustomsCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir gümrük mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Customs();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteCustoms(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Customs>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public CustomsModel GetCustoms(int id)
+        {
+            CustomsModel model = new CustomsModel { };
+
+            var repo = _unitOfWork.GetRepository<Customs>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
         #endregion
 
         #region ITEM BUSINESS

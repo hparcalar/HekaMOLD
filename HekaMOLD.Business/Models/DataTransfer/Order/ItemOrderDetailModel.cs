@@ -18,6 +18,15 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public decimal? NetQuantity { get; set; }
         public decimal? GrossQuantity { get; set; }
         public decimal? UnitPrice { get; set; }
+        public int? ShortWidth { get; set; }
+        public int? LongWidth { get; set; }
+        public decimal? Volume { get; set; }
+        public int? Height { get; set; }
+        public int? Weight { get; set; }
+        //istiflenebilir
+        public bool? Stackable { get; set; }
+        public decimal? Desi { get; set; }
+        public int? CalculationTypeEnum { get; set; }
         public int? ForexId { get; set; }
         public decimal? ForexRate { get; set; }
         public decimal? ForexUnitPrice { get; set; }

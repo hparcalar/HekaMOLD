@@ -37,8 +37,8 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
-                { dataField: 'StartDate', caption: 'Başlangıç Tarihi' },
-                { dataField: 'EndDate', caption: 'Bitiş Tarihi' },
+                { dataField: 'StartDateStr', caption: 'Başlangıç Tarihi' },
+                { dataField: 'EndDateStr', caption: 'Bitiş Tarihi' },
                 { dataField: 'VehicleInsuranceTypeName', caption: 'Sigorta Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'KmHour', caption: 'Km/Saat' },

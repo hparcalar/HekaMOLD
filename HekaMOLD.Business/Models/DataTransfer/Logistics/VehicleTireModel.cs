@@ -14,7 +14,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         //Ebat bilgi
         public string DimensionsInfo { get; set; }
         //Montaj tarih
-        public Nullable<DateTime> MontageDate { get; set; }
+        public DateTime? MontageDate { get; set; }
         public int? VehicleId { get; set; }
         public int? OperationFirmId { get; set; }
         public int? KmHour { get; set; }

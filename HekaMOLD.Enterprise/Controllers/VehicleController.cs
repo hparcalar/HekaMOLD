@@ -96,6 +96,10 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
+                    if (!string.IsNullOrEmpty(model.ContractStartDateStr))     
+                        model.ContractStartDate = DateTime.ParseExact(model.ContractStartDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                    if (!string.IsNullOrEmpty(model.ContractEndDateStr))
+                        model.ContractEndDate = DateTime.ParseExact(model.ContractEndDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                     result = bObj.SaveOrUpdateVehicle(model);
                 }
 

@@ -142,7 +142,7 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka', validationRules: [{ type: "required" }] },
-                { dataField: 'CareDate', caption: 'Bakım Tarihi', format: 'dd.MM.yyyy' },
+                { dataField: 'CareDateStr', caption: 'Bakım Tarihi', format: 'dd.MM.yyyy' },
                 { dataField: 'VehicleCareTypeName', caption: 'Bakım Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'Amount', caption: 'Fiyat'},
@@ -219,8 +219,8 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
-                { dataField: 'StartDate', caption: 'Başlangıç Tarihi', format: 'dd.MM.yyyy' },
-                { dataField: 'EndDate', caption: 'Bitiş Tarihi', format: 'dd.MM.yyyy' },
+                { dataField: 'StartDateStr', caption: 'Başlangıç Tarihi', format: 'dd.MM.yyyy' },
+                { dataField: 'EndDateStr', caption: 'Bitiş Tarihi', format: 'dd.MM.yyyy' },
                 { dataField: 'VehicleInsuranceTypeName', caption: 'Sigorta Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'Amount', caption: 'Fiyat' },
@@ -297,7 +297,7 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
-                { dataField: 'CareDate', caption: 'İşlem Tarihi', format: 'dd.MM.yyyy'},
+                { dataField: 'MontageDateStr', caption: 'İşlem Tarihi', format: 'dd.MM.yyyy'},
                 { dataField: 'VehicleTireDirectionTypeName', caption: 'Lastik Yön Tipi' },
                 { dataField: 'VehicleTireTypeStr', caption: 'Lastik İşlem Tipi' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
@@ -310,9 +310,33 @@
 
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
-        alert($scope.modelObject.Plate);
-        alert($scope.modelObject.Model);
-        $http.post(HOST_URL + 'Vehicle/SaveModel', $scope.modelObject, 'json')
+
+        console.log($scope.modelObject);
+
+        $http.post(HOST_URL + 'Vehicle/SaveModel', {
+            Id: $scope.modelObject.Id,
+            Plate: $scope.modelObject.Plate,
+            Mark: $scope.modelObject.Mark,
+            Versiyon: $scope.modelObject.Versiyon,
+            Length: $scope.modelObject.Length,
+            Width: $scope.modelObject.Width,
+            Height: $scope.modelObject.Height,
+            VehicleTypeId: $scope.selectedVehicleType.Id,
+            TrailerHeadWeight: $scope.modelObject.TrailerHeadWeight,
+            LoadCapacity: $scope.modelObject.LoadCapacity,
+            ChassisNumber: $scope.modelObject.ChassisNumber,
+            TrailerType: $scope.selectedTrailerType.Id,
+            VehicleAllocationType: $scope.selectedVehicleAllocationType.Id,
+            ContractStartDate: $scope.modelObject.ContractStartDateStr,
+            ContractEndDate: $scope.modelObject.ContractEndDateStr,
+            Price: $scope.modelObject.Price,
+            CareNotification: $scope.modelObject.CareNotification,
+            TireNotification: $scope.modelObject.TireNotification,
+            KmHour: $scope.modelObject.KmHour,
+            KmHourControl: $scope.modelObject.KmHourControl,
+            CarePeriyot: $scope.modelObject.CarePeriyot,
+            ProportionalLimit: $scope.modelObject.ProportionalLimit
+        }, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -325,13 +349,40 @@
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
                 }
-            }).catch(function (err) { });
+            }).catch(function (err) {
+
+
+                alert(err);
+
+
+            });
     }
     $scope.bindModel = function (id) {
         $http.get(HOST_URL + 'Vehicle/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
+
+                    if ($scope.modelObject.VehicleTypeId > 0)
+                        $scope.selectedVehicleType = $scope.vehicleTypeList.find(d => d.Id == $scope.modelObject.VehicleTypeId);
+                    else
+                        $scope.selectedVehicleType = {};
+
+                    if ($scope.modelObject.OperationFirmId > 0)
+                        $scope.selectedOperationFirm = $scope.operationFirmList.find(d => d.Id == $scope.modelObject.OperationFirmId);
+                    else
+                        $scope.selectedOperationFirm = {};
+
+                    if ($scope.modelObject.VehicleAllocationType > 0)
+                        $scope.selectedVehicleAllocationType = $scope.vehicleAllocationTypeList.find(d => d.Id == $scope.modelObject.VehicleAllocationType);
+                    else
+                        $scope.selectedOperationFirm = {};
+
+                    if ($scope.modelObject.TrailerType > 0)
+                        $scope.selectedTrailerType = $scope.trailerTypeList.find(d => d.Id == $scope.modelObject.TrailerType);
+                    else
+                        $scope.selectedTrailerType = {};
+
                     $scope.bindCareList();
                     $scope.bindInsuranceList();
                     $scope.bindTireList();
