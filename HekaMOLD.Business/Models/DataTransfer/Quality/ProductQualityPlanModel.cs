@@ -21,5 +21,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Quality
         public decimal? ToleranceMin { get; set; }
         public decimal? ToleranceMax { get; set; }
         public string MoldTestFieldName { get; set; }
+        public bool? Display { get; set; }
+
     }
 }

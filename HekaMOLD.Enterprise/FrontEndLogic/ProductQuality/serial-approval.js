@@ -31,6 +31,59 @@
                 }
             }).catch(function (err) { });
     }
+    $scope.deleteEntries = function () {
+        //for (var i = 0; i < $scope.selectedProducts.length; i++) {
+        //    var prd = $scope.selectedProducts[i];
+        //    if (prd.QualityStatus != null && prd.QualityStatus > 0) {
+        //        toastr.error('Seçilen ürünlerin kalite durumları silmek için uygun değil.');
+        //        return;
+        //    }
+        //}
+
+        bootbox.confirm({
+            message: "Seçilen ürünleri silmek istediğinizden emin misiniz?",
+            closeButton: false,
+            buttons: {
+                confirm: {
+                    label: 'Evet',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'Hayır',
+                    className: 'btn-light'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $scope.saveStatus = 1;
+
+                    $http.post(HOST_URL + 'ProductQuality/DeleteSerials', { model: $scope.selectedProducts }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                $scope.saveStatus = 0;
+
+                                if (resp.data.Status == 1) {
+                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                                    $scope.modelObject = {
+                                        DocumentNo: '', FirmId: 0,
+                                        FirmCode: '', FirmName: '',
+                                        ShowOnlyOk: false,
+                                        Details: []
+                                    };
+
+                                    window.location.reload();
+                                    //$scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+                                    //$scope.bindModel();
+                                }
+                                else
+                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                            }
+                        }).catch(function (err) { });
+                }
+            }
+        });
+    }
 
     $scope.showQualityText = function (item) {
         if (item.QualityStatus == 2) {

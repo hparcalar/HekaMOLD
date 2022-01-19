@@ -313,6 +313,27 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
+        [HttpPost]
+        public JsonResult DeleteSerials(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = null;
+
+            try
+            {
+                int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.DeleteSerials(model, userId);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
         #endregion
 
         #region CONDITIONAL APPROVE & SCRAP REPORTS

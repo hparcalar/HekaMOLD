@@ -34,7 +34,8 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> ToleranceMin { get; set; }
         public Nullable<decimal> ToleranceMax { get; set; }
         public string MoldTestFieldName { get; set; }
-    
+        public bool? Display { get; set; }
+
         [InverseProperty("ProductQualityPlan")]
         public virtual ICollection<ProductQualityDataDetail> ProductQualityDataDetail { get; set; }
     }

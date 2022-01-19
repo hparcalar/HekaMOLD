@@ -466,6 +466,7 @@ namespace HekaMOLD.Business.UseCases
                         PeriodType = m.PeriodType,
                         ProductQualityCode = m.ProductQualityCode,
                         Responsible = m.Responsible,
+                        Display = m.Display,
                     }).ToArray();
             }
             catch (Exception)
