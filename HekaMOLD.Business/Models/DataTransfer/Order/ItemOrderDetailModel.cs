@@ -26,6 +26,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         //istiflenebilir
         public bool? Stackable { get; set; }
         public decimal? Desi { get; set; }
+        public decimal? Ladametre { get; set; }
         public int? CalculationTypeEnum { get; set; }
         public int? ForexId { get; set; }
         public decimal? ForexRate { get; set; }

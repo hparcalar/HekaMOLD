@@ -47,6 +47,7 @@ namespace Heka.DataAccess.Context
         //istiflenebilir
         public bool? Stackable { get; set; }
         public decimal? Desi { get; set; }
+        public decimal? Ladametre { get; set; }
         public int? CalculationTypeEnum { get; set; }
         [ForeignKey("ForexType")]
         public Nullable<int> ForexId { get; set; }

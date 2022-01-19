@@ -275,20 +275,26 @@
             row.LongWidth = 0;
         if (row.Height == 'undefined' || row.Height == null)
             row.Height = 0; 
-        row.Volume = row.ShortWidth * row.LongWidth * row.Height /1000000;
-        row.Desi = row.ShortWidth * row.LongWidth * row.Height / 5000;
-        //CALCULATE VALUME AND WEIGHT 
+        row.Volume = row.Quantity * row.ShortWidth * row.LongWidth * row.Height /1000000;
+        row.Desi = row.Quantity * row.ShortWidth * row.LongWidth * row.Height / 5000;
+        //CALCULATE VALUME AND WEIGHT AND LADAMETRE
         let sumVolume = 0;
         let sumWeight = 0;
-        $scope.modelObject.Details.forEach(element => { sumVolume += parseFloat(element.Volume != null ? element.Volume : 0); sumWeight += parseFloat(element.Weight != null ? element.Weight : 0); });
-        $scope.modelObject.OveralVolume = row.Quantity * sumVolume;
-        $scope.modelObject.OveralWeight = row.Quantity * sumWeight;
+        let = sumLadametre = 0 ;
+        $scope.modelObject.Details.forEach(element => {
+            sumVolume += parseFloat(element.Volume != null ? element.Volume : 0);
+            sumWeight += parseFloat(element.Weight != null ? element.Weight : 0);
+            sumLadametre += parseFloat(element.Ladametre != null ? element.Ladametre : 0);
+        });
+        $scope.modelObject.OveralVolume =  sumVolume;
+        $scope.modelObject.OveralWeight = sumWeight;
+        $scope.modelObject.OveralLadametre =  sumLadametre;
 
     }
 
     $scope.calculateHeader = function () {
-        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
-        $scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
+        //$scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
+        //$scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
         $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
     }
 
@@ -333,9 +339,10 @@
                         if (typeof values.Volume != 'undefined') { obj.Volume = values.Volume; calculateRowAgain = true; }
                         if (typeof values.Weight != 'undefined') { obj.Weight = values.Weight; calculateRowAgain = true; }
                         if (typeof values.Desi != 'undefined') { obj.Desi = values.Desi; calculateRowAgain = true; }
+                        if (typeof values.Ladametre != 'undefined') { obj.Ladametre = values.Ladametre; calculateRowAgain = true; }
                         if (typeof values.Stackable != 'undefined') { obj.Stackable = values.Stackable; calculateRowAgain = true; }
-                       if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
-                        if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
+                       //if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
+                        //if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
                         if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
                         if (typeof values.ForexRate != 'undefined') { obj.ForexRate = values.ForexRate; calculateRowAgain = true; }
                         if (typeof values.ForexUnitPrice != 'undefined') {
@@ -396,8 +403,8 @@
                         Volume: values.Volume,
                         Stackable: values.Stackable,
                         Desi: values.Desi,
-                        TaxRate: values.TaxRate,
-                        TaxIncluded: values.TaxIncluded,
+                        Ladametre: values.Ladametre,
+                        //TaxIncluded: values.TaxIncluded,
                         UnitPrice: values.UnitPrice,
                         ForexRate: values.ForexRate,
                         ForexUnitPrice: values.ForexUnitPrice,
@@ -488,18 +495,19 @@
                 { dataField: 'Weight', caption: 'Ağırlık (Kg)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Volume', caption: 'Hacim (m3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 },allowEditing: false},
                 { dataField: 'Desi', caption: 'Desi', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 60, allowEditing: false },
+                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 60 },
                 { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean' },
-                { dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", width: 60, precision: 2 } },
-                {
-                    dataField: 'TaxIncluded', caption: 'Kdv D/H',
-                    allowSorting: false,
-                    lookup: {
-                        dataSource: [{ Id: 1, Text: 'Dahil' }, { Id: 0, Text: 'Hariç' }],
-                        valueExpr: "Id",
-                        displayExpr: "Text"
-                    },
-                    validationRules: [{ type: "required" }]
-                },
+                //{ dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", width: 60, precision: 2 } },
+                //{
+                //    dataField: 'TaxIncluded', caption: 'Kdv D/H',
+                //    allowSorting: false,
+                //    lookup: {
+                //        dataSource: [{ Id: 1, Text: 'Dahil' }, { Id: 0, Text: 'Hariç' }],
+                //        valueExpr: "Id",
+                //        displayExpr: "Text"
+                //    },
+                //    validationRules: [{ type: "required" }]
+                //},
                 { dataField: 'UnitPrice', caption: 'B. Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
                 {
                     dataField: 'ForexId', caption: 'Döviz Cinsi',
@@ -512,7 +520,7 @@
                 },
                 { dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
                     type: "buttons",

@@ -25,6 +25,8 @@ namespace Heka.DataAccess.Context
             this.VehicleInsurance = new HashSet<VehicleInsurance>();
             this.VehicleCare = new HashSet<VehicleCare>();
             this.VehicleTire = new HashSet<VehicleTire>();
+            this.FirmTariff = new HashSet<FirmTariff>();
+
         }
 
         public int Id { get; set; }
@@ -50,5 +52,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ForexType")]
         public virtual ICollection<VehicleTire> VehicleTire { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<FirmTariff> FirmTariff { get; set; }
     }
 }

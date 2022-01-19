@@ -36,6 +36,7 @@ namespace Heka.DataAccess.Context
         public decimal? OveralWeight { get; set; }
         //Toplam Hacim
         public decimal? OveralVolume { get; set; }
+        public decimal? OveralLadametre { get; set; }
         public bool? Closed { get; set; }
 
         [ForeignKey("Firm")]

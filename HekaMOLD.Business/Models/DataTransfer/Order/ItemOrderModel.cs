@@ -21,6 +21,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public decimal? OveralWeight { get; set; }
         //Toplam Hacim
         public decimal? OveralVolume { get; set; }
+        public decimal? OveralLadametre { get; set; }
         public bool? Closed { get; set; }
         public int? ExitCustomsId { get; set; }
         public int? EntryCustomsId { get; set; }

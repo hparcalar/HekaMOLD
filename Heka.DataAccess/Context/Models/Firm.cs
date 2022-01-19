@@ -31,7 +31,7 @@ namespace Heka.DataAccess.Context
             this.VehicleInsurance = new HashSet<VehicleInsurance>();
             this.VehicleCare = new HashSet<VehicleCare>();
             this.VehicleTire = new HashSet<VehicleTire>();
-
+            this.FirmTariff = new HashSet<FirmTariff>();
         }
 
         public int Id { get; set; }
@@ -66,6 +66,9 @@ namespace Heka.DataAccess.Context
         
         [InverseProperty("Firm")]
         public virtual ICollection<FirmAuthor> FirmAuthor { get; set; }
+
+        [InverseProperty("Firm")]
+        public virtual ICollection<FirmTariff> FirmTariff { get; set; }
 
         [InverseProperty("Firm")]
         public virtual ICollection<Invoice> Invoice { get; set; }

@@ -70,6 +70,7 @@
     <Compile Include="Context\Models\EquipmentCategory.cs" />
     <Compile Include="Context\Models\Firm.cs" />
     <Compile Include="Context\Models\FirmAuthor.cs" />
+    <Compile Include="Context\Models\FirmTariff.cs" />
     <Compile Include="Context\Models\ForexHistory.cs" />
     <Compile Include="Context\Models\ForexType.cs" />
     <Compile Include="Context\Models\Incident.cs" />
@@ -208,6 +209,14 @@
     <Compile Include="Migrations\202201180834517_ItemOrderAdded%28OrderUploadPointType%29.designer.cs">
       <DependentUpon>202201180834517_ItemOrderAdded%28OrderUploadPointType%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.cs" />
+    <Compile Include="Migrations\202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.designer.cs">
+      <DependentUpon>202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201190803097_ItemOrderAdded-OveralLAdametre.cs" />
+    <Compile Include="Migrations\202201190803097_ItemOrderAdded-OveralLAdametre.designer.cs">
+      <DependentUpon>202201190803097_ItemOrderAdded-OveralLAdametre.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -257,6 +266,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201180834517_ItemOrderAdded%28OrderUploadPointType%29.resx">
       <DependentUpon>202201180834517_ItemOrderAdded%28OrderUploadPointType%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.resx">
+      <DependentUpon>202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201190803097_ItemOrderAdded-OveralLAdametre.resx">
+      <DependentUpon>202201190803097_ItemOrderAdded-OveralLAdametre.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
