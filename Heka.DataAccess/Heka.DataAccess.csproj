@@ -217,6 +217,10 @@
     <Compile Include="Migrations\202201190803097_ItemOrderAdded-OveralLAdametre.designer.cs">
       <DependentUpon>202201190803097_ItemOrderAdded-OveralLAdametre.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201190917368_FirmTariffAdded.cs" />
+    <Compile Include="Migrations\202201190917368_FirmTariffAdded.designer.cs">
+      <DependentUpon>202201190917368_FirmTariffAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -272,6 +276,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201190803097_ItemOrderAdded-OveralLAdametre.resx">
       <DependentUpon>202201190803097_ItemOrderAdded-OveralLAdametre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201190917368_FirmTariffAdded.resx">
+      <DependentUpon>202201190917368_FirmTariffAdded.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

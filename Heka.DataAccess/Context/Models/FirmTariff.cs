@@ -14,6 +14,7 @@ namespace Heka.DataAccess.Context.Models
         public decimal? Weight { get; set; }
         public int? ForexTypeId { get; set; }
         public int FirmId { get; set; }
+        public int? UnitTypeId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
@@ -25,6 +26,8 @@ namespace Heka.DataAccess.Context.Models
 
         public virtual Firm Firm { get; set; }
         public virtual ForexType ForexType { get; set; }
+        public virtual UnitType UnitType { get; set; }
+
 
 
     }
