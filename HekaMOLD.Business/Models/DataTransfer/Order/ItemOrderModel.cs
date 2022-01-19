@@ -22,6 +22,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         //Toplam Hacim
         public decimal? OveralVolume { get; set; }
         public decimal? OveralLadametre { get; set; }
+        public int? OrderCalculationType { get; set; }
+        public DateTime? LoadOutDate { get; set; }
+        public decimal? CalculationTypePrice { get; set; }
         public bool? Closed { get; set; }
         public int? ExitCustomsId { get; set; }
         public int? EntryCustomsId { get; set; }
@@ -53,6 +56,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string OrderStatusStr { get; set; }
         public string CreatedDateStr { get; set; }
         public string DateOfNeedStr { get; set; }
+        public string LoadOutDateStr { get; set; }
         public string OrderDateStr { get; set; }
         public string CreatedUserName { get; set; }
         public string OrderUploadTypeStr { get; set; }

@@ -83,7 +83,7 @@
     <Compile Include="Base\IDataObject.cs" />
     <Compile Include="Helpers\ConstantHelper.cs" />
     <Compile Include="Helpers\Mapper.cs" />
-    <Compile Include="Models\Constants\CalculationType.cs" />
+    <Compile Include="Models\Constants\OrderCalculationType.cs" />
     <Compile Include="Models\Constants\FirmType.cs" />
     <Compile Include="Models\Constants\ItemCriticalBehaviourType.cs" />
     <Compile Include="Models\Constants\ItemReceiptType.cs" />
@@ -92,6 +92,7 @@
     <Compile Include="Models\Constants\MachineStatusType.cs" />
     <Compile Include="Models\Constants\MoldStatus.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
+    <Compile Include="Models\Constants\OrderProductBreedType.cs" />
     <Compile Include="Models\Constants\OrderTransactionDirectionType.cs" />
     <Compile Include="Models\Constants\OrderUploadPointType.cs" />
     <Compile Include="Models\Constants\OrderUploadType.cs" />

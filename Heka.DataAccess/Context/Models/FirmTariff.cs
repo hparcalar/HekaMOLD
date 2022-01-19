@@ -9,9 +9,9 @@ namespace Heka.DataAccess.Context.Models
                 
         }
         public int Id { get; set; }
-        public decimal? Ladametre { get; set; }
-        public decimal? MeetrCup { get; set; }
-        public decimal? Weight { get; set; }
+        public decimal? LadametrePrice { get; set; }
+        public decimal? MeterCupPrice { get; set; }
+        public decimal? WeightPrice { get; set; }
         public int? ForexTypeId { get; set; }
         public int FirmId { get; set; }
         public int? UnitTypeId { get; set; }

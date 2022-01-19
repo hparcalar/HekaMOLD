@@ -169,6 +169,82 @@
             ]
         });
     }
+    //$scope.bindTariffList = function () {
+    //    $('#tariffList').dxDataGrid({
+    //        dataSource: {
+    //            load: function () {
+    //                return $scope.modelObject.Tariff;
+    //            },
+    //            update: function (key, values) {
+    //                var obj = $scope.modelObject.Tariffs.find(d => d.Id == key);
+    //                if (obj != null) {
+    //                    if (typeof values.LadametrePrice != 'undefined') { obj.LadametrePrice = values.LadametrePrice; }
+    //                    if (typeof values.MeterCupPrice != 'undefined') { obj.MeterCupPrice = values.MeterCupPrice; }
+    //                    if (typeof values.WeightPrice != 'undefined') { obj.WeightPrice = values.WeightPrice; }
+    //                    if (typeof values. != 'undefined') { obj.Phone = values.Phone; }
+    //                    if (typeof values.SendMailForPurchaseOrder != 'undefined') { obj.SendMailForPurchaseOrder = values.SendMailForPurchaseOrder; }
+    //                }
+    //            },
+    //            remove: function (key) {
+    //                var obj = $scope.modelObject.Authors.find(d => d.Id == key);
+    //                if (obj != null) {
+    //                    $scope.modelObject.Authors.splice($scope.modelObject.Authors.indexOf(obj), 1);
+    //                }
+    //            },
+    //            insert: function (values) {
+    //                var newId = 1;
+    //                if ($scope.modelObject.Authors.length > 0) {
+    //                    newId = $scope.modelObject.Authors.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+    //                    newId++;
+    //                }
+
+    //                var newObj = {
+    //                    Id: newId,
+    //                    AuthorName: values.AuthorName,
+    //                    Title: values.Title,
+    //                    Email: values.Email,
+    //                    Phone: values.Phone,
+    //                    SendMailForPurchaseOrder: values.SendMailForPurchaseOrder,
+    //                    NewDetail: true
+    //                };
+
+    //                $scope.modelObject.Authors.push(newObj);
+    //            },
+    //            key: 'Id'
+    //        },
+    //        showColumnLines: true,
+    //        showRowLines: true,
+    //        rowAlternationEnabled: true,
+    //        focusedRowEnabled: false,
+    //        showBorders: true,
+    //        filterRow: {
+    //            visible: false
+    //        },
+    //        headerFilter: {
+    //            visible: false
+    //        },
+    //        groupPanel: {
+    //            visible: false
+    //        },
+    //        scrolling: {
+    //            mode: "virtual"
+    //        },
+    //        height: 200,
+    //        editing: {
+    //            allowUpdating: true,
+    //            allowDeleting: true,
+    //            allowAdding: true,
+    //            mode: 'cell'
+    //        },
+    //        columns: [
+    //            { dataField: 'AuthorName', caption: 'Yetkili', validationRules: [{ type: "required" }] },
+    //            { dataField: 'Title', caption: 'Ünvan' },
+    //            { dataField: 'Email', caption: 'E-Posta' },
+    //            { dataField: 'Phone', caption: 'Telefon' },
+    //            { dataField: 'SendMailForPurchaseOrder', caption: 'Mail Gönder', dataType: 'boolean' },
+    //        ]
+    //    });
+    //}
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');

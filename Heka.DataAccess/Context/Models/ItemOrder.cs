@@ -37,6 +37,9 @@ namespace Heka.DataAccess.Context
         //Toplam Hacim
         public decimal? OveralVolume { get; set; }
         public decimal? OveralLadametre { get; set; }
+        public int? OrderCalculationType { get; set; }
+        public DateTime? LoadOutDate { get; set; }
+        public decimal? CalculationTypePrice { get; set; }
         public bool? Closed { get; set; }
 
         [ForeignKey("Firm")]

@@ -1,9 +1,5 @@
 ﻿using HekaMOLD.Business.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.Models.DataTransfer.Order
 {
@@ -42,6 +38,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public int? OrderStatus { get; set; }
         public int? SyncStatus { get; set; }
         public DateTime? SyncDate { get; set; }
+        public int? OrderProductBreed { get; set; }
+        public int? PackageInNumber { get; set; }
         public int? ItemRequestDetailId { get; set; }
 
         #region HEADER DATA

@@ -222,6 +222,22 @@
     <Compile Include="Migrations\202201190917368_FirmTariffAdded.designer.cs">
       <DependentUpon>202201190917368_FirmTariffAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201191435427_FirmTariffUpdate.cs" />
+    <Compile Include="Migrations\202201191435427_FirmTariffUpdate.designer.cs">
+      <DependentUpon>202201191435427_FirmTariffUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201192042462_ItemOrderandItemOrderDetailUpdate.cs" />
+    <Compile Include="Migrations\202201192042462_ItemOrderandItemOrderDetailUpdate.designer.cs">
+      <DependentUpon>202201192042462_ItemOrderandItemOrderDetailUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201192145585_ItemOrderUpdateCalculationTypePrice.cs" />
+    <Compile Include="Migrations\202201192145585_ItemOrderUpdateCalculationTypePrice.designer.cs">
+      <DependentUpon>202201192145585_ItemOrderUpdateCalculationTypePrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201192208440_ItemOrderUpdateCalculationTypePrice2.cs" />
+    <Compile Include="Migrations\202201192208440_ItemOrderUpdateCalculationTypePrice2.designer.cs">
+      <DependentUpon>202201192208440_ItemOrderUpdateCalculationTypePrice2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -280,6 +296,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201190917368_FirmTariffAdded.resx">
       <DependentUpon>202201190917368_FirmTariffAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201191435427_FirmTariffUpdate.resx">
+      <DependentUpon>202201191435427_FirmTariffUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201192042462_ItemOrderandItemOrderDetailUpdate.resx">
+      <DependentUpon>202201192042462_ItemOrderandItemOrderDetailUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201192145585_ItemOrderUpdateCalculationTypePrice.resx">
+      <DependentUpon>202201192145585_ItemOrderUpdateCalculationTypePrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201192208440_ItemOrderUpdateCalculationTypePrice2.resx">
+      <DependentUpon>202201192208440_ItemOrderUpdateCalculationTypePrice2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

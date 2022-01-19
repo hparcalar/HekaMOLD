@@ -28,6 +28,7 @@ namespace HekaMOLD.Business.UseCases
                     OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
                     CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
                     DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                    LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
                     CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                     CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
                     OrderNo = d.OrderNo,
@@ -37,6 +38,7 @@ namespace HekaMOLD.Business.UseCases
                     CustomerFirmId = d.CustomerFirmId,
                     OrderStatus = d.OrderStatus,
                     OrderType = d.OrderType,
+                    CalculationTypePrice = d.CalculationTypePrice,
                     PlantId = d.PlantId,
                 })
                 .OrderByDescending(d => d.OrderDate)
@@ -76,6 +78,11 @@ namespace HekaMOLD.Business.UseCases
                 if (!string.IsNullOrEmpty(model.DateOfNeedStr))
                 {
                     model.DateOfNeed = DateTime.ParseExact(model.DateOfNeedStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.LoadOutDateStr))
+                {
+                    model.LoadOutDate = DateTime.ParseExact(model.LoadOutDateStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
 
@@ -367,6 +374,7 @@ namespace HekaMOLD.Business.UseCases
                 model = dbObj.MapTo(model);
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
                 model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate);
+                model.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadOutDate);
                 model.OrderStatusStr = ((OrderStatusType)model.OrderStatus).ToCaption();
                 model.CustomerFirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
                 model.CustomerFirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
@@ -397,8 +405,8 @@ namespace HekaMOLD.Business.UseCases
                         Height = d.Height,
                         Weight = d.Weight,
                         Volume = d.Volume,
-                        Desi = d.Desi,
                         Stackable = d.Stackable,
+                        PackageInNumber= d.PackageInNumber,
                         SubTotal = d.SubTotal,
                         TaxAmount = d.TaxAmount,
                         TaxIncluded = d.TaxIncluded,

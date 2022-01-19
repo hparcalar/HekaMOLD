@@ -23,6 +23,9 @@
     $scope.selectedOrderUploadPointType = {};
     $scope.orderUploadPointTypeList = [{ Id: 1, Text: 'Müşteriden Yükleme' }, { Id: 2, Text: 'Depodan Yükleme' }];
 
+    $scope.selectedOrderCalculationType = {Id:0};
+    $scope.orderCalculationTypeList = [{ Id: 1, Text: 'Ağırlık' }, { Id: 2, Text: 'Metreküp' }, { Id: 3, Text: 'Ladametre' }];
+
     $scope.saveStatus = 0;
 
     // RECEIPT FUNCTIONS
@@ -68,7 +71,13 @@
     // CRUD
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus: 0 };
-        $scope.selectedFirm = {};
+        $scope.selectedCustomerFirm = {};
+        $scope.selectedOrderCalculationType = { Id: 0 };
+        $scope.selectedOrderUploadPointType = {};
+        $scope.selectedOrderTransactionDirectionType = {};
+        $scope.selectedOrderUploadType = {};
+        $scope.selectedEntryCustoms = {};
+        $scope.selectedExitCustoms = {};
 
         $scope.getNextOrderNo().then(function (rNo) {
             $scope.modelObject.OrderNo = rNo;
@@ -140,6 +149,11 @@
             $scope.modelObject.OrderTransactionDirectionType = $scope.selectedOrderTransactionDirectionType.Id;
         else
             $scope.modelObject.OrderTransactionDirectionType = null;
+
+        if (typeof $scope.selectedOrderCalculationType != 'undefined' && $scope.selectedOrderCalculationType != null)
+            $scope.modelObject.OrderCalculationType = $scope.selectedOrderCalculationType.Id;
+        else
+            $scope.modelObject.OrderCalculationType = null;
 
         if (typeof $scope.selectedOrderUploadPointType != 'undefined' && $scope.selectedOrderUploadPointType != null)
             $scope.modelObject.OrderUploadPointType = $scope.selectedOrderUploadPointType.Id;
@@ -221,6 +235,11 @@
                     else
                         $scope.selectedOrderTransactionDirectionType = {};
 
+                    if ($scope.modelObject.OrderCalculationType > 0)
+                        $scope.selectedOrderCalculationType = $scope.orderCalculationTypeList.find(d => d.Id == $scope.modelObject.OrderCalculationType);
+                    else
+                        $scope.selectedOrderCalculationType = {};
+
                     if ($scope.modelObject.OrderUploadPointType > 0)
                         $scope.selectedOrderUploadPointType = $scope.orderUploadPointTypeList.find(d => d.Id == $scope.modelObject.OrderUploadPointType);
                     else
@@ -248,8 +267,9 @@
     }
 
     $scope.calculateRow = function (row) {
-
         $scope.calculateValumeAndDesi(row);
+        $scope.calculateOveralTotal();
+
         if (typeof row != 'undefined' && row != null) {
             try {
                 $http.post(HOST_URL + 'LOrder/CalculateRow', row, 'json')
@@ -276,7 +296,6 @@
         if (row.Height == 'undefined' || row.Height == null)
             row.Height = 0; 
         row.Volume = row.Quantity * row.ShortWidth * row.LongWidth * row.Height /1000000;
-        row.Desi = row.Quantity * row.ShortWidth * row.LongWidth * row.Height / 5000;
         //CALCULATE VALUME AND WEIGHT AND LADAMETRE
         let sumVolume = 0;
         let sumWeight = 0;
@@ -295,9 +314,19 @@
     $scope.calculateHeader = function () {
         //$scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
         //$scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
-        $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
+       // $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
     }
+    $scope.calculateOveralTotal = function () {
+        if ($scope.selectedOrderCalculationType.Id == 1)
+            $scope.modelObject.OverallTotal = $scope.modelObject.OveralWeight * $scope.modelObject.CalculationTypePrice;
+        else if ($scope.selectedOrderCalculationType.Id == 2)
+            $scope.modelObject.OverallTotal = $scope.modelObject.OveralVolume * $scope.modelObject.CalculationTypePrice;
+        else if ($scope.selectedOrderCalculationType.Id == 3)
+            $scope.modelObject.OverallTotal = $scope.modelObject.OveralLadametre * $scope.modelObject.CalculationTypePrice;
+        else if ($scope.selectedOrderCalculationType.Id == 0)
+            toastr.error("Hesaplama Tip seçimi yapılmadı !", 'Hata');
 
+    }
     $scope.bindDetails = function () {
         $('#dataList').dxDataGrid({
             dataSource: {
@@ -338,12 +367,13 @@
                         if (typeof values.Height != 'undefined') { obj.Height = values.Height; calculateRowAgain = true; }
                         if (typeof values.Volume != 'undefined') { obj.Volume = values.Volume; calculateRowAgain = true; }
                         if (typeof values.Weight != 'undefined') { obj.Weight = values.Weight; calculateRowAgain = true; }
-                        if (typeof values.Desi != 'undefined') { obj.Desi = values.Desi; calculateRowAgain = true; }
+                        //if (typeof values.Desi != 'undefined') { obj.Desi = values.Desi; calculateRowAgain = true; }
                         if (typeof values.Ladametre != 'undefined') { obj.Ladametre = values.Ladametre; calculateRowAgain = true; }
                         if (typeof values.Stackable != 'undefined') { obj.Stackable = values.Stackable; calculateRowAgain = true; }
+                        if (typeof values.PackageInNumber != 'undefined') { obj.PackageInNumber = values.PackageInNumber; calculateRowAgain = true; }
                        //if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
                         //if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
-                        if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
+                        //if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
                         if (typeof values.ForexRate != 'undefined') { obj.ForexRate = values.ForexRate; calculateRowAgain = true; }
                         if (typeof values.ForexUnitPrice != 'undefined') {
                             obj.ForexUnitPrice = values.ForexUnitPrice;
@@ -402,10 +432,11 @@
                         Weight: values.Weight,
                         Volume: values.Volume,
                         Stackable: values.Stackable,
-                        Desi: values.Desi,
+                        PackageInNumber: values.PackageInNumber,
+                        //Desi: values.Desi,
                         Ladametre: values.Ladametre,
                         //TaxIncluded: values.TaxIncluded,
-                        UnitPrice: values.UnitPrice,
+                        //UnitPrice: values.UnitPrice,
                         ForexRate: values.ForexRate,
                         ForexUnitPrice: values.ForexUnitPrice,
                         ForexId: values.ForexId,
@@ -494,9 +525,11 @@
                 { dataField: 'Height', caption: 'Yükseklik (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Weight', caption: 'Ağırlık (Kg)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Volume', caption: 'Hacim (m3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 },allowEditing: false},
-                { dataField: 'Desi', caption: 'Desi', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 60, allowEditing: false },
-                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 60 },
+                //{ dataField: 'Desi', caption: 'Desi', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 60, allowEditing: false },
+                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 80 },
                 { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean' },
+                { dataField: 'PackageInNumber', caption: 'Koli iç Adet'},
+
                 //{ dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", width: 60, precision: 2 } },
                 //{
                 //    dataField: 'TaxIncluded', caption: 'Kdv D/H',
@@ -508,7 +541,7 @@
                 //    },
                 //    validationRules: [{ type: "required" }]
                 //},
-                { dataField: 'UnitPrice', caption: 'B. Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                //{ dataField: 'UnitPrice', caption: 'B. Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
                 {
                     dataField: 'ForexId', caption: 'Döviz Cinsi',
                     allowSorting: false,

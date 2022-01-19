@@ -63,7 +63,7 @@
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
                 { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'DateOfNeedStr', caption: 'Termin Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'DateOfNeedStr', caption: 'Teslim Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'CustomerFirmCode', caption: 'Müşteri Firma Kodu' },
                 { dataField: 'CustomerFirmName', caption: 'Müşteri Firma Adı' },
                 { dataField: 'OrderStatusStr', caption: 'Durum' },

@@ -64,7 +64,8 @@ namespace Heka.DataAccess.Context
         public Nullable<int> OrderStatus { get; set; }
         public Nullable<int> SyncStatus { get; set; }
         public Nullable<System.DateTime> SyncDate { get; set; }
-
+        public int? OrderProductBreed { get; set; }
+        public int? PackageInNumber { get; set; }
         [ForeignKey("ItemRequestDetail")]
         public Nullable<int> ItemRequestDetailId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
