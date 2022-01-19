@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\HekaEntities.cs" />
+    <Compile Include="Context\LSabit.cs" />
     <Compile Include="Context\Models\ActualRouteHistory.cs" />
     <Compile Include="Context\Models\AllocatedCode.cs" />
     <Compile Include="Context\Models\Attachment.cs" />
