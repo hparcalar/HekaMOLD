@@ -1,4 +1,4 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Production;
+﻿using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using System;
@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class ProcessGroupController : Controller
+    public class CountryController : Controller
     {
-        // GET: ProcessGroup
+        // GET: Country
         public ActionResult Index()
         {
             return View();
@@ -20,13 +20,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetProcessGroupList()
+        public JsonResult GetCountryList()
         {
-            ProcessGroupModel[] result = new ProcessGroupModel[0];
+            CountryModel[] result = new CountryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetProcessGroupList();
+                result = bObj.GetCountryList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -37,10 +37,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ProcessGroupModel model = null;
+            CountryModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetProcessGroup(rid);
+                model = bObj.GetCountry(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -54,7 +54,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteProcessGroup(rid);
+                    result = bObj.DeleteCountry(rid);
                 }
 
                 if (result.Result)
@@ -69,14 +69,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ProcessGroupModel model)
+        public JsonResult SaveModel(CountryModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateProcessGroup(model);
+                    result = bObj.SaveOrUpdateCountry(model);
                 }
 
                 if (result.Result)

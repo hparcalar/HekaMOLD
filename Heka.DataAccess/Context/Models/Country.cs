@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Heka.DataAccess.Context.Models
 {
-   public partial class YarnRecipeType
+    public partial class Country
     {
-        public YarnRecipeType()
+        public Country()
         {
-            this.YarnRecipe = new HashSet<YarnRecipe>();
-
+            this.City = new HashSet<City>();
         }
         public int Id { get; set; }
-        public string YarnTypeCode { get; set; }
-        public string YarnTypeName { get; set; }
-        public Nullable<bool> IsActive { get; set; }
+        public string DoubleCode { get; set; }
+        public string ThreeCode { get; set; }
+        public string CountryName { get; set; }
+        public string NumberCode { get; set; }
+
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
 
-        [InverseProperty("YarnRecipeType")]
-        public virtual ICollection<YarnRecipe> YarnRecipe { get; set; }
+        [InverseProperty("Country")]
+        public virtual ICollection<City> City { get; set; }
     }
 }

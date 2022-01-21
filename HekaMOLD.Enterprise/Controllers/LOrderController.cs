@@ -47,6 +47,7 @@ namespace HekaMOLD.Enterprise.Controllers
             FirmModel[] firms = new FirmModel[0];
             ForexTypeModel[] forexes = new ForexTypeModel[0];
             CustomsModel[] customers = new CustomsModel[0];
+            CityModel[] citys = new CityModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -55,9 +56,10 @@ namespace HekaMOLD.Enterprise.Controllers
                 firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
                 customers = bObj.GetCustomsList();
+                citys = bObj.GetCityList();
             }
 
-            var jsonResult = Json(new { Items = items, Units = units, Firms = firms, Forexes = forexes, Customers = customers }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Items = items, Units = units, Firms = firms, Forexes = forexes, Customers = customers, Citys = citys }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

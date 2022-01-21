@@ -6,6 +6,10 @@
     $scope.customerFirmList = [];
     $scope.forexList = [];
     $scope.customsList = [];
+    $scope.cityList = [];
+
+    $scope.selectedLoadCity = {};
+    $scope.selectedDischargeCity = {};
 
     $scope.selectedCustomerFirm = {};
     $scope.selectedRow = { Id: 0 };
@@ -78,6 +82,8 @@
         $scope.selectedOrderUploadType = {};
         $scope.selectedEntryCustoms = {};
         $scope.selectedExitCustoms = {};
+        $scope.selectedLoadCity = {};
+
 
         $scope.getNextOrderNo().then(function (rNo) {
             $scope.modelObject.OrderNo = rNo;
@@ -159,6 +165,16 @@
             $scope.modelObject.OrderUploadPointType = $scope.selectedOrderUploadPointType.Id;
         else
             $scope.modelObject.OrderUploadPointType = null;
+
+        if (typeof $scope.selectedLoadCity != 'undefined' && $scope.selectedLoadCity != null)
+            $scope.modelObject.LoadCityId = $scope.selectedLoadCity.Id;
+        else
+            $scope.modelObject.LoadCityId = null;
+
+        if (typeof $scope.selectedDischargeCity != 'undefined' && $scope.selectedDischargeCity != null)
+            $scope.modelObject.DischargeCityId = $scope.selectedDischargeCity.Id;
+        else
+            $scope.modelObject.DischargeCityId = null;
 
         $http.post(HOST_URL + 'LOrder/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -259,6 +275,16 @@
                         $scope.selectedExitCustoms = $scope.customsList.find(d => d.Id == $scope.modelObject.ExitCustomsId);
                     else
                         $scope.selectedExitCustoms = {};
+
+                    if ($scope.modelObject.LoadCityId > 0)
+                        $scope.selectedLoadCity = $scope.cityList.find(d => d.Id == $scope.modelObject.LoadCityId);
+                    else
+                        $scope.selectedLoadCity = {};
+
+                    if ($scope.modelObject.DischargeCityId > 0)
+                        $scope.selectedDischargeCity = $scope.cityList.find(d => d.Id == $scope.modelObject.DischargeCityId);
+                    else
+                        $scope.selectedDischargeCity = {};
 
                     $scope.bindDetails();
                     $scope.calculateHeader();
@@ -658,7 +684,8 @@
                         $scope.customerFirmList = resp.data.Firms;
                         $scope.forexList = resp.data.Forexes;
                         $scope.customsList = resp.data.Customers;
-                        resolve();
+                        $scope.cityList = resp.data.Citys;
+                       resolve();
                     }
                 }).catch(function (err) { });
         });

@@ -59,9 +59,12 @@
     <Compile Include="Context\Models\ActualRouteHistory.cs" />
     <Compile Include="Context\Models\AllocatedCode.cs" />
     <Compile Include="Context\Models\Attachment.cs" />
+    <Compile Include="Context\Models\City.cs" />
     <Compile Include="Context\Models\ContractWorkFlow.cs" />
+    <Compile Include="Context\Models\Country.cs" />
     <Compile Include="Context\Models\Customs.cs" />
     <Compile Include="Context\Models\DeliveryPlan.cs" />
+    <Compile Include="Context\Models\District.cs" />
     <Compile Include="Context\Models\Dye.cs" />
     <Compile Include="Context\Models\EntryQualityData.cs" />
     <Compile Include="Context\Models\EntryQualityDataDetail.cs" />
@@ -80,14 +83,12 @@
     <Compile Include="Context\Models\Item.cs" />
     <Compile Include="Context\Models\ItemCategory.cs" />
     <Compile Include="Context\Models\ItemGroup.cs" />
-    <Compile Include="Context\Models\ItemKnitDensity.cs" />
     <Compile Include="Context\Models\ItemLiveStatus.cs" />
     <Compile Include="Context\Models\ItemOrder.cs" />
     <Compile Include="Context\Models\ItemOrderConsume.cs" />
     <Compile Include="Context\Models\ItemOrderDetail.cs" />
     <Compile Include="Context\Models\ItemOrderItemNeeds.cs" />
     <Compile Include="Context\Models\ItemPrice.cs" />
-    <Compile Include="Context\Models\ItemQualityType.cs" />
     <Compile Include="Context\Models\ItemReceipt.cs" />
     <Compile Include="Context\Models\ItemReceiptConsume.cs" />
     <Compile Include="Context\Models\ItemReceiptDetail.cs" />
@@ -158,8 +159,6 @@
     <Compile Include="Context\Models\WorkOrderDetail.cs" />
     <Compile Include="Context\Models\WorkOrderItemNeeds.cs" />
     <Compile Include="Context\Models\WorkOrderSerial.cs" />
-    <Compile Include="Context\Models\YarnRecipe.cs" />
-    <Compile Include="Context\Models\YarnRecipeType.cs" />
     <Compile Include="Migrations\202201081555394_vehiclelmqwefwee.cs" />
     <Compile Include="Migrations\202201081555394_vehiclelmqwefwee.designer.cs">
       <DependentUpon>202201081555394_vehiclelmqwefwee.cs</DependentUpon>
@@ -238,6 +237,30 @@
     <Compile Include="Migrations\202201192208440_ItemOrderUpdateCalculationTypePrice2.designer.cs">
       <DependentUpon>202201192208440_ItemOrderUpdateCalculationTypePrice2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201200021574_DeleteItemKnitDensity.cs" />
+    <Compile Include="Migrations\202201200021574_DeleteItemKnitDensity.designer.cs">
+      <DependentUpon>202201200021574_DeleteItemKnitDensity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201200048589_DeleteItemQuality.cs" />
+    <Compile Include="Migrations\202201200048589_DeleteItemQuality.designer.cs">
+      <DependentUpon>202201200048589_DeleteItemQuality.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201211437370_CountryAdd.cs" />
+    <Compile Include="Migrations\202201211437370_CountryAdd.designer.cs">
+      <DependentUpon>202201211437370_CountryAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201211537475_CityAdd.cs" />
+    <Compile Include="Migrations\202201211537475_CityAdd.designer.cs">
+      <DependentUpon>202201211537475_CityAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201211859183_DsitrictAdd.cs" />
+    <Compile Include="Migrations\202201211859183_DsitrictAdd.designer.cs">
+      <DependentUpon>202201211859183_DsitrictAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201212040455_LOrderAddedCity.cs" />
+    <Compile Include="Migrations\202201212040455_LOrderAddedCity.designer.cs">
+      <DependentUpon>202201212040455_LOrderAddedCity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -308,6 +331,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201192208440_ItemOrderUpdateCalculationTypePrice2.resx">
       <DependentUpon>202201192208440_ItemOrderUpdateCalculationTypePrice2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201200021574_DeleteItemKnitDensity.resx">
+      <DependentUpon>202201200021574_DeleteItemKnitDensity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201200048589_DeleteItemQuality.resx">
+      <DependentUpon>202201200048589_DeleteItemQuality.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201211437370_CountryAdd.resx">
+      <DependentUpon>202201211437370_CountryAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201211537475_CityAdd.resx">
+      <DependentUpon>202201211537475_CityAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201211859183_DsitrictAdd.resx">
+      <DependentUpon>202201211859183_DsitrictAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201212040455_LOrderAddedCity.resx">
+      <DependentUpon>202201212040455_LOrderAddedCity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

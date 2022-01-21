@@ -25,6 +25,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
         public decimal? CalculationTypePrice { get; set; }
+        public Nullable<int> LoadCityId { get; set; }
+        public Nullable<int> DischargeCityId { get; set; }
         public bool? Closed { get; set; }
         public int? ExitCustomsId { get; set; }
         public int? EntryCustomsId { get; set; }

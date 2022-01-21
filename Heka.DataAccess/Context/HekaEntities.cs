@@ -110,10 +110,6 @@
         public virtual DbSet<WorkOrderDetail> WorkOrderDetail { get; set; }
         public virtual DbSet<ProductWastage> ProductWastage { get; set; }
         public virtual DbSet<ContractWorkFlow> ContractWorkFlow { get; set; }
-        public virtual DbSet<ItemQualityType> ItemQualityType { get; set; }
-        public virtual DbSet<ItemKnitDensity> ItemKnitDensity { get; set; }
-        public virtual DbSet<YarnRecipe> YarnRecipe { get; set; }
-        public virtual DbSet<YarnRecipeType> YarnRecipeType { get; set; }
         public virtual DbSet<Models.Vehicle> Vehicle { get; set; }
         public virtual DbSet<VehicleCare> VehicleCare { get; set; }
         public virtual DbSet<VehicleCareType> VehicleCareType { get; set; }
@@ -122,6 +118,9 @@
         public virtual DbSet<VehicleNotification> VehicleNotification { get; set; }
         public virtual DbSet<VehicleTire> VehicleTire { get; set; }
         public virtual DbSet<VehicleType> VehicleType { get; set; }
+        public virtual DbSet<Country> Country { get; set; }
+        public virtual DbSet<City> City { get; set; }
+        public virtual DbSet<District> District { get; set; }
 
     }
 }

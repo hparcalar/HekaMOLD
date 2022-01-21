@@ -63,6 +63,13 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("Warehouse1")]
         public Nullable<int> OutWarehouseId { get; set; }
+
+        [ForeignKey("LoadCity")]
+        public Nullable<int> LoadCityId { get; set; }
+
+        [ForeignKey("DischargeCity")]
+        public Nullable<int> DischargeCityId { get; set; }
+
         public Nullable<int> PlantId { get; set; }
         public string Explanation { get; set; }
         public Nullable<int> OrderStatus { get; set; }
@@ -91,6 +98,10 @@ namespace Heka.DataAccess.Context
         public virtual SyncPoint SyncPoint { get; set; }
         public virtual Warehouse Warehouse { get; set; }
         public virtual Warehouse Warehouse1 { get; set; }
+
+        public virtual City LoadCity { get; set; }
+        public virtual City DischargeCity { get; set; }
+
 
         [InverseProperty("ItemOrder")]
         public virtual ICollection<ItemOrderDetail> ItemOrderDetail { get; set; }

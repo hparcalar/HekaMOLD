@@ -1,4 +1,4 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Production;
+﻿using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using System;
@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class ProcessGroupController : Controller
+    public class CityController : Controller
     {
-        // GET: ProcessGroup
+        // GET: City
         public ActionResult Index()
         {
             return View();
@@ -18,15 +18,34 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
-
         [HttpGet]
-        public JsonResult GetProcessGroupList()
+        public JsonResult GetSelectables()
         {
-            ProcessGroupModel[] result = new ProcessGroupModel[0];
+            CountryModel[] countries = new CountryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetProcessGroupList();
+                countries = bObj.GetCountryList();
+
+            }
+
+            var jsonResult = Json(new
+            {
+                Countries = countries,
+
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetCityList()
+        {
+            CityModel[] result = new CityModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.GetCityList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -37,10 +56,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ProcessGroupModel model = null;
+            CityModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetProcessGroup(rid);
+                model = bObj.GetCity(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -54,7 +73,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteProcessGroup(rid);
+                    result = bObj.DeleteCity(rid);
                 }
 
                 if (result.Result)
@@ -69,14 +88,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ProcessGroupModel model)
+        public JsonResult SaveModel(CityModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateProcessGroup(model);
+                    result = bObj.SaveOrUpdateCity(model);
                 }
 
                 if (result.Result)

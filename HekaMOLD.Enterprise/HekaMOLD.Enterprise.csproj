@@ -143,10 +143,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
+    <Compile Include="Controllers\CityController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ContractWorksController.cs" />
+    <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\CustomsController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
+    <Compile Include="Controllers\DistrictController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
@@ -4072,11 +4075,17 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="FrontEndLogic\City\index.js" />
+    <Content Include="FrontEndLogic\City\list.js" />
     <Content Include="FrontEndLogic\ContractWorks\index.js" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
+    <Content Include="FrontEndLogic\Country\index.js" />
+    <Content Include="FrontEndLogic\Country\list.js" />
     <Content Include="FrontEndLogic\Customs\index.js" />
     <Content Include="FrontEndLogic\Customs\list.js" />
     <Content Include="FrontEndLogic\Delivery\planning.js" />
+    <Content Include="FrontEndLogic\District\index.js" />
+    <Content Include="FrontEndLogic\District\list.js" />
     <Content Include="FrontEndLogic\Document\index.js" />
     <Content Include="FrontEndLogic\Document\list.js" />
     <Content Include="FrontEndLogic\Document\preview.js" />
@@ -4680,6 +4689,12 @@
     <Content Include="Views\LOrder\List.cshtml" />
     <Content Include="Views\Customs\Index.cshtml" />
     <Content Include="Views\Customs\List.cshtml" />
+    <Content Include="Views\Country\Index.cshtml" />
+    <Content Include="Views\Country\List.cshtml" />
+    <Content Include="Views\City\Index.cshtml" />
+    <Content Include="Views\City\List.cshtml" />
+    <Content Include="Views\District\Index.cshtml" />
+    <Content Include="Views\District\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

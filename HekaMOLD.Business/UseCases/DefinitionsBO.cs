@@ -3813,6 +3813,7 @@ namespace HekaMOLD.Business.UseCases
         }
         #endregion
 
+
         #region PROCESS GROUP BUSINESS
         public ProcessGroupModel[] GetProcessGroupList()
         {
@@ -3915,6 +3916,322 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        #endregion
+
+        #region COUNTRY BUSINESS
+        public CountryModel[] GetCountryList()
+        {
+            List<CountryModel> data = new List<CountryModel>();
+
+            var repo = _unitOfWork.GetRepository<Country>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                CountryModel containerObj = new CountryModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateCountry(CountryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.CountryName))
+                    throw new Exception("Ülke adı girilmelidir.");
+
+
+                var repo = _unitOfWork.GetRepository<Country>();
+
+                if (repo.Any(d => (d.CountryName == model.CountryName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı isme sahip başka bir ülke mevcuttur. Lütfen farklı bir isim giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Country();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteCountry(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Country>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public CountryModel GetCountry(int id)
+        {
+            CountryModel model = new CountryModel { };
+
+            var repo = _unitOfWork.GetRepository<Country>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region CITY BUSINESS
+        public CityModel[] GetCityList()
+        {
+            List<CityModel> data = new List<CityModel>();
+
+            var repo = _unitOfWork.GetRepository<City>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                CityModel containerObj = new CityModel();
+                containerObj.CountryName = d.Country != null ? d.Country.CountryName : "";
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateCity(CityModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.CityName))
+                    throw new Exception("Şehir adı girilmelidir.");
+
+                if (string.IsNullOrEmpty(Convert.ToString( model.CountryId )))
+                    throw new Exception("Ülke Seçilmelidir");
+
+                var repo = _unitOfWork.GetRepository<City>();
+
+                if (repo.Any(d => (d.CityName == model.CityName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı isme sahip başka bir şehir mevcuttur. Lütfen farklı bir isim giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new City();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteCity(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<City>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public CityModel GetCity(int id)
+        {
+            CityModel model = new CityModel { };
+
+            var repo = _unitOfWork.GetRepository<City>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region DISTRICT BUSINESS
+        public DistrictModel[] GetDistrictList()
+        {
+            List<DistrictModel> data = new List<DistrictModel>();
+
+            var repo = _unitOfWork.GetRepository<District>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                DistrictModel containerObj = new DistrictModel();
+                containerObj.CityName = d.City != null ? d.City.CityName : "";
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateDistrict(DistrictModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.DistrictName))
+                    throw new Exception("İlçe adı girilmelidir.");
+
+                if (string.IsNullOrEmpty(Convert.ToString(model.CityId) ))
+                    throw new Exception("Şehir Seçilmelidir");
+
+                var repo = _unitOfWork.GetRepository<District>();
+
+                if (repo.Any(d => (d.DistrictName == model.DistrictName)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı isme sahip başka bir ilçe mevcuttur. Lütfen farklı bir isim giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new District();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteDistrict(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<District>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public DistrictModel GetDistrict(int id)
+        {
+            DistrictModel model = new DistrictModel { };
+
+            var repo = _unitOfWork.GetRepository<District>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
         #endregion
 
         #region WORK ORDER CATEGORY BUSINESS
