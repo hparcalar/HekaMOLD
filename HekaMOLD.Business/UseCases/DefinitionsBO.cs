@@ -1166,6 +1166,9 @@ namespace HekaMOLD.Business.UseCases
             repo.GetAll().ToList().ForEach(d =>
             {
                 CustomsModel containerObj = new CustomsModel();
+                containerObj.CityName = d.City != null ? d.City.CityName : "";
+                containerObj.PostCode = d.City != null ? d.City.PostCode : "";
+                containerObj.CountryName = d.City != null ? d.City.Country.CountryName : "";
                 d.MapTo(containerObj);
                 data.Add(containerObj);
             });
@@ -1250,6 +1253,111 @@ namespace HekaMOLD.Business.UseCases
             CustomsModel model = new CustomsModel { };
 
             var repo = _unitOfWork.GetRepository<Customs>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model.CityName = dbObj.City != null ? dbObj.City.CityName:"";
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region CUSTOMSDOOR BUSIENSS
+        public CustomsDoorModel[] GetCustomsDoorList()
+        {
+            List<CustomsDoorModel> data = new List<CustomsDoorModel>();
+
+            var repo = _unitOfWork.GetRepository<CustomsDoor>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                CustomsDoorModel containerObj = new CustomsDoorModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateCustomsDoor(CustomsDoorModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.CustomsDoorCode))
+                    throw new Exception("Gümrük kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.CustomsDoorName))
+                    throw new Exception("Gümrük adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<CustomsDoor>();
+
+                if (repo.Any(d => (d.CustomsDoorCode == model.CustomsDoorCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir kod mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new CustomsDoor();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteCustomsDoor(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CustomsDoor>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public CustomsDoorModel GetCustomsDoor(int id)
+        {
+            CustomsDoorModel model = new CustomsDoorModel { };
+
+            var repo = _unitOfWork.GetRepository<CustomsDoor>();
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {
@@ -3812,7 +3920,6 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
         #endregion
-
 
         #region PROCESS GROUP BUSINESS
         public ProcessGroupModel[] GetProcessGroupList()

@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Gümrük Tanımları";
+    ViewBag.Title = "Gümrük Kapı Tanımları";
 }
 
-<div ng-controller="customsCtrl">
+<div ng-controller="customsDoorCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -14,7 +14,7 @@
                 <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
                     @ViewBag.Title
                 </h1>
-
+                 
                 <!-- Progress enabled state -->
                 <button type="button" class="btn btn-sm btn-dark mx-2" ng-show="saveStatus==1" data-kt-indicator="on">
                     <span class="indicator-label">
@@ -31,7 +31,7 @@
             <div class="d-flex align-items-center py-1">
                 <!--begin::Wrapper-->
                 <div class="me-4">
-                    <a href="@Url.Action("List","Customs")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
+                    <a href="@Url.Action("List","CustomsDoor")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
@@ -103,27 +103,23 @@
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
                 <div class="col-xxl-6">
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şehir</label>
+
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gümrük Kapı Kodu</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <select ng-options="item.PostCode +' / '+ item.CityName +' / '+ item.CountryName for item in cityList"
-                                ng-model="selectedCity" data-control="select2" class="form-select form-select-solid" data-allow-clear="true" data-placeholder="-- Seçiniz --">
-                        </select>
-                    </div>
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gümrük Kodu</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.CustomsCode" placeholder="" />
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.CustomsDoorCode" placeholder="" />
                     </div>
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gümrük Adı</label>
+                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gümrük Kapı Adı</label>
                     <!--begin::Input group-->
                     <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.CustomsName" placeholder="" />
+                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.CustomsDoorName" placeholder="" />
                     </div>
-
                 </div>
                 <!--end::Col-->
+                <div class="col-xxl-6">
+
+                </div>
             </div>
             <!--end::Row-->
         </div>
@@ -133,7 +129,5 @@
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
-    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-    <script src="~/Scripts/dx.all.js"></script>
-    <script src="~/FrontEndLogic/Customs/index.js"></script>
+    <script src="~/FrontEndLogic/CustomsDoor/index.js"></script>
 }

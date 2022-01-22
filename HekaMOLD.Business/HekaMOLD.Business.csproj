@@ -149,6 +149,7 @@
     <Compile Include="Models\DataTransfer\Layout\LayoutObjectTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\CityModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\CountryModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\CustomsDoorModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\CustomsModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\DistrictModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\FirmTariffModel.cs" />

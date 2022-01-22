@@ -1,30 +1,15 @@
-﻿app.controller('customsCtrl', function ($scope, $http) {
+﻿app.controller('customsDoorCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
 
-    $scope.selectedCity = {};
-    $scope.cityList = [];
-
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
     }
-    $scope.loadSelectables = function () {
-        var prmReq = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'Customs/GetSelectables', {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        $scope.cityList = resp.data.Citys;
-                        resolve(resp.data);
-                    }
-                }).catch(function (err) { });
-        });
 
-        return prmReq;
-    }
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu gümrüğü silmek istediğinizden emin misiniz?",
+            message: "Bu Gümrük kapısını silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
                 confirm: {
@@ -39,7 +24,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'Customs/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'CustomsDoor/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -61,12 +46,7 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        if (typeof $scope.selectedCity != 'undefined' && $scope.selectedCity != null)
-            $scope.modelObject.CityId = $scope.selectedCity.Id;
-        else
-            $scope.modelObject.CityId = null;
-
-        $http.post(HOST_URL + 'Customs/SaveModel', $scope.modelObject, 'json')
+        $http.post(HOST_URL + 'CustomsDoor/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -83,25 +63,15 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'Customs/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'CustomsDoor/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
-
-                    if ($scope.modelObject.CityId > 0)
-                        $scope.selectedCity = $scope.cityList.find(d => d.Id == $scope.modelObject.CityId);
-                    else
-                        $scope.selectedCity = {};
                 }
             }).catch(function (err) { });
     }
 
     // ON LOAD EVENTS
-    DevExpress.localization.locale('tr');
-    $scope.loadSelectables().then(function () {
-        if (PRM_ID > 0)
-            $scope.bindModel(PRM_ID);
-        else
-            $scope.bindModel(0);
-    });
+    if (PRM_ID > 0)
+        $scope.bindModel(PRM_ID);
 });

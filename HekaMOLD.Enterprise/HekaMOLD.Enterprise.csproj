@@ -148,6 +148,7 @@
     <Compile Include="Controllers\ContractWorksController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\CustomsController.cs" />
+    <Compile Include="Controllers\CustomsDoorController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DistrictController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
@@ -4081,6 +4082,8 @@
     <Content Include="FrontEndLogic\Core\record-manager.js" />
     <Content Include="FrontEndLogic\Country\index.js" />
     <Content Include="FrontEndLogic\Country\list.js" />
+    <Content Include="FrontEndLogic\CustomsDoor\index.js" />
+    <Content Include="FrontEndLogic\CustomsDoor\list.js" />
     <Content Include="FrontEndLogic\Customs\index.js" />
     <Content Include="FrontEndLogic\Customs\list.js" />
     <Content Include="FrontEndLogic\Delivery\planning.js" />
@@ -4695,6 +4698,8 @@
     <Content Include="Views\City\List.cshtml" />
     <Content Include="Views\District\Index.cshtml" />
     <Content Include="Views\District\List.cshtml" />
+    <Content Include="Views\Customsdoor\Index.cshtml" />
+    <Content Include="Views\Customsdoor\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

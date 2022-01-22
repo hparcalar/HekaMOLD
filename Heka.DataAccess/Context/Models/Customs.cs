@@ -14,6 +14,9 @@ namespace Heka.DataAccess.Context.Models
         public int Id { get; set; }
         public string CustomsCode { get; set; }
         public string CustomsName { get; set; }
+        [ForeignKey("City")]
+        public int? CityId { get; set; }
+
 
         public Nullable<int> PlantId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
@@ -21,13 +24,13 @@ namespace Heka.DataAccess.Context.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
 
+        public virtual City City { get; set; }
+
         [InverseProperty("CustomsEntry")]
         public virtual ICollection<ItemOrder> ItemOrderByEntries { get; set; }
 
         [InverseProperty("CustomsExit")]
         public virtual ICollection<ItemOrder> ItemOrderByExits { get; set; }
 
-        //[InverseProperty("Customs")]
-        //public virtual ICollection<ItemOrder> ItemOrder2 { get; set; }
     }
 }

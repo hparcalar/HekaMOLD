@@ -63,6 +63,7 @@
     <Compile Include="Context\Models\ContractWorkFlow.cs" />
     <Compile Include="Context\Models\Country.cs" />
     <Compile Include="Context\Models\Customs.cs" />
+    <Compile Include="Context\Models\CustomsDoor.cs" />
     <Compile Include="Context\Models\DeliveryPlan.cs" />
     <Compile Include="Context\Models\District.cs" />
     <Compile Include="Context\Models\Dye.cs" />
@@ -261,6 +262,14 @@
     <Compile Include="Migrations\202201212040455_LOrderAddedCity.designer.cs">
       <DependentUpon>202201212040455_LOrderAddedCity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201221441037_customsUpdate2.cs" />
+    <Compile Include="Migrations\202201221441037_customsUpdate2.designer.cs">
+      <DependentUpon>202201221441037_customsUpdate2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201221445529_customsUpdate3.cs" />
+    <Compile Include="Migrations\202201221445529_customsUpdate3.designer.cs">
+      <DependentUpon>202201221445529_customsUpdate3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -349,6 +358,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201212040455_LOrderAddedCity.resx">
       <DependentUpon>202201212040455_LOrderAddedCity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201221441037_customsUpdate2.resx">
+      <DependentUpon>202201221441037_customsUpdate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201221445529_customsUpdate3.resx">
+      <DependentUpon>202201221445529_customsUpdate3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

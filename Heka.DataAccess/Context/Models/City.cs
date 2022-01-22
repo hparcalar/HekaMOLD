@@ -11,6 +11,7 @@ namespace Heka.DataAccess.Context.Models
             this.District =new HashSet<District>();
             this.ItemOrderByLoad = new HashSet<ItemOrder>();
             this.ItemOrderByDischarge = new HashSet<ItemOrder>();
+            this.Customs = new HashSet<Customs>();
 
         }
         public int Id { get; set; }
@@ -32,6 +33,9 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("City")]
         public virtual ICollection<District> District { get; set; }
+
+        [InverseProperty("City")]
+        public virtual ICollection<Customs> Customs { get; set; }
 
         [InverseProperty("LoadCity")]
         public virtual ICollection<ItemOrder> ItemOrderByLoad { get; set; }

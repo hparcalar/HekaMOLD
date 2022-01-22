@@ -1,4 +1,4 @@
-﻿app.controller('customsListCtrl', function ($scope, $http) {
+﻿app.controller('customsDoorListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS
@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'Customs/GetCustomsList', function (data) {
+                    return $.getJSON(HOST_URL + 'CustomsDoor/GetCustomsDoorList', function (data) {
 
                     });
                 },
@@ -36,11 +36,8 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'CustomsCode', caption: 'Gümrük Kodu' },
-                { dataField: 'CustomsName', caption: 'Gümrük Adı' },
-                { dataField: 'PostCode', caption: 'Posta Kodu' },
-                { dataField: 'CityName', caption: 'Şehir' },
-                { dataField: 'CountryName', caption: 'Ülke' },
+                { dataField: 'CustomsDoorCode', caption: 'Gümrük Kapı Kodu' },
+                { dataField: 'CustomsDoorName', caption: 'Gümrük Kapı Adı' },
                 {
                     type: "buttons",
                     buttons: [
@@ -50,7 +47,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'Customs?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'CustomsDoor?rid=' + e.row.data.Id;
                             }
                         }
                     ]

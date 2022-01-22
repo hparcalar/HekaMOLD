@@ -6,44 +6,27 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class CustomsController : Controller
+    public class CustomsDoorController : Controller
     {
-        // GET: Customs
+        // GET: Customsdoor
         public ActionResult Index()
         {
             return View();
         }
+
         public ActionResult List()
         {
             return View();
         }
+
         [HttpGet]
-        public JsonResult GetSelectables()
+        public JsonResult GetCustomsDoorList()
         {
-            CityModel[] citys = new CityModel[0];
+            CustomsDoorModel[] result = new CustomsDoorModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                citys = bObj.GetCityList();
-
-            }
-
-            var jsonResult = Json(new
-            {
-                Citys = citys,
-
-            }, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-        [HttpGet]
-        public JsonResult GetCustomsList()
-        {
-            CustomsModel[] result = new CustomsModel[0];
-
-            using (DefinitionsBO bObj = new DefinitionsBO())
-            {
-                result = bObj.GetCustomsList();
+                result = bObj.GetCustomsDoorList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -54,10 +37,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            CustomsModel model = null;
+            CustomsDoorModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetCustoms(rid);
+                model = bObj.GetCustomsDoor(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -71,7 +54,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteCustoms(rid);
+                    result = bObj.DeleteCustomsDoor(rid);
                 }
 
                 if (result.Result)
@@ -86,14 +69,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(CustomsModel model)
+        public JsonResult SaveModel(CustomsDoorModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateCustoms(model);
+                    result = bObj.SaveOrUpdateCustomsDoor(model);
                 }
 
                 if (result.Result)
