@@ -27,6 +27,7 @@ namespace Heka.DataAccess.Context
             this.ItemSerial = new HashSet<ItemSerial>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
             this.ProductWastage = new HashSet<ProductWastage>();
+            this.ItemLoadDetail = new HashSet<ItemLoadDetail>();
         }
 
         public int Id { get; set; }
@@ -113,6 +114,9 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Item")]
         public virtual ICollection<ItemPrice> ItemPrice { get; set; }
+
+        [InverseProperty("Item")]
+        public virtual ICollection<ItemLoadDetail> ItemLoadDetail { get; set; }
 
     }
 }

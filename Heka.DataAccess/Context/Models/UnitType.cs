@@ -27,6 +27,7 @@ namespace Heka.DataAccess.Context
             this.ProductRecipeDetail = new HashSet<ProductRecipeDetail>();
             this.ItemOrderConsume = new HashSet<ItemOrderConsume>();
             this.FirmTariff = new HashSet<FirmTariff>();
+            this.ItemLoadDetail = new HashSet<ItemLoadDetail>();
 
         }
 
@@ -65,5 +66,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("UnitType")]
         public virtual ICollection<FirmTariff> FirmTariff { get; set; }
+
+        [InverseProperty("UnitType")]
+        public virtual ICollection<ItemLoadDetail> ItemLoadDetail { get; set; }
     }
 }

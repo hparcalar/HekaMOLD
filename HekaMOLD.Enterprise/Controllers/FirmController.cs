@@ -28,7 +28,23 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public JsonResult GetSelectables()
+        {
+            ForexTypeModel[] forexTypes = new ForexTypeModel[0];
 
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                forexTypes = bObj.GetForexTypeList();
+            }
+
+            var jsonResult = Json(new
+            {
+                ForexTypes = forexTypes
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         [HttpGet]
         public JsonResult GetFirmList()
         {
@@ -115,6 +131,19 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
 
+        }
+                [HttpGet]
+        public JsonResult GetFirmCode()
+        {
+           string firmCode = "";
+
+            using (RequestBO bObj = new RequestBO())
+            {
+                firmCode = bObj.GetNextFirmCode();
+            }
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(firmCode), FirmCode = firmCode }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
     }
 }

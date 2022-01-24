@@ -150,8 +150,8 @@
                                 <!-- Logistic begin -->
                                 @if (Html.IsGranted("ModuleLogisticsOrder"))
                                 {
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "LOrder$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "3") ? "show":"")">
-                                        <span class="menu-link @(Regex.IsMatch(ctrl, "LOrder$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "3") ? "active" : "")">
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "LOrder$") || (Regex.IsMatch(ctrl, "Load$") && receiptCtg == "3") ? "show":"")">
+                                        <span class="menu-link @(Regex.IsMatch(ctrl, "LOrder$") || (Regex.IsMatch(ctrl, "Load$") && receiptCtg == "3") ? "active" : "")">
                                             <span class="menu-icon">
                                                 <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
                                                 <span class="svg-icon svg-icon-dark svg-icon-2">
@@ -196,7 +196,7 @@
                                                 </a>
                                             </div>
                                             <div class="menu-item">
-                                                <a class="menu-link @(Regex.IsMatch(ctrl, "LOrder$") ? "active" : "")" href="@Url.Action("List", "LOrder")">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "Load$") ? "active" : "")" href="@Url.Action("List", "Load")">
                                                     <span class="menu-bullet">
                                                         <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                             <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -917,7 +917,7 @@
                                                         </span>
                                                         <!--end::Svg Icon-->
                                                     </span>
-                                                    <span class="menu-title">Stok</span>
+                                                    <span class="menu-title">Mal</span>
                                                     <span class="menu-arrow"></span>
                                                 </span>
                                                 <div class="menu-sub menu-sub-accordion">
@@ -926,7 +926,7 @@
                                                             <span class="menu-bullet">
                                                                 <span class="bullet bullet-dot"></span>
                                                             </span>
-                                                            <span class="menu-title">Stok Tanım</span>
+                                                            <span class="menu-title">Mal Tanım</span>
                                                         </a>
                                                     </div>
                                                     <div class="menu-item">
@@ -934,7 +934,7 @@
                                                             <span class="menu-bullet">
                                                                 <span class="bullet bullet-dot"></span>
                                                             </span>
-                                                            <span class="menu-title">Stok Grupları</span>
+                                                            <span class="menu-title">Mal Grupları</span>
                                                         </a>
                                                     </div>
                                                     <div class="menu-item">
@@ -942,7 +942,7 @@
                                                             <span class="menu-bullet">
                                                                 <span class="bullet bullet-dot"></span>
                                                             </span>
-                                                            <span class="menu-title">Stok Kategorileri</span>
+                                                            <span class="menu-title">Mal Kategorileri</span>
                                                         </a>
                                                     </div>
                                                     <div class="menu-item">

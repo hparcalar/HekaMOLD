@@ -2,7 +2,10 @@
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
+    $scope.forexTypeList = [];
 
+
+    $scope.selectedForexType = {};
     $scope.selectedFirmType = {};
     $scope.firmTypeList = [{ Id: 1, Text: 'Tedarikçi' },
     { Id: 2, Text: 'Müşteri' }, { Id: 3, Text: 'Fason' }];
@@ -10,8 +13,43 @@
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
         $scope.selectedFirmType = {};
+        $scope.selectedForexType = {};
+        $scope.getNextFirmCode().then(function (rNo) {
+            $scope.modelObject.FirmCode = rNo;
+            $scope.$apply();
+        });
     }
+    $scope.loadSelectables = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Firm/GetSelectables', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.forexTypeList = resp.data.ForexTypes;
+                        resolve();
+                    }
+                }).catch(function (err) { });
+        });
 
+        return prms;
+    }
+    $scope.getNextFirmCode = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Firm/GetFirmCode', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            resolve(resp.data.FirmCode);
+                        }
+                        else {
+                            toastr.error('Sıradaki sipariş numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prms;
+    }
     $scope.performDelete = function () {
         bootbox.confirm({
             message: "Bu firma tanımını silmek istediğinizden emin misiniz?",
@@ -57,6 +95,11 @@
         else
             $scope.modelObject.FirmType = null;
 
+        if (typeof $scope.selectedForexType != 'undefined' && $scope.selectedForexType != null)
+            $scope.modelObject.ForexTypeId = $scope.selectedForexType.Id;
+        else
+            $scope.modelObject.ForexTypeId = null;
+
         $http.post(HOST_URL + 'Firm/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -86,6 +129,10 @@
                     else {
                         $scope.selectedFirmType = {};
                     }
+                    if ($scope.modelObject.ForexTypeId > 0)
+                        $scope.selectedForexType = $scope.forexTypeList.find(d => d.Id == $scope.modelObject.ForexTypeId);
+                    else
+                        $scope.selectedForexType = {};
 
                     $scope.bindAuthorList();
                 }
@@ -248,6 +295,14 @@
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
-    if (PRM_ID > 0)
-        $scope.bindModel(PRM_ID);
+    $scope.loadSelectables().then(function () {
+        if (PRM_ID > 0)
+            $scope.bindModel(PRM_ID);
+        else {
+            $scope.getNextFirmCode().then(function (rNo) {
+                $scope.modelObject.FirmCode = rNo;
+                $scope.$apply();
+            });
+        }
+    });
 });

@@ -22,11 +22,16 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string Email { get; set; }
         public string TaxNo { get; set; }
         public string TaxOffice { get; set; }
+        public decimal? LadametrePrice { get; set; }
+        public decimal? MeterCupPrice { get; set; }
+        public decimal? WeightPrice { get; set; }
+        public int? ForexTypeId { get; set; }
         public bool? IsApproved { get; set; }
         public FirmAuthorModel[] Authors { get; set; }
 
         #region VISUAL ELEMENTS
         public string FirmTypeStr { get; set; }
+        public string ForexTypeCode { get; set; }
         #endregion
     }
 }

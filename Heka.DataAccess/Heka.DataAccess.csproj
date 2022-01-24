@@ -85,6 +85,8 @@
     <Compile Include="Context\Models\ItemCategory.cs" />
     <Compile Include="Context\Models\ItemGroup.cs" />
     <Compile Include="Context\Models\ItemLiveStatus.cs" />
+    <Compile Include="Context\Models\ItemLoad.cs" />
+    <Compile Include="Context\Models\ItemLoadDetail.cs" />
     <Compile Include="Context\Models\ItemOrder.cs" />
     <Compile Include="Context\Models\ItemOrderConsume.cs" />
     <Compile Include="Context\Models\ItemOrderDetail.cs" />
@@ -270,6 +272,14 @@
     <Compile Include="Migrations\202201221445529_customsUpdate3.designer.cs">
       <DependentUpon>202201221445529_customsUpdate3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201231748374_ItemLoadAdded.cs" />
+    <Compile Include="Migrations\202201231748374_ItemLoadAdded.designer.cs">
+      <DependentUpon>202201231748374_ItemLoadAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201232225148_firmUpdate%28Ladametre%29.cs" />
+    <Compile Include="Migrations\202201232225148_firmUpdate%28Ladametre%29.designer.cs">
+      <DependentUpon>202201232225148_firmUpdate%28Ladametre%29.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -364,6 +374,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201221445529_customsUpdate3.resx">
       <DependentUpon>202201221445529_customsUpdate3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201231748374_ItemLoadAdded.resx">
+      <DependentUpon>202201231748374_ItemLoadAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201232225148_firmUpdate%28Ladametre%29.resx">
+      <DependentUpon>202201232225148_firmUpdate%28Ladametre%29.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

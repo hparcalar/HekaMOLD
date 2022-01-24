@@ -204,9 +204,9 @@
                     dataSource: $scope.itemList,
                     remoteOperations: true,
                     columns: [
-                        { dataField: 'ItemNo', caption: 'Ürün Kodu' },
-                        { dataField: 'ItemName', caption: 'Ürün Adı' },
-                        { dataField: 'ItemTypeStr', caption: 'Ürün Türü' },
+                        { dataField: 'ItemNo', caption: 'Mal Kodu' },
+                        { dataField: 'ItemName', caption: 'Mal Adı' },
+                        { dataField: 'ItemTypeStr', caption: 'Mal Türü' },
                         { dataField: 'GroupName', caption: 'Grup' },
                         { dataField: 'CategoryName', caption: 'Kategori' }
                     ],
@@ -517,7 +517,7 @@
             },
             columns: [
                 {
-                    dataField: 'ItemId', caption: 'Ürün Kodu',
+                    dataField: 'ItemId', caption: 'Mal Kodu',
                     lookup: {
                         dataSource: $scope.itemList,
                         valueExpr: "Id",
@@ -535,7 +535,7 @@
                             container.text(options.displayValue);
                     }
                 },
-                { dataField: 'ItemName', caption: 'Ürün Adı', allowEditing: false },
+                { dataField: 'ItemName', caption: 'Mal Adı', allowEditing: false },
                 {
                     dataField: 'UnitId', caption: 'Birim',
                     allowSorting: false,

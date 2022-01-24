@@ -454,6 +454,8 @@
         $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType:'ItemOrder' });
     }
 
+
+
     $scope.showAttachmentList = function () {
         $scope.$broadcast('showAttachmentList',
             { RecordId: $scope.modelObject.Id, RecordType: 1 });

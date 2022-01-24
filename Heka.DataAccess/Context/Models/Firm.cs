@@ -32,6 +32,9 @@ namespace Heka.DataAccess.Context
             this.VehicleCare = new HashSet<VehicleCare>();
             this.VehicleTire = new HashSet<VehicleTire>();
             this.FirmTariff = new HashSet<FirmTariff>();
+            this.ItemOrderByShipper = new HashSet<ItemLoad>();
+            this.ItemOrderByBuyer = new HashSet<ItemLoad>();
+
         }
 
         public int Id { get; set; }
@@ -54,6 +57,13 @@ namespace Heka.DataAccess.Context
         public string Email { get; set; }
         public string TaxNo { get; set; }
         public string TaxOffice { get; set; }
+
+        public decimal? LadametrePrice { get; set; }
+        public decimal? MeterCupPrice { get; set; }
+        public decimal? WeightPrice { get; set; }
+        [ForeignKey("ForexType")]
+        public int? ForexTypeId { get; set; }
+
         public Nullable<bool> IsApproved { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
@@ -63,7 +73,8 @@ namespace Heka.DataAccess.Context
         
         public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
         public virtual Plant Plant { get; set; }
-        
+        public virtual ForexType ForexType { get; set; }
+
         [InverseProperty("Firm")]
         public virtual ICollection<FirmAuthor> FirmAuthor { get; set; }
 
@@ -78,10 +89,10 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Firm")]
         public virtual ICollection<ItemOrder> ItemOrder { get; set; }
-        //[InverseProperty("Firm")]
-        //public virtual ICollection<ItemOrder> ItemOrder1 { get; set; }
-        //[InverseProperty("Firm")]
-        //public virtual ICollection<ItemOrder> ItemOrder2 { get; set; }
+        [InverseProperty("FirmShipper")]
+        public virtual ICollection<ItemLoad> ItemOrderByShipper { get; set; }
+        [InverseProperty("Firmbuyer")]
+        public virtual ICollection<ItemLoad> ItemOrderByBuyer { get; set; }
 
         [InverseProperty("Firm")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }

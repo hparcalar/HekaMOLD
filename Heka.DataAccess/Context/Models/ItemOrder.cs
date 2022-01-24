@@ -22,8 +22,9 @@ namespace Heka.DataAccess.Context
             this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
             this.ItemOrderItemNeeds = new HashSet<ItemOrderItemNeeds>();
             this.ItemReceipt = new HashSet<ItemReceipt>();
+            this.ItemLoad = new HashSet<ItemLoad>();
         }
-    
+
         public int Id { get; set; }
         public string OrderNo { get; set; }
         public string DocumentNo { get; set; }
@@ -44,13 +45,6 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("Firm")]
         public Nullable<int> CustomerFirmId { get; set; }
-
-        ////Gönderici Firma
-        //[ForeignKey("Firm1")]
-        //public int? ShipperFirmId { get; set; }
-
-        //[ForeignKey("Firm2")]
-        //public int? BuyerFirmId { get; set; }
 
         [ForeignKey("CustomsEntry")]
         public int? EntryCustomsId { get; set; }
@@ -102,7 +96,6 @@ namespace Heka.DataAccess.Context
         public virtual City LoadCity { get; set; }
         public virtual City DischargeCity { get; set; }
 
-
         [InverseProperty("ItemOrder")]
         public virtual ICollection<ItemOrderDetail> ItemOrderDetail { get; set; }
 
@@ -111,5 +104,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ItemOrder")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
+
+        [InverseProperty("ItemOrder")]
+        public virtual ICollection<ItemLoad> ItemLoad { get; set; }
     }
 }

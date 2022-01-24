@@ -9,6 +9,7 @@
 
 namespace Heka.DataAccess.Context
 {
+    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -25,8 +26,10 @@ namespace Heka.DataAccess.Context
             this.TransactionLog = new HashSet<TransactionLog>();
             this.UserAuth = new HashSet<UserAuth>();
             this.Shift = new HashSet<Shift>();
+            this.ItemLoad = new HashSet<ItemLoad>();
+
         }
-    
+
         public int Id { get; set; }
         public string UserCode { get; set; }
         public string UserName { get; set; }
@@ -67,5 +70,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("User")]
         public virtual ICollection<Shift> Shift { get; set; }
+
+        [InverseProperty("User")]
+        public virtual ICollection<ItemLoad> ItemLoad { get; set; }
     }
 }

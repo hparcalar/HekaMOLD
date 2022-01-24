@@ -92,6 +92,7 @@
     <Compile Include="Models\Constants\MachineStatusType.cs" />
     <Compile Include="Models\Constants\MoldStatus.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
+    <Compile Include="Models\Constants\OrderLoadStatusType.cs" />
     <Compile Include="Models\Constants\OrderProductBreedType.cs" />
     <Compile Include="Models\Constants\OrderTransactionDirectionType.cs" />
     <Compile Include="Models\Constants\OrderUploadPointType.cs" />

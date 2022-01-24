@@ -4028,18 +4028,21 @@ namespace HekaMOLD.Business.UseCases
         #region COUNTRY BUSINESS
         public CountryModel[] GetCountryList()
         {
-            List<CountryModel> data = new List<CountryModel>();
+            CountryModel[] data = new CountryModel[0];
 
             var repo = _unitOfWork.GetRepository<Country>();
 
-            repo.GetAll().ToList().ForEach(d =>
-            {
-                CountryModel containerObj = new CountryModel();
-                d.MapTo(containerObj);
-                data.Add(containerObj);
-            });
+            data = repo.GetAll()
+                .Select(d => new CountryModel
+                {
+                    Id = d.Id,
+                    DoubleCode = d.DoubleCode,
+                    ThreeCode = d.ThreeCode,
+                    CountryName = d.CountryName ,
+                    NumberCode = d.NumberCode,
+                }).ToArray();
 
-            return data.ToArray();
+            return data;
         }
 
         public BusinessResult SaveOrUpdateCountry(CountryModel model)
@@ -4131,19 +4134,23 @@ namespace HekaMOLD.Business.UseCases
         #region CITY BUSINESS
         public CityModel[] GetCityList()
         {
-            List<CityModel> data = new List<CityModel>();
+            CityModel[] data = new CityModel[0];
 
             var repo = _unitOfWork.GetRepository<City>();
 
-            repo.GetAll().ToList().ForEach(d =>
-            {
-                CityModel containerObj = new CityModel();
-                containerObj.CountryName = d.Country != null ? d.Country.CountryName : "";
-                d.MapTo(containerObj);
-                data.Add(containerObj);
-            });
+            data = repo.GetAll()
+                .Select(d => new CityModel
+                {
+                    Id = d.Id,
+                    CityName = d.CityName,
+                    CountryId = d.CountryId,
+                    PlateCode = d.PlateCode,
+                    NumberCode = d.NumberCode,
+                    //CountryName = d.Country != null ? d.Country.CountryName : "",
+                    PostCode = d.PostCode,
+                }).ToArray();
 
-            return data.ToArray();
+            return data;
         }
 
         public BusinessResult SaveOrUpdateCity(CityModel model)

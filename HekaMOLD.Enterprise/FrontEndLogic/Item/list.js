@@ -42,9 +42,9 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'ItemNo', caption: 'Stok No' },
-                { dataField: 'ItemName', caption: 'Stok Adı' },
-                { dataField: 'ItemTypeStr', caption: 'Stok Türü' },
+                { dataField: 'ItemNo', caption: 'Mal No' },
+                { dataField: 'ItemName', caption: 'Mal Adı' },
+                { dataField: 'ItemTypeStr', caption: 'Mal Türü' },
                 { dataField: 'CategoryName', caption: 'Kategori' },
                 { dataField: 'GroupName', caption: 'Grup' },
                 { dataField: 'TotalInQuantity', caption: 'Giriş', format: { type: "fixedPoint", precision: 2 } },

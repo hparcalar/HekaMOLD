@@ -1,14 +1,10 @@
 ﻿using Heka.DataAccess.Context;
 using Heka.DataAccess.UnitOfWork;
-using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core.Base;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases.Core
 {
@@ -82,7 +78,28 @@ namespace HekaMOLD.Business.UseCases.Core
 
             return default;
         }
-        
+        public string GetNextFirmCode()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Firm>();
+                var lastReceiptNo = repo.GetAll().OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(Convert.ToString( lastReceiptNo)))
+                    lastReceiptNo = 0;
+
+                return "FR"+string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+
         public BusinessResult UpdateConsume(int? consumedId, int? consumerId, decimal usedQuantity)
         {
             BusinessResult result = new BusinessResult();

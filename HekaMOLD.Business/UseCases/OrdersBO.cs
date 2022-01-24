@@ -1,5 +1,4 @@
 ﻿using Heka.DataAccess.Context;
-using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Order;
@@ -8,8 +7,6 @@ using HekaMOLD.Business.UseCases.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -45,7 +42,7 @@ namespace HekaMOLD.Business.UseCases
                 .ToArray();
         }
 
-        public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model, bool detailCanBeNull=false)
+        public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model, bool detailCanBeNull = false)
         {
             BusinessResult result = new BusinessResult();
 
@@ -400,13 +397,13 @@ namespace HekaMOLD.Business.UseCases
                         OrderStatus = d.OrderStatus,
                         OverallTotal = d.OverallTotal,
                         Quantity = d.Quantity,
-                        ShortWidth=d.ShortWidth,
+                        ShortWidth = d.ShortWidth,
                         LongWidth = d.LongWidth,
                         Height = d.Height,
                         Weight = d.Weight,
                         Volume = d.Volume,
                         Stackable = d.Stackable,
-                        PackageInNumber= d.PackageInNumber,
+                        PackageInNumber = d.PackageInNumber,
                         SubTotal = d.SubTotal,
                         TaxAmount = d.TaxAmount,
                         TaxIncluded = d.TaxIncluded,
@@ -658,7 +655,7 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemOrderConsume>();
-                var existingConsume = repo.Get(d => 
+                var existingConsume = repo.Get(d =>
                     (d.ConsumedReceiptDetailId == consumedId || d.ConsumerReceiptDetailId == consumerId)
                     && d.ItemOrderDetailId == orderDetailId);
                 if (existingConsume == null)
@@ -824,7 +821,7 @@ namespace HekaMOLD.Business.UseCases
 
                 data = repo.Filter(d => d.ItemOrder.PlantId == plantId
                     && d.ItemOrder.OrderType == (int)ItemOrderType.Sale
-                    && d.OrderStatus != (int)OrderStatusType.Cancelled 
+                    && d.OrderStatus != (int)OrderStatusType.Cancelled
                     && d.OrderStatus != (int)OrderStatusType.Completed)
                     .ToList()
                     .Select(d => new ItemOrderDetailModel
@@ -874,7 +871,7 @@ namespace HekaMOLD.Business.UseCases
                 if (dbDetail == null)
                     throw new Exception("Sipariş kalemi bulunamadı.");
 
-                
+
 
                 result.Result = false;
             }

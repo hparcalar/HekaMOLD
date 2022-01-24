@@ -155,6 +155,7 @@
     <Compile Include="Controllers\EntryQualityController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
+    <Compile Include="Controllers\LoadController.cs" />
     <Compile Include="Controllers\LOrderController.cs" />
     <Compile Include="Controllers\MachineGroupController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
@@ -4700,6 +4701,8 @@
     <Content Include="Views\District\List.cshtml" />
     <Content Include="Views\Customsdoor\Index.cshtml" />
     <Content Include="Views\Customsdoor\List.cshtml" />
+    <Content Include="Views\Load\Index.cshtml" />
+    <Content Include="Views\Load\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

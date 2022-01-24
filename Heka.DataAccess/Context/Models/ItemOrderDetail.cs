@@ -9,6 +9,7 @@
 
 namespace Heka.DataAccess.Context
 {
+    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -68,6 +69,8 @@ namespace Heka.DataAccess.Context
         public int? PackageInNumber { get; set; }
         [ForeignKey("ItemRequestDetail")]
         public Nullable<int> ItemRequestDetailId { get; set; }
+        [ForeignKey("ItemLoadDetail")]
+        public Nullable<int> ItemLoadDetailId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
@@ -78,6 +81,7 @@ namespace Heka.DataAccess.Context
         public virtual ItemOrder ItemOrder { get; set; }
         public virtual ItemRequestDetail ItemRequestDetail { get; set; }
         public virtual UnitType UnitType { get; set; }
+        public virtual ItemLoadDetail ItemLoadDetail { get; set; }
 
         [InverseProperty("ItemOrderDetail")]
         public virtual ICollection<ItemOrderItemNeeds> ItemOrderItemNeeds { get; set; }
