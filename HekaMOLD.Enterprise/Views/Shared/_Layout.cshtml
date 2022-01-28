@@ -183,7 +183,7 @@
                                                 </a>
                                             </div>
                                             <div class="menu-item">
-                                                <a class="menu-link @(Regex.IsMatch(ctrl, "LOrder$") ? "active" : "")" href="@Url.Action("List", "LOrder")">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "LOrder$") ? "active" : "")" href="@Url.Action("UnapprovedOrder", "LOrder")">
                                                     <span class="menu-bullet">
                                                         <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                             <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -192,7 +192,7 @@
                                                             </g>
                                                         </svg>
                                                     </span>
-                                                    <span class="menu-title">Onaysız Siparişler</span>
+                                                    <span class="menu-title">Onay Bekleyen Siparişler</span>
                                                 </a>
                                             </div>
                                             <div class="menu-item">

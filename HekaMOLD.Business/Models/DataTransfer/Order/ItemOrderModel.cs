@@ -18,6 +18,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         //Gönderici Firma
         public int? ShipperFirmId { get; set; }
         public int? BuyerFirmId { get; set; }
+        public Nullable<int> CreatUserId { get; set; }
         public decimal? OveralWeight { get; set; }
         //Toplam Hacim
         public decimal? OveralVolume { get; set; }
@@ -65,6 +66,12 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string OrderTransactionDirectionTypeStr { get; set; }
         public string EntrycustomsName { get; set; }
         public string ExitcustomsName { get; set; }
+        public string CreatUserCode { get; set; }
+        public string CreatUserName { get; set; }
+        public string LoadCityName { get; set; }
+        public string LoadCountryName { get; set; }
+        public string DischangeCityName { get; set; }
+        public string dischangeCountryName { get; set; }
 
         #endregion
     }

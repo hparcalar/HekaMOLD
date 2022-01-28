@@ -15,15 +15,15 @@ namespace HekaMOLD.Business.UseCases.Core
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemOrder>();
-                string lastReceiptNo = repo.Filter(d => d.PlantId == plantId && d.OrderType == (int)orderType)
-                    .OrderByDescending(d => d.OrderNo)
-                    .Select(d => d.OrderNo)
+                int lastOrderNo = repo.Filter(d => d.PlantId == plantId && d.OrderType == (int)orderType)
+                    .OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
                     .FirstOrDefault();
 
-                if (string.IsNullOrEmpty(lastReceiptNo))
-                    lastReceiptNo = "0";
+                if (string.IsNullOrEmpty(Convert.ToString(lastOrderNo)))
+                    lastOrderNo = 0;
 
-                return string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
+                return DateTime.Now.Year+"-" +string.Format("{0:000000}", Convert.ToInt32(lastOrderNo) + 1);
             }
             catch (Exception)
             {

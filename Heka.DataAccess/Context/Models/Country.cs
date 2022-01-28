@@ -9,6 +9,10 @@ namespace Heka.DataAccess.Context.Models
         public Country()
         {
             this.City = new HashSet<City>();
+            this.Firm = new HashSet<Firm>();
+            this.ItemLoadByCountryShipper = new HashSet<ItemLoad>();
+            this.ItemLoadByCountryBuyer = new HashSet<ItemLoad>();
+
         }
         public int Id { get; set; }
         public string DoubleCode { get; set; }
@@ -23,5 +27,14 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("Country")]
         public virtual ICollection<City> City { get; set; }
+
+        [InverseProperty("Country")]
+        public virtual ICollection<Firm> Firm { get; set; }
+
+        [InverseProperty("CountryShipper")]
+        public virtual ICollection<ItemLoad> ItemLoadByCountryShipper { get; set; }
+
+        [InverseProperty("CountryBuyer")]
+        public virtual ICollection<ItemLoad> ItemLoadByCountryBuyer { get; set; }
     }
 }

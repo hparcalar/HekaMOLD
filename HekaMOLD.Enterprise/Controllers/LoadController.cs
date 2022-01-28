@@ -1,4 +1,7 @@
-﻿using HekaMOLD.Business.Models.Operational;
+﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Logistics;
+using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.UseCases;
 using System;
 using System.Web.Mvc;
 
@@ -16,54 +19,148 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
-        //[HttpGet]
-        //public JsonResult GetNextReceiptNo()
-        //{
-        //    string receiptNo = "";
+        [HttpGet]
+        public JsonResult GetNextloadCode(int directionId)
+        {
+            string loadCode = "";
 
-        //    using (RequestBO bObj = new RequestBO())
-        //    {
-        //        receiptNo = bObj.GetNextRequestNo(Convert.ToInt32(Request.Cookies["PlantId"].Value));
-        //    }
+            using (LoadBO bObj = new LoadBO())
+            {
+                loadCode = bObj.GetNextLoadCode(Convert.ToInt32(Request.Cookies["PlantId"].Value), directionId);
+            }
 
-        //    var jsonResult = Json(new { Result = !string.IsNullOrEmpty(receiptNo), ReceiptNo = receiptNo }, JsonRequestBehavior.AllowGet);
-        //    jsonResult.MaxJsonLength = int.MaxValue;
-        //    return jsonResult;
-        //}
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(loadCode), LoadCode = loadCode }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        [HttpGet]
+        public JsonResult GetSelectables()
+        {
+            ItemModel[] items = new ItemModel[0];
+            UnitTypeModel[] units = new UnitTypeModel[0];
+            FirmModel[] firms = new FirmModel[0];
+            ForexTypeModel[] forexes = new ForexTypeModel[0];
+            CustomsModel[] customs = new CustomsModel[0];
+            UserModel[] users = new UserModel[0];
+            CityModel[] citys = new CityModel[0];
+            CountryModel[] countrys = new CountryModel[0];
 
-        //[HttpGet]
-        //public JsonResult GetSelectables()
-        //{
-        //    ItemModel[] items = new ItemModel[0];
-        //    UnitTypeModel[] units = new UnitTypeModel[0];
-        //    ItemRequestCategoryModel[] categories = new ItemRequestCategoryModel[0];
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                items = bObj.GetItemList();
+                units = bObj.GetUnitTypeList();
+                firms = bObj.GetFirmList();
+                forexes = bObj.GetForexTypeList();
+                customs = bObj.GetCustomsList();
+                citys = bObj.GetCityList();
+                countrys = bObj.GetCountryList();
+            }
+            using (UsersBO bObj =new UsersBO())
+            {
+                users = bObj.GetUserList();
+            }
 
-        //    using (DefinitionsBO bObj = new DefinitionsBO())
-        //    {
-        //        items = bObj.GetItemList();
-        //        units = bObj.GetUnitTypeList();
-        //    }
+            var jsonResult = Json(new { 
+                Items = items, 
+                Units = units, 
+                Firms = firms, 
+                Forexes = forexes, 
+                Customs = customs , 
+                Users = users,
+                Citys = citys,
+                Countrys = countrys
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        [HttpGet]
+        public JsonResult GetItemLoadList()
+        {
+            ItemLoadModel[] result = new ItemLoadModel[0];
 
-        //    using (RequestBO bObj = new RequestBO())
-        //    {
-        //        categories = bObj.GetRequestCategoryList();
-        //    }
+            using (LoadBO bObj = new LoadBO())
+            {
+                result = bObj.GetItemLoadList();
+            }
 
-        //    var jsonResult = Json(new { Items = items, Units = units, Categories = categories }, JsonRequestBehavior.AllowGet);
-        //    jsonResult.MaxJsonLength = int.MaxValue;
-        //    return jsonResult;
-        //}
-        //[HttpPost]
-        //public JsonResult CreateLoad(int rid)
-        //{
-        //    BusinessResult result = new BusinessResult();
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        [HttpGet]
+        public JsonResult BindModel(int rid)
+        {
+            ItemLoadModel model = null;
+            using (LoadBO bObj = new LoadBO())
+            {
+                model = bObj.GetLoad(rid);
+            }
 
-        //    using (RequestBO bObj = new RequestBO())
-        //    {
-        //        result = bObj.CreatePurchaseOrder(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
-        //    }
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult DeleteModel(int rid)
+        {
+            try
+            {
+                BusinessResult result = null;
+                using (LoadBO bObj = new LoadBO())
+                {
+                    result = bObj.DeleteLoad(rid);
+                }
 
-        //    return Json(result);
-        //}
+                if (result.Result)
+                    return Json(new { Status = 1 });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult SaveModel(ItemLoadModel model)
+        {
+            try
+            {
+                BusinessResult result = null;
+                using (LoadBO bObj = new LoadBO())
+                {
+                    model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+
+                    //model.OrderType = (int)ItemOrderType.Purchase;
+                    result = bObj.SaveOrUpdateLoad(model);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+
+
+        }
+        [HttpGet]
+        public JsonResult GetNextReceiptNo()
+        {
+            string receiptNo = "";
+
+            using (RequestBO bObj = new RequestBO())
+            {
+                receiptNo = bObj.GetNextRequestNo(Convert.ToInt32(Request.Cookies["PlantId"].Value));
+            }
+
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(receiptNo), ReceiptNo = receiptNo }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+
+
     }
 }

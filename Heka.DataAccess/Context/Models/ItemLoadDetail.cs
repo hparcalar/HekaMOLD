@@ -8,7 +8,6 @@ namespace Heka.DataAccess.Context.Models
     {
         public ItemLoadDetail()
         {
-            this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
         }
         public int Id { get; set; }
 
@@ -21,6 +20,10 @@ namespace Heka.DataAccess.Context.Models
 
         [ForeignKey("UnitType")]
         public Nullable<int> UnitId { get; set; }
+
+        [ForeignKey("ItemOrderDetail")]
+        public Nullable<int> ItemOrderDetailId { get; set; }
+
 
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<decimal> NetQuantity { get; set; }
@@ -35,6 +38,7 @@ namespace Heka.DataAccess.Context.Models
         //istiflenebilir
         public bool? Stackable { get; set; }
         public decimal? Ladametre { get; set; }
+        public Nullable<int> LoadStatus { get; set; }
 
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
@@ -44,8 +48,7 @@ namespace Heka.DataAccess.Context.Models
         public virtual ItemLoad ItemLoad { get; set; }
         public virtual Item Item { get; set; }
         public virtual UnitType UnitType { get; set; }
+        public virtual ItemOrderDetail ItemOrderDetail { get; set; }
 
-        [InverseProperty("ItemLoadDetail")]
-        public virtual ICollection<ItemOrderDetail> ItemOrderDetail { get; set; }
     }
 }

@@ -280,6 +280,62 @@
     <Compile Include="Migrations\202201232225148_firmUpdate%28Ladametre%29.designer.cs">
       <DependentUpon>202201232225148_firmUpdate%28Ladametre%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201242111028_ItemLoadDetailUpdate.cs" />
+    <Compile Include="Migrations\202201242111028_ItemLoadDetailUpdate.designer.cs">
+      <DependentUpon>202201242111028_ItemLoadDetailUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.cs" />
+    <Compile Include="Migrations\202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.designer.cs">
+      <DependentUpon>202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.cs" />
+    <Compile Include="Migrations\202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.designer.cs">
+      <DependentUpon>202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.cs" />
+    <Compile Include="Migrations\202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.designer.cs">
+      <DependentUpon>202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.cs" />
+    <Compile Include="Migrations\202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.designer.cs">
+      <DependentUpon>202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.cs" />
+    <Compile Include="Migrations\202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.designer.cs">
+      <DependentUpon>202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201261113074_UpdateItemLoad%28OrderNo%29.cs" />
+    <Compile Include="Migrations\202201261113074_UpdateItemLoad%28OrderNo%29.designer.cs">
+      <DependentUpon>202201261113074_UpdateItemLoad%28OrderNo%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201271324033_ItemOrderUpdate%28UserAdded%29.cs" />
+    <Compile Include="Migrations\202201271324033_ItemOrderUpdate%28UserAdded%29.designer.cs">
+      <DependentUpon>202201271324033_ItemOrderUpdate%28UserAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201271328263_ItemOrderUpdate%28UserAdded2%29.cs" />
+    <Compile Include="Migrations\202201271328263_ItemOrderUpdate%28UserAdded2%29.designer.cs">
+      <DependentUpon>202201271328263_ItemOrderUpdate%28UserAdded2%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.cs" />
+    <Compile Include="Migrations\202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.designer.cs">
+      <DependentUpon>202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.cs" />
+    <Compile Include="Migrations\202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.designer.cs">
+      <DependentUpon>202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201281420386_FirmUpdate%28CityAndCountryAdd%29.cs" />
+    <Compile Include="Migrations\202201281420386_FirmUpdate%28CityAndCountryAdd%29.designer.cs">
+      <DependentUpon>202201281420386_FirmUpdate%28CityAndCountryAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.cs" />
+    <Compile Include="Migrations\202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.designer.cs">
+      <DependentUpon>202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.cs" />
+    <Compile Include="Migrations\202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.designer.cs">
+      <DependentUpon>202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -380,6 +436,48 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201232225148_firmUpdate%28Ladametre%29.resx">
       <DependentUpon>202201232225148_firmUpdate%28Ladametre%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201242111028_ItemLoadDetailUpdate.resx">
+      <DependentUpon>202201242111028_ItemLoadDetailUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.resx">
+      <DependentUpon>202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.resx">
+      <DependentUpon>202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.resx">
+      <DependentUpon>202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.resx">
+      <DependentUpon>202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.resx">
+      <DependentUpon>202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201261113074_UpdateItemLoad%28OrderNo%29.resx">
+      <DependentUpon>202201261113074_UpdateItemLoad%28OrderNo%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201271324033_ItemOrderUpdate%28UserAdded%29.resx">
+      <DependentUpon>202201271324033_ItemOrderUpdate%28UserAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201271328263_ItemOrderUpdate%28UserAdded2%29.resx">
+      <DependentUpon>202201271328263_ItemOrderUpdate%28UserAdded2%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.resx">
+      <DependentUpon>202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.resx">
+      <DependentUpon>202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201281420386_FirmUpdate%28CityAndCountryAdd%29.resx">
+      <DependentUpon>202201281420386_FirmUpdate%28CityAndCountryAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.resx">
+      <DependentUpon>202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.resx">
+      <DependentUpon>202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

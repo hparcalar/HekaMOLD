@@ -32,6 +32,7 @@ namespace Heka.DataAccess.Context
             this.VehicleCare = new HashSet<VehicleCare>();
             this.VehicleTire = new HashSet<VehicleTire>();
             this.FirmTariff = new HashSet<FirmTariff>();
+            this.ItemOrderByCustomer = new HashSet<ItemLoad>();
             this.ItemOrderByShipper = new HashSet<ItemLoad>();
             this.ItemOrderByBuyer = new HashSet<ItemLoad>();
 
@@ -61,8 +62,13 @@ namespace Heka.DataAccess.Context
         public decimal? LadametrePrice { get; set; }
         public decimal? MeterCupPrice { get; set; }
         public decimal? WeightPrice { get; set; }
+        [ForeignKey("City")]
+        public int? CityId { get; set; }
         [ForeignKey("ForexType")]
         public int? ForexTypeId { get; set; }
+
+        [ForeignKey("Country")]
+        public int? CountryId { get; set; }
 
         public Nullable<bool> IsApproved { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
@@ -74,6 +80,8 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
         public virtual Plant Plant { get; set; }
         public virtual ForexType ForexType { get; set; }
+        public virtual City City { get; set; }
+        public virtual Country Country { get; set; }
 
         [InverseProperty("Firm")]
         public virtual ICollection<FirmAuthor> FirmAuthor { get; set; }
@@ -89,8 +97,13 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Firm")]
         public virtual ICollection<ItemOrder> ItemOrder { get; set; }
+
+        [InverseProperty("FirmCustomer")]
+        public virtual ICollection<ItemLoad> ItemOrderByCustomer { get; set; }
+
         [InverseProperty("FirmShipper")]
         public virtual ICollection<ItemLoad> ItemOrderByShipper { get; set; }
+
         [InverseProperty("Firmbuyer")]
         public virtual ICollection<ItemLoad> ItemOrderByBuyer { get; set; }
 

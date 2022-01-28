@@ -3,17 +3,26 @@
 
     $scope.saveStatus = 0;
     $scope.forexTypeList = [];
+    $scope.cityList = [];
+    $scope.countryList = [];
+
 
 
     $scope.selectedForexType = {};
+    $scope.selectedCity = {};
+    $scope.selectedCountry = {};
+
     $scope.selectedFirmType = {};
     $scope.firmTypeList = [{ Id: 1, Text: 'Tedarikçi' },
-    { Id: 2, Text: 'Müşteri' }, { Id: 3, Text: 'Fason' }];
+        { Id: 2, Text: 'Müşteri' }, { Id: 3, Text: 'Tedarikçi + Müşteri' }];
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
         $scope.selectedFirmType = {};
         $scope.selectedForexType = {};
+        $scope.selectedCity = {};
+        $scope.selectedCountry = {};
+
         $scope.getNextFirmCode().then(function (rNo) {
             $scope.modelObject.FirmCode = rNo;
             $scope.$apply();
@@ -25,6 +34,9 @@
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.forexTypeList = resp.data.ForexTypes;
+                        $scope.cityList = resp.data.Citys;
+                        $scope.countryList = resp.data.Countrys;
+
                         resolve();
                     }
                 }).catch(function (err) { });
@@ -95,6 +107,18 @@
         else
             $scope.modelObject.FirmType = null;
 
+        if (typeof $scope.selectedCity != 'undefined' && $scope.selectedCity != null) {
+            $scope.modelObject.CityId = $scope.selectedCity.Id;
+        }
+        else
+            $scope.modelObject.CityId = null;
+
+        if (typeof $scope.selectedCountry != 'undefined' && $scope.selectedCountry != null) {
+            $scope.modelObject.CountryId = $scope.selectedCountry.Id;
+        }
+        else
+            $scope.modelObject.CountryId = null;
+
         if (typeof $scope.selectedForexType != 'undefined' && $scope.selectedForexType != null)
             $scope.modelObject.ForexTypeId = $scope.selectedForexType.Id;
         else
@@ -133,6 +157,16 @@
                         $scope.selectedForexType = $scope.forexTypeList.find(d => d.Id == $scope.modelObject.ForexTypeId);
                     else
                         $scope.selectedForexType = {};
+
+                    if ($scope.modelObject.CityId > 0)
+                        $scope.selectedCity = $scope.cityList.find(d => d.Id == $scope.modelObject.CityId);
+                    else
+                        $scope.selectedCity = {};
+
+                    if ($scope.modelObject.CountryId > 0)
+                        $scope.selectedCountry = $scope.countryList.find(d => d.Id == $scope.modelObject.CountryId);
+                    else
+                        $scope.selectedcity = {};
 
                     $scope.bindAuthorList();
                 }

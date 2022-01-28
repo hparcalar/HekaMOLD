@@ -24,6 +24,10 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { NotifyType.PostureResolved, "Duruş Tamamlandı" },
             { NotifyType.ItemAtMinimumInWarehouse, "Malzeme Azalıyor" },
             { NotifyType.ItemAtMaximumInWarehouse, "Malzeme Gereğinden Fazla Birikti" },
+            { NotifyType.ItemLoadWaitForApproval, "Yük Talebi" },
+            { NotifyType.ItemLoadIsApproved, "Yük Sonucu" },
+
         };
     }
 }
+

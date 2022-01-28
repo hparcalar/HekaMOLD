@@ -27,11 +27,16 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public decimal? WeightPrice { get; set; }
         public int? ForexTypeId { get; set; }
         public bool? IsApproved { get; set; }
+        public int? CityId { get; set; }
+        public int? CountryId { get; set; }
         public FirmAuthorModel[] Authors { get; set; }
 
         #region VISUAL ELEMENTS
         public string FirmTypeStr { get; set; }
         public string ForexTypeCode { get; set; }
+        public string CityName { get; set; }
+        public string CountryName { get; set; }
+
         #endregion
     }
 }

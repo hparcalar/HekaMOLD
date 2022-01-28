@@ -103,17 +103,22 @@
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
                 <div class="col-xxl-6">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Firma Kodu</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.FirmCode" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
 
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Firma Kodu</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.FirmCode" placeholder="" />
-                    </div>
-
-                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Firma Adı</label>
-                    <!--begin::Input group-->
-                    <div class="mb-5">
-                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.FirmName" placeholder="" />
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Firma Adı</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.FirmName" placeholder="" />
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -133,21 +138,34 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Adres</label>
+                        <div class="col-lg-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ladametre Fiyat</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <textarea name="notes" class="form-control form-control-solid" ng-model="modelObject.Address" rows="3" placeholder=""></textarea>
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.LadametrePrice" placeholder="" />
+                            </div>
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Hacim Fiyat (m3)</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.MeterCupPrice" placeholder="" />
                             </div>
                         </div>
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Adres-2</label>
+                        <div class="col-lg-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ağırlık Fiyat (Kg)</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <textarea name="notes" class="form-control form-control-solid" ng-model="modelObject.Address2" rows="3" placeholder=""></textarea>
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.WeightPrice" placeholder="" />
+                            </div>
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Doviz Türü</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <select aria-label="Doviz Türü" ng-options="item.ForexTypeCode for item in forexTypeList"
+                                        ng-model="selectedForexType" class="form-select form-select-solid">
+                                </select>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="container-fluid" style="margin-top:30px;">
                         <div class="row gy-5 gx-xl-8 bg-white">
@@ -156,17 +174,17 @@
                                     <button class="nav-link active " id="pills-author-tab" data-bs-toggle="pill" data-bs-target="#pills-author" type="button" role="tab" aria-controls="pills-author" aria-selected="true">Yetkili</button>
                                 </li>
                                 @*<li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-insurance-tab" data-bs-toggle="pill" data-bs-target="#pills-insurance" type="button" role="tab" aria-controls="pills-insurance" aria-selected="false">Banka Bilgiler</button>
-                    </li>*@
+                                        <button class="nav-link" id="pills-insurance-tab" data-bs-toggle="pill" data-bs-target="#pills-insurance" type="button" role="tab" aria-controls="pills-insurance" aria-selected="false">Banka Bilgiler</button>
+                                    </li>*@
                                 @*<li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-tire-tab" data-bs-toggle="pill" data-bs-target="#pills-tire" type="button" role="tab" aria-controls="pills-tire" aria-selected="false">Adresler</button>
-                    </li>*@
+                                        <button class="nav-link" id="pills-tire-tab" data-bs-toggle="pill" data-bs-target="#pills-tire" type="button" role="tab" aria-controls="pills-tire" aria-selected="false">Adresler</button>
+                                    </li>*@
                                 @*<li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-tire-tab" data-bs-toggle="pill" data-bs-target="#pills-tire" type="button" role="tab" aria-controls="pills-tire" aria-selected="false">Firma Tipi</button>
-                    </li>*@
+                                        <button class="nav-link" id="pills-tire-tab" data-bs-toggle="pill" data-bs-target="#pills-tire" type="button" role="tab" aria-controls="pills-tire" aria-selected="false">Firma Tipi</button>
+                                    </li>*@
                                 @*<li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-tire-tab" data-bs-toggle="pill" data-bs-target="#pills-tire" type="button" role="tab" aria-controls="pills-tire" aria-selected="false">Tarife</button>
-                    </li>*@
+                                        <button class="nav-link" id="pills-tire-tab" data-bs-toggle="pill" data-bs-target="#pills-tire" type="button" role="tab" aria-controls="pills-tire" aria-selected="false">Tarife</button>
+                                    </li>*@
                             </ul>
                             <div class="tab-content" id="pills-tabContent">
                                 <div class="tab-pane fade show active" id="pills-author" role="tabpanel" aria-labelledby="pills-author-tab">
@@ -226,12 +244,12 @@
                     </div>
 
                     @*<div class="card">
-            <div class="card-body py-0 mb-4">
-                <div class="dx-viewport">
-                    <div id="authorList"></div>
-                </div>
-            </div>
-        </div>*@
+                            <div class="card-body py-0 mb-4">
+                                <div class="dx-viewport">
+                                    <div id="authorList"></div>
+                                </div>
+                            </div>
+                        </div>*@
                 </div>
                 <!--end::Col-->
                 <div class="col-xxl-6">
@@ -281,29 +299,37 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ladametre Fiyat</label>
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Adres</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.LadametrePrice" placeholder="" />
-                            </div>
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Hacim Fiyat (m3)</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.MeterCupPrice" placeholder="" />
+                                <textarea name="notes" class="form-control form-control-solid" ng-model="modelObject.Address" rows="3" placeholder=""></textarea>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ağırlık Fiyat (Kg)</label>
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Adres-2</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.WeightPrice" placeholder="" />
+                                <textarea name="notes" class="form-control form-control-solid" ng-model="modelObject.Address2" rows="3" placeholder=""></textarea>
                             </div>
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Doviz Türü</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İlçe</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <select aria-label="Doviz Türü" ng-options="item.ForexTypeCode for item in forexTypeList"
-                                        ng-model="selectedForexType" class="form-select form-select-solid">
+                                <select aria-label="İlçe" ng-options="item.CityName for item in cityList"
+                                        ng-model="selectedCity" data-control="select2" class="form-select form-select-solid">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ülke</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <select aria-label="Ülke" ng-options="item.CountryName for item in countryList"
+                                        ng-model="selectedCountry" class="form-select form-select-solid">
                                 </select>
                             </div>
                         </div>

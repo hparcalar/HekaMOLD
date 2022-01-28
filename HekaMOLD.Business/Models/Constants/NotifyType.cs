@@ -20,5 +20,7 @@ namespace HekaMOLD.Business.Models.Constants
         PostureResolved=10,
         ItemAtMinimumInWarehouse=11,
         ItemAtMaximumInWarehouse=12,
+        ItemLoadWaitForApproval=13,
+        ItemLoadIsApproved = 14,
     }
 }

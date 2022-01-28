@@ -4121,8 +4121,11 @@
     <Content Include="FrontEndLogic\LayoutObjectType\index.js" />
     <Content Include="FrontEndLogic\LayoutObjectType\list.js" />
     <Content Include="FrontEndLogic\Layout\index.js" />
+    <Content Include="FrontEndLogic\Load\index.js" />
+    <Content Include="FrontEndLogic\Load\list.js" />
     <Content Include="FrontEndLogic\LOrder\index.js" />
     <Content Include="FrontEndLogic\LOrder\list.js" />
+    <Content Include="FrontEndLogic\LOrder\UnapprovedOrder.js" />
     <Content Include="FrontEndLogic\MachineGroup\index.js" />
     <Content Include="FrontEndLogic\MachineGroup\list.js" />
     <Content Include="FrontEndLogic\MachineOnline\online.js" />
@@ -4703,6 +4706,8 @@
     <Content Include="Views\Customsdoor\List.cshtml" />
     <Content Include="Views\Load\Index.cshtml" />
     <Content Include="Views\Load\List.cshtml" />
+    <Content Include="Views\Load\UnapprovedOrder.cshtml" />
+    <Content Include="Views\LOrder\UnapprovedOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

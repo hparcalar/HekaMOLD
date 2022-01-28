@@ -1,4 +1,5 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.Context.Models;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Order;
@@ -28,6 +29,10 @@ namespace HekaMOLD.Business.UseCases
                     LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
                     CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                     CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    LoadCityName = d.LoadCity != null ? d.LoadCity.CityName : "",
+                    // LoadCountryName = d.LoadCity.Country != null ? d.LoadCity.Country.CountryName :"",
+                    DischangeCityName = d.DischargeCity != null ? d.DischargeCity.CityName : "",
+                    // LoadCountryName = d.LoadCity.Country != null ? d.LoadCity.Country.CountryName :"",
                     OrderNo = d.OrderNo,
                     OrderDate = d.OrderDate,
                     DocumentNo = d.DocumentNo,
@@ -41,7 +46,35 @@ namespace HekaMOLD.Business.UseCases
                 .OrderByDescending(d => d.OrderDate)
                 .ToArray();
         }
+        public ItemOrderModel[] GetUnappovedItemOrderList(ItemOrderType orderType)
+        {
+            List<ItemOrderModel> data = new List<ItemOrderModel>();
 
+            var repo = _unitOfWork.GetRepository<ItemOrder>();
+
+            return repo.Filter(d => d.OrderType == (int)orderType && d.OrderStatus == (int)OrderStatusType.Created ).ToList()
+                .Select(d => new ItemOrderModel
+                {
+                    Id = d.Id,
+                    OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                    DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                    LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                    CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                    CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    OrderNo = d.OrderNo,
+                    OrderDate = d.OrderDate,
+                    DocumentNo = d.DocumentNo,
+                    Explanation = d.Explanation,
+                    CustomerFirmId = d.CustomerFirmId,
+                    OrderStatus = d.OrderStatus,
+                    OrderType = d.OrderType,
+                    CalculationTypePrice = d.CalculationTypePrice,
+                    PlantId = d.PlantId,
+                })
+                .OrderByDescending(d => d.OrderDate)
+                .ToArray();
+        }
         public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model, bool detailCanBeNull = false)
         {
             BusinessResult result = new BusinessResult();
@@ -65,7 +98,6 @@ namespace HekaMOLD.Business.UseCases
                     repo.Add(dbObj);
                     newRecord = true;
                 }
-
                 if (!string.IsNullOrEmpty(model.OrderDateStr))
                 {
                     model.OrderDate = DateTime.ParseExact(model.OrderDateStr, "dd.MM.yyyy",
@@ -118,19 +150,19 @@ namespace HekaMOLD.Business.UseCases
                     var deletedDetails = dbObj.ItemOrderDetail.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
                     foreach (var item in deletedDetails)
                     {
-                        if (item.ItemReceiptDetail.Any())
-                            continue;
-                        //throw new Exception("İrsaliyesi girilmiş olan bir sipariş detayı silinemez.");
+                        //if (item.ItemReceiptDetail.Any())
+                        //    continue;
+                        ////throw new Exception("İrsaliyesi girilmiş olan bir sipariş detayı silinemez.");
 
-                        if (item.WorkOrderDetail.Any())
-                            continue;
+                        //if (item.WorkOrderDetail.Any())
+                        //    continue;
 
                         #region SET REQUEST & DETAIL TO APPROVED
-                        if (item.ItemRequestDetail != null)
-                        {
-                            item.ItemRequestDetail.RequestStatus = (int)RequestStatusType.Approved;
-                            item.ItemRequestDetail.ItemRequest.RequestStatus = (int)RequestStatusType.Approved;
-                        }
+                        //if (item.ItemRequestDetail != null)
+                        //{
+                        //    item.ItemRequestDetail.RequestStatus = (int)RequestStatusType.Approved;
+                        //    item.ItemRequestDetail.ItemRequest.RequestStatus = (int)RequestStatusType.Approved;
+                        //}
                         #endregion
 
                         repoDetail.Delete(item);
@@ -162,20 +194,20 @@ namespace HekaMOLD.Business.UseCases
                         dbDetail.LineNumber = lineNo;
 
                         #region SET REQUEST & DETAIL STATUS TO COMPLETE
-                        if (dbDetail.ItemRequestDetailId > 0)
-                        {
-                            var dbRequestDetail = repoRequestDetail.Get(d => d.Id == dbDetail.ItemRequestDetailId);
-                            if (dbRequestDetail != null)
-                            {
-                                dbRequestDetail.RequestStatus = (int)RequestStatusType.Completed;
+                        //if (dbDetail.ItemRequestDetailId > 0)
+                        //{
+                        //    var dbRequestDetail = repoRequestDetail.Get(d => d.Id == dbDetail.ItemRequestDetailId);
+                        //    if (dbRequestDetail != null)
+                        //    {
+                        //        dbRequestDetail.RequestStatus = (int)RequestStatusType.Completed;
 
-                                if (!dbRequestDetail.ItemRequest
-                                    .ItemRequestDetail.Any(d => d.RequestStatus != (int)RequestStatusType.Completed))
-                                {
-                                    dbRequestDetail.ItemRequest.RequestStatus = (int)RequestStatusType.Completed;
-                                }
-                            }
-                        }
+                        //        if (!dbRequestDetail.ItemRequest
+                        //            .ItemRequestDetail.Any(d => d.RequestStatus != (int)RequestStatusType.Completed))
+                        //        {
+                        //            dbRequestDetail.ItemRequest.RequestStatus = (int)RequestStatusType.Completed;
+                        //        }
+                        //    }
+                        //}
                         #endregion
 
                         lineNo++;
@@ -186,21 +218,21 @@ namespace HekaMOLD.Business.UseCases
                 _unitOfWork.SaveChanges();
 
                 #region CREATE NOTIFICATION
-                if (model.OrderType == (int)ItemOrderType.Purchase)
+                if (model.OrderType == (int)ItemOrderType.Sale)
                 {
                     if (newRecord || !repoNotify.Any(d => d.RecordId == dbObj.Id && d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval))
                     {
                         var repoUser = _unitOfWork.GetRepository<User>();
-                        var itemRequestApprovalOwners = repoUser.Filter(d => d.UserRole != null &&
-                            d.UserRole.UserAuth.Any(m => m.UserAuthType.AuthTypeCode == "POApproval" && m.IsGranted == true)).ToArray();
+                        var itemOrderApprovalOwners = repoUser.Filter(d => d.UserRole != null &&
+                            d.UserRole.UserAuth.Any(m => m.UserAuthType.AuthTypeCode == "LOApproval" && m.IsGranted == true)).ToArray();
 
-                        foreach (var poOWNER in itemRequestApprovalOwners)
+                        foreach (var poOWNER in itemOrderApprovalOwners)
                         {
                             base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
                             {
                                 IsProcessed = false,
                                 Message = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate)
-                                + " yeni bir satınalma siparişi oluşturuldu. Onayınız bekleniyor.",
+                                + " yeni bir sipariş oluşturuldu. Onayınız bekleniyor.",
                                 Title = NotifyType.ItemOrderWaitForApproval.ToCaption(),
                                 NotifyType = (int)NotifyType.ItemOrderWaitForApproval,
                                 SeenStatus = 0,
@@ -295,11 +327,16 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemOrder>();
                 var repoDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
-                var repoNeeds = _unitOfWork.GetRepository<ItemOrderItemNeeds>();
+                var repoLoad = _unitOfWork.GetRepository<ItemLoad>();
+
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
                     throw new Exception("Silinmesi istenen sipariş kaydına ulaşılamadı.");
+
+                var dbLoad = repoLoad.Get(d => d.OrderNo == dbObj.OrderNo);
+                if (dbLoad!=null)
+                    throw new Exception("Yüke dönüştürülmüş sipariş silinemez ! Yük No: "+dbLoad.LoadCode);
 
                 if (dbObj.ItemReceipt.Any())
                     throw new Exception("İrsaliyesi girilmiş olan bir sipariş silinemez.");
@@ -322,15 +359,15 @@ namespace HekaMOLD.Business.UseCases
                     }
                 }
 
-                // CLEAR NEEDS
-                if (dbObj.ItemOrderItemNeeds.Any())
-                {
-                    var needs = dbObj.ItemOrderItemNeeds.ToArray();
-                    foreach (var needItem in needs)
-                    {
-                        repoNeeds.Delete(needItem);
-                    }
-                }
+                //// CLEAR NEEDS
+                //if (dbObj.ItemOrderItemNeeds.Any())
+                //{
+                //    var needs = dbObj.ItemOrderItemNeeds.ToArray();
+                //    foreach (var needItem in needs)
+                //    {
+                //        repoNeeds.Delete(needItem);
+                //    }
+                //}
 
                 // CLEAR NOTIFICATIONS
                 if (repoNotify.Any(d => d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval && d.RecordId == dbObj.Id))

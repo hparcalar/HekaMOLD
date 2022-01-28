@@ -9,6 +9,7 @@
 
 namespace Heka.DataAccess.Context
 {
+    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -19,8 +20,10 @@ namespace Heka.DataAccess.Context
         public Invoice()
         {
             this.ItemReceipt = new HashSet<ItemReceipt>();
+            this.ItemLoad = new HashSet<ItemLoad>();
+
         }
-    
+
         public int Id { get; set; }
         public Nullable<int> InvoiceType { get; set; }
         public string InvoiceNo { get; set; }
@@ -48,5 +51,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Invoice")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
+
+        [InverseProperty("Invoice")]
+        public virtual ICollection<ItemLoad> ItemLoad { get; set; }
     }
 }

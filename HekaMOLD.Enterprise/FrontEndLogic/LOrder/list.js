@@ -67,6 +67,10 @@
                 { dataField: 'CustomerFirmCode', caption: 'Müşteri Firma Kodu' },
                 { dataField: 'CustomerFirmName', caption: 'Müşteri Firma Adı' },
                 { dataField: 'OrderStatusStr', caption: 'Durum' },
+                { dataField: 'LoadCityName', caption: 'Yükleme Şehri' },
+                { dataField: 'LoadCountryName', caption: 'Yükleme Ülke' },
+                { dataField: 'DischangeCityName', caption: 'Boşaltma Şehri' },
+                { dataField: 'DischangeCountryName', caption: 'Boşaltma Ülke' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {
                     type: "buttons",

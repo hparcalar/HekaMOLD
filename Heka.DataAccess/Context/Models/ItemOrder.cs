@@ -64,6 +64,9 @@ namespace Heka.DataAccess.Context
         [ForeignKey("DischargeCity")]
         public Nullable<int> DischargeCityId { get; set; }
 
+        [ForeignKey("User")]
+        public Nullable<int> CreatUserId { get; set; }
+
         public Nullable<int> PlantId { get; set; }
         public string Explanation { get; set; }
         public Nullable<int> OrderStatus { get; set; }
@@ -82,11 +85,9 @@ namespace Heka.DataAccess.Context
         public string SyncKey { get; set; }
 
         public virtual Firm Firm { get; set; }
-        //public virtual Firm Firm1 { get; set; }
-        //public virtual Firm Firm2 { get; set; }
         public virtual Customs CustomsEntry { get; set; }
         public virtual Customs CustomsExit { get; set; }
-        //public virtual Customs Customs1 { get; set; }
+        public virtual User User { get; set; }
         public virtual ItemRequest ItemRequest { get; set; }
         public virtual Plant Plant { get; set; }
         public virtual SyncPoint SyncPoint { get; set; }

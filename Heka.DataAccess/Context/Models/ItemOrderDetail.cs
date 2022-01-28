@@ -23,8 +23,9 @@ namespace Heka.DataAccess.Context
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
             this.ItemOrderConsume = new HashSet<ItemOrderConsume>();
             this.WorkOrderDetail = new HashSet<WorkOrderDetail>();
+            this.ItemLoadDetail = new HashSet<ItemLoadDetail>();
         }
-    
+
         public int Id { get; set; }
 
         [ForeignKey("ItemOrder")]
@@ -69,8 +70,6 @@ namespace Heka.DataAccess.Context
         public int? PackageInNumber { get; set; }
         [ForeignKey("ItemRequestDetail")]
         public Nullable<int> ItemRequestDetailId { get; set; }
-        [ForeignKey("ItemLoadDetail")]
-        public Nullable<int> ItemLoadDetailId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
@@ -81,7 +80,6 @@ namespace Heka.DataAccess.Context
         public virtual ItemOrder ItemOrder { get; set; }
         public virtual ItemRequestDetail ItemRequestDetail { get; set; }
         public virtual UnitType UnitType { get; set; }
-        public virtual ItemLoadDetail ItemLoadDetail { get; set; }
 
         [InverseProperty("ItemOrderDetail")]
         public virtual ICollection<ItemOrderItemNeeds> ItemOrderItemNeeds { get; set; }
@@ -94,5 +92,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ItemOrderDetail")]
         public virtual ICollection<WorkOrderDetail> WorkOrderDetail { get; set; }
+
+        [InverseProperty("ItemOrderDetail")]
+        public virtual ICollection<ItemLoadDetail> ItemLoadDetail { get; set; }
     }
 }

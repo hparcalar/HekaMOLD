@@ -23,7 +23,10 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
-
+        public ActionResult UnapprovedOrder()
+        {
+            return View();
+        }
         [HttpGet]
         public JsonResult GetNextOrderNo()
         {
@@ -73,13 +76,13 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 result = bObj.GetItemOrderList(ItemOrderType.Sale);
 
-                foreach (var item in result)
-                {
-                    if (item.OrderStatus == (int)OrderStatusType.Created)
-                        item.OrderStatusStr = "Onaylanması bekleniyor";
-                    if (item.OrderStatus == (int)OrderStatusType.Approved)
-                        item.OrderStatusStr = "Onaylandı.";
-                }
+                //foreach (var item in result)
+                //{
+                //    if (item.OrderStatus == (int)OrderStatusType.Created)
+                //        item.OrderStatusStr = "Onaylanması bekleniyor";
+                //    if (item.OrderStatus == (int)OrderStatusType.Approved)
+                //        item.OrderStatusStr = "Onaylandı.";
+                //}
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -121,8 +124,8 @@ namespace HekaMOLD.Enterprise.Controllers
                         throw new Exception("Sisteme yeniden giriş yapmanız gerekmektedir.");
 
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
-
                     model.OrderType = (int)ItemOrderType.Sale;
+
                     result = bObj.SaveOrUpdateItemOrder(model);
                 }
 
@@ -175,6 +178,28 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(result);
         }
+        [HttpGet]
+        public JsonResult UnapproveOrderList()
+        {
+            ItemOrderModel[] result = new ItemOrderModel[0];
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                result = bObj.GetUnappovedItemOrderList(ItemOrderType.Sale);
+
+                foreach (var item in result)
+                {
+                    if (item.OrderStatus == (int)OrderStatusType.Created)
+                        item.OrderStatusStr = "Onaylanması bekleniyor";
+                    if (item.OrderStatus == (int)OrderStatusType.Approved)
+                        item.OrderStatusStr = "Onaylandı.";
+                }
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         public JsonResult CancelledOrderPrice(int rid)
         {
             BusinessResult result = new BusinessResult();
@@ -213,6 +238,19 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult CreateLoad(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (RequestBO bObj = new RequestBO())
+            {
+                result = bObj.CreateLoad(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+            }
+
+            return Json(result);
         }
     }
 }

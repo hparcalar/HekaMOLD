@@ -1,4 +1,5 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.Context.Models;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
@@ -579,6 +580,100 @@ namespace HekaMOLD.Business.UseCases
 
                 result.Result = true;
                 result.RecordId = dbOrder.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
+
+        #region LOAD CONVERSION BUSINESS
+        public BusinessResult CreateLoad(int orderId, int userId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrder>();
+                var repoLoad = _unitOfWork.GetRepository<ItemLoad>();
+                var repoLoadDetail = _unitOfWork.GetRepository<ItemLoadDetail>();
+                var repoNotify = _unitOfWork.GetRepository<Notification>();
+
+                var dbOrder = repo.Get(d => d.Id == orderId);
+                if (dbOrder == null)
+                    throw new Exception("Sipariş bilgisine ulaşılamadı.");
+
+                // CREATE LOAD
+                var dbLoad = new ItemLoad
+                {
+                    CreatDate = DateTime.Now,
+                    OrderNo = dbOrder.OrderNo,
+                    CreatedUserId = userId,
+                    DateOfNeed = dbOrder.DateOfNeed,
+                    LoadOutDate = dbOrder.LoadOutDate,
+                    OrderUploadType = dbOrder.OrderUploadType,
+                    OrderUploadPointType = dbOrder.OrderUploadPointType,
+                    OrderTransactionDirectionType = dbOrder.OrderTransactionDirectionType,
+                    OrderCalculationType = dbOrder.OrderCalculationType,
+                    CustomerFirmId = dbOrder.CustomerFirmId,
+                    EntryCustomsId =dbOrder.EntryCustomsId,
+                    ExitCustomsId = dbOrder.ExitCustomsId,
+                    OveralLadametre = dbOrder.OveralLadametre,
+                    OveralVolume = dbOrder.OveralVolume,
+                    OveralWeight = dbOrder.OveralWeight,
+                    CalculationTypePrice = dbOrder.CalculationTypePrice,
+                    Explanation = dbOrder.Explanation,
+                    ItemOrder = dbOrder,
+                    LoadCode = "Test",//GetNextOrderNo(dbRequest.PlantId.Value, ItemOrderType.Purchase),
+                    LoadStatusType = (int)LoadStatusType.Created,
+                    PlantId = dbOrder.PlantId.Value,
+                };
+                repoLoad.Add(dbLoad);
+
+                // CHANGE REQUEST STATUS
+                dbOrder.OrderStatus = (int)OrderStatusType.Loaded;
+                dbOrder.UpdatedDate = DateTime.Now;
+                dbOrder.UpdatedUserId = userId;
+
+                // CREATE LOAD DETAILS
+                foreach (var dbOrderDetail in dbOrder.ItemOrderDetail)
+                {
+                    var dbLoadDetail = new ItemLoadDetail
+                    {
+                        CreatedDate = DateTime.Now,
+                        CreatedUserId = userId,
+                        Item = dbOrderDetail.Item,
+                        ItemLoad = dbLoad,
+                        Quantity = dbOrderDetail.Quantity,
+                        ItemOrderDetail = dbOrderDetail,
+                        LineNumber = dbOrderDetail.LineNumber,
+                        Height = dbOrderDetail.Height,
+                        Ladametre = dbOrderDetail.Ladametre,
+                        LongWidth = dbOrderDetail.LongWidth,
+                        PackageInNumber = dbOrderDetail.PackageInNumber,
+                        ShortWidth = dbOrderDetail.ShortWidth,
+                        UnitType = dbOrderDetail.UnitType,
+                        Stackable = dbOrderDetail.Stackable,
+                        Volume = dbOrderDetail.Volume,
+                        Weight = dbOrderDetail.Weight,
+                        LoadStatus = (int)LoadStatusType.Created
+                    };
+                    repoLoadDetail.Add(dbLoadDetail);
+
+                    // CHANGE REQUEST DETAIL STATUS
+                    dbOrderDetail.OrderStatus = (int)OrderStatusType.Completed;
+                    dbOrderDetail.UpdatedDate = DateTime.Now;
+                    dbOrderDetail.UpdatedUserId = userId;
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbLoad.Id;
             }
             catch (Exception ex)
             {

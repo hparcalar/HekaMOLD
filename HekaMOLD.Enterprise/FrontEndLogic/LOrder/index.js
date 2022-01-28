@@ -51,7 +51,61 @@
 
         return prms;
     }
+    $scope.createLoad = function () {
+        bootbox.confirm({
+            message: "Bu siparişi yüke dönüştürmek istediğinizden emin misiniz?",
+            closeButton: false,
+            buttons: {
+                confirm: {
+                    label: 'Evet',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'Hayır',
+                    className: 'btn-light'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $scope.saveStatus = 1;
+                    $http.post(HOST_URL + 'LOrder/CreateLoad', { rid: $scope.modelObject.Id }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                $scope.saveStatus = 0;
 
+                                if (resp.data.Result) {
+                                    toastr.success('Yüke dönüştürme işlemi başarılı.', 'Bilgilendirme');
+
+                                    bootbox.confirm({
+                                        message: "Oluşturulan yükü görüntülemek istiyor musunuz?",
+                                        closeButton: false,
+                                        buttons: {
+                                            confirm: {
+                                                label: 'Evet',
+                                                className: 'btn-primary'
+                                            },
+                                            cancel: {
+                                                label: 'Hayır',
+                                                className: 'btn-light'
+                                            }
+                                        },
+                                        callback: function (resultOrder) {
+                                            if (resultOrder) {
+                                                window.location.href = HOST_URL + 'Load?rid=' + resp.data.RecordId;
+                                            }
+                                        }
+                                    });
+
+                                    $scope.bindModel($scope.modelObject.Id);
+                                }
+                                else
+                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                            }
+                        }).catch(function (err) { });
+                }
+            }
+        });
+    }
     // SELECTABLES
     $scope.showFirmDialog = function () {
         $('#dial-firm').dialog({
@@ -400,29 +454,29 @@
                        //if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
                         //if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
                         //if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
-                        if (typeof values.ForexRate != 'undefined') { obj.ForexRate = values.ForexRate; calculateRowAgain = true; }
-                        if (typeof values.ForexUnitPrice != 'undefined') {
-                            obj.ForexUnitPrice = values.ForexUnitPrice;
-                            if (typeof obj.ForexId != 'undefined' && obj.ForexId != null) {
-                                obj.UnitPrice = obj.ForexUnitPrice * obj.ForexRate;
-                                calculateRowAgain = true;
-                            }
-                        }
-                        if (typeof values.ForexId != 'undefined') {
-                            obj.ForexId = values.ForexId;
-                            var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
-                            alert($scope.modelObject.OrderDateStr);
-                            $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
-                                + '&forexDate=' + $scope.modelObject.OrderDateStr, {}, 'json')
-                                .then(function (resp) {
-                                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                                        if (typeof resp.data.SalesForexRate != 'undefined') {
-                                            obj.ForexRate = resp.data.SalesForexRate;
-                                            $scope.calculateRow(obj);
-                                        }
-                                    }
-                                }).catch(function (err) { });
-                        }
+                        //if (typeof values.ForexRate != 'undefined') { obj.ForexRate = values.ForexRate; calculateRowAgain = true; }
+                        //if (typeof values.ForexUnitPrice != 'undefined') {
+                        //    obj.ForexUnitPrice = values.ForexUnitPrice;
+                        //    if (typeof obj.ForexId != 'undefined' && obj.ForexId != null) {
+                        //        obj.UnitPrice = obj.ForexUnitPrice * obj.ForexRate;
+                        //        calculateRowAgain = true;
+                        //    }
+                        //}
+                        //if (typeof values.ForexId != 'undefined') {
+                        //    obj.ForexId = values.ForexId;
+                        //    var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
+                        //    alert($scope.modelObject.OrderDateStr);
+                        //    $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
+                        //        + '&forexDate=' + $scope.modelObject.OrderDateStr, {}, 'json')
+                        //        .then(function (resp) {
+                        //            if (typeof resp.data != 'undefined' && resp.data != null) {
+                        //                if (typeof resp.data.SalesForexRate != 'undefined') {
+                        //                    obj.ForexRate = resp.data.SalesForexRate;
+                        //                    $scope.calculateRow(obj);
+                        //                }
+                        //            }
+                        //        }).catch(function (err) { });
+                        //}
 
                         if (calculateRowAgain)
                             $scope.calculateRow(obj);
@@ -463,9 +517,9 @@
                         Ladametre: values.Ladametre,
                         //TaxIncluded: values.TaxIncluded,
                         //UnitPrice: values.UnitPrice,
-                        ForexRate: values.ForexRate,
-                        ForexUnitPrice: values.ForexUnitPrice,
-                        ForexId: values.ForexId,
+                        //ForexRate: values.ForexRate,
+                        //ForexUnitPrice: values.ForexUnitPrice,
+                        //ForexId: values.ForexId,
                         ItemRequestDetailId: null,
                         Explanation: values.Explanation,
                         NewDetail: true
@@ -568,19 +622,19 @@
                 //    validationRules: [{ type: "required" }]
                 //},
                 //{ dataField: 'UnitPrice', caption: 'B. Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                {
-                    dataField: 'ForexId', caption: 'Döviz Cinsi',
-                    allowSorting: false,
-                    lookup: {
-                        dataSource: $scope.forexList,
-                        valueExpr: "Id",
-                        displayExpr: "ForexTypeCode"
-                    }
-                },
-                { dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{
+                //    dataField: 'ForexId', caption: 'Döviz Cinsi',
+                //    allowSorting: false,
+                //    lookup: {
+                //        dataSource: $scope.forexList,
+                //        valueExpr: "Id",
+                //        displayExpr: "ForexTypeCode"
+                //    }
+                //},
+                //{ dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 //{ dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
                     type: "buttons",
                     buttons: [
