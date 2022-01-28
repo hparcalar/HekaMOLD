@@ -379,11 +379,22 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             properGroupId = properGroupKey.Value;
                                         }
 
+                                        bool needSave = false;
                                         if (dbItem.ItemGroupId != properGroupId && properGroupId != null)
                                         {
                                             dbItem.ItemGroupId = properGroupId;
-                                            bObjEx.SaveOrUpdateItem(dbItem);
+                                            needSave = true;
                                         }
+
+                                        string newItemName = (string)row["sto_isim"];
+                                        if (newItemName != dbItem.ItemName)
+                                        {
+                                            dbItem.ItemName = newItemName;
+                                            needSave = true;
+                                        }
+
+                                        if (needSave)
+                                            bObjEx.SaveOrUpdateItem(dbItem);
                                     }
                                 }
                             }
@@ -732,7 +743,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                         {
                                             existingDetail.UnitPrice = Decimal.Parse(row["sip_b_fiyat"].ToString(), System.Globalization.NumberStyles.Float);
                                             existingDetail.Quantity = Decimal.Parse(row["sip_miktar"].ToString(), System.Globalization.NumberStyles.Float)
-                                            - Decimal.Parse(row["sip_planlananmiktar"].ToString(), System.Globalization.NumberStyles.Float);
+                                                - Decimal.Parse(row["sip_planlananmiktar"].ToString(), System.Globalization.NumberStyles.Float);
                                             existingDetail.SubTotal = Decimal.Parse(row["sip_tutar"].ToString(), System.Globalization.NumberStyles.Float);
                                             existingDetail.TaxAmount = Decimal.Parse(row["sip_vergi"].ToString(), System.Globalization.NumberStyles.Float);
                                             existingDetail.ForexRate = Decimal.Parse(row["sip_doviz_kuru"].ToString(), System.Globalization.NumberStyles.Float);
@@ -1207,12 +1218,12 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 + " sip_FormulMiktarNo, sip_FormulMiktar, sip_satis_fiyat_doviz_cinsi, sip_satis_fiyat_doviz_kuru, sip_eticaret_kanali, sip_onodeme_evrak_sira, sip_teslim_tarih) "
                                                 + " VALUES('0', 0, 21, 0, 0, 0, 0, 3, 3, '','','', 0, 0, '" + string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "', "
                                                 + "'0', '"+ mikroSipCins +"', '"+ docText +"', '" + newReceiptNo + "', " + lineNumber + ", '', '" + string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "', "
-                                                + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 'SATIŞ02', '" + rcp.FirmCode +"', 0, "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".") + ", " +
+                                                + "'" + rdt.ItemNo + "', 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 'SATIŞ02', '" + rcp.FirmCode +"', 0, "+ mikroForexId +", "+ string.Format("{0:0.00}", 1).Replace(",", ".") + ", " +
                                                    string.Format("{0:0.00}", rdt.Quantity ?? 0).Replace(",", ".") + " , 1, '"+ string.Format("{0:0.00}", (rdt.UnitPrice) * rdt.Quantity).Replace(",",".") +"', 0,0,0,0,0,0, 0,0,0,0, "+ taxRateId.ToString() +",'"+ string.Format("{0:0.00}", rdt.TaxAmount).Replace(",", ".") + "', 0,0,'"+ paymentPlanCode +"', '', " +
                                                    string.Format("{0:0.00}", rdt.UnitPrice ?? 0).Replace(",", ".") +", 1, '','', 0, '','',0,0,0,'03',1,0,0,0, '"+ cariGrupNo + "', '1', '0', '00000000-0000-0000-0000-000000000000', "
                                                    + " '', '0', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', '0', '0', '0', "
                                                    + " '0', '0', '0', '', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', "
-                                                   + " '1899-12-30 00:00:00', '0', '', '0', '0', '','','', 0,0,0,0,0, '0', '0', "+ mikroForexId +", "+ string.Format("{0:0.00}", forexRate).Replace(",", ".").Replace(",", ".") + ", "
+                                                   + " '1899-12-30 00:00:00', '0', '', '0', '0', '','','', 0,0,0,0,0, '0', '0', "+ mikroForexId +", "+ string.Format("{0:0.00}", 1).Replace(",", ".").Replace(",", ".") + ", "
                                                    +" '0', '0', '"+ string.Format("{0:yyyy-MM-dd} 00:00:00", rcp.OrderDate) + "')";
                                             SqlCommand cmd = new SqlCommand(sql, con);
                                             int affectedRows = cmd.ExecuteNonQuery();
