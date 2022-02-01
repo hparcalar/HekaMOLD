@@ -1,4 +1,4 @@
-﻿app.controller('lOrderUnapprovedOrderCtrl', function ($scope, $http) {
+﻿app.controller('loadDomesticListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS
@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'LOrder/UnapproveOrderList', function (data) {
+                    return $.getJSON(HOST_URL + 'Load/GetItemLoadDomesticList', function (data) {
 
                     });
                 },
@@ -26,6 +26,7 @@
             rowAlternationEnabled: false,
             focusedRowEnabled: true,
             showBorders: true,
+            //allowColumnReordering = true,
             filterRow: {
                 visible: true,
             },
@@ -56,19 +57,22 @@
                     return;
 
                 var deadlineClass = '', item = e.data;
-                if (item.OrderStatus == 3 || item.OrderStatus == 2) {
+                if (item.LoadStatusType == 2) {
                     deadlineClass = 'bg-danger';
                 }
-                else {
-                    if (item.DateOfNeedStr != null && item.DateOfNeedStr.length > 0) {
-                        var dtDeadline = moment(item.DateOfNeedStr, 'DD.MM.YYYY');
-                        if (moment().diff(dtDeadline, 'days') >= 0)
-                            deadlineClass = 'bg-secondary';
-                        else if (moment().diff(dtDeadline, 'days') > -5)
-                            deadlineClass = 'bg-warning';
-                    }
+                if (item.LoadStatusType == 1) {
+                    deadlineClass = 'bg-primary';
                 }
-                if (item.OrderStatus == 1) {
+                //else {
+                //    if (item.DateOfNeedStr != null && item.DateOfNeedStr.length > 0) {
+                //        var dtDeadline = moment(item.DateOfNeedStr, 'DD.MM.YYYY');
+                //        if (moment().diff(dtDeadline, 'days') >= 0)
+                //            deadlineClass = 'bg-secondary';
+                //        else if (moment().diff(dtDeadline, 'days') > -5)
+                //            deadlineClass = 'bg-warning';
+                //    }
+                //}
+                if (item.LoadStatusType == 5) {
                     deadlineClass = 'bg-success';
                 }
 
@@ -76,18 +80,17 @@
                     e.rowElement.addClass(deadlineClass);
             },
             columns: [
+                { dataField: 'LoadCode', caption: 'Yük Kodu' },
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
-                { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'DateOfNeedStr', caption: 'Teslim Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'CustomerFirmName', caption: 'Müşteri Firma Adı' },
-                { dataField: 'OrderStatusStr', caption: 'Durum' },
-                { dataField: 'LoadPostCode', caption: 'Yükleme Şehri Posta Kodu' },
-                { dataField: 'LoadCityName', caption: 'Yükleme Şehri' },
-                { dataField: 'LoadCountryName', caption: 'Yükleme Ülke' },
-                { dataField: 'DischangePostCode', caption: 'Boşaltma Şehri Posta Kodu' },
-                { dataField: 'DischangeCityName', caption: 'Boşaltma Şehri' },
-                { dataField: 'DischangeCountryName', caption: 'Boşaltma Ülke' },
+                { dataField: 'OrderDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'DateOfNeedStr', caption: 'Teslim Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'LoadOutDateStr', caption: 'Boşaltma Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'LoadingDateStr', caption: 'Yükleme Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'CustomerFirmName', caption: 'Müşteri' },
+                { dataField: 'LoadStatusTypeStr', caption: 'Durum' },
+                { dataField: 'ShipperFirmName', caption: 'Gönderici Firma' },
+                { dataField: 'BuyerFirmName', caption: 'Alıcı Firma' },
                 { dataField: 'EntryCustomsName', caption: 'Çıkış Gümrüğü' },
                 { dataField: 'ExitCustomsName', caption: 'Varış Gümrüğü' },
                 { dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü' },
@@ -110,7 +113,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'LOrder?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'Load?rid=' + e.row.data.Id;
                             }
                         }
                     ]

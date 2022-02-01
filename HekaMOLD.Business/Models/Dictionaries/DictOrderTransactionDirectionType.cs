@@ -8,11 +8,10 @@ namespace HekaMOLD.Business.Models.Dictionaries
         public static Dictionary<OrderTransactionDirectionType, string> Values
     = new Dictionary<OrderTransactionDirectionType, string>()
 {
-            { OrderTransactionDirectionType.AbroadExport, "AEX" },
-            { OrderTransactionDirectionType.AbroadImport, "AIM" },
-            { OrderTransactionDirectionType.Domestic, "D" },
-            { OrderTransactionDirectionType.DomesticTransfer, "DT" },
-            { OrderTransactionDirectionType.AbroadTransfer, "AT" },
+            { OrderTransactionDirectionType.Export, "EX" },
+            { OrderTransactionDirectionType.Import, "IM" },
+            { OrderTransactionDirectionType.Domestic, "YI" },
+            { OrderTransactionDirectionType.Transit, "TR" },
 
 };
     }

@@ -41,6 +41,7 @@ namespace Heka.DataAccess.Context
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
         public decimal? CalculationTypePrice { get; set; }
+        public int? OveralQuantity { get; set; }
         public bool? Closed { get; set; }
 
         [ForeignKey("Firm")]
@@ -66,6 +67,9 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("User")]
         public Nullable<int> CreatUserId { get; set; }
+
+        [ForeignKey("ForexType")]
+        public Nullable<int> ForexTypeId { get; set; }
 
         public Nullable<int> PlantId { get; set; }
         public string Explanation { get; set; }
@@ -93,7 +97,7 @@ namespace Heka.DataAccess.Context
         public virtual SyncPoint SyncPoint { get; set; }
         public virtual Warehouse Warehouse { get; set; }
         public virtual Warehouse Warehouse1 { get; set; }
-
+        public virtual ForexType ForexType { get; set; }
         public virtual City LoadCity { get; set; }
         public virtual City DischargeCity { get; set; }
 

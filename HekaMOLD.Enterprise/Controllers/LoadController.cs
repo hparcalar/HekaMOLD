@@ -18,6 +18,22 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
+        public ActionResult ExportList()
+        {
+            return View();
+        }
+        public ActionResult ImportList()
+        {
+            return View();
+        }
+        public ActionResult DomesticList()
+        {
+            return View();
+        }
+        public ActionResult TransitList()
+        {
+            return View();
+        }
 
         [HttpGet]
         public JsonResult GetNextloadCode(int directionId)
@@ -26,13 +42,14 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (LoadBO bObj = new LoadBO())
             {
-                loadCode = bObj.GetNextLoadCode(Convert.ToInt32(Request.Cookies["PlantId"].Value), directionId);
+                loadCode = bObj.GetNextLoadCode( directionId);
             }
 
             var jsonResult = Json(new { Result = !string.IsNullOrEmpty(loadCode), LoadCode = loadCode }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
         [HttpGet]
         public JsonResult GetSelectables()
         {
@@ -73,6 +90,7 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
         [HttpGet]
         public JsonResult GetItemLoadList()
         {
@@ -87,6 +105,67 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        [HttpGet]
+        public JsonResult GetItemLoadExportList()
+        {
+            ItemLoadModel[] result = new ItemLoadModel[0];
+
+            using (LoadBO bObj = new LoadBO())
+            {
+                result = bObj.GetItemLoadExportList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetItemLoadImportList()
+        {
+            ItemLoadModel[] result = new ItemLoadModel[0];
+
+            using (LoadBO bObj = new LoadBO())
+            {
+                result = bObj.GetItemLoadImportList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetItemLoadDomesticList()
+        {
+            ItemLoadModel[] result = new ItemLoadModel[0];
+
+            using (LoadBO bObj = new LoadBO())
+            {
+                result = bObj.GetItemLoadDomesticList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetItemLoadTransitList()
+        {
+            ItemLoadModel[] result = new ItemLoadModel[0];
+
+            using (LoadBO bObj = new LoadBO())
+            {
+                result = bObj.GetItemLoadTransitList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
@@ -98,6 +177,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public JsonResult DeleteModel(int rid)
         {
@@ -119,6 +199,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
         }
+
         [HttpPost]
         public JsonResult SaveModel(ItemLoadModel model)
         {
@@ -160,7 +241,18 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
 
+        [HttpPost]
+        public JsonResult ApproveLoad(int rid)
+        {
+            BusinessResult result = new BusinessResult();
 
+            using (LoadBO bObj = new LoadBO())
+            {
+                result = bObj.ApproveLoad(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+            }
+
+            return Json(result);
+        }
 
     }
 }

@@ -122,6 +122,7 @@
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<District> District { get; set; }
         public virtual DbSet<CustomsDoor> CustomsDoor { get; set; }
+        public virtual DbSet<CodeCounter> CodeCounter { get; set; }
 
     }
 }

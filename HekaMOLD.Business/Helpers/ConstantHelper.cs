@@ -49,6 +49,13 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(LoadStatusType))
+                {
+                    return DictLoadStatusType.Values
+                        .Where(d => d.Key == (LoadStatusType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
                 else if (obj.GetType() == typeof(ItemCriticalBehaviourType))
                 {
                     return DictItemCriticalBehaviourType.Values
@@ -151,6 +158,13 @@ namespace HekaMOLD.Business.Helpers
                 {
                     return DictProcessStatusType.Values
                         .Where(d => d.Key == (ProcessStatusType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
+                else if (obj.GetType() == typeof(OrderCalculationType))
+                {
+                    return DictOrderCalculationType.Values
+                        .Where(d => d.Key == (OrderCalculationType)obj)
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }

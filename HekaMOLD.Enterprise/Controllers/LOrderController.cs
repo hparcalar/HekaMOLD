@@ -187,13 +187,13 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 result = bObj.GetUnappovedItemOrderList(ItemOrderType.Sale);
 
-                foreach (var item in result)
-                {
-                    if (item.OrderStatus == (int)OrderStatusType.Created)
-                        item.OrderStatusStr = "Onaylanması bekleniyor";
-                    if (item.OrderStatus == (int)OrderStatusType.Approved)
-                        item.OrderStatusStr = "Onaylandı.";
-                }
+                //foreach (var item in result)
+                //{
+                //    if (item.OrderStatus == (int)OrderStatusType.Created)
+                //        item.OrderStatusStr = "Onaylanması bekleniyor";
+                //    if (item.OrderStatus == (int)OrderStatusType.Approved)
+                //        item.OrderStatusStr = "Onaylandı.";
+                //}
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

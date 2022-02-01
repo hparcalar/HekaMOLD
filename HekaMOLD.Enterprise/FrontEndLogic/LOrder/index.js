@@ -16,19 +16,21 @@
 
     $scope.selectedEntryCustoms = {};
     $scope.selectedExitCustoms = {};
+    $scope.selectedForexType = {};
+
 
     $scope.selectedOrderUploadType = {};
     $scope.orderUploadTypeList = [{ Id: 1, Text: 'Grupaj' }, { Id: 2, Text: 'Komple' }];
 
     $scope.selectedOrderTransactionDirectionType = {};
-    $scope.orderTransactionDirectionTypeList = [{ Id: 1, Text: 'Yurt Dışı/İhracat' }, { Id: 2, Text: 'Yurt Dışı/İthalat' },
-        { Id: 3, Text: 'Yurt İçi' }, { Id: 4, Text: 'Yurt içi Transfer' }, { Id: 5, Text: 'Yurt Dışı Transfer' }];
+    $scope.orderTransactionDirectionTypeList = [{ Id: 1, Text: 'İhracat' }, { Id: 2, Text: 'İthalat' },
+    { Id: 3, Text: 'Yurt İçi' }, { Id: 4, Text: 'Transit' }];
 
     $scope.selectedOrderUploadPointType = {};
     $scope.orderUploadPointTypeList = [{ Id: 1, Text: 'Müşteriden Yükleme' }, { Id: 2, Text: 'Depodan Yükleme' }];
 
-    $scope.selectedOrderCalculationType = {Id:0};
-    $scope.orderCalculationTypeList = [{ Id: 1, Text: 'Ağırlık' }, { Id: 2, Text: 'Metreküp' }, { Id: 3, Text: 'Ladametre' }];
+    $scope.selectedOrderCalculationType = { Id: 0 };
+    $scope.orderCalculationTypeList = [{ Id: 1, Text: 'Ağırlık' }, { Id: 2, Text: 'Metreküp' }, { Id: 3, Text: 'Ladametre' }, { Id: 4, Text: 'Komple' }, { Id: 5, Text: 'Minimun' }];
 
     $scope.saveStatus = 0;
 
@@ -137,6 +139,7 @@
         $scope.selectedEntryCustoms = {};
         $scope.selectedExitCustoms = {};
         $scope.selectedLoadCity = {};
+        $scope.selectedDischargeCity = {};
 
 
         $scope.getNextOrderNo().then(function (rNo) {
@@ -229,6 +232,11 @@
             $scope.modelObject.DischargeCityId = $scope.selectedDischargeCity.Id;
         else
             $scope.modelObject.DischargeCityId = null;
+
+        if (typeof $scope.selectedForexType != 'undefined' && $scope.selectedForexType != null)
+            $scope.modelObject.ForexTypeId = $scope.selectedForexType.Id;
+        else
+            $scope.modelObject.ForexTypeId = null;
 
         $http.post(HOST_URL + 'LOrder/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -340,8 +348,12 @@
                     else
                         $scope.selectedDischargeCity = {};
 
+                    if (typeof $scope.modelObject.ForexTypeId != 'undefined' && $scope.modelObject.ForexTypeId != null)
+                        $scope.selectedForexType = $scope.forexList.find(d => d.Id == $scope.modelObject.ForexTypeId);
+                    else
+                        $scope.selectedForexType = {};
+
                     $scope.bindDetails();
-                    $scope.calculateHeader();
                 }
             }).catch(function (err) { });
     }
@@ -350,23 +362,6 @@
         $scope.calculateValumeAndDesi(row);
         $scope.calculateOveralTotal();
 
-        if (typeof row != 'undefined' && row != null) {
-            try {
-                $http.post(HOST_URL + 'LOrder/CalculateRow', row, 'json')
-                    .then(function (resp) {
-                        if (typeof resp.data != 'undefined' && resp.data != null) {
-                            row.OverallTotal = resp.data.OverallTotal;
-                            row.UnitPrice = resp.data.UnitPrice;
-                            row.TaxAmount = resp.data.TaxAmount;
-                            row.ForexUnitPrice = resp.data.ForexUnitPrice;
-
-                            $scope.calculateHeader();
-                        }
-                    }).catch(function (err) { });
-            } catch (e) {
-
-            }
-        }
     }
     $scope.calculateValumeAndDesi = function (row) {
         if (row.ShortWidth == 'undefined' || row.ShortWidth == null)
@@ -374,28 +369,26 @@
         if (row.LongWidth == 'undefined' || row.LongWidth == null)
             row.LongWidth = 0;
         if (row.Height == 'undefined' || row.Height == null)
-            row.Height = 0; 
-        row.Volume = row.Quantity * row.ShortWidth * row.LongWidth * row.Height /1000000;
+            row.Height = 0;
+        row.Volume = row.Quantity * row.ShortWidth * row.LongWidth * row.Height / 1000000;
         //CALCULATE VALUME AND WEIGHT AND LADAMETRE
         let sumVolume = 0;
         let sumWeight = 0;
-        let = sumLadametre = 0 ;
+        let = sumLadametre = 0;
+        let = sumQuantity = 0;
         $scope.modelObject.Details.forEach(element => {
             sumVolume += parseFloat(element.Volume != null ? element.Volume : 0);
             sumWeight += parseFloat(element.Weight != null ? element.Weight : 0);
             sumLadametre += parseFloat(element.Ladametre != null ? element.Ladametre : 0);
+            sumQuantity += parseFloat(element.Quantity != null ? element.Quantity : 0);
         });
-        $scope.modelObject.OveralVolume =  sumVolume;
+        $scope.modelObject.OveralVolume = sumVolume;
         $scope.modelObject.OveralWeight = sumWeight;
-        $scope.modelObject.OveralLadametre =  sumLadametre;
+        $scope.modelObject.OveralLadametre = sumLadametre;
+        $scope.modelObject.OveralQuantity = sumQuantity;
 
     }
 
-    $scope.calculateHeader = function () {
-        //$scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
-        //$scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
-       // $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
-    }
     $scope.calculateOveralTotal = function () {
         if ($scope.selectedOrderCalculationType.Id == 1)
             $scope.modelObject.OverallTotal = $scope.modelObject.OveralWeight * $scope.modelObject.CalculationTypePrice;
@@ -447,36 +440,9 @@
                         if (typeof values.Height != 'undefined') { obj.Height = values.Height; calculateRowAgain = true; }
                         if (typeof values.Volume != 'undefined') { obj.Volume = values.Volume; calculateRowAgain = true; }
                         if (typeof values.Weight != 'undefined') { obj.Weight = values.Weight; calculateRowAgain = true; }
-                        //if (typeof values.Desi != 'undefined') { obj.Desi = values.Desi; calculateRowAgain = true; }
                         if (typeof values.Ladametre != 'undefined') { obj.Ladametre = values.Ladametre; calculateRowAgain = true; }
                         if (typeof values.Stackable != 'undefined') { obj.Stackable = values.Stackable; calculateRowAgain = true; }
                         if (typeof values.PackageInNumber != 'undefined') { obj.PackageInNumber = values.PackageInNumber; calculateRowAgain = true; }
-                       //if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
-                        //if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
-                        //if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
-                        //if (typeof values.ForexRate != 'undefined') { obj.ForexRate = values.ForexRate; calculateRowAgain = true; }
-                        //if (typeof values.ForexUnitPrice != 'undefined') {
-                        //    obj.ForexUnitPrice = values.ForexUnitPrice;
-                        //    if (typeof obj.ForexId != 'undefined' && obj.ForexId != null) {
-                        //        obj.UnitPrice = obj.ForexUnitPrice * obj.ForexRate;
-                        //        calculateRowAgain = true;
-                        //    }
-                        //}
-                        //if (typeof values.ForexId != 'undefined') {
-                        //    obj.ForexId = values.ForexId;
-                        //    var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
-                        //    alert($scope.modelObject.OrderDateStr);
-                        //    $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
-                        //        + '&forexDate=' + $scope.modelObject.OrderDateStr, {}, 'json')
-                        //        .then(function (resp) {
-                        //            if (typeof resp.data != 'undefined' && resp.data != null) {
-                        //                if (typeof resp.data.SalesForexRate != 'undefined') {
-                        //                    obj.ForexRate = resp.data.SalesForexRate;
-                        //                    $scope.calculateRow(obj);
-                        //                }
-                        //            }
-                        //        }).catch(function (err) { });
-                        //}
 
                         if (calculateRowAgain)
                             $scope.calculateRow(obj);
@@ -513,13 +479,7 @@
                         Volume: values.Volume,
                         Stackable: values.Stackable,
                         PackageInNumber: values.PackageInNumber,
-                        //Desi: values.Desi,
                         Ladametre: values.Ladametre,
-                        //TaxIncluded: values.TaxIncluded,
-                        //UnitPrice: values.UnitPrice,
-                        //ForexRate: values.ForexRate,
-                        //ForexUnitPrice: values.ForexUnitPrice,
-                        //ForexId: values.ForexId,
                         ItemRequestDetailId: null,
                         Explanation: values.Explanation,
                         NewDetail: true
@@ -563,8 +523,8 @@
             repaintChangesOnly: true,
             onCellPrepared: function (e) {
                 if (e.rowType === "data") {
-                    if (e.data.OrderStatus == 3) {
-                        e.cellElement.css("background-color", "#e64040");
+                    if (e.data.OrderStatus == 5) {
+                        e.cellElement.css("background-color", "Green");
                         //e.cellElement.css("color", "white");
                     }
                 }
@@ -578,7 +538,7 @@
                         displayExpr: "ItemNo"
                     },
                     allowSorting: false,
-                    width : 70,
+                    width: 70,
                     validationRules: [{ type: "required" }],
                     editCellTemplate: $scope.dropDownBoxEditorTemplate,
                     cellTemplate: function (container, options) {
@@ -597,44 +557,18 @@
                         dataSource: $scope.unitList,
                         valueExpr: "Id",
                         displayExpr: "UnitCode"
-                    }, width : 60
-                }, 
+                    }, width: 60
+                },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 60, validationRules: [{ type: "required" }] },
                 { dataField: 'ShortWidth', caption: 'Kısa En (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'LongWidth', caption: 'Uzun En (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 }},
+                { dataField: 'LongWidth', caption: 'Uzun En (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Height', caption: 'Yükseklik (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Weight', caption: 'Ağırlık (Kg)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'Volume', caption: 'Hacim (m3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 },allowEditing: false},
-                //{ dataField: 'Desi', caption: 'Desi', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 60, allowEditing: false },
+                { dataField: 'Volume', caption: 'Hacim (m3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, allowEditing: false },
                 { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 80 },
                 { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean' },
-                { dataField: 'PackageInNumber', caption: 'Koli iç Adet'},
+                { dataField: 'PackageInNumber', caption: 'Koli iç Adet', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
 
-                //{ dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", width: 60, precision: 2 } },
-                //{
-                //    dataField: 'TaxIncluded', caption: 'Kdv D/H',
-                //    allowSorting: false,
-                //    lookup: {
-                //        dataSource: [{ Id: 1, Text: 'Dahil' }, { Id: 0, Text: 'Hariç' }],
-                //        valueExpr: "Id",
-                //        displayExpr: "Text"
-                //    },
-                //    validationRules: [{ type: "required" }]
-                //},
-                //{ dataField: 'UnitPrice', caption: 'B. Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                //{
-                //    dataField: 'ForexId', caption: 'Döviz Cinsi',
-                //    allowSorting: false,
-                //    lookup: {
-                //        dataSource: $scope.forexList,
-                //        valueExpr: "Id",
-                //        displayExpr: "ForexTypeCode"
-                //    }
-                //},
-                //{ dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                //{ dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                //{ dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                //{ dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
                     type: "buttons",
                     buttons: [
@@ -642,14 +576,14 @@
                             name: 'delete', cssClass: '', text: '', onClick: function (e) {
                                 $('#dataList').dxDataGrid('instance').deleteRow(e.row.rowIndex);
                             }
-                        },
-                        {
-                            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: '...', onClick: function (e) {
-                                var dataGrid = $("#dataList").dxDataGrid("instance");
-                                $scope.selectedRow = e.row.data;
-                                $scope.showRowMenu();
-                            }
                         }
+                        //{
+                        //    name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: '...', onClick: function (e) {
+                        //        var dataGrid = $("#dataList").dxDataGrid("instance");
+                        //        $scope.selectedRow = e.row.data;
+                        //        $scope.showRowMenu();
+                        //    }
+                        //}
                     ]
                 }
             ]
@@ -691,7 +625,7 @@
             }
         });
     }
-    
+
     $scope.cancelledLOrder = function () {
         bootbox.confirm({
             message: "Bu Sipariş talebi İptal etmek istediğinizden emin misiniz?",
@@ -739,7 +673,7 @@
                         $scope.forexList = resp.data.Forexes;
                         $scope.customsList = resp.data.Customers;
                         $scope.cityList = resp.data.Citys;
-                       resolve();
+                        resolve();
                     }
                 }).catch(function (err) { });
         });

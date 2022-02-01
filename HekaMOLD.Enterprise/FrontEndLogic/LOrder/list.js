@@ -10,7 +10,16 @@
 
                     });
                 },
-                key: 'Id'
+                key: 'Id',
+            },
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnAutoWidth: true,
+            columnChooser: {
+                enabled: true,
+            },
+            columnFixing: {
+                enabled: true,
             },
             showColumnLines: false,
             showRowLines: true,
@@ -22,6 +31,13 @@
             },
             headerFilter: {
                 visible: true
+            },
+            pager: {
+                allowedPageSizes: [5, 8, 15, 30],
+                showInfo: true,
+                showNavigationButtons: true,
+                showPageSizeSelector: true,
+                visible: true,
             },
             paging: {
                 enabled: true,
@@ -40,20 +56,23 @@
                     return;
 
                 var deadlineClass = '', item = e.data;
-                if (item.OrderStatus == 3 || item.OrderStatus == 2 ) {
+                if (item.OrderStatus == 2 ) {
                     deadlineClass = 'bg-danger';
                 }
-                else {
-                    if (item.DateOfNeedStr != null && item.DateOfNeedStr.length > 0) {
-                        var dtDeadline = moment(item.DateOfNeedStr, 'DD.MM.YYYY');
-                        if (moment().diff(dtDeadline, 'days') >= 0)
-                            deadlineClass = 'bg-secondary';
-                        else if (moment().diff(dtDeadline, 'days') > -5)
-                            deadlineClass = 'bg-warning';
-                    }
-                }
                 if (item.OrderStatus == 1) {
-                    deadlineClass = 'bg-success';
+                    deadlineClass = 'bg-primary';
+                }
+                //else {
+                //    if (item.DateOfNeedStr != null && item.DateOfNeedStr.length > 0) {
+                //        var dtDeadline = moment(item.DateOfNeedStr, 'DD.MM.YYYY');
+                //        if (moment().diff(dtDeadline, 'days') >= 0)
+                //            deadlineClass = 'bg-secondary';
+                //        else if (moment().diff(dtDeadline, 'days') > -5)
+                //            deadlineClass = 'bg-warning';
+                //    }
+                //}
+                if (item.OrderStatus == 5) {
+                    deadlineClass = 'bg-secondary';
                 }
 
                 if (deadlineClass.length > 0)
@@ -64,14 +83,28 @@
                 { dataField: 'DocumentNo', caption: 'Belge No' },
                 { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'DateOfNeedStr', caption: 'Teslim Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'CustomerFirmCode', caption: 'Müşteri Firma Kodu' },
                 { dataField: 'CustomerFirmName', caption: 'Müşteri Firma Adı' },
                 { dataField: 'OrderStatusStr', caption: 'Durum' },
+                { dataField: 'LoadPostCode', caption: 'Yükleme Şehri Posta Kodu' },
                 { dataField: 'LoadCityName', caption: 'Yükleme Şehri' },
                 { dataField: 'LoadCountryName', caption: 'Yükleme Ülke' },
+                { dataField: 'DischangePostCode', caption: 'Boşaltma Şehri Posta Kodu' },
                 { dataField: 'DischangeCityName', caption: 'Boşaltma Şehri' },
                 { dataField: 'DischangeCountryName', caption: 'Boşaltma Ülke' },
+                { dataField: 'EntryCustomsName', caption: 'Çıkış Gümrüğü'},
+                { dataField: 'ExitCustomsName', caption: 'Varış Gümrüğü' }, 
+                { dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü' },
+                { dataField: 'OrderUploadTypeStr', caption: 'Yükleme Tipi' },
+                { dataField: 'OrderUploadPointTypeStr', caption: 'Yükleme Noktası Tipi' },
+                { dataField: 'OrderCalculationTypeStr', caption: 'Hesaplama Tipi' },
+                { dataField: 'OveralQuantity', caption: 'Toplam Miktar' },
+                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık' },
+                { dataField: 'OveralVolume', caption: 'Toplam Hacim' },
+                { dataField: 'OveralLadametre', caption: 'Toplam Ladametre' },
+                { dataField: 'OverallTotal', caption: 'Toplam Tutar' },
+                { dataField: 'ForexTypeCode', caption: 'Döviz Kodu' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
+
                 {
                     type: "buttons",
                     buttons: [

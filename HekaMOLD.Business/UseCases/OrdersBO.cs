@@ -30,9 +30,21 @@ namespace HekaMOLD.Business.UseCases
                     CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                     CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
                     LoadCityName = d.LoadCity != null ? d.LoadCity.CityName : "",
-                    // LoadCountryName = d.LoadCity.Country != null ? d.LoadCity.Country.CountryName :"",
+                    LoadPostCode = d.LoadCity != null ? d.LoadCity.PostCode : "",
+                    EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
+                    ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "", 
                     DischangeCityName = d.DischargeCity != null ? d.DischargeCity.CityName : "",
+                    DischangePostCode = d.DischargeCity != null ? d.DischargeCity.PostCode :"",
+                    OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType !=null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() :"",
+                    OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
+                    OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
+                    OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
                     // LoadCountryName = d.LoadCity.Country != null ? d.LoadCity.Country.CountryName :"",
+                    OveralQuantity = d.OveralQuantity,
+                    OveralWeight = d.OveralWeight,
+                    OveralVolume = d.OveralVolume,
+                    OveralLadametre = d.OveralLadametre,
+                    OverallTotal = d.OverallTotal,
                     OrderNo = d.OrderNo,
                     OrderDate = d.OrderDate,
                     DocumentNo = d.DocumentNo,
@@ -42,6 +54,7 @@ namespace HekaMOLD.Business.UseCases
                     OrderType = d.OrderType,
                     CalculationTypePrice = d.CalculationTypePrice,
                     PlantId = d.PlantId,
+                    ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode :""
                 })
                 .OrderByDescending(d => d.OrderDate)
                 .ToArray();
@@ -62,6 +75,22 @@ namespace HekaMOLD.Business.UseCases
                     LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
                     CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                     CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    LoadCityName = d.LoadCity != null ? d.LoadCity.CityName : "",
+                    LoadPostCode = d.LoadCity != null ? d.LoadCity.PostCode : "",
+                    EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
+                    ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "",
+                    DischangeCityName = d.DischargeCity != null ? d.DischargeCity.CityName : "",
+                    DischangePostCode = d.DischargeCity != null ? d.DischargeCity.PostCode : "",
+                    OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+                    OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
+                    OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
+                    OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+                    // LoadCountryName = d.LoadCity.Country != null ? d.LoadCity.Country.CountryName :"",
+                    OveralQuantity = d.OveralQuantity,
+                    OveralWeight = d.OveralWeight,
+                    OveralVolume = d.OveralVolume,
+                    OveralLadametre = d.OveralLadametre,
+                    OverallTotal = d.OverallTotal,
                     OrderNo = d.OrderNo,
                     OrderDate = d.OrderDate,
                     DocumentNo = d.DocumentNo,
@@ -71,6 +100,7 @@ namespace HekaMOLD.Business.UseCases
                     OrderType = d.OrderType,
                     CalculationTypePrice = d.CalculationTypePrice,
                     PlantId = d.PlantId,
+                    ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : ""
                 })
                 .OrderByDescending(d => d.OrderDate)
                 .ToArray();
@@ -114,6 +144,15 @@ namespace HekaMOLD.Business.UseCases
                     model.LoadOutDate = DateTime.ParseExact(model.LoadOutDateStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
+                if ((int)model.OrderStatus == (int)OrderStatusType.Loaded)
+                {
+                    throw new Exception("Yüke dönüştürülülen siparişte değişiklik yapılamaz !");
+                }
+                if ( model.OrderTransactionDirectionType == null)
+                    throw new Exception("İşlem yönü seçilmelidir !");
+
+                if (model.ForexTypeId == null)
+                    throw new Exception("Döviz kodu seçilmelidir !");
 
                 var crDate = dbObj.CreatedDate;
                 var donDate = dbObj.DateOfNeed;
@@ -231,7 +270,7 @@ namespace HekaMOLD.Business.UseCases
                             base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
                             {
                                 IsProcessed = false,
-                                Message = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate)
+                                Message = "Sipariş Kodu: "+dbObj.OrderNo 
                                 + " yeni bir sipariş oluşturuldu. Onayınız bekleniyor.",
                                 Title = NotifyType.ItemOrderWaitForApproval.ToCaption(),
                                 NotifyType = (int)NotifyType.ItemOrderWaitForApproval,
@@ -241,6 +280,7 @@ namespace HekaMOLD.Business.UseCases
                             });
                         }
                     }
+
                 }
                 #endregion
 
@@ -412,6 +452,7 @@ namespace HekaMOLD.Business.UseCases
                 model.OrderStatusStr = ((OrderStatusType)model.OrderStatus).ToCaption();
                 model.CustomerFirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
                 model.CustomerFirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
+                model.CreatedUserName = dbObj.User != null ? dbObj.User.UserName : "";
 
                 model.Details =
                     repoDetails.Filter(d => d.ItemOrderId == dbObj.Id)
@@ -439,6 +480,7 @@ namespace HekaMOLD.Business.UseCases
                         Height = d.Height,
                         Weight = d.Weight,
                         Volume = d.Volume,
+                        Ladametre = d.Ladametre,
                         Stackable = d.Stackable,
                         PackageInNumber = d.PackageInNumber,
                         SubTotal = d.SubTotal,
@@ -553,8 +595,8 @@ namespace HekaMOLD.Business.UseCases
                 base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
                 {
                     IsProcessed = false,
-                    Message = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed)
-                            + " tarihinde oluşturduğunuz satınalma siparişi onaylandı.",
+                    Message = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate)
+                            + " tarihinde oluşturduğunuz siparişi onaylandı.",
                     Title = NotifyType.ItemOrderIsApproved.ToCaption(),
                     NotifyType = (int)NotifyType.ItemOrderIsApproved,
                     SeenStatus = 0,

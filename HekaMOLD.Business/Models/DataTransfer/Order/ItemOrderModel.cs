@@ -34,6 +34,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public int? InWarehouseId { get; set; }
         public int? OutWarehouseId { get; set; }
         public int? PlantId { get; set; }
+        public int? OveralQuantity { get; set; }
         public string Explanation { get; set; }
         public int? OrderStatus { get; set; }
         public int? ItemRequestId { get; set; }
@@ -45,6 +46,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public DateTime? SyncDate { get; set; }
         public int? SyncUserId { get; set; }
         public string SyncKey { get; set; }
+        public Nullable<int> ForexTypeId { get; set; }
         public ItemOrderDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS
@@ -64,14 +66,19 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string CreatedUserName { get; set; }
         public string OrderUploadTypeStr { get; set; }
         public string OrderTransactionDirectionTypeStr { get; set; }
-        public string EntrycustomsName { get; set; }
-        public string ExitcustomsName { get; set; }
+        public string OrderUploadPointTypeStr { get; set; }
+        public string OrderCalculationTypeStr { get; set; }
+        public string EntryCustomsName { get; set; }
+        public string ExitCustomsName { get; set; }
         public string CreatUserCode { get; set; }
         public string CreatUserName { get; set; }
         public string LoadCityName { get; set; }
         public string LoadCountryName { get; set; }
+        public string LoadPostCode { get; set; }
         public string DischangeCityName { get; set; }
-        public string dischangeCountryName { get; set; }
+        public string DischangeCountryName { get; set; }
+        public string DischangePostCode { get; set; }
+        public string ForexTypeCode { get; set; }
 
         #endregion
     }

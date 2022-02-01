@@ -24,12 +24,15 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
         public string Explanation { get; set; }
+        public string ShipperFirmExplanation { get; set; }
+        public string BuyerFirmExplanation { get; set; }
         public Nullable<int> CustomerFirmId { get; set; }
         public int? ShipperFirmId { get; set; }
         public int? BuyerFirmId { get; set; }
         public int? EntryCustomsId { get; set; }
         public int? ExitCustomsId { get; set; }
         public DateTime? DateOfNeed { get; set; }
+        public int? OveralQuantity { get; set; }
 
         public int? UserAuthorId { get; set; }
         public DateTime? LoadingDate { get; set; }
@@ -45,6 +48,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? BuyerCountryId { get; set; }
         public Nullable<int> ItemOrderId { get; set; }
         public Nullable<int> PlantId { get; set; }
+        public Nullable<int> ForexTypeId { get; set; }
         public ItemLoadDetailModel[] Details { get; set; }
         //public Nullable<int> CreatedUserId { get; set; }
 
@@ -76,6 +80,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string BuyerCityName { get; set; }
         public string ShipperCountryName { get; set; }
         public string BuyerCountryName { get; set; }
+        public string ForexTypeCode { get; set; }
         #endregion
     }
 }

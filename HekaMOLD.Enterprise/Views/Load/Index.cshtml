@@ -73,7 +73,7 @@
 
                     @if (Html.IsGranted("LoadApproval"))
                     {
-                        <a class="btn btn-sm btn-light-success" ng-click="approveLOrder()" ng-show="modelObject.OrderStatus == 0 && modelObject.Id > 0">
+                        <a class="btn btn-sm btn-light-success" ng-click="approveLoad()" ng-show="modelObject.LoadStatusType == 0 && modelObject.Id > 0">
                             <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                                 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -242,26 +242,27 @@
                             <button class="nav-link" id="pills-order-tab" data-bs-toggle="pill" data-bs-target="#pills-order" type="button" role="tab" aria-controls="pills-order" aria-selected="false">Sipariş Bilgisi</button>
                         </li>
                         <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-round-tab" data-bs-toggle="pill" data-bs-target="#pills-round" type="button" role="tab" aria-controls="pills-round" aria-selected="false">Sefer Bilgisi</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
                             <button class="nav-link" id="pills-generic-tab" data-bs-toggle="pill" data-bs-target="#pills-generic" type="button" role="tab" aria-controls="pills-generic" aria-selected="false">Genel</button>
                         </li>
-                        @*<li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pills-tire-tab" data-bs-toggle="pill" data-bs-target="#pills-tire" type="button" role="tab" aria-controls="pills-tire" aria-selected="false">Tarife</button>
-                            </li>*@
+
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-basic" role="tabpanel" aria-labelledby="pills-basic-tab">
                             <!--Care-->
                             <div class="card">
-                                <div class="card-body py-0 mb-4">
+                                <div class="card-body py-0">
                                     <div class="row gy-5 gx-xl-8 bg-white">
                                         <!--begin::Col-->
                                         <div class="col-xxl-5">
                                             <div class="row">
                                                 <div class="col-xxl-6">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük Kodu</label>
-                                                    <span class="badge badge-light-primary" ng-cloak ng-show="modelObject.Id > 0">{{modelObject.LoadStatusStr}}</span>
+                                                    <span class="badge badge-light-primary" ng-cloak ng-show="modelObject.Id > 0">{{modelObject.LoadStatusTypeStr}}</span>
                                                     <!--begin::Input group-->
-                                                    <div class="mb-5">
+                                                    <div class="mb-3">
                                                         <input type="text" class="form-control form-control-solid" readonly="readonly" ng-model="modelObject.LoadCode" placeholder="" />
                                                     </div>
                                                 </div>
@@ -279,14 +280,14 @@
                                                 <div class="col-xxl-6">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yükleme Tarihi</label>
                                                     <!--begin::Input group-->
-                                                    <div class="mb-5">
+                                                    <div class="mb-3">
                                                         <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.LoadingDateStr" placeholder="" />
                                                     </div>
                                                 </div>
                                                 <div class="col-xxl-6">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Boşaltma Tarihi</label>
                                                     <!--begin::Input group-->
-                                                    <div class="mb-5">
+                                                    <div class="mb-3">
                                                         <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.DischargeDateStr" placeholder="" />
                                                     </div>
                                                 </div>
@@ -298,7 +299,7 @@
                                             <div class="row">
                                                 <div class="col-xxl-4">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yükleme Tipi</label>
-                                                    <select class="form-select form-select-solid" data-allow-clear="true"
+                                                    <select class="form-select form-select-solid mb-3" data-allow-clear="true"
                                                             ng-options="item.Text for item in orderUploadTypeList" ng-model="selectedOrderUploadType"
                                                             data-control="select2" data-placeholder="-- Seçiniz --">
                                                     </select>
@@ -306,7 +307,7 @@
                                                 </div>
                                                 <div class="col-xxl-4">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşlem Yön Tipi</label>
-                                                    <select class="form-select form-select-solid" data-allow-clear="true"
+                                                    <select class="form-select form-select-solid mb-3" data-allow-clear="true"
                                                             ng-options="item.Text for item in orderTransactionDirectionTypeList" ng-change="getNextOrderNo()" ng-model="selectedOrderTransactionDirectionType"
                                                             data-control="select2" data-placeholder="-- Seçiniz --">
                                                     </select>
@@ -314,7 +315,7 @@
                                                 </div>
                                                 <div class="col-xxl-4">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yükleme Noktası</label>
-                                                    <select class="form-select form-select-solid" data-allow-clear="true"
+                                                    <select class="form-select form-select-solid mb-3" data-allow-clear="true"
                                                             ng-options="item.Text for item in orderUploadPointTypeList" ng-model="selectedOrderUploadPointType"
                                                             data-control="select2" data-placeholder="-- Seçiniz --">
                                                     </select>
@@ -322,30 +323,30 @@
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-top:25px;">
+                                                <div class="col-xxl-4">
+                                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Hesaplama Tip</label>
+                                                    <select class="form-select form-select-solid mb-3" data-allow-clear="true"
+                                                            ng-options="item.Text for item in orderCalculationTypeList" ng-change="calculateOveralTotal()" ng-model="selectedOrderCalculationType"
+                                                            data-control="select2" data-placeholder="-- Seçiniz --">
+                                                    </select>
 
+                                                </div>
                                                 <div class="col-xxl-4">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çıkış Gümrük</label>
-                                                    <select class="form-select form-select-solid" data-allow-clear="true"
+                                                    <select class="form-select form-select-solid mb-3" data-allow-clear="true"
                                                             ng-options="item.CustomsName for item in customsList" ng-model="selectedEntryCustoms"
                                                             data-control="select2" data-placeholder="-- Seçiniz --">
                                                     </select>
                                                 </div>
                                                 <div class="col-xxl-4">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Varış Gümrük</label>
-                                                    <select class="form-select form-select-solid" data-allow-clear="true"
+                                                    <select class="form-select form-select-solid mb-3" data-allow-clear="true"
                                                             ng-options="item.CustomsName for item in customsList" ng-model="selectedExitCustoms"
                                                             data-control="select2" data-placeholder="-- Seçiniz --">
                                                     </select>
 
                                                 </div>
-                                                <div class="col-xxl-4">
-                                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Hesaplama Tip</label>
-                                                    <select class="form-select form-select-solid" data-allow-clear="true"
-                                                            ng-options="item.Text for item in orderCalculationTypeList" ng-change="calculateOveralTotal()" ng-model="selectedOrderCalculationType"
-                                                            data-control="select2" data-placeholder="-- Seçiniz --">
-                                                    </select>
 
-                                                </div>
                                             </div>
                                         </div>
 
@@ -359,22 +360,22 @@
                                 <div class="card-body py-0 mb-4">
                                     <div class="row ">
                                         <div class="col-xxl-6">
-                                            <div class="mb-5">
+                                            <div class="mb-3">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gönderici Firma</label>
                                                 <!--begin::Input group-->
                                                 <select class="form-select form-select-solid" data-allow-clear="true"
                                                         ng-options="item.FirmName for item in firmList" ng-model="selectedShipperFirm"
-                                                        data-control="select2" data-placeholder="-- Seçiniz --">
+                                                        data-control="select2" ng-change="findAddressShipperFirm()" data-placeholder="-- Seçiniz --">
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6">
-                                            <div class="mb-5">
+                                            <div class="mb-3">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Alıcı Firma</label>
                                                 <!--begin::Input group-->
                                                 <select class="form-select form-select-solid" data-allow-clear="true"
                                                         ng-options="item.FirmName for item in firmList" ng-model="selectedBuyerFirm"
-                                                        data-control="select2" data-placeholder="-- Seçiniz --">
+                                                        data-control="select2" ng-change="findAddressBuyerFirm()" data-placeholder="-- Seçiniz --">
                                                 </select>
                                             </div>
                                         </div>
@@ -387,8 +388,8 @@
                                                     <div class="mb-3">
                                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gön. Ülke</label>
                                                         <!--begin::Input group-->
-                                                        <select aria-label="Gönderici Firma Ülke" ng-options="item.CountryName for item in countryList"
-                                                                ng-model="selectedShipperCountry" data-control="select2" class="form-select form-select-solid">
+                                                        <select aria-label="Gönderici Firma Ülke" data-allow-clear="true" ng-options="item.CountryName for item in countryList"
+                                                                ng-model="selectedShipperCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -397,8 +398,8 @@
                                                     <div class="mb-3">
                                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gön. Şehir</label>
                                                         <!--begin::Input group-->
-                                                        <select aria-label="Gönderici Firma Şehir" ng-options="item.CityName for item in cityList"
-                                                                ng-model="selectedShipperCity" data-control="select2" class="form-select form-select-solid">
+                                                        <select aria-label="Gönderici Firma Şehir" data-allow-clear="true" ng-options="item.CityName for item in cityList"
+                                                                ng-model="selectedShipperCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -411,49 +412,49 @@
 
                                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Al. Ülke</label>
                                                         <!--begin::Input group-->
-                                                        <select aria-label="Alıcı Firma Ülke" ng-options="item.CountryName for item in countryList"
-                                                                ng-model="selectedBuyerCountry" data-control="select2" class="form-select form-select-solid">
+                                                        <select aria-label="Alıcı Firma Ülke" data-allow-clear="true" ng-options="item.CountryName for item in countryList"
+                                                                ng-model="selectedBuyerCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
                                                         </select>
                                                     </div>
                                                 </div>
 
-                                            <div class="col-xxl-6">
+                                                <div class="col-xxl-6">
 
-                                                <div class="mb-3">
+                                                    <div class="mb-3">
 
-                                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Al. Şehir</label>
-                                                    <!--begin::Input group-->
-                                                    <div class="Şehir">
-                                                        <select aria-label="Alıcı Firma Şehir" ng-options="item.CityName for item in cityList"
-                                                                ng-model="selectedBuyerCity" data-control="select2" class="form-select form-select-solid">
-                                                        </select>
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Al. Şehir</label>
+                                                        <!--begin::Input group-->
+                                                        <div class="Şehir">
+                                                            <select aria-label="Alıcı Firma Şehir" data-allow-clear="true" ng-options="item.CityName for item in cityList"
+                                                                    ng-model="selectedBuyerCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xxl-6">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gön. Adres</label>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3 d-flex flex-fill flex-column">
+                                                <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.ShipperFirmExplanation" placeholder=""></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Al. Adres</label>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3 d-flex flex-fill flex-column">
+                                                <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.BuyerFirmExplanation" placeholder=""></textarea>
                                             </div>
                                         </div>
 
                                     </div>
 
-                                        </div>
-                                            <div class="row">
-                                                <div class="col-xxl-6">
-                                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gön. Adres</label>
-                                                    <!--begin::Input group-->
-                                                    <div class="mb-5 d-flex flex-fill flex-column">
-                                                        <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.Explanation" placeholder=""></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xxl-6">
-                                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Al. Adres</label>
-                                                    <!--begin::Input group-->
-                                                    <div class="mb-5 d-flex flex-fill flex-column">
-                                                        <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.Explanation" placeholder=""></textarea>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
+                                </div>
 
                             </div>
                         </div>
@@ -465,13 +466,13 @@
                                         <div class="row">
                                             <div class="col-xxl-6">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sipariş No</label>
-                                                <div class="mb-5">
+                                                <div class="mb-3">
                                                     <input type="text" class="form-control form-control-solid" readonly ng-model="modelObject.OrderNo" placeholder="" />
                                                 </div>
                                             </div>
                                             <div class="col-xxl-6">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sipariş Oluşturan </label>
-                                                <div class="mb-5">
+                                                <div class="mb-3">
                                                     <input type="text" class="form-control form-control-solid" readonly ng-model="modelObject.OrderCreatUser" placeholder="" />
                                                 </div>
                                             </div>
@@ -480,14 +481,14 @@
                                             <div class="col-xxl-6">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Teslim Tarihi</label>
                                                 <!--begin::Input group-->
-                                                <div class="mb-5">
+                                                <div class="mb-3">
                                                     <input type="text" readonly class="form-control form-control-solid datepicker" ng-model="modelObject.DateOfNeedStr" placeholder="" />
                                                 </div>
                                             </div>
                                             <div class="col-xxl-6">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük Çıkış Tarihi</label>
                                                 <!--begin::Input group-->
-                                                <div class="mb-5">
+                                                <div class="mb-3">
                                                     <input type="text" readonly class="form-control form-control-solid datepicker" ng-model="modelObject.LoadOutDateStr" placeholder="" />
                                                 </div>
                                             </div>
@@ -497,10 +498,51 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="pills-generic" role="tabpanel" aria-labelledby="pills-generic-tab">
+                        <div class="tab-pane fade" id="pills-round" role="tabpanel" aria-labelledby="pills-round-tab">
                             <!--Tire-->
                             <div class="card">
                                 <div class="card-body py-0 mb-4">
+                                    <div class="row gy-5 gx-xl-12 bg-white">
+                                        <div class="row">
+                                            <div class="col-xxl-6">
+                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer No</label>
+                                                <div class="mb-3">
+                                                    <input type="text" class="form-control form-control-solid" readonly ng-model="modelObject.RoundNo" placeholder="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6">
+                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sipariş Oluşturan </label>
+                                                <div class="mb-3">
+                                                    <input type="text" class="form-control form-control-solid" readonly ng-model="modelObject.RoundCreatUser" placeholder="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xxl-6">
+                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şoför</label>
+                                                <!--begin::Input group-->
+                                                <div class="mb-3">
+                                                    <input type="text" readonly class="form-control form-control-solid datepicker" ng-model="modelObject.Driver" placeholder="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6">
+                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük Durumu</label>
+                                                <!--begin::Input group-->
+                                                <div class="mb-3">
+                                                    <input type="text" readonly class="form-control form-control-solid datepicker" ng-model="modelObject.RoundStatus" placeholder="" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pills-generic" role="tabpanel" aria-labelledby="pills-generic-tab">
+                            <!--Tire-->
+                            <div class="card">
+                                <div class="card-body py-0">
                                     <div class="row">
                                         <div class="col-xxl-6">
                                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük Temsilcisi</label>
@@ -513,7 +555,7 @@
                                         <div class="col-xxl-6">
                                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Crm No</label>
                                             <!--begin::Input group-->
-                                            <div class="mb-5">
+                                            <div class="mb-3">
                                                 <input type="text" class="form-control form-control-solid" ng-model="modelObject.CrmNo" placeholder="" />
                                             </div>
                                         </div>
@@ -522,14 +564,14 @@
                                         <div class="col-xxl-6">
                                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
                                             <!--begin::Input group-->
-                                            <div class="mb-5 d-flex flex-fill flex-column">
+                                            <div class="mb-3 d-flex flex-fill flex-column">
                                                 <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.Explanation" placeholder=""></textarea>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6">
                                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Navlun Bedeli</label>
                                             <!--begin::Input group-->
-                                            <div class="mb-5">
+                                            <div class="mb-3">
                                                 <input type="text" class="form-control form-control-solid" ng-model="modelObject.InvoiceFreightPrice" placeholder="" />
                                             </div>
                                         </div>
@@ -537,16 +579,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="pills-tire" role="tabpanel" aria-labelledby="pills-tire-tab">
-                            <!--Tire-->
-                            <div class="card">
-                                <div class="card-body py-0 mb-4">
-                                    <div class="dx-viewport">
-                                        <div id="authorList"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
 
@@ -566,55 +599,56 @@
                     <div class="separator border-dark separator-dashed my-4"></div>
 
                     <div class="row mt-2">
-                        <!--<div class="col-xxl-2">
-                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Birim Fiyat</label>-->
-                        <!--begin::Input group-->
-                        <!--<div class="mb-5">
+                        <div class="col-xxl-1">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Birim Fiyat</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
                                 <input type="text" class="form-control" ng-change="calculateOveralTotal()" ng-model="modelObject.CalculationTypePrice" placeholder="" />
                             </div>
-                        </div>-->
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Toplam Ladametre</label>
+                        </div>
+                        <div class="col-xxl-1">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Top. Miktar</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <input type="text" class="form-control" ng-model="modelObject.OveralLadametre" placeholder="" />
+                                <input type="text" class="form-control" readonly ng-model="modelObject.OveralQuantity" placeholder="" />
                             </div>
                         </div>
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Toplam Hacim (m3)</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control" ng-model="modelObject.OveralVolume" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Toplam Ağırlık (Kg)</label>
+                        <div class="col-xxl-2">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Top. Ağırlık (Kg)</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
                                 <input type="text" class="form-control" ng-model="modelObject.OveralWeight" placeholder="" />
                             </div>
                         </div>
-                        <!--<div class="col-xxl-2">
-                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ara Toplam</label>-->
-                        <!--begin::Input group-->
-                        <!--<div class="mb-5">
-                                <input type="text" class="form-control" readonly="readonly" ng-model="modelObject.SubTotal" placeholder="" />
+                        <div class="col-xxl-2">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Top. Hacim (m3)</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control" ng-model="modelObject.OveralVolume" placeholder="" />
                             </div>
                         </div>
-                        <div class="col-xxl-3">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kdv Toplam</label>-->
-                        <!--begin::Input group-->
-                        <!--<div class="mb-5">
-                                <input type="text" class="form-control" readonly="readonly" ng-model="modelObject.TaxPrice" placeholder="" />
+                        <div class="col-xxl-2">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Top. Ladametre</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control" ng-model="modelObject.OveralLadametre" placeholder="" />
                             </div>
-                        </div>-->
-                        <!--<div class="col-xxl-3">
-                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Genel Toplam</label>-->
-                        <!--begin::Input group-->
-                        <!--<div class="mb-5">
+                        </div>
+                        <div class="col-xxl-2">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Genel Top.</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
                                 <input type="text" class="form-control" readonly="readonly" ng-model="modelObject.OverallTotal" placeholder="" />
                             </div>
-                        </div>-->
+                        </div>
+                        <div class="col-xxl-2">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Döviz Kodu</label>
+                            <!--begin::Input group-->
+                            <select class="form-select form-select-solid" data-allow-clear="true"
+                                    ng-options="item.ForexTypeCode  for item in forexList" ng-model="selectedForexType"
+                                    data-control="select2" data-placeholder="-- Seçiniz --">
+                            </select>
+                        </div>
                     </div>
 
                 </div>

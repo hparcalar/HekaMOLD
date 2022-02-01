@@ -4121,8 +4121,12 @@
     <Content Include="FrontEndLogic\LayoutObjectType\index.js" />
     <Content Include="FrontEndLogic\LayoutObjectType\list.js" />
     <Content Include="FrontEndLogic\Layout\index.js" />
+    <Content Include="FrontEndLogic\Load\domesticlist.js" />
+    <Content Include="FrontEndLogic\Load\exportlist.js" />
+    <Content Include="FrontEndLogic\Load\importlist.js" />
     <Content Include="FrontEndLogic\Load\index.js" />
     <Content Include="FrontEndLogic\Load\list.js" />
+    <Content Include="FrontEndLogic\Load\transitlist.js" />
     <Content Include="FrontEndLogic\LOrder\index.js" />
     <Content Include="FrontEndLogic\LOrder\list.js" />
     <Content Include="FrontEndLogic\LOrder\UnapprovedOrder.js" />
@@ -4708,6 +4712,10 @@
     <Content Include="Views\Load\List.cshtml" />
     <Content Include="Views\Load\UnapprovedOrder.cshtml" />
     <Content Include="Views\LOrder\UnapprovedOrder.cshtml" />
+    <Content Include="Views\Load\ExportList.cshtml" />
+    <Content Include="Views\Load\ImportList.cshtml" />
+    <Content Include="Views\Load\DomesticList.cshtml" />
+    <Content Include="Views\Load\TransitList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -595,18 +595,24 @@ namespace HekaMOLD.Business.UseCases
         public BusinessResult CreateLoad(int orderId, int userId)
         {
             BusinessResult result = new BusinessResult();
-
+           
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemOrder>();
                 var repoLoad = _unitOfWork.GetRepository<ItemLoad>();
                 var repoLoadDetail = _unitOfWork.GetRepository<ItemLoadDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoCodeCounter = _unitOfWork.GetRepository<CodeCounter>();
+
 
                 var dbOrder = repo.Get(d => d.Id == orderId);
                 if (dbOrder == null)
                     throw new Exception("Sipariş bilgisine ulaşılamadı.");
-
+                string newLoadCode = "";
+                using (LoadBO lBObj = new LoadBO())
+                {
+                    newLoadCode = lBObj.GetNextLoadCode((int)dbOrder.OrderTransactionDirectionType);
+                }
                 // CREATE LOAD
                 var dbLoad = new ItemLoad
                 {
@@ -622,14 +628,17 @@ namespace HekaMOLD.Business.UseCases
                     CustomerFirmId = dbOrder.CustomerFirmId,
                     EntryCustomsId =dbOrder.EntryCustomsId,
                     ExitCustomsId = dbOrder.ExitCustomsId,
+                    OveralQuantity = dbOrder.OveralQuantity,
                     OveralLadametre = dbOrder.OveralLadametre,
                     OveralVolume = dbOrder.OveralVolume,
                     OveralWeight = dbOrder.OveralWeight,
+                    OverallTotal = dbOrder.OverallTotal,
                     CalculationTypePrice = dbOrder.CalculationTypePrice,
                     Explanation = dbOrder.Explanation,
                     ItemOrder = dbOrder,
-                    LoadCode = "Test",//GetNextOrderNo(dbRequest.PlantId.Value, ItemOrderType.Purchase),
+                    LoadCode = newLoadCode,
                     LoadStatusType = (int)LoadStatusType.Created,
+                    ForexTypeId = dbOrder.ForexTypeId,
                     PlantId = dbOrder.PlantId.Value,
                 };
                 repoLoad.Add(dbLoad);
@@ -665,13 +674,59 @@ namespace HekaMOLD.Business.UseCases
                     repoLoadDetail.Add(dbLoadDetail);
 
                     // CHANGE REQUEST DETAIL STATUS
-                    dbOrderDetail.OrderStatus = (int)OrderStatusType.Completed;
+                    dbOrderDetail.OrderStatus = (int)OrderStatusType.Loaded;
                     dbOrderDetail.UpdatedDate = DateTime.Now;
                     dbOrderDetail.UpdatedUserId = userId;
                 }
 
+                #region CODECOUNTER
+                var objCodeCounter = repoCodeCounter.Filter(d => d.CounterType == 2)
+                    .OrderByDescending(d => d.Id)
+                    .Select(d => d)
+                    .FirstOrDefault();
+                var dbrepoCodeCounter = repoCodeCounter.Get(d => d.Id == objCodeCounter.Id);
+                if (dbOrder.OrderTransactionDirectionType == 1)
+                {
+                    dbrepoCodeCounter.Export++;
+                }
+                if (dbOrder.OrderTransactionDirectionType == 2)
+                {
+                    dbrepoCodeCounter.Import++;
+                }
+                if (dbOrder.OrderTransactionDirectionType == 3)
+                {
+                    dbrepoCodeCounter.Domestic++;
+                }
+                if (dbOrder.OrderTransactionDirectionType == 4)
+                {
+                    dbrepoCodeCounter.Transit++;
+                }
+                #endregion
                 _unitOfWork.SaveChanges();
 
+                #region CREATE NOTIFICATION
+                    if (!repoNotify.Any(d => d.RecordId == dbLoad.Id && d.NotifyType == (int)NotifyType.ItemLoadWaitForApproval))
+                    {
+                        var repoUser = _unitOfWork.GetRepository<User>();
+                        var itemLoadApprovalOwners = repoUser.Filter(d => d.UserRole != null &&
+                            d.UserRole.UserAuth.Any(m => m.UserAuthType.AuthTypeCode == "LoadApproval" && m.IsGranted == true)).ToArray();
+
+                        foreach (var poOWNER in itemLoadApprovalOwners)
+                        {
+                            base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                            {
+                                IsProcessed = false,
+                                Message ="Yük Kodu: "+ newLoadCode
+                                + " yeni bir yük oluşturuldu. Onayınız bekleniyor.",
+                                Title = NotifyType.ItemLoadWaitForApproval.ToCaption(),
+                                NotifyType = (int)NotifyType.ItemLoadWaitForApproval,
+                                SeenStatus = 0,
+                                RecordId = dbLoad.Id,
+                                UserId = poOWNER.Id
+                            });
+                        }
+                }
+                #endregion
                 result.Result = true;
                 result.RecordId = dbLoad.Id;
             }

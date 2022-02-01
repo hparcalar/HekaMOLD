@@ -4,6 +4,8 @@
     {
         Volumetric = 1,
         Weighted = 2,
-        Ladametre = 3
+        Ladametre = 3,
+        Complet = 4,
+        Minimum = 5
     }
 }

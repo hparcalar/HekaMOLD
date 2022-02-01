@@ -14,22 +14,21 @@ namespace HekaMOLD.Business.UseCases
     public class LoadBO : CoreReceiptsBO
     {
 
-        public string GetNextLoadCode(int plantId, int directionId = 0)
+        public string GetNextLoadCode(int directionId = 0)
         {
             string defaultValue = "";
             try
             {
-
-                var repo = _unitOfWork.GetRepository<ItemLoad>();
-                int lastOrderNo = repo.GetAll()
+                var repo = _unitOfWork.GetRepository<CodeCounter>();
+                var dbCodeCounter = repo.Filter(d=>d.CounterType == 2)
                     .OrderByDescending(d => d.Id)
-                    .Select(d => d.Id)
+                    .Select(d => d)
                     .FirstOrDefault();
+                defaultValue = dbCodeCounter.FirstValue + string.Format("{0:00000}", Convert.ToInt32(directionId == 1 ? (int)dbCodeCounter.Export : directionId == 2 ? (int)dbCodeCounter.Import : directionId == 3 ? (int)dbCodeCounter.Domestic : directionId == 4 ? 
+                    (int)dbCodeCounter.Transit : dbCodeCounter.Id) + 1) + ((OrderTransactionDirectionType)directionId).ToCaption();
 
-                if (string.IsNullOrEmpty(Convert.ToString(lastOrderNo)))
-                    lastOrderNo = 0;
-                defaultValue = DateTime.Now.Year + "-" + string.Format("{0:000000}", Convert.ToInt32(lastOrderNo) + 1);
-                return  defaultValue+ ((OrderTransactionDirectionType)directionId).ToCaption();
+                //defaultValue = DateTime.Now.Year + "-" + string.Format("{0:000000}", Convert.ToInt32(lastOrderNo) + 1);
+                return  defaultValue;
             }
             catch (Exception)
             {
@@ -38,6 +37,7 @@ namespace HekaMOLD.Business.UseCases
 
             return defaultValue;
         }
+
         public ItemLoadModel[] GetItemLoadList()
         {
             List<ItemLoadModel> data = new List<ItemLoadModel>();
@@ -48,12 +48,155 @@ namespace HekaMOLD.Business.UseCases
             {
                 ItemLoadModel containerObj = new ItemLoadModel();
                 d.MapTo(containerObj); 
-                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType.Value).ToCaption();
+                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
                 containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
                 containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
                 containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed );
                 containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
+                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : System.DateTime.Today);
                 containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
+                containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
+                containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
+                containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
+                containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
+                containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
+                containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption():"";
+
+
+
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+        public ItemLoadModel[] GetItemLoadExportList()
+        {
+            List<ItemLoadModel> data = new List<ItemLoadModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemLoad>();
+
+            repo.Filter(d=>d.OrderTransactionDirectionType == (int) OrderTransactionDirectionType.Export).ToList().ForEach(d =>
+            {
+                ItemLoadModel containerObj = new ItemLoadModel();
+                d.MapTo(containerObj);
+                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
+                containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
+                containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
+                containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
+                containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
+                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : System.DateTime.Today);
+                containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
+                containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
+                containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
+                containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
+                containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
+                containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
+                containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "";
+
+
+
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+        public ItemLoadModel[] GetItemLoadImportList()
+        {
+            List<ItemLoadModel> data = new List<ItemLoadModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemLoad>();
+
+            repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Import).ToList().ForEach(d =>
+            {
+                ItemLoadModel containerObj = new ItemLoadModel();
+                d.MapTo(containerObj);
+                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
+                containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
+                containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
+                containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
+                containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
+                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : System.DateTime.Today);
+                containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
+                containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
+                containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
+                containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
+                containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
+                containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
+                containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "";
+
+
+
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+        public ItemLoadModel[] GetItemLoadDomesticList()
+        {
+            List<ItemLoadModel> data = new List<ItemLoadModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemLoad>();
+
+            repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Domestic).ToList().ForEach(d =>
+            {
+                ItemLoadModel containerObj = new ItemLoadModel();
+                d.MapTo(containerObj);
+                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
+                containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
+                containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
+                containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
+                containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
+                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : System.DateTime.Today);
+                containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
+                containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
+                containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
+                containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
+                containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
+                containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
+                containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "";
+
+
+
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+        public ItemLoadModel[] GetItemLoadTransitList()
+        {
+            List<ItemLoadModel> data = new List<ItemLoadModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemLoad>();
+
+            repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Transit).ToList().ForEach(d =>
+            {
+                ItemLoadModel containerObj = new ItemLoadModel();
+                d.MapTo(containerObj);
+                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
+                containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
+                containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
+                containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
+                containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
+                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : System.DateTime.Today);
+                containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
+                containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
+                containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
+                containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
+                containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
+                containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
+                containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "";
+
+
 
                 data.Add(containerObj);
             });
@@ -74,6 +217,7 @@ namespace HekaMOLD.Business.UseCases
                 model = dbObj.MapTo(model);
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed );
                 model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrder != null ? dbObj.ItemOrder.OrderDate : System.DateTime.Today);
+                model.LoadStatusTypeStr =  ((LoadStatusType)dbObj.LoadStatusType).ToCaption() != null ? ((LoadStatusType)dbObj.LoadStatusType).ToCaption() :"";
                 model.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.DischargeDate);
                 model.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadingDate);
                 model.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}",  dbObj.LoadOutDate );
@@ -86,8 +230,7 @@ namespace HekaMOLD.Business.UseCases
                 model.ExitCustomsCode = dbObj.CustomsExit != null ? dbObj.CustomsExit.CustomsCode : "";
                 model.ExitCustomsName = dbObj.CustomsExit != null ? dbObj.CustomsExit.CustomsName : "";
                 //model.OrderCreatUser = dbObj.ItemOrder.User != null ? dbObj.ItemOrder.User.Login:"";
-                model.OrderTransactionDirectionTypeStr = dbObj.OrderTransactionDirectionType == 1 ? LSabit.GET_ABROAD_EXPORT : dbObj.OrderTransactionDirectionType == 2 ? LSabit.GET_ABROAD_IMPORT :
-                    dbObj.OrderTransactionDirectionType == 3 ? LSabit.GET_DOMESTIC : dbObj.OrderTransactionDirectionType == 4 ? LSabit.GET_DOMESTIC_TRASFER : dbObj.OrderTransactionDirectionType == 5 ? LSabit.GET_ABROAD_TRASFER : "";
+                model.OrderTransactionDirectionTypeStr =dbObj.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)dbObj.OrderTransactionDirectionType).ToCaption():"";
                 model.OrderUploadTypeStr = dbObj.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : dbObj.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
                 model.OrderUploadPointTypeStr =  dbObj.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : dbObj.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "" ;
                 model.OrderCalculationTypeStr =  dbObj.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : dbObj.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : dbObj.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : "";
@@ -111,6 +254,7 @@ namespace HekaMOLD.Business.UseCases
                         Height = d.Height,
                         Weight = d.Weight,
                         Volume = d.Volume,
+                        Ladametre = d.Ladametre,
                         Stackable = d.Stackable,
                         PackageInNumber = d.PackageInNumber,
                         UnitId = d.UnitId,
@@ -208,13 +352,15 @@ namespace HekaMOLD.Business.UseCases
                 var repoDetail = _unitOfWork.GetRepository<ItemLoadDetail>();
                 var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoCodeCounter = _unitOfWork.GetRepository<CodeCounter>();
+
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
                     dbObj = new ItemLoad();
-                    dbObj.OrderNo = "Yapılandır"; //GetNextOrderNo(model.PlantId.Value, (ItemOrderType)model.OrderType.Value);
+                    dbObj.LoadCode = GetNextLoadCode( (int)model.OrderTransactionDirectionType);
                     dbObj.CreatDate = DateTime.Now;
                     dbObj.CreatedUserId = model.CreatedUserId;
                     dbObj.LoadStatusType = (int)LoadStatusType.Created;
@@ -237,12 +383,24 @@ namespace HekaMOLD.Business.UseCases
                     model.DateOfNeed = DateTime.ParseExact(model.DateOfNeedStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
-
                 if (!string.IsNullOrEmpty(model.LoadOutDateStr))
                 {
                     model.LoadOutDate = DateTime.ParseExact(model.LoadOutDateStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
+                if (!string.IsNullOrEmpty(model.LoadingDateStr))
+                {
+                    model.LoadingDate = DateTime.ParseExact(model.LoadingDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (model.OrderTransactionDirectionType == null)
+                    throw new Exception("İşlem yönü seçilmelidir !");
+
+                if (model.ForexTypeId == null)
+                    throw new Exception("Döviz kodu seçilmelidir !");
+
+                if (string.IsNullOrEmpty(model.LoadCode))
+                    throw new Exception("Yük kodu boş geçilemez !");
 
                 var crDate = dbObj.CreatDate;
                 var reqStats = dbObj.LoadStatusType;
@@ -340,10 +498,35 @@ namespace HekaMOLD.Business.UseCases
                 }
                 #endregion
 
+                #region CODECOUNTER
+                var objCodeCounter = repoCodeCounter.Filter(d => d.CounterType == 2)
+                    .OrderByDescending(d => d.Id)
+                    .Select(d => d)
+                    .FirstOrDefault();
+                var dbrepoCodeCounter = repoCodeCounter.Get(d => d.Id == objCodeCounter.Id);
+                if (newRecord)
+                {
+                    if (model.OrderTransactionDirectionType == 1)
+                    {
+                        dbrepoCodeCounter.Export++;
+                    }
+                    if (model.OrderTransactionDirectionType == 2)
+                    {
+                        dbrepoCodeCounter.Import++;
+                    }
+                    if (model.OrderTransactionDirectionType == 3)
+                    {
+                        dbrepoCodeCounter.Domestic++;
+                    }
+                    if (model.OrderTransactionDirectionType == 4)
+                    {
+                        dbrepoCodeCounter.Transit++;
+                    }
+                }
+                #endregion
                 _unitOfWork.SaveChanges();
-
                 #region CREATE NOTIFICATION
-                    if (newRecord || !repoNotify.Any(d => d.RecordId == dbObj.Id && d.NotifyType == (int)NotifyType.ItemLoadWaitForApproval))
+                if (newRecord || !repoNotify.Any(d => d.RecordId == dbObj.Id && d.NotifyType == (int)NotifyType.ItemLoadWaitForApproval))
                     {
                         var repoUser = _unitOfWork.GetRepository<User>();
                         var itemLoadApprovalOwners = repoUser.Filter(d => d.UserRole != null &&
@@ -368,6 +551,58 @@ namespace HekaMOLD.Business.UseCases
 
                 result.Result = true;
                 result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult ApproveLoad(int id, int userId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemLoad>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj == null)
+                    throw new Exception("Onaylanması beklenen yük kaydına ulaşılamadı.");
+
+                if (dbObj.LoadStatusType != (int)LoadStatusType.Created)
+                    throw new Exception("Onay bekleyen durumunda olmayan bir sipariş onaylanamaz.");
+
+                dbObj.LoadStatusType = (int)LoadStatusType.Approved;
+                dbObj.UpdatedDate = DateTime.Now;
+                dbObj.UpdatedUserId = userId;
+
+                foreach (var item in dbObj.ItemLoadDetail)
+                {
+                    item.LoadStatus = (int)LoadStatusType.Approved;
+                }
+
+                _unitOfWork.SaveChanges();
+
+                #region CREATE NOTIFICATIONS
+                base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+                {
+                    IsProcessed = false,
+                    Message = "Yük kodu: "+dbObj.LoadCode
+                            + " olan yük onaylandı.",
+                    Title = NotifyType.ItemLoadIsApproved.ToCaption(),
+                    NotifyType = (int)NotifyType.ItemOrderIsApproved,
+                    SeenStatus = 0,
+                    RecordId = dbObj.Id,
+                    UserId = dbObj.CreatedUserId
+                });
+                #endregion
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
             }
             catch (Exception ex)
             {

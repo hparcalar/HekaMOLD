@@ -60,6 +60,7 @@
     <Compile Include="Context\Models\AllocatedCode.cs" />
     <Compile Include="Context\Models\Attachment.cs" />
     <Compile Include="Context\Models\City.cs" />
+    <Compile Include="Context\Models\CodeCounter.cs" />
     <Compile Include="Context\Models\ContractWorkFlow.cs" />
     <Compile Include="Context\Models\Country.cs" />
     <Compile Include="Context\Models\Customs.cs" />
@@ -336,6 +337,22 @@
     <Compile Include="Migrations\202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.designer.cs">
       <DependentUpon>202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.cs" />
+    <Compile Include="Migrations\202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.designer.cs">
+      <DependentUpon>202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201291352386_ItemOrderAndItemLoad%28Update%29.cs" />
+    <Compile Include="Migrations\202201291352386_ItemOrderAndItemLoad%28Update%29.designer.cs">
+      <DependentUpon>202201291352386_ItemOrderAndItemLoad%28Update%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.cs" />
+    <Compile Include="Migrations\202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.designer.cs">
+      <DependentUpon>202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201311235218_CodeCounterAdd.cs" />
+    <Compile Include="Migrations\202201311235218_CodeCounterAdd.designer.cs">
+      <DependentUpon>202201311235218_CodeCounterAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -379,6 +396,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201171926132_CustomsUpdate.resx">
       <DependentUpon>202201171926132_CustomsUpdate.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201172255155_UpdateVehicle%28Model-Versiyon%29.resx">
       <DependentUpon>202201172255155_UpdateVehicle%28Model-Versiyon%29.cs</DependentUpon>
@@ -478,6 +496,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.resx">
       <DependentUpon>202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.resx">
+      <DependentUpon>202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201291352386_ItemOrderAndItemLoad%28Update%29.resx">
+      <DependentUpon>202201291352386_ItemOrderAndItemLoad%28Update%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.resx">
+      <DependentUpon>202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201311235218_CodeCounterAdd.resx">
+      <DependentUpon>202201311235218_CodeCounterAdd.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

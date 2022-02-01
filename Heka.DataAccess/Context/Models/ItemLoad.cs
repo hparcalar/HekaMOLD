@@ -29,6 +29,7 @@ namespace Heka.DataAccess.Context.Models
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
         public Nullable<System.DateTime> DateOfNeed { get; set; }
+        public int? OveralQuantity { get; set; }
 
         [ForeignKey("UserAuthor")]
         public int? UserAuthorId { get; set; }
@@ -37,6 +38,9 @@ namespace Heka.DataAccess.Context.Models
         [ForeignKey("Invoice")]
         public int? InvoiceId { get; set; }
 
+        [ForeignKey("ForexType")]
+        public Nullable<int> ForexTypeId { get; set; }
+
         public int? InvoiceStatus { get; set; }
         //Navlun bedeli
         public decimal? InvoiceFreightPrice { get; set; }
@@ -44,7 +48,9 @@ namespace Heka.DataAccess.Context.Models
         public int? CrmStatus { get; set; }
 
         public string Explanation { get; set; }
-
+        public string ShipperFirmExplanation { get; set; }
+        public string BuyerFirmExplanation { get; set; }
+        
         [ForeignKey("CityShipper")]
         public Nullable<int> ShipperCityId { get; set; }
 
@@ -82,6 +88,7 @@ namespace Heka.DataAccess.Context.Models
         [ForeignKey("User")]
         public Nullable<int> CreatedUserId { get; set; }
 
+
         public Nullable<System.DateTime> CreatDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
@@ -100,6 +107,7 @@ namespace Heka.DataAccess.Context.Models
         public virtual Country CountryBuyer { get; set; }
         public virtual City CityShipper { get; set; }
         public virtual City CityBuyer { get; set; }
+        public virtual ForexType ForexType { get; set; }
 
         [InverseProperty("ItemLoad")]
         public virtual ICollection<ItemLoadDetail> ItemLoadDetail { get; set; }

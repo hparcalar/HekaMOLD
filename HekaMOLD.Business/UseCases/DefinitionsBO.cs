@@ -33,6 +33,17 @@ namespace HekaMOLD.Business.UseCases
                     IsApproved = true,
                     FirmType = d.FirmType,
                     FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : "Tedarikçi + Müşteri",
+                    Address = d.Address,
+                    Address2 = d.Address2,
+                    CityId = d.CityId,
+                    CountryId = d.CountryId,
+                    CityName = d.City != null ? d.City.CityName : "",
+                    CountryName = d.Country != null ? d.Country.CountryName : "",
+                    LadametrePrice = d.LadametrePrice,
+                    WeightPrice = d.WeightPrice,
+                    MeterCupPrice = d.MeterCupPrice,
+                    ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode: "",
+
                 }).ToArray();
         }
 
