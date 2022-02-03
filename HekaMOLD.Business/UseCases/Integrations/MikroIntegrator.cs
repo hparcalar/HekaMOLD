@@ -516,46 +516,28 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             firmId = dbFirm.Id;
                                     }
 
-                                    if (firmId != null)
-                                    {
-                                        var orderResult = subObj.SaveOrUpdateItemOrder(new ItemOrderModel
-                                        {
-                                            OrderNo = subObj.GetNextOrderNo(syncPoint.PlantId.Value, ItemOrderType.Sale),
-                                            DocumentNo = intOrderNo.ToString(),
-                                            OrderType = (int)ItemOrderType.Sale,
-                                            DateOfNeed = (DateTime)row["sip_teslim_tarih"],
-                                            CustomerFirmId = firmId,
-                                            PlantId = syncPoint.PlantId,
-                                            OrderDate = (DateTime)row["sip_tarih"],
-                                            OrderStatus = (int)OrderStatusType.Created,
-                                            CreatedDate = DateTime.Now,
-                                            Details = new ItemOrderDetailModel[0]
-                                        }, detailCanBeNull: true);
+                                    //if (firmId != null)
+                                    //{
+                                    //    var orderResult = subObj.SaveOrUpdateItemOrder(new ItemOrderModel
+                                    //    {
+                                    //        OrderNo = subObj.GetNextOrderNo(syncPoint.PlantId.Value, ItemOrderType.Sale),
+                                    //        DocumentNo = intOrderNo.ToString(),
+                                    //        OrderType = (int)ItemOrderType.Sale,
+                                    //        DateOfNeed = (DateTime)row["sip_teslim_tarih"],
+                                    //        CustomerFirmId = firmId,
+                                    //        PlantId = syncPoint.PlantId,
+                                    //        OrderDate = (DateTime)row["sip_tarih"],
+                                    //        OrderStatus = (int)OrderStatusType.Created,
+                                    //        CreatedDate = DateTime.Now,
+                                    //        Details = new ItemOrderDetailModel[0]
+                                    //    }, detailCanBeNull: true);
 
-                                        if (orderResult.Result)
-                                            lastOrderId = orderResult.RecordId;
-                                    }
+                                    //    if (orderResult.Result)
+                                    //        lastOrderId = orderResult.RecordId;
+                                    //}
                                 }
-                                else
-                                {
-                                    var dbItemOrder = subObj.GetItemOrder(intOrderNo, ItemOrderType.Sale);
-                                    if (dbItemOrder != null)
-                                    {
-                                        lastOrderId = dbItemOrder.Id;
 
-                                        //if (dbItemOrder.OrderStatus != (int)OrderStatusType.Created)
-                                        //    isLockedOrder = true;
 
-                                        if (!isLockedOrder)
-                                        {
-                                            // MEVCUT SİPARİŞ İSE GÜNCELLE VE TÜM DETAYLARINI SİL, AŞAĞIDA YENİDEN EKLENECEK
-                                            dbItemOrder.DateOfNeed = (DateTime)row["sip_teslim_tarih"];
-                                            dbItemOrder.OrderDate = (DateTime)row["sip_tarih"];
-                                            dbItemOrder.Details = new ItemOrderDetailModel[0];
-                                            subObj.SaveOrUpdateItemOrder(dbItemOrder, detailCanBeNull: true);
-                                        }
-                                    }
-                                }
                             }
 
                             lastOrderNo = intOrderNo;

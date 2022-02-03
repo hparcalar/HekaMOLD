@@ -15,6 +15,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? PersonnelId { get; set; }
         public int? ForexTypeId { get; set; }
         public decimal? Amount { get; set; }
+        public string DocumentNo { get; set; }
         public string Explanation { get; set; }
 
         #region VISUAL ELEMENTS

@@ -39,7 +39,7 @@
                 { dataField: 'Plate', caption: 'Plaka' },
                 { dataField: 'StartDateStr', caption: 'Başlangıç Tarihi' },
                 { dataField: 'EndDateStr', caption: 'Bitiş Tarihi' },
-                { dataField: 'VehicleInsuranceTypeName', caption: 'Sigorta Tip' },
+                { dataField: 'VehicleInsuranceTypeName', caption: 'Belge Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'KmHour', caption: 'Km/Saat' },
                 { dataField: 'Amount', caption: 'Fiyat' },

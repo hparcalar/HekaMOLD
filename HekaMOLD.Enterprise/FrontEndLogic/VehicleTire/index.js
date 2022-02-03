@@ -120,6 +120,7 @@
             VehicleTireType: $scope.selectedVehicleTireType.Id,
             KmHour: $scope.modelObject.KmHour,
             Amount: $scope.modelObject.Amount,
+            DocumentNo: $scope.modelObject.DocumentNo,
             ForexTypeId: $scope.selectedForexType.Id,
             SeriNo: $scope.modelObject.SeriNo,
             DimensionsInfo: $scope.modelObject.DimensionsInfo,

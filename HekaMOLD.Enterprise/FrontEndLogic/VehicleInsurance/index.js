@@ -40,7 +40,7 @@
     }
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu araç sigorta bilgisini silmek istediğinizden emin misiniz?",
+            message: "Bu araç belge bilgisini silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
                 confirm: {
@@ -83,7 +83,8 @@
             EndDateStr: $scope.modelObject.EndDateStr,
             Plate: $scope.selectedVehicle.Plate,
             VehicleId: $scope.selectedVehicle.Id,
-            KmHour: $scope.selectedVehicle.KmHour,
+            KmHour: $scope.modelObject.KmHour,
+            DocumentNo: $scope.modelObject.DocumentNo,
             OperationFirmId: $scope.selectedOperationFirm.Id,
             VehicleInsuranceTypeId: $scope.selectedVehicleInsuranceType.Id,
             ForexTypeId: $scope.selectedForexType.Id,

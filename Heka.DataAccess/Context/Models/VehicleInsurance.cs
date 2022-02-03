@@ -26,6 +26,7 @@ namespace Heka.DataAccess.Context.Models
         public int? ForexTypeId { get; set; }
         public decimal? Amount { get; set; }
         public string Explanation { get; set; }
+        public string DocumentNo { get; set; }
 
         public Nullable<int> PlantId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }

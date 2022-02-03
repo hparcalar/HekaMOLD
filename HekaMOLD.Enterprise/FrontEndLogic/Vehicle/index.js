@@ -6,9 +6,12 @@
     $scope.selectedVehicleType = {};
     $scope.vehicleTypeList = [];
 
+
     $scope.selectedTrailerType = {};
     $scope.trailerTypeList = [{ Id: 1, Text: 'Çadırlı' },
-        { Id: 2, Text: 'Frigo' }, { Id: 3, Text: 'Kapalı' }];
+        { Id: 2, Text: 'Frigo' }, { Id: 3, Text: 'Kapalı Kasa' }, { Id: 4, Text: 'Optima' }, { Id: 5, Text: 'Mega' }
+        , { Id: 6, Text: 'Konteyner' }, { Id: 7, Text: 'Swapboddy' }, { Id: 8, Text: 'Lowbed' }
+        , { Id: 9, Text: 'Kamyon Romörk' }, { Id: 10, Text: 'Standart' }, { Id: 10, Text: 'Minivan' }];
 
     $scope.selectedVehicleAllocationType = {};
     $scope.vehicleAllocationTypeList = [{ Id: 1, Text: 'Satın Alma' },
@@ -221,7 +224,7 @@
                 { dataField: 'Plate', caption: 'Plaka' },
                 { dataField: 'StartDateStr', caption: 'Başlangıç Tarihi', format: 'dd.MM.yyyy' },
                 { dataField: 'EndDateStr', caption: 'Bitiş Tarihi', format: 'dd.MM.yyyy' },
-                { dataField: 'VehicleInsuranceTypeName', caption: 'Sigorta Tip' },
+                { dataField: 'VehicleInsuranceTypeName', caption: 'Belge Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
                 { dataField: 'Amount', caption: 'Fiyat' },
                 { dataField: 'ForexTypeCode', caption: 'Döviz Kodu' },
@@ -310,9 +313,6 @@
 
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
-
-        console.log($scope.modelObject);
-
         $http.post(HOST_URL + 'Vehicle/SaveModel', {
             Id: $scope.modelObject.Id,
             Plate: $scope.modelObject.Plate,

@@ -26,6 +26,7 @@ namespace Heka.DataAccess.Context.Models
         public int? KmHourLimit { get; set; }
         [ForeignKey("ForexType")]
         public int? ForexTypeId { get; set; }
+        public string DocumentNo { get; set; }
         public string Explanation { get; set; }
 
         //iptal

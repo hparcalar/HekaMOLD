@@ -118,7 +118,13 @@
                         }
                     ]
                 }
-            ]
+            ],
+            summary: {
+                totalItems: [{
+                    column: 'LoadCode',
+                    summaryType: 'count',
+                }]
+            },
         });
     }
 

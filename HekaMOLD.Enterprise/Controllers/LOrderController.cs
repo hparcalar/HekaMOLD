@@ -124,9 +124,10 @@ namespace HekaMOLD.Enterprise.Controllers
                         throw new Exception("Sisteme yeniden giriş yapmanız gerekmektedir.");
 
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                    int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
                     model.OrderType = (int)ItemOrderType.Sale;
 
-                    result = bObj.SaveOrUpdateItemOrder(model);
+                    result = bObj.SaveOrUpdateItemOrder(model, userId);
                 }
 
                 if (result.Result)

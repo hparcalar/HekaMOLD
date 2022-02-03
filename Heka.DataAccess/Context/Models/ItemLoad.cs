@@ -44,13 +44,35 @@ namespace Heka.DataAccess.Context.Models
         public int? InvoiceStatus { get; set; }
         //Navlun bedeli
         public decimal? InvoiceFreightPrice { get; set; }
-        public string CrmNo { get; set; }
-        public int? CrmStatus { get; set; }
+        public string CmrNo { get; set; }
+        public int? CmrStatus { get; set; }
 
         public string Explanation { get; set; }
         public string ShipperFirmExplanation { get; set; }
         public string BuyerFirmExplanation { get; set; }
-        
+        //Hazır olma Tarihi
+        public DateTime? ReadinessDate { get; set; }
+        //Müşteriden teslim Alınış Tarihi
+        public DateTime? DeliveryFromCustomerDate  { get; set; }
+        //İstenen Varış Tarihi
+        public DateTime? IntendedArrivalDate  { get; set; }
+        public string ArrivalCustoms { get; set; }
+        public string CustomsExplanation { get; set; }
+        public string T1T2No { get; set; }
+        //T Kapanış Tarihi
+        public DateTime? TClosingDate { get; set; }
+        public bool? HasCmrDeliveryed { get; set; }
+        public decimal? ItemPrice { get; set; }
+        public int? TrailerType { get; set; }
+        public bool? HasItemInsurance { get; set; }
+        public string ItemInsuranceDraftNo { get; set; }
+        //Tehlikeli Madde var
+        public bool? HasItemDangerous { get; set; }
+        //Cmr Müşteri Teslim Tarihi
+        public DateTime? CmrCustomerDeliveryDate { get; set; }
+        //Depoya Getiren Araç
+        public string BringingToWarehousePlate { get; set; }
+
         [ForeignKey("CityShipper")]
         public Nullable<int> ShipperCityId { get; set; }
 

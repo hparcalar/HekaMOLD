@@ -17,6 +17,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public bool? Invalidation { get; set; }
         //Toplam
         public decimal? Amount { get; set; }
+        public string DocumentNo { get; set; }
         public string Explanation { get; set; }
 
         #region VISUAL ELEMENTS

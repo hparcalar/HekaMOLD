@@ -353,6 +353,26 @@
     <Compile Include="Migrations\202201311235218_CodeCounterAdd.designer.cs">
       <DependentUpon>202201311235218_CodeCounterAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202011319346_ItemLoadRevize.cs" />
+    <Compile Include="Migrations\202202011319346_ItemLoadRevize.designer.cs">
+      <DependentUpon>202202011319346_ItemLoadRevize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.cs" />
+    <Compile Include="Migrations\202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.designer.cs">
+      <DependentUpon>202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.cs" />
+    <Compile Include="Migrations\202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.designer.cs">
+      <DependentUpon>202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.cs" />
+    <Compile Include="Migrations\202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.designer.cs">
+      <DependentUpon>202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202022201418_Vehicle%28CareInsuranceTire%29Update.cs" />
+    <Compile Include="Migrations\202202022201418_Vehicle%28CareInsuranceTire%29Update.designer.cs">
+      <DependentUpon>202202022201418_Vehicle%28CareInsuranceTire%29Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -508,6 +528,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201311235218_CodeCounterAdd.resx">
       <DependentUpon>202201311235218_CodeCounterAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202011319346_ItemLoadRevize.resx">
+      <DependentUpon>202202011319346_ItemLoadRevize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.resx">
+      <DependentUpon>202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.resx">
+      <DependentUpon>202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.resx">
+      <DependentUpon>202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202022201418_Vehicle%28CareInsuranceTire%29Update.resx">
+      <DependentUpon>202202022201418_Vehicle%28CareInsuranceTire%29Update.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

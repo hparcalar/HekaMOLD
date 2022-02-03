@@ -210,8 +210,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 {
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
 
-                    //model.OrderType = (int)ItemOrderType.Purchase;
-                    result = bObj.SaveOrUpdateLoad(model);
+                    int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+                    result = bObj.SaveOrUpdateLoad(model, userId);
                 }
 
                 if (result.Result)
@@ -226,6 +226,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
 
         }
+
         [HttpGet]
         public JsonResult GetNextReceiptNo()
         {

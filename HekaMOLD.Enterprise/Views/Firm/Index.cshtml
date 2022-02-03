@@ -319,7 +319,7 @@
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İl</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <select aria-label="İl" ng-options="item.CityName for item in cityList"
+                                <select aria-label="İl" data-allow-clear="true" ng-options="item.CityName for item in cityList"
                                         ng-model="selectedCity" data-control="select2" class="form-select form-select-solid">
                                 </select>
                             </div>
@@ -328,8 +328,8 @@
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ülke</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <select aria-label="Ülke" ng-options="item.CountryName for item in countryList"
-                                        ng-model="selectedCountry" class="form-select form-select-solid">
+                                <select aria-label="Ülke" data-allow-clear="true" ng-options="item.CountryName for item in countryList"
+                                        ng-model="selectedCountry" data-control="select2" class="form-select form-select-solid">
                                 </select>
                             </div>
                         </div>

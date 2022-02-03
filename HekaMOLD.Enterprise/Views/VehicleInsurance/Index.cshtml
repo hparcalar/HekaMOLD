@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Araç Sigorta Tanımları";
+    ViewBag.Title = "Araç Belge Tanımları";
 }
 
 <div ng-controller="vehicleInsuranceCtrl">
@@ -116,10 +116,10 @@
                         </div>
 
                         <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sigorta Tip</label>
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Belge Tip</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
-                                <select aria-label="Sigorta Tip" ng-options="item.VehicleInsuranceTypeName for item in vehicleInsuranceTypeList"
+                                <select aria-label="Belge Tip" ng-options="item.VehicleInsuranceTypeName for item in vehicleInsuranceTypeList"
                                         ng-model="selectedVehicleInsuranceType" class="form-select form-select-solid">
                                 </select>
                             </div>
@@ -193,7 +193,14 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Evrak No</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid " ng-model="modelObject.DocumentNo" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
                             <!--begin::Input group-->
                             <div class="mb-5">

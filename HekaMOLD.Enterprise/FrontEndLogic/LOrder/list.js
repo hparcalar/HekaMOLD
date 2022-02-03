@@ -79,6 +79,7 @@
                     e.rowElement.addClass(deadlineClass);
             },
             columns: [
+                { dataField: 'Id', caption: 'Id', visible: false,sortOrder: "desc", },
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
                 { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
@@ -119,7 +120,14 @@
                         }
                     ]
                 }
-            ]
+            ],
+            summary: {
+                totalItems: [{
+                    column: 'OrderNo',
+                    summaryType: 'count',
+                }]
+            },
+
         });
     }
 

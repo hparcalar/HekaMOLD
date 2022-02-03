@@ -80,6 +80,7 @@
                     e.rowElement.addClass(deadlineClass);
             },
             columns: [
+                { dataField: 'Id', caption: 'Id', visible: false, sortOrder: "desc", },
                 { dataField: 'LoadCode', caption: 'Yük Kodu' },
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
@@ -118,7 +119,13 @@
                         }
                     ]
                 }
-            ]
+            ],
+            summary: {
+                totalItems: [{
+                    column: 'LoadCode',
+                    summaryType: 'count',
+                }]
+            },
         });
     }
 

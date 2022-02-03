@@ -36,8 +36,8 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'VehicleInsuranceTypeCode', caption: 'Sigorta Tip Kodu' },
-                { dataField: 'VehicleInsuranceTypeName', caption: 'Sigorta Tip Adı' },
+                { dataField: 'VehicleInsuranceTypeCode', caption: 'Belge Tip Kodu' },
+                { dataField: 'VehicleInsuranceTypeName', caption: 'Belge Tip Adı' },
                 {
                     type: "buttons",
                     buttons: [

@@ -35,6 +35,12 @@
     $scope.selectedOrderCalculationType = { Id: 0 };
     $scope.orderCalculationTypeList = [{ Id: 1, Text: 'Ağırlık' }, { Id: 2, Text: 'Metreküp' }, { Id: 3, Text: 'Ladametre' }, { Id: 4, Text: 'Komple' }, { Id: 5, Text: 'Minimun' }];
 
+    $scope.selectedTrailerType = {};
+    $scope.trailerTypeList = [{ Id: 1, Text: 'Çadırlı' },
+    { Id: 2, Text: 'Frigo' }, { Id: 3, Text: 'Kapalı Kasa' }, { Id: 4, Text: 'Optima' }, { Id: 5, Text: 'Mega' }
+        , { Id: 6, Text: 'Konteyner' }, { Id: 7, Text: 'Swapboddy' }, { Id: 8, Text: 'Lowbed' }
+        , { Id: 9, Text: 'Kamyon Romörk' }, { Id: 10, Text: 'Standart' }, { Id: 10, Text: 'Minivan' }];
+
     $scope.saveStatus = 0;
 
      // FUNCTIONS
@@ -231,6 +237,11 @@
         else
             $scope.modelObject.ForexTypeId = null;
 
+        if (typeof $scope.selectedTrailerType != 'undefined' && $scope.selectedTrailerType != null)
+            $scope.modelObject.TrailerType = $scope.selectedTrailerType.Id;
+        else
+            $scope.modelObject.TrailerType = null;
+
         $http.post(HOST_URL + 'Load/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -368,6 +379,11 @@
                         $scope.selectedForexType = $scope.forexList.find(d => d.Id == $scope.modelObject.ForexTypeId);
                     else
                         $scope.selectedForexType = {};
+
+                    if (typeof $scope.modelObject.TrailerType != 'undefined' && $scope.modelObject.TrailerType != null)
+                        $scope.selectedTrailerType = $scope.trailerTypeList.find(d => d.Id == $scope.modelObject.TrailerType);
+                    else
+                        $scope.selectedTrailerType = {};
 
                     $scope.bindDetails();
                 }
@@ -617,15 +633,15 @@
                         displayExpr: "UnitCode"
                     }, width: 60
                 },
-                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 60, validationRules: [{ type: "required" }] },
+                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
                 { dataField: 'ShortWidth', caption: 'Kısa En (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'LongWidth', caption: 'Uzun En (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Height', caption: 'Yükseklik (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Weight', caption: 'Ağırlık (Kg)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Volume', caption: 'Hacim (m3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, allowEditing: false },
-                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 80 },
-                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean' },
-                { dataField: 'PackageInNumber', caption: 'Koli iç Adet' },
+                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 }},
+                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90  },
+                { dataField: 'PackageInNumber', caption: 'Koli iç Adet', width: 90 },
 
                 {
                     type: "buttons",
@@ -644,7 +660,29 @@
                         //}
                     ]
                 }
-            ]
+            ]                       
+            ,
+            summary: {
+                totalItems: [{
+                    column: 'Quantity',
+                    summaryType: 'sum',
+                },
+                {
+                    column: 'Weight',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                },
+                {
+                    column: 'Volume',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                },
+                {
+                    column: 'Ladametre',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                }]
+            },
         });
     }
 

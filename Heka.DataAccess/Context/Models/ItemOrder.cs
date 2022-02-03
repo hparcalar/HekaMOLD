@@ -66,7 +66,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> DischargeCityId { get; set; }
 
         [ForeignKey("User")]
-        public Nullable<int> CreatUserId { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
 
         [ForeignKey("ForexType")]
         public Nullable<int> ForexTypeId { get; set; }
@@ -83,7 +83,6 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> SyncDate { get; set; }
         public Nullable<int> SyncUserId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public string SyncKey { get; set; }

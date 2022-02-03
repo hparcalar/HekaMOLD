@@ -9,7 +9,7 @@
 
     $scope.performDelete = function () {
         bootbox.confirm({
-            message: "Bu araç sigorta tipini silmek istediğinizden emin misiniz?",
+            message: "Bu araç belge tipini silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
                 confirm: {

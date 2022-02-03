@@ -20,6 +20,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? KmHour { get; set; }
         public int? KmHourLimit { get; set; }
         public int? ForexTypeId { get; set; }
+        public string DocumentNo { get; set; }
         public string Explanation { get; set; }
 
         //iptal

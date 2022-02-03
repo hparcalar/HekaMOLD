@@ -529,6 +529,7 @@
                     }
                 }
             },
+
             columns: [
                 {
                     dataField: 'ItemId', caption: 'Mal Kodu',
@@ -559,15 +560,15 @@
                         displayExpr: "UnitCode"
                     }, width: 60
                 },
-                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 60, validationRules: [{ type: "required" }] },
+                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
                 { dataField: 'ShortWidth', caption: 'Kısa En (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'LongWidth', caption: 'Uzun En (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Height', caption: 'Yükseklik (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Weight', caption: 'Ağırlık (Kg)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Volume', caption: 'Hacim (m3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, allowEditing: false },
-                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 80 },
-                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean' },
-                { dataField: 'PackageInNumber', caption: 'Koli iç Adet', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90 },
+                { dataField: 'PackageInNumber', caption: 'Koli iç Adet', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 90 },
 
                 {
                     type: "buttons",
@@ -587,6 +588,28 @@
                     ]
                 }
             ]
+            ,
+            summary: {
+                totalItems: [{
+                    column: 'Quantity',
+                    summaryType: 'sum',
+                },
+                 {
+                    column: 'Weight',
+                    summaryType: 'sum',
+                     format: { type: "fixedPoint", precision: 2 }
+                },
+                {
+                    column: 'Volume',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                },
+                {
+                    column: 'Ladametre',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                }]
+            },
         });
     }
     // APPROVALS

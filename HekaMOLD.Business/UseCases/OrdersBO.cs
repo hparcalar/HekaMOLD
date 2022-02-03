@@ -105,7 +105,7 @@ namespace HekaMOLD.Business.UseCases
                 .OrderByDescending(d => d.OrderDate)
                 .ToArray();
         }
-        public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model, bool detailCanBeNull = false)
+        public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model,int userId,bool detailCanBeNull = false)
         {
             BusinessResult result = new BusinessResult();
 
@@ -123,7 +123,7 @@ namespace HekaMOLD.Business.UseCases
                     dbObj = new ItemOrder();
                     dbObj.OrderNo = GetNextOrderNo(model.PlantId.Value, (ItemOrderType)model.OrderType.Value);
                     dbObj.CreatedDate = DateTime.Now;
-                    dbObj.CreatedUserId = model.CreatedUserId;
+                    dbObj.CreatedUserId = userId;
                     dbObj.OrderStatus = (int)OrderStatusType.Created;
                     repo.Add(dbObj);
                     newRecord = true;
@@ -160,7 +160,7 @@ namespace HekaMOLD.Business.UseCases
                 var crUserId = dbObj.CreatedUserId;
 
                 model.MapTo(dbObj);
-
+                dbObj.UpdatedUserId = userId;
                 if (dbObj.CreatedDate == null)
                     dbObj.CreatedDate = crDate;
                 if (dbObj.DateOfNeed == null)
@@ -171,7 +171,6 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedUserId = crUserId;
 
                 dbObj.UpdatedDate = DateTime.Now;
-
                 #region SAVE DETAILS
                 if (model.Details == null && detailCanBeNull == false)
                     throw new Exception("Detay bilgisi olmadan sipariş kaydedilemez.");

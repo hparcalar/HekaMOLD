@@ -26,6 +26,7 @@ namespace Heka.DataAccess.Context.Models
         public bool? Invalidation { get; set; }
         //Toplam
         public decimal? Amount { get; set; }
+        public string DocumentNo { get; set; }
         public string Explanation { get; set; }
 
         public Nullable<int> PlantId { get; set; }
