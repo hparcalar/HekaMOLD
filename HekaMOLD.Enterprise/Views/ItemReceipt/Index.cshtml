@@ -188,7 +188,7 @@
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
-                <div class="col-xxl-6">
+                <div class="col-xxl-8">
                     <div class="row">
                         <div class="col-xxl-4">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İrsaliye No</label>
@@ -218,25 +218,32 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-xxl-4">
+                        <div class="col-xxl-3">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İrsaliye Tarihi</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
                                 <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.ReceiptDate" placeholder="" />
                             </div>
                         </div>
-                        <div class="col-xxl-4">
+                        <div class="col-xxl-3">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Depo</label>
                             <!--begin::Input group-->
                             <select class="form-select form-select-solid" data-allow-clear="true"
                                     ng-options="item.WarehouseName for item in warehouseList" ng-model="selectedWarehouse"
                                     data-control="select2" data-placeholder="-- Seçiniz --"></select>
                         </div>
-                        <div class="col-xxl-4">
+                        <div class="col-xxl-3">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Firma</label>
                             <!--begin::Input group-->
                             <select id="cmbFirm" class="form-select form-select-solid" data-allow-clear="true"
                                     ng-options="item.FirmCode + ' / ' + item.FirmName for item in firmList" ng-model="selectedFirm"
+                                    data-control="select2" data-placeholder="-- Seçiniz --"></select>
+                        </div>
+                        <div class="col-xxl-3">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşletme</label>
+                            <!--begin::Input group-->
+                            <select id="cmbReceiverPlant" class="form-select form-select-solid" data-allow-clear="true"
+                                    ng-options="item.PlantName for item in plantList" ng-model="selectedPlant"
                                     data-control="select2" data-placeholder="-- Seçiniz --"></select>
                         </div>
                     </div>
@@ -244,7 +251,7 @@
                 </div>
                 <!--end::Col-->
 
-                <div class="col-xxl-6 d-flex flex-column">
+                <div class="col-xxl-4 d-flex flex-column">
                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
                     <!--begin::Input group-->
                     <div class="mb-5 d-flex flex-fill flex-column">

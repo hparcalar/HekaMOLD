@@ -15,6 +15,9 @@
     $scope.selectedFirm = {Id:0, FirmCode:''};
     $scope.firmList = [];
 
+    $scope.selectedPlant = { Id: 0, PlantCode:'', PlantName: '' };
+    $scope.plantList = [];
+
     $scope.selectedWarehouse = {Id:0, WarehouseName:''};
     $scope.warehouseList = [];
 
@@ -54,6 +57,7 @@
 
         $scope.selectedFirm = $scope.firmList[0];
         $scope.selectedWarehouse = $scope.warehouseList[0];
+        $scope.selectedPlant = $scope.plantList[0];
 
         $scope.getNextReceiptNo().then(function (rNo) {
             $scope.modelObject.ReceiptNo = rNo;
@@ -114,6 +118,11 @@
             $scope.modelObject.FirmId = $scope.selectedFirm.Id;
         else
             $scope.modelObject.FirmId = null;
+
+        if (typeof $scope.selectedPlant != 'undefined' && $scope.selectedPlant != null)
+            $scope.modelObject.ReceiverPlantId = $scope.selectedPlant.Id;
+        else
+            $scope.modelObject.ReceiverPlantId = null;
 
         if (typeof $scope.selectedWarehouse != 'undefined' && $scope.selectedWarehouse != null)
             $scope.modelObject.InWarehouseId = $scope.selectedWarehouse.Id;
@@ -199,8 +208,14 @@
                     else
                         $scope.selectedReceiptType = $scope.receiptTypeList[0];
 
+                    if (typeof $scope.modelObject.ReceiverPlantId != 'undefined' && $scope.modelObject.ReceiverPlantId != null)
+                        $scope.selectedPlant = $scope.plantList.find(d => d.Id == $scope.modelObject.ReceiverPlantId);
+                    else
+                        $scope.selectedPlant = $scope.plantList[0];
+
                     refreshArray($scope.firmList);
                     refreshArray($scope.warehouseList);
+                    refreshArray($scope.plantList);
 
                     $scope.bindDetails();
                     $scope.calculateHeader();
@@ -508,6 +523,7 @@
                         $scope.itemList = resp.data.Items;
                         $scope.unitList = resp.data.Units;
                         $scope.forexList = resp.data.Forexes;
+                        $scope.plantList = resp.data.Plants;
 
                         $scope.firmList = resp.data.Firms;
                         var emptyFirmObj = { Id: 0, FirmCode: '-- Seçiniz --' };
@@ -518,6 +534,10 @@
                         var emptyWrObj = { Id: 0, WarehouseName: '-- Seçiniz --' };
                         $scope.warehouseList.splice(0, 0, emptyWrObj);
                         $scope.selectedWarehouse = emptyWrObj;
+
+                        var emptyPlantObj = { Id: 0, PlantCode: '', PlantName: '-- Seçiniz --' };
+                        $scope.plantList.splice(0, 0, emptyPlantObj);
+                        $scope.selectedPlant = emptyPlantObj;
 
                         $scope.receiptTypeList = resp.data.ReceiptTypes;
                         $scope.selectedReceiptType = $scope.receiptTypeList[0];

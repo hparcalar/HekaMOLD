@@ -195,6 +195,7 @@
     <Compile Include="Controllers\MachineGroupController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
+    <Compile Include="Controllers\PlantController.cs" />
     <Compile Include="Controllers\PrintingController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
     <Compile Include="Controllers\ProcessGroupController.cs" />
@@ -4192,6 +4193,8 @@
     <Content Include="FrontEndLogic\PIRequest\list.js" />
     <Content Include="FrontEndLogic\Planning\print-template.js" />
     <Content Include="FrontEndLogic\Planning\planning.js" />
+    <Content Include="FrontEndLogic\Plant\index.js" />
+    <Content Include="FrontEndLogic\Plant\list.js" />
     <Content Include="FrontEndLogic\PostureCategory\index.js" />
     <Content Include="FrontEndLogic\PostureCategory\list.js" />
     <Content Include="FrontEndLogic\Posture\index.js" />
@@ -4713,6 +4716,8 @@
     <Content Include="Views\Process\Index.cshtml" />
     <Content Include="Views\Route\List.cshtml" />
     <Content Include="Views\Route\Index.cshtml" />
+    <Content Include="Views\Plant\List.cshtml" />
+    <Content Include="Views\Plant\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

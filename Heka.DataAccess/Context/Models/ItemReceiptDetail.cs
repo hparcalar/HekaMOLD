@@ -63,6 +63,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public Nullable<decimal> WeightQuantity { get; set; }
 
 
         [InverseProperty("ItemReceiptDetail")]

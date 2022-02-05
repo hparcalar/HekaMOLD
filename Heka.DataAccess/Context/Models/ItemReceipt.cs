@@ -60,10 +60,14 @@ namespace Heka.DataAccess.Context
         [ForeignKey("WorkOrderDetail")]
         public Nullable<int> WorkOrderDetailId { get; set; }
 
+        [ForeignKey("ReceiverPlant")]
+        public Nullable<int> ReceiverPlantId { get; set; }
+
         public virtual Firm Firm { get; set; }
         public virtual Invoice Invoice { get; set; }
         public virtual ItemOrder ItemOrder { get; set; }
         public virtual Plant Plant { get; set; }
+        public virtual Plant ReceiverPlant { get; set; }
         public virtual SyncPoint SyncPoint { get; set; }
         public virtual Warehouse Warehouse { get; set; }
         public virtual Warehouse Warehouse1 { get; set; }

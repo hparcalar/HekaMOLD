@@ -87,12 +87,14 @@ function ($scope, $http, Upload) {
     }
 
     $scope.showOfferDialog = function () {
-        $scope.offerModel.firmaismi = $scope.selectedFirm.FirmName;
-        $scope.offerModel.sackg = $scope.rawSheetPrice;
-        $scope.offerModel.hurdakg = $scope.wastagePrice;
-        $scope.offerModel.isci = $scope.manPrice;
-        $scope.offerModel.marj = $scope.profitRate;
-        $scope.offerModel.vadeyuzde = $scope.expirationVal;
+        if ($scope.modelObject.Id <= 0) {
+            $scope.offerModel.firmaismi = $scope.selectedFirm.FirmName;
+            $scope.offerModel.sackg = $scope.rawSheetPrice;
+            $scope.offerModel.hurdakg = $scope.wastagePrice;
+            $scope.offerModel.isci = $scope.manPrice;
+            $scope.offerModel.marj = $scope.profitRate;
+            $scope.offerModel.vadeyuzde = $scope.expirationVal;
+        }
 
         $("#dial-offer").modal("show");
     }
@@ -104,6 +106,24 @@ function ($scope, $http, Upload) {
     $scope.uploadSent = false;
     // CRUD
     $scope.uploadDocxFile = function () {
+        if ($scope.modelObject.Id > 0) {
+            $scope.modelObject.SheetWeight = $scope.offerModel.sackg;
+            $scope.modelObject.WastageWeight = $scope.offerModel.hurdakg;
+            $scope.modelObject.LaborCost = $scope.offerModel.isci;
+            $scope.modelObject.ProfitRate = $scope.offerModel.marj;
+            $scope.modelObject.CreditMonths = $scope.offerModel.vadeay;
+            $scope.modelObject.CreditRate = $scope.offerModel.vadeyuzde;
+
+            if ($scope.modelObject.CreditMonths == 0)
+                $scope.modelObject.Expiration = 'PEŞİN';
+            else
+                $scope.modelObject.Expiration = $scope.modelObject.CreditMonths + ' AY';
+
+            $scope.saveModel();
+            $scope.closeOfferDialog();
+            return;
+        }
+
         if ($scope.uploadSent)
             return;
 
@@ -121,6 +141,13 @@ function ($scope, $http, Upload) {
                 if (resp.data.status == true) {
                     var headerData = resp.data.mydata[0];
                     $scope.modelObject.Expiration = headerData.vade;
+
+                    $scope.modelObject.SheetWeight = $scope.offerModel.sackg;
+                    $scope.modelObject.WastageWeight = $scope.offerModel.hurdakg;
+                    $scope.modelObject.LaborCost = $scope.offerModel.isci;
+                    $scope.modelObject.ProfitRate = $scope.offerModel.marj;
+                    $scope.modelObject.CreditMonths = $scope.offerModel.vadeay;
+                    $scope.modelObject.CreditRate = $scope.offerModel.vadeyuzde;
 
                     for (var i = 0; i < headerData.data.length; i++) {
                         var dataRow = headerData.data[i];
@@ -290,11 +317,11 @@ function ($scope, $http, Upload) {
         for (var i = 0; i < $scope.modelObject.Details.length; i++) {
             var dObj = $scope.modelObject.Details[i];
             calcDetails.push({
-                "agirlik": dObj.SheetWeight,
+                "agirlik": $scope.modelObject.SheetWeight,
                 "parca_adi": dObj.ItemExplanation,
                 "adet": parseInt(dObj.Quantity),
                 "maliyet": dObj.TotalPrice,
-                "tickness": dObj.WastageWeight.toString(),
+                "tickness": $scope.modelObject.WastageWeight.toString(),
                 "maliyet-cur": formatter.format(dObj.TotalPrice),
                 "malzeme": dObj.QualityExplanation,
                 "resim": '<p><img src=\"data:image/png;base64,' + dObj.ItemVisualStr + '" ></p>',
@@ -306,6 +333,12 @@ function ($scope, $http, Upload) {
 
         var calcObj = [{
             msg: 'ok', filename: 'wb.docx',
+            sackg: $scope.modelObject.SheetWeight,
+            hurdakg: $scope.modelObject.WastageWeight,
+            isci: $scope.modelObject.isci,
+            marj: $scope.modelObject.ProfitRate,
+            vadeay: $scope.modelObject.CreditMonths,
+            vadeyuzde: $scope.modelObject.CreditRate,
             vade: $scope.modelObject.Expiration,
             total: $scope.modelObject.TotalPrice,
             "to-company": $scope.selectedFirm.FirmName,
@@ -430,6 +463,14 @@ function ($scope, $http, Upload) {
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
                     else
                         $scope.selectedFirm = {};
+
+                    $scope.offerModel.firmaismi = $scope.selectedFirm.FirmName;
+                    $scope.offerModel.sackg = $scope.modelObject.SheetWeight;
+                    $scope.offerModel.hurdakg = $scope.modelObject.WastageWeight;
+                    $scope.offerModel.isci = $scope.modelObject.LaborCost;
+                    $scope.offerModel.marj = $scope.modelObject.ProfitRate;
+                    $scope.offerModel.vadeyuzde = $scope.modelObject.CreditRate;
+                    $scope.offerModel.vadeay = $scope.modelObject.CreditMonths;
 
                     $scope.bindDetails();
                     $scope.calculateHeader();

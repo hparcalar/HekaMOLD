@@ -34,6 +34,12 @@ namespace Heka.DataAccess.Context
         public Nullable<DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public string Expiration { get; set; }
+        public Nullable<decimal> SheetWeight { get; set; }
+        public Nullable<decimal> LaborCost { get; set; }
+        public Nullable<decimal> WastageWeight { get; set; }
+        public Nullable<decimal> ProfitRate { get; set; }
+        public Nullable<int> CreditMonths { get; set; }
+        public Nullable<int> CreditRate { get; set; }
 
         public virtual Firm Firm { get; set; }
         public virtual Plant Plant { get; set; }

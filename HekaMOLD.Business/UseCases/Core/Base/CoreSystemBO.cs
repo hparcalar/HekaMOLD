@@ -465,5 +465,85 @@ namespace HekaMOLD.Business.UseCases.Core.Base
             }
         }
         #endregion
+
+        #region PLANT DEFINITION BUSINESS
+        public BusinessResult SaveOrUpdatePlant(PlantModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.PlantCode))
+                    throw new Exception("İşletme kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.PlantName))
+                    throw new Exception("İşletme adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Plant>();
+
+                if (repo.Any(d => (d.PlantCode == model.PlantCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir işletme mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Plant();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePlant(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Plant>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public PlantModel GetPlant(int id)
+        {
+            PlantModel model = new PlantModel { };
+
+            var repo = _unitOfWork.GetRepository<Plant>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        #endregion
     }
 }

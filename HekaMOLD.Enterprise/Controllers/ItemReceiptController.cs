@@ -52,6 +52,7 @@ namespace HekaMOLD.Enterprise.Controllers
             FirmModel[] firms = new FirmModel[0];
             ForexTypeModel[] forexes = new ForexTypeModel[0];
             WarehouseModel[] warehouses = new WarehouseModel[0];
+            PlantModel[] plants = new PlantModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -60,6 +61,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
                 warehouses = bObj.GetWarehouseList();
+                plants = bObj.GetPlantList();
             }
 
             Dictionary<int, string> receiptTypes =
@@ -69,6 +71,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 Items = items, Units = units, 
                 Firms = firms, Forexes=forexes,
                 Warehouses = warehouses,
+                Plants = plants,
                 ReceiptTypes = receiptTypes.Select(d => new { 
                     Id=d.Key,
                     Text=d.Value

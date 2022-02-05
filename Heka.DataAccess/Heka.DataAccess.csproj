@@ -271,6 +271,18 @@
     <Compile Include="Migrations\202201121406278_OfferExpiration.designer.cs">
       <DependentUpon>202201121406278_OfferExpiration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202052000259_OfferParamsForHeader.cs" />
+    <Compile Include="Migrations\202202052000259_OfferParamsForHeader.designer.cs">
+      <DependentUpon>202202052000259_OfferParamsForHeader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202052109276_ItemReceipt_ReceiverPlant.cs" />
+    <Compile Include="Migrations\202202052109276_ItemReceipt_ReceiverPlant.designer.cs">
+      <DependentUpon>202202052109276_ItemReceipt_ReceiverPlant.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202052126056_ItemReceiptDetail_WeightQuantity.cs" />
+    <Compile Include="Migrations\202202052126056_ItemReceiptDetail_WeightQuantity.designer.cs">
+      <DependentUpon>202202052126056_ItemReceiptDetail_WeightQuantity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -344,6 +356,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201121406278_OfferExpiration.resx">
       <DependentUpon>202201121406278_OfferExpiration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202052000259_OfferParamsForHeader.resx">
+      <DependentUpon>202202052000259_OfferParamsForHeader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202052109276_ItemReceipt_ReceiverPlant.resx">
+      <DependentUpon>202202052109276_ItemReceipt_ReceiverPlant.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202052126056_ItemReceiptDetail_WeightQuantity.resx">
+      <DependentUpon>202202052126056_ItemReceiptDetail_WeightQuantity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
