@@ -15,6 +15,12 @@
             //Database.SetInitializer<HekaEntities>(null);
         }
 
+        public HekaEntities(string name)
+            : base("name=" + name)
+        {
+
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

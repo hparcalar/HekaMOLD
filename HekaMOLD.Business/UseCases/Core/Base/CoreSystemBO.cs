@@ -1,4 +1,5 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
@@ -18,6 +19,16 @@ namespace HekaMOLD.Business.UseCases.Core.Base
 {
     public class CoreSystemBO : IBusinessObject
     {
+        public CoreSystemBO() : base()
+        {
+
+        }
+
+        public CoreSystemBO(IUnitOfWork work) : base(work)
+        {
+
+        }
+
         #region PRINTER DEFINITION BUSINESS
         public SystemPrinterModel[] GetPrinterList()
         {
@@ -219,6 +230,23 @@ namespace HekaMOLD.Business.UseCases.Core.Base
                     AllocatedPrintData = d.AllocatedPrintData,
                     RecordType = d.RecordType,
                 }).FirstOrDefault();
+        }
+
+        public PrinterQueueModel[] GetPrinterQueue(int printerId)
+        {
+            var repo = _unitOfWork.GetRepository<PrinterQueue>();
+            return repo.Filter(d => d.PrinterId == printerId)
+                .OrderBy(d => d.CreatedDate)
+                .Select(d => new PrinterQueueModel
+                {
+                    Id = d.Id,
+                    CreatedDate = d.CreatedDate,
+                    OrderNo = d.OrderNo,
+                    PrinterId = d.PrinterId,
+                    RecordId = d.RecordId,
+                    AllocatedPrintData = d.AllocatedPrintData,
+                    RecordType = d.RecordType,
+                }).ToArray();
         }
 
         public BusinessResult SetElementAsPrinted(int printerQueueId)

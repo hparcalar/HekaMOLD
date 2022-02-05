@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Text;
 
-namespace HekaMOLD.MachineService.Helpers
+namespace HekaPrintingService.Helpers
 {
     public class ApiHelper
     {
@@ -15,7 +15,7 @@ namespace HekaMOLD.MachineService.Helpers
         {
             this.baseUrl = baseUrl;
             _httpClient = new HttpClient();
-            _httpClient.Timeout = TimeSpan.FromSeconds(10);
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
         }
 
         public void AddHeader(string header, string value)
@@ -32,16 +32,6 @@ namespace HekaMOLD.MachineService.Helpers
 
             var content = await httpResponse.Content.ReadAsStringAsync();
             var returnItem = JsonConvert.DeserializeObject<T>(content);
-
-            return returnItem;
-        }
-
-        public async Task<R> PostData<T,R>(string target, T data)
-        {
-            var httpResponse = await _httpClient.PostAsync($"{baseUrl}{target}",
-                new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
-            var content = await httpResponse.Content.ReadAsStringAsync();
-            var returnItem = JsonConvert.DeserializeObject<R>(content);
 
             return returnItem;
         }

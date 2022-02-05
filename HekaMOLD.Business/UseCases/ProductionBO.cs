@@ -93,6 +93,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
                 containerObj.TrialProductName = d.TrialProductName;
                 containerObj.WorkOrderType = d.WorkOrderType;
+                containerObj.CreatedDate = d.CreatedDate;
                 containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
                 containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
                 containerObj.MachineName = d.Machine != null ? d.Machine.MachineName : "";
@@ -105,6 +106,20 @@ namespace HekaMOLD.Business.UseCases
 
                 data = containerObj;
             });
+
+            return data;
+        }
+
+        public WorkOrderSerialModel GetWorkOrderSerial(int serialId)
+        {
+            WorkOrderSerialModel data = new WorkOrderSerialModel();
+
+            var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+            var dbObj = repo.Get(d => d.Id == serialId);
+            if (dbObj != null)
+            {
+                dbObj.MapTo(data);
+            }
 
             return data;
         }
@@ -3327,6 +3342,70 @@ namespace HekaMOLD.Business.UseCases
 
                 report.DataSources.Add(new ReportDataSource("DS1", dataList));
                 Export(report, dbPrinter.PageWidth ?? 0, dbPrinter.PageHeight ?? 0);
+                Print(printerName);
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult PrintProductLabel(WorkOrderSerialModel model,
+            WorkOrderDetailModel workDetailModel,
+            int printerId, string printerName)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                var repoPrinter = _unitOfWork.GetRepository<SystemPrinter>();
+                var dbPrinter = repoPrinter.Get(d => d.Id == printerId);
+
+                string designFileName = "ProductLabel.rdlc";
+                if (!string.IsNullOrEmpty(workDetailModel.LabelConfig))
+                {
+                    LabelConfigModel labelData = JsonConvert.DeserializeObject<LabelConfigModel>(workDetailModel.LabelConfig);
+                    if (labelData != null && labelData.ShowFirm == false)
+                    {
+                        designFileName = "ProductLabelWithoutFirm.rdlc";
+                    }
+                }
+
+                // GENERATE BARCODE IMAGE
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(model.SerialNo, QRCodeGenerator.ECCLevel.Q);
+                QRCode qrCode = new QRCode(qrCodeData);
+                Bitmap qrCodeImage = qrCode.GetGraphic(100);
+
+                ImageConverter converter = new ImageConverter();
+                var imgBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                List<ProductLabel> dataList = new List<ProductLabel>() {
+                    new ProductLabel
+                    {
+                        ProductCode = workDetailModel.ProductCode,
+                        ProductName = workDetailModel.ProductName,
+                        FirmName = workDetailModel.FirmName,
+                        InPackageQuantity = string.Format("{0:N2}", model.FirstQuantity ?? 0),
+                        Weight = "",
+                        ShiftName = model.ShiftCode,
+                        CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", model.CreatedDate),
+                        BarcodeImage = imgBytes
+                    }
+                };
+
+                LocalReport report = new LocalReport();
+                report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\" + designFileName;
+
+                report.DataSources.Add(new ReportDataSource("DS1", dataList));
+                Export(report, dbPrinter.PageWidth ?? 0, dbPrinter.PageHeight ?? 0); // (9.7m, 8)
                 Print(printerName);
 
                 result.Result = true;
