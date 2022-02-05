@@ -56,6 +56,7 @@
                 { dataField: 'ReceiptDateStr', caption: 'Tarih' },
                 { dataField: 'FirmCode', caption: 'Firma Kodu' },
                 { dataField: 'FirmName', caption: 'Firma Adı' },
+                { dataField: 'ReceiverPlantName', caption: 'İşletme Adı' },
                 { dataField: 'ReceiptStatusStr', caption: 'Durum' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {

@@ -35,6 +35,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public DateTime? SyncDate { get; set; }
         public int? ItemOrderDetailId { get; set; }
         public Nullable<decimal> WeightQuantity { get; set; }
+        public int? PriceCalcType { get; set; }
 
         #region SERIAL SAVING PARAMETERS
         public bool UpdateSerials { get; set; } = false;

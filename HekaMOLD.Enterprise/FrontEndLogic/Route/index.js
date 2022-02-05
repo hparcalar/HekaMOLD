@@ -282,7 +282,7 @@
                 {
                     cssClass:'bg-secondary',
                     dataField: 'ProcessUnitPrice', caption: 'Fiyatı', allowEditing: false, dataType: 'number',
-                    format: { type: "fixedPoint", precision: 0 },
+                    format: { type: "fixedPoint", precision: 2 },
                 },
                 { dataField: 'ProcessForexType', caption: 'Döviz Cinsi', allowEditing: false, cssClass: 'bg-secondary', },
                 { dataField: 'Explanation', caption: 'Açıklama' },

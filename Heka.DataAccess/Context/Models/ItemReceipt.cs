@@ -62,6 +62,7 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("ReceiverPlant")]
         public Nullable<int> ReceiverPlantId { get; set; }
+        public Nullable<int> PriceCalcType { get; set; }
 
         public virtual Firm Firm { get; set; }
         public virtual Invoice Invoice { get; set; }

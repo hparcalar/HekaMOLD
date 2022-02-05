@@ -3366,7 +3366,7 @@ namespace HekaMOLD.Business.UseCases
                 RouteModel containerObj = new RouteModel();
                 d.MapTo(containerObj);
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
-                containerObj.UnitPrice = (d.UnitPrice ?? 0) > 0 ? d.UnitPrice : d.RouteItem.Sum(m => m.Process.UnitPrice ?? 0);
+                containerObj.UnitPrice = d.RouteItem.Sum(m => m.Process.UnitPrice ?? 0);// (d.UnitPrice ?? 0) > 0 ? d.UnitPrice : d.RouteItem.Sum(m => m.Process.UnitPrice ?? 0);
                 data.Add(containerObj);
             });
 

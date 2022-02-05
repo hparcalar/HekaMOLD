@@ -183,6 +183,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 using (ReceiptBO bObj = new ReceiptBO())
                 {
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                    if (model.ReceiverPlantId == 0)
+                        model.ReceiverPlantId = null;
 
                     result = bObj.SaveOrUpdateItemReceipt(model);
                 }

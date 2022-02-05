@@ -27,6 +27,7 @@ namespace HekaMOLD.Business.UseCases
                 .Select(d => new ItemOfferModel
                 {
                     Id = d.Id,
+                    OfferDate = d.OfferDate,
                     OfferDateStr = string.Format("{0:dd.MM.yyyy}", d.OfferDate),
                     FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                     FirmName = d.Firm != null ? d.Firm.FirmName : "",

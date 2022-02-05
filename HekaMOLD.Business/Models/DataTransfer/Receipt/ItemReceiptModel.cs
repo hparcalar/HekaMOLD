@@ -32,6 +32,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public int? SyncUserId { get; set; }
         public decimal? TotalQuantity { get; set; }
         public int? ReceiverPlantId { get; set; }
+        public Nullable<int> PriceCalcType { get; set; }
         public ItemReceiptDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS

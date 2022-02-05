@@ -1,16 +1,20 @@
 ﻿app.controller('receiptCtrl', function ($scope, $http) {
     $scope.modelObject = {
         Id: 0, ReceiptDate: moment().format('DD.MM.YYYY'),
-        Details: [], ReceiptStatus: 0, ReceiptType:0
+        Details: [], ReceiptStatus: 0, ReceiptType:0, PriceCalcType: 0,
     };
 
     // #region PAGE VARIABLES
     $scope.itemList = [];
     $scope.unitList = [];
     $scope.forexList = [];
+    
     $scope.reportTemplateId = 0;
 
     $scope.selectedRow = { Id: 0 };
+
+    $scope.selectedCalcType = { Id:0, Code:'Miktar' };
+    $scope.calcTypeList = [{ Id: 0, Code: 'Miktar' }, { Id: 1, Code: 'Kg' }];
 
     $scope.selectedFirm = {Id:0, FirmCode:''};
     $scope.firmList = [];
@@ -52,7 +56,7 @@
     $scope.openNewRecord = function () {
         $scope.modelObject = {
             Id: 0, ReceiptDate: moment().format('DD.MM.YYYY'),
-            Details: [], ReceiptStatus: 0, ReceiptType:0
+            Details: [], ReceiptStatus: 0, ReceiptType:0, PriceCalcType: 0,
         };
 
         $scope.selectedFirm = $scope.firmList[0];
@@ -123,6 +127,11 @@
             $scope.modelObject.ReceiverPlantId = $scope.selectedPlant.Id;
         else
             $scope.modelObject.ReceiverPlantId = null;
+
+        if (typeof $scope.selectedCalcType != 'undefined' && $scope.selectedCalcType != null)
+            $scope.modelObject.PriceCalcType = $scope.selectedCalcType.Id;
+        else
+            $scope.modelObject.PriceCalcType = null;
 
         if (typeof $scope.selectedWarehouse != 'undefined' && $scope.selectedWarehouse != null)
             $scope.modelObject.InWarehouseId = $scope.selectedWarehouse.Id;
@@ -213,6 +222,11 @@
                     else
                         $scope.selectedPlant = $scope.plantList[0];
 
+                    if (typeof $scope.modelObject.PriceCalcType != 'undefined' && $scope.modelObject.PriceCalcType != null)
+                        $scope.selectedCalcType = $scope.calcTypeList.find(d => d.Id == $scope.modelObject.PriceCalcType);
+                    else
+                        $scope.selectedCalcType = $scope.calcTypeList[0];
+
                     refreshArray($scope.firmList);
                     refreshArray($scope.warehouseList);
                     refreshArray($scope.plantList);
@@ -231,6 +245,7 @@
     $scope.calculateRow = function (row) {
         if (typeof row != 'undefined' && row != null) {
             try {
+                row.PriceCalcType = $scope.selectedCalcType.Id;
                 $http.post(HOST_URL + 'ItemReceipt/CalculateRow', row, 'json')
                     .then(function (resp) {
                         if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -292,6 +307,7 @@
 
                         if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation; }
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
+                        if (typeof values.WeightQuantity != 'undefined') { obj.WeightQuantity = values.WeightQuantity; calculateRowAgain = true; }
                         if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
                         if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
                         if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
@@ -347,6 +363,7 @@
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
                         UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
                         Quantity: values.Quantity,
+                        WeightQuantity: values.WeightQuantity,
                         TaxRate: values.TaxRate,
                         TaxIncluded: values.TaxIncluded,
                         UnitPrice: values.UnitPrice,
@@ -429,10 +446,16 @@
                     validationRules: [{ type: "required" }]
                 },
                 {
-                    cssClass:'bg-secondary',
-                    dataField: 'NetQuantity', allowEditing: false, caption: 'Net Miktar', dataType: 'number',
-                    format: { type: "fixedPoint", precision: 2 },
+                    dataField: 'WeightQuantity', caption: 'Kg', dataType: 'number',
+                    cssClass:'bg-light-primary',
+                    format: { type: "fixedPoint", precision: 2 }, allowEditing: true,
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
                 },
+                //{
+                //    cssClass:'bg-secondary',
+                //    dataField: 'NetQuantity', allowEditing: false, caption: 'Net Miktar', dataType: 'number',
+                //    format: { type: "fixedPoint", precision: 2 },
+                //},
                 { dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
                     dataField: 'TaxIncluded', caption: 'Kdv D/H',
@@ -505,6 +528,12 @@
         $scope.getNextReceiptNo();
     }
 
+    $scope.onCalcTypeChanged = function (e) {
+        $scope.modelObject.Details.forEach(d => {
+            $scope.calculateRow(d);
+        });
+    }
+
     $scope.setReceiptTypeFromSelected = function () {
         if (typeof $scope.selectedReceiptType != 'undefined'
             && $scope.selectedReceiptType != null
@@ -523,7 +552,6 @@
                         $scope.itemList = resp.data.Items;
                         $scope.unitList = resp.data.Units;
                         $scope.forexList = resp.data.Forexes;
-                        $scope.plantList = resp.data.Plants;
 
                         $scope.firmList = resp.data.Firms;
                         var emptyFirmObj = { Id: 0, FirmCode: '-- Seçiniz --' };
@@ -535,6 +563,7 @@
                         $scope.warehouseList.splice(0, 0, emptyWrObj);
                         $scope.selectedWarehouse = emptyWrObj;
 
+                        $scope.plantList = resp.data.Plants;
                         var emptyPlantObj = { Id: 0, PlantCode: '', PlantName: '-- Seçiniz --' };
                         $scope.plantList.splice(0, 0, emptyPlantObj);
                         $scope.selectedPlant = emptyPlantObj;
@@ -687,19 +716,36 @@
 
     // #region TRANSFER ORDERS TO RECEIPT
     $scope.showItemOrderList = function () {
-        // DO BROADCAST
-        $scope.$broadcast('loadOpenPoList');
+        if ($scope.modelObject.ReceiptType > 100) {
+            // DO BROADCAST
+            $scope.$broadcast('loadOpenSoList');
 
-        $('#dial-orderlist').dialog({
-            width: window.innerWidth * 0.6,
-            height: window.innerHeight * 0.6,
-            hide: true,
-            modal: true,
-            resizable: false,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
-        });
+            $('#dial-orderlist-so').dialog({
+                width: window.innerWidth * 0.6,
+                height: window.innerHeight * 0.6,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+        else {
+            // DO BROADCAST
+            $scope.$broadcast('loadOpenPoList');
+
+            $('#dial-orderlist').dialog({
+                width: window.innerWidth * 0.6,
+                height: window.innerHeight * 0.6,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
     }
 
     $scope.$on('transferOrderDetails', function (e, d) {
@@ -732,10 +778,18 @@
 
                 var detailsGrid = $("#dataList").dxDataGrid("instance");
                 detailsGrid.refresh();
+
+                if (x.FirmId != null) {
+                    $scope.selectedFirm = $scope.firmList.find(d => d.Id == x.FirmId);
+                    refreshArray($scope.firmList);
+                }
             }
         });
 
-        $('#dial-orderlist').dialog('close');
+        if ($scope.modelObject.ReceiptType > 100)
+            $('#dial-orderlist-so').dialog('close');
+        else
+            $('#dial-orderlist').dialog('close');
     });
     // #endregion
 

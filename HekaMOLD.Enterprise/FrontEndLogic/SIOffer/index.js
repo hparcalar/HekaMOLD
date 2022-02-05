@@ -19,7 +19,7 @@ function ($scope, $http, Upload) {
     $scope.priceToleranceMax = 0;
 
     $scope.selectedDocx = null;
-    $scope.selectedFirm = {};
+    $scope.selectedFirm = { Id:0, FirmCode: '', FirmName : '' };
     $scope.selectedRow = { Id: 0 };
     $scope.viewingRow = null;
 
@@ -47,6 +47,9 @@ function ($scope, $http, Upload) {
 
     $scope.getToFixed = function(data, points) {
         try {
+            if (isNaN(data))
+                data = 0;
+
             var formatter = new Intl.NumberFormat('tr', {
                 style: 'decimal',
             });
@@ -418,8 +421,22 @@ function ($scope, $http, Upload) {
             dropDownOptions: { width: 600 },
             dataSource: $scope.routeList,
             value: cellInfo.value,
+            showClearButton: true,
             valueExpr: "Id",
             displayExpr: "RouteCode",
+            onValueChanged: function (e) {
+                if (e.value == null && cellInfo.data.RouteId != null) {
+                    cellInfo.data.RouteId = null;
+                    cellInfo.data.RouteCode = '';
+                    cellInfo.data.RouteName = '';
+                    cellInfo.data.RoutePrice = 0;
+
+                    var gridInst = $('#dataList').dxDataGrid('instance');
+                    gridInst.refresh();
+
+                    e.component.close();
+                }
+            },
             contentTemplate: function (e) {
                 return $("<div>").dxDataGrid({
                     dataSource: $scope.routeList,
@@ -518,6 +535,8 @@ function ($scope, $http, Upload) {
 
     $scope.calculateHeader = function () {
         $scope.modelObject.TotalPrice = $scope.modelObject.Details.map(d => d.TotalPrice).reduce((n, x) => n + x);
+        if (isNaN($scope.modelObject.TotalPrice))
+            $scope.modelObject.TotalPrice = 0;
     }
 
     $scope.updateProcessListOfDetail = function (detailObj) {
@@ -577,8 +596,10 @@ function ($scope, $http, Upload) {
 
                             calculateRowAgain = true;
                         }
-                        else
+                        else {
                             obj.RoutePrice = 0;
+                            obj.RouteId = null;
+                        }
 
                         let dontUpdateUnitPrice = false;
                         if ($scope.priceToleranceMax > 0 && $scope.priceToleranceMin > 0 && obj.OrgUnitPrice > 0) {
@@ -736,6 +757,7 @@ function ($scope, $http, Upload) {
                         valueExpr: "Id",
                         displayExpr: "RouteCode"
                     },
+                    allowClearing: true,
                     allowSorting: false,
                     editCellTemplate: $scope.dropDownBoxEditorTemplateRoute,
                     cellTemplate: function (container, options) {
@@ -779,8 +801,12 @@ function ($scope, $http, Upload) {
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.itemList = resp.data.Items;
-                        $scope.firmList = resp.data.Firms;
                         $scope.routeList = resp.data.Routes;
+
+                        $scope.firmList = resp.data.Firms;
+                        var emptyFirmObj = { Id: 0, FirmCode: '-- Seçiniz --' };
+                        $scope.firmList.splice(0, 0, emptyFirmObj);
+                        $scope.selectedFirm = emptyFirmObj;
 
                         $scope.priceToleranceMin = resp.data.PriceToleranceMin;
                         $scope.priceToleranceMax = resp.data.PriceToleranceMax;

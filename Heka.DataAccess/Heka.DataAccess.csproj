@@ -283,6 +283,10 @@
     <Compile Include="Migrations\202202052126056_ItemReceiptDetail_WeightQuantity.designer.cs">
       <DependentUpon>202202052126056_ItemReceiptDetail_WeightQuantity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202052239242_ItemReceipt_PriceCalcType.cs" />
+    <Compile Include="Migrations\202202052239242_ItemReceipt_PriceCalcType.designer.cs">
+      <DependentUpon>202202052239242_ItemReceipt_PriceCalcType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -365,6 +369,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202202052126056_ItemReceiptDetail_WeightQuantity.resx">
       <DependentUpon>202202052126056_ItemReceiptDetail_WeightQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202052239242_ItemReceipt_PriceCalcType.resx">
+      <DependentUpon>202202052239242_ItemReceipt_PriceCalcType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
