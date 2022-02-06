@@ -4746,6 +4746,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="ReportDesign\DeliveryPalletLabel.rdlc" />
+    <Content Include="ReportDesign\ItemReceipt.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\PalletLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />

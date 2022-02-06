@@ -6,101 +6,22 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>1.54195cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>2.246cm</Width>
-            </TablixColumn>
-            <TablixColumn>
               <Width>6.37306cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.68234cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.90738cm</Width>
+              <Width>2.77521cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.79444cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>2.08011cm</Width>
+              <Width>6.80686cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
               <Height>0.6cm</Height>
               <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox1">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>Konteyner</Value>
-                              <Style>
-                                <FontSize>8pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox1</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox30">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>Paket Tipi</Value>
-                              <Style>
-                                <FontSize>8pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox30</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Textbox32">
@@ -110,7 +31,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Açıklama</Value>
+                              <Value>Stok</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
@@ -145,7 +66,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Adet</Value>
+                              <Value>Miktar</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
@@ -180,7 +101,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Net Kg</Value>
+                              <Value>Kg</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
@@ -208,41 +129,6 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox38">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>Brüt Kg</Value>
-                              <Style>
-                                <FontSize>8pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox38</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
                     <Textbox Name="Textbox40">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
@@ -250,7 +136,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Ölçümler (m3)</Value>
+                              <Value>Açıklama</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
@@ -281,66 +167,6 @@
             <TablixRow>
               <Height>0.6cm</Height>
               <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox3">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style />
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox3</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox31">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style />
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox31</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="ProductName">
@@ -433,36 +259,6 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="GrossWeight">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!GrossWeight.Value</Value>
-                              <Style />
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>GrossWeight</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
                     <Textbox Name="Textbox41">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
@@ -470,7 +266,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>=Fields!LineExplanation.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -501,9 +297,6 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
-            <TablixMember />
-            <TablixMember />
-            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
@@ -517,10 +310,10 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DS1</DataSetName>
-        <Top>0.69572cm</Top>
-        <Left>1.09277cm</Left>
+        <Top>0.35175cm</Top>
+        <Left>1.18736cm</Left>
         <Height>1.2cm</Height>
-        <Width>18.62528cm</Width>
+        <Width>18.63747cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -528,45 +321,16 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>9.48117cm</Height>
+    <Height>2.62317cm</Height>
     <Style />
   </Body>
   <Width>21cm</Width>
   <Page>
     <PageHeader>
-      <Height>10.28131cm</Height>
+      <Height>3.93131cm</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
-        <Textbox Name="Textbox2">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>www.batusanplastik.com.tr</Value>
-                  <Style>
-                    <FontSize>8pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                    <TextDecoration>Underline</TextDecoration>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox2</rd:DefaultName>
-          <Top>2.18907cm</Top>
-          <Left>1.06839cm</Left>
-          <Height>0.4095cm</Height>
-          <Width>3.81233cm</Width>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-          </Style>
-        </Textbox>
         <Textbox Name="Textbox4">
           <CanGrow>true</CanGrow>
           <KeepTogether>true</KeepTogether>
@@ -574,7 +338,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Alıcı :</Value>
+                  <Value>Firma :</Value>
                   <Style>
                     <FontSize>9pt</FontSize>
                     <FontWeight>Bold</FontWeight>
@@ -585,11 +349,10 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>2.93888cm</Top>
-          <Left>1.06839cm</Left>
+          <Top>1.9439cm</Top>
+          <Left>1.17517cm</Left>
           <Height>1.51016cm</Height>
           <Width>3.81233cm</Width>
-          <ZIndex>1</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -600,28 +363,13 @@
             <PaddingBottom>1pt</PaddingBottom>
           </Style>
         </Textbox>
-        <Image Name="Image1">
-          <Source>Embedded</Source>
-          <Value>BatusanLogo</Value>
-          <Sizing>FitProportional</Sizing>
-          <Top>0.77374cm</Top>
-          <Left>1.09277cm</Left>
-          <Height>1.3095cm</Height>
-          <Width>4.65383cm</Width>
-          <ZIndex>2</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-          </Style>
-        </Image>
         <Textbox Name="Textbox5">
           <KeepTogether>true</KeepTogether>
           <Paragraphs>
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ReceiverText.Value, "DS1")</Value>
+                  <Value>=First(Fields!FirmName.Value, "DS1")</Value>
                   <Style>
                     <FontSize>9pt</FontSize>
                   </Style>
@@ -631,11 +379,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>2.93888cm</Top>
-          <Left>4.88072cm</Left>
+          <Top>1.9439cm</Top>
+          <Left>4.9875cm</Left>
           <Height>1.51016cm</Height>
           <Width>6.37306cm</Width>
-          <ZIndex>3</ZIndex>
+          <ZIndex>1</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -653,7 +401,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Fatura No &amp; Tarih:</Value>
+                  <Value>Tarih : </Value>
                   <Style>
                     <FontSize>9pt</FontSize>
                     <FontWeight>Bold</FontWeight>
@@ -664,11 +412,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>2.93888cm</Top>
-          <Left>11.26789cm</Left>
+          <Top>1.9439cm</Top>
+          <Left>11.37467cm</Left>
           <Height>0.87516cm</Height>
           <Width>4.17569cm</Width>
-          <ZIndex>4</ZIndex>
+          <ZIndex>2</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -697,11 +445,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>2.93888cm</Top>
-          <Left>15.44358cm</Left>
+          <Top>1.9439cm</Top>
+          <Left>15.55036cm</Left>
           <Height>0.87516cm</Height>
           <Width>4.27447cm</Width>
-          <ZIndex>5</ZIndex>
+          <ZIndex>3</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -728,11 +476,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>3.81404cm</Top>
-          <Left>11.25378cm</Left>
+          <Top>2.81905cm</Top>
+          <Left>11.36056cm</Left>
           <Height>0.635cm</Height>
           <Width>4.1898cm</Width>
-          <ZIndex>6</ZIndex>
+          <ZIndex>4</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -749,7 +497,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value />
+                  <Value>=First(Fields!DocumentNo.Value, "DS1")</Value>
                   <Style>
                     <FontSize>9pt</FontSize>
                   </Style>
@@ -759,11 +507,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>3.81404cm</Top>
-          <Left>15.44358cm</Left>
+          <Top>2.81905cm</Top>
+          <Left>15.55036cm</Left>
           <Height>0.635cm</Height>
           <Width>4.27447cm</Width>
-          <ZIndex>7</ZIndex>
+          <ZIndex>5</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -781,7 +529,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>ÇEKİ LİSTESİ / PACKING LIST</Value>
+                  <Value>SEVK İRSALİYESİ</Value>
                   <Style>
                     <FontSize>16pt</FontSize>
                     <FontWeight>Bold</FontWeight>
@@ -794,11 +542,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>0.77374cm</Top>
-          <Left>6.08753cm</Left>
+          <Top>0.47726cm</Top>
+          <Left>4.9875cm</Left>
           <Height>1.3095cm</Height>
-          <Width>13.63052cm</Width>
-          <ZIndex>8</ZIndex>
+          <Width>14.83733cm</Width>
+          <ZIndex>6</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -810,497 +558,21 @@
             <PaddingBottom>2pt</PaddingBottom>
           </Style>
         </Textbox>
-        <Textbox Name="Textbox11">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Emanetçi :</Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>4.44904cm</Top>
-          <Left>1.06839cm</Left>
-          <Height>1.51016cm</Height>
-          <Width>3.81233cm</Width>
-          <ZIndex>9</ZIndex>
+        <Image Name="Image1">
+          <Source>Embedded</Source>
+          <Value>livello</Value>
+          <Sizing>FitProportional</Sizing>
+          <Top>0.47726cm</Top>
+          <Left>1.17517cm</Left>
+          <Height>1.3095cm</Height>
+          <Width>3.63594cm</Width>
+          <ZIndex>7</ZIndex>
           <Style>
             <Border>
-              <Style>Solid</Style>
+              <Style>None</Style>
             </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
           </Style>
-        </Textbox>
-        <Textbox Name="Textbox12">
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value />
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>4.44904cm</Top>
-          <Left>4.88072cm</Left>
-          <Height>1.51016cm</Height>
-          <Width>6.37306cm</Width>
-          <ZIndex>10</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>5pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox13">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Satın Alan : </Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>4.44904cm</Top>
-          <Left>11.26789cm</Left>
-          <Height>1.51016cm</Height>
-          <Width>4.17569cm</Width>
-          <ZIndex>11</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox14">
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value />
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>4.44904cm</Top>
-          <Left>15.44358cm</Left>
-          <Height>1.51016cm</Height>
-          <Width>4.27894cm</Width>
-          <ZIndex>12</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>5pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox15">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Gönderme Yöntemi : </Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>5.9592cm</Top>
-          <Left>1.06839cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>3.81233cm</Width>
-          <ZIndex>13</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox16">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Gönderi Türü : </Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>5.9592cm</Top>
-          <Left>4.88072cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>6.37306cm</Width>
-          <ZIndex>14</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox17">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Menşei :</Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>5.9592cm</Top>
-          <Left>11.26789cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>4.1898cm</Width>
-          <ZIndex>15</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox18">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Hedef Ülke : </Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>5.9592cm</Top>
-          <Left>15.45769cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>4.27447cm</Width>
-          <ZIndex>16</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox19">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Yüklenen Parça :</Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>7.87886cm</Top>
-          <Left>1.06839cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>3.81233cm</Width>
-          <ZIndex>17</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox20">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Çıkış Tarihi :</Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>7.87886cm</Top>
-          <Left>4.88072cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>6.37306cm</Width>
-          <ZIndex>18</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox21">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>İndirilen Parça : </Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>8.83869cm</Top>
-          <Left>1.06839cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>3.81233cm</Width>
-          <ZIndex>19</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox22">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Hedef Lokasyon :</Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>8.83869cm</Top>
-          <Left>4.88072cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>6.37306cm</Width>
-          <ZIndex>20</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox23">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Gemi/Uçak :</Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>6.91903cm</Top>
-          <Left>1.06839cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>3.81233cm</Width>
-          <ZIndex>21</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox24">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Sefer No :</Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>6.91903cm</Top>
-          <Left>4.88072cm</Left>
-          <Height>0.95983cm</Height>
-          <Width>6.37306cm</Width>
-          <ZIndex>22</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox25">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Sevkiyat Bilgisi :</Value>
-                  <Style>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>6.91903cm</Top>
-          <Left>11.25378cm</Left>
-          <Height>2.87949cm</Height>
-          <Width>8.46427cm</Width>
-          <ZIndex>23</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-            <PaddingLeft>1pt</PaddingLeft>
-            <PaddingRight>1pt</PaddingRight>
-            <PaddingTop>1pt</PaddingTop>
-            <PaddingBottom>1pt</PaddingBottom>
-          </Style>
-        </Textbox>
+        </Image>
       </ReportItems>
       <Style>
         <Border>
@@ -1320,7 +592,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Ek Bilgiler : </Value>
+                  <Value>="Ek Bilgiler : " + First(Fields!ReceiptExplanation.Value, "DS1")</Value>
                   <Style>
                     <FontSize>9pt</FontSize>
                     <FontWeight>Bold</FontWeight>
@@ -1331,8 +603,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>0.624cm</Top>
-          <Left>1.09277cm</Left>
+          <Top>0.65046cm</Top>
+          <Left>1.18736cm</Left>
           <Height>3.40866cm</Height>
           <Width>12.9516cm</Width>
           <Style>
@@ -1352,7 +624,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Yüklenen Parça :</Value>
+                  <Value>="Toplam Kg : " + string.Format("{0:N2}", Sum(Fields!NetWeight.Value, "DS1"))</Value>
                   <Style>
                     <FontSize>9pt</FontSize>
                     <FontWeight>Bold</FontWeight>
@@ -1363,8 +635,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>1.58383cm</Top>
-          <Left>14.04437cm</Left>
+          <Top>1.6103cm</Top>
+          <Left>14.13896cm</Left>
           <Height>0.95983cm</Height>
           <Width>5.67368cm</Width>
           <ZIndex>1</ZIndex>
@@ -1385,7 +657,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>İndirilen Parça : </Value>
+                  <Value />
                   <Style>
                     <FontSize>9pt</FontSize>
                     <FontWeight>Bold</FontWeight>
@@ -1396,8 +668,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>2.54366cm</Top>
-          <Left>14.04437cm</Left>
+          <Top>2.57013cm</Top>
+          <Left>14.13896cm</Left>
           <Height>1.49958cm</Height>
           <Width>5.67368cm</Width>
           <ZIndex>2</ZIndex>
@@ -1418,7 +690,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Gemi/Uçak :</Value>
+                  <Value>="Toplam Miktar : " + string.Format("{0:N2}", Sum(Fields!Quantity.Value, "DS1"))</Value>
                   <Style>
                     <FontSize>9pt</FontSize>
                     <FontWeight>Bold</FontWeight>
@@ -1429,8 +701,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>0.624cm</Top>
-          <Left>14.04437cm</Left>
+          <Top>0.65046cm</Top>
+          <Left>14.13896cm</Left>
           <Height>0.95983cm</Height>
           <Width>5.67368cm</Width>
           <ZIndex>3</ZIndex>
@@ -1510,6 +782,26 @@
         <Field Name="GrossWeight">
           <DataField>GrossWeight</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="LineExplanation">
+          <DataField>LineExplanation</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReceiptExplanation">
+          <DataField>ReceiptExplanation</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DocumentNo">
+          <DataField>DocumentNo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FirmCode">
+          <DataField>FirmCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FirmName">
+          <DataField>FirmName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>
@@ -1720,6 +1012,12 @@ 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
 oooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAIJ7S2uVInt4pR/toG/nXF61Y2kTny7WBP8AdjAoortwUpc9rnmZnTg6V2lf0X+RxtwAs7AAAZ6Ct/RraCVk8yCN+P4kBoor3MQ2qWh8dl0U8S01/Vz0GxsbO3hRobWCNiM5SMKf0q7RRXzEm29T9BpxjGKUVYKKKKksKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACo5YIphiWJJB6MoNFFCdhNJ6M5rW9NsItxjsrZP92JR/SuF1GNEkwiKvPYYoor3svk2ldnx+e04RvypL5L/ACGWKK7ncob6jNdpo2nWUrL5lnbv/vRKf6UUVeOk0nZkZJThK3Mk/kjrIbS2txiC3iiH+wgX+VTUUV8+23ufZpJKyCiiikMKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACq95bQXNu6zwxyqASBIoYfrRRTi2ndEyScWmeU6zFHFfbY41Rc9FGBXYeFLG0kTzHtYGdRkMYwSPxoor3cZJrDJ3PkMrhF5hNNL7jrqKKK8E+xCiiigD/9k=</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="livello">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>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</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>

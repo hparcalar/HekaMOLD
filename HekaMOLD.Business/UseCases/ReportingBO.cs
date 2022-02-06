@@ -46,6 +46,12 @@ namespace HekaMOLD.Business.UseCases
                             ProductCode = item.Item.ItemNo,
                             ProductName = item.Item.ItemName,
                             Quantity = item.Quantity ?? 0,
+                            NetWeight = item.WeightQuantity ?? 0,
+                            LineExplanation = item.Explanation,
+                            FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "",
+                            FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "",
+                            DocumentNo = dbObj.ReceiptNo,
+                            ReceiptExplanation = dbObj.Explanation,
                             ReceiptDate = string.Format("{0:dd.MM.yyyy}", dbObj.ReceiptDate),
                             ReceiverText = dbObj.Firm != null ? dbObj.Firm.FirmName + "\r\n" +
                                 dbObj.Firm.Address : "",

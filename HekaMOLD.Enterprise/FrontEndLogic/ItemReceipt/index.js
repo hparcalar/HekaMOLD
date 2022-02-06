@@ -10,6 +10,7 @@
     $scope.forexList = [];
     
     $scope.reportTemplateId = 0;
+    $scope.reportTemplateType = 0;
 
     $scope.selectedRow = { Id: 0 };
 
@@ -606,6 +607,7 @@
         if ($scope.selectedRow.Id > 0) {
             // DO BROADCAST
             $scope.$broadcast('loadTemplateList', [6]);
+            $scope.reportTemplateType = 6;
 
             $('#dial-reports').dialog({
                 width: window.innerWidth * 0.65,
@@ -642,9 +644,9 @@
             if (d.exportType == 'PDF') {
                 try {
                     $http.post(HOST_URL + 'Printing/ExportAsPdf', {
-                        objectId: $scope.selectedRow.Id,
+                        objectId: $scope.reportTemplateType == 6 ? $scope.selectedRow.Id : $scope.modelObject.Id,
                         reportId: $scope.reportTemplateId,
-                        reportType: 6,
+                        reportType: $scope.reportTemplateType,
                     }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -669,10 +671,10 @@
 
         try {
             $http.post(HOST_URL + 'Printing/AddToPrintQueue', {
-                objectId: $scope.selectedRow.Id,
+                objectId: $scope.reportTemplateType == 6 ? $scope.selectedRow.Id : $scope.modelObject.Id,
                 reportId: $scope.reportTemplateId,
                 printerId: d.PrinterId,
-                recordType: 6, // item receipt detail type
+                recordType: $scope.reportTemplateType,
             }, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -791,6 +793,27 @@
         else
             $('#dial-orderlist').dialog('close');
     });
+    // #endregion
+
+    // #region PRINTING DELIVERY RECEIPT TEMPLATE
+    $scope.showPrintTemplateList = function () {
+        if ($scope.modelObject.Id > 0) {
+            // DO BROADCAST
+            $scope.$broadcast('loadTemplateList', [2]);
+            $scope.reportTemplateType = 2;
+
+            $('#dial-reports').dialog({
+                width: window.innerWidth * 0.65,
+                height: window.innerHeight * 0.65,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+    }
     // #endregion
 
     // ON LOAD EVENTS
