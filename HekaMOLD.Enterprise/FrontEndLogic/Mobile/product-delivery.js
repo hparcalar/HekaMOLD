@@ -318,6 +318,11 @@
                     NewDetail: true,
                     ItemOrderDetailId: x.Id
                 });
+
+                if (x.FirmId != null) {
+                    $scope.selectedFirm = $scope.firmList.find(d => d.Id == x.FirmId);
+                    refreshArray($scope.firmList);
+                }
             }
         });
 
