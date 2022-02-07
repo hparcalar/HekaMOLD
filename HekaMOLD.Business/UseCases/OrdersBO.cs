@@ -53,7 +53,9 @@ namespace HekaMOLD.Business.UseCases
             var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
 
             return repo.Filter(d => d.ItemOrder.OrderType == (int)orderType
-                && d.OrderStatus != (int)OrderStatusType.Completed && d.OrderStatus != (int)OrderStatusType.Cancelled).ToList()
+                && d.OrderStatus != (int)OrderStatusType.Completed 
+                && d.OrderStatus != (int)OrderStatusType.Cancelled
+                && d.OrderStatus != (int)OrderStatusType.Planned).ToList()
                 .Select(d => new ItemOrderDetailModel
                 {
                     Id = d.Id,

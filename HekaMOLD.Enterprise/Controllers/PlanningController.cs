@@ -67,6 +67,25 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
+        public JsonResult GetProductionPlanViews(string date)
+        {
+            DateTime dtDate = DateTime.ParseExact(date, "dd.MM.yyyy", 
+                System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+            MachinePlanModel[] result = new MachinePlanModel[0];
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.GetProductionPlanViews(dtDate);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult GetWaitingPlans()
         {
             ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
@@ -179,6 +198,21 @@ namespace HekaMOLD.Enterprise.Controllers
             using (PlanningBO bObj = new PlanningBO())
             {
                 result = bObj.DeletePlan(rid);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateLastPlanView()
+        {
+            BusinessResult result = new BusinessResult();
+
+            int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.SavePlanView(plantId);
             }
 
             return Json(result);

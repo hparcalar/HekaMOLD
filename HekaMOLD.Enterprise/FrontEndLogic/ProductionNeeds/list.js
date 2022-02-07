@@ -57,13 +57,15 @@
                 { dataField: 'ItemOrderDateStr', caption: 'Sip. Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'NeedsDateStr', caption: 'İhtiyaç Tar.', dataType: 'date', format: 'dd.MM.yyyy' },
                 /* { dataField: 'WorkOrderNo', caption: 'İş Emri No' },*/
-                { dataField: 'ProductCode', caption: 'Ürün Kodu' },
+                /*{ dataField: 'ProductCode', caption: 'Ürün Kodu' },*/
+
                 { dataField: 'ProductName', caption: 'Ürün Adı' },
                 { dataField: 'ItemOrderNo', caption: 'Sipariş No' },
                 /*{ dataField: 'DyeCode', caption: 'Renk Kodu' },*/
                 { dataField: 'ItemNo', caption: 'Malzeme No' },
                 { dataField: 'ItemName', caption: 'Malzeme Adı' },
                 /*{ dataField: 'SaleOrderDeadline', caption: 'Sipariş Termin' },*/
+                { dataField: 'RecipeQuantity', caption: 'Reçete Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'TargetQuantity', caption: 'Sipariş Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'WarehouseQuantity', caption: 'Depo Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Quantity', caption: 'İhtiyaç Miktar', format: { type: "fixedPoint", precision: 2 } },

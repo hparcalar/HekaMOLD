@@ -72,7 +72,9 @@ namespace HekaMOLD.Business.UseCases
                     ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ReceiptDate),
                     WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "",
                     WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "",
-                    ReceiptTypeStr = ((ItemReceiptType)d.ReceiptType.Value).ToCaption()
+                    ReceiptTypeStr = ((ItemReceiptType)d.ReceiptType.Value).ToCaption(),
+                    ItemOrderDocumentNo = d.ItemOrder != null ? (d.ItemOrder.DocumentNo != null && d.ItemOrder.DocumentNo.Length > 0 ?
+                        d.ItemOrder.DocumentNo : d.ItemOrder.OrderNo) : "",
                 })
                 .OrderByDescending(d => d.Id)
                 .ToArray();

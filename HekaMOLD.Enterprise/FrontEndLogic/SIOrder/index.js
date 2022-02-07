@@ -323,9 +323,11 @@
                 },
                 insert: function (values) {
                     var newId = 1;
+                    var lastRow = null;
                     if ($scope.modelObject.Details.length > 0) {
                         newId = $scope.modelObject.Details.map(d => d.Id).reduce((max, n) => n > max ? n : max)
                         newId++;
+                        lastRow = $scope.modelObject.Details[$scope.modelObject.Details.length - 1];
                     }
 
                     var itemObj = $scope.itemList.find(d => d.Id == values.ItemId);
@@ -344,7 +346,8 @@
                         UnitPrice: values.UnitPrice,
                         ForexRate: values.ForexRate,
                         ForexUnitPrice: values.ForexUnitPrice,
-                        ForexId: values.ForexId,
+                        ForexId: (typeof (values.ForexId) == 'undefined' || values.ForexId == null) && lastRow != null ?
+                            lastRow.ForexId : values.ForexId,
                         ItemRequestDetailId: null,
                         Explanation: values.Explanation,
                         NewDetail: true
@@ -384,6 +387,11 @@
             onInitNewRow: function (e) {
                 e.data.UnitPrice = 0;
                 e.data.TaxIncluded = 0;
+
+                if ($scope.modelObject.Details.length > 0) {
+                    var lastRow = $scope.modelObject.Details[$scope.modelObject.Details.length - 1];
+                    e.data.ForexId = lastRow.ForexId;
+                }
             },
             repaintChangesOnly: true,
             onCellPrepared: function (e) {

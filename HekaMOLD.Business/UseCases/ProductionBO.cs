@@ -1538,6 +1538,8 @@ namespace HekaMOLD.Business.UseCases
                     Id = d.Id,
                     ItemId = d.ItemId,
                     ItemName = d.Item != null ? d.Item.ItemName : "",
+                    RecipeQuantity = (d.Item != null ? d.Item.ProductRecipeDetail
+                        .Where(m => m.ProductRecipe.ProductId == d.ItemOrderDetail.ItemId).Select(m => m.Quantity).FirstOrDefault() : (decimal?)null) ?? 0,
                     ItemNo = d.Item != null ? d.Item.ItemNo : "",
                     ProductCode = d.ItemOrderDetail.Item != null ? d.ItemOrderDetail.Item.ItemNo : "",
                     ProductName = d.ItemOrderDetail.Item != null ? d.ItemOrderDetail.Item.ItemName : "",

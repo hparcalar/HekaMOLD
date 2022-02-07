@@ -53,8 +53,9 @@
                 { dataField: 'ReceiptNo', caption: 'İrsaliye No' },
                 { dataField: 'ReceiptTypeStr', caption: 'Hareket Türü' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
+                { dataField: 'ItemOrderDocumentNo', caption: 'Sipariş No' },
                 { dataField: 'ReceiptDateStr', caption: 'Tarih' },
-                { dataField: 'FirmCode', caption: 'Firma Kodu' },
+                /*{ dataField: 'FirmCode', caption: 'Firma Kodu' },*/
                 { dataField: 'FirmName', caption: 'Firma Adı' },
                 { dataField: 'ReceiptStatusStr', caption: 'Durum' },
                 { dataField: 'Explanation', caption: 'Açıklama' },

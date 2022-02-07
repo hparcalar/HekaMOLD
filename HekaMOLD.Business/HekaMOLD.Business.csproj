@@ -171,6 +171,8 @@
     <Compile Include="Models\DataTransfer\Production\MachineGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachinePlanViewDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachinePlanViewModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePreProcessHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePreProcessModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineSignalModel.cs" />

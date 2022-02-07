@@ -20,8 +20,8 @@ namespace HekaMOLD.Enterprise.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("PlainDashboard","Home");
-            return View();
+            return RedirectToAction("Online","Machine");
+            //return View();
         }
 
         #region LOGIN PROCESS

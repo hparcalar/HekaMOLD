@@ -358,6 +358,11 @@
             onInitNewRow: function (e) {
                 e.data.UnitPrice = 0;
                 e.data.TaxIncluded = 0;
+
+                if ($scope.modelObject.Details.length > 0) {
+                    var lastRow = $scope.modelObject.Details[$scope.modelObject.Details.length - 1];
+                    e.data.ForexId = lastRow.ForexId;
+                }
             },
             repaintChangesOnly: true,
             onCellPrepared: function (e) {

@@ -115,6 +115,8 @@
                                         <h6 class="text-decoration-underline my-0">{{ shift.ShiftCode }} Vardiyası</h6>
                                         <p class="py-0 my-0">Ort Çevrim: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
                                         <p class="py-0 my-0">Üretim: <b>{{ shift.AvgProductionCount }} adet</b></p>
+                                        <p class="py-0 my-0 bg-white rounded-1 text-dark" 
+                                           ng-if="currentShift.Id == shift.ShiftId"><b>Hedef: {{ shift.TargetCount }} adet</b></p>
                                         <p class="py-0 my-0" ng-class="{'bg-danger': shift.WastageCount > 0}">Fire: <b>{{ shift.WastageCount }} adet</b></p>
                                     </div>
                                 </div>

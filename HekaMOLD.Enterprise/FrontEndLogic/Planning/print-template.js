@@ -3,27 +3,56 @@
 app.controller('printTemplateCtrl', function printTemplateCtrl($scope, $http) {
     $scope.modelObject = { Id: 0 };
     $scope.saveStatus = 0;
+    $scope.cursor = 0;
+    $scope.selectedDate = moment().format('DD.MM.YYYY');
 
     $scope.machineList = [];
     $scope.boardPlanList = [];
 
-    $scope.getMachinePlans = function (machine) {
-        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id);
+    $scope.onDateChanged = function () {
+        $scope.cursor = moment().diff(moment($scope.selectedDate, 'DD.MM.YYYY'), 'days');
+        $scope.loadRunningBoard();
     }
 
+    $scope.goPrev = function () {
+        $scope.cursor--;
+        $scope.selectedDate = moment().add('days', $scope.cursor).format('DD.MM.YYYY');
+        $scope.loadRunningBoard();
+    }
+
+    $scope.goNext = function () {
+        $scope.cursor++;
+        $scope.selectedDate = moment().add('days', $scope.cursor).format('DD.MM.YYYY');
+        $scope.loadRunningBoard();
+    }
+
+    $scope.getMachinePlans = function (machine) {
+        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id && d.WorkOrder.WorkOrderStatus >= 3);
+    }
+
+    $scope.getFuturePlans = function (machine) {
+        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id && d.WorkOrder.WorkOrderStatus < 3);
+    }
+
+    //$scope.getMachineTotalPlanned = function (machine) {
+    //    return $scope.boardPlanList.filter(d => d.MachineId == machine.Id && d.WorkOrder.WorkOrderStatus >= 3)
+    //        .reduce((p, a) => p + a, 0);
+    //}
+
     $scope.getMachineTotalPlanned = function (machine) {
-        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id)
+        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id && d.WorkOrder.WorkOrderStatus >= 3)
+            .map(d => d.WorkOrder.Quantity)
             .reduce((p, a) => p + a, 0);
     }
 
-    $scope.getMachineTotalPlanned = function (machine) {
-        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id)
+    $scope.getFutureTotalPlanned = function (machine) {
+        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id && d.WorkOrder.WorkOrderStatus < 3)
             .map(d => d.WorkOrder.Quantity)
             .reduce((p, a) => p + a, 0);
     }
 
     $scope.getMachineTotalComplete = function (machine) {
-        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id)
+        return $scope.boardPlanList.filter(d => d.MachineId == machine.Id && d.WorkOrder.WorkOrderStatus >= 3)
             .map(d => d.WorkOrder.CompleteQuantity)
             .reduce((p, a) => p + a, 0);
     }
@@ -45,7 +74,7 @@ app.controller('printTemplateCtrl', function printTemplateCtrl($scope, $http) {
     }
 
     $scope.loadRunningBoard = function () {
-        $http.get(HOST_URL + 'Planning/GetProductionPlans', {}, 'json')
+        $http.get(HOST_URL + 'Planning/GetProductionPlanViews?date=' + $scope.selectedDate, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.boardPlanList = resp.data;

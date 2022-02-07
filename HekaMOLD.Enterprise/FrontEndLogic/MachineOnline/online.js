@@ -1,5 +1,6 @@
-﻿app.controller('machineOnlineCtrl', function ($scope, $http) {
+﻿app.controller('machineOnlineCtrl', function ($scope, $http, $interval) {
     $scope.machineList = [];
+    $scope.currentShift = {Id:0};
     $scope.filterModel = { startDate: moment().format('DD.MM.YYYY'), endDate: moment().format('DD.MM.YYYY') };
 
     $scope.bindModel = function () {
@@ -7,7 +8,8 @@
             + $scope.filterModel.endDate, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.machineList = resp.data;
+                    $scope.machineList = resp.data.Data;
+                    $scope.currentShift = resp.data.Shift;
                 }
             }).catch(function (err) { });
     }
@@ -64,4 +66,8 @@
 
     // ON LOAD EVENTS
     $scope.bindModel(PRM_ID);
+
+    $interval($scope.bindModel, 25000);
+
+    setTimeout(function () { window.location.reload(); }, 1000 * 60 * 10);
 });

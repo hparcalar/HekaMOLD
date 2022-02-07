@@ -338,14 +338,15 @@ namespace HekaMOLD.Business.UseCases
                     && d.SignalStatus == 1))
                 {
                     var dataList = repoSignal.Filter(d => d.ShiftBelongsToDate >= dtStart && d.ShiftBelongsToDate <= dtEnd
-                    && d.WorkOrderDetail != null
+                    && d.WorkOrderDetail != null && d.User != null
                     && d.SignalStatus == 1)
                     .GroupBy(d => new
                     {
                         WorkOrderDetail = d.WorkOrderDetail,
-                        WorkDate = DbFunctions.TruncateTime(d.ShiftBelongsToDate),
+                        WorkDate = d.ShiftBelongsToDate,
                         Machine = d.Machine,
                         Shift = d.Shift,
+                        User = d.User != null ? d.User.UserName : "",
                     })
                     .Select(d => new ProductionHistoryModel
                     {
@@ -366,6 +367,7 @@ namespace HekaMOLD.Business.UseCases
                         SaleOrderNo = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ItemOrderDetail.ItemOrder.DocumentNo : "",
                         SerialCount = d.Count(),
                         ShiftId = d.Key.Shift.Id,
+                        UserName = d.Key.User,
                         ShiftCode = d.Key.Shift.ShiftCode,
                         ShiftName = d.Key.Shift.ShiftName,
                         WastageQuantity = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ProductWastage
@@ -389,8 +391,9 @@ namespace HekaMOLD.Business.UseCases
                    .GroupBy(d => new
                    {
                        WorkOrderDetail = d.WorkOrderDetail,
-                       WorkDate = DbFunctions.TruncateTime(d.CreatedDate),
+                       WorkDate = d.CreatedDate,
                        Shift = d.Shift,
+                       //User = d.User != null ? d.User.UserName : "",
                    })
                    .Select(d => new ProductionHistoryModel
                    {

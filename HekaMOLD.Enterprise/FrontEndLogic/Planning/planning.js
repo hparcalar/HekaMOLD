@@ -213,6 +213,19 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
         $scope.modelObject = { Id: 0 };
     }
 
+    $scope.updateLastPlanView = function () {
+        try {
+            $http.post(HOST_URL + 'Planning/UpdateLastPlanView', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                       
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
     $scope.saveModel = function (planObj) {
         $scope.saveStatus = 1;
 
@@ -226,6 +239,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
                         $scope.loadMachineList();
                         $scope.loadWaitingPlanList();
+                        $scope.updateLastPlanView();
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
@@ -248,6 +262,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                         $scope.loadWaitingPlanList();
 
                         $scope.selectPlan(planObj);
+                        $scope.updateLastPlanView();
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
@@ -482,6 +497,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
                                             $scope.loadMachineList();
                                             $scope.loadWaitingPlanList();
+                                            $scope.updateLastPlanView();
                                         }
                                         else
                                             toastr.error(resp.data.ErrorMessage, 'Hata');

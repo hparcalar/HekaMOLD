@@ -67,7 +67,7 @@
                 { dataField: 'DocumentNo', caption: 'Belge No' },
                 { dataField: 'CreatedDateStr', caption: 'Sipariş Tarihi' },
                 { dataField: 'DateOfNeedStr', caption: 'Termin Tarihi' },
-                { dataField: 'FirmCode', caption: 'Firma Kodu' },
+                /*{ dataField: 'FirmCode', caption: 'Firma Kodu' },*/
                 { dataField: 'FirmName', caption: 'Firma Adı' },
                 { dataField: 'OrderStatusStr', caption: 'Durum' },
                 { dataField: 'Explanation', caption: 'Açıklama' },

@@ -72,12 +72,18 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             MachineModel[] result = new MachineModel[0];
 
+            ShiftModel shiftData = null;
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                shiftData = bObj.GetCurrentShift();
+            }
+
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 result = bObj.GetMachineStats(t1, t2);
             }
 
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Data=result, Shift = shiftData }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

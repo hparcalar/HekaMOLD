@@ -1548,43 +1548,6 @@ namespace HekaMOLD.Business.UseCases
                         
                         
                     }
-
-                    // OLD AVERAGE CALCULATION -- CHANGED SINCE 20.12.2021
-                    //var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
-                    //    && m.WorkOrderDetailId != null
-                    //    && m.ShiftId == shift.Id)
-                    //    .OrderByDescending(m => m.Id).FirstOrDefault();
-                    //if (lastSignal != null)
-                    //{
-                    //    lastProductName = lastSignal.WorkOrderDetail.Item != null ?
-                    //        lastSignal.WorkOrderDetail.Item.ItemName : lastSignal.WorkOrderDetail.TrialProductName;
-                    //    if (lastSignal.WorkOrderDetail.Item != null)
-                    //    {
-                    //        var dbMoldTest = repoMoldTest.Get(m => m.ProductCode == lastSignal.WorkOrderDetail.Item.ItemNo);
-                    //        if (dbMoldTest != null)
-                    //            avgCycleTime = dbMoldTest.TotalTimeSeconds ?? 0;
-                    //    }
-                    //}
-
-                    //// IF NO CYCLE TIME FOUND THEN CALCULATE OVER HISTORY
-                    //if (avgCycleTime <= 0)
-                    //{
-                    //    //avgCycleTime = Convert.ToDecimal(repoSignal.Filter(m => m.MachineId == d.Id && m.ShiftId == shift.Id)
-                    //    //    .Average(m => m.Duration) ?? 0);
-                    //    targetCount = 0;
-                    //}
-
-                    //if (avgCycleTime > 0)
-                    //{
-                    //    try
-                    //    {
-                    //        targetCount = Convert.ToInt32(Convert.ToDecimal(netShiftTime) / avgCycleTime);
-                    //    }
-                    //    catch (Exception)
-                    //    {
-
-                    //    }
-                    //}
                     #endregion
 
                     var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;

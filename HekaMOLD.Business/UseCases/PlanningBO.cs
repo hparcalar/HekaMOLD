@@ -907,6 +907,116 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+
+        public BusinessResult SavePlanView(int plantId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var currentDate = DateTime.Now.Date;
+
+                var repo = _unitOfWork.GetRepository<MachinePlanView>();
+                var repoDetails = _unitOfWork.GetRepository<MachinePlanViewDetail>();
+
+                // CREATE VIEW HEADER
+                var dbObj = repo.Get(d => d.ViewDate == currentDate && d.PlantId == plantId);
+                if (dbObj == null)
+                {
+                    dbObj = new MachinePlanView
+                    {
+                        PlantId = plantId,
+                        ViewDate = currentDate,
+                    };
+                    repo.Add(dbObj);
+                }
+
+                // GET LAST UPDATED PLAN VIEW
+                MachinePlanModel[] currentPlans = new MachinePlanModel[0];
+                using (PlanningBO bObj = new PlanningBO())
+                {
+                    currentPlans = bObj.GetProductionPlans();
+                }
+
+                // CLEAR OLD DETAILS
+                var oldDetails = repoDetails.Filter(d => d.MachinePlanViewId == dbObj.Id).ToArray();
+                foreach (var item in oldDetails)
+                {
+                    repoDetails.Delete(item);
+                }
+
+                // UPDATE DETAILS
+                foreach (var item in currentPlans)
+                {
+                    repoDetails.Add(new MachinePlanViewDetail
+                    {
+                        MachineId = item.MachineId,
+                        MachinePlanView = dbObj,
+                        OrderNo = item.OrderNo,
+                        WorkOrderDetailId = item.WorkOrderDetailId,
+                    });
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public MachinePlanModel[] GetProductionPlanViews(DateTime planDate)
+        {
+            MachinePlanModel[] data = new MachinePlanModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachinePlanViewDetail>();
+                data = repo.Filter(d => d.MachinePlanView.ViewDate == planDate).ToList().Select(d => new MachinePlanModel
+                {
+                    Id = d.Id,
+                    MachineId = d.MachineId,
+                    OrderNo = d.OrderNo,
+                    WorkOrderDetailId = d.WorkOrderDetailId,
+                    WorkOrder = new WorkOrderDetailModel
+                    {
+                        ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                        ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
+                        WorkOrderId = d.WorkOrderDetail.WorkOrderId,
+                        MoldId = d.WorkOrderDetail.MoldId,
+                        MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
+                        MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
+                        CreatedDate = d.WorkOrderDetail.CreatedDate,
+                        Quantity = d.WorkOrderDetail.Quantity,
+                        WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
+                        WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
+                        FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName,
+                        WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
+                        WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
+                        WastageQuantity = d.WorkOrderDetail.ProductWastage.Sum(m => m.Quantity) ?? 0,
+                        CompleteQuantity = Convert.ToInt32(d.WorkOrderDetail.WorkOrderSerial
+                            .Where(m => m.QualityStatus == (int)QualityStatusType.Ok)
+                            .Sum(m => m.FirstQuantity) ?? 0),
+                        WorkOrderType = d.WorkOrderDetail.WorkOrderType ?? 1,
+                    }
+                }).OrderBy(d => d.OrderNo).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         #endregion
 
         #region ITEM ALLOCATION

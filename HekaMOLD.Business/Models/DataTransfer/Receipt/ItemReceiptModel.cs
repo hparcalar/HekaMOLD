@@ -48,6 +48,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string InvoiceDateStr { get; set; }
         public string InvoiceDocumentNo { get; set; }
         public string ConsumptionReceiptNo { get; set; }
+        public string ItemOrderDocumentNo { get; set; }
         #endregion
     }
 }

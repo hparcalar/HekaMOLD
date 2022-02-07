@@ -1290,9 +1290,11 @@ namespace HekaMOLD.Business.UseCases.Integrations
                     con.Open();
 
                     DataTable dTable = new DataTable();
-                    string sql = "SELECT * FROM STOK_HAREKETLERI WHERE sth_tip=1 AND sth_cins IN(0,1,2,12) AND sth_normal_iade=0 " +
-                                            "AND sth_evraktip=1 AND sth_tarih >= '" + string.Format("{0:yyyy-MM-dd} ", dtMinDelivery) + "' "
-                                            + "ORDER BY sth_evrakno_seri, sth_evrakno_sira, sth_satirno";
+                    string sql = "SELECT sh.*, sp.sip_evrakno_seri + CONVERT(VARCHAR(10),sp.sip_evrakno_sira) [SiparisNo] FROM STOK_HAREKETLERI sh "
+                                +"LEFT JOIN SIPARISLER sp ON sh.sth_sip_uid = sp.sip_Guid "
+                                +"WHERE sh.sth_tip=1 AND sh.sth_cins IN(0,1,2,12) AND sh.sth_normal_iade=0 " +
+                                            "AND sh.sth_evraktip=1 AND sh.sth_tarih >= '" + string.Format("{0:yyyy-MM-dd} ", dtMinDelivery) + "' "
+                                            + "ORDER BY sh.sth_evrakno_seri, sh.sth_evrakno_sira, sh.sth_satirno";
                     SqlDataAdapter dAdapter =
                                         new SqlDataAdapter(sql, con);
                     dAdapter.Fill(dTable);
@@ -1307,6 +1309,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                         foreach (DataRow row in dTable.Rows)
                         {
                             string intReceiptNo = row["sth_evrakno_seri"].ToString() + row["sth_evrakno_sira"].ToString();
+                            string extOrderNo = row["SiparisNo"] != null ? row["SiparisNo"].ToString() : "";
 
                             int productWarehouse = 0;
                             // ÜRÜN SATIRI DEĞİLSE ATLA VE DEVAM ET
@@ -1330,6 +1333,18 @@ namespace HekaMOLD.Business.UseCases.Integrations
                             {
                                 lastReceiptId = 0;
                                 lineNumber = 1;
+
+                                // RESOLVE RELATED SYSTEM SALE ORDER
+                                int? systemOrderId = null;
+                                if (!string.IsNullOrEmpty(extOrderNo))
+                                {
+                                    using (OrdersBO ordBO = new OrdersBO())
+                                    {
+                                        var sysOrder = ordBO.GetItemOrder(extOrderNo, ItemOrderType.Sale);
+                                        if (sysOrder != null && sysOrder.Id > 0)
+                                            systemOrderId = sysOrder.Id;
+                                    }
+                                }
 
                                 using (ReceiptBO subObj = new ReceiptBO())
                                 {
@@ -1356,6 +1371,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 ReceiptDate = (DateTime)row["sth_tarih"],
                                                 ReceiptStatus = (int)ReceiptStatusType.Created,
                                                 InWarehouseId = productWarehouse,
+                                                ItemOrderId = systemOrderId,
                                                 //SyncDate = DateTime.Now,
                                                 //SyncStatus = 1,
                                                 CreatedDate = DateTime.Now,
@@ -1383,6 +1399,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             }
 
                                             dbItemReceipt.FirmId = firmId;
+                                            dbItemReceipt.ItemOrderId = systemOrderId;
 
                                             // MEVCUT SEVK İRSALİYESİ İSE BAŞLIK BİLGİLERİNİ GÜNCELLE VE DETAYLARA DOKUNMA
                                             dbItemReceipt.ReceiptDate = (DateTime)row["sth_tarih"];

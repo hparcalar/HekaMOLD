@@ -25,7 +25,22 @@
                             toastr.error('Hata: ' + resp.data.ErrorMessage, 'Uyarı');
                     }
 
+                    $scope.updateLastPlanView();
+
                     $scope.$emit('editPlanEnd', $scope.modelObject);
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
+    $scope.updateLastPlanView = function () {
+        try {
+            $http.post(HOST_URL + 'Planning/UpdateLastPlanView', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+
+                    }
                 }).catch(function (err) { });
         } catch (e) {
 
@@ -58,7 +73,46 @@
                                         toastr.error('Hata: ' + resp.data.ErrorMessage, 'Uyarı');
                                 }
 
+                                $scope.updateLastPlanView();
+
                                 $scope.$emit('editPlanEnd', $scope.modelObject);
+                            }).catch(function (err) { });
+                    } catch (e) {
+
+                    }
+                }
+            }
+        });
+    }
+
+    $scope.rollbackPlan = function () {
+        bootbox.confirm({
+            message: "Bu üretim planını silmek istediğinizden emin misiniz?",
+            closeButton: false,
+            buttons: {
+                confirm: {
+                    label: 'Evet',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'Hayır',
+                    className: 'btn-light'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    try {
+                        $http.post(HOST_URL + 'Planning/DeletePlan', { rid: $scope.modelObject.Id }, 'json')
+                            .then(function (resp) {
+                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                    if (resp.data.Result == true) {
+                                        toastr.success('Plan başarıyla silindi.', 'Bilgilendirme');
+                                        $scope.updateLastPlanView();
+                                        $scope.$emit('editPlanEnd', $scope.modelObject);
+                                    }
+                                    else
+                                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                                }
                             }).catch(function (err) { });
                     } catch (e) {
 
