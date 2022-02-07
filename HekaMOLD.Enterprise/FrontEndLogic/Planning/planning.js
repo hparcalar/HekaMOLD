@@ -302,7 +302,6 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 mode: "virtual"
             },
             height: 450,
-            width: 450,
             onEditorPreparing: function (e) {
                 if (e.parentType === "filterRow") {
                     let onValueChanged = e.editorOptions.onValueChanged
@@ -332,9 +331,15 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
                         if (typeof machineId != 'undefined') {
                             var planObj = $scope.waitingPlanList.find(d => d.Id == parseInt(planId));
-                            if (typeof planObj != 'undefined') {
-                                planObj.MachineId = parseInt(machineId);
-                                $scope.saveModel(planObj);
+                            var sameOrderDetails = $scope.waitingPlanList.filter(d => d.ItemOrderId == planObj.ItemOrderId);
+                            for (var i = 0; i < sameOrderDetails.length; i++) {
+                                var detailObj = sameOrderDetails[i];
+                                if (detailObj != null) {
+                                    if (typeof planObj != 'undefined') {
+                                        detailObj.MachineId = parseInt(machineId);
+                                        $scope.saveModel(detailObj);
+                                    }
+                                }
                             }
                         }
                     });
@@ -364,6 +369,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     "<tr draggable=\"true\" "
                     + "class=\"dx-row dx-data-row dx-row-lines waiting-plan-row " + deadlineClass + "\" data-id=\"" + data.Id + "\">" +
                         "<td>" + data.OrderDateStr + "</td>" +
+                        "<td>" + data.OrderNo + "</td>" +
                         "<td>" + data.DeadlineDateStr + "</td>" +
                         "<td>" + data.FirmName + "</td>" +
                         "<td>" + data.ItemNo + "</td>" +
@@ -378,6 +384,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     dataField: 'OrderDateStr',
                     caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy'
                 },
+                { dataField: 'OrderNo', caption: 'Sipariş No' },
                 {
                     dataField: 'DeadlineDateStr',
                     caption: 'Termin', dataType: 'date', format: 'dd.MM.yyyy'
@@ -474,19 +481,31 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     },
                     callback: function (result) {
                         if (result) {
-                            $http.post(HOST_URL + 'Planning/DeletePlan', { rid: $scope.selectedPlan.Id }, 'json')
-                                .then(function (resp) {
-                                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                                        if (resp.data.Result == true) {
-                                            toastr.success('Plan başarıyla silindi.', 'Bilgilendirme');
+                            var sameOrderDetails = $scope.boardPlanList
+                                .filter(d => d.WorkOrder.ItemOrderId == $scope.selectedPlan.WorkOrder.ItemOrderId);
+                            
+                            if (sameOrderDetails.some(d => d.WorkOrder.WorkOrderStatus == 3)) {
+                                toastr.error('Bu sipariş için başlatılan bir iş emri bulunmakta olduğundan silemezsiniz.');
+                                return;
+                            }
 
-                                            $scope.loadMachineList();
-                                            $scope.loadWaitingPlanList();
+                            for (var i = 0; i < sameOrderDetails.length; i++) {
+                                var planObj = sameOrderDetails[i];
+
+                                $http.post(HOST_URL + 'Planning/DeletePlan', { rid: planObj.Id }, 'json')
+                                    .then(function (resp) {
+                                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                                            if (resp.data.Result == true) {
+                                                toastr.success('Plan başarıyla silindi.', 'Bilgilendirme');
+
+                                                $scope.loadMachineList();
+                                                $scope.loadWaitingPlanList();
+                                            }
+                                            else
+                                                toastr.error(resp.data.ErrorMessage, 'Hata');
                                         }
-                                        else
-                                            toastr.error(resp.data.ErrorMessage, 'Hata');
-                                    }
-                                }).catch(function (err) { });
+                                    }).catch(function (err) { });
+                            }
                         }
                     }
                 });

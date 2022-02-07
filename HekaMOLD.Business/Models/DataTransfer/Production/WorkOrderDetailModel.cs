@@ -38,6 +38,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public bool NewDetail { get; set; }
         public string Explanation { get; set; }
         public string ItemOrderDocumentNo { get; set; }
+        public int? ItemOrderId { get; set; }
         public int? MachinePlanOrderNo { get; set; }
         public string WorkOrderStatusStr { get; set; }
         public string WorkOrderDateStr { get; set; }

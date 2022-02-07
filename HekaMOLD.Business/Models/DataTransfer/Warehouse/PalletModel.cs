@@ -16,6 +16,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Warehouse
 
         #region VISUAL ELEMENTS
         public string CreatedDateStr { get; set; }
+        public string ItemName { get; set; }
+        public string FirmName { get; set; }
         public int BoxCount { get; set; }
         public decimal? Quantity { get; set; }
         public string QuantityStr { get; set; }

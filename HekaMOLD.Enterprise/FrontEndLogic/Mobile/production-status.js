@@ -62,22 +62,27 @@
                     if (result) {
                         $scope.saveStatus = 1;
 
-                        $http.post(HOST_URL + 'Mobile/HoldWorkOrder',
-                            { workOrderDetailId: $scope.selectedWorkOrder.WorkOrder.Id }, 'json')
-                            .then(function (resp) {
-                                if (typeof resp.data != 'undefined' && resp.data != null) {
-                                    $scope.saveStatus = 0;
+                        var sameOrderDetails = $scope.machineQueue.filter(d => d.WorkOrder.ItemOrderId == $scope.selectedWorkOrder.WorkOrder.ItemOrderId);
+                        for (var i = 0; i < sameOrderDetails.length; i++) {
+                            var detailObj = sameOrderDetails[i];
 
-                                    if (resp.data.Result == true) {
-                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                            $http.post(HOST_URL + 'Mobile/HoldWorkOrder',
+                                { workOrderDetailId: detailObj.WorkOrder.Id }, 'json')
+                                .then(function (resp) {
+                                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                                        $scope.saveStatus = 0;
+
+                                        if (resp.data.Result == true) {
+                                            toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                                        }
+                                        else
+                                            toastr.error(resp.data.ErrorMessage, 'Hata');
+
+                                        $scope.loadMachineQueue();
+                                        /*$scope.loadActiveWorkOrder();*/
                                     }
-                                    else
-                                        toastr.error(resp.data.ErrorMessage, 'Hata');
-
-                                    $scope.loadMachineQueue();
-                                    $scope.loadActiveWorkOrder();
-                                }
-                            }).catch(function (err) { });
+                                }).catch(function (err) { });
+                        }
                     }
                 }
             });
@@ -106,22 +111,27 @@
                     if (result) {
                         $scope.saveStatus = 1;
 
-                        $http.post(HOST_URL + 'Mobile/ToggleWorkOrderStatus',
-                            { workOrderDetailId: $scope.selectedWorkOrder.WorkOrder.Id }, 'json')
-                            .then(function (resp) {
-                                if (typeof resp.data != 'undefined' && resp.data != null) {
-                                    $scope.saveStatus = 0;
+                        var sameOrderDetails = $scope.machineQueue.filter(d => d.WorkOrder.ItemOrderId == $scope.selectedWorkOrder.WorkOrder.ItemOrderId);
+                        for (var i = 0; i < sameOrderDetails.length; i++) {
+                            var detailObj = sameOrderDetails[i];
 
-                                    if (resp.data.Result == true) {
-                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                            $http.post(HOST_URL + 'Mobile/ToggleWorkOrderStatus',
+                                { workOrderDetailId: detailObj.WorkOrder.Id }, 'json')
+                                .then(function (resp) {
+                                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                                        $scope.saveStatus = 0;
+
+                                        if (resp.data.Result == true) {
+                                            toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                                        }
+                                        else
+                                            toastr.error(resp.data.ErrorMessage, 'Hata');
+
+                                        $scope.loadMachineQueue();
+                                        /*$scope.loadActiveWorkOrder();*/
                                     }
-                                    else
-                                        toastr.error(resp.data.ErrorMessage, 'Hata');
-
-                                    $scope.loadMachineQueue();
-                                    $scope.loadActiveWorkOrder();
-                                }
-                            }).catch(function (err) { });
+                                }).catch(function (err) { });
+                        }
                     }
                 }
             });

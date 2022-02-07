@@ -105,6 +105,20 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.MapTo(modelDetail);
 
                     modelDetail.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now);
+                    var firstSerial = dbObj.ItemSerial.FirstOrDefault();
+                    if (firstSerial != null)
+                    {
+                        modelDetail.ItemName = firstSerial.ItemReceiptDetail.Item.ItemName;
+                        try
+                        {
+                            modelDetail.FirmName = firstSerial.ItemReceiptDetail.ItemReceipt.Firm.FirmName;
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    modelDetail.QuantityStr = string.Format("{0:N2}", dbObj.ItemSerial.Sum(d => d.FirstQuantity) ?? 0);
 
                     // GENERATE BARCODE IMAGE
                     QRCodeGenerator qrGenerator = new QRCodeGenerator();

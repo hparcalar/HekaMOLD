@@ -91,6 +91,7 @@
 
                                             <p ng-cloak>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
                                             <p><span ng-cloak class="plan-firm-name">{{plan.WorkOrder.FirmName}}</span>&nbsp;</p>
+                                            <p><span ng-cloak class="plan-firm-name bg-white rounded-1 text-dark">Sipariş: {{plan.WorkOrder.ItemOrderDocumentNo}}</span>&nbsp;</p>
                                             <p><b ng-cloak>{{showProperProductName(plan.WorkOrder)}}</b>&nbsp;</p>
                                             <p ng-cloak>
                                                 {{plan.WorkOrder.CompleteQuantity}} /
@@ -106,37 +107,38 @@
                                         </div>
 
                                         @* GET COMPLETED PLANS OF MACHINE *@
-                                        <div class="plan-box" draggable="true"
-                                             data-plan-id="{{plan.Id}}"
-                                             ng-cloak
-                                             ng-click="selectPlan(plan)"
-                                             ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6,
+                                    <div class="plan-box" draggable="true"
+                                         data-plan-id="{{plan.Id}}"
+                                         ng-cloak
+                                         ng-click="selectPlan(plan)"
+                                         ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6,
                                                     'plan-box-completed': plan.WorkOrder.WorkOrderStatus == 4,
                                                     'plan-box-progress': plan.WorkOrder.WorkOrderStatus == 3,
                                                     'plan-selected': plan.Id == selectedPlan.Id}"
-                                             ng-repeat="plan in getMachinePlans(machine, false)">
-                                            <button class="btn btn-primary btn-sm btn-plan-details px-1 py-1"
-                                                    ng-click="showPlanDetails(plan, $event.currentTarget)">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
+                                         ng-repeat="plan in getMachinePlans(machine, false)">
+                                        <button class="btn btn-primary btn-sm btn-plan-details px-1 py-1"
+                                                ng-click="showPlanDetails(plan, $event.currentTarget)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
 
-                                            <p ng-cloak>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
-                                            <p ng-cloak>{{plan.WorkOrder.FirmName}}&nbsp;</p>
-                                            <p><b ng-cloak>{{showProperProductName(plan.WorkOrder)}}</b>&nbsp;</p>
-                                            <p ng-cloak>
-                                                {{plan.WorkOrder.CompleteQuantity}} /
-                                                {{plan.WorkOrder.Quantity}}
-                                            </p>
-                                            <p ng-cloak ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,
+                                        <p ng-cloak>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
+                                        <p ng-cloak>{{plan.WorkOrder.FirmName}}&nbsp;</p>
+                                        <p><span ng-cloak class="plan-firm-name bg-white rounded-1 text-dark">Sipariş: {{plan.WorkOrder.ItemOrderDocumentNo}}</span>&nbsp;</p>
+                                        <p><b ng-cloak>{{showProperProductName(plan.WorkOrder)}}</b>&nbsp;</p>
+                                        <p ng-cloak>
+                                            {{plan.WorkOrder.CompleteQuantity}} /
+                                            {{plan.WorkOrder.Quantity}}
+                                        </p>
+                                        <p ng-cloak ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,
                                                'label-wastage-count': plan.WorkOrder.WastageQuantity == 0}">
-                                                Fire: {{ plan.WorkOrder.WastageQuantity }}
-                                            </p>
-                                        </div>
+                                            Fire: {{ plan.WorkOrder.WastageQuantity }}
+                                        </p>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex flex-column w-35" ng-class="{'collapsed-panel': waitingPlansVisible == false}">
+                        <div class="d-flex flex-column w-50" ng-class="{'collapsed-panel': waitingPlansVisible == false}">
                             <div class="card" ng-class="{'collapsed-body': !waitingPlansVisible}">
                                 <div class="card-header min-h-10px px-1">
                                     @*<span ng-show="waitingPlansVisible" class="mx-auto">Bekleyen İş Emirleri</span>*@

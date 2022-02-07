@@ -623,6 +623,8 @@ namespace HekaMOLD.Business.UseCases
                             ProductName = dbObj.WorkOrderDetail.Item != null ? dbObj.WorkOrderDetail.Item.ItemName : dbObj.WorkOrderDetail.TrialProductName,
                             WorkOrderId = dbObj.WorkOrderDetail.WorkOrderId,
                             ItemId = dbObj.WorkOrderDetail.ItemId,
+                            ItemOrderId = dbObj.WorkOrderDetail.ItemOrderDetail != null ?
+                                dbObj.WorkOrderDetail.ItemOrderDetail.ItemOrderId : (int?)null,
                             MoldId = dbObj.WorkOrderDetail.MoldId,
                             MoldCode = dbObj.WorkOrderDetail.Mold != null ? dbObj.WorkOrderDetail.Mold.MoldCode : "",
                             MoldName = dbObj.WorkOrderDetail.Mold != null ? dbObj.WorkOrderDetail.Mold.MoldName : "",

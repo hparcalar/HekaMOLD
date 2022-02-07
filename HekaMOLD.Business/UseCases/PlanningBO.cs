@@ -396,8 +396,9 @@ namespace HekaMOLD.Business.UseCases
                 )
             ).ToList().Select(d => new ItemOrderDetailModel { 
                 Id = d.Id,
+                ItemOrderId = d.ItemOrderId,
                 OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
-                
+                OrderNo = d.ItemOrder.OrderNo,
                 ItemNo = d.Item != null ? d.Item.ItemNo : "",
                 ItemName = d.Item != null ? d.Item.ItemName : "",
                 FirmName = d.ItemOrder.Firm != null ? 
@@ -428,6 +429,11 @@ namespace HekaMOLD.Business.UseCases
                         ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
                         ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
                         WorkOrderId = d.WorkOrderDetail.WorkOrderId,
+                        SaleOrderDetailId = d.WorkOrderDetail.SaleOrderDetailId,
+                        ItemOrderId = d.WorkOrderDetail.ItemOrderDetail != null ?
+                            d.WorkOrderDetail.ItemOrderDetail.ItemOrderId : (int?)null,
+                        ItemOrderDocumentNo = d.WorkOrderDetail.ItemOrderDetail != null ?
+                            d.WorkOrderDetail.ItemOrderDetail.ItemOrder.OrderNo : "",
                         MoldId = d.WorkOrderDetail.MoldId,
                         MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
                         MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
@@ -546,6 +552,8 @@ namespace HekaMOLD.Business.UseCases
                     WorkOrder = new WorkOrderDetailModel
                     {
                         Id= d.WorkOrderDetail.Id,
+                        ItemOrderId = d.WorkOrderDetail.ItemOrderDetail != null ?
+                            d.WorkOrderDetail.ItemOrderDetail.ItemOrderId : (int?)null,
                         ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
                         ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
                         Explanation = d.WorkOrderDetail.WorkOrder.Explanation,

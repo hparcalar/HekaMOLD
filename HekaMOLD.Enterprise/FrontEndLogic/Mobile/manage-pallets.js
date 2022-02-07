@@ -245,7 +245,7 @@
 
     $scope.createPallet = function () {
         bootbox.confirm({
-            message: "Yeni palet oluşturulup etiket yazdırılacaktır. Onaylıyor musunuz?",
+            message: "Yeni palet oluşturulacaktır. Onaylıyor musunuz?",
             closeButton: false,
             buttons: {
                 confirm: {
@@ -270,7 +270,7 @@
                                     toastr.success('Kayıt başarılı.', 'Bilgilendirme');
 
                                     $scope.lastRecordId = resp.data.RecordId;
-                                    $scope.showPrintTemplates();
+                                    /*$scope.showPrintTemplates();*/
 
                                     $scope.bindModel();
                                 }
