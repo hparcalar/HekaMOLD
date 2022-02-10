@@ -8,7 +8,7 @@
             + $scope.filterModel.endDate, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.machineList = resp.data;
+                    $scope.machineList = resp.data.Data;
                 }
             }).catch(function (err) { });
     }
