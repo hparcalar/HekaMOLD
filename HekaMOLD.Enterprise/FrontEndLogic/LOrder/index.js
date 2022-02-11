@@ -127,7 +127,43 @@
 
         $('#dial-firm').dialog("close");
     }
+    
+    $scope.getNextRecord = function () {
+            var prms = new Promise(function (resolve, reject) {
+                $http.get(HOST_URL + 'LOrder/GetNextRecord?Id=' + $scope.modelObject.Id, {},'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            window.location.href = HOST_URL + 'LOrder?rid=' + resp.data.NextNo;
+                        }
+                        else {
+                            toastr.warning('Sıradaki sipariş numarasına ulaşılamadı. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
 
+        return prms;
+    }
+    $scope.getBackRecord = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'LOrder/GetBackRecord?Id=' + $scope.modelObject.Id, {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            window.location.href = HOST_URL + 'LOrder?rid=' + resp.data.NextNo;
+                        }
+                        else {
+                            toastr.warning('Sıradaki sipariş numarasına ulaşılamadı. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prms;
+    }
     // CRUD
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus: 0 };

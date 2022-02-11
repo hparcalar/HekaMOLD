@@ -7,6 +7,7 @@ using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace HekaMOLD.Business.UseCases
@@ -16,7 +17,6 @@ namespace HekaMOLD.Business.UseCases
         public ItemOrderModel[] GetItemOrderList(ItemOrderType orderType)
         {
             List<ItemOrderModel> data = new List<ItemOrderModel>();
-
             var repo = _unitOfWork.GetRepository<ItemOrder>();
 
             return repo.Filter(d => d.OrderType == (int)orderType).ToList()
@@ -24,9 +24,10 @@ namespace HekaMOLD.Business.UseCases
                 {
                     Id = d.Id,
                     OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
-                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                    OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.OrderDate),
                     DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
                     LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                    OrderDateWeek = getWeekOfNumber((DateTime)d.OrderDate),
                     CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                     CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
                     LoadCityName = d.LoadCity != null ? d.LoadCity.CityName : "",
@@ -39,6 +40,7 @@ namespace HekaMOLD.Business.UseCases
                     OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
                     OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
                     OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+                    //OrderDateWeek = Convert.ToString( Convert.ToDateTime(d.OrderDate).GetDateTimeFormats()),
                     // LoadCountryName = d.LoadCity.Country != null ? d.LoadCity.Country.CountryName :"",
                     OveralQuantity = d.OveralQuantity,
                     OveralWeight = d.OveralWeight,
@@ -962,5 +964,15 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
         #endregion
+        public int getWeekOfNumber(DateTime Date)
+        {
+            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(Date);
+            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+            {
+                Date = Date.AddDays(3);
+            }
+            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(Date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+        }
     }
 }

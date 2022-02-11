@@ -12,6 +12,7 @@ namespace Heka.DataAccess.Context.Models
             this.Firm = new HashSet<Firm>();
             this.ItemLoadByCountryShipper = new HashSet<ItemLoad>();
             this.ItemLoadByCountryBuyer = new HashSet<ItemLoad>();
+            this.Driver = new HashSet<Driver>();
 
         }
         public int Id { get; set; }
@@ -36,5 +37,8 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("CountryBuyer")]
         public virtual ICollection<ItemLoad> ItemLoadByCountryBuyer { get; set; }
+
+        [InverseProperty("Country")]
+        public virtual ICollection<Driver> Driver { get; set; }
     }
 }

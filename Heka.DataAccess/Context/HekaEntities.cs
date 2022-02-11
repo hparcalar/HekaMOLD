@@ -123,6 +123,8 @@
         public virtual DbSet<District> District { get; set; }
         public virtual DbSet<CustomsDoor> CustomsDoor { get; set; }
         public virtual DbSet<CodeCounter> CodeCounter { get; set; }
+        public virtual DbSet<RoundCostCategory> RoundCostCategory { get; set; }
+
 
     }
 }

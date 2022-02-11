@@ -1,10 +1,12 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.Context.Models;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Authentication;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Authentication;
 using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.Models.Operational;
 using System;
 using System.Collections.Generic;
@@ -636,6 +638,133 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
+        #endregion
+
+        #region DRIVER BUSINESS
+        public DriverModel GetDriver(int id)
+        {
+            DriverModel model = new DriverModel();
+
+            var repo = _unitOfWork.GetRepository<Driver>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.BirthDateStr = String.Format("{0:dd.MM.yyyy}", model.BirthDate);
+                model.VisaStartDateStr = string.Format("{0:dd.MM.yyyy}",model.VisaStartDate);
+                model.VisaEndDateStr = string.Format("{0:dd.MM.yyyy}", model.VisaEndDate);
+
+                if (dbObj.ProfileImage != null)
+                {
+                    model.ProfileImageBase64 = "data:image/png;base64, " + Convert.ToBase64String(dbObj.ProfileImage);
+                }
+            }
+
+            return model;
+        }
+
+        public DriverModel[] GetDriverList()
+        {
+            List<DriverModel> data = new List<DriverModel>();
+
+            var repo = _unitOfWork.GetRepository<Driver>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                DriverModel containerObj = new DriverModel();
+                d.MapTo(containerObj);
+                containerObj.BirthDateStr = String.Format("{0:dd.MM.yyyy}", d.BirthDate);
+                containerObj.VisaStartDateStr = String.Format("{0:dd.MM.yyyy}", d.VisaStartDate);
+                containerObj.VisaEndDateStr = String.Format("{0:dd.MM.yyyy}", d.VisaEndDate);
+                containerObj.VisaTypeStr = d.VisaType != null ? d.VisaType == 1 ? "SCHENGEN" : "" :"";
+                containerObj.CountryName = d.Country != null ? d.Country.CountryName : "";
+                containerObj.ProfileImage = null;
+                containerObj.ProfileImageBase64 = "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateDriver(DriverModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.DriverName))
+                    throw new Exception("Şoför adı bilgisi girilmelidir.");
+                if (string.IsNullOrEmpty(model.DriverSurName))
+                    throw new Exception("Şoför soyadı bilgisi girilmelidir.");
+                if (!String.IsNullOrEmpty(model.BirthDateStr))
+                    model.BirthDate = DateTime.ParseExact(model.BirthDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                if (!String.IsNullOrEmpty(model.VisaStartDateStr))
+                    model.VisaStartDate = DateTime.ParseExact(model.VisaStartDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                if (!String.IsNullOrEmpty(model.VisaEndDateStr))
+                    model.VisaEndDate = DateTime.ParseExact(model.VisaEndDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repo = _unitOfWork.GetRepository<Driver>();
+
+                if (repo.Any(d => (d.Tc == model.Tc)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı Tc bilgisine sahip başka bir şoför mevcuttur. Lütfen farklı bir giriş bilgisi giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Driver();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteDriver(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Driver>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+
         #endregion
     }
 }

@@ -67,6 +67,7 @@
     <Compile Include="Context\Models\CustomsDoor.cs" />
     <Compile Include="Context\Models\DeliveryPlan.cs" />
     <Compile Include="Context\Models\District.cs" />
+    <Compile Include="Context\Models\Driver.cs" />
     <Compile Include="Context\Models\Dye.cs" />
     <Compile Include="Context\Models\EntryQualityData.cs" />
     <Compile Include="Context\Models\EntryQualityDataDetail.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Context\Models\ProductRecipeDetail.cs" />
     <Compile Include="Context\Models\ProductWastage.cs" />
     <Compile Include="Context\Models\ReportTemplate.cs" />
+    <Compile Include="Context\Models\RoundCostCategory.cs" />
     <Compile Include="Context\Models\Route.cs" />
     <Compile Include="Context\Models\RouteItem.cs" />
     <Compile Include="Context\Models\SectionSetting.cs" />
@@ -373,6 +375,34 @@
     <Compile Include="Migrations\202202022201418_Vehicle%28CareInsuranceTire%29Update.designer.cs">
       <DependentUpon>202202022201418_Vehicle%28CareInsuranceTire%29Update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202042126417_VehicleUpdate%28HasLoadPlannig%29.cs" />
+    <Compile Include="Migrations\202202042126417_VehicleUpdate%28HasLoadPlannig%29.designer.cs">
+      <DependentUpon>202202042126417_VehicleUpdate%28HasLoadPlannig%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202052046395_Driveradd.cs" />
+    <Compile Include="Migrations\202202052046395_Driveradd.designer.cs">
+      <DependentUpon>202202052046395_Driveradd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202052049123_Driverupdate.cs" />
+    <Compile Include="Migrations\202202052049123_Driverupdate.designer.cs">
+      <DependentUpon>202202052049123_Driverupdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.cs" />
+    <Compile Include="Migrations\202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.designer.cs">
+      <DependentUpon>202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.cs" />
+    <Compile Include="Migrations\202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.designer.cs">
+      <DependentUpon>202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.cs" />
+    <Compile Include="Migrations\202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.designer.cs">
+      <DependentUpon>202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202111044135_RoundCostCategoryAdd.cs" />
+    <Compile Include="Migrations\202202111044135_RoundCostCategoryAdd.designer.cs">
+      <DependentUpon>202202111044135_RoundCostCategoryAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -543,6 +573,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202202022201418_Vehicle%28CareInsuranceTire%29Update.resx">
       <DependentUpon>202202022201418_Vehicle%28CareInsuranceTire%29Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202042126417_VehicleUpdate%28HasLoadPlannig%29.resx">
+      <DependentUpon>202202042126417_VehicleUpdate%28HasLoadPlannig%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202052046395_Driveradd.resx">
+      <DependentUpon>202202052046395_Driveradd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202052049123_Driverupdate.resx">
+      <DependentUpon>202202052049123_Driverupdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.resx">
+      <DependentUpon>202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.resx">
+      <DependentUpon>202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.resx">
+      <DependentUpon>202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202111044135_RoundCostCategoryAdd.resx">
+      <DependentUpon>202202111044135_RoundCostCategoryAdd.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

@@ -365,6 +365,107 @@
                                     </div>
                                 }
                                 <!-- Logistic Load end -->
+                                <!-- Logistic Round begin -->
+                                @if (Html.IsGranted("ModuleLogisticsRound"))
+                                {
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @((Regex.IsMatch(ctrl, "LPlanning$") && receiptCtg == "3") ? "show":"")">
+                                        <span class="menu-link @((Regex.IsMatch(ctrl, "LPlanning$") && receiptCtg == "3") ? "active" : "")">
+                                            <span class="menu-icon">
+                                                <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
+                                                <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                         viewBox="0 0 47.416 47.416" style="enable-background:new 0 0 47.416 47.416;" xml:space="preserve"><g><path style="fill:#010002;" d="M0,30.739h11.083v11.083H0V30.739z M0,18.072h11.083v11.083H0V18.072z M0,5.406h11.083v11.083H0
+		                                                    V5.406z M12.667,5.406H23.75v11.083H12.667V5.406zM12.667,18.072H23.75v11.083H12.667V18.072z M12.667,30.739H23.75v11.083H12.667V30.739z M15.833,33.906v4.75h4.75v-4.75H15.833z M43.644,39.603l-6.271,
+                                                         2.407l-11.572-5.152l5.152-11.572l6.271-2.407l-3.6,8.088c3.104-0.998,5.787-3.264,7.217-6.477c1.949-4.378,1.036-9.305-1.935-12.683c-0.828-0.499-1.382-1.406-1.382-2
+                                                       .443c0-1.574,1.276-2.85,2.85-2.85c0.998,0,1.876,0.513,2.385,1.289c4.6,4.959,6.071,12.371,3.146,18.941c-2.03,4.56-5.779,7.818-10.143,9.351L43.644,39.603z" />
+                                                       </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+                                                    </svg>
+                                                </span>
+                                                <!--end::Svg Icon-->
+                                            </span>
+                                            <span class="menu-title">SEFER YÖNETİMİ</span>
+                                            <span class="menu-arrow"></span>
+                                        </span>
+                                        <div class="menu-sub menu-sub-accordion">
+                                            <div class="menu-item">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "LPlanning$") ? "active" : "")" href="@Url.Action("Planning", "LPlanning")">
+                                                    <span class="menu-bullet">
+                                                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                             viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"><g>	<g>		<polygon points="462.283,412.565 440.767,434.082 453.755,447.069 130.737,447.069 143.724,434.082 122.208,412.565
+			72.491,462.283 122.208,512 143.724,490.484 130.737,477.497 453.755,477.497 440.767,490.484 462.283,512 512,462.283 		" />
+	</g></g><g>	<g>
+                                                        <polygon points="64.931,381.263 64.931,58.245 77.919,71.233 99.435,49.717 49.717,0 0,49.717 21.516,71.233 34.503,58.245
+			34.503,381.263 21.516,368.276 0,389.792 49.717,439.509 99.435,389.792 77.919,368.276 		" />
+	</g></g><g>	<g>
+                                                        <path d="M381.55,0.216H106.841V405.16h404.943V147.78H381.55V0.216z M137.269,30.644h91.712v49.865h-91.712V30.644z
+			 M178.265,374.731h-40.996V253.262h40.996V374.731z M351.122,374.731H208.693V253.262h142.429V374.731z M351.122,162.995v15.213
+			v44.626H137.269V110.937h213.853V162.995z M351.122,80.509h-91.712V30.644h91.712V80.509z M481.356,178.208v196.523H381.55
+			V178.208H481.356z" />
+	</g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+                                                    </span>
+                                                    <span class="menu-title">Sefer Planlama</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "Load$") ? "active" : "")" href="@Url.Action("ExportList", "Load")">
+                                                    <span class="menu-bullet">
+
+                                                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                             viewBox="0 0 458.18 458.18" style="enable-background:new 0 0 458.18 458.18;" xml:space="preserve">
+<g>
+                                                        <path d="M36.09,5.948c-18.803,0-34.052,15.248-34.052,34.051c0,18.803,15.249,34.052,34.052,34.052
+		c18.803,0,34.052-15.25,34.052-34.052C70.142,21.196,54.893,5.948,36.09,5.948z" />
+                                                        <path d="M147.537,80h268.604c22.092,0,40-17.908,40-40s-17.908-40-40-40H147.537c-22.092,0-40,17.908-40,40S125.445,80,147.537,80z
+		" />
+                                                        <path d="M36.09,132.008c-18.803,0-34.052,15.248-34.052,34.051s15.249,34.052,34.052,34.052c18.803,0,34.052-15.249,34.052-34.052
+		S54.893,132.008,36.09,132.008z" />
+                                                        <path d="M416.142,126.06H147.537c-22.092,0-40,17.908-40,40s17.908,40,40,40h268.604c22.092,0,40-17.908,40-40
+		S438.233,126.06,416.142,126.06z" />
+                                                        <path d="M36.09,258.068c-18.803,0-34.052,15.248-34.052,34.051c0,18.803,15.249,34.052,34.052,34.052
+		c18.803,0,34.052-15.249,34.052-34.052C70.142,273.316,54.893,258.068,36.09,258.068z" />
+                                                        <path d="M416.142,252.119H147.537c-22.092,0-40,17.908-40,40s17.908,40,40,40h268.604c22.092,0,40-17.908,40-40
+		S438.233,252.119,416.142,252.119z" />
+                                                        <path d="M36.09,384.128c-18.803,0-34.052,15.248-34.052,34.051s15.249,34.053,34.052,34.053c18.803,0,34.052-15.25,34.052-34.053
+		S54.893,384.128,36.09,384.128z" />
+                                                        <path d="M416.142,378.18H147.537c-22.092,0-40,17.908-40,40s17.908,40,40,40h268.604c22.092,0,40-17.908,40-40
+		S438.233,378.18,416.142,378.18z" /></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+		</svg>
+                                                    </span>
+                                                    <span class="menu-title">Sefer Listesi</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "RoundCostCategory$") ? "active" : "")" href="@Url.Action("List", "RoundCostCategory")">
+                                                    <span class="menu-bullet">
+
+                                                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                             viewBox="0 0 458.18 458.18" style="enable-background:new 0 0 458.18 458.18;" xml:space="preserve">
+<g>
+                                                        <path d="M36.09,5.948c-18.803,0-34.052,15.248-34.052,34.051c0,18.803,15.249,34.052,34.052,34.052
+		c18.803,0,34.052-15.25,34.052-34.052C70.142,21.196,54.893,5.948,36.09,5.948z" />
+                                                        <path d="M147.537,80h268.604c22.092,0,40-17.908,40-40s-17.908-40-40-40H147.537c-22.092,0-40,17.908-40,40S125.445,80,147.537,80z
+		" />
+                                                        <path d="M36.09,132.008c-18.803,0-34.052,15.248-34.052,34.051s15.249,34.052,34.052,34.052c18.803,0,34.052-15.249,34.052-34.052
+		S54.893,132.008,36.09,132.008z" />
+                                                        <path d="M416.142,126.06H147.537c-22.092,0-40,17.908-40,40s17.908,40,40,40h268.604c22.092,0,40-17.908,40-40
+		S438.233,126.06,416.142,126.06z" />
+                                                        <path d="M36.09,258.068c-18.803,0-34.052,15.248-34.052,34.051c0,18.803,15.249,34.052,34.052,34.052
+		c18.803,0,34.052-15.249,34.052-34.052C70.142,273.316,54.893,258.068,36.09,258.068z" />
+                                                        <path d="M416.142,252.119H147.537c-22.092,0-40,17.908-40,40s17.908,40,40,40h268.604c22.092,0,40-17.908,40-40
+		S438.233,252.119,416.142,252.119z" />
+                                                        <path d="M36.09,384.128c-18.803,0-34.052,15.248-34.052,34.051s15.249,34.053,34.052,34.053c18.803,0,34.052-15.25,34.052-34.053
+		S54.893,384.128,36.09,384.128z" />
+                                                        <path d="M416.142,378.18H147.537c-22.092,0-40,17.908-40,40s17.908,40,40,40h268.604c22.092,0,40-17.908,40-40
+		S438.233,378.18,416.142,378.18z" /></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+		</svg>
+                                                    </span>
+                                                    <span class="menu-title">Sefer Maliyet Kategori</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <!-- Logistic Round end -->
                                 @if (Html.IsGranted("ModuleItems"))
                                 {
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "SIOrder$") || (Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "3") ? "show":"")">
@@ -1325,120 +1426,133 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Driver$") ? "active" : "")" href="@Url.Action("List","Driver")">
+                                                    <span class="menu-icon">
+                                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Group.svg-->
+                                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <path d="M18,14 C16.3431458,14 15,12.6568542 15,11 C15,9.34314575 16.3431458,8 18,8 C19.6568542,8 21,9.34314575 21,11 C21,12.6568542 19.6568542,14 18,14 Z M9,11 C6.790861,11 5,9.209139 5,7 C5,4.790861 6.790861,3 9,3 C11.209139,3 13,4.790861 13,7 C13,9.209139 11.209139,11 9,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                                                                <path d="M17.6011961,15.0006174 C21.0077043,15.0378534 23.7891749,16.7601418 23.9984937,20.4 C24.0069246,20.5466056 23.9984937,21 23.4559499,21 L19.6,21 C19.6,18.7490654 18.8562935,16.6718327 17.6011961,15.0006174 Z M0.00065168429,20.1992055 C0.388258525,15.4265159 4.26191235,13 8.98334134,13 C13.7712164,13 17.7048837,15.2931929 17.9979143,20.2 C18.0095879,20.3954741 17.9979143,21 17.2466999,21 C13.541124,21 8.03472472,21 0.727502227,21 C0.476712155,21 -0.0204617505,20.45918 0.00065168429,20.1992055 Z" fill="#000000" fill-rule="nonzero" />
+                                                            </svg>
+                                                        </span>
+                                                        <!--end::Svg Icon-->
+                                                    </span>
+                                                    <span class="menu-title">Şoför</span>
+                                                </a>
+                                            </div>
+                                            @if (Html.IsGranted("ModuleProduction"))
+                                            {
+                                                <div class="menu-item">
+                                                    <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Warehouse") ? "active" : "")" href="@Url.Action("List", "Warehouse")">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                                    <g id="Stockholm-icons-/-Shopping-/-Box3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                        <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                                        <path d="M20.4061385,6.73606154 C20.7672665,6.89656288 21,7.25468437 21,7.64987309 L21,16.4115967 C21,16.7747638 20.8031081,17.1093844 20.4856429,17.2857539 L12.4856429,21.7301984 C12.1836204,21.8979887 11.8163796,21.8979887 11.5143571,21.7301984 L3.51435707,17.2857539 C3.19689188,17.1093844 3,16.7747638 3,16.4115967 L3,7.64987309 C3,7.25468437 3.23273352,6.89656288 3.59386153,6.73606154 L11.5938615,3.18050598 C11.8524269,3.06558805 12.1475731,3.06558805 12.4061385,3.18050598 L20.4061385,6.73606154 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
+                                                                        <polygon id="Combined-Shape-Copy" fill="#000000" points="14.9671522 4.22441676 7.5999999 8.31727912 7.5999999 12.9056825 9.5999999 13.9056825 9.5999999 9.49408582 17.25507 5.24126912"></polygon>
+                                                                    </g>
+                                                                </svg>
+                                                            </span>
+                                                        </span> <span class="menu-title">Depo</span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "ProductRecipe") ? "active" : "")" href="@Url.Action("List", "ProductRecipe")">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M6 2C5.44772 2 5 2.44772 5 3V21.0657C5 21.4651 5.44507 21.7033 5.77735 21.4818L7.51714 20.3219C7.81573 20.1228 8.19808 20.099 8.51906 20.2595L10.6584 21.3292C11.5029 21.7515 12.4971 21.7515 13.3416 21.3292L15.4809 20.2595C15.8019 20.099 16.1843 20.1228 16.4829 20.3219L18.2226 21.4818C18.5549 21.7033 19 21.4651 19 21.0657V3C19 2.44772 18.5523 2 18 2H6Z" fill="#12131A" />
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8 8C8 7.44771 8.44771 7 9 7H11C11.5523 7 12 7.44771 12 8C12 8.55229 11.5523 9 11 9H9C8.44771 9 8 8.55229 8 8ZM14 8C14 7.44771 14.4477 7 15 7C15.5523 7 16 7.44771 16 8C16 8.55229 15.5523 9 15 9C14.4477 9 14 8.55229 14 8ZM8 12C8 11.4477 8.44771 11 9 11H11C11.5523 11 12 11.4477 12 12C12 12.5523 11.5523 13 11 13H9C8.44771 13 8 12.5523 8 12ZM14 12C14 11.4477 14.4477 11 15 11C15.5523 11 16 11.4477 16 12C16 12.5523 15.5523 13 15 13C14.4477 13 14 12.5523 14 12ZM8 16C8 15.4477 8.44771 15 9 15H11C11.5523 15 12 15.4477 12 16C12 16.5523 11.5523 17 11 17H9C8.44771 17 8 16.5523 8 16ZM14 16C14 15.4477 14.4477 15 15 15C15.5523 15 16 15.4477 16 16C16 16.5523 15.5523 17 15 17C14.4477 17 14 16.5523 14 16Z" fill="#12131A" />
+                                                                    <path d="M2 3C2 2.44772 2.44772 2 3 2H21C21.5523 2 22 2.44772 22 3V3C22 3.55228 21.5523 4 21 4H3C2.44772 4 2 3.55228 2 3V3Z" fill="#12131A" />
+                                                                </svg>
+                                                            </span>
+                                                        </span>
+                                                        <span class="menu-title">Reçete</span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Machine$") ? "active" : "") " href="@Url.Action("List", "Machine")">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path opacity="0.25" d="M5 7C5 5.89543 5.89543 5 7 5H17C18.1046 5 19 5.89543 19 7V17C19 18.1046 18.1046 19 17 19H7C5.89543 19 5 18.1046 5 17V7Z" fill="#12131A" />
+                                                                    <path d="M10 11C10 10.4477 10.4477 10 11 10H13C13.5523 10 14 10.4477 14 11V13C14 13.5523 13.5523 14 13 14H11C10.4477 14 10 13.5523 10 13V11Z" fill="#12131A" />
+                                                                    <path d="M9 2C8.44772 2 8 2.44772 8 3V5H10V3C10 2.44772 9.55228 2 9 2Z" fill="#12131A" />
+                                                                    <path d="M10 21V19H8V21C8 21.5523 8.44772 22 9 22C9.55228 22 10 21.5523 10 21Z" fill="#12131A" />
+                                                                    <path d="M14 3C14 2.44772 14.4477 2 15 2C15.5523 2 16 2.44772 16 3V5H14V3Z" fill="#12131A" />
+                                                                    <path d="M16 21V19H14V21C14 21.5523 14.4477 22 15 22C15.5523 22 16 21.5523 16 21Z" fill="#12131A" />
+                                                                    <path d="M21 8C21.5523 8 22 8.44772 22 9C22 9.55229 21.5523 10 21 10H19V8H21Z" fill="#12131A" />
+                                                                    <path d="M3 10H5V8H3C2.44772 8 2 8.44771 2 9C2 9.55229 2.44772 10 3 10Z" fill="#12131A" />
+                                                                    <path d="M21 14C21.5523 14 22 14.4477 22 15C22 15.5523 21.5523 16 21 16H19V14H21Z" fill="#12131A" />
+                                                                    <path d="M3 16H5V14H3C2.44772 14 2 14.4477 2 15C2 15.5523 2.44772 16 3 16Z" fill="#12131A" />
+                                                                </svg>
 
-                                            <!--<div class="menu-item">  <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Warehouse") ? "active" : "")" href="@Url.Action("List","Warehouse")">  <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">            <g id="Stockholm-icons-/-Shopping-/-Box3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>          <path d="M20.4061385,6.73606154 C20.7672665,6.89656288 21,7.25468437 21,7.64987309 L21,16.4115967 C21,16.7747638 20.8031081,17.1093844 20.4856429,17.2857539 L12.4856429,21.7301984 C12.1836204,21.8979887 11.8163796,21.8979887 11.5143571,21.7301984 L3.51435707,17.2857539 C3.19689188,17.1093844 3,16.7747638 3,16.4115967 L3,7.64987309 C3,7.25468437 3.23273352,6.89656288 3.59386153,6.73606154 L11.5938615,3.18050598 C11.8524269,3.06558805 12.1475731,3.06558805 12.4061385,3.18050598 L20.4061385,6.73606154 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
-                                            <polygon id="Combined-Shape-Copy" fill="#000000" points="14.9671522 4.22441676 7.5999999 8.31727912 7.5999999 12.9056825 9.5999999 13.9056825 9.5999999 9.49408582 17.25507 5.24126912"></polygon>  </g> </svg>  </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span> <span class="menu-title">Depo</span>  </a> </div>-->
-                                            <!--<div class="menu-item">
-                                            <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "ProductRecipe") ? "active" : "")" href="@Url.Action("List","ProductRecipe")">
-                                                <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M6 2C5.44772 2 5 2.44772 5 3V21.0657C5 21.4651 5.44507 21.7033 5.77735 21.4818L7.51714 20.3219C7.81573 20.1228 8.19808 20.099 8.51906 20.2595L10.6584 21.3292C11.5029 21.7515 12.4971 21.7515 13.3416 21.3292L15.4809 20.2595C15.8019 20.099 16.1843 20.1228 16.4829 20.3219L18.2226 21.4818C18.5549 21.7033 19 21.4651 19 21.0657V3C19 2.44772 18.5523 2 18 2H6Z" fill="#12131A" />
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8 8C8 7.44771 8.44771 7 9 7H11C11.5523 7 12 7.44771 12 8C12 8.55229 11.5523 9 11 9H9C8.44771 9 8 8.55229 8 8ZM14 8C14 7.44771 14.4477 7 15 7C15.5523 7 16 7.44771 16 8C16 8.55229 15.5523 9 15 9C14.4477 9 14 8.55229 14 8ZM8 12C8 11.4477 8.44771 11 9 11H11C11.5523 11 12 11.4477 12 12C12 12.5523 11.5523 13 11 13H9C8.44771 13 8 12.5523 8 12ZM14 12C14 11.4477 14.4477 11 15 11C15.5523 11 16 11.4477 16 12C16 12.5523 15.5523 13 15 13C14.4477 13 14 12.5523 14 12ZM8 16C8 15.4477 8.44771 15 9 15H11C11.5523 15 12 15.4477 12 16C12 16.5523 11.5523 17 11 17H9C8.44771 17 8 16.5523 8 16ZM14 16C14 15.4477 14.4477 15 15 15C15.5523 15 16 15.4477 16 16C16 16.5523 15.5523 17 15 17C14.4477 17 14 16.5523 14 16Z" fill="#12131A" />
-                                                    <path d="M2 3C2 2.44772 2.44772 2 3 2H21C21.5523 2 22 2.44772 22 3V3C22 3.55228 21.5523 4 21 4H3C2.44772 4 2 3.55228 2 3V3Z" fill="#12131A" />
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
-                                                    <span class="menu-title">Reçete</span>
-                                                </a>
-                                            </div>-->
-                                            <!--<div class="menu-item">
-                                            <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Machine$") ? "active" : "") " href="@Url.Action("List","Machine")">
-                                                <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path opacity="0.25" d="M5 7C5 5.89543 5.89543 5 7 5H17C18.1046 5 19 5.89543 19 7V17C19 18.1046 18.1046 19 17 19H7C5.89543 19 5 18.1046 5 17V7Z" fill="#12131A" />
-                                                    <path d="M10 11C10 10.4477 10.4477 10 11 10H13C13.5523 10 14 10.4477 14 11V13C14 13.5523 13.5523 14 13 14H11C10.4477 14 10 13.5523 10 13V11Z" fill="#12131A" />
-                                                    <path d="M9 2C8.44772 2 8 2.44772 8 3V5H10V3C10 2.44772 9.55228 2 9 2Z" fill="#12131A" />
-                                                    <path d="M10 21V19H8V21C8 21.5523 8.44772 22 9 22C9.55228 22 10 21.5523 10 21Z" fill="#12131A" />
-                                                    <path d="M14 3C14 2.44772 14.4477 2 15 2C15.5523 2 16 2.44772 16 3V5H14V3Z" fill="#12131A" />
-                                                    <path d="M16 21V19H14V21C14 21.5523 14.4477 22 15 22C15.5523 22 16 21.5523 16 21Z" fill="#12131A" />
-                                                    <path d="M21 8C21.5523 8 22 8.44772 22 9C22 9.55229 21.5523 10 21 10H19V8H21Z" fill="#12131A" />
-                                                    <path d="M3 10H5V8H3C2.44772 8 2 8.44771 2 9C2 9.55229 2.44772 10 3 10Z" fill="#12131A" />
-                                                    <path d="M21 14C21.5523 14 22 14.4477 22 15C22 15.5523 21.5523 16 21 16H19V14H21Z" fill="#12131A" />
-                                                    <path d="M3 16H5V14H3C2.44772 14 2 14.4477 2 15C2 15.5523 2.44772 16 3 16Z" fill="#12131A" />
-                                                </svg>
-
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
-                                                    <span class="menu-title">Makine</span>
-                                                </a>
-                                            </div>-->
-                                            <!--<div class="menu-item">
-                                            <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "MachineGroup$") ? "active" : "") "
-                                               href="@Url.Action("List","MachineGroup")">
-                                                <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                                                        <rect id="Rectangle" fill="#000000" x="4" y="4" width="16" height="16" rx="2"></rect>
-                                                    </g>
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
-                                                    <span class="menu-title">Makine Grupları</span>
-                                                </a>
-                                            </div>-->
-                                            <!--<div class="menu-item">
-                                            <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Mold$") ? "active" : "") " href="@Url.Action("List","Mold")">
-                                                <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg id="Icons" style="enable-background:new 0 0 32 32;" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M26,13c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S27.7,13,26,13z M26,17c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S26.6,17,26,17z" /><path d="M16,9c1.7,0,3-1.3,3-3s-1.3-3-3-3s-3,1.3-3,3S14.3,9,16,9z M16,5c0.6,0,1,0.4,1,1s-0.4,1-1,1s-1-0.4-1-1S15.4,5,16,5z" /><path d="M16,23c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S17.7,23,16,23z M16,27c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S16.6,27,16,27z" /><path d="M26,23c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S27.7,23,26,23z M26,27c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S26.6,27,26,27z" /><path d="M24.7,8.7C25.1,8.9,25.5,9,26,9c1.7,0,3-1.3,3-3s-1.3-3-3-3s-3,1.3-3,3c0,0.5,0.1,0.9,0.3,1.3l-6,6   C16.9,13.1,16.5,13,16,13c-1.7,0-3,1.3-3,3c0,0.5,0.1,0.9,0.3,1.3l-6,6c-0.1,0-0.2-0.1-0.3-0.1v-4.4c1.2-0.4,2-1.5,2-2.8   s-0.8-2.4-2-2.8V8.8C8.2,8.4,9,7.3,9,6c0-1.7-1.3-3-3-3S3,4.3,3,6c0,1.3,0.8,2.4,2,2.8v4.4c-1.2,0.4-2,1.5-2,2.8s0.8,2.4,2,2.8v4.4   c-1.2,0.4-2,1.5-2,2.8c0,1.7,1.3,3,3,3s3-1.3,3-3c0-0.5-0.1-0.9-0.3-1.3l6-6c0.4,0.2,0.8,0.3,1.3,0.3c1.7,0,3-1.3,3-3   c0-0.5-0.1-0.9-0.3-1.3L24.7,8.7z" /></g></svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
-                                                    <span class="menu-title">Kalıp</span>
-                                                </a>
-                                            </div>-->
-                                            <!--<div class="menu-item">
-                                            <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Shift") ? "active" : "")" href="@Url.Action("List","Shift")">
-                                                <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M10.9630156,7.5 L11.0475062,7.5 C11.3043819,7.5 11.5194647,7.69464724 11.5450248,7.95024814 L12,12.5 L15.2480695,14.3560397 C15.403857,14.4450611 15.5,14.6107328 15.5,14.7901613 L15.5,15 C15.5,15.2109164 15.3290185,15.3818979 15.1181021,15.3818979 C15.0841582,15.3818979 15.0503659,15.3773725 15.0176181,15.3684413 L10.3986612,14.1087258 C10.1672824,14.0456225 10.0132986,13.8271186 10.0316926,13.5879956 L10.4644883,7.96165175 C10.4845267,7.70115317 10.7017474,7.5 10.9630156,7.5 Z" id="Path-107" fill="#000000"></path>
-                                                    <path d="M7.38979581,2.8349582 C8.65216735,2.29743306 10.0413491,2 11.5,2 C17.2989899,2 22,6.70101013 22,12.5 C22,18.2989899 17.2989899,23 11.5,23 C5.70101013,23 1,18.2989899 1,12.5 C1,11.5151324 1.13559454,10.5619345 1.38913364,9.65805651 L3.31481075,10.1982117 C3.10672013,10.940064 3,11.7119264 3,12.5 C3,17.1944204 6.80557963,21 11.5,21 C16.1944204,21 20,17.1944204 20,12.5 C20,7.80557963 16.1944204,4 11.5,4 C10.54876,4 9.62236069,4.15592757 8.74872191,4.45446326 L9.93948308,5.87355717 C10.0088058,5.95617272 10.0495583,6.05898805 10.05566,6.16666224 C10.0712834,6.4423623 9.86044965,6.67852665 9.5847496,6.69415008 L4.71777931,6.96995273 C4.66931162,6.97269931 4.62070229,6.96837279 4.57348157,6.95710938 C4.30487471,6.89303938 4.13906482,6.62335149 4.20313482,6.35474463 L5.33163823,1.62361064 C5.35654118,1.51920756 5.41437908,1.4255891 5.49660017,1.35659741 C5.7081375,1.17909652 6.0235153,1.2066885 6.2010162,1.41822583 L7.38979581,2.8349582 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
-                                                    <span class="menu-title">Vardiya</span>
-                                                </a>
-                                            </div>-->
-                                            <!--<div class="menu-item">
-                                            <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "WorkOrderCategory") ? "active" : "")" href="@Url.Action("List","WorkOrderCategory")">
-                                                <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path opacity="0.25" d="M3 6C3 3.79086 4.79086 2 7 2H17C19.2091 2 21 3.79086 21 6V19C21 21.2091 19.2091 23 17 23H7C4.79086 23 3 21.2091 3 19V6Z" fill="#12131A" />
-                                                    <path d="M8 10C8.55228 10 9 9.55228 9 9C9 8.44772 8.55228 8 8 8C7.44772 8 7 8.44772 7 9C7 9.55228 7.44772 10 8 10Z" fill="#12131A" />
-                                                    <path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10H16C16.5523 10 17 9.55228 17 9C17 8.44772 16.5523 8 16 8H12Z" fill="#12131A" />
-                                                    <path d="M12 12C11.4477 12 11 12.4477 11 13C11 13.5523 11.4477 14 12 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H12Z" fill="#12131A" />
-                                                    <path d="M11 17C11 16.4477 11.4477 16 12 16H14C14.5523 16 15 16.4477 15 17C15 17.5523 14.5523 18 14 18H12C11.4477 18 11 17.5523 11 17Z" fill="#12131A" />
-                                                    <path d="M9 13C9 13.5523 8.55228 14 8 14C7.44772 14 7 13.5523 7 13C7 12.4477 7.44772 12 8 12C8.55228 12 9 12.4477 9 13Z" fill="#12131A" />
-                                                    <path d="M8 18C8.55228 18 9 17.5523 9 17C9 16.4477 8.55228 16 8 16C7.44772 16 7 16.4477 7 17C7 17.5523 7.44772 18 8 18Z" fill="#12131A" />
-                                                    <path d="M8.25 1H15.75C16.4404 1 17 1.44772 17 2C17 2.55228 16.4404 3 15.75 3H8.25C7.55964 3 7 2.55228 7 2C7 1.44772 7.55964 1 8.25 1Z" fill="#12131A" />
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
-                                                    <span class="menu-title">İş Emri Kategorileri</span>
-                                                </a>
-                                            </div>-->
+                                                            </span>
+                                                        </span>
+                                                        <span class="menu-title">Makine</span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "MachineGroup$") ? "active" : "") "
+                                                       href="@Url.Action("List", "MachineGroup")">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                                    <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                        <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                                        <rect id="Rectangle" fill="#000000" x="4" y="4" width="16" height="16" rx="2"></rect>
+                                                                    </g>
+                                                                </svg>
+                                                            </span>
+                                                        </span>
+                                                        <span class="menu-title">Makine Grupları</span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Mold$") ? "active" : "") " href="@Url.Action("List", "Mold")">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg id="Icons" style="enable-background:new 0 0 32 32;" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M26,13c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S27.7,13,26,13z M26,17c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S26.6,17,26,17z" /><path d="M16,9c1.7,0,3-1.3,3-3s-1.3-3-3-3s-3,1.3-3,3S14.3,9,16,9z M16,5c0.6,0,1,0.4,1,1s-0.4,1-1,1s-1-0.4-1-1S15.4,5,16,5z" /><path d="M16,23c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S17.7,23,16,23z M16,27c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S16.6,27,16,27z" /><path d="M26,23c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S27.7,23,26,23z M26,27c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S26.6,27,26,27z" /><path d="M24.7,8.7C25.1,8.9,25.5,9,26,9c1.7,0,3-1.3,3-3s-1.3-3-3-3s-3,1.3-3,3c0,0.5,0.1,0.9,0.3,1.3l-6,6   C16.9,13.1,16.5,13,16,13c-1.7,0-3,1.3-3,3c0,0.5,0.1,0.9,0.3,1.3l-6,6c-0.1,0-0.2-0.1-0.3-0.1v-4.4c1.2-0.4,2-1.5,2-2.8   s-0.8-2.4-2-2.8V8.8C8.2,8.4,9,7.3,9,6c0-1.7-1.3-3-3-3S3,4.3,3,6c0,1.3,0.8,2.4,2,2.8v4.4c-1.2,0.4-2,1.5-2,2.8s0.8,2.4,2,2.8v4.4   c-1.2,0.4-2,1.5-2,2.8c0,1.7,1.3,3,3,3s3-1.3,3-3c0-0.5-0.1-0.9-0.3-1.3l6-6c0.4,0.2,0.8,0.3,1.3,0.3c1.7,0,3-1.3,3-3   c0-0.5-0.1-0.9-0.3-1.3L24.7,8.7z" /></g></svg>
+                                                            </span>
+                                                        </span>
+                                                        <span class="menu-title">Kalıp</span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Shift") ? "active" : "")" href="@Url.Action("List", "Shift")">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M10.9630156,7.5 L11.0475062,7.5 C11.3043819,7.5 11.5194647,7.69464724 11.5450248,7.95024814 L12,12.5 L15.2480695,14.3560397 C15.403857,14.4450611 15.5,14.6107328 15.5,14.7901613 L15.5,15 C15.5,15.2109164 15.3290185,15.3818979 15.1181021,15.3818979 C15.0841582,15.3818979 15.0503659,15.3773725 15.0176181,15.3684413 L10.3986612,14.1087258 C10.1672824,14.0456225 10.0132986,13.8271186 10.0316926,13.5879956 L10.4644883,7.96165175 C10.4845267,7.70115317 10.7017474,7.5 10.9630156,7.5 Z" id="Path-107" fill="#000000"></path>
+                                                                    <path d="M7.38979581,2.8349582 C8.65216735,2.29743306 10.0413491,2 11.5,2 C17.2989899,2 22,6.70101013 22,12.5 C22,18.2989899 17.2989899,23 11.5,23 C5.70101013,23 1,18.2989899 1,12.5 C1,11.5151324 1.13559454,10.5619345 1.38913364,9.65805651 L3.31481075,10.1982117 C3.10672013,10.940064 3,11.7119264 3,12.5 C3,17.1944204 6.80557963,21 11.5,21 C16.1944204,21 20,17.1944204 20,12.5 C20,7.80557963 16.1944204,4 11.5,4 C10.54876,4 9.62236069,4.15592757 8.74872191,4.45446326 L9.93948308,5.87355717 C10.0088058,5.95617272 10.0495583,6.05898805 10.05566,6.16666224 C10.0712834,6.4423623 9.86044965,6.67852665 9.5847496,6.69415008 L4.71777931,6.96995273 C4.66931162,6.97269931 4.62070229,6.96837279 4.57348157,6.95710938 C4.30487471,6.89303938 4.13906482,6.62335149 4.20313482,6.35474463 L5.33163823,1.62361064 C5.35654118,1.51920756 5.41437908,1.4255891 5.49660017,1.35659741 C5.7081375,1.17909652 6.0235153,1.2066885 6.2010162,1.41822583 L7.38979581,2.8349582 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
+                                                                </svg>
+                                                            </span>
+                                                        </span>
+                                                        <span class="menu-title">Vardiya</span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "WorkOrderCategory") ? "active" : "")" href="@Url.Action("List", "WorkOrderCategory")">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path opacity="0.25" d="M3 6C3 3.79086 4.79086 2 7 2H17C19.2091 2 21 3.79086 21 6V19C21 21.2091 19.2091 23 17 23H7C4.79086 23 3 21.2091 3 19V6Z" fill="#12131A" />
+                                                                    <path d="M8 10C8.55228 10 9 9.55228 9 9C9 8.44772 8.55228 8 8 8C7.44772 8 7 8.44772 7 9C7 9.55228 7.44772 10 8 10Z" fill="#12131A" />
+                                                                    <path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10H16C16.5523 10 17 9.55228 17 9C17 8.44772 16.5523 8 16 8H12Z" fill="#12131A" />
+                                                                    <path d="M12 12C11.4477 12 11 12.4477 11 13C11 13.5523 11.4477 14 12 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H12Z" fill="#12131A" />
+                                                                    <path d="M11 17C11 16.4477 11.4477 16 12 16H14C14.5523 16 15 16.4477 15 17C15 17.5523 14.5523 18 14 18H12C11.4477 18 11 17.5523 11 17Z" fill="#12131A" />
+                                                                    <path d="M9 13C9 13.5523 8.55228 14 8 14C7.44772 14 7 13.5523 7 13C7 12.4477 7.44772 12 8 12C8.55228 12 9 12.4477 9 13Z" fill="#12131A" />
+                                                                    <path d="M8 18C8.55228 18 9 17.5523 9 17C9 16.4477 8.55228 16 8 16C7.44772 16 7 16.4477 7 17C7 17.5523 7.44772 18 8 18Z" fill="#12131A" />
+                                                                    <path d="M8.25 1H15.75C16.4404 1 17 1.44772 17 2C17 2.55228 16.4404 3 15.75 3H8.25C7.55964 3 7 2.55228 7 2C7 1.44772 7.55964 1 8.25 1Z" fill="#12131A" />
+                                                                </svg>
+                                                            </span>
+                                                        </span>
+                                                        <span class="menu-title">İş Emri Kategorileri</span>
+                                                    </a>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
                                 }
@@ -1499,97 +1613,89 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            @if (Html.IsGranted("ModuleProduction"))
+                                            {
+                                                <div class="menu-item">
+                                                    <a class="menu-link bg-warning" target="_blank"
+                                                       href="@Url.Action("Production", "Mobile", new { ShowAs = "MobileProductionUser" })">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M4.5,6 L19.5,6 C20.8807119,6 22,6.97004971 22,8.16666667 L22,16.8333333 C22,18.0299503 20.8807119,19 19.5,19 L4.5,19 C3.11928813,19 2,18.0299503 2,16.8333333 L2,8.16666667 C2,6.97004971 3.11928813,6 4.5,6 Z M4,8 L4,17 L20,17 L20,8 L4,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+                                                                    <polygon id="Combined-Shape" fill="#000000" opacity="0.3" points="4 8 4 17 20 17 20 8"></polygon>
+                                                                    <rect id="Rectangle" fill="#000000" opacity="0.3" x="7" y="20" width="10" height="1" rx="0.5"></rect>
 
-                                            <!--<div class="menu-item">
-                                            <a class="menu-link bg-warning" target="_blank"
-                                               href="@Url.Action("Production","Mobile", new { ShowAs="MobileProductionUser" })">
-                                                <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M4.5,6 L19.5,6 C20.8807119,6 22,6.97004971 22,8.16666667 L22,16.8333333 C22,18.0299503 20.8807119,19 19.5,19 L4.5,19 C3.11928813,19 2,18.0299503 2,16.8333333 L2,8.16666667 C2,6.97004971 3.11928813,6 4.5,6 Z M4,8 L4,17 L20,17 L20,8 L4,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
-                                                    <polygon id="Combined-Shape" fill="#000000" opacity="0.3" points="4 8 4 17 20 17 20 8"></polygon>
-                                                    <rect id="Rectangle" fill="#000000" opacity="0.3" x="7" y="20" width="10" height="1" rx="0.5"></rect>
+                                                                </svg>
+                                                            </span>
+                                                        </span>
+                                                        <span class="menu-title">Üretim Terminali</span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link bg-warning" target="_blank"
+                                                       href="@Url.Action("Mechanic", "Mobile", new { ShowAs = "MobileMechanicUser" })">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M4.5,6 L19.5,6 C20.8807119,6 22,6.97004971 22,8.16666667 L22,16.8333333 C22,18.0299503 20.8807119,19 19.5,19 L4.5,19 C3.11928813,19 2,18.0299503 2,16.8333333 L2,8.16666667 C2,6.97004971 3.11928813,6 4.5,6 Z M4,8 L4,17 L20,17 L20,8 L4,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+                                                                    <polygon id="Combined-Shape" fill="#000000" opacity="0.3" points="4 8 4 17 20 17 20 8"></polygon>
+                                                                    <rect id="Rectangle" fill="#000000" opacity="0.3" x="7" y="20" width="10" height="1" rx="0.5"></rect>
 
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
-                                                    <span class="menu-title">Üretim Terminali</span>
-                                                </a>
-                                            </div>-->
-                                            <!--<div class="menu-item">
-                                            <a class="menu-link bg-warning" target="_blank"
-                                               href="@Url.Action("Mechanic","Mobile", new { ShowAs="MobileMechanicUser" })">
-                                                <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M4.5,6 L19.5,6 C20.8807119,6 22,6.97004971 22,8.16666667 L22,16.8333333 C22,18.0299503 20.8807119,19 19.5,19 L4.5,19 C3.11928813,19 2,18.0299503 2,16.8333333 L2,8.16666667 C2,6.97004971 3.11928813,6 4.5,6 Z M4,8 L4,17 L20,17 L20,8 L4,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
-                                                    <polygon id="Combined-Shape" fill="#000000" opacity="0.3" points="4 8 4 17 20 17 20 8"></polygon>
-                                                    <rect id="Rectangle" fill="#000000" opacity="0.3" x="7" y="20" width="10" height="1" rx="0.5"></rect>
+                                                                </svg>
+                                                            </span>
+                                                        </span>
+                                                        <span class="menu-title">Bakım Terminali</span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link bg-warning" target="_blank"
+                                                       href="@Url.Action("Warehouse", "Mobile", new { ShowAs = "MobileWarehouseUser" })">
+                                                        <span class="menu-icon">
+                                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M4.5,6 L19.5,6 C20.8807119,6 22,6.97004971 22,8.16666667 L22,16.8333333 C22,18.0299503 20.8807119,19 19.5,19 L4.5,19 C3.11928813,19 2,18.0299503 2,16.8333333 L2,8.16666667 C2,6.97004971 3.11928813,6 4.5,6 Z M4,8 L4,17 L20,17 L20,8 L4,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+                                                                    <polygon id="Combined-Shape" fill="#000000" opacity="0.3" points="4 8 4 17 20 17 20 8"></polygon>
+                                                                    <rect id="Rectangle" fill="#000000" opacity="0.3" x="7" y="20" width="10" height="1" rx="0.5"></rect>
 
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
-                                                    <span class="menu-title">Bakım Terminali</span>
-                                                </a>
-                                            </div>
-                                            <div class="menu-item">
-                                                <a class="menu-link bg-warning" target="_blank"
-                                                   href="@Url.Action("Warehouse","Mobile", new { ShowAs="MobileWarehouseUser" })">
-                                                    <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M4.5,6 L19.5,6 C20.8807119,6 22,6.97004971 22,8.16666667 L22,16.8333333 C22,18.0299503 20.8807119,19 19.5,19 L4.5,19 C3.11928813,19 2,18.0299503 2,16.8333333 L2,8.16666667 C2,6.97004971 3.11928813,6 4.5,6 Z M4,8 L4,17 L20,17 L20,8 L4,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
-                                                    <polygon id="Combined-Shape" fill="#000000" opacity="0.3" points="4 8 4 17 20 17 20 8"></polygon>
-                                                    <rect id="Rectangle" fill="#000000" opacity="0.3" x="7" y="20" width="10" height="1" rx="0.5"></rect>
-
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
-                                                    <span class="menu-title">Depo Terminali</span>
-                                                </a>
-                                            </div>
+                                                                </svg>
+                                                            </span>
+                                                        </span>
+                                                        <span class="menu-title">Depo Terminali</span>
+                                                    </a>
+                                                </div>
+                                            }
                                             <div class="menu-item">
                                                 <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "SystemPrinter") ? "active" : "")"
                                                    href="@Url.Action("List","SystemPrinter")">
-                                                    <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path opacity="0.25" d="M2 11C2 9.89543 2.89543 9 4 9H20C21.1046 9 22 9.89543 22 11V17C22 18.1046 21.1046 19 20 19H4C2.89543 19 2 18.1046 2 17V11Z" fill="#12131A" />
-                                                    <path d="M7 16C7 15.4477 7.44772 15 8 15H16C16.5523 15 17 15.4477 17 16V20C17 21.1046 16.1046 22 15 22H9C7.89543 22 7 21.1046 7 20V16Z" fill="#12131A" />
-                                                    <path d="M7 4C7 2.89543 7.89543 2 9 2H15C16.1046 2 17 2.89543 17 4V9H7V4Z" fill="#12131A" />
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
+                                                    <span class="menu-icon">
+                                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path opacity="0.25" d="M2 11C2 9.89543 2.89543 9 4 9H20C21.1046 9 22 9.89543 22 11V17C22 18.1046 21.1046 19 20 19H4C2.89543 19 2 18.1046 2 17V11Z" fill="#12131A" />
+                                                                <path d="M7 16C7 15.4477 7.44772 15 8 15H16C16.5523 15 17 15.4477 17 16V20C17 21.1046 16.1046 22 15 22H9C7.89543 22 7 21.1046 7 20V16Z" fill="#12131A" />
+                                                                <path d="M7 4C7 2.89543 7.89543 2 9 2H15C16.1046 2 17 2.89543 17 4V9H7V4Z" fill="#12131A" />
+                                                            </svg>
+                                                        </span>
+                                                    </span>
                                                     <span class="menu-title">Yazıcılar</span>
                                                 </a>
                                             </div>
                                             <div class="menu-item">
                                                 <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Document") ? "active" : "")"
                                                    href="@Url.Action("List","Document")">
-                                                    <span class="menu-icon">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Credit-card.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect x="0" y="0" width="24" height="24" />
-                                                        <path d="M5,3 L6,3 C6.55228475,3 7,3.44771525 7,4 L7,20 C7,20.5522847 6.55228475,21 6,21 L5,21 C4.44771525,21 4,20.5522847 4,20 L4,4 C4,3.44771525 4.44771525,3 5,3 Z M10,3 L11,3 C11.5522847,3 12,3.44771525 12,4 L12,20 C12,20.5522847 11.5522847,21 11,21 L10,21 C9.44771525,21 9,20.5522847 9,20 L9,4 C9,3.44771525 9.44771525,3 10,3 Z" fill="#000000" />
-                                                        <rect fill="#000000" opacity="0.3" transform="translate(17.825568, 11.945519) rotate(-19.000000) translate(-17.825568, -11.945519)" x="16.3255682" y="2.94551858" width="3" height="18" rx="1" />
-                                                    </g>
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
-                                            <!--</span>
+                                                    <span class="menu-icon">
+                                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <rect x="0" y="0" width="24" height="24" />
+                                                                    <path d="M5,3 L6,3 C6.55228475,3 7,3.44771525 7,4 L7,20 C7,20.5522847 6.55228475,21 6,21 L5,21 C4.44771525,21 4,20.5522847 4,20 L4,4 C4,3.44771525 4.44771525,3 5,3 Z M10,3 L11,3 C11.5522847,3 12,3.44771525 12,4 L12,20 C12,20.5522847 11.5522847,21 11,21 L10,21 C9.44771525,21 9,20.5522847 9,20 L9,4 C9,3.44771525 9.44771525,3 10,3 Z" fill="#000000" />
+                                                                    <rect fill="#000000" opacity="0.3" transform="translate(17.825568, 11.945519) rotate(-19.000000) translate(-17.825568, -11.945519)" x="16.3255682" y="2.94551858" width="3" height="18" rx="1" />
+                                                                </g>
+                                                            </svg>
+                                                        </span>
+                                                    </span>
                                                     <span class="menu-title">Talimat Belgeleri</span>
                                                 </a>
-                                            </div>-->
+                                            </div>
                                             <div class="menu-item">
                                                 <a class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "ReportTemplate") ? "active" : "")"
                                                    href="@Url.Action("List","ReportTemplate")">
@@ -1718,19 +1824,19 @@
                                         <!--end::drawer toggle-->
                                         <!--</div>-->
                                         <!--end::Activities-->
-                                        <a href="@Url.Action("PlainDashboard","Home", new { OnlyContent=1 })"
-                                           class="ms-1 ms-lg-3 mt-4 btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px">
+                                        <!--<a href="@Url.Action("PlainDashboard","Home", new { OnlyContent=1 })"
+                                           class="ms-1 ms-lg-3 mt-4 btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px">-->
                                             <!--begin::Svg Icon | path: icons/stockholm/Layout/Layout-4-blocks.svg-->
-                                            <span class="svg-icon svg-icon-dark svg-icon-1">
+                                            <!--<span class="svg-icon svg-icon-dark svg-icon-1">
                                                 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M4.5,6 L19.5,6 C20.8807119,6 22,6.97004971 22,8.16666667 L22,16.8333333 C22,18.0299503 20.8807119,19 19.5,19 L4.5,19 C3.11928813,19 2,18.0299503 2,16.8333333 L2,8.16666667 C2,6.97004971 3.11928813,6 4.5,6 Z M4,8 L4,17 L20,17 L20,8 L4,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
                                                     <polygon id="Combined-Shape" fill="#000000" opacity="0.3" points="4 8 4 17 20 17 20 8"></polygon>
                                                     <rect id="Rectangle" fill="#000000" opacity="0.3" x="7" y="20" width="10" height="1" rx="0.5"></rect>
 
                                                 </svg>
-                                            </span>
+                                            </span>-->
                                             <!--end::Svg Icon-->
-                                        </a>
+                                        <!--</a>-->
                                         <!--begin::Quick links-->
                                         <div class="d-flex align-items-center ms-1 ms-lg-3">
                                             <!--begin::Menu-->

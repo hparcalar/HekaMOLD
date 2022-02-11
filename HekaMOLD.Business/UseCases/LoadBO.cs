@@ -210,7 +210,8 @@ namespace HekaMOLD.Business.UseCases
             {
                 model = dbObj.MapTo(model);
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed );
-                model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrder != null ? dbObj.ItemOrder.OrderDate : System.DateTime.Today);
+                model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrder != null ? dbObj.ItemOrder.OrderDate :null);
+                model.OrderCreatUser = dbObj.ItemOrder != null ? dbObj.ItemOrder.User.UserName : "";
                 model.LoadStatusTypeStr =  ((LoadStatusType)dbObj.LoadStatusType).ToCaption() != null ? ((LoadStatusType)dbObj.LoadStatusType).ToCaption() :"";
                 model.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.DischargeDate);
                 model.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadingDate);
@@ -439,7 +440,6 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.LoadStatusType = reqStats;
                 if (dbObj.CreatedUserId == null)
                     dbObj.CreatedUserId = crUserId;
-
                 dbObj.UpdatedDate = DateTime.Now;
 
                 #region SAVE DETAILS
@@ -452,7 +452,7 @@ namespace HekaMOLD.Business.UseCases
                         item.Id = 0;
                 }
 
-                if (dbObj.LoadStatusType != (int)OrderStatusType.Completed &&  dbObj.LoadStatusType != (int)OrderStatusType.Cancelled)
+                if (dbObj.LoadStatusType != (int)LoadStatusType.Completed &&  dbObj.LoadStatusType != (int)LoadStatusType.Cancelled)
                 {
                     var newDetailIdList = model.Details.Select(d => d.Id).ToArray();
                     var deletedDetails = dbObj.ItemLoadDetail.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
@@ -502,20 +502,20 @@ namespace HekaMOLD.Business.UseCases
                         dbDetail.LineNumber = lineNo;
 
                         #region SET REQUEST & DETAIL STATUS TO COMPLETE
-                        if (dbDetail.ItemOrderDetailId > 0)
-                        {
-                            var dbOrderDetail = repoOrderDetail.Get(d => d.Id == dbDetail.ItemOrderDetailId);
-                            if (dbOrderDetail != null)
-                            {
-                                dbOrderDetail.OrderStatus = (int)OrderStatusType.Completed;
+                        //if (dbDetail.ItemOrderDetailId > 0)
+                        //{
+                        //    var dbOrderDetail = repoOrderDetail.Get(d => d.Id == dbDetail.ItemOrderDetailId);
+                        //    if (dbOrderDetail != null)
+                        //    {
+                        //        dbOrderDetail.OrderStatus = (int)OrderStatusType.Completed;
 
-                                if (!dbOrderDetail.ItemOrder
-                                    .ItemOrderDetail.Any(d => d.OrderStatus != (int)OrderStatusType.Completed))
-                                {
-                                    dbOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Completed;
-                                }
-                            }
-                        }
+                        //        if (!dbOrderDetail.ItemOrder
+                        //            .ItemOrderDetail.Any(d => d.OrderStatus != (int)OrderStatusType.Completed))
+                        //        {
+                        //            dbOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Completed;
+                        //        }
+                        //    }
+                        //}
                         #endregion
 
                         lineNo++;
@@ -638,7 +638,50 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public int GetNextRecord(int plantId, int Id)
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemLoad>();
+                int lastLoadNo = repo.Filter(d => d.PlantId == plantId && d.Id > Id)
+                    .OrderBy(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
 
+                if (string.IsNullOrEmpty(Convert.ToString(lastLoadNo)))
+                    lastLoadNo = 0;
+
+                return lastLoadNo;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+        public int GetBackRecord(int plantId, int Id)
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemLoad>();
+                int lastLoadNo = repo.Filter(d => d.PlantId == plantId && d.Id < Id)
+                    .OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(Convert.ToString(lastLoadNo)))
+                    lastLoadNo = 0;
+
+                return lastLoadNo;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
 
     }
 }

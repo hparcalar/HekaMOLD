@@ -14,7 +14,7 @@
 
     $scope.selectedFirmType = {};
     $scope.firmTypeList = [{ Id: 1, Text: 'Tedarikçi' },
-        { Id: 2, Text: 'Müşteri' }, { Id: 3, Text: 'Tedarikçi + Müşteri' }];
+        { Id: 2, Text: 'Müşteri' }, { Id: 3, Text: 'Gümrükçü' }, { Id: 4, Text: 'Tedarikçi + Müşteri' }];
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };

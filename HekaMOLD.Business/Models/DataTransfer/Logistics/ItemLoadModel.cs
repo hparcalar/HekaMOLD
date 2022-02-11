@@ -35,7 +35,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public DateTime? DeliveryFromCustomerDate { get; set; }
         //İstenen Varış Tarihi
         public DateTime? IntendedArrivalDate { get; set; }
-        public string ArrivalCustoms { get; set; }
+        public int? FirmCustomsArrivalId { get; set; }
         public string CustomsExplanation { get; set; }
         public string T1T2No { get; set; }
         //T Kapanış Tarihi
@@ -72,7 +72,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public Nullable<int> PlantId { get; set; }
         public Nullable<int> ForexTypeId { get; set; }
         public ItemLoadDetailModel[] Details { get; set; }
-        public Nullable<int> CreatedUserId { get; set; }
+
 
         #region VISUAL ELEMENTS
         public string OrderDateStr { get; set; }
@@ -111,6 +111,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string TClosingDateStr { get; set; }
         public string CrmDeliveryDateStr { get; set; }
         public string CmrCustomerDeliveryDateStr { get; set; }
+        public string FirmArrivalCustomsName { get; set; }
 
 
         #endregion

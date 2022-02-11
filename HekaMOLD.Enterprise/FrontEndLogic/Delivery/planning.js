@@ -12,7 +12,7 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
     $scope.waitingPlanList = [];
     $scope.selectedPlan = { Id: 0 };
     $scope.copiedPlan = { Id: 0 };
-    $scope.selectedSource = { Id:0 }; // Plan queue of a selected machine for highlighting
+    $scope.selectedSource = { Id: 0 }; // Plan queue of a selected machine for highlighting
 
     $scope.getMachinePlans = function (machine) {
         return $scope.boardPlanList.filter(d => d.PlanDateStr == machine.PlanDateTitle);
@@ -116,7 +116,7 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
             //refCounter--;
 
             //if (refCounter == 0)
-                //$(this).removeClass('drag-over');
+            //$(this).removeClass('drag-over');
         });
 
         $('.plan-box').on('drop', function (de) {
@@ -245,7 +245,7 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
                 mode: "virtual"
             },
             height: 450,
-            width:450,
+            width: 450,
             editing: {
                 allowUpdating: false,
                 allowDeleting: false

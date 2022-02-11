@@ -48,6 +48,7 @@ namespace Heka.DataAccess.Context.Models
         public bool? Approval { get; set; }
         public bool? Invalidation { get; set; }
         public bool? KmHourControl { get; set; }
+        public bool? HasLoadPlannig{ get; set; }
 
         public Nullable<int> PlantId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }

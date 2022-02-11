@@ -76,7 +76,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string DischangeCountryName { get; set; }
         public string DischangePostCode { get; set; }
         public string ForexTypeCode { get; set; }
-
+        public int OrderDateWeek { get; set; }
         #endregion
     }
 }

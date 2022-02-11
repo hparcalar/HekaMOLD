@@ -35,6 +35,7 @@ namespace Heka.DataAccess.Context
             this.ItemOrderByCustomer = new HashSet<ItemLoad>();
             this.ItemOrderByShipper = new HashSet<ItemLoad>();
             this.ItemOrderByBuyer = new HashSet<ItemLoad>();
+            this.ItemLoadByFirmCustomsArrival = new HashSet<ItemLoad>();
 
         }
 
@@ -125,5 +126,9 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Firm")]
         public virtual ICollection<VehicleTire> VehicleTire { get; set; }
+
+        [InverseProperty("FirmCustomsArrival")]
+        public virtual ICollection<ItemLoad> ItemLoadByFirmCustomsArrival { get; set; }
+
     }
 }

@@ -56,7 +56,8 @@ namespace Heka.DataAccess.Context.Models
         public DateTime? DeliveryFromCustomerDate  { get; set; }
         //İstenen Varış Tarihi
         public DateTime? IntendedArrivalDate  { get; set; }
-        public string ArrivalCustoms { get; set; }
+        [ForeignKey("FirmCustomsArrival")]
+        public int? FirmCustomsArrivalId { get; set; }
         public string CustomsExplanation { get; set; }
         public string T1T2No { get; set; }
         //T Kapanış Tarihi
@@ -124,6 +125,7 @@ namespace Heka.DataAccess.Context.Models
         public virtual Firm FirmCustomer { get; set; }
         public virtual Customs CustomsEntry { get; set; }
         public virtual Customs CustomsExit { get; set; }
+        public virtual Firm FirmCustomsArrival { get; set; }
         public virtual Invoice Invoice { get; set; }
         public virtual Country CountryShipper { get; set; }
         public virtual Country CountryBuyer { get; set; }

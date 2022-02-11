@@ -334,6 +334,7 @@
             TireNotification: $scope.modelObject.TireNotification,
             KmHour: $scope.modelObject.KmHour,
             KmHourControl: $scope.modelObject.KmHourControl,
+            HasLoadPlannig: $scope.modelObject.HasLoadPlannig,
             CarePeriyot: $scope.modelObject.CarePeriyot,
             ProportionalLimit: $scope.modelObject.ProportionalLimit
         }, 'json')

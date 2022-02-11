@@ -102,7 +102,7 @@
                 { dataField: 'OveralWeight', caption: 'Toplam Ağırlık' },
                 { dataField: 'OveralVolume', caption: 'Toplam Hacim' },
                 { dataField: 'OveralLadametre', caption: 'Toplam Ladametre' },
-                { dataField: 'OverallTotal', caption: 'Toplam Tutar' },
+                { dataField: 'OverallTotal', caption: 'Toplam Tutar' }, 
                 { dataField: 'ForexTypeCode', caption: 'Döviz Kodu' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {

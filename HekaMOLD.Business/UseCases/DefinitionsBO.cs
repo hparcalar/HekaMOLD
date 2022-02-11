@@ -32,7 +32,7 @@ namespace HekaMOLD.Business.UseCases
                     FirmName = d.FirmName,
                     IsApproved = true,
                     FirmType = d.FirmType,
-                    FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : "Tedarikçi + Müşteri",
+                    FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : d.FirmType ==3 ? "Gümrükçü" : d.FirmType == 4 ? "Tedarikçi + Müşteri":"",
                     Address = d.Address,
                     Address2 = d.Address2,
                     CityId = d.CityId,
@@ -43,6 +43,32 @@ namespace HekaMOLD.Business.UseCases
                     WeightPrice = d.WeightPrice,
                     MeterCupPrice = d.MeterCupPrice,
                     ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode: "",
+
+                }).ToArray();
+        }
+        public FirmModel[] GetFirmCustomsList()
+        {
+            var repo = _unitOfWork.GetRepository<Firm>();
+
+            return repo.Filter(d=>d.FirmType == 3)
+                .Select(d => new FirmModel
+                {
+                    Id = d.Id,
+                    FirmCode = d.FirmCode,
+                    FirmName = d.FirmName,
+                    IsApproved = true,
+                    FirmType = d.FirmType,
+                    FirmTypeStr = d.FirmType == 1 ? "Tedarikçi" : d.FirmType == 2 ? "Müşteri" : d.FirmType == 3 ? "Gümrükçü" : d.FirmType == 4 ? "Tedarikçi + Müşteri" : "",
+                    Address = d.Address,
+                    Address2 = d.Address2,
+                    CityId = d.CityId,
+                    CountryId = d.CountryId,
+                    CityName = d.City != null ? d.City.CityName : "",
+                    CountryName = d.Country != null ? d.Country.CountryName : "",
+                    LadametrePrice = d.LadametrePrice,
+                    WeightPrice = d.WeightPrice,
+                    MeterCupPrice = d.MeterCupPrice,
+                    ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
 
                 }).ToArray();
         }
@@ -338,6 +364,21 @@ namespace HekaMOLD.Business.UseCases
                     Mark = d.Mark,
                     Versiyon = d.Versiyon,
                     KmHour=d.KmHour,                
+                    TrailerTypeStr = d.TrailerType == 1 ? "Çadırlı" : d.TrailerType == 2 ? "Frigo" : "Kapalı",
+                }).ToArray();
+        }
+        public VehicleModel[] GetVehicleCanBePlanedList()
+        {
+            var repo = _unitOfWork.GetRepository<Vehicle>();
+
+            return repo.Filter(d=>d.HasLoadPlannig == true)
+                .Select(d => new VehicleModel
+                {
+                    Id = d.Id,
+                    Plate = d.Plate,
+                    Mark = d.Mark,
+                    Versiyon = d.Versiyon,
+                    KmHour = d.KmHour,
                     TrailerTypeStr = d.TrailerType == 1 ? "Çadırlı" : d.TrailerType == 2 ? "Frigo" : "Kapalı",
                 }).ToArray();
         }
@@ -4444,6 +4485,110 @@ namespace HekaMOLD.Business.UseCases
             WorkOrderCategoryModel model = new WorkOrderCategoryModel { };
 
             var repo = _unitOfWork.GetRepository<WorkOrderCategory>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region ROUNDCOSTCATEGORY BUSINESS
+        public RoundCostCategoryModel[] GetRoundCostCategoryList()
+        {
+            List<RoundCostCategoryModel> data = new List<RoundCostCategoryModel>();
+
+            var repo = _unitOfWork.GetRepository<RoundCostCategory>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                RoundCostCategoryModel containerObj = new RoundCostCategoryModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateRoundCostCategory(RoundCostCategoryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.RoundCostCategoryCode))
+                    throw new Exception("Kategori kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.RoundCostCategoryName))
+                    throw new Exception("Kategori adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<RoundCostCategory>();
+
+                if (repo.Any(d => (d.RoundCostCategoryCode == model.RoundCostCategoryCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir Kategori mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new RoundCostCategory();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteRoundCostCategory(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<RoundCostCategory>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public RoundCostCategoryModel GetRoundCostCategory(int id)
+        {
+            RoundCostCategoryModel model = new RoundCostCategoryModel { };
+
+            var repo = _unitOfWork.GetRepository<RoundCostCategory>();
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {

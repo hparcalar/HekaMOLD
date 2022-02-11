@@ -34,6 +34,10 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
+        public ActionResult ScheduLoad()
+        {
+            return View();
+        }
 
         [HttpGet]
         public JsonResult GetNextloadCode(int directionId)
@@ -61,6 +65,8 @@ namespace HekaMOLD.Enterprise.Controllers
             UserModel[] users = new UserModel[0];
             CityModel[] citys = new CityModel[0];
             CountryModel[] countrys = new CountryModel[0];
+            FirmModel[] firmArrivalCustoms = new FirmModel[0];
+
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -71,6 +77,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 customs = bObj.GetCustomsList();
                 citys = bObj.GetCityList();
                 countrys = bObj.GetCountryList();
+                firmArrivalCustoms = bObj.GetFirmCustomsList();
             }
             using (UsersBO bObj =new UsersBO())
             {
@@ -85,7 +92,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 Customs = customs , 
                 Users = users,
                 Citys = citys,
-                Countrys = countrys
+                Countrys = countrys,
+                FirmArrivalCustoms = firmArrivalCustoms
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
@@ -253,6 +261,34 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(result);
+        }
+        [HttpGet]
+        public JsonResult GetNextRecord(int Id)
+        {
+            int nextNo = 0;
+
+            using (LoadBO bObj = new LoadBO())
+            {
+                nextNo = bObj.GetNextRecord(Convert.ToInt32(Request.Cookies["PlantId"].Value), Id);
+            }
+
+            var jsonResult = Json(new { Result = nextNo, NextNo = nextNo }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        [HttpGet]
+        public JsonResult GetBackRecord(int Id)
+        {
+            int nextNo = 0;
+
+            using (LoadBO bObj = new LoadBO())
+            {
+                nextNo = bObj.GetBackRecord(Convert.ToInt32(Request.Cookies["PlantId"].Value), Id);
+            }
+
+            var jsonResult = Json(new { Result = nextNo, NextNo = nextNo }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
     }

@@ -41,6 +41,34 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+        [HttpGet]
+        public JsonResult GetNextRecord(int Id)
+        {
+            int nextNo = 0;
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                nextNo = bObj.GetNextRecord(Convert.ToInt32(Request.Cookies["PlantId"].Value), ItemOrderType.Sale, Id);
+            }
+
+            var jsonResult = Json(new { Result = nextNo, NextNo = nextNo }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        [HttpGet]
+        public JsonResult GetBackRecord(int Id)
+        {
+            int nextNo = 0;
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                nextNo = bObj.GetBackRecord(Convert.ToInt32(Request.Cookies["PlantId"].Value), ItemOrderType.Sale, Id);
+            }
+
+            var jsonResult = Json(new { Result = nextNo, NextNo = nextNo }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
 
         [HttpGet]
         public JsonResult GetSelectables()

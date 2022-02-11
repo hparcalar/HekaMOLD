@@ -40,5 +40,6 @@ namespace Heka.DataAccess.Context.Models
         [InverseProperty("CustomsExit")]
         public virtual ICollection<ItemLoad> ItemLoadByExits { get; set; }
 
+
     }
 }

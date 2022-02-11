@@ -152,11 +152,13 @@
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DistrictController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
+    <Compile Include="Controllers\DriverController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
     <Compile Include="Controllers\LoadController.cs" />
     <Compile Include="Controllers\LOrderController.cs" />
+    <Compile Include="Controllers\LPlanningController.cs" />
     <Compile Include="Controllers\MachineGroupController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Controllers\ProductionNeedsController.cs" />
     <Compile Include="Controllers\ProductQualityController.cs" />
     <Compile Include="Controllers\ReportTemplateController.cs" />
+    <Compile Include="Controllers\RoundCostCategoryController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
@@ -201,6 +204,16 @@
     <Compile Include="Controllers\WarehouseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="HekaLogisticsDataItemLoadCmr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HekaLogisticsDataItemLoadCmr.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="HekaLogisticsDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HekaLogisticsDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HekaHtmlHelper.cs" />
     <Compile Include="Models\LoginModel.cs" />
@@ -4093,6 +4106,8 @@
     <Content Include="FrontEndLogic\Document\index.js" />
     <Content Include="FrontEndLogic\Document\list.js" />
     <Content Include="FrontEndLogic\Document\preview.js" />
+    <Content Include="FrontEndLogic\Driver\index.js" />
+    <Content Include="FrontEndLogic\Driver\list.js" />
     <Content Include="FrontEndLogic\Dye\index.js" />
     <Content Include="FrontEndLogic\Dye\list.js" />
     <Content Include="FrontEndLogic\EntryQuality\index-data.js" />
@@ -4126,6 +4141,7 @@
     <Content Include="FrontEndLogic\Load\importlist.js" />
     <Content Include="FrontEndLogic\Load\index.js" />
     <Content Include="FrontEndLogic\Load\list.js" />
+    <Content Include="FrontEndLogic\Load\scheduLoad.js" />
     <Content Include="FrontEndLogic\Load\transitlist.js" />
     <Content Include="FrontEndLogic\LOrder\index.js" />
     <Content Include="FrontEndLogic\LOrder\list.js" />
@@ -4162,6 +4178,7 @@
     <Content Include="FrontEndLogic\PIOrder\list.js" />
     <Content Include="FrontEndLogic\PIRequest\index.js" />
     <Content Include="FrontEndLogic\PIRequest\list.js" />
+    <Content Include="FrontEndLogic\LPlanning\planning.js" />
     <Content Include="FrontEndLogic\Planning\print-template.js" />
     <Content Include="FrontEndLogic\Planning\planning.js" />
     <Content Include="FrontEndLogic\PostureCategory\index.js" />
@@ -4183,6 +4200,8 @@
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\ReportTemplate\index.js" />
     <Content Include="FrontEndLogic\ReportTemplate\list.js" />
+    <Content Include="FrontEndLogic\RoundCostCategory\index.js" />
+    <Content Include="FrontEndLogic\RoundCostCategory\list.js" />
     <Content Include="FrontEndLogic\Shift\index.js" />
     <Content Include="FrontEndLogic\Shift\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
@@ -4501,6 +4520,28 @@
     <Content Include="Scripts\helpers.esm.js" />
     <Content Include="Scripts\html5-qrcode.min.js" />
     <Content Include="Scripts\ckeditor.js.map" />
+    <Content Include="HekaLogisticsDataSet.xsc">
+      <DependentUpon>HekaLogisticsDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="HekaLogisticsDataItemLoadCmr.xsc">
+      <DependentUpon>HekaLogisticsDataItemLoadCmr.xsd</DependentUpon>
+    </Content>
+    <None Include="HekaLogisticsDataItemLoadCmr.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>HekaLogisticsDataItemLoadCmr.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="HekaLogisticsDataItemLoadCmr.xss">
+      <DependentUpon>HekaLogisticsDataItemLoadCmr.xsd</DependentUpon>
+    </Content>
+    <None Include="HekaLogisticsDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>HekaLogisticsDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="HekaLogisticsDataSet.xss">
+      <DependentUpon>HekaLogisticsDataSet.xsd</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.2.1.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
@@ -4716,9 +4757,16 @@
     <Content Include="Views\Load\ImportList.cshtml" />
     <Content Include="Views\Load\DomesticList.cshtml" />
     <Content Include="Views\Load\TransitList.cshtml" />
+    <Content Include="Views\Load\ScheduLoad.cshtml" />
+    <Content Include="Views\driver\Index.cshtml" />
+    <Content Include="Views\driver\List.cshtml" />
+    <Content Include="Views\LPlanning\Planning.cshtml" />
+    <Content Include="Views\RoundCostCategory\Index.cshtml" />
+    <Content Include="Views\RoundCostCategory\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\" />
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Printing\" />
   </ItemGroup>
@@ -4741,6 +4789,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ReportDesign\DeliverySerialList.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReportDesign\Cmr.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />

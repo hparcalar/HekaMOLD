@@ -20,6 +20,12 @@
             filterRow: {
                 visible: true,
             },
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             headerFilter: {
                 visible: true
             },

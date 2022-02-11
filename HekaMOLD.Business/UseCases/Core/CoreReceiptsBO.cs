@@ -242,5 +242,49 @@ namespace HekaMOLD.Business.UseCases.Core
 
             return result;
         }
+        public int GetNextRecord(int plantId, ItemOrderType orderType, int Id)
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrder>();
+                int lastOrderNo = repo.Filter(d => d.PlantId == plantId && d.OrderType == (int)orderType && d.Id > Id )
+                    .OrderBy(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(Convert.ToString(lastOrderNo)))
+                    lastOrderNo = 0;
+
+                return lastOrderNo;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+        public int GetBackRecord(int plantId, ItemOrderType orderType, int Id)
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrder>();
+                int lastOrderNo = repo.Filter(d => d.PlantId == plantId && d.OrderType == (int)orderType && d.Id < Id)
+                    .OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(Convert.ToString(lastOrderNo)))
+                    lastOrderNo = 0;
+
+                return lastOrderNo;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
     }
 }

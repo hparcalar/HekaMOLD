@@ -9,6 +9,7 @@
     $scope.usersList = [];
     $scope.cityList = [];
     $scope.countryList = [];
+    $scope.firmArrivalCustoms = [];
 
     $scope.selectedUser = {};
     $scope.selectedCustomerFirm = {};
@@ -21,6 +22,7 @@
     $scope.selectedShipperCity = {};
     $scope.selectedShipperCountry = {};
     $scope.selectedForexType = {};
+    $scope.selectedFirmArrivalCustoms = {};
 
     $scope.selectedOrderUploadType = {};
     $scope.orderUploadTypeList = [{ Id: 1, Text: 'Grupaj' }, { Id: 2, Text: 'Komple' }];
@@ -71,7 +73,42 @@
 
         return prms;
     }
+    $scope.getNextRecord = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Load/GetNextRecord?Id=' + $scope.modelObject.Id, {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            window.location.href = HOST_URL + 'Load?rid=' + resp.data.NextNo;
+                        }
+                        else {
+                            toastr.warning('Sıradaki yük numarasına ulaşılamadı. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
 
+        return prms;
+    }
+    $scope.getBackRecord = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Load/GetBackRecord?Id=' + $scope.modelObject.Id, {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            window.location.href = HOST_URL + 'Load?rid=' + resp.data.NextNo;
+                        }
+                        else {
+                            toastr.warning('Sıradaki yük numarasına ulaşılamadı. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prms;
+    }
     // SELECTABLES
     $scope.showFirmDialog = function () {
         $('#dial-firm').dialog({
@@ -115,6 +152,7 @@
         $scope.selectedCustomerFirm = {};
         $scope.modelObject.Explanation = "";
         $scope.modelObject.OrderNo = "";
+        $scope.selectedFirmArrivalCustoms = {};
 
         $scope.getNextOrderNo().then(function (rNo) {
             $scope.modelObject.OrderNo = rNo;
@@ -241,6 +279,11 @@
             $scope.modelObject.TrailerType = $scope.selectedTrailerType.Id;
         else
             $scope.modelObject.TrailerType = null;
+
+        if (typeof $scope.selectedFirmArrivalCustoms != 'undefined' && $scope.selectedFirmArrivalCustoms != null)
+            $scope.modelObject.FirmCustomsArrivalId = $scope.selectedFirmArrivalCustoms.Id;
+        else
+            $scope.modelObject.FirmCustomsArrivalId = null;
 
         $http.post(HOST_URL + 'Load/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -384,6 +427,12 @@
                         $scope.selectedTrailerType = $scope.trailerTypeList.find(d => d.Id == $scope.modelObject.TrailerType);
                     else
                         $scope.selectedTrailerType = {};
+
+                    if (typeof $scope.modelObject.FirmCustomsArrivalId != 'undefined' && $scope.modelObject.FirmCustomsArrivalId != null)
+                        $scope.selectedFirmArrivalCustoms = $scope.firmArrivalCustomsList.find(d => d.Id == $scope.modelObject.FirmCustomsArrivalId
+                        );
+                    else
+                        $scope.selectedFirmArrivalCustoms = {};
 
                     $scope.bindDetails();
                 }
@@ -724,6 +773,7 @@
                         $scope.usersList = resp.data.Users;
                         $scope.cityList = resp.data.Citys;
                         $scope.countryList = resp.data.Countrys;
+                        $scope.firmArrivalCustomsList = resp.data.FirmArrivalCustoms;
                         resolve();
                     }
                 }).catch(function (err) { });

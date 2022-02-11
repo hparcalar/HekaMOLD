@@ -1,6 +1,8 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.Context.Models;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
@@ -873,6 +875,39 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return result;
+        }
+        #endregion
+
+        #region LOGISTICS PLAN
+        public ItemLoadModel[] GetWaitingLoads()
+        {
+            ItemLoadModel[] data = new ItemLoadModel[0];
+
+            var repo = _unitOfWork.GetRepository<ItemLoad>();
+            data = repo.Filter(d =>
+                (
+                    d.LoadStatusType == (int)LoadStatusType.Created
+                    ||
+                    d.LoadStatusType == (int)LoadStatusType.Approved
+                )
+            ).ToList().Select(d => new ItemLoadModel
+            {
+                Id = d.Id,
+                LoadCode = d.LoadCode,
+                LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
+                LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName :"",
+                OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+                OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "",
+                OveralQuantity = d.OveralQuantity,
+                OveralWeight = d.OveralWeight,
+                OveralLadametre = d.OveralLadametre,
+                OveralVolume = d.OveralVolume,
+                OverallTotal = d.OverallTotal,
+                ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
+            }).ToArray();
+
+            return data;
         }
         #endregion
     }

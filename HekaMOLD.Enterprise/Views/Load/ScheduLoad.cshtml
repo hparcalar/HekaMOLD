@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>DevExtreme Demo</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))</script>
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/21.2.5/css/dx.common.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/21.2.5/css/dx.light.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>window.angular || document.write(decodeURIComponent('%3Cscript src="js/angular.min.js"%3E%3C/script%3E'))</script>
+    <script src="https://cdn3.devexpress.com/jslib/21.2.5/js/dx.all.js"></script>
+    <script src="data.js"></script>
+    <script src="index.js"></script>
+</head>
+<body class="dx-viewport">
+    <div class="demo-container" ng-app="DemoApp" ng-controller="DemoController">
+        <div dx-scheduler="schedulerOptions"></div>
+    </div>
+</body>
+</html>
+@section scripts{
+    <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/FrontEndLogic/Load/scheduLoad.js"></script>
+}
