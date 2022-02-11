@@ -36,6 +36,7 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> ProfitRate { get; set; }
         public Nullable<int> CreditMonths { get; set; }
         public Nullable<int> CreditRate { get; set; }
+        public Nullable<int> SheetTickness { get; set; }
 
         [ForeignKey("Route")]
         public Nullable<int> RouteId { get; set; }

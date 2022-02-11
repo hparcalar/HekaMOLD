@@ -90,13 +90,17 @@ function ($scope, $http, Upload) {
     }
 
     $scope.showOfferDialog = function () {
-        if ($scope.modelObject.Id <= 0) {
-            $scope.offerModel.firmaismi = $scope.selectedFirm.FirmName;
-            $scope.offerModel.sackg = $scope.rawSheetPrice;
-            $scope.offerModel.hurdakg = $scope.wastagePrice;
-            $scope.offerModel.isci = $scope.manPrice;
-            $scope.offerModel.marj = $scope.profitRate;
-            $scope.offerModel.vadeyuzde = $scope.expirationVal;
+        try {
+            if ($scope.modelObject.Id <= 0) {
+                $scope.offerModel.firmaismi = $scope.selectedFirm.FirmName;
+                $scope.offerModel.sackg = $scope.rawSheetPrice != null && $scope.rawSheetPrice.length > 0 ? parseFloat($scope.rawSheetPrice) : null;
+                $scope.offerModel.hurdakg = $scope.wastagePrice != null && $scope.wastagePrice.length > 0 ? parseFloat($scope.wastagePrice) : null;
+                $scope.offerModel.isci = $scope.manPrice != null && $scope.manPrice.length > 0 ? parseFloat($scope.manPrice) : null;
+                $scope.offerModel.marj = $scope.profitRate != null && $scope.profitRate.length > 0 ? parseFloat($scope.profitRate) : null;
+                $scope.offerModel.vadeyuzde = $scope.expirationVal != null && $scope.expirationVal.length > 0 ? parseInt($scope.expirationVal) : null;
+            }
+        } catch (e) {
+
         }
 
         $("#dial-offer").modal("show");
@@ -176,6 +180,7 @@ function ($scope, $http, Upload) {
                             QualityExplanation: dataRow.malzeme,
                             UnitPrice: parseFloat(dataRow["adet-fiyat"]),
                             OrgUnitPrice: parseFloat(dataRow["adet-fiyat"]),
+                            SheetTickenss: parseInt(dataRow.tickness),
                             ItemVisualStr: visualData,
                         });
                     }
@@ -330,7 +335,7 @@ function ($scope, $http, Upload) {
                 "resim": '<p><img src=\"data:image/png;base64,' + dObj.ItemVisualStr + '" ></p>',
                 "adet-fiyat": dObj.UnitPrice.toFixed(2),
                 "adet-fiyat-cur": formatter.format(dObj.UnitPrice),
-                "tickness": "8",
+                "tickness": (dObj.SheetTickness ?? 8).toString(),
             });
         }
 
@@ -344,9 +349,10 @@ function ($scope, $http, Upload) {
             vadeyuzde: $scope.modelObject.CreditRate,
             vade: $scope.modelObject.Expiration,
             total: $scope.modelObject.TotalPrice,
+            "aciklama": $scope.modelObject.Explanation,
             "to-company": $scope.selectedFirm.FirmName,
             "from-company": 'London Metal',
-            "total-cur": $scope.modelObject.TotalPrice,
+            "total-cur": formatter.format($scope.modelObject.TotalPrice),
             data: calcDetails,
         }];
         // #endregion
@@ -918,6 +924,8 @@ function ($scope, $http, Upload) {
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
     $scope.loadSelectables().then(function () {
+        $scope.bindConstants();
+
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
         else {
