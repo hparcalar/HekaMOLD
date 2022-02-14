@@ -621,6 +621,7 @@ namespace HekaMOLD.Business.UseCases
                     CreatedUserId = userId,
                     DateOfNeed = dbOrder.DateOfNeed,
                     LoadOutDate = dbOrder.LoadOutDate,
+                    ScheduledUploadDate = dbOrder.ScheduledUploadDate,
                     OrderUploadType = dbOrder.OrderUploadType,
                     OrderUploadPointType = dbOrder.OrderUploadPointType,
                     OrderTransactionDirectionType = dbOrder.OrderTransactionDirectionType,

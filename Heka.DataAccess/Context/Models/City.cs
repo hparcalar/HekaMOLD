@@ -16,6 +16,8 @@ namespace Heka.DataAccess.Context.Models
             this.Firm = new HashSet<Firm>();
             this.ItemLoadByCityShipper = new HashSet<ItemLoad>();
             this.ItemLoadByCityBuyer = new HashSet<ItemLoad>();
+            this.RotaByCityStart = new HashSet<Rota>();
+            this.RotaByCityEnd = new HashSet<Rota>();
 
         }
         public int Id { get; set; }
@@ -55,5 +57,11 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("CityBuyer")]
         public virtual ICollection<ItemLoad> ItemLoadByCityBuyer { get; set; }
+
+        [InverseProperty("CityStart")]
+        public virtual ICollection<Rota> RotaByCityStart { get; set; }
+
+        [InverseProperty("CityEnd")]
+        public virtual ICollection<Rota> RotaByCityEnd { get; set; }
     }
 }

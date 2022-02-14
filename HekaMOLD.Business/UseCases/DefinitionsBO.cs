@@ -4198,7 +4198,7 @@ namespace HekaMOLD.Business.UseCases
                     CountryId = d.CountryId,
                     PlateCode = d.PlateCode,
                     NumberCode = d.NumberCode,
-                    //CountryName = d.Country != null ? d.Country.CountryName : "",
+                    CountryName = d.Country != null ? d.Country.CountryName : "",
                     PostCode = d.PostCode,
                 }).ToArray();
 
@@ -4495,16 +4495,16 @@ namespace HekaMOLD.Business.UseCases
         }
         #endregion
 
-        #region ROUNDCOSTCATEGORY BUSINESS
-        public RoundCostCategoryModel[] GetRoundCostCategoryList()
+        #region LOADCOSTCATEGORY BUSINESS
+        public LoadCostCategoryModel[] GetLoadCostCategoryList()
         {
-            List<RoundCostCategoryModel> data = new List<RoundCostCategoryModel>();
+            List<LoadCostCategoryModel> data = new List<LoadCostCategoryModel>();
 
-            var repo = _unitOfWork.GetRepository<RoundCostCategory>();
+            var repo = _unitOfWork.GetRepository<LoadCostCategory>();
 
             repo.GetAll().ToList().ForEach(d =>
             {
-                RoundCostCategoryModel containerObj = new RoundCostCategoryModel();
+                LoadCostCategoryModel containerObj = new LoadCostCategoryModel();
                 d.MapTo(containerObj);
                 data.Add(containerObj);
             });
@@ -4512,27 +4512,27 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
-        public BusinessResult SaveOrUpdateRoundCostCategory(RoundCostCategoryModel model)
+        public BusinessResult SaveOrUpdateLoadCostCategory(LoadCostCategoryModel model)
         {
             BusinessResult result = new BusinessResult();
 
             try
             {
-                if (string.IsNullOrEmpty(model.RoundCostCategoryCode))
+                if (string.IsNullOrEmpty(model.LoadCostCategoryCode))
                     throw new Exception("Kategori kodu girilmelidir.");
-                if (string.IsNullOrEmpty(model.RoundCostCategoryName))
+                if (string.IsNullOrEmpty(model.LoadCostCategoryName))
                     throw new Exception("Kategori adı girilmelidir.");
 
-                var repo = _unitOfWork.GetRepository<RoundCostCategory>();
+                var repo = _unitOfWork.GetRepository<LoadCostCategory>();
 
-                if (repo.Any(d => (d.RoundCostCategoryCode == model.RoundCostCategoryCode)
+                if (repo.Any(d => (d.LoadCostCategoryCode == model.LoadCostCategoryCode)
                     && d.Id != model.Id))
                     throw new Exception("Aynı koda sahip başka bir Kategori mevcuttur. Lütfen farklı bir kod giriniz.");
 
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
-                    dbObj = new RoundCostCategory();
+                    dbObj = new LoadCostCategory();
                     dbObj.CreatedDate = DateTime.Now;
                     dbObj.CreatedUserId = model.CreatedUserId;
                     repo.Add(dbObj);
@@ -4561,13 +4561,13 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult DeleteRoundCostCategory(int id)
+        public BusinessResult DeleteLoadCostCategory(int id)
         {
             BusinessResult result = new BusinessResult();
 
             try
             {
-                var repo = _unitOfWork.GetRepository<RoundCostCategory>();
+                var repo = _unitOfWork.GetRepository<LoadCostCategory>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 repo.Delete(dbObj);
@@ -4584,11 +4584,11 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public RoundCostCategoryModel GetRoundCostCategory(int id)
+        public LoadCostCategoryModel GetLoadCostCategory(int id)
         {
-            RoundCostCategoryModel model = new RoundCostCategoryModel { };
+            LoadCostCategoryModel model = new LoadCostCategoryModel { };
 
-            var repo = _unitOfWork.GetRepository<RoundCostCategory>();
+            var repo = _unitOfWork.GetRepository<LoadCostCategory>();
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
             {

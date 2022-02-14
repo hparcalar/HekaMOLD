@@ -100,7 +100,7 @@
                             </svg>
                         </span>
                     </a>
-                    @if (Html.IsGranted("LoadApproval"))
+                    @*@if (Html.IsGranted("LoadApproval"))
                     {
                         <a class="btn btn-sm btn-light-success" ng-click="approveLoad()" ng-show="modelObject.LoadStatusType == 0 && modelObject.Id > 0">
                             <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
@@ -114,10 +114,7 @@
                             Onayla
                         </a>
 
-                        <!--begin::Separator-->
-                        <span class="h-20px border-gray-200 border-start ms-3 mx-2" ng-show="modelObject.RequestStatus == 0 && modelObject.Id > 0"></span>
-                        <!--end::Separator-->
-                    }
+                    }*@
                     @if (Html.IsGranted("LoadCancelled"))
                     {
                         <a class="btn btn-sm btn-light-danger" ng-click="cancelledLOrder()" ng-show="(modelObject.OrderStatus == 0 || modelObject.OrderStatus == 1) && modelObject.Id > 0">
@@ -510,10 +507,10 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-xxl-6">
-                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük Çıkış Tarihi</label>
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Planlanan Yükleme Tarihi</label>
                                                         <!--begin::Input group-->
                                                         <div class="mb-3">
-                                                            <input type="text" readonly class="form-control form-control-solid datepicker" ng-model="modelObject.LoadOutDateStr" placeholder="" />
+                                                            <input type="text" readonly class="form-control form-control-solid datepicker" ng-model="modelObject.ScheduledUploadDateStr" placeholder="" />
                                                         </div>
                                                     </div>
 

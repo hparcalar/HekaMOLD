@@ -80,13 +80,14 @@
                     e.rowElement.addClass(deadlineClass);
             },
             columns: [
+                { dataField: 'Id', caption: 'Id', visible: false, sortOrder: "desc", },
                 { dataField: 'LoadCode', caption: 'Yük Kodu' },
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
-                { dataField: 'DocumentNo', caption: 'Belge No' },
-                { dataField: 'OrderDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'ScheduledUploadWeek', caption: 'Yük Hafta' },
+                { dataField: 'ScheduledUploadDateStr', caption: 'Pl. Yükleme Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'DateOfNeedStr', caption: 'Teslim Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'LoadOutDateStr', caption: 'Boşaltma Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'LoadingDateStr', caption: 'Yükleme Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'LoadOutDateStr', caption: 'Boşaltma Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'CustomerFirmName', caption: 'Müşteri' },
                 { dataField: 'LoadStatusTypeStr', caption: 'Durum' },
                 { dataField: 'ShipperFirmName', caption: 'Gönderici Firma' },
@@ -103,6 +104,8 @@
                 { dataField: 'OveralLadametre', caption: 'Toplam Ladametre' },
                 { dataField: 'OverallTotal', caption: 'Toplam Tutar' },
                 { dataField: 'ForexTypeCode', caption: 'Döviz Kodu' },
+                { dataField: 'DocumentNo', caption: 'Belge No' },
+                { dataField: 'OrderDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {
                     type: "buttons",

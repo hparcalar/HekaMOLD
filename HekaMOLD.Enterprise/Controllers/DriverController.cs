@@ -109,8 +109,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult UploadProfileImage(int userId,
-            HttpPostedFileBase file)
+        public JsonResult UploadProfileImage(int userId, HttpPostedFileBase file)
         {
             BusinessResult result = new BusinessResult();
 

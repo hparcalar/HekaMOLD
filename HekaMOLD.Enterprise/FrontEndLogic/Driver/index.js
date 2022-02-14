@@ -31,6 +31,8 @@
         $scope.openNewRecord = function () {
             $scope.modelObject = { Id: 0 };
             $scope.selectedCountry = {};
+            $scope.selectedObjectFile = null;
+            $scope.selectedVisaType = {};
         }
 
         $scope.onDataSelected = function (invalids, valids) {

@@ -157,6 +157,7 @@
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
     <Compile Include="Controllers\LoadController.cs" />
+    <Compile Include="Controllers\LoadCostCategoryController.cs" />
     <Compile Include="Controllers\LOrderController.cs" />
     <Compile Include="Controllers\LPlanningController.cs" />
     <Compile Include="Controllers\MachineGroupController.cs" />
@@ -167,7 +168,7 @@
     <Compile Include="Controllers\ProductionNeedsController.cs" />
     <Compile Include="Controllers\ProductQualityController.cs" />
     <Compile Include="Controllers\ReportTemplateController.cs" />
-    <Compile Include="Controllers\RoundCostCategoryController.cs" />
+    <Compile Include="Controllers\RotaController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
@@ -4200,8 +4201,10 @@
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\ReportTemplate\index.js" />
     <Content Include="FrontEndLogic\ReportTemplate\list.js" />
-    <Content Include="FrontEndLogic\RoundCostCategory\index.js" />
-    <Content Include="FrontEndLogic\RoundCostCategory\list.js" />
+    <Content Include="FrontEndLogic\LoadCostCategory\index.js" />
+    <Content Include="FrontEndLogic\LoadCostCategory\list.js" />
+    <Content Include="FrontEndLogic\Rota\index.js" />
+    <Content Include="FrontEndLogic\Rota\list.js" />
     <Content Include="FrontEndLogic\Shift\index.js" />
     <Content Include="FrontEndLogic\Shift\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
@@ -4761,8 +4764,10 @@
     <Content Include="Views\driver\Index.cshtml" />
     <Content Include="Views\driver\List.cshtml" />
     <Content Include="Views\LPlanning\Planning.cshtml" />
-    <Content Include="Views\RoundCostCategory\Index.cshtml" />
-    <Content Include="Views\RoundCostCategory\List.cshtml" />
+    <Content Include="Views\LoadCostCategory\Index.cshtml" />
+    <Content Include="Views\LoadCostCategory\List.cshtml" />
+    <Content Include="Views\Rota\Index.cshtml" />
+    <Content Include="Views\Rota\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,6 +9,8 @@ namespace Heka.DataAccess.Context.Models
         public ItemLoad()
         {
             this.ItemLoadDetail = new HashSet<ItemLoadDetail>();
+            this.ItemLoadCost = new HashSet<ItemLoadCost>();
+
         }
         public int Id { get; set; }
         public string LoadCode { get; set; }
@@ -28,6 +30,7 @@ namespace Heka.DataAccess.Context.Models
         public int? OrderTransactionDirectionType { get; set; }
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
+        public DateTime? ScheduledUploadDate { get; set; }
         public Nullable<System.DateTime> DateOfNeed { get; set; }
         public int? OveralQuantity { get; set; }
 
@@ -112,6 +115,7 @@ namespace Heka.DataAccess.Context.Models
         public Nullable<int> CreatedUserId { get; set; }
 
 
+
         public Nullable<System.DateTime> CreatDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
@@ -132,9 +136,12 @@ namespace Heka.DataAccess.Context.Models
         public virtual City CityShipper { get; set; }
         public virtual City CityBuyer { get; set; }
         public virtual ForexType ForexType { get; set; }
-
+        
         [InverseProperty("ItemLoad")]
         public virtual ICollection<ItemLoadDetail> ItemLoadDetail { get; set; }
+
+        [InverseProperty("ItemLoad")]
+        public virtual ICollection<ItemLoadCost> ItemLoadCost { get; set; }
 
     }
 }

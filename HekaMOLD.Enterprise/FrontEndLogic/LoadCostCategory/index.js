@@ -1,4 +1,4 @@
-﻿app.controller('roundCostCategoryCtrl', function ($scope, $http) {
+﻿app.controller('loadCostCategoryCtrl', function ($scope, $http) {
     $scope.modelObject = {};
 
     $scope.saveStatus = 0;
@@ -24,7 +24,7 @@
             callback: function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'RoundCostCategory/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                    $http.post(HOST_URL + 'LoadCostCategory/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -46,7 +46,7 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        $http.post(HOST_URL + 'RoundCostCategory/SaveModel', $scope.modelObject, 'json')
+        $http.post(HOST_URL + 'LoadCostCategory/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
@@ -63,7 +63,7 @@
     }
 
     $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'RoundCostCategory/BindModel?rid=' + id, {}, 'json')
+        $http.get(HOST_URL + 'LoadCostCategory/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;

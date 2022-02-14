@@ -1,4 +1,4 @@
-﻿app.controller('roundCostCategoryListCtrl', function ($scope, $http) {
+﻿app.controller('rotaListCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     // LIST FUNCTIONS
@@ -6,7 +6,7 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'RoundCostCategory/GetRoundCostCategoryList', function (data) {
+                    return $.getJSON(HOST_URL + 'Rota/GetRotaList', function (data) {
 
                     });
                 },
@@ -36,8 +36,21 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'RoundCostCategoryCode', caption: 'Maliyet Kategori Kodu' },
-                { dataField: 'RoundCostCategoryName', caption: 'Maliyet Kategori Adı' },
+                //{
+                //    dataField: 'Picture', caption:'Resim',
+                //    width: 100,
+                //    allowFiltering: false,
+                //    allowSorting: false,
+                //    cellTemplate(container, options) {
+                //        $('<div>')
+                //            .append($('<img>', { src: options.value }))
+                //            .appendTo(container);
+                //    },
+                //},
+                { dataField: 'CityStartName', caption: 'Başlangıç Şehri' },
+                { dataField: 'CityEndName', caption: 'Bitiş Şehri' },
+                { dataField: 'KmHour', caption: 'Km' },
+
                 {
                     type: "buttons",
                     buttons: [
@@ -47,7 +60,7 @@
                                 dataGrid.deselectAll();
                                 dataGrid.selectRowsByIndexes([e.row.rowIndex]);
 
-                                window.location.href = HOST_URL + 'RoundCostCategory?rid=' + e.row.data.Id;
+                                window.location.href = HOST_URL + 'Rota?rid=' + e.row.data.Id;
                             }
                         }
                     ]

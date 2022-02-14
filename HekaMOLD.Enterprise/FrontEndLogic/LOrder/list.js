@@ -82,9 +82,10 @@
                 { dataField: 'Id', caption: 'Id', visible: false,sortOrder: "desc", },
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
-                { dataField: 'OrderDateWeek', caption: 'sipariş Hafta', },
+                { dataField: 'OrderDateWeek', caption: 'Sipariş Hafta', },
                 { dataField: 'OrderDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'DateOfNeedStr', caption: 'Teslim Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'ScheduledUploadDateStr', caption: 'Pl. Yükleme Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'CustomerFirmName', caption: 'Müşteri Firma Adı' },
                 { dataField: 'OrderStatusStr', caption: 'Durum' },
                 { dataField: 'LoadPostCode', caption: 'Yükleme Şehri Posta Kodu' },
@@ -105,6 +106,7 @@
                 { dataField: 'OveralLadametre', caption: 'Toplam Ladametre' },
                 { dataField: 'OverallTotal', caption: 'Toplam Tutar' },
                 { dataField: 'ForexTypeCode', caption: 'Döviz Kodu' },
+                { dataField: 'CreatedUserName', caption: 'Siparişi Oluşturan' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
 
                 {

@@ -12,7 +12,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
         public static Dictionary<LoadStatusType, string> Values
     = new Dictionary<LoadStatusType, string>()
 {
-            { LoadStatusType.Created, "Onay Bekliyor" },
+            { LoadStatusType.Created, "Hazır Bekliyor" },
             { LoadStatusType.Approved, "Yük Onaylandı" },
             { LoadStatusType.Cancelled, "Yük Reddedildi" },
             { LoadStatusType.Completed, "Yük Tamamlandı" },

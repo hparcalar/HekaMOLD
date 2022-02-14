@@ -27,7 +27,8 @@ namespace HekaMOLD.Business.UseCases
                     OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.OrderDate),
                     DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
                     LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
-                    OrderDateWeek = getWeekOfNumber((DateTime)d.OrderDate),
+                    ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
+                    OrderDateWeek = getYearAndWeekOfNumber(Convert.ToString( d.OrderDate )),
                     CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                     CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
                     LoadCityName = d.LoadCity != null ? d.LoadCity.CityName : "",
@@ -40,8 +41,9 @@ namespace HekaMOLD.Business.UseCases
                     OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
                     OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
                     OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+                    CreatedUserName = d.User != null ? d.User.UserName : "",
                     //OrderDateWeek = Convert.ToString( Convert.ToDateTime(d.OrderDate).GetDateTimeFormats()),
-                    // LoadCountryName = d.LoadCity.Country != null ? d.LoadCity.Country.CountryName :"",
+                    //LoadCountryName = d.LoadCity.Country != null ? d.LoadCity.Country.CountryName :"",
                     OveralQuantity = d.OveralQuantity,
                     OveralWeight = d.OveralWeight,
                     OveralVolume = d.OveralVolume,
@@ -56,7 +58,7 @@ namespace HekaMOLD.Business.UseCases
                     OrderType = d.OrderType,
                     CalculationTypePrice = d.CalculationTypePrice,
                     PlantId = d.PlantId,
-                    ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode :""
+                    ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode :"",
                 })
                 .OrderByDescending(d => d.OrderDate)
                 .ToArray();
@@ -75,6 +77,7 @@ namespace HekaMOLD.Business.UseCases
                     CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
                     DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
                     LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                    ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
                     CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                     CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
                     LoadCityName = d.LoadCity != null ? d.LoadCity.CityName : "",
@@ -146,6 +149,14 @@ namespace HekaMOLD.Business.UseCases
                     model.LoadOutDate = DateTime.ParseExact(model.LoadOutDateStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
+                if (!string.IsNullOrEmpty(model.ScheduledUploadDateStr))
+                {
+                    model.ScheduledUploadDate = DateTime.ParseExact(model.ScheduledUploadDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                else if (string.IsNullOrEmpty(model.ScheduledUploadDateStr))
+                    throw new Exception("Planlanan yükleme tarihi giriniz !");
+
                 if ((int)model.OrderStatus == (int)OrderStatusType.Loaded)
                 {
                     throw new Exception("Yüke dönüştürülülen siparişte değişiklik yapılamaz !");
@@ -450,6 +461,7 @@ namespace HekaMOLD.Business.UseCases
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
                 model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate);
                 model.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadOutDate);
+                model.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ScheduledUploadDate);
                 model.OrderStatusStr = ((OrderStatusType)model.OrderStatus).ToCaption();
                 model.CustomerFirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
                 model.CustomerFirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
@@ -513,6 +525,7 @@ namespace HekaMOLD.Business.UseCases
                 model = dbObj.MapTo(model);
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
                 model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate);
+                model.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ScheduledUploadDate);
                 model.OrderStatusStr = ((OrderStatusType)model.OrderStatus).ToCaption();
                 model.CustomerFirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
                 model.CustomerFirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
@@ -617,6 +630,7 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+
         public BusinessResult CancelledItemOrderPrice(int id, int userId)
         {
             BusinessResult result = new BusinessResult();
@@ -964,15 +978,31 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
         #endregion
-        public int getWeekOfNumber(DateTime Date)
+        #region METHOD
+        public string getYearAndWeekOfNumber(string OrderDateWeek)
         {
-            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(Date);
-            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+            try
             {
-                Date = Date.AddDays(3);
+                DateTime Date;
+                if (!string.IsNullOrEmpty(OrderDateWeek))
+                     Date = Convert.ToDateTime(OrderDateWeek);
+                else
+                 return "";
+                DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(Date);
+                if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+                {
+                    Date = Date.AddDays(3);
+                }
+                return Date.Year + "-" + CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(Date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             }
-            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(Date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            catch (Exception)
+            {
+
+                throw;
+            }
 
         }
+        #endregion
+
     }
 }

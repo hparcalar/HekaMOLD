@@ -14,7 +14,7 @@
             },
             showColumnLines: false,
             showRowLines: true,
-            rowAlternationEnabled: true,
+            rowAlternationEnabled: false,
             focusedRowEnabled: true,
             showBorders: true,
             allowColumnResizing: true,

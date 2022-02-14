@@ -40,6 +40,7 @@ namespace Heka.DataAccess.Context
         public decimal? OveralLadametre { get; set; }
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
+        public DateTime? ScheduledUploadDate { get; set; }
         public decimal? CalculationTypePrice { get; set; }
         public int? OveralQuantity { get; set; }
         public bool? Closed { get; set; }

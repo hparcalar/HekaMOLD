@@ -23,6 +23,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? OrderTransactionDirectionType { get; set; }
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
+        public DateTime? ScheduledUploadDate { get; set; }
         public string Explanation { get; set; }
         public string ShipperFirmExplanation { get; set; }
         public string BuyerFirmExplanation { get; set; }
@@ -112,7 +113,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string CrmDeliveryDateStr { get; set; }
         public string CmrCustomerDeliveryDateStr { get; set; }
         public string FirmArrivalCustomsName { get; set; }
-
+        public string ScheduledUploadDateStr { get; set; }
+        public string ScheduledUploadWeek { get; set; }
 
         #endregion
     }

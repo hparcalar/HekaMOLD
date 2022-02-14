@@ -24,6 +24,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public decimal? OveralLadametre { get; set; }
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
+        public DateTime? ScheduledUploadDate { get; set; }
         public decimal? CalculationTypePrice { get; set; }
         public Nullable<int> LoadCityId { get; set; }
         public Nullable<int> DischargeCityId { get; set; }
@@ -76,7 +77,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string DischangeCountryName { get; set; }
         public string DischangePostCode { get; set; }
         public string ForexTypeCode { get; set; }
-        public int OrderDateWeek { get; set; }
+        public string OrderDateWeek { get; set; }
+        public string ScheduledUploadDateStr { get; set; }
         #endregion
     }
 }

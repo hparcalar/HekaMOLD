@@ -37,7 +37,7 @@
             },
             columns: [
                 { dataField: 'CityName', caption: 'Şehir İsmi' },
-                //{ dataField: 'CountryName', caption: 'Ülke' },
+                { dataField: 'CountryName', caption: 'Ülke' },
                 { dataField: 'PlateCode', caption: 'Plaka Kodu' },
                 { dataField: 'NumberCode', caption: 'Telefon Kodu' },
                 { dataField: 'PostCode', caption: 'Posta Kodu' },

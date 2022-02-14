@@ -764,7 +764,113 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        #endregion
 
+        #region ROTA BUSINESS
+        public RotaModel GetRota(int id)
+        {
+            RotaModel model = new RotaModel();
+
+            var repo = _unitOfWork.GetRepository<Rota>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.CityStartName = dbObj.CityStart != null ? dbObj.CityStart.CityName : "";
+                model.CityEndName = dbObj.CityEnd != null ? dbObj.CityEnd.CityName : "";
+
+                if (dbObj.ProfileImage != null)
+                {
+                    model.ProfileImageBase64 = "data:image/png;base64, " + Convert.ToBase64String(dbObj.ProfileImage);
+                }
+            }
+
+            return model;
+        }
+
+        public RotaModel[] GetRotaList()
+        {
+            List<RotaModel> data = new List<RotaModel>();
+
+            var repo = _unitOfWork.GetRepository<Rota>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                RotaModel containerObj = new RotaModel();
+                d.MapTo(containerObj);
+                containerObj.CityStartName = d.CityStart != null ? d.CityStart.CityName : "";
+                containerObj.CityEndName = d.CityEnd != null ? d.CityEnd.CityName : "";
+                containerObj.ProfileImage = null;
+                containerObj.ProfileImageBase64 = "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateRota(RotaModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+
+                var repo = _unitOfWork.GetRepository<Rota>();
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Rota();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteRota(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Rota>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         #endregion
     }
 }

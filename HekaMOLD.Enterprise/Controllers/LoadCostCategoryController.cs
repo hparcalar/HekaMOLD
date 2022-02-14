@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class RoundCostCategoryController : Controller
+    public class LoadCostCategoryController : Controller
     {
-        // GET: RoundCostCategory
+        // GET: LoadCostCategory
         public ActionResult Index()
         {
             return View();
@@ -19,13 +19,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetRoundCostCategoryList()
+        public JsonResult GetLoadCostCategoryList()
         {
-            RoundCostCategoryModel[] result = new RoundCostCategoryModel[0];
+            LoadCostCategoryModel[] result = new LoadCostCategoryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetRoundCostCategoryList();
+                result = bObj.GetLoadCostCategoryList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -36,10 +36,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            RoundCostCategoryModel model = null;
+            LoadCostCategoryModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetRoundCostCategory(rid);
+                model = bObj.GetLoadCostCategory(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -53,7 +53,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteRoundCostCategory(rid);
+                    result = bObj.DeleteLoadCostCategory(rid);
                 }
 
                 if (result.Result)
@@ -68,14 +68,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(RoundCostCategoryModel model)
+        public JsonResult SaveModel(LoadCostCategoryModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateRoundCostCategory(model);
+                    result = bObj.SaveOrUpdateLoadCostCategory(model);
                 }
 
                 if (result.Result)

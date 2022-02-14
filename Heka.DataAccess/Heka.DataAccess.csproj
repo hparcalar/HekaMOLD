@@ -88,6 +88,7 @@
     <Compile Include="Context\Models\ItemGroup.cs" />
     <Compile Include="Context\Models\ItemLiveStatus.cs" />
     <Compile Include="Context\Models\ItemLoad.cs" />
+    <Compile Include="Context\Models\ItemLoadCost.cs" />
     <Compile Include="Context\Models\ItemLoadDetail.cs" />
     <Compile Include="Context\Models\ItemOrder.cs" />
     <Compile Include="Context\Models\ItemOrderConsume.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Context\Models\ItemWarehouse.cs" />
     <Compile Include="Context\Models\LayoutItem.cs" />
     <Compile Include="Context\Models\LayoutObjectType.cs" />
+    <Compile Include="Context\Models\LoadCostCategory.cs" />
     <Compile Include="Context\Models\Machine.cs" />
     <Compile Include="Context\Models\MachineGroup.cs" />
     <Compile Include="Context\Models\MachineMaintenanceInstruction.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Context\Models\ProductRecipeDetail.cs" />
     <Compile Include="Context\Models\ProductWastage.cs" />
     <Compile Include="Context\Models\ReportTemplate.cs" />
+    <Compile Include="Context\Models\Rota.cs" />
     <Compile Include="Context\Models\RoundCostCategory.cs" />
     <Compile Include="Context\Models\Route.cs" />
     <Compile Include="Context\Models\RouteItem.cs" />
@@ -403,6 +406,34 @@
     <Compile Include="Migrations\202202111044135_RoundCostCategoryAdd.designer.cs">
       <DependentUpon>202202111044135_RoundCostCategoryAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.cs" />
+    <Compile Include="Migrations\202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.designer.cs">
+      <DependentUpon>202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131321387_RoundCostCategoryDelete.cs" />
+    <Compile Include="Migrations\202202131321387_RoundCostCategoryDelete.designer.cs">
+      <DependentUpon>202202131321387_RoundCostCategoryDelete.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131322322_RoundCostCategoryAdd1.cs" />
+    <Compile Include="Migrations\202202131322322_RoundCostCategoryAdd1.designer.cs">
+      <DependentUpon>202202131322322_RoundCostCategoryAdd1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131416140_ItemLoadCostAdd.cs" />
+    <Compile Include="Migrations\202202131416140_ItemLoadCostAdd.designer.cs">
+      <DependentUpon>202202131416140_ItemLoadCostAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131417266_ItemLoadCostAdd%28FprexTypeId%29.cs" />
+    <Compile Include="Migrations\202202131417266_ItemLoadCostAdd%28FprexTypeId%29.designer.cs">
+      <DependentUpon>202202131417266_ItemLoadCostAdd%28FprexTypeId%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131547435_RotaAdded.cs" />
+    <Compile Include="Migrations\202202131547435_RotaAdded.designer.cs">
+      <DependentUpon>202202131547435_RotaAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131556035_RotaUpdate%28CityAdd%29.cs" />
+    <Compile Include="Migrations\202202131556035_RotaUpdate%28CityAdd%29.designer.cs">
+      <DependentUpon>202202131556035_RotaUpdate%28CityAdd%29.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -594,6 +625,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202202111044135_RoundCostCategoryAdd.resx">
       <DependentUpon>202202111044135_RoundCostCategoryAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.resx">
+      <DependentUpon>202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131321387_RoundCostCategoryDelete.resx">
+      <DependentUpon>202202131321387_RoundCostCategoryDelete.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131322322_RoundCostCategoryAdd1.resx">
+      <DependentUpon>202202131322322_RoundCostCategoryAdd1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131416140_ItemLoadCostAdd.resx">
+      <DependentUpon>202202131416140_ItemLoadCostAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131417266_ItemLoadCostAdd%28FprexTypeId%29.resx">
+      <DependentUpon>202202131417266_ItemLoadCostAdd%28FprexTypeId%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131547435_RotaAdded.resx">
+      <DependentUpon>202202131547435_RotaAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131556035_RotaUpdate%28CityAdd%29.resx">
+      <DependentUpon>202202131556035_RotaUpdate%28CityAdd%29.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
