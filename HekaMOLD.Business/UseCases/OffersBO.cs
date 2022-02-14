@@ -36,7 +36,7 @@ namespace HekaMOLD.Business.UseCases
                     FirmId = d.FirmId,
                     PlantId = d.PlantId,
                 })
-                .OrderByDescending(d => d.OfferDate)
+                .OrderByDescending(d => d.OfferNo)
                 .ToArray();
         }
 
@@ -326,6 +326,7 @@ namespace HekaMOLD.Business.UseCases
                         NewDetail = false,
                         ProfitRate = d.ProfitRate,
                         RoutePrice = d.RoutePrice,
+                        SheetTickness = d.SheetTickness,
                         QualityExplanation = d.QualityExplanation,
                         RouteId = d.RouteId,
                         Quantity = d.Quantity,
