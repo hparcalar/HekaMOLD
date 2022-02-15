@@ -174,7 +174,7 @@
         <Height>9.48117cm</Height>
         <Style />
       </Body>
-      <Width>23.85237cm</Width>
+      <Width>24.01803cm</Width>
       <Page>
         <PageHeader>
           <Height>30.0898cm</Height>
@@ -3462,6 +3462,36 @@ Supplem charges:</Value>
               <Height>0.89633cm</Height>
               <Width>5.3381cm</Width>
               <ZIndex>79</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="LoadCode">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=First(Fields!LoadCode.Value, "DataSetItemLoadCmr")</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>LoadCode</rd:DefaultName>
+              <Top>2.27753cm</Top>
+              <Left>20.35387cm</Left>
+              <Height>0.6cm</Height>
+              <Width>2.5cm</Width>
+              <ZIndex>80</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>

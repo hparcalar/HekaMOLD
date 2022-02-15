@@ -4768,6 +4768,7 @@
     <Content Include="Views\LoadCostCategory\List.cshtml" />
     <Content Include="Views\Rota\Index.cshtml" />
     <Content Include="Views\Rota\List.cshtml" />
+    <Content Include="Views\Load\Calendar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

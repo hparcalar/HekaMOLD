@@ -159,6 +159,7 @@
     <Compile Include="Context\Models\VehicleTire.cs" />
     <Compile Include="Context\Models\VehicleTireDirectionType.cs" />
     <Compile Include="Context\Models\VehicleType.cs" />
+    <Compile Include="Context\Models\Voyage.cs" />
     <Compile Include="Context\Models\Warehouse.cs" />
     <Compile Include="Context\Models\WorkOrder.cs" />
     <Compile Include="Context\Models\WorkOrderAllocation.cs" />
@@ -434,6 +435,34 @@
     <Compile Include="Migrations\202202131556035_RotaUpdate%28CityAdd%29.designer.cs">
       <DependentUpon>202202131556035_RotaUpdate%28CityAdd%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202151542143_VoyageAdd.cs" />
+    <Compile Include="Migrations\202202151542143_VoyageAdd.designer.cs">
+      <DependentUpon>202202151542143_VoyageAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151604269_VoyageUpdate%28StartCityadd%29.cs" />
+    <Compile Include="Migrations\202202151604269_VoyageUpdate%28StartCityadd%29.designer.cs">
+      <DependentUpon>202202151604269_VoyageUpdate%28StartCityadd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151629325_VoyageUpdate%28LoadCityadd%29.cs" />
+    <Compile Include="Migrations\202202151629325_VoyageUpdate%28LoadCityadd%29.designer.cs">
+      <DependentUpon>202202151629325_VoyageUpdate%28LoadCityadd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151633420_VoyageUpdate%28LoadCountryAdd%29.cs" />
+    <Compile Include="Migrations\202202151633420_VoyageUpdate%28LoadCountryAdd%29.designer.cs">
+      <DependentUpon>202202151633420_VoyageUpdate%28LoadCountryAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151639306_VoyageUpdate%28LoadCustomsAdd%29.cs" />
+    <Compile Include="Migrations\202202151639306_VoyageUpdate%28LoadCustomsAdd%29.designer.cs">
+      <DependentUpon>202202151639306_VoyageUpdate%28LoadCustomsAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.cs" />
+    <Compile Include="Migrations\202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.designer.cs">
+      <DependentUpon>202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151708454_VoyageUpdate%28VehicleAdd%29.cs" />
+    <Compile Include="Migrations\202202151708454_VoyageUpdate%28VehicleAdd%29.designer.cs">
+      <DependentUpon>202202151708454_VoyageUpdate%28VehicleAdd%29.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -646,6 +675,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202202131556035_RotaUpdate%28CityAdd%29.resx">
       <DependentUpon>202202131556035_RotaUpdate%28CityAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151542143_VoyageAdd.resx">
+      <DependentUpon>202202151542143_VoyageAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151604269_VoyageUpdate%28StartCityadd%29.resx">
+      <DependentUpon>202202151604269_VoyageUpdate%28StartCityadd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151629325_VoyageUpdate%28LoadCityadd%29.resx">
+      <DependentUpon>202202151629325_VoyageUpdate%28LoadCityadd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151633420_VoyageUpdate%28LoadCountryAdd%29.resx">
+      <DependentUpon>202202151633420_VoyageUpdate%28LoadCountryAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151639306_VoyageUpdate%28LoadCustomsAdd%29.resx">
+      <DependentUpon>202202151639306_VoyageUpdate%28LoadCustomsAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.resx">
+      <DependentUpon>202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151708454_VoyageUpdate%28VehicleAdd%29.resx">
+      <DependentUpon>202202151708454_VoyageUpdate%28VehicleAdd%29.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

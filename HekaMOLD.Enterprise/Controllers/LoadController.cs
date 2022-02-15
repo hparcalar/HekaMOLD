@@ -1,14 +1,20 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+﻿using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Logistics;
+using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using Microsoft.Reporting.WebForms;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
     public class LoadController : Controller
     {
+
         // GET: Load
         public ActionResult Index()
         {
@@ -34,7 +40,7 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
-        public ActionResult ScheduLoad()
+        public ActionResult Calendar()
         {
             return View();
         }
@@ -289,6 +295,21 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(new { Result = nextNo, NextNo = nextNo }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
+        }
+        [HttpPost]
+        public JsonResult TestPrintDelivery(int loadId)
+        {
+            string outputFile = Session.SessionID + ".pdf";
+
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                var reportData = (List<LoadCmrModel>)bObj.PrepareReportData(loadId, ReportType.Cmr);
+
+                bObj.ExportReportAsPdf<List<LoadCmrModel>>(1, reportData, Server.MapPath("~/Outputs") + "/",
+                    Session.SessionID + ".pdf");
+            }
+
+            return Json(new { Status = 1, Path = outputFile });
         }
 
     }

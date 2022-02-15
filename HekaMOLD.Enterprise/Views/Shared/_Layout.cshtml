@@ -361,6 +361,17 @@
                                                     <span class="menu-title">Transit Yük</span>
                                                 </a>
                                             </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "Load$") ? "active" : "")" href="@Url.Action("Calendar", "Load")">
+                                                    <span class="menu-bullet">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M6 3C6 2.44772 6.44772 2 7 2C7.55228 2 8 2.44772 8 3V4H16V3C16 2.44772 16.4477 2 17 2C17.5523 2 18 2.44772 18 3V4H19C20.6569 4 22 5.34315 22 7V19C22 20.6569 20.6569 22 19 22H5C3.34315 22 2 20.6569 2 19V7C2 5.34315 3.34315 4 5 4H6V3Z" fill="#191213" />
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10 12C9.44772 12 9 12.4477 9 13C9 13.5523 9.44772 14 10 14H17C17.5523 14 18 13.5523 18 13C18 12.4477 17.5523 12 17 12H10ZM7 16C6.44772 16 6 16.4477 6 17C6 17.5523 6.44772 18 7 18H13C13.5523 18 14 17.5523 14 17C14 16.4477 13.5523 16 13 16H7Z" fill="#121319" />
+                                                        </svg>
+                                                    </span>
+                                                    <span class="menu-title">Yük Takvimi</span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 }
@@ -1844,16 +1855,16 @@ Rectangle&gt;" class="cls-1" width="32" height="32" />
                                         <!--end::Activities-->
                                         <!--<a href="@Url.Action("PlainDashboard","Home", new { OnlyContent=1 })"
                                            class="ms-1 ms-lg-3 mt-4 btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px">-->
-                                            <!--begin::Svg Icon | path: icons/stockholm/Layout/Layout-4-blocks.svg-->
-                                            <!--<span class="svg-icon svg-icon-dark svg-icon-1">
-                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M4.5,6 L19.5,6 C20.8807119,6 22,6.97004971 22,8.16666667 L22,16.8333333 C22,18.0299503 20.8807119,19 19.5,19 L4.5,19 C3.11928813,19 2,18.0299503 2,16.8333333 L2,8.16666667 C2,6.97004971 3.11928813,6 4.5,6 Z M4,8 L4,17 L20,17 L20,8 L4,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
-                                                    <polygon id="Combined-Shape" fill="#000000" opacity="0.3" points="4 8 4 17 20 17 20 8"></polygon>
-                                                    <rect id="Rectangle" fill="#000000" opacity="0.3" x="7" y="20" width="10" height="1" rx="0.5"></rect>
+                                        <!--begin::Svg Icon | path: icons/stockholm/Layout/Layout-4-blocks.svg-->
+                                        <!--<span class="svg-icon svg-icon-dark svg-icon-1">
+                                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M4.5,6 L19.5,6 C20.8807119,6 22,6.97004971 22,8.16666667 L22,16.8333333 C22,18.0299503 20.8807119,19 19.5,19 L4.5,19 C3.11928813,19 2,18.0299503 2,16.8333333 L2,8.16666667 C2,6.97004971 3.11928813,6 4.5,6 Z M4,8 L4,17 L20,17 L20,8 L4,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+                                                <polygon id="Combined-Shape" fill="#000000" opacity="0.3" points="4 8 4 17 20 17 20 8"></polygon>
+                                                <rect id="Rectangle" fill="#000000" opacity="0.3" x="7" y="20" width="10" height="1" rx="0.5"></rect>
 
-                                                </svg>
-                                            </span>-->
-                                            <!--end::Svg Icon-->
+                                            </svg>
+                                        </span>-->
+                                        <!--end::Svg Icon-->
                                         <!--</a>-->
                                         <!--begin::Quick links-->
                                         <div class="d-flex align-items-center ms-1 ms-lg-3">
@@ -2554,6 +2565,8 @@ Rectangle&gt;" class="cls-1" width="32" height="32" />
     <script src="~/FrontEndLogic/Main/user-profile.js"></script>
 
     @RenderSection("scripts", required: false)
+    @RenderSection("calendarJS", required: false)
+
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->
 </body>

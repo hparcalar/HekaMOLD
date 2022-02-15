@@ -12,6 +12,8 @@ namespace Heka.DataAccess.Context.Models
             this.ItemOrderByExits = new HashSet<ItemOrder>();
             this.ItemLoadByEntries = new HashSet<ItemLoad>();
             this.ItemLoadByExits = new HashSet<ItemLoad>();
+            this.VoyageByLoadCustoms = new HashSet<Voyage>();
+            this.VoyageByDischargeCustoms = new HashSet<Voyage>();
         }
         public int Id { get; set; }
         public string CustomsCode { get; set; }
@@ -39,6 +41,12 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("CustomsExit")]
         public virtual ICollection<ItemLoad> ItemLoadByExits { get; set; }
+
+        [InverseProperty("LoadCustoms")]
+        public virtual ICollection<Voyage> VoyageByLoadCustoms { get; set; }
+
+        [InverseProperty("DischargeCustoms")]
+        public virtual ICollection<Voyage> VoyageByDischargeCustoms { get; set; }
 
 
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Heka.DataAccess.Context.Models
@@ -7,7 +8,7 @@ namespace Heka.DataAccess.Context.Models
     {
         public Driver()
         {
-
+            this.Voyage = new HashSet<Voyage>();
         }
         public int Id { get; set; }
         public string DriverName { get; set; }
@@ -29,6 +30,7 @@ namespace Heka.DataAccess.Context.Models
 
         public virtual Country Country { get; set; }
 
-
+        [InverseProperty("Driver")]
+        public virtual ICollection<Voyage> Voyage { get; set; }
     }
 }

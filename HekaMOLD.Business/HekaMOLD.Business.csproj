@@ -225,6 +225,7 @@
     <Compile Include="Models\DataTransfer\Receipt\ItemReceiptModel.cs" />
     <Compile Include="Models\DataTransfer\Receipt\ItemSerialModel.cs" />
     <Compile Include="Models\DataTransfer\Reporting\DeliverySerialListModel.cs" />
+    <Compile Include="Models\DataTransfer\Reporting\LoadCmrModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestApproveLogModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Request\ItemRequestDetailModel.cs" />

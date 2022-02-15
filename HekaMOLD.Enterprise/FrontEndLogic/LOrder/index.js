@@ -127,7 +127,14 @@
 
         $('#dial-firm').dialog("close");
     }
-    
+    $scope.printTemplate = function () {
+        $http.post(HOST_URL + 'Load/TestPrintDelivery', { loadId: $scope.modelObject.Id }, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    window.open(HOST_URL + 'Outputs/' + resp.data.Path);
+                }
+            }).catch(function (err) { });
+    }
     $scope.getNextRecord = function () {
             var prms = new Promise(function (resolve, reject) {
                 $http.get(HOST_URL + 'LOrder/GetNextRecord?Id=' + $scope.modelObject.Id, {},'json')

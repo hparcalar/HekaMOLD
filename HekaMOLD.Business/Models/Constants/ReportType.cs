@@ -13,5 +13,6 @@ namespace HekaMOLD.Business.Models.Constants
         WorkOrder=3,
         WorkOrderDetail=4,
         WorkOrderSerial=5,
+        Cmr=6
     }
 }

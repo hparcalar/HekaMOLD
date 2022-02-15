@@ -11,6 +11,8 @@ namespace Heka.DataAccess.Context.Models
             this.VehicleInsurance = new HashSet<VehicleInsurance>();
             this.VehicleCare = new HashSet<VehicleCare>();
             this.VehicleTire = new HashSet<VehicleTire>();
+            this.VoyageByTowinfVehicle = new HashSet<Voyage>();
+            this.VoyageByTraillerVehicle = new HashSet<Voyage>();
 
         }
         public int Id { get; set; }
@@ -68,6 +70,12 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("Vehicle")]
         public virtual ICollection<VehicleTire> VehicleTire { get; set; }
+
+        [InverseProperty("TowinfVehicle")]
+        public virtual ICollection<Voyage> VoyageByTowinfVehicle { get; set; }
+
+        [InverseProperty("TraillerVehicle")]
+        public virtual ICollection<Voyage> VoyageByTraillerVehicle { get; set; }
 
     }
 }

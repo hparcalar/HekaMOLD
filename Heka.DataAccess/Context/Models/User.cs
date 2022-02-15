@@ -29,6 +29,7 @@ namespace Heka.DataAccess.Context
             this.ItemLoad = new HashSet<ItemLoad>();
             this.ItemOrder = new HashSet<ItemOrder>();
             this.ItemLoadByAuthor = new HashSet<ItemLoad>();
+            this.Voyage = new HashSet<Voyage>();
 
         }
 
@@ -81,5 +82,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("User")]
         public virtual ICollection<ItemOrder> ItemOrder { get; set; }
+
+        [InverseProperty("User")]
+        public virtual ICollection<Voyage> Voyage { get; set; }
     }
 }
