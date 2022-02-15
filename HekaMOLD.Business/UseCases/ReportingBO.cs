@@ -312,6 +312,68 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        public ItemStateModel[] GetItemStatesOnlyEntries(int[] warehouseList, BasicRangeFilter filter)
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(filter.StartDate))
+                    filter.StartDate = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(filter.EndDate))
+                    filter.EndDate = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var movements = repo.Filter(d => warehouseList.Contains(d.ItemReceipt.InWarehouseId ?? 0)
+                    && d.ItemReceipt.ReceiptType < 100
+                    && d.ItemReceipt.ReceiptDate >= dtStart && d.ItemReceipt.ReceiptDate <= dtEnd
+                    );
+                data = movements.GroupBy(d => new { d.Item, d.ItemReceipt.Warehouse })
+                    .Select(d => new ItemStateModel
+                    {
+                        ItemId = d.Key.Item.Id,
+                        ItemNo = d.Key.Item.ItemNo,
+                        ItemName = d.Key.Item.ItemName,
+                        WarehouseId = d.Key.Warehouse.Id,
+                        WarehouseCode = d.Key.Warehouse.WarehouseCode,
+                        WarehouseName = d.Key.Warehouse.WarehouseName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
+                        InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100
+                            && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd
+                            ).Sum(m => m.Quantity) ?? 0,
+                        OutQty = d.Where(m => m.ItemReceipt.ReceiptType > 100
+                            && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd).Sum(m => m.Quantity) ?? 0,
+                        TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100
+                            && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd).Sum(m => m.Quantity) ?? 0)
+                            - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
+                    })
+                    .OrderBy(d => d.ItemGroupId)
+                    .ToArray();
+
+                data = data.Where(d => d.InQty - d.OutQty > 0).ToArray();
+
+                foreach (var item in data)
+                {
+                    item.TotalQty = item.InQty - item.OutQty;
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         public ProductionHistoryModel[] GetProductionHistory(BasicRangeFilter filter)
         {
             ProductionHistoryModel[] data = new ProductionHistoryModel[0];

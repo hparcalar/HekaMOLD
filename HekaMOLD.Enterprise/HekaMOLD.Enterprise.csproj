@@ -3947,6 +3947,7 @@
     <Content Include="Components\Controllers\machine-postures.js" />
     <Content Include="Components\Controllers\maintenance-plan.js" />
     <Content Include="Components\Controllers\open-so-list.js" />
+    <Content Include="Components\Controllers\plan-serials.js" />
     <Content Include="Components\Controllers\planning-work-copy.js" />
     <Content Include="Components\Controllers\posture-category-selection.js" />
     <Content Include="Components\Controllers\incident-category-selection.js" />

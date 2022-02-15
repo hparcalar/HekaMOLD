@@ -586,6 +586,68 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                var dbObj = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbObj != null)
+                {
+                    data.Id = workOrderDetailId;
+                    data.WorkOrderNo = dbObj.WorkOrder.WorkOrderNo;
+                    data.FirmCode = dbObj.WorkOrder.Firm != null ? dbObj.WorkOrder.Firm.FirmCode : "";
+                    data.FirmName = dbObj.WorkOrder.Firm != null ? dbObj.WorkOrder.Firm.FirmName : dbObj.WorkOrder.TrialFirmName;
+                    data.ItemOrderDocumentNo = dbObj.ItemOrderDetail != null ? dbObj.ItemOrderDetail.ItemOrder.DocumentNo : "";
+                    data.ProductCode = dbObj.Item != null ? dbObj.Item.ItemNo : "";
+                    data.Explanation = dbObj.WorkOrder.Explanation;
+                    data.ProductName = dbObj.Item != null ? dbObj.Item.ItemName : dbObj.TrialProductName;
+                    data.Quantity = dbObj.Quantity;
+                    data.CompleteQuantity = Convert.ToInt32(dbObj.MachineSignal.Any() ?
+                        dbObj.MachineSignal.Where(m => m.SignalStatus == 1).Count() :
+                        dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0);
+                    data.MoldCode = dbObj.Mold != null ? dbObj.Mold.MoldCode : "";
+                    data.MoldName = dbObj.Mold != null ? dbObj.Mold.MoldName : "";
+                    data.WastageQuantity = dbObj.ProductWastage.Sum(d => d.Quantity) ?? 0;
+                    data.OrderDeadline = dbObj.ItemOrderDetail != null &&
+                            dbObj.ItemOrderDetail.ItemOrder.DateOfNeed != null ?
+                                string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrderDetail.ItemOrder.DateOfNeed) : "";
+                    data.LabelConfig = dbObj.LabelConfig;
+                    data.Serials = repoSerial.Filter(d => d.WorkOrderDetailId == workOrderDetailId
+                            && d.SerialNo != null && d.SerialNo.Length > 0)
+                            .OrderByDescending(d => d.Id)
+                            .ToList()
+                            .Select(d => new WorkOrderSerialModel
+                            {
+                                Id = d.Id,
+                                SerialNo = d.SerialNo,
+                                ItemName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
+                                CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate),
+                                FirstQuantity = d.FirstQuantity,
+                                LiveQuantity = d.LiveQuantity,
+                                InPackageQuantity = d.InPackageQuantity,
+                            }).ToArray();
+
+                    if (!string.IsNullOrEmpty(data.LabelConfig))
+                    {
+                        data.LabelConfigData = JsonConvert.DeserializeObject<LabelConfigModel>(data.LabelConfig);
+                    }
+                    else
+                        data.LabelConfigData = new LabelConfigModel { ShowFirm = true };
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public WorkOrderDetailModel GetWorkOrderDetailWithSerials(int workOrderDetailId)
+        {
+            WorkOrderDetailModel data = new WorkOrderDetailModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
                 var dbObj = repo.Get(d => d.Id == workOrderDetailId);
                 if (dbObj != null)
                 {

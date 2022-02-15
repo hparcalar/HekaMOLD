@@ -705,6 +705,66 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        public MachinePlanModel GetActiveWorkOrderOnMachineSimple(int machineId)
+        {
+            MachinePlanModel model = new MachinePlanModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachinePlan>();
+                var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var repoWastages = _unitOfWork.GetRepository<ProductWastage>();
+
+                var dbObj = repo.Filter(d => d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
+                    && d.MachineId == machineId)
+                    .OrderBy(d => d.OrderNo).FirstOrDefault();
+                if (dbObj != null)
+                {
+                    model = new MachinePlanModel
+                    {
+                        Id = dbObj.Id,
+                        MachineId = dbObj.MachineId,
+                        OrderNo = dbObj.OrderNo,
+                        WorkOrderDetailId = dbObj.WorkOrderDetailId,
+                        WorkOrder = new WorkOrderDetailModel
+                        {
+                            Id = dbObj.WorkOrderDetail.Id,
+                            ProductCode = dbObj.WorkOrderDetail.Item != null ? dbObj.WorkOrderDetail.Item.ItemNo : "",
+                            ProductName = dbObj.WorkOrderDetail.Item != null ? dbObj.WorkOrderDetail.Item.ItemName : dbObj.WorkOrderDetail.TrialProductName,
+                            WorkOrderId = dbObj.WorkOrderDetail.WorkOrderId,
+                            ItemId = dbObj.WorkOrderDetail.ItemId,
+                            MoldId = dbObj.WorkOrderDetail.MoldId,
+                            MoldCode = dbObj.WorkOrderDetail.Mold != null ? dbObj.WorkOrderDetail.Mold.MoldCode : "",
+                            MoldName = dbObj.WorkOrderDetail.Mold != null ? dbObj.WorkOrderDetail.Mold.MoldName : "",
+                            CreatedDate = dbObj.WorkOrderDetail.CreatedDate,
+                            Quantity = dbObj.WorkOrderDetail.Quantity,
+                            WorkOrderNo = dbObj.WorkOrderDetail.WorkOrder.WorkOrderNo,
+                            InPackageQuantity = dbObj.WorkOrderDetail.InPackageQuantity,
+                            InPalletPackageQuantity = dbObj.WorkOrderDetail.InPalletPackageQuantity,
+                            WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.WorkOrderDetail.WorkOrder.WorkOrderDate),
+                            FirmCode = dbObj.WorkOrderDetail.WorkOrder.Firm != null ?
+                            dbObj.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                            FirmName = dbObj.WorkOrderDetail.WorkOrder.Firm != null ?
+                            dbObj.WorkOrderDetail.WorkOrder.Firm.FirmName : dbObj.WorkOrderDetail.WorkOrder.TrialFirmName,
+                            WorkOrderStatus = dbObj.WorkOrderDetail.WorkOrderStatus,
+                            WorkOrderStatusStr = ((WorkOrderStatusType)dbObj.WorkOrderDetail.WorkOrderStatus).ToCaption(),
+                            CompleteQuantity = dbObj.WorkOrderDetail.MachineSignal.Any() ?
+                                dbObj.WorkOrderDetail.MachineSignal.Where(m => m.SignalStatus == 1).Count() :
+                                Convert.ToInt32(dbObj.WorkOrderDetail.WorkOrderSerial.Sum(m => m.FirstQuantity) ?? 0),
+                            CompleteQuantitySingleProduct = dbObj.WorkOrderDetail.WorkOrderSerial.Count(),
+                            MoldTestCycle = dbObj.WorkOrderDetail.MoldTest != null ?
+                                dbObj.WorkOrderDetail.MoldTest.TotalTimeSeconds ?? 0 : 0,
+                        },
+                    };
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return model;
+        }
         public MachinePlanModel GetHistoryWorkOrderOnMachine(int workOrderDetailId)
         {
             MachinePlanModel model = new MachinePlanModel();

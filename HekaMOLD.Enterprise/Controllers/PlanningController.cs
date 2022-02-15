@@ -68,6 +68,22 @@ namespace HekaMOLD.Enterprise.Controllers
 
         [HttpGet]
         [FreeAction]
+        public JsonResult GetSerialsOfPlan(int? planId)
+        {
+            WorkOrderDetailModel result = new WorkOrderDetailModel();
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.GetWorkOrderDetailWithSerials(planId ?? 0);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
         public JsonResult GetProductionPlanViews(string date)
         {
             DateTime dtDate = DateTime.ParseExact(date, "dd.MM.yyyy", 

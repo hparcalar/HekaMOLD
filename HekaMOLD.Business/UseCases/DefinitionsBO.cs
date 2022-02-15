@@ -1426,7 +1426,7 @@ namespace HekaMOLD.Business.UseCases
                     }
                 }
 
-                containerObj.ActivePlan = prodBO.GetActiveWorkOrderOnMachine(d.Id);
+                containerObj.ActivePlan = prodBO.GetActiveWorkOrderOnMachineSimple(d.Id);
 
                 var signalData = repoSignal.Filter(m => m.MachineId == d.Id &&
                     dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
@@ -1496,7 +1496,8 @@ namespace HekaMOLD.Business.UseCases
                         {
                             try
                             {
-                                var completeCount = workDetail.MachineSignal.Where(m => m.ShiftBelongsToDate < dt1).Count();
+                                var completeCount = repoSignal.Filter(m => m.WorkOrderDetailId == workDetail.Id 
+                                    && m.ShiftBelongsToDate < dt1).Count();
                                 var remainingCount = workDetail.Quantity - completeCount;
 
                                 if (workDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
@@ -1539,7 +1540,7 @@ namespace HekaMOLD.Business.UseCases
                                     remainingShiftTime -= cycleTime * producableCount;
                                 }
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
 
                             }

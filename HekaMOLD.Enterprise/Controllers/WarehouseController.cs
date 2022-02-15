@@ -187,7 +187,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 using (ReportingBO bObj = new ReportingBO())
                 {
-                    data = bObj.GetItemStates(new int[] { pWrId }, new Business.Models.Filters.BasicRangeFilter { 
+                    data = bObj.GetItemStatesOnlyEntries(new int[] { pWrId }, new Business.Models.Filters.BasicRangeFilter { 
                         StartDate = dt1,
                         EndDate = dt2,
                     });
