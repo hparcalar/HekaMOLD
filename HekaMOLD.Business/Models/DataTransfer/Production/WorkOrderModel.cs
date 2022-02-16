@@ -23,12 +23,20 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public WorkOrderDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS
+        public string ItemOrderDocumentNo { get; set; }
         public string WorkOrderStatusStr { get; set; }
         public string WorkOrderDateStr { get; set; }
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
         public string WorkOrderCategoryCode { get; set; }
         public string WorkOrderCategoryName { get; set; }
+        public string ProductName { get; set; }
+        public decimal? Quantity { get; set; }
+        public int? CompleteQuantity { get; set; }
+        public decimal? WastageQuantity { get; set; }
+        public int? MachineId { get; set; }
+        public int? ItemOrderId { get; set; }
+        public int? OrderNo { get; set; }
         #endregion
     }
 }

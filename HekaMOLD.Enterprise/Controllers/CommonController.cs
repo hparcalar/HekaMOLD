@@ -329,13 +329,46 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult GetMachineQueue(int machineId)
         {
             MachinePlanModel[] data = new MachinePlanModel[0];
+            WorkOrderModel[] dataModel = new WorkOrderModel[0];
 
             using (PlanningBO bObj = new PlanningBO())
             {
                 data = bObj.GetMachineQueue(machineId);
             }
 
-            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            if (data != null && data.Length > 0)
+            {
+                dataModel = data.GroupBy(d => new
+                {
+                    //WorkOrderId = d.WorkOrder.Id,
+                    ItemOrderId = d.WorkOrder.ItemOrderId,
+                    MachineId = d.MachineId,
+                }).Select(d => new WorkOrderModel
+                {
+                    Id = d.First().WorkOrder.WorkOrderId ?? 0,
+                    OrderNo = d.First().OrderNo ?? 0,
+                    WorkOrderStatus = d.First().WorkOrder.WorkOrderStatus,
+                    WorkOrderDateStr = d.First().WorkOrder.WorkOrderDateStr,
+                    ItemOrderId = d.Key.ItemOrderId ?? 0,
+                    FirmName = d.First().WorkOrder.FirmName,
+                    ItemOrderDocumentNo = d.First().WorkOrder.ItemOrderDocumentNo,
+                    ProductName = d.First().WorkOrder.ProductName,
+                    Quantity = d.First().WorkOrder.Quantity ?? 0,
+                    CompleteQuantity = d.First().WorkOrder.CompleteQuantity,
+                    WastageQuantity = d.First().WorkOrder.WastageQuantity ?? 0,
+                    Explanation = d.First().WorkOrder.Explanation,
+                    WorkOrderType = d.First().WorkOrder.WorkOrderType,
+                    MachineId = d.Key.MachineId ?? 0,
+                    Details = d.Select(m => new WorkOrderDetailModel
+                    {
+                        Id = m.WorkOrderDetailId ?? 0,
+                    }).ToArray(),
+                })
+                .OrderBy(d => d.OrderNo)
+                .ToArray();
+            }
+
+            var jsonResult = Json(dataModel, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

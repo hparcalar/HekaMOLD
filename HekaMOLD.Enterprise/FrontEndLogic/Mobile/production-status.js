@@ -26,7 +26,7 @@
                     size: 'xl',
                     centerVertical: true,
                     
-                    title: $scope.selectedWorkOrder.WorkOrder.ProductName + ' / Ürün Bilgileri',
+                    title: $scope.selectedWorkOrder.ProductName + ' / Ürün Bilgileri',
                     message: '<iframe class="w-100 h-300px" src="' + HOST_URL + 'Mobile/ProductInformation?rid=' + $scope.selectedWorkOrder.WorkOrder.Id
                         + '&popup=1"></iframe>',
                     callback: function (result) {
@@ -62,12 +62,13 @@
                     if (result) {
                         $scope.saveStatus = 1;
 
-                        var sameOrderDetails = $scope.machineQueue.filter(d => d.WorkOrder.ItemOrderId == $scope.selectedWorkOrder.WorkOrder.ItemOrderId);
+                        var sameOrderDetails = $scope.selectedWorkOrder.Details;
+                            //$scope.machineQueue.filter(d => d.WorkOrder.ItemOrderId == $scope.selectedWorkOrder.WorkOrder.ItemOrderId);
                         for (var i = 0; i < sameOrderDetails.length; i++) {
                             var detailObj = sameOrderDetails[i];
 
                             $http.post(HOST_URL + 'Mobile/HoldWorkOrder',
-                                { workOrderDetailId: detailObj.WorkOrder.Id }, 'json')
+                                { workOrderDetailId: detailObj.Id }, 'json')
                                 .then(function (resp) {
                                     if (typeof resp.data != 'undefined' && resp.data != null) {
                                         $scope.saveStatus = 0;
@@ -94,7 +95,7 @@
     $scope.toggleWorkOrderStatus = function () {
         try {
             bootbox.confirm({
-                message: "Bu iş emrini " + ($scope.selectedWorkOrder.WorkOrder.WorkOrderStatus == 3 ? 'bitirmek' : 'başlatmak')
+                message: "Bu iş emrini " + ($scope.selectedWorkOrder.WorkOrderStatus == 3 ? 'bitirmek' : 'başlatmak')
                     + " istediğinize emin misiniz?",
                 closeButton: false,
                 buttons: {
@@ -111,12 +112,13 @@
                     if (result) {
                         $scope.saveStatus = 1;
 
-                        var sameOrderDetails = $scope.machineQueue.filter(d => d.WorkOrder.ItemOrderId == $scope.selectedWorkOrder.WorkOrder.ItemOrderId);
+                        var sameOrderDetails = $scope.selectedWorkOrder.Details;
+                            //$scope.machineQueue.filter(d => d.WorkOrder.ItemOrderId == $scope.selectedWorkOrder.WorkOrder.ItemOrderId);
                         for (var i = 0; i < sameOrderDetails.length; i++) {
                             var detailObj = sameOrderDetails[i];
 
                             $http.post(HOST_URL + 'Mobile/ToggleWorkOrderStatus',
-                                { workOrderDetailId: detailObj.WorkOrder.Id }, 'json')
+                                { workOrderDetailId: detailObj.Id }, 'json')
                                 .then(function (resp) {
                                     if (typeof resp.data != 'undefined' && resp.data != null) {
                                         $scope.saveStatus = 0;
@@ -165,7 +167,7 @@
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.activeWorkOrder = resp.data;
                         if ($scope.lastPackageQty > 0)
-                            $scope.activeWorkOrder.WorkOrder.InPackageQuantity = $scope.lastPackageQty;
+                            $scope.activeWorkOrder.InPackageQuantity = $scope.lastPackageQty;
                         $scope.selectedWorkOrder = $scope.activeWorkOrder;
                     }
                 }).catch(function (err) { });

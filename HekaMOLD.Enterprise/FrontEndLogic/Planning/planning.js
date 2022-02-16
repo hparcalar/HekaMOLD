@@ -16,8 +16,8 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
     $scope.getMachinePlans = function (machine, isActive = true) {
         return $scope.boardPlanList.filter(d => d.MachineId == machine.Id
-            && ((isActive == true && d.WorkOrder.WorkOrderStatus != 6 && d.WorkOrder.WorkOrderStatus != 4)
-                || (isActive == false && (d.WorkOrder.WorkOrderStatus == 6 || d.WorkOrder.WorkOrderStatus == 4))));
+            && ((isActive == true && d.WorkOrderStatus != 6 && d.WorkOrderStatus != 4)
+                || (isActive == false && (d.WorkOrderStatus == 6 || d.WorkOrderStatus == 4))));
     }
 
     $scope.toggleWaitingPlans = function () {
@@ -126,7 +126,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
             var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
             if (planObj != null) {
-                if (planObj.WorkOrder.WorkOrderStatus > 3) {
+                if (planObj.WorkOrderStatus > 3) {
                     toastr.error('Tamamlanmış bir planı değiştiremezsiniz.', 'Uyarı');
                     return false;
                 }
@@ -146,7 +146,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 return false;
             else {
                 var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
-                if (planObj.WorkOrder.WorkOrderStatus > 3) {
+                if (planObj.WorkOrderStatus > 3) {
                     toastr.error('Tamamlanmış bir planın önüne üretim alamazsınız.', 'Uyarı');
                     return false;
                 }
@@ -331,7 +331,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
                         if (typeof machineId != 'undefined') {
                             var planObj = $scope.waitingPlanList.find(d => d.Id == parseInt(planId));
-                            var sameOrderDetails = $scope.waitingPlanList.filter(d => d.ItemOrderId == planObj.ItemOrderId);
+                            var sameOrderDetails = planObj.Details; //$scope.waitingPlanList.filter(d => d.ItemOrderId == planObj.ItemOrderId);
                             for (var i = 0; i < sameOrderDetails.length; i++) {
                                 var detailObj = sameOrderDetails[i];
                                 if (detailObj != null) {
@@ -481,13 +481,13 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     },
                     callback: function (result) {
                         if (result) {
-                            var sameOrderDetails = $scope.boardPlanList
-                                .filter(d => d.WorkOrder.ItemOrderId == $scope.selectedPlan.WorkOrder.ItemOrderId);
+                            var sameOrderDetails = $scope.selectedPlan.Details; // $scope.boardPlanList
+                                //.filter(d => d.ItemOrderId == $scope.selectedPlan.ItemOrderId);
                             
-                            if (sameOrderDetails.some(d => d.WorkOrder.WorkOrderStatus == 3)) {
-                                toastr.error('Bu sipariş için başlatılan bir iş emri bulunmakta olduğundan silemezsiniz.');
-                                return;
-                            }
+                            //if (sameOrderDetails.some(d => d.WorkOrderStatus == 3)) {
+                            //    toastr.error('Bu sipariş için başlatılan bir iş emri bulunmakta olduğundan silemezsiniz.');
+                            //    return;
+                            //}
 
                             for (var i = 0; i < sameOrderDetails.length; i++) {
                                 var planObj = sameOrderDetails[i];
