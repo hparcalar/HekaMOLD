@@ -1,7 +1,9 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,11 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         public ActionResult List()
+        {
+            return View();
+        }
+
+        public ActionResult ManageItems()
         {
             return View();
         }
@@ -167,6 +174,56 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
             jsonResponse.MaxJsonLength = int.MaxValue;
             return jsonResponse;
+        }
+
+        [HttpGet]
+        public JsonResult GetCurrentSerials(int warehouseId, int itemId)
+        {
+            ItemSerialModel[] data = new ItemSerialModel[0];
+
+            try
+            {
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetCurrentSerials(warehouseId, itemId);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult UpdateItemSerial(int serialId, decimal newQuantity)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.UpdateItemSerialQuantity(serialId, newQuantity);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult DeleteItemSerial(int serialId)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.RemoveItemSerial(serialId);
+            }
+
+            return Json(result);
         }
 
         [HttpGet]

@@ -400,6 +400,12 @@
                         e.cellElement.css("background-color", "#e64040");
                         //e.cellElement.css("color", "white");
                     }
+                    else if (e.data.OrderStatus == 4) {
+                        e.cellElement.css("background-color", "#dbfc03");
+                    }
+                    else if (e.data.OrderStatus == 5) {
+                        e.cellElement.css("background-color", "#4afc03");
+                    }
                 }
             },
             columns: [

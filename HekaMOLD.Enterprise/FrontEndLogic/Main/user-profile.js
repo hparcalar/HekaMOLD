@@ -5,7 +5,7 @@
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         var imageData = resp.data;
-                        if (imageData != null && imageData.length > 0) {
+                        if (imageData != null && imageData.length > 30) {
                             $('#imgProfile1').attr('src', imageData);
                             $('#imgProfile2').attr('src', imageData);
                         }

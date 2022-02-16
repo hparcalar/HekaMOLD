@@ -20,7 +20,7 @@ namespace HekaMOLD.Business.UseCases
         public AuthenticationResult Authenticate(string userCode, string password)
         {
             AuthenticationResult result = new AuthenticationResult();
-
+            
             try
             {
                 var repo = _unitOfWork.GetRepository<User>();
@@ -48,6 +48,9 @@ namespace HekaMOLD.Business.UseCases
                     && d.IsGranted == true);
                 result.UserData.IsWarehouseTerminal = dbUser.UserRole.UserAuth
                     .Any(d => d.UserAuthType.AuthTypeCode == "MobileWarehouseUser"
+                    && d.IsGranted == true);
+                result.UserData.IsBossMode = dbUser.UserRole.UserAuth
+                    .Any(d => d.UserAuthType.AuthTypeCode == "IsBossMode"
                     && d.IsGranted == true);
                 result.UserData.Auths = dbUser.UserRole.UserAuth
                     .Select(d => new UserAuthModel

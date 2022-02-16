@@ -123,6 +123,36 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
+
+        public BusinessResult UpdateSerialQuantity(int serialId, decimal newQuantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var dbObj = repo.Get(d => d.Id == serialId);
+                if (dbObj == null)
+                    throw new Exception("Paket kaydı bulunamadı.");
+
+                var exQuantity = dbObj.FirstQuantity;
+
+                dbObj.FirstQuantity = newQuantity;
+                dbObj.LiveQuantity = newQuantity;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public int? GetMachineByWorkOrderDetail(int workOrderDetailId) 
         {
             int? result = null;
@@ -234,7 +264,7 @@ namespace HekaMOLD.Business.UseCases
                     d.WorkOrderStatus == (int)WorkOrderStatusType.Completed
                     ||
                     d.WorkOrderStatus == (int)WorkOrderStatusType.Cancelled
-                )).OrderByDescending(d => d.CreatedDate).Take(10).ToList().ForEach(d =>
+                )).OrderByDescending(d => d.CreatedDate).Take(20).ToList().ForEach(d =>
             {
                 WorkOrderDetailModel containerObj = new WorkOrderDetailModel();
                 d.MapTo(containerObj);

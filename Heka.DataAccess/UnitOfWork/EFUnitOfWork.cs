@@ -54,6 +54,21 @@ namespace Heka.DataAccess.UnitOfWork
                 throw;
             }
         }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            try
+            {
+                // Transaction işlemleri burada ele alınabilir veya Identity Map kurumsal tasarım kalıbı kullanılarak
+                // sadece değişen alanları güncellemeyide sağlayabiliriz.
+                return await _dbContext.SaveChangesAsync();
+            }
+            catch
+            {
+                // Burada DbEntityValidationException hatalarını handle edebiliriz.
+                throw;
+            }
+        }
         #endregion
 
         #region IDisposable Members

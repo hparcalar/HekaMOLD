@@ -364,8 +364,11 @@ namespace HekaMOLD.Business.UseCases
                                 }
                             }
                         }
+                    }
 
-                        bObj.CheckReceiptStatus(dbReceipt.Id);
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        bObj.CheckReceiptStatus(dbObj.Id);
                     }
                 }
                 catch (Exception)
@@ -451,6 +454,68 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult UpdateItemSerialQuantity(int serialId, decimal newQuantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemSerial>();
+                var dbObj = repo.Get(d => d.Id == serialId);
+                if (dbObj == null)
+                    throw new Exception("Paket kaydı bulunamadı.");
+
+                var exQuantity = dbObj.FirstQuantity;
+
+                dbObj.FirstQuantity = newQuantity;
+                dbObj.LiveQuantity = newQuantity;
+
+                var receiptDetail = dbObj.ItemReceiptDetail;
+                receiptDetail.Quantity = receiptDetail.ItemSerial.Sum(d => d.FirstQuantity) ?? 0;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult RemoveItemSerial(int serialId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemSerial>();
+                var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var dbObj = repo.Get(d => d.Id == serialId);
+                if (dbObj == null)
+                    throw new Exception("Paket kaydı bulunamadı.");
+
+                var receiptDetail = dbObj.ItemReceiptDetail;
+                receiptDetail.Quantity -= dbObj.FirstQuantity;
+
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public BusinessResult UpdateReceiptDetail(ItemReceiptDetailModel model)
         {
             BusinessResult result = new BusinessResult();

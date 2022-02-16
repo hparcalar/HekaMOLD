@@ -149,12 +149,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
+    <Compile Include="Controllers\BossController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ContractWorksController.cs" />
     <Compile Include="Controllers\CountingController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
+    <Compile Include="Controllers\Filters\BossAuthFilter.cs" />
     <Compile Include="Controllers\LojisticOrderController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
@@ -3965,6 +3967,7 @@
     <Content Include="Components\Controllers\shift-targets.js" />
     <Content Include="Components\Controllers\to-contract.js" />
     <Content Include="Components\Controllers\trial-work-form.js" />
+    <Content Include="Components\Controllers\warehouse-manager.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
     <Content Include="Components\Views\ItemList.html" />
@@ -3989,6 +3992,7 @@
     <Content Include="Components\Views\ShiftTargets.html" />
     <Content Include="Components\Views\ToContract.html" />
     <Content Include="Components\Views\TrialWorkForm.html" />
+    <Content Include="Components\Views\WarehouseManager.html" />
     <Content Include="Components\VisualMechanics\camera-manager.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -4193,6 +4197,7 @@
     <Content Include="FrontEndLogic\Warehouse\finished-product-state.js" />
     <Content Include="FrontEndLogic\Warehouse\finished-products.js" />
     <Content Include="FrontEndLogic\Warehouse\index.js" />
+    <Content Include="FrontEndLogic\Warehouse\manage-items.js" />
     <Content Include="FrontEndLogic\Warehouse\states.js" />
     <Content Include="FrontEndLogic\Warehouse\list.js" />
     <Content Include="FrontEndLogic\WorkOrderCategory\index.js" />
@@ -4669,6 +4674,10 @@
     <Content Include="Views\Counting\List.cshtml" />
     <Content Include="Views\Counting\Index.cshtml" />
     <Content Include="Views\SIOrder\OpenDetails.cshtml" />
+    <Content Include="Views\Warehouse\ManageItems.cshtml" />
+    <Content Include="Views\Shared\_LayoutBoss.cshtml" />
+    <Content Include="Views\Boss\Index.cshtml" />
+    <Content Include="Views\Boss\SettingsBoss.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4717,7 +4726,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56183</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56186/</IISUrl>
+          <IISUrl>http://localhost:56195/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -465,6 +465,7 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<MachinePlan>();
+                var repoPlanHistory = _unitOfWork.GetRepository<MachinePlanViewDetail>();
                 var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
                 var repoWorkOrder = _unitOfWork.GetRepository<WorkOrder>();
                 var repoItemOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
@@ -485,6 +486,12 @@ namespace HekaMOLD.Business.UseCases
 
                     if (!dbWorkOrder.WorkOrderDetail.Any(d => d.Id != dbWorkOrderDetail.Id))
                         repoWorkOrder.Delete(dbWorkOrder);
+
+                    var histories = repoPlanHistory.Filter(d => d.WorkOrderDetailId == dbWorkOrderDetail.Id).ToArray();
+                    foreach (var item in histories)
+                    {
+                        repoPlanHistory.Delete(item);
+                    }
 
                     // UPDATE SALE ORDER STATUS FROM PLANNED TO APPROVED
                     var dbItemOrderDetail = repoItemOrderDetail.Get(d => d.Id == saleOrderDetailId);
@@ -600,6 +607,7 @@ namespace HekaMOLD.Business.UseCases
                     data.Explanation = dbObj.WorkOrder.Explanation;
                     data.ProductName = dbObj.Item != null ? dbObj.Item.ItemName : dbObj.TrialProductName;
                     data.Quantity = dbObj.Quantity;
+                    data.WorkOrderStatus = dbObj.WorkOrderStatus ?? 0;
                     data.CompleteQuantity = Convert.ToInt32(dbObj.MachineSignal.Any() ?
                         dbObj.MachineSignal.Where(m => m.SignalStatus == 1).Count() :
                         dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0);
@@ -906,7 +914,7 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                     throw new Exception("Durumu değiştirilmek istenen iş emri kaydına ulaşılamadı.");
 
-                bool workOrderStarted = false;
+                //bool workOrderStarted = false;
 
                 if (dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Planned 
                     || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Created 
@@ -932,7 +940,7 @@ namespace HekaMOLD.Business.UseCases
 
                     dbObj.WorkOrderStatus = (int)WorkOrderStatusType.InProgress;
 
-                    workOrderStarted = true;
+                    //workOrderStarted = true;
                 }
                 else
                 {
@@ -942,16 +950,27 @@ namespace HekaMOLD.Business.UseCases
                         dbObj.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
                 }
 
+                var saleOrderDetailId = dbObj.SaleOrderDetailId ?? 0;
+
                 _unitOfWork.SaveChanges();
 
-                if (workOrderStarted)
+                // TRG-POINT: UPDATE SALE ORDER DETAIL STATUS
+                if (saleOrderDetailId > 0)
                 {
+                    using (OrdersBO bObj = new OrdersBO())
+                    {
+                        bObj.CheckOrderDetailStatus(saleOrderDetailId).Wait();
+                    }
+                }
+
+                //if (workOrderStarted)
+                //{
                     // CREATE PRODUCT RECIPE CONSUMPTION -- MOVED TO PRODUCT ENTRY TO WAREHOUSE
                     //using (RecipeBO bObj = new RecipeBO())
                     //{
                     //    bObj.CreateRecipeConsumption(workOrderDetailId, warehouseId: null);
                     //}
-                }
+                //}
 
                 // MOVED TO USER LOGIN WITH MACHINE SELECTION
                 //using (ProductionBO bObj = new ProductionBO())

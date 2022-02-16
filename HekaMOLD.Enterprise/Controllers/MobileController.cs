@@ -623,6 +623,20 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        [FreeAction]
+        public JsonResult UpdateWorkOrderSerial(int serialId, decimal newQuantity)
+        {
+            BusinessResult result = null;
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.UpdateSerialQuantity(serialId, newQuantity);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
         public JsonResult DeleteSerials(WorkOrderSerialModel[] model)
         {
             BusinessResult result = null;

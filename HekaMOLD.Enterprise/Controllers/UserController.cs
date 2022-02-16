@@ -100,6 +100,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (UsersBO bObj = new UsersBO())
                 {
+                    model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
                     result = bObj.SaveOrUpdateUser(model);
                 }
 

@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Bitmiş Ürünler";
+    ViewBag.Title = "Stok Yönetimi";
 }
 
-<div ng-controller="finishedProductsCtrl">
+<div ng-controller="manageItemsCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -14,12 +14,26 @@
                 <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
                     @ViewBag.Title
                 </h1>
+
+                <!-- Progress enabled state -->
+                <button type="button" class="btn btn-sm btn-dark mx-2" ng-show="saveStatus==1" data-kt-indicator="on">
+                    <span class="indicator-label">
+                        Submit
+                    </span>
+                    <span class="indicator-progress">
+                        Lütfen bekleyiniz... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
                 <!--end::Title-->
             </div>
             <!--end::Page title-->
             <!--begin::Actions-->
-            <div class="d-flex align-items-center py-1" style="width:400px !important;">
-               
+            <div class="d-flex align-items-center py-1">
+                <!--begin::Wrapper-->
+                <div class="me-4">
+                    
+                </div>
+                <!--end::Wrapper-->
             </div>
             <!--end::Actions-->
         </div>
@@ -31,13 +45,11 @@
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
             <!--begin::Row-->
-            <div class="row gy-5 gx-xl-8">
+            <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
                 <div class="col-xxl-12">
 
-                    <div id="tableContainer" class="dx-viewport h-75">
-                        <div id="dataList"></div>
-                    </div>
+                    <ng-include src="'../Components/Views/WarehouseManager.html'"></ng-include>
 
                 </div>
                 <!--end::Col-->
@@ -48,10 +60,10 @@
     </div>
     <!--end::Post-->
 </div>
-
 @section scripts{
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-    <script src="~/FrontEndLogic/Warehouse/finished-products.js"></script>
+    <script src="~/Components/Controllers/warehouse-manager.js"></script>
+    <script src="~/FrontEndLogic/Warehouse/manage-items.js"></script>
 }

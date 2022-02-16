@@ -969,7 +969,7 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region STATUS VALIDATIONS
-        public BusinessResult CheckOrderDetailStatus(int orderDetailId)
+        public async Task<BusinessResult> CheckOrderDetailStatus(int orderDetailId)
         {
             BusinessResult result = new BusinessResult();
 
@@ -996,7 +996,21 @@ namespace HekaMOLD.Business.UseCases
                 }
                 else if (dbDetail.ItemOrder.OrderType == (int)ItemOrderType.Sale)
                 {
-                    
+                    var relatedWorks = repoWorkDetail.Filter(d => d.SaleOrderDetailId == dbDetail.Id).ToArray();
+                    if (relatedWorks.Count() > 0)
+                    {
+                        if (!relatedWorks.Any(d => d.WorkOrderStatus != (int)WorkOrderStatusType.Completed
+                            && d.WorkOrderStatus != (int)WorkOrderStatusType.Cancelled))
+                            dbDetail.OrderStatus = (int)OrderStatusType.Completed;
+                        else if (!relatedWorks.Any(d => d.WorkOrderStatus != (int)WorkOrderStatusType.Delivered))
+                            dbDetail.OrderStatus = (int)OrderStatusType.Delivered;
+                        else if (relatedWorks.Any(d => d.WorkOrderStatus == (int)WorkOrderStatusType.Created))
+                            dbDetail.OrderStatus = (int)OrderStatusType.Approved;
+                        else
+                            dbDetail.OrderStatus = (int)OrderStatusType.Planned;
+                    }
+                    else
+                        dbDetail.OrderStatus = (int)OrderStatusType.Approved;
                 }
 
                 // UPDATE ITEM ORDER HEADER TO ITS NEW STATUS
@@ -1015,7 +1029,7 @@ namespace HekaMOLD.Business.UseCases
                     }
                 }
 
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.SaveChangesAsync();
 
                 result.Result = false;
             }

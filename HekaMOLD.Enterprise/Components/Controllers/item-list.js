@@ -2,6 +2,7 @@
     DevExpress.localization.locale('tr');
 
     $scope.itemList = [];
+    $scope.multipleSelection = true;
 
     $scope.loadItemList = function () {
         $scope.itemList = [];
@@ -23,6 +24,13 @@
                     var obj = $scope.itemList.responseJSON.find(d => d.Id == key);
                     if (obj != null) {
                         obj.IsChecked = values.IsChecked;
+
+                        if ($scope.multipleSelection == false && obj.IsChecked == true) {
+                            $scope.itemList.responseJSON.forEach(d => {
+                                if (d.Id != obj.Id)
+                                    d.IsChecked = false;
+                            })
+                        }
                     }
                 },
                 key: 'Id'
@@ -78,6 +86,10 @@
 
     // ON LOAD EVENTS
     $scope.$on('loadItemList', function (e, d) {
+        if (typeof d != 'undefined' && d != null) {
+            $scope.multipleSelection = d.multipleSelection;
+        }
+
         $scope.loadItemList();
     });
 });

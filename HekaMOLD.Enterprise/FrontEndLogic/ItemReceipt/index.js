@@ -1,6 +1,6 @@
 ﻿app.controller('receiptCtrl', function ($scope, $http) {
     $scope.modelObject = {
-        Id: 0, ReceiptDate: moment().format('DD.MM.YYYY'),
+        Id: 0, ReceiptDateStr: moment().format('DD.MM.YYYY'),
         Details: [], ReceiptStatus: 0, ReceiptType:0
     };
 
@@ -48,7 +48,7 @@
 
     $scope.openNewRecord = function () {
         $scope.modelObject = {
-            Id: 0, ReceiptDate: moment().format('DD.MM.YYYY'),
+            Id: 0, ReceiptDateStr: moment().format('DD.MM.YYYY'),
             Details: [], ReceiptStatus: 0, ReceiptType:0
         };
 
@@ -163,7 +163,7 @@
 
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
-            dropDownOptions: { width: 600 },
+            dropDownOptions: { width: 800 },
             dataSource: $scope.itemList,
             value: cellInfo.value,
             valueExpr: "Id",
@@ -181,6 +181,8 @@
                     ],
                     hoverStateEnabled: true,
                     keyExpr: "Id",
+                    allowColumnResizing: true,
+                    wordWrapEnabled: true,
                     scrolling: { mode: "virtual" },
                     height: 250,
                     filterRow: { visible: true },

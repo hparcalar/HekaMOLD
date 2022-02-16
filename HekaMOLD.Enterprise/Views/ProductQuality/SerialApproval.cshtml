@@ -15,7 +15,7 @@
                             <h1 class="d-flex align-items-center text-dark fw-bolder mt-3 fs-3">
                                 @ViewBag.Title
                             </h1>
-                            <label class="mt-2"><b>Seçilen <u>Koli:</u> {{ selectedProducts.length }} / <u>Adet:</u> {{ getListSum(selectedProducts, 'FirstQuantity') }}</b></label>
+                            <label class="mt-2"><b>Seçilen <u>Koli:</u> <span ng-bind="selectedProducts.length"></span> / <u>Adet:</u> <span ng-bind="getListSum(selectedProducts, 'FirstQuantity')"></span></b></label>
                             <!--end::Title-->
                         </div>
                         <div class="col-sm-4 col-xxl-4 col-xs-4">
@@ -158,8 +158,8 @@
                     <h5 class="hk-title-mobile">Koli Listesi</h5>
                     <div class="d-flex flex-row justify-content-end">
                         <button type="button" class="btn btn-primary mx-1" ng-cloak
-                                ng-click="selectAll(item)">
-                            {{ selectedProducts.length == filteredPickupList.length && selectedProducts.length > 0 ? 'Seçimi Kaldır' : 'Tümünü Seç' }}
+                                ng-click="selectAll(item)" 
+                                ng-bind="selectedProducts.length == filteredPickupList.length && selectedProducts.length > 0 ? 'Seçimi Kaldır' : 'Tümünü Seç'">
                         </button>
                     </div>
                     <table class="table table-bordered table-hk-md-lh">
@@ -184,13 +184,13 @@
                                 <tr ng-repeat="item in filteredPickupList"
                                     ng-show="modelObject.ShowOnlyWaitings == false || modelObject.ShowOnlyWaitings == true && (item.QualityStatus == 0 || item.QualityStatus == 3)"
                                     ng-class="{'bg-warning': isSelectedProduct(item)}">
-                                    <td class="w-10 px-2">{{item.ShiftBelongsToDateStr}}</td>
-                                    <td class="w-10 px-2">{{item.MachineCode}}</td>
+                                    <td class="w-10 px-2" ng-bind="item.ShiftBelongsToDateStr"></td>
+                                    <td class="w-10 px-2" ng-bind="item.MachineCode"></td>
                                     @*<td class="w-10 px-2">{{item.SerialNo}}</td>*@
                                     @*<td class="w-10 px-2">{{item.ItemNo}}</td>*@
-                                    <td class="w-25 px-2">{{item.ItemName}}</td>
-                                    <td class="w-15 px-2">{{item.FirmName}}</td>
-                                    <td class="w-10 px-1">{{item.ShiftCode}}</td>
+                                    <td class="w-25 px-2" ng-bind="item.ItemName"></td>
+                                    <td class="w-15 px-2" ng-bind="item.FirmName"></td>
+                                    <td class="w-10 px-1" ng-bind="item.ShiftCode"></td>
                                     <td class="w-15 px-2"
                                         ng-class="{
                                         'bg-success': item.QualityStatus == 1,
@@ -202,20 +202,23 @@
                                            ng-click="showQualityText(item)"></a>
                                     </td>
                                     <td class="w-15 px-2">
-                                        <input type="number"
+                                        <button type="button" ng-click="changePackageQuantity(item)"
+                                                class="btn btn-sm btn-primary w-100 fw-bolder text-center" ng-bind="item.FirstQuantity">
+                                        </button>
+                                        @*<input type="number"
                                                class="form-control form-control-sm"
-                                               ng-model="item.FirstQuantity" />
+                                               ng-model="item.FirstQuantity" />*@
                                     </td>
                                     <td class="w-15 px-2">
                                         <div class="d-flex flex-row">
                                             <button type="button" ng-click="selectProduct(item)"
-                                                    class="btn btn-sm btn-primary flex-grow-1">
-                                                {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}
+                                                    class="btn btn-sm btn-primary flex-grow-1"
+                                                    ng-bind="isSelectedProduct(item) ? 'Kaldır' : 'Seç'">
                                             </button>
 
                                             <button type="button" ng-click="selectParty(item)"
-                                                    class="btn btn-sm btn-primary flex-grow-1 mx-2">
-                                                {{ isSelectedProduct(item) ? 'Partiyi Kaldır' : 'Partiyi Seç' }}
+                                                    class="btn btn-sm btn-primary flex-grow-1 mx-2"
+                                                    ng-bind="isSelectedProduct(item) ? 'Partiyi Kaldır' : 'Partiyi Seç'">
                                             </button>
                                         </div>
                                     </td>
@@ -227,8 +230,8 @@
                         <tfoot>
                             <tr class="bg-primary text-white">
                                 <th class="w-50 px-2 py-1"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ filteredPickupList.length }} KOLİ</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredPickupList, 'FirstQuantity') }} ADET</b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="filteredPickupList.length + ' KOLİ'"></b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getListSum(filteredPickupList, 'FirstQuantity') + ' ADET'"></b></th>
                                 <th class="w-10 px-2 py-1"></th>
                             </tr>
                         </tfoot>
@@ -242,8 +245,7 @@
                         <button type="button" class="btn btn-primary flex-grow-1 mx-1"
                                 ng-class="{'btn-dark': selectedShift.Id == item.Id}"
                                 ng-click="selectShift(item)"
-                                ng-repeat="item in shiftList">
-                            {{ item.ShiftCode }}
+                                ng-repeat="item in shiftList" ng-bind="item.ShiftCode">
                         </button>
                     </div>
                     <table class="table table-bordered table-hk-md">
@@ -262,13 +264,13 @@
                             <tbody>
                                 <tr ng-repeat="item in filteredSummaryList"
                                     ng-class="{'bg-warning': selectedSummary.ItemName == item.ItemName}">
-                                    <td class="w-50 px-2">{{item.ItemName}}</td>
-                                    <td class="w-20 px-1">{{ item.ShiftCode }}</td>
-                                    <td class="w-25 px-2">{{item.SerialCount}}</td>
-                                    <td class="w-25 px-2">{{item.SerialSum}}</td>
+                                    <td class="w-50 px-2" ng-bind="item.ItemName"></td>
+                                    <td class="w-20 px-1" ng-bind="item.ShiftCode"></td>
+                                    <td class="w-25 px-2" ng-bind="item.SerialCount"></td>
+                                    <td class="w-25 px-2" ng-bind="item.SerialSum"></td>
                                     <td class="w-10 px-2">
-                                        <button type="button" class="btn btn-sm btn-primary" ng-click="selectSummary(item)">
-                                            {{ selectedSummary.ItemName == item.ItemName ? 'Kaldır' : 'Seç' }}
+                                        <button type="button" class="btn btn-sm btn-primary" ng-click="selectSummary(item)"
+                                                ng-bind="selectedSummary.ItemName == item.ItemName ? 'Kaldır' : 'Seç'">
                                         </button>
                                     </td>
                                 </tr>
@@ -278,15 +280,15 @@
                     <table class="table table-bordered">
                         <tfoot>
                             <tr class="bg-primary text-white" ng-repeat="item in shiftList">
-                                <th class="w-50 px-2 py-1"><b>{{ item.ShiftCode }} Vardiyası</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialCount') }} KOLİ</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialSum') }} ADET</b></th>
+                                <th class="w-50 px-2 py-1"><b ng-bind="item.ShiftCode + ' Vardiyası'"></b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getShiftSum(item.ShiftCode, 'SerialCount') + ' KOLİ'"></b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getShiftSum(item.ShiftCode, 'SerialSum') + ' ADET'"></b></th>
                                 <th class="w-10 px-2 py-1"></th>
                             </tr>
                             <tr class="bg-primary text-white">
                                 <th class="w-50 px-2 py-1"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialCount') }} KOLİ</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialSum') }} ADET</b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getListSum(filteredSummaryList, 'SerialCount') + ' KOLİ'"></b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getListSum(filteredSummaryList, 'SerialSum') + ' ADET'"></b></th>
                                 <th class="w-10 px-2 py-1"></th>
                             </tr>
                         </tfoot>

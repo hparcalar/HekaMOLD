@@ -24,6 +24,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string RoleName { get; set; }
         public bool IsProdTerminal { get; set; }
         public bool IsProdChief { get; set; }
+        public bool IsBossMode { get; set; }
         public bool IsMechanicTerminal { get; set; }
         public bool IsWarehouseTerminal { get; set; }
         public string ProfileImageBase64 { get; set; }

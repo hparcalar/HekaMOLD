@@ -1,5 +1,7 @@
 ﻿using Heka.DataAccess.Context;
+using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Filters;
@@ -489,6 +491,60 @@ namespace HekaMOLD.Business.UseCases
                 }
             }
             catch (Exception ex)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ItemSerialModel[] GetCurrentSerials(int warehosueId, int itemId)
+        {
+            ItemSerialModel[] data = new ItemSerialModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemSerial>();
+                var repoItemReceipt = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var allMovements = repoItemReceipt.Filter(d => d.ItemId == itemId
+                    && d.ItemReceipt.InWarehouseId == warehosueId);
+                var totalRemaining = (allMovements.Where(d => d.ItemReceipt.ReceiptType < 100).Sum(d => d.Quantity) ?? 0)
+                    - (allMovements.Where(d => d.ItemReceipt.ReceiptType > 100).Sum(d => d.Quantity) ?? 0);
+
+                if (totalRemaining > 0)
+                {
+                    var currentPackages = repo.Filter(d => d.ItemReceiptDetail.ItemId == itemId
+                       && d.ItemReceiptDetail.ItemReceipt.InWarehouseId == warehosueId)
+                       .OrderByDescending(d => d.Id)
+                       .ToArray();
+
+                    List<ItemSerialModel> pickedPackages = new List<ItemSerialModel>();
+
+                    int packageIndex = currentPackages.Length - 1;
+                    while (totalRemaining > 0)
+                    {
+                        if (packageIndex < 0)
+                            break;
+
+                        var pack = currentPackages[packageIndex];
+
+                        ItemSerialModel containerPack = new ItemSerialModel();
+                        pack.MapTo(containerPack);
+                        containerPack.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", pack.ItemReceiptDetail.ItemReceipt.ReceiptDate);
+                        containerPack.MachineCode = pack.WorkOrderDetail != null &&
+                            pack.WorkOrderDetail.Machine != null ? pack.WorkOrderDetail.Machine.MachineCode : "";
+
+                        pickedPackages.Add(containerPack);
+
+                        totalRemaining -= pack.FirstQuantity ?? 0;
+                        packageIndex--;
+                    }
+
+                    data = pickedPackages.ToArray();
+                }
+            }
+            catch (Exception)
             {
 
             }

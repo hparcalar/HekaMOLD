@@ -32,6 +32,8 @@ namespace HekaMOLD.Enterprise.Controllers.Filters
                         || HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileMechanicUser")
                         || HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "MobileWarehouseUser"))
                         properCtrl = "Mobile";
+                    else if (HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "IsBossMode"))
+                        properCtrl = "Boss";
 
                     filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(
 
@@ -55,6 +57,11 @@ namespace HekaMOLD.Enterprise.Controllers.Filters
                     {
                         filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(
                         new { controller = "Mobile", action = "Index" }));
+                    }
+                    else if (HekaHtmlHelper.IsGranted(Convert.ToInt32(userId), "IsBossMode"))
+                    {
+                        filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(
+                        new { controller = "Boss", action = "Index" }));
                     }
                 }
             }

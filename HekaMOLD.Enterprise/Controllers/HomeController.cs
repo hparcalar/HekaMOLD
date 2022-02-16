@@ -127,6 +127,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 if (authResult.UserData.IsMechanicTerminal
                     || authResult.UserData.IsProdTerminal || authResult.UserData.IsWarehouseTerminal)
                     redirectionResult = RedirectToAction("Index", "Mobile");
+                else if (authResult.UserData.IsBossMode)
+                    redirectionResult = RedirectToAction("Index", "Boss");
                 else
                     redirectionResult = RedirectToAction("Index", "Home");
 

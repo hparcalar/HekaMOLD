@@ -173,7 +173,7 @@ namespace HekaMOLD.Business.UseCases.Core
             return result;
         }
 
-        public BusinessResult UpdateItemStats(int[] itemId)
+        public async Task<BusinessResult> UpdateItemStats(int[] itemId)
         {
             BusinessResult result = new BusinessResult();
 
@@ -214,7 +214,7 @@ namespace HekaMOLD.Business.UseCases.Core
                     }
                 }
 
-                _uow.SaveChanges();
+                await _uow.SaveChangesAsync();
                 result.Result = true;
             }
             catch (Exception ex)

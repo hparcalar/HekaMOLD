@@ -12,6 +12,7 @@ namespace HekaMOLD.Business.Models.Constants
         Approved = 1,
         Cancelled = 2,
         Completed = 3,
-        Planned = 4
+        Planned = 4,
+        Delivered = 5,
     }
 }

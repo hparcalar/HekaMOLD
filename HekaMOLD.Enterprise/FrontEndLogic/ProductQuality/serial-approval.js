@@ -1,4 +1,4 @@
-﻿app.controller('serialApprovalCtrl', function ($scope, $http) {
+﻿app.controller('serialApprovalCtrl', function ($scope, $http, $timeout) {
     $scope.modelObject = {
         Id:0,
         DocumentNo: '', FirmId: 0,
@@ -31,6 +31,41 @@
                 }
             }).catch(function (err) { });
     }
+
+    $scope.changePackageQuantity = function (packObj) {
+        bootbox.prompt({
+            title: "Koli içi miktarı giriniz",
+            centerVertical: true,
+            callback: function (result) {
+                if (result != null && result.length > 0) {
+                    var newQty = parseInt(result);
+                    if (newQty <= 0) {
+                        toastr.error('Miktar 0 dan büyük olmalıdır.');
+                        return;
+                    }
+
+                    $http.post(HOST_URL + 'Mobile/UpdateWorkOrderSerial', {
+                        serialId: packObj.Id,
+                        newQuantity: newQty,
+                    }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                if (resp.data.Result) {
+                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                                    $timeout(function () {
+                                        $scope.bindModel();
+                                    });
+                                }
+                                else
+                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                            }
+                        }).catch(function (err) { });
+                }
+            }
+        });
+    }
+
     $scope.deleteEntries = function () {
         //for (var i = 0; i < $scope.selectedProducts.length; i++) {
         //    var prd = $scope.selectedProducts[i];

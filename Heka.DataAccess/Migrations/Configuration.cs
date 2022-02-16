@@ -113,6 +113,12 @@
                     currentAuthTypes.Add(aType);
                     context.UserAuthType.Add(aType);
                 }
+                if (!context.UserAuthType.Any(d => d.AuthTypeCode == "IsBossMode"))
+                {
+                    var aType = new UserAuthType { AuthTypeCode = "IsBossMode", AuthTypeName = "Üst Yönetim" };
+                    currentAuthTypes.Add(aType);
+                    context.UserAuthType.Add(aType);
+                }
                 #endregion
 
                 #region CREATE SYSTEM ADMIN ROLE & USER
