@@ -293,6 +293,9 @@ namespace HekaMOLD.Business.UseCases
                         if (item.WorkOrderDetail.Any())
                             continue;
 
+                        if (item.OrderStatus == (int)OrderStatusType.Completed)
+                            continue;
+
                         #region SET REQUEST & DETAIL TO APPROVED
                         if (item.ItemRequestDetail != null)
                         {
