@@ -146,6 +146,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetFinishedProducts()
         {
             ItemStateModel[] data = new ItemStateModel[0];
@@ -164,6 +165,70 @@ namespace HekaMOLD.Enterprise.Controllers
                 using (ReportingBO bObj = new ReportingBO())
                 {
                     data = bObj.GetItemStates(new int[] { pWrId });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetOnlySaleOrderProducts()
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                int pWrId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var wrModel = bObj.GetProductWarehouse();
+                    if (wrModel != null && wrModel.Id > 0)
+                        pWrId = wrModel.Id;
+                }
+
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetOnlySaleOrderProducts(new int[] { pWrId });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetSelfReadyProducts()
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                int pWrId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var wrModel = bObj.GetProductWarehouse();
+                    if (wrModel != null && wrModel.Id > 0)
+                        pWrId = wrModel.Id;
+                }
+
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetSelfReadyProducts(new int[] { pWrId });
                 }
             }
             catch (Exception)

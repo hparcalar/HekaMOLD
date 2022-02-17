@@ -4045,6 +4045,7 @@
     <Content Include="Content\heka-styles-red.css" />
     <Content Include="Content\heka-styles.css" />
     <Content Include="Content\images\close.png" />
+    <Content Include="Content\images\loading-36.gif" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\next.png" />
     <Content Include="Content\images\prev.png" />
@@ -4084,6 +4085,7 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="FrontEndLogic\Boss\finished-products.js" />
     <Content Include="FrontEndLogic\ContractWorks\index.js" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
     <Content Include="FrontEndLogic\Counting\index.js" />
@@ -4678,6 +4680,8 @@
     <Content Include="Views\Shared\_LayoutBoss.cshtml" />
     <Content Include="Views\Boss\Index.cshtml" />
     <Content Include="Views\Boss\SettingsBoss.cshtml" />
+    <Content Include="Views\Boss\ProductionStatus.cshtml" />
+    <Content Include="Views\Boss\Warehouse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

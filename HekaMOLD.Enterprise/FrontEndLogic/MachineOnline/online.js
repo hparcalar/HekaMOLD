@@ -2,16 +2,26 @@
     $scope.machineList = [];
     $scope.currentShift = {Id:0};
     $scope.filterModel = { startDate: moment().format('DD.MM.YYYY'), endDate: moment().format('DD.MM.YYYY') };
+    $scope.isModelBinding = false;
 
     $scope.bindModel = function () {
+        if ($scope.isModelBinding)
+            return;
+
+        $scope.isModelBinding = true;
+
         $http.get(HOST_URL + 'Machine/GetMachineStats?t1=' + $scope.filterModel.startDate + '&t2='
             + $scope.filterModel.endDate, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.machineList = resp.data.Data;
                     $scope.currentShift = resp.data.Shift;
+
+                    $scope.isModelBinding = false;
                 }
-            }).catch(function (err) { });
+            }).catch(function (err) {
+                $scope.isModelBinding = false;
+            });
     }
 
     $scope.getFixed = function (arg, point) {
@@ -67,7 +77,7 @@
     // ON LOAD EVENTS
     $scope.bindModel(PRM_ID);
 
-    $interval($scope.bindModel, 25000);
+    $interval($scope.bindModel, 120000);
 
     setTimeout(function () { window.location.reload(); }, 1000 * 60 * 10);
 });

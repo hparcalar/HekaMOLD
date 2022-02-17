@@ -251,6 +251,108 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        public ItemStateModel[] GetOnlySaleOrderProducts(int[] warehouseList)
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var movements = repo.Filter(d => warehouseList.Contains(d.ItemReceipt.InWarehouseId ?? 0)
+                    &&
+                    (
+                        (d.ItemReceipt.ReceiptType < 100 && !d.ItemSerial.Any(m => m.WorkOrderDetail.WorkOrder.FirmId == 1))
+                        ||
+                        (d.ItemReceipt.ReceiptType > 100 && d.ItemReceipt.ReceiptType < 200)
+                    )
+                    );
+                data = movements.GroupBy(d => new { d.Item, d.ItemReceipt.Warehouse })
+                    .Select(d => new ItemStateModel
+                    {
+                        ItemId = d.Key.Item.Id,
+                        ItemNo = d.Key.Item.ItemNo,
+                        ItemName = d.Key.Item.ItemName,
+                        WarehouseId = d.Key.Warehouse.Id,
+                        WarehouseCode = d.Key.Warehouse.WarehouseCode,
+                        WarehouseName = d.Key.Warehouse.WarehouseName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
+                        InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0,
+                        OutQty = d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0,
+                        TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0)
+                            - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
+                    })
+                    .OrderBy(d => d.ItemGroupId)
+                    .ToArray();
+
+                data = data.Where(d => d.InQty - d.OutQty > 0).ToArray();
+
+                foreach (var item in data)
+                {
+                    item.TotalQty = item.InQty - item.OutQty;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ItemStateModel[] GetSelfReadyProducts(int[] warehouseList)
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var movements = repo.Filter(d => warehouseList.Contains(d.ItemReceipt.InWarehouseId ?? 0)
+                    && 
+                    (
+                        (d.ItemReceipt.ReceiptType < 100 && d.ItemSerial.Any(m => m.WorkOrderDetail.WorkOrder.FirmId == 1))
+                        ||
+                        (d.ItemReceipt.ReceiptType > 100 && d.ItemReceipt.ReceiptType < 200)
+                    )
+                    );
+                data = movements.GroupBy(d => new { d.Item, d.ItemReceipt.Warehouse })
+                    .Select(d => new ItemStateModel
+                    {
+                        ItemId = d.Key.Item.Id,
+                        ItemNo = d.Key.Item.ItemNo,
+                        ItemName = d.Key.Item.ItemName,
+                        WarehouseId = d.Key.Warehouse.Id,
+                        WarehouseCode = d.Key.Warehouse.WarehouseCode,
+                        WarehouseName = d.Key.Warehouse.WarehouseName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
+                        InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0,
+                        OutQty = d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0,
+                        TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0)
+                            - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
+                    })
+                    .OrderBy(d => d.ItemGroupId)
+                    .ToArray();
+
+                data = data.Where(d => d.InQty - d.OutQty > 0).ToArray();
+
+                foreach (var item in data)
+                {
+                    item.TotalQty = item.InQty - item.OutQty;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return data;
+        }
+
         public ItemStateModel[] GetItemStates(int[] warehouseList, BasicRangeFilter filter)
         {
             ItemStateModel[] data = new ItemStateModel[0];

@@ -264,7 +264,7 @@ namespace HekaMOLD.Business.UseCases
                     d.WorkOrderStatus == (int)WorkOrderStatusType.Completed
                     ||
                     d.WorkOrderStatus == (int)WorkOrderStatusType.Cancelled
-                )).OrderByDescending(d => d.CreatedDate).Take(20).ToList().ForEach(d =>
+                )).OrderByDescending(d => d.CreatedDate).Take(50).ToList().ForEach(d =>
             {
                 WorkOrderDetailModel containerObj = new WorkOrderDetailModel();
                 d.MapTo(containerObj);

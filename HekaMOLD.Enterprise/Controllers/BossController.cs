@@ -20,5 +20,15 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
+
+        public ActionResult ProductionStatus()
+        {
+            return View();
+        }
+
+        public ActionResult Warehouse()
+        {
+            return View();
+        }
     }
 }
