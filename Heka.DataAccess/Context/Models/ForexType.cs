@@ -9,6 +9,7 @@
 
 namespace Heka.DataAccess.Context
 {
+    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -21,8 +22,11 @@ namespace Heka.DataAccess.Context
             this.ForexHistory = new HashSet<ForexHistory>();
             this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
+            this.YarnRecipe = new HashSet<YarnRecipe>();
+            this.Cost = new HashSet<Cost>();
+
         }
-    
+
         public int Id { get; set; }
         public string ForexTypeCode { get; set; }
         public Nullable<decimal> ActiveSalesRate { get; set; }
@@ -37,5 +41,11 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ForexType")]
         public virtual ICollection<ItemReceiptDetail> ItemReceiptDetail { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<YarnRecipe> YarnRecipe { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<Cost> Cost { get; set; }
     }
 }

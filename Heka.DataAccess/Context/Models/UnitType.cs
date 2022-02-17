@@ -9,6 +9,7 @@
 
 namespace Heka.DataAccess.Context
 {
+    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -25,8 +26,10 @@ namespace Heka.DataAccess.Context
             this.ItemUnit = new HashSet<ItemUnit>();
             this.ProductRecipeDetail = new HashSet<ProductRecipeDetail>();
             this.ItemOrderConsume = new HashSet<ItemOrderConsume>();
+            this.Cost = new HashSet<Cost>();
+
         }
-    
+
         public int Id { get; set; }
         public string UnitCode { get; set; }
         public string UnitName { get; set; }
@@ -59,5 +62,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("UnitType")]
         public virtual ICollection<ItemOrderConsume> ItemOrderConsume { get; set; }
+
+        [InverseProperty("UnitType")]
+        public virtual ICollection<Cost> Cost { get; set; }
     }
 }

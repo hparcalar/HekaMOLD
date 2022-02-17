@@ -24,12 +24,14 @@ namespace Heka.DataAccess.Context.Models
         public int? Factor { get; set; }
         //Bukum
         public int? Twist { get; set; }
-        public string TwistDirection { get; set; }
+        public int? TwistDirection { get; set; }
         //Punta
         public int? CenterType { get; set; }
         //Karisim 
         public bool? Mix { get; set; }
         public int? YarnRecipeType { get; set; }
+        public decimal ? Price { get; set; }
+
         public Nullable<int> PlantId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
@@ -45,14 +47,20 @@ namespace Heka.DataAccess.Context.Models
 
         [ForeignKey("Item")]
         public Nullable<int> ItemId { get; set; }
+
+        [ForeignKey("ForexType")]
+        public Nullable<int> ForexTypeId { get; set; }
+
         public virtual Firm Firm { get; set; }
         public virtual YarnBreed YarnBreed { get; set; }
         public virtual YarnColour YarnColour { get; set; }
+        public virtual ForexType ForexType { get; set; }
+        public virtual Item Item { get; set; }
 
         [InverseProperty("YarnRecipe")]
         public virtual ICollection<KnitYarn> KnitYarn { get; set; }
+
         [InverseProperty("YarnRecipe")]
         public virtual ICollection<YarnRecipeMix> YarnRecipeMix { get; set; }
-        public virtual Item Item { get; set; }
     }
 }

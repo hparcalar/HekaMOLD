@@ -200,36 +200,53 @@
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Büküm Tipi</label>
                             <div class="mb-5">
-                                <select ng-options="item.Text for item in twistDirectionTypeList"
-                                        ng-model="selectedTwistDirectionType" class="form-select form-select-solid">
+                                <select ng-options="item.Text for item in twistDirectionList"
+                                        ng-model="selectedTwistDirection" class="form-select form-select-solid">
                                 </select>
                             </div>
-
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Punta</label>
+                            <div class="mb-5">
+                                <select ng-options="item.Text for item in centerTypeList"
+                                        ng-model="selectedCenterType" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                </select>
+                            </div>
                         </div>
                         <div class="col-xxl-6">
 
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tedarikçi</label>
-                            <select class="form-select form-select-solid" data-allow-clear="true"
-                                    ng-options="item.FirmName for item in firmList" ng-model="selectedFirm"
-                                    data-control="select2" data-placeholder="-- Seçiniz --">
-                            </select>
+                            <div class="mb-5">
+                                <select class="form-select form-select-solid" data-allow-clear="true"
+                                        ng-options="item.FirmName for item in firmList" ng-model="selectedFirm"
+                                        data-control="select2" data-placeholder="-- Seçiniz --">
+                                </select>
+                            </div>
+
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Renk</label>
-                            <select class="form-select form-select-solid" data-allow-clear="true"
-                                    ng-options="item.YarnColourName for item in yarnColourList" ng-model="selectedYarnColour"
-                                    data-control="select2" data-placeholder="-- Seçiniz --">
-                            </select>
-                            <!--begin::Input group-->
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Punta</label>
                             <div class="mb-5">
-                                <select ng-options="item.Text for item in centerTypeList"
-                                        ng-model="selectedCenterType" class="form-select form-select-solid"  data-placeholder="-- Seçiniz --">
+                                <select class="form-select form-select-solid" data-allow-clear="true"
+                                        ng-options="item.YarnColourName for item in yarnColourList" ng-model="selectedYarnColour"
+                                        data-control="select2" data-placeholder="-- Seçiniz --">
+                                </select>
+                            </div>
+
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Fiyat</label>
+                            <div class="mb-5">
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Price" placeholder="" />
+                            </div>
+
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Döviz Kodu</label>
+                            <div class="mb-5">
+                                <select class="form-select form-select-solid" data-allow-clear="true"ng-options="item.ForexTypeCode for item in forexTypeList"
+                                        ng-model="selectedForexType" data-control="select2"  data-placeholder="-- Seçiniz --">
                                 </select>
                             </div>
                         </div>
 
-                    </div>
+                        </div>
 
                 </div>
             </div>

@@ -59,6 +59,8 @@
     <Compile Include="Context\Models\AllocatedCode.cs" />
     <Compile Include="Context\Models\Attachment.cs" />
     <Compile Include="Context\Models\ContractWorkFlow.cs" />
+    <Compile Include="Context\Models\Cost.cs" />
+    <Compile Include="Context\Models\CostCategory.cs" />
     <Compile Include="Context\Models\DeliveryPlan.cs" />
     <Compile Include="Context\Models\Dye.cs" />
     <Compile Include="Context\Models\EntryQualityData.cs" />
@@ -344,6 +346,26 @@
     <Compile Include="Migrations\202201111049594_ItemUpdate%28int-string TestNo%29.designer.cs">
       <DependentUpon>202201111049594_ItemUpdate%28int-string TestNo%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202170945228_YarnRecipeUpdate%28PriceAdd%29.cs" />
+    <Compile Include="Migrations\202202170945228_YarnRecipeUpdate%28PriceAdd%29.designer.cs">
+      <DependentUpon>202202170945228_YarnRecipeUpdate%28PriceAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202171058560_YarnRecipeUpdate%28DirectionTypeUpdate%29.cs" />
+    <Compile Include="Migrations\202202171058560_YarnRecipeUpdate%28DirectionTypeUpdate%29.designer.cs">
+      <DependentUpon>202202171058560_YarnRecipeUpdate%28DirectionTypeUpdate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202171320019_CostCategoryAdd.cs" />
+    <Compile Include="Migrations\202202171320019_CostCategoryAdd.designer.cs">
+      <DependentUpon>202202171320019_CostCategoryAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202171328588_CostCategoryUpdate%28ExplanationAdd%29.cs" />
+    <Compile Include="Migrations\202202171328588_CostCategoryUpdate%28ExplanationAdd%29.designer.cs">
+      <DependentUpon>202202171328588_CostCategoryUpdate%28ExplanationAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202171352379_CostAdd.cs" />
+    <Compile Include="Migrations\202202171352379_CostAdd.designer.cs">
+      <DependentUpon>202202171352379_CostAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -495,6 +517,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201111049594_ItemUpdate%28int-string TestNo%29.resx">
       <DependentUpon>202201111049594_ItemUpdate%28int-string TestNo%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202170945228_YarnRecipeUpdate%28PriceAdd%29.resx">
+      <DependentUpon>202202170945228_YarnRecipeUpdate%28PriceAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202171058560_YarnRecipeUpdate%28DirectionTypeUpdate%29.resx">
+      <DependentUpon>202202171058560_YarnRecipeUpdate%28DirectionTypeUpdate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202171320019_CostCategoryAdd.resx">
+      <DependentUpon>202202171320019_CostCategoryAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202171328588_CostCategoryUpdate%28ExplanationAdd%29.resx">
+      <DependentUpon>202202171328588_CostCategoryUpdate%28ExplanationAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202171352379_CostAdd.resx">
+      <DependentUpon>202202171352379_CostAdd.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

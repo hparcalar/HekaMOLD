@@ -104,6 +104,27 @@ namespace HekaMOLD.Business.UseCases.Core
 
             return default;
         }
+        public string GetNextFirmCode()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Firm>();
+                var lastReceiptNo = repo.GetAll().OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(Convert.ToString(lastReceiptNo)))
+                    lastReceiptNo = 0;
+
+                return "FR" + string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
         public string GetNextWeavingDraftCode(string Code)
         {
             try

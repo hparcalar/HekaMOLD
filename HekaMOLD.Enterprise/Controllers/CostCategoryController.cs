@@ -1,32 +1,34 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Production;
+﻿using HekaMOLD.Business.Models.DataTransfer.Finance;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class ProcessGroupController : Controller
+    public class CostCategoryController : Controller
     {
-        // GET: ProcessGroup
+        // GET: CostCategory
         public ActionResult Index()
         {
             return View();
         }
-
         public ActionResult List()
         {
             return View();
         }
 
         [HttpGet]
-        public JsonResult GetProcessGroupList()
+        public JsonResult GetCostCategoryList()
         {
-            ProcessGroupModel[] result = new ProcessGroupModel[0];
+            CostCategoryModel[] result = new CostCategoryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetProcessGroupList();
+                result = bObj.GetCostCategoryList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -37,10 +39,10 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ProcessGroupModel model = null;
+            CostCategoryModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetProcessGroup(rid);
+                model = bObj.GetCostCategory(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -54,7 +56,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteProcessGroup(rid);
+                    result = bObj.DeleteCostCategory(rid);
                 }
 
                 if (result.Result)
@@ -69,14 +71,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ProcessGroupModel model)
+        public JsonResult SaveModel(CostCategoryModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateProcessGroup(model);
+                    result = bObj.SaveOrUpdateCostCategory(model);
                 }
 
                 if (result.Result)

@@ -149,6 +149,8 @@
     <Compile Include="Models\DataTransfer\Core\YarnRecipeModel.cs" />
     <Compile Include="Models\DataTransfer\EmployeeStats\UserWorkOrderHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
+    <Compile Include="Models\DataTransfer\Finance\CostCategoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Finance\CostModel.cs" />
     <Compile Include="Models\DataTransfer\Finance\InvoiceModel.cs" />
     <Compile Include="Models\DataTransfer\Labels\ProductLabel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutItemModel.cs" />

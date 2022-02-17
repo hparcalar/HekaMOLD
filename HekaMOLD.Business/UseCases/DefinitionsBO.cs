@@ -5,6 +5,7 @@ using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Finance;
 using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
@@ -3663,7 +3664,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoItem = _unitOfWork.GetRepository<Item>();
                 var repoYarnRecipeMixes = _unitOfWork.GetRepository<YarnRecipeMix>();
 
-                if (repo.Any(d => (d.YarnRecipeCode == model.YarnRecipeCode || d.YarnRecipeName == model.YarnRecipeName)
+                if (repo.Any(d => (d.YarnRecipeCode == model.YarnRecipeCode )
                     && d.Id != model.Id))
                     throw new Exception("Aynı koda sahip başka bir iplik mevcuttur. Lütfen farklı bir kod giriniz.");
 
@@ -3686,24 +3687,23 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 #region GENERATE ITEM MODEL OF CURRENT YARN
-                if (dbObj.Item == null)
-                {
-                    var existingItem = repoItem.Get(d => d.ItemName == dbObj.YarnRecipeName);
+
+                    var existingItem = repoItem.Get(d => d.Id == dbObj.ItemId);
                     if (existingItem == null)
                     {
                         existingItem = new Item
                         {
                             PlantId = dbObj.PlantId,
-                            ItemNo = dbObj.YarnRecipeName,
-                            ItemName = dbObj.YarnRecipeName,
                             CreatedDate = DateTime.Now,
                             ItemType = (int)ItemType.RawMaterials,
                         };
                         repoItem.Add(existingItem);
                     }
+                    existingItem.ItemNo = dbObj.YarnRecipeCode;
+                    existingItem.ItemName = dbObj.YarnRecipeName;
 
-                    dbObj.Item = existingItem;
-                }
+                dbObj.Item = existingItem;
+ 
                 #endregion
 
                 #region SAVE KNITYARN
@@ -3980,6 +3980,225 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
 
+        #endregion
+
+        #region COST CATEGORY BUSINESS
+        public CostCategoryModel[] GetCostCategoryList()
+        {
+            List<CostCategoryModel> data = new List<CostCategoryModel>();
+
+            var repo = _unitOfWork.GetRepository<CostCategory>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                CostCategoryModel containerObj = new CostCategoryModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateCostCategory(CostCategoryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.CostCategoryCode))
+                    throw new Exception("Kategori kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.CostCategoryName))
+                    throw new Exception("Kategori adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<CostCategory>();
+
+                if (repo.Any(d => (d.CostCategoryCode == model.CostCategoryCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir Kategori mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new CostCategory();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteCostCategory(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<CostCategory>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public CostCategoryModel GetCostCategory(int id)
+        {
+            CostCategoryModel model = new CostCategoryModel { };
+
+            var repo = _unitOfWork.GetRepository<CostCategory>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region COST BUSINESS
+        public CostModel[] GetCostList()
+        {
+            List<CostModel> data = new List<CostModel>();
+
+            var repo = _unitOfWork.GetRepository<Cost>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                CostModel containerObj = new CostModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateCost(CostModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+
+                if (string.IsNullOrEmpty(model.CostName))
+                    throw new Exception(" adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Cost>();
+
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Cost();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = (int)dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteCost(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Cost>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public CostModel GetCost(int id)
+        {
+            CostModel model = new CostModel { };
+
+            var repo = _unitOfWork.GetRepository<Cost>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+            }
+
+            return model;
+        }
+
+        public CostModel GetCost(string firmCode)
+        {
+            CostModel model = new CostModel { };
+
+            var repo = _unitOfWork.GetRepository<Cost>();
+            var dbObj = repo.Get(d => d.CostCode == firmCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
         #endregion
     }
 }

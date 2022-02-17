@@ -116,5 +116,19 @@ namespace HekaMOLD.Enterprise.Controllers
 
 
         }
+
+        [HttpGet]
+        public JsonResult GetFirmCode()
+        {
+            string firmCode = "";
+
+            using (RequestBO bObj = new RequestBO())
+            {
+                firmCode = bObj.GetNextFirmCode();
+            }
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(firmCode), FirmCode = firmCode }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
     }
 }

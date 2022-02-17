@@ -151,6 +151,8 @@
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ContractWorksController.cs" />
+    <Compile Include="Controllers\CostCategoryController.cs" />
+    <Compile Include="Controllers\CostController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
@@ -4088,6 +4090,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="FrontEndLogic\ContractWorks\index.js" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
+    <Content Include="FrontEndLogic\CostCategory\index.js" />
+    <Content Include="FrontEndLogic\CostCategory\list.js" />
+    <Content Include="FrontEndLogic\Cost\index.js" />
     <Content Include="FrontEndLogic\Delivery\planning.js" />
     <Content Include="FrontEndLogic\Document\index.js" />
     <Content Include="FrontEndLogic\Document\list.js" />
@@ -4690,6 +4695,9 @@
     <Content Include="Views\SerialWinding\Index.cshtml" />
     <Content Include="Views\WeavingDraft\Index.cshtml" />
     <Content Include="Views\WeavingDraft\List.cshtml" />
+    <Content Include="Views\CostCategory\Index.cshtml" />
+    <Content Include="Views\CostCategory\List.cshtml" />
+    <Content Include="Views\Cost\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -3,19 +3,23 @@
 
     $scope.saveStatus = 0;
 
-    $scope.selectedYarnBreed = {};
-    $scope.yarnBreedList = [];
-
-    $scope.selectedFirm = {};
     $scope.firmList = [];
-    $scope.selectedYarnColour = {}; 
+    $scope.yarnBreedList = [];
     $scope.yarnColourList = [];
+    $scope.forexTypeList = [];
+
+
+    $scope.selectedYarnBreed = {};
+    $scope.selectedFirm = {};
+    $scope.selectedYarnColour = {}; 
     $scope.selectedCenterType = {};
+    $scope.selectedForexType = {};
+
     $scope.centerTypeList = [{ Id: 1, Text: 'Kuvvetli Punta' },
         { Id: 2, Text: 'Seyrek Punta' }, { Id: 3, Text: 'Yok' }];
 
-    $scope.selectedTwistDirectionType = {};
-    $scope.twistDirectionTypeList = [{ Id: 1, Text: 'Z' },
+    $scope.selectedTwistDirection = {};
+    $scope.twistDirectionList = [{ Id: 1, Text: 'Z' },
         { Id: 2, Text: 'S' },{ Id: 3, Text: 'Yok' }];
 
     $scope.openNewRecord = function () {
@@ -24,7 +28,7 @@
         $scope.selectedFirm = {};
         $scope.selectedCenterType = {};
         $scope.selectedYarnColour = {};
-        $scope.selectedTwistDirectionType = {};
+        $scope.selectedTwistDirection = {};
     }
 
     // GET SELECTABLE DATA
@@ -37,6 +41,7 @@
                         $scope.firmList = resp.data.Firms;
                         $scope.yarnColourList = resp.data.Colours;
                         $scope.yarnBreedList = resp.data.YarnBreed;
+                        $scope.forexTypeList = resp.data.ForexTypes;
                         resolve(resp.data);
                     }
                 }).catch(function (err) { });
@@ -107,6 +112,7 @@
     }
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
+
         if (typeof $scope.selectedCenterType != 'undefined' && $scope.selectedCenterType != null) {
             $scope.modelObject.CenterType = $scope.selectedCenterType.Id;
         }
@@ -131,7 +137,17 @@
         else
             $scope.modelObject.YarnBreedId = null;
 
+        if (typeof $scope.selectedForexType != 'undefined' && $scope.selectedForexType != null) {
+            $scope.modelObject.ForexTypeId = $scope.selectedForexType.Id;
+        }
+        else
+            $scope.modelObject.ForexTypeId = null;
 
+        if (typeof $scope.selectedTwistDirection != 'undefined' && $scope.selectedTwistDirection != null) {
+            $scope.modelObject.TwistDirection = $scope.selectedTwistDirection.Id;
+        }
+        else
+            $scope.modelObject.TwistDirection = null;
 
         $http.post(HOST_URL + 'YarnRecipe/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -213,12 +229,24 @@
                     else {
                         $scope.selectedYarnBreed = {};
                     }
-                    // BIND EXTERNAL CENTER TYPE
                     if ($scope.modelObject.CenterType > 0) {
                         $scope.selectedCenterType = $scope.centerTypeList.find(d => d.Id == $scope.modelObject.CenterType);
                     }
                     else {
                         $scope.selectedCenterType = {};
+                    }
+
+                    if ($scope.modelObject.ForexTypeId > 0) {
+                        $scope.selectedForexType = $scope.forexTypeList.find(d => d.Id == $scope.modelObject.ForexTypeId);
+                    }
+                    else {
+                        $scope.selectedForexType = {};
+                    }
+                    if ($scope.modelObject.TwistDirection > 0) {
+                        $scope.selectedTwistDirection = $scope.twistDirectionList.find(d => d.Id == $scope.modelObject.TwistDirection);
+                    }
+                    else {
+                        $scope.selectedTwistDirection = {};
                     }
                     $scope.bindMixList();
                 }

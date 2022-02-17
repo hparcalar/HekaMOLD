@@ -14,7 +14,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? Factor { get; set; }
         //Bukum
         public int? Twist { get; set; }
-        public string TwistDirection { get; set; }
+        public int? TwistDirection { get; set; }
         //Punta
         public int? CenterType { get; set; }
         //Karisim 
@@ -24,6 +24,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? YarnColourId { get; set; }
         public int? FirmId { get; set; }
         public int? ItemId { get; set; }
+        public int? ForexTypeId { get; set; }
+        public decimal? Price { get; set; }
 
         public YarnRecipeMixModel[] YarnRecipeMixes { get; set; }
 
@@ -34,6 +36,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string YarnBreedName { get; set; }
         public string YarnRecipeTypeStr { get; set; }
         public string CenterTypeStr { get; set; }
+        public string ForexTypeCode { get; set; }
+        public string TwistDirectionStr { get; set; }
+
         #endregion
 
     }

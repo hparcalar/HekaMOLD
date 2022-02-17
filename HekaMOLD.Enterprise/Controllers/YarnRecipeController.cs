@@ -36,19 +36,22 @@ namespace HekaMOLD.Enterprise.Controllers
             YarnColourModel[] colours = new YarnColourModel[0];
             FirmModel[] firms = new FirmModel[0];
             YarnBreedModel[] yarnBreed = new YarnBreedModel[0];
+            ForexTypeModel[] forexTypes = new ForexTypeModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 colours = bObj.GetYarnColourList();
                 firms = bObj.GetFirmList();
                 yarnBreed = bObj.GetYarnBreedList();
+                forexTypes = bObj.GetForexTypeList();
             }
 
             var jsonResult = Json(new
             {
                 Firms = firms,
                 Colours = colours,
-                YarnBreed = yarnBreed
+                YarnBreed = yarnBreed,
+                ForexTypes = forexTypes,
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;

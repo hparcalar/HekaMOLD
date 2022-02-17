@@ -1,46 +1,70 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Production;
+﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Finance;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
-    public class ProcessGroupController : Controller
+    public class CostController : Controller
     {
-        // GET: ProcessGroup
+        // GET: Cost
         public ActionResult Index()
         {
             return View();
         }
-
         public ActionResult List()
         {
             return View();
         }
 
         [HttpGet]
-        public JsonResult GetProcessGroupList()
+        public JsonResult GetCostList()
         {
-            ProcessGroupModel[] result = new ProcessGroupModel[0];
+            CostModel[] result = new CostModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                result = bObj.GetProcessGroupList();
+                result = bObj.GetCostList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+        public JsonResult GetSelectables()
+        {
+            CostCategoryModel[] costCategorys = new CostCategoryModel[0];
+            UnitTypeModel[] unitTypes = new UnitTypeModel[0];
+            ForexTypeModel[] forexTypes = new ForexTypeModel[0];
 
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                costCategorys = bObj.GetCostCategoryList();
+                unitTypes = bObj.GetUnitTypeList();
+                forexTypes = bObj.GetForexTypeList();
+            }
+
+            var jsonResult = Json(new
+            {
+                CostCategorys = costCategorys,
+                UnitTypes = unitTypes,
+                ForexTypes = forexTypes,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
-            ProcessGroupModel model = null;
+            CostModel model = null;
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                model = bObj.GetProcessGroup(rid);
+                model = bObj.GetCost(rid);
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -54,7 +78,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.DeleteProcessGroup(rid);
+                    result = bObj.DeleteCost(rid);
                 }
 
                 if (result.Result)
@@ -69,14 +93,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ProcessGroupModel model)
+        public JsonResult SaveModel(CostModel model)
         {
             try
             {
                 BusinessResult result = null;
                 using (DefinitionsBO bObj = new DefinitionsBO())
                 {
-                    result = bObj.SaveOrUpdateProcessGroup(model);
+                    result = bObj.SaveOrUpdateCost(model);
                 }
 
                 if (result.Result)
@@ -91,5 +115,6 @@ namespace HekaMOLD.Enterprise.Controllers
 
 
         }
+
     }
 }

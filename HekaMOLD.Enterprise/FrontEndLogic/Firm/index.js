@@ -10,8 +10,29 @@
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
         $scope.selectedFirmType = {};
+        $scope.getNextFirmCode().then(function (rNo) {
+            $scope.modelObject.FirmCode = rNo;
+            $scope.$apply();
+        });
     }
+    $scope.getNextFirmCode = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Firm/GetFirmCode', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            resolve(resp.data.FirmCode);
+                        }
+                        else {
+                            toastr.error('Sıradaki sipariş numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
 
+        return prms;
+    }
     $scope.performDelete = function () {
         bootbox.confirm({
             message: "Bu firma tanımını silmek istediğinizden emin misiniz?",
@@ -172,6 +193,12 @@
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
-    if (PRM_ID > 0)
-        $scope.bindModel(PRM_ID);
+        if (PRM_ID > 0)
+            $scope.bindModel(PRM_ID);
+        else {
+            $scope.getNextFirmCode().then(function (rNo) {
+                $scope.modelObject.FirmCode = rNo;
+                $scope.$apply();
+            });
+        }
 });
