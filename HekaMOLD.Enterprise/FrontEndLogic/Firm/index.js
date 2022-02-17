@@ -44,6 +44,8 @@
 
         return prms;
     }
+
+
     $scope.getNextFirmCode = function () {
         var prms = new Promise(function (resolve, reject) {
             $http.get(HOST_URL + 'Firm/GetFirmCode', {}, 'json')

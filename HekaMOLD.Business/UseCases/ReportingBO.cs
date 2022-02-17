@@ -1,4 +1,5 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.Context.Models;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
@@ -50,6 +51,23 @@ namespace HekaMOLD.Business.UseCases
                     }
 
                     return data;
+                }
+                else if (reportType == ReportType.Cmr)
+                {
+                    var repo = _unitOfWork.GetRepository<ItemLoad>();
+                    var dbObj = repo.Get(d => d.Id == objectId);
+                    if (dbObj != null)
+                    {
+                        List<LoadCmrModel> data = new List<LoadCmrModel>();
+
+                        data.Add(new LoadCmrModel
+                        {
+                            Id = objectId,
+                            LoadCode = dbObj.LoadCode,
+                        });
+
+                        return data;
+                    }
                 }
             }
             catch (Exception)

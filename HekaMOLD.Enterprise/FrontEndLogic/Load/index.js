@@ -45,6 +45,93 @@
 
     $scope.saveStatus = 0;
 
+    // #region PRINTING BUSINESS
+    $scope.showPrintTemplates = function () {
+        if ($scope.modelObject.Id > 0) {
+            // DO BROADCAST
+            $scope.$broadcast('loadTemplateList', [6]);
+
+            $('#dial-reports').dialog({
+                width: window.innerWidth * 0.65,
+                height: window.innerHeight * 0.65,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+    }
+
+    $scope.showPrintOptions = function () {
+        $scope.$broadcast('showPrintOptions');
+
+        $('#dial-print-options').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: 300,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+
+    // RECEIVE EMIT REPORT PRINT DATA
+    $scope.$on('printTemplate', function (e, d) {
+        if (d.templateId > 0) {
+            $scope.reportTemplateId = d.templateId;
+
+            if (d.exportType == 'PDF') {
+                try {
+                    $http.post(HOST_URL + 'Printing/ExportAsPdf', {
+                        objectId: $scope.modelObject.Id,
+                        reportId: $scope.reportTemplateId,
+                        reportType: 6,
+                    }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                window.open(HOST_URL + 'Outputs/' + resp.data.Path);
+                            }
+                        }).catch(function (err) { });
+                } catch (e) {
+
+                }
+            }
+            else {
+                $scope.showPrintOptions();
+            }
+        }
+
+        $('#dial-reports').dialog('close');
+    });
+
+    // RECEIVE EMIT PRINTING OPTIONS DATA
+    $scope.$on('printOptionsApproved', function (e, d) {
+        $('#dial-print-options').dialog('close');
+
+        try {
+            $http.post(HOST_URL + 'Printing/AddToPrintQueue', {
+                objectId: $scope.modelObject.Id,
+                reportId: $scope.reportTemplateId,
+                printerId: d.PrinterId,
+                recordType: 6, // delivery list type
+            }, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Status == 1)
+                            toastr.success('İstek yazıcıya iletildi.', 'Bilgilendirme');
+                        else
+                            toastr.error('Hata: ' + resp.data.ErrorMessage, 'Uyarı');
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    });
+    // #endregion
      // FUNCTIONS
     $scope.getNextOrderNo = function () {
 
