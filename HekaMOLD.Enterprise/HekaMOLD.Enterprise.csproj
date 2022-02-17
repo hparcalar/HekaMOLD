@@ -3983,6 +3983,7 @@
     <Content Include="Components\Controllers\trial-work-form.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
+    <Content Include="Components\Views\LoadCalendar.html" />
     <Content Include="Components\Views\MachineIncidents.html" />
     <Content Include="Components\Views\MachinePostures.html" />
     <Content Include="Components\Views\OpenSoList.html" />
@@ -4137,6 +4138,7 @@
     <Content Include="FrontEndLogic\LayoutObjectType\index.js" />
     <Content Include="FrontEndLogic\LayoutObjectType\list.js" />
     <Content Include="FrontEndLogic\Layout\index.js" />
+    <Content Include="FrontEndLogic\Load\calendar.js" />
     <Content Include="FrontEndLogic\Load\domesticlist.js" />
     <Content Include="FrontEndLogic\Load\exportlist.js" />
     <Content Include="FrontEndLogic\Load\importlist.js" />

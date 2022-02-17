@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using LoadCalendarModel = HekaMOLD.Business.Models.DataTransfer.Logistics.LoadCalendarModel;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -65,8 +66,34 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
                 containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
                 containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE: d.OrderCalculationType==4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM:"" ;
+                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName:"";
+                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName:"";
+                containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
+                containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
+                containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
+                containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+        public LoadCalendarModel[] GetLoadCalendarList()
+        {
+            List<LoadCalendarModel> data = new List<LoadCalendarModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemLoad>();
+
+            repo.Filter(a=>a.LoadDate !=null).ToList().ForEach(d =>
+            {
+                LoadCalendarModel containerObj = new LoadCalendarModel();
+                d.MapTo(containerObj);
+                containerObj.text = d.FirmCustomer != null ? d.FirmCustomer.FirmName + " Kap:" + d.OveralQuantity + " Yük Kodu :" + d.LoadCode+ " İşlem Yönü :"+((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption(): "" ;
+
+                containerObj.startDate = string.Format("{0:yyyy-MM-dd}", d.LoadDate) + "T00:00:00.000Z"; ;
+                containerObj.endDate = string.Format("{0:yyyy-MM-dd}", d.LoadDate) + "T00:00:00.000Z"; ;
+                containerObj.allDay = true;
                 data.Add(containerObj);
             });
 
@@ -98,7 +125,13 @@ namespace HekaMOLD.Business.UseCases
                  containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
                  containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
                  containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                 containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "";
+                 containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
+                 containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
+                 containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
+                 containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
+                 containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
+                 containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
+                 containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                  containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
 
                  data.Add(containerObj);
@@ -131,7 +164,13 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
                 containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
                 containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
+                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
+                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
+                containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
+                containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
+                containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
+                containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
 
                 data.Add(containerObj);
@@ -164,7 +203,13 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
                 containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
                 containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
+                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
+                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
+                containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
+                containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
+                containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
+                containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
 
                 data.Add(containerObj);
@@ -197,9 +242,14 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
                 containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
                 containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                containerObj.OrderCalculationTypeStr = d.OrderCalculationType != null ? ((OrderCalculationType)d.OrderCalculationType).ToCaption() : "";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
+                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
+                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
+                containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
+                containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
+                containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
+                containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
-
                 data.Add(containerObj);
             });
 

@@ -115,6 +115,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string FirmArrivalCustomsName { get; set; }
         public string ScheduledUploadDateStr { get; set; }
         public string ScheduledUploadWeek { get; set; }
+        public string LoadAddress { get; set; }
+        public string DischargeAddress { get; set; }
+
 
         #endregion
     }

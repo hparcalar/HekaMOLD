@@ -4,10 +4,8 @@ using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
-using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
@@ -52,7 +50,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (LoadBO bObj = new LoadBO())
             {
-                loadCode = bObj.GetNextLoadCode( directionId);
+                loadCode = bObj.GetNextLoadCode(directionId);
             }
 
             var jsonResult = Json(new { Result = !string.IsNullOrEmpty(loadCode), LoadCode = loadCode }, JsonRequestBehavior.AllowGet);
@@ -85,21 +83,40 @@ namespace HekaMOLD.Enterprise.Controllers
                 countrys = bObj.GetCountryList();
                 firmArrivalCustoms = bObj.GetFirmCustomsList();
             }
-            using (UsersBO bObj =new UsersBO())
+            using (UsersBO bObj = new UsersBO())
             {
                 users = bObj.GetUserList();
             }
 
-            var jsonResult = Json(new { 
-                Items = items, 
-                Units = units, 
-                Firms = firms, 
-                Forexes = forexes, 
-                Customs = customs , 
+            var jsonResult = Json(new
+            {
+                Items = items,
+                Units = units,
+                Firms = firms,
+                Forexes = forexes,
+                Customs = customs,
                 Users = users,
                 Citys = citys,
                 Countrys = countrys,
                 FirmArrivalCustoms = firmArrivalCustoms
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetLoadCalendarList()
+        {
+            LoadCalendarModel[] load = new LoadCalendarModel[0];
+
+            using (LoadBO bObj = new LoadBO())
+            {
+                load = bObj.GetLoadCalendarList();
+            }
+
+            var jsonResult = Json(new
+            {
+                Load = load
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;

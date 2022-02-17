@@ -107,6 +107,7 @@
     <Compile Include="Context\Models\ItemWarehouse.cs" />
     <Compile Include="Context\Models\LayoutItem.cs" />
     <Compile Include="Context\Models\LayoutObjectType.cs" />
+    <Compile Include="Context\Models\LoadCalendarModel.cs" />
     <Compile Include="Context\Models\LoadCostCategory.cs" />
     <Compile Include="Context\Models\Machine.cs" />
     <Compile Include="Context\Models\MachineGroup.cs" />
