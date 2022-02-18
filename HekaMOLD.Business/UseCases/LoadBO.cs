@@ -57,7 +57,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
                 containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
                 containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
-                containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
+               // containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
                 containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
                 containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
                 containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
@@ -268,8 +268,8 @@ namespace HekaMOLD.Business.UseCases
             {
                 model = dbObj.MapTo(model);
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
-                model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrder != null ? dbObj.ItemOrder.OrderDate : null);
-                model.OrderCreatUser = dbObj.ItemOrder != null ? dbObj.ItemOrder.User != null ? dbObj.ItemOrder.User.UserName : "": "";
+                //model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrder != null ? dbObj.ItemOrder.OrderDate : null);
+                //model.OrderCreatUser = dbObj.ItemOrder != null ? dbObj.ItemOrder.User != null ? dbObj.ItemOrder.User.UserName : "": "";
                 model.LoadStatusTypeStr = ((LoadStatusType)dbObj.LoadStatusType).ToCaption() != null ? ((LoadStatusType)dbObj.LoadStatusType).ToCaption() : "";
                 model.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.DischargeDate);
                 model.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadingDate);

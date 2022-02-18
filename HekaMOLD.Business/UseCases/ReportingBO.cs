@@ -64,7 +64,15 @@ namespace HekaMOLD.Business.UseCases
                         {
                             Id = objectId,
                             LoadCode = dbObj.LoadCode,
-                        });
+                            OveralWeight = Convert.ToString(dbObj.OveralWeight) + " KG",
+                            ShipperCountry = dbObj.CountryShipper != null ? dbObj.CountryShipper.CountryName:"",
+                            ShipperCity = dbObj.CityShipper != null ? dbObj.CityShipper.PostCode+" " +dbObj.CityShipper.CityName : "",
+                            ShipperAddress = dbObj.ShipperFirmExplanation,
+                            BuyerCountry = dbObj.CountryBuyer != null ? dbObj.CountryBuyer.CountryName : "",
+                            BuyerCity = dbObj.CityBuyer != null ? dbObj.CityBuyer.PostCode + " " + dbObj.CityBuyer.CityName : "",
+                            BuyerAddress = dbObj.BuyerFirmExplanation,
+                            OveralQuantity = Convert.ToString(dbObj.OveralQuantity) + " KAP",
+                        }) ;
 
                         return data;
                     }
