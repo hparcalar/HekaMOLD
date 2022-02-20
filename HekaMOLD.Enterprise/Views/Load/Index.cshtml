@@ -104,12 +104,12 @@
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                  viewBox="0 0 191.102 191.102" style="enable-background:new 0 0 191.102 191.102;" xml:space="preserve"><g>	<g>		<g>
-                                <path d="M151.134,0H39.968C26.551,0,15.636,10.914,15.636,24.33v142.441c0,13.417,10.916,24.331,24.332,24.331h111.166	c13.417,0,24.332-10.914,24.332-24.33V24.33C175.466,10.914,164.55,0,151.134,0z M168.517,118.135h-17.305v6.949h17.305v41.687
+                            <path d="M151.134,0H39.968C26.551,0,15.636,10.914,15.636,24.33v142.441c0,13.417,10.916,24.331,24.332,24.331h111.166	c13.417,0,24.332-10.914,24.332-24.33V24.33C175.466,10.914,164.55,0,151.134,0z M168.517,118.135h-17.305v6.949h17.305v41.687
 			                	c0,9.584-7.797,17.382-17.383,17.382H39.968c-9.586,0-17.383-7.797-17.383-17.381v-41.687h10.491v-6.949H22.585V24.33c0-9.584,7.797-17.381,17.383-17.381h111.166c9.586,0,17.383,7.797,17.383,17.381V118.135z" />
-                                 <rect x="40.025" y="118.136" width="20.847" height="6.949" /><rect x="67.822" y="118.136" width="20.847" height="6.949" /><rect x="95.619" y="118.136" width="20.847" height="6.949" />
-                                <rect x="123.415" y="118.136" width="20.847" height="6.949" /><path d="M85.127,48.644V20.847c0-1.919-1.554-3.475-3.475-3.475H36.483c-1.92,0-3.475,1.556-3.475,3.475v27.797
+                            <rect x="40.025" y="118.136" width="20.847" height="6.949" /><rect x="67.822" y="118.136" width="20.847" height="6.949" /><rect x="95.619" y="118.136" width="20.847" height="6.949" />
+                            <rect x="123.415" y="118.136" width="20.847" height="6.949" /><path d="M85.127,48.644V20.847c0-1.919-1.554-3.475-3.475-3.475H36.483c-1.92,0-3.475,1.556-3.475,3.475v27.797
 				                c0,1.919,1.554,3.475,3.475,3.475h45.169C83.573,52.119,85.127,50.563,85.127,48.644z M78.178,45.169h-38.22V24.322h38.22V45.169z" /><rect x="39.958" y="69.492" width="69.583" height="6.949" />
-                                <rect x="39.958" y="83.39" width="52.119" height="6.949" /><rect x="39.958" y="156.356" width="21.275" height="6.949" /> <rect x="39.958" y="142.458" width="38.22" height="6.949" />		</g>	</g></g><g></g><g>
+                            <rect x="39.958" y="83.39" width="52.119" height="6.949" /><rect x="39.958" y="156.356" width="21.275" height="6.949" /> <rect x="39.958" y="142.458" width="38.22" height="6.949" />		</g>	</g></g><g></g><g>
 			                     </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
                                </svg>
                         </span>
@@ -132,7 +132,7 @@
                         }*@
                     @if (Html.IsGranted("LoadCancelled"))
                     {
-                        <a class="btn btn-sm btn-light-danger" ng-click="cancelledLOrder()" ng-show="(modelObject.OrderStatus == 0 || modelObject.OrderStatus == 1) && modelObject.Id > 0">
+                        <a class="btn btn-sm btn-light-danger" ng-click="cancelledLOrder()" ng-show="(modelObject.OrderStatus == 2) && modelObject.Id > 0">
                             <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                      viewBox="0 0 512.001 512.001" style="enable-background:new 0 0 512.001 512.001;" xml:space="preserve">
@@ -344,7 +344,7 @@
                                         </div>
                                         <div class="col-xxl-7 d-flex flex-column">
                                             <div class="row">
-                                                <div class="col-xxl-6">
+                                                <div class="col-xxl-4">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yükleme Tipi</label>
                                                     <select class="form-select form-select-solid mb-3" data-allow-clear="true"
                                                             ng-options="item.Text for item in orderUploadTypeList" ng-model="selectedOrderUploadType"
@@ -352,13 +352,20 @@
                                                     </select>
 
                                                 </div>
-                                                <div class="col-xxl-6">
+                                                <div class="col-xxl-4">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşlem Yön Tipi</label>
                                                     <select class="form-select form-select-solid mb-3" data-allow-clear="true"
                                                             ng-options="item.Text for item in orderTransactionDirectionTypeList" ng-change="getNextOrderNo()" ng-model="selectedOrderTransactionDirectionType"
                                                             data-control="select2" data-placeholder="-- Seçiniz --">
                                                     </select>
 
+                                                </div>
+                                                <div class="col-xxl-4">
+                                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük Durumu</label>
+                                                    <select class="form-select form-select-solid mb-3" data-allow-clear="true"
+                                                            ng-options="item.Text for item in loadStatusTypeList" ng-model="selectedLoadStatusType"
+                                                            data-control="select2" data-placeholder="-- Seçiniz --">
+                                                    </select>
                                                 </div>
 
                                             </div>
@@ -551,6 +558,39 @@
                                                 </div>
                                             </div>
                                             <div class="col-xxl-6">
+                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Plaka</label>
+                                                <!--begin::Input group-->
+                                                <div class="mb-5">
+                                                    <select class="form-select form-select-solid" ng-options="item.Plate +'/'+item.Mark+'/'+item.Versiyon for item in vehicleTraillerList"
+                                                            ng-model="selectedVehicleTrailler" data-allow-clear="true"  data-control="select2">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xxl-6">
+                                                <div class="row">
+                                                    <div class="col-xxl-6">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İstenilen Romörk Tipi</label>
+                                                        <!--begin::Input group-->
+                                                        <div class="mb-5">
+                                                            <select ng-options="item.Text for item in trailerTypeList"
+                                                                    ng-model="selectedTrailerType" class="form-select form-select-solid">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xxl-6">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şoför</label>
+                                                        <!--begin::Input group-->
+                                                        <div class="mb-3">
+                                                            <input type="text" readonly class="form-control form-control-solid " ng-model="modelObject.Driver" placeholder="" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                            <div class="col-xxl-6">
                                                 <div class="row">
                                                     <div class="col-xxl-6">
                                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sipariş Oluşturan </label>
@@ -569,31 +609,6 @@
                                                 </div>
 
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xxl-6">
-                                                <div class="row">
-                                                    <div class="col-xxl-6">
-                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İstenilen Romörk Tipi</label>
-                                                        <!--begin::Input group-->
-                                                        <div class="mb-5">
-                                                            <select aria-label="Firma Türü" ng-options="item.Text for item in trailerTypeList"
-                                                                    ng-model="selectedTrailerType" class="form-select form-select-solid">
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xxl-6">
-                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şoför</label>
-                                                        <!--begin::Input group-->
-                                                        <div class="mb-3">
-                                                            <input type="text" readonly class="form-control form-control-solid " ng-model="modelObject.Driver" placeholder="" />
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
                                         </div>
 
                                     </div>

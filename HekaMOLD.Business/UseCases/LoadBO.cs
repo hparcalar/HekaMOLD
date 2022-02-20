@@ -57,7 +57,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
                 containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
                 containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
-               // containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
+                containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
                 containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
                 containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
                 containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
@@ -268,8 +268,8 @@ namespace HekaMOLD.Business.UseCases
             {
                 model = dbObj.MapTo(model);
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
-                //model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrder != null ? dbObj.ItemOrder.OrderDate : null);
-                //model.OrderCreatUser = dbObj.ItemOrder != null ? dbObj.ItemOrder.User != null ? dbObj.ItemOrder.User.UserName : "": "";
+                model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrder != null ? dbObj.ItemOrder.OrderDate : null);
+                model.OrderCreatUser = dbObj.ItemOrder != null ? dbObj.ItemOrder.User != null ? dbObj.ItemOrder.User.UserName : "": "";
                 model.LoadStatusTypeStr = ((LoadStatusType)dbObj.LoadStatusType).ToCaption() != null ? ((LoadStatusType)dbObj.LoadStatusType).ToCaption() : "";
                 model.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.DischargeDate);
                 model.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadingDate);
@@ -423,7 +423,7 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.LoadCode = GetNextLoadCode((int)model.OrderTransactionDirectionType);
                     dbObj.CreatDate = DateTime.Now;
                     dbObj.CreatedUserId = userId;
-                    dbObj.LoadStatusType = (int)LoadStatusType.Created;
+                    dbObj.LoadStatusType = (int)LoadStatusType.Ready;
                     repo.Add(dbObj);
                     newRecord = true;
                 }
@@ -485,6 +485,8 @@ namespace HekaMOLD.Business.UseCases
                 }
                 else if (string.IsNullOrEmpty(model.ScheduledUploadDateStr))
                     throw new Exception("Planlanan yükleme tarihi bilgisini giriniz !");
+                if ((int)model.LoadStatusType == (int)LoadStatusType.Cancelled)
+                    throw new Exception("İptal edilen yükte değişiklik yapılamaz !");
 
                 if (model.OrderTransactionDirectionType == null)
                     throw new Exception("İşlem yönü seçilmelidir !");
@@ -561,7 +563,7 @@ namespace HekaMOLD.Business.UseCases
                         item.MapTo(dbDetail);
                         dbDetail.ItemLoad = dbObj;
 
-                        if (dbDetail.LoadStatus == null || dbDetail.LoadStatus == (int)LoadStatusType.Approved)
+                        if (dbDetail.LoadStatus == null || dbDetail.LoadStatus == (int)LoadStatusType.Ready)
                             dbDetail.LoadStatus = dbObj.LoadStatusType;
                         if (dbObj.Id > 0)
                             dbDetail.ItemLoadId = dbObj.Id;
@@ -653,57 +655,57 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult ApproveLoad(int id, int userId)
-        {
-            BusinessResult result = new BusinessResult();
+        //public BusinessResult ApproveLoad(int id, int userId)
+        //{
+        //    BusinessResult result = new BusinessResult();
 
-            try
-            {
-                var repo = _unitOfWork.GetRepository<ItemLoad>();
+        //    try
+        //    {
+        //        var repo = _unitOfWork.GetRepository<ItemLoad>();
 
-                var dbObj = repo.Get(d => d.Id == id);
-                if (dbObj == null)
-                    throw new Exception("Onaylanması beklenen yük kaydına ulaşılamadı.");
+        //        var dbObj = repo.Get(d => d.Id == id);
+        //        if (dbObj == null)
+        //            throw new Exception("Onaylanması beklenen yük kaydına ulaşılamadı.");
 
-                if (dbObj.LoadStatusType != (int)LoadStatusType.Created)
-                    throw new Exception("Onay bekleyen durumunda olmayan bir sipariş onaylanamaz.");
+        //        if (dbObj.LoadStatusType != (int)LoadStatusType.Created)
+        //            throw new Exception("Onay bekleyen durumunda olmayan bir sipariş onaylanamaz.");
 
-                dbObj.LoadStatusType = (int)LoadStatusType.Approved;
-                dbObj.UpdatedDate = DateTime.Now;
-                dbObj.UpdatedUserId = userId;
+        //        dbObj.LoadStatusType = (int)LoadStatusType.Approved;
+        //        dbObj.UpdatedDate = DateTime.Now;
+        //        dbObj.UpdatedUserId = userId;
 
-                foreach (var item in dbObj.ItemLoadDetail)
-                {
-                    item.LoadStatus = (int)LoadStatusType.Approved;
-                }
+        //        foreach (var item in dbObj.ItemLoadDetail)
+        //        {
+        //            item.LoadStatus = (int)LoadStatusType.Approved;
+        //        }
 
-                _unitOfWork.SaveChanges();
+        //        _unitOfWork.SaveChanges();
 
-                #region CREATE NOTIFICATIONS
-                base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
-                {
-                    IsProcessed = false,
-                    Message = "Yük kodu: " + dbObj.LoadCode
-                            + " olan yük onaylandı.",
-                    Title = NotifyType.ItemLoadIsApproved.ToCaption(),
-                    NotifyType = (int)NotifyType.ItemOrderIsApproved,
-                    SeenStatus = 0,
-                    RecordId = dbObj.Id,
-                    UserId = dbObj.CreatedUserId
-                });
-                #endregion
+        //        #region CREATE NOTIFICATIONS
+        //        base.CreateNotification(new Models.DataTransfer.Core.NotificationModel
+        //        {
+        //            IsProcessed = false,
+        //            Message = "Yük kodu: " + dbObj.LoadCode
+        //                    + " olan yük onaylandı.",
+        //            Title = NotifyType.ItemLoadIsApproved.ToCaption(),
+        //            NotifyType = (int)NotifyType.ItemOrderIsApproved,
+        //            SeenStatus = 0,
+        //            RecordId = dbObj.Id,
+        //            UserId = dbObj.CreatedUserId
+        //        });
+        //        #endregion
 
-                result.RecordId = dbObj.Id;
-                result.Result = true;
-            }
-            catch (Exception ex)
-            {
-                result.Result = false;
-                result.ErrorMessage = ex.Message;
-            }
+        //        result.RecordId = dbObj.Id;
+        //        result.Result = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.Result = false;
+        //        result.ErrorMessage = ex.Message;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         public int GetNextRecord(int plantId, int Id)
         {

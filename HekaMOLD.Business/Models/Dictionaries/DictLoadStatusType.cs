@@ -12,13 +12,18 @@ namespace HekaMOLD.Business.Models.Dictionaries
         public static Dictionary<LoadStatusType, string> Values
     = new Dictionary<LoadStatusType, string>()
 {
-            { LoadStatusType.Created, "Hazır Bekliyor" },
-            { LoadStatusType.Approved, "Yük Onaylandı" },
-            { LoadStatusType.Cancelled, "Yük Reddedildi" },
-            { LoadStatusType.Completed, "Yük Tamamlandı" },
-            { LoadStatusType.Emptied, "Yük Boşaltıldı" },
-            { LoadStatusType.OnTheRoad, "Yük Yolda"},
-            { LoadStatusType.InWarehouse, "Yük Depoda"},
+            { LoadStatusType.Created, "Yük Oluşturuldu" },
+            { LoadStatusType.Cancelled, "Yük İptal Edildi" },
+            { LoadStatusType.Ready, "Hazır Bekliyor" },
+            { LoadStatusType.InWarehouse, "Yük Depoda" },
+            { LoadStatusType.ToBeLoadedFromCustomer, "Müşteriden Alınacak" },
+            { LoadStatusType.AtDomesticCustoms, "Yurtiçi Gümrükte"},
+            { LoadStatusType.InKapukule, "Kapıkulede"},
+            { LoadStatusType.OnTheWayAbroad, "Yurtdışı Yolda"},
+            { LoadStatusType.AtCustomsAbroad, "Yurtdışı Gümrükte"},
+            { LoadStatusType.BeingEmptied, "Boşaltmada"},
+            { LoadStatusType.Emptied, "Boşaltıldı"},
+            { LoadStatusType.Completed, "Tamamlandı"},
 
 };
 

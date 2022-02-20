@@ -10,10 +10,12 @@
     $scope.cityList = [];
     $scope.countryList = [];
     $scope.firmArrivalCustoms = [];
+    $scope.vehicleTraillerList = [];
 
     $scope.selectedUser = {};
     $scope.selectedCustomerFirm = {};
     $scope.selectedRow = { Id: 0 };
+    $scope.selectedVehicleTrailler = { };
 
     $scope.selectedEntryCustoms = {};
     $scope.selectedExitCustoms = {};
@@ -29,13 +31,18 @@
 
     $scope.selectedOrderTransactionDirectionType = {};
     $scope.orderTransactionDirectionTypeList = [{ Id: 1, Text: 'İhracat' }, { Id: 2, Text: 'İthalat' },
-        { Id: 3, Text: 'Yurt İçi' }, { Id: 4, Text: 'Transit' }];
+    { Id: 3, Text: 'Yurt İçi' }, { Id: 4, Text: 'Transit' }];
 
     $scope.selectedOrderUploadPointType = {};
     $scope.orderUploadPointTypeList = [{ Id: 1, Text: 'Müşteriden Yükleme' }, { Id: 2, Text: 'Depodan Yükleme' }];
 
     $scope.selectedOrderCalculationType = { Id: 0 };
     $scope.orderCalculationTypeList = [{ Id: 1, Text: 'Ağırlık' }, { Id: 2, Text: 'Metreküp' }, { Id: 3, Text: 'Ladametre' }, { Id: 4, Text: 'Komple' }, { Id: 5, Text: 'Minimun' }];
+
+    $scope.selectedLoadStatusType = { Id: 0 };
+    $scope.loadStatusTypeList = [{ Id: 2, Text: 'Hazır Bekliyor' }, { Id: 3, Text: 'Yük Depoda' }, { Id: 4, Text: 'Müşteriden Alınacak' }, { Id: 5, Text: 'Yurtiçi Gümrükte' },
+        { Id: 6, Text: 'Kapıkulede' }, { Id: 7, Text: 'Yurtdışı Yolda' }, { Id: 8, Text: 'Yurtdışı Gümrükte' }, { Id: 9, Text: 'Boşaltmada' },
+        { Id: 10, Text: 'Boşaltıldı' }, { Id: 11, Text: 'Tamamlandı' }];
 
     $scope.selectedTrailerType = {};
     $scope.trailerTypeList = [{ Id: 1, Text: 'Çadırlı' },
@@ -132,7 +139,7 @@
         }
     });
     // #endregion
-     // FUNCTIONS
+    // FUNCTIONS
     $scope.getNextOrderNo = function () {
 
         let directionId = 0;
@@ -240,6 +247,7 @@
         $scope.modelObject.Explanation = "";
         $scope.modelObject.OrderNo = "";
         $scope.selectedFirmArrivalCustoms = {};
+        $scope.selectedVehicleTrailler = {};
 
         $scope.getNextOrderNo().then(function (rNo) {
             $scope.modelObject.OrderNo = rNo;
@@ -371,6 +379,16 @@
             $scope.modelObject.FirmCustomsArrivalId = $scope.selectedFirmArrivalCustoms.Id;
         else
             $scope.modelObject.FirmCustomsArrivalId = null;
+
+        if (typeof $scope.selectedVehicleTrailler != 'undefined' && $scope.selectedVehicleTrailler != null)
+            $scope.modelObject.VehicleTraillerId = $scope.selectedVehicleTrailler.Id;
+        else
+            $scope.modelObject.VehicleTraillerId = null;
+
+        if (typeof $scope.selectedLoadStatusType != 'undefined' && $scope.selectedLoadStatusType != null)
+            $scope.modelObject.LoadStatusType = $scope.selectedLoadStatusType.Id;
+        else
+            $scope.modelObject.LoadStatusType = null;
 
         $http.post(HOST_URL + 'Load/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -520,6 +538,18 @@
                         );
                     else
                         $scope.selectedFirmArrivalCustoms = {};
+
+                    if (typeof $scope.modelObject.VehicleTraillerId != 'undefined' && $scope.modelObject.VehicleTraillerId != null)
+                        $scope.selectedVehicleTrailler = $scope.vehicleTraillerList.find(d => d.Id == $scope.modelObject.VehicleTraillerId
+                        );
+                    else
+                        $scope.selectedFirmArrivalCustoms = {};
+
+                    if (typeof $scope.modelObject.LoadStatusType != 'undefined' && $scope.modelObject.LoadStatusType != null)
+                        $scope.selectedLoadStatusType = $scope.loadStatusTypeList.find(d => d.Id == $scope.modelObject.LoadStatusType
+                        );
+                    else
+                        $scope.selectedLoadStatusType = {};
 
                     $scope.bindDetails();
                 }
@@ -775,8 +805,8 @@
                 { dataField: 'Height', caption: 'Yükseklik (Cm)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Weight', caption: 'Ağırlık (Kg)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Volume', caption: 'Hacim (m3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, allowEditing: false },
-                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 }},
-                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90  },
+                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90 },
                 { dataField: 'PackageInNumber', caption: 'Koli iç Adet', width: 90 },
 
                 {
@@ -796,7 +826,7 @@
                         //}
                     ]
                 }
-            ]                       
+            ]
             ,
             summary: {
                 totalItems: [{
@@ -861,6 +891,7 @@
                         $scope.cityList = resp.data.Citys;
                         $scope.countryList = resp.data.Countrys;
                         $scope.firmArrivalCustomsList = resp.data.FirmArrivalCustoms;
+                        $scope.vehicleTraillerList = resp.data.Vehicles;
                         resolve();
                     }
                 }).catch(function (err) { });
@@ -999,7 +1030,7 @@
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
         else {
-                $scope.bindDetails();
+            $scope.bindDetails();
 
         }
     });

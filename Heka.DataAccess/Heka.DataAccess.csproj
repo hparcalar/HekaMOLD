@@ -464,6 +464,14 @@
     <Compile Include="Migrations\202202151708454_VoyageUpdate%28VehicleAdd%29.designer.cs">
       <DependentUpon>202202151708454_VoyageUpdate%28VehicleAdd%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.cs" />
+    <Compile Include="Migrations\202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.designer.cs">
+      <DependentUpon>202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.cs" />
+    <Compile Include="Migrations\202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.designer.cs">
+      <DependentUpon>202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -697,6 +705,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202202151708454_VoyageUpdate%28VehicleAdd%29.resx">
       <DependentUpon>202202151708454_VoyageUpdate%28VehicleAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.resx">
+      <DependentUpon>202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.resx">
+      <DependentUpon>202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

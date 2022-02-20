@@ -169,9 +169,8 @@ namespace HekaMOLD.Business.Helpers
                         .FirstOrDefault();
                 }
             }
-            catch (Exception)
+            catch (Exception )
             {
-
             }
 
             return string.Empty;

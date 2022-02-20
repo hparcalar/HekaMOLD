@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Heka.DataAccess.Context.Models
+namespace Heka.DataAccess.Context
 {
     public partial class ItemLoad
     {
@@ -37,12 +37,15 @@ namespace Heka.DataAccess.Context.Models
         [ForeignKey("UserAuthor")]
         public int? UserAuthorId { get; set; }
         public DateTime? LoadingDate { get; set; }
-        
+
         [ForeignKey("Invoice")]
         public int? InvoiceId { get; set; }
 
         [ForeignKey("ForexType")]
         public Nullable<int> ForexTypeId { get; set; }
+
+        [ForeignKey("Vehicle")]
+        public Nullable<int> VehicleTraillerId { get; set; }
 
         public int? InvoiceStatus { get; set; }
         //Navlun bedeli
@@ -56,9 +59,9 @@ namespace Heka.DataAccess.Context.Models
         //Hazır olma Tarihi
         public DateTime? ReadinessDate { get; set; }
         //Müşteriden teslim Alınış Tarihi
-        public DateTime? DeliveryFromCustomerDate  { get; set; }
+        public DateTime? DeliveryFromCustomerDate { get; set; }
         //İstenen Varış Tarihi
-        public DateTime? IntendedArrivalDate  { get; set; }
+        public DateTime? IntendedArrivalDate { get; set; }
         [ForeignKey("FirmCustomsArrival")]
         public int? FirmCustomsArrivalId { get; set; }
         public string CustomsExplanation { get; set; }
@@ -136,7 +139,8 @@ namespace Heka.DataAccess.Context.Models
         public virtual City CityShipper { get; set; }
         public virtual City CityBuyer { get; set; }
         public virtual ForexType ForexType { get; set; }
-        
+        public virtual Vehicle Vehicle { get; set; }
+
         [InverseProperty("ItemLoad")]
         public virtual ICollection<ItemLoadDetail> ItemLoadDetail { get; set; }
 

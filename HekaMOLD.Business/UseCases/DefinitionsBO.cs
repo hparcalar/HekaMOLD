@@ -4198,7 +4198,7 @@ namespace HekaMOLD.Business.UseCases
                     CountryId = d.CountryId,
                     PlateCode = d.PlateCode,
                     NumberCode = d.NumberCode,
-                    CountryName = d.Country != null ? d.Country.CountryName : "",
+                    //CountryName = d.Country != null ? d.Country.CountryName : "",
                     PostCode = d.PostCode,
                 }).ToArray();
 

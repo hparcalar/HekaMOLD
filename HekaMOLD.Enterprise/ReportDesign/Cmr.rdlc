@@ -11,86 +11,18 @@
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
-        <Textbox Name="Textbox10">
+        <Textbox Name="Textbox113">
           <CanGrow>true</CanGrow>
           <KeepTogether>true</KeepTogether>
           <Paragraphs>
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>1.Изпраща(име, адрес, държава)</Value>
-                  <Style>
-                    <FontSize>8pt</FontSize>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>General</TextAlign>
-              </Style>
-            </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>   Sender ( name, address, country)</Value>
-                  <Style>
-                    <FontSize>8pt</FontSize>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>General</TextAlign>
-              </Style>
-            </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
                   <Value />
                   <Style>
-                    <FontSize>8pt</FontSize>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>General</TextAlign>
-              </Style>
-            </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value />
-                  <Style>
-                    <FontSize>8pt</FontSize>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>General</TextAlign>
-              </Style>
-            </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value />
-                  <Style>
-                    <FontSize>8pt</FontSize>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>General</TextAlign>
-              </Style>
-            </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value />
-                  <Style>
-                    <FontSize>8pt</FontSize>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                   </Style>
                 </TextRun>
@@ -101,10 +33,10 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>0.38498cm</Top>
-          <Left>1.1986cm</Left>
-          <Height>4.06117cm</Height>
-          <Width>9.37602cm</Width>
+          <Top>18.57895cm</Top>
+          <Left>10.52523cm</Left>
+          <Height>4.27141cm</Height>
+          <Width>10.03039cm</Width>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -116,32 +48,389 @@
             <PaddingBottom>2pt</PaddingBottom>
           </Style>
         </Textbox>
-        <Image Name="Image2">
-          <Source>Embedded</Source>
-          <Value>ID20220209_163703</Value>
-          <Sizing>FitProportional</Sizing>
-          <Top>0.43508cm</Top>
-          <Left>10.75101cm</Left>
-          <Height>4.01107cm</Height>
-          <Width>8.73421cm</Width>
-          <ZIndex>1</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-          </Style>
-        </Image>
-        <Textbox Name="Textbox33">
+        <Textbox Name="Textbox4">
           <CanGrow>true</CanGrow>
           <KeepTogether>true</KeepTogether>
           <Paragraphs>
             <Paragraph>
               <TextRuns>
                 <TextRun>
+                  <Value>INTERNATIONAL CONSIGNMENT NOTE / ULUSLARARASI</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>HAMULE SENEDI</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>SCRISOARE DE TRANSPORT INTERNATIONAL</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>This carriage is subject notwithstanding</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>any contrary clause , to the convention</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>relating to the contract for the international</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>carriage of the goods bv road (CMR)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value />
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value />
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>İşbu irsaliye karşıt klozlara rağmen</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>karayolu ile emtianını uluslararası</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>taşınması ile ilgili anlaşmaları</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>düzenleyen hükümlerine tabidir. (CMR)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox4</rd:DefaultName>
+          <Top>0.3497cm</Top>
+          <Left>10.68046cm</Left>
+          <Height>4.06117cm</Height>
+          <Width>9.94571cm</Width>
+          <ZIndex>1</ZIndex>
+          <Style>
+            <Border>
+              <Style>Solid</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox3">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>C M R</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>12pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox3</rd:DefaultName>
+          <Top>0.3497cm</Top>
+          <Left>16.98844cm</Left>
+          <Height>1.57506cm</Height>
+          <Width>3.60283cm</Width>
+          <ZIndex>2</ZIndex>
+          <Style>
+            <Border>
+              <Style>Solid</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox10">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>1.Gönderen (isim,adres,memleket)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>General</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Sender (name,address,country)Expeditor (Nume,adresa,tara)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
                   <Value />
                   <Style>
                     <FontSize>8pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>General</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value />
+                  <Style>
+                    <FontSize>8pt</FontSize>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>General</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value />
+                  <Style>
+                    <FontSize>8pt</FontSize>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>General</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value />
+                  <Style>
+                    <FontSize>8pt</FontSize>
                     <TextDecoration>None</TextDecoration>
                   </Style>
                 </TextRun>
@@ -152,11 +441,67 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>4.55198cm</Top>
+          <Top>0.3497cm</Top>
+          <Left>1.23388cm</Left>
+          <Height>4.06117cm</Height>
+          <Width>9.34074cm</Width>
+          <ZIndex>3</ZIndex>
+          <Style>
+            <Border>
+              <Style>Solid</Style>
+            </Border>
+            <VerticalAlign>Top</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox33">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>2.Alıcı (isim,adres,memleket)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>General</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Consignee (name,address,country) Destinatar (Nume,adresa,tara)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox10</rd:DefaultName>
+          <Top>4.5167cm</Top>
           <Left>1.1986cm</Left>
           <Height>2.99888cm</Height>
           <Width>9.37602cm</Width>
-          <ZIndex>2</ZIndex>
+          <ZIndex>4</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -175,13 +520,33 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>16.Превозвач (име, адрес, държава)</Value>
+                  <Value>16</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontFamily>Arial Tur</FontFamily>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>.</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
                     <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>Nakliyeci (isim,adres,memleket) Carrier (name,address,country)Transportator(Nume,adresa,tara)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -189,32 +554,13 @@
                 <TextAlign>General</TextAlign>
               </Style>
             </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>     Carrier (name, address, country)</Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>7pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <LeftIndent>0cm</LeftIndent>
-              <RightIndent>0cm</RightIndent>
-              <Style>
-                <TextAlign>Left</TextAlign>
-              </Style>
-            </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>4.55198cm</Top>
-          <Left>10.64518cm</Left>
+          <Top>4.5167cm</Top>
+          <Left>10.68046cm</Left>
           <Height>2.99888cm</Height>
-          <Width>9.91044cm</Width>
-          <ZIndex>3</ZIndex>
+          <Width>9.87516cm</Width>
+          <ZIndex>5</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -233,8 +579,17 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>3.Разтоварен пункт (място, държава)
- Place of delivery of the goods (place, country)
+                  <Value>3.Malların gönderildiği yer
+Place of delivery of the goods (place, country)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">
                   </Value>
                   <Style>
                     <FontSize>8pt</FontSize>
@@ -252,7 +607,7 @@
           <Left>1.1986cm</Left>
           <Height>1.52117cm</Height>
           <Width>9.37602cm</Width>
-          <ZIndex>4</ZIndex>
+          <ZIndex>6</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -271,10 +626,19 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>17. Последователни превозвачи (име, адрес, държава)</Value>
+                  <Value>17. </Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>Diğer nakliyeciler / Successive carries / Transportator succesiv (Nume,adresa,tara)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
                     <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -291,7 +655,7 @@
           <Left>10.68046cm</Left>
           <Height>1.52117cm</Height>
           <Width>9.87517cm</Width>
-          <ZIndex>5</ZIndex>
+          <ZIndex>7</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -311,7 +675,7 @@
           <Left>6.7437cm</Left>
           <Height>3.7225cm</Height>
           <Width>7.87117cm</Width>
-          <ZIndex>6</ZIndex>
+          <ZIndex>8</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -325,10 +689,9 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>4.Товарен пункт ( място, държава, дата)</Value>
+                  <Value>4.Malların teslim alındığı yer ve gün/ Place and dateof taking of the goods/</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
                     <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -342,10 +705,9 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>   Place and  date of taking over the goods (place, country, date)</Value>
+                  <Value>  Locul şi data incarcarii marfii(localitate,tara,data)</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
                     <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -364,7 +726,7 @@
           <Left>1.1986cm</Left>
           <Height>1.63406cm</Height>
           <Width>9.37602cm</Width>
-          <ZIndex>7</ZIndex>
+          <ZIndex>9</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -383,8 +745,16 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value> 5. Приложени документи
- Dokuments attached
+                  <Value>5. Locul şi data incarcarii marfii(localitate,tara,data)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">
                   </Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
@@ -405,7 +775,7 @@
           <Left>1.1986cm</Left>
           <Height>1.74695cm</Height>
           <Width>9.37602cm</Width>
-          <ZIndex>8</ZIndex>
+          <ZIndex>10</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -424,10 +794,19 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>18.Резерви и бележки на превозвача</Value>
+                  <Value>18.</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>Nakliyecinin şart ve mulahazaları / Carries reservation and observation / Rezervele si observatiile transportatorului</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
                     <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -438,32 +817,13 @@
                 <TextAlign>General</TextAlign>
               </Style>
             </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>     Carrier's resevations and observations</Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>7pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <LeftIndent>0cm</LeftIndent>
-              <RightIndent>0cm</RightIndent>
-              <Style>
-                <TextAlign>Left</TextAlign>
-              </Style>
-            </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
           <Top>9.31897cm</Top>
           <Left>10.68046cm</Left>
           <Height>3.45156cm</Height>
           <Width>9.87516cm</Width>
-          <ZIndex>9</ZIndex>
+          <ZIndex>11</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -566,11 +926,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>12.80582cm</Top>
+          <Top>12.77054cm</Top>
           <Left>1.23388cm</Left>
           <Height>2.79823cm</Height>
           <Width>11.13285cm</Width>
-          <ZIndex>10</ZIndex>
+          <ZIndex>12</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -589,7 +949,67 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>6.Знаци и номера  </Value>
+                  <Value>6.</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontFamily>Arial Tur</FontFamily>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>Marka ve numara</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Marks and No</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontFamily>Times New Roman</FontFamily>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Marci şi numere</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve"> </Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">       </Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -601,32 +1021,13 @@
               </TextRuns>
               <Style />
             </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>   Marks and Nos        </Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>6pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <LeftIndent>0cm</LeftIndent>
-              <RightIndent>0cm</RightIndent>
-              <Style>
-                <TextAlign>Left</TextAlign>
-              </Style>
-            </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox48</rd:DefaultName>
           <Top>12.91165cm</Top>
           <Left>1.23388cm</Left>
-          <Height>0.74817cm</Height>
+          <Height>1.08684cm</Height>
           <Width>2.57056cm</Width>
-          <ZIndex>11</ZIndex>
+          <ZIndex>13</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -644,7 +1045,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>7.Брой колети</Value>
+                  <Value>7.</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -653,13 +1054,53 @@
                     <TextDecoration>None</TextDecoration>
                   </Style>
                 </TextRun>
+                <TextRun>
+                  <Value>Parça adedi</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
               </TextRuns>
               <Style />
             </Paragraph>
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>  Number of  packages   </Value>
+                  <Value>Number of packing</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Numar de colete</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">   </Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -673,15 +1114,16 @@
               <RightIndent>0cm</RightIndent>
               <Style>
                 <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
               </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox48</rd:DefaultName>
           <Top>12.91165cm</Top>
           <Left>3.91027cm</Left>
-          <Height>0.74817cm</Height>
+          <Height>1.08684cm</Height>
           <Width>2.65704cm</Width>
-          <ZIndex>12</ZIndex>
+          <ZIndex>14</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -699,7 +1141,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>8.Вид опaковка</Value>
+                  <Value>8</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -708,13 +1150,53 @@
                     <TextDecoration>None</TextDecoration>
                   </Style>
                 </TextRun>
+                <TextRun>
+                  <Value>Ambalaj nevi</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
               </TextRuns>
               <Style />
             </Paragraph>
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>   Method of packing   </Value>
+                  <Value>Method of the goods</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Mod de ambalare</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">   </Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -728,15 +1210,16 @@
               <RightIndent>0cm</RightIndent>
               <Style>
                 <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
               </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox48</rd:DefaultName>
           <Top>12.91165cm</Top>
           <Left>6.67314cm</Left>
-          <Height>0.74817cm</Height>
+          <Height>1.08684cm</Height>
           <Width>2.69575cm</Width>
-          <ZIndex>13</ZIndex>
+          <ZIndex>15</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -754,7 +1237,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>9.Вид на  стоката</Value>
+                  <Value>9.</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -763,13 +1246,53 @@
                     <TextDecoration>None</TextDecoration>
                   </Style>
                 </TextRun>
+                <TextRun>
+                  <Value>Malın cinsi</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
               </TextRuns>
               <Style />
             </Paragraph>
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>  Nature of the goods  </Value>
+                  <Value>Nature of goods</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Natura marfii</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve"> </Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -783,15 +1306,16 @@
               <RightIndent>0cm</RightIndent>
               <Style>
                 <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
               </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox48</rd:DefaultName>
           <Top>12.91165cm</Top>
           <Left>9.47472cm</Left>
-          <Height>0.74817cm</Height>
+          <Height>1.08684cm</Height>
           <Width>2.6764cm</Width>
-          <ZIndex>14</ZIndex>
+          <ZIndex>16</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -829,7 +1353,7 @@
           <Left>1.23388cm</Left>
           <Height>1.03039cm</Height>
           <Width>11.20341cm</Width>
-          <ZIndex>15</ZIndex>
+          <ZIndex>17</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -848,7 +1372,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value> Клас </Value>
+                  <Value> Sınıf</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -879,9 +1403,9 @@
           <rd:DefaultName>Textbox48</rd:DefaultName>
           <Top>15.70988cm</Top>
           <Left>1.1986cm</Left>
-          <Height>1.03039cm</Height>
+          <Height>0.77639cm</Height>
           <Width>2.60584cm</Width>
-          <ZIndex>16</ZIndex>
+          <ZIndex>18</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -899,7 +1423,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Цифра</Value>
+                  <Value>Numara</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -930,9 +1454,9 @@
           <rd:DefaultName>Textbox48</rd:DefaultName>
           <Top>15.70988cm</Top>
           <Left>3.875cm</Left>
-          <Height>1.03039cm</Height>
+          <Height>0.77639cm</Height>
           <Width>2.71167cm</Width>
-          <ZIndex>17</ZIndex>
+          <ZIndex>19</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -950,7 +1474,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Буква</Value>
+                  <Value>Mektup</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -981,9 +1505,9 @@
           <rd:DefaultName>Textbox48</rd:DefaultName>
           <Top>15.70988cm</Top>
           <Left>6.65722cm</Left>
-          <Height>1.03039cm</Height>
+          <Height>0.77639cm</Height>
           <Width>2.71167cm</Width>
-          <ZIndex>18</ZIndex>
+          <ZIndex>20</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -1032,9 +1556,9 @@
           <rd:DefaultName>Textbox48</rd:DefaultName>
           <Top>15.70988cm</Top>
           <Left>9.43945cm</Left>
-          <Height>1.03039cm</Height>
+          <Height>0.77639cm</Height>
           <Width>2.89201cm</Width>
-          <ZIndex>19</ZIndex>
+          <ZIndex>21</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -1052,7 +1576,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>10.Статистически No Statistical number</Value>
+                  <Value>10.</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -1061,18 +1585,68 @@
                     <TextDecoration>None</TextDecoration>
                   </Style>
                 </TextRun>
+                <TextRun>
+                  <Value>Statistik No</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
               </TextRuns>
               <Style>
                 <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Statistical</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Number Nr.Statistic</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
               </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
           <Top>12.87637cm</Top>
           <Left>12.43729cm</Left>
-          <Height>3.8639cm</Height>
+          <Height>3.6099cm</Height>
           <Width>2.67084cm</Width>
-          <ZIndex>20</ZIndex>
+          <ZIndex>22</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -1091,13 +1665,23 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>11.Тежина бруто кг.</Value>
+                  <Value>11.</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
                     <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>Brüt kg.</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1108,44 +1692,13 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Gross weight in</Value>
+                  <Value>Gross weight in kg</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
                     <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-                <TextRun>
-                  <Value xml:space="preserve"> </Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>7pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-                <TextRun>
-                  <Value>kg</Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>6pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-                <TextRun>
-                  <Value>.</Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>6pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
-                    <TextDecoration>None</TextDecoration>
-                    <Color>#969696</Color>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1153,6 +1706,27 @@
               <RightIndent>0cm</RightIndent>
               <Style>
                 <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Greutate bruta, kg</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
               </Style>
             </Paragraph>
             <Paragraph>
@@ -1199,9 +1773,9 @@
           <rd:DefaultName>Textbox10</rd:DefaultName>
           <Top>12.87637cm</Top>
           <Left>15.21396cm</Left>
-          <Height>3.8639cm</Height>
+          <Height>3.6099cm</Height>
           <Width>2.63556cm</Width>
-          <ZIndex>21</ZIndex>
+          <ZIndex>23</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -1220,13 +1794,23 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>12.Обем м3</Value>
+                  <Value>12.</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
                     <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>Hacim m3</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1237,13 +1821,13 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value> Volume in m3</Value>
+                  <Value>Volume in m3</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
                     <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1251,15 +1835,36 @@
               <RightIndent>0cm</RightIndent>
               <Style>
                 <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Cubaj, m3</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+                <LineHeight>12pt</LineHeight>
               </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
           <Top>12.87637cm</Top>
           <Left>17.92008cm</Left>
-          <Height>3.8639cm</Height>
+          <Height>3.6099cm</Height>
           <Width>2.63554cm</Width>
-          <ZIndex>22</ZIndex>
+          <ZIndex>24</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -1278,20 +1883,9 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value xml:space="preserve"> </Value>
+                  <Value>13. Gönderenin talimatı ( Gümrük ve diğer formaliteler)</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>6pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
-                    <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-                <TextRun>
-                  <Value>13. Указания на изпращача</Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
                     <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -1305,10 +1899,27 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>      Sender's instructions</Value>
+                  <Value>Sender's instructions ( Customs and formalities)</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>expeditorului (Formalitati vamale si oficiale)</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
                     <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -1323,11 +1934,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>16.81083cm</Top>
+          <Top>16.5921cm</Top>
           <Left>1.1986cm</Left>
-          <Height>4.23867cm</Height>
+          <Height>3.49783cm</Height>
           <Width>9.2208cm</Width>
-          <ZIndex>23</ZIndex>
+          <ZIndex>25</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -1346,10 +1957,19 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>19. Специални споразумения</Value>
+                  <Value>19.</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>Özel Şartlar / Special agreements / Conditii speciale</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
                     <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -1363,29 +1983,26 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>     Special agreements</Value>
+                  <Value>1-Mal Kalitesinden ambalaj ve istif hatasından meydana gelebilecek hasar ve zararlardan nakliyeci sorumlu değildir. 2-Yüklemede ve Boşaltmada 48 saat serbest süre vardır.Bu süre aşıldığında her gün için EUR 200,-bekleme alınır. Carrier are not responsible for any damages and/or losses due to improper loading and/or packing. Demurrage at EUR.200,- per day shali be payable exceeding 48 hours loading and/or discharging time</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>7pt</FontSize>
+                    <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                   </Style>
                 </TextRun>
               </TextRuns>
-              <LeftIndent>0cm</LeftIndent>
-              <RightIndent>0cm</RightIndent>
               <Style>
-                <TextAlign>Left</TextAlign>
+                <TextAlign>General</TextAlign>
               </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>16.81083cm</Top>
+          <Top>16.5921cm</Top>
           <Left>10.52523cm</Left>
-          <Height>1.69756cm</Height>
+          <Height>1.91629cm</Height>
           <Width>10.03039cm</Width>
-          <ZIndex>24</ZIndex>
+          <ZIndex>26</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -1404,24 +2021,49 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>
-                    За плащане от
-                    20.To be paid by
+                  <Value>Tarafından ödenecek</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>20.To be paid by</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">
                   </Value>
                   <Style>
                     <FontSize>4pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
-              <Style />
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>18.6495cm</Top>
           <Left>10.59579cm</Left>
           <Height>0.6cm</Height>
-          <Width>2.44355cm</Width>
-          <ZIndex>25</ZIndex>
+          <Width>2.38711cm</Width>
+          <ZIndex>27</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1439,7 +2081,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>    Изпращача / Sender</Value>
+                  <Value>    Gönderen/ Sender</Value>
                   <Style>
                     <FontSize>4pt</FontSize>
                   </Style>
@@ -1453,7 +2095,7 @@
           <Left>13.07462cm</Left>
           <Height>0.6cm</Height>
           <Width>2.46472cm</Width>
-          <ZIndex>26</ZIndex>
+          <ZIndex>28</ZIndex>
           <Style>
             <Border />
             <PaddingLeft>2pt</PaddingLeft>
@@ -1469,7 +2111,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>        Валута  /  Сurrency</Value>
+                  <Value>       Para Birimi/  Сurrency</Value>
                   <Style>
                     <FontSize>4pt</FontSize>
                   </Style>
@@ -1483,7 +2125,7 @@
           <Left>15.68046cm</Left>
           <Height>0.6cm</Height>
           <Width>2.42944cm</Width>
-          <ZIndex>27</ZIndex>
+          <ZIndex>29</ZIndex>
           <Style>
             <Border />
             <PaddingLeft>2pt</PaddingLeft>
@@ -1499,7 +2141,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Получателя / Consignee</Value>
+                  <Value>Alıcı/ Consignee</Value>
                   <Style>
                     <FontSize>4pt</FontSize>
                   </Style>
@@ -1513,7 +2155,7 @@
           <Left>18.21573cm</Left>
           <Height>0.6cm</Height>
           <Width>2.33989cm</Width>
-          <ZIndex>28</ZIndex>
+          <ZIndex>30</ZIndex>
           <Style>
             <Border />
             <RightBorder>
@@ -1534,24 +2176,42 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>
-                    Превозна цена
-                    Carriage charges:
-                  </Value>
+                  <Value>Taşıma ücretleri</Value>
                   <Style>
+                    <FontStyle>Normal</FontStyle>
                     <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
                   </Style>
                 </TextRun>
               </TextRuns>
               <Style />
             </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Carriage charges:</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
-          <Top>19.28478cm</Top>
+          <Top>19.32006cm</Top>
           <Left>10.59579cm</Left>
           <Height>0.56472cm</Height>
           <Width>2.38711cm</Width>
-          <ZIndex>29</ZIndex>
+          <ZIndex>31</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1569,16 +2229,41 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>
-                    Намаления
-                    Deductions:
+                  <Value>Kesintiler</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Deductions:</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">
                   </Value>
                   <Style>
                     <FontSize>4pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
-              <Style />
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
@@ -1586,7 +2271,7 @@
           <Left>10.59579cm</Left>
           <Height>0.56472cm</Height>
           <Width>2.38711cm</Width>
-          <ZIndex>30</ZIndex>
+          <ZIndex>32</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1604,9 +2289,17 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>
-                    Cалдо
-                    Balance:
+                  <Value>Denge
+Balance:</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">
                   </Value>
                   <Style>
                     <FontSize>4pt</FontSize>
@@ -1619,9 +2312,9 @@
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>20.48478cm</Top>
           <Left>10.59579cm</Left>
-          <Height>0.56472cm</Height>
+          <Height>0.49503cm</Height>
           <Width>2.38711cm</Width>
-          <ZIndex>31</ZIndex>
+          <ZIndex>33</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1650,10 +2343,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>19.32006cm</Top>
-          <Left>13.01818cm</Left>
+          <Left>13.07462cm</Left>
           <Height>0.52944cm</Height>
-          <Width>1.27233cm</Width>
-          <ZIndex>32</ZIndex>
+          <Width>1.21589cm</Width>
+          <ZIndex>34</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1685,7 +2378,7 @@
           <Left>14.36107cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.15711cm</Width>
-          <ZIndex>33</ZIndex>
+          <ZIndex>35</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1717,7 +2410,7 @@
           <Left>15.68046cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.23705cm</Width>
-          <ZIndex>34</ZIndex>
+          <ZIndex>36</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1749,7 +2442,7 @@
           <Left>16.98806cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.12184cm</Width>
-          <ZIndex>35</ZIndex>
+          <ZIndex>37</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1781,7 +2474,7 @@
           <Left>18.21573cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.23705cm</Width>
-          <ZIndex>36</ZIndex>
+          <ZIndex>38</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1812,8 +2505,8 @@
           <Top>19.32006cm</Top>
           <Left>19.52334cm</Left>
           <Height>0.52944cm</Height>
-          <Width>1.03229cm</Width>
-          <ZIndex>37</ZIndex>
+          <Width>1.03228cm</Width>
+          <ZIndex>39</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1847,10 +2540,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>19.92006cm</Top>
-          <Left>13.05345cm</Left>
+          <Left>13.07462cm</Left>
           <Height>0.52944cm</Height>
-          <Width>1.27233cm</Width>
-          <ZIndex>38</ZIndex>
+          <Width>1.21588cm</Width>
+          <ZIndex>40</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1882,7 +2575,7 @@
           <Left>14.36106cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.15711cm</Width>
-          <ZIndex>39</ZIndex>
+          <ZIndex>41</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1914,7 +2607,7 @@
           <Left>15.68045cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.23705cm</Width>
-          <ZIndex>40</ZIndex>
+          <ZIndex>42</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1946,7 +2639,7 @@
           <Left>16.98805cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.12184cm</Width>
-          <ZIndex>41</ZIndex>
+          <ZIndex>43</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1978,7 +2671,7 @@
           <Left>18.21572cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.23705cm</Width>
-          <ZIndex>42</ZIndex>
+          <ZIndex>44</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2010,7 +2703,7 @@
           <Left>19.52333cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.03229cm</Width>
-          <ZIndex>43</ZIndex>
+          <ZIndex>45</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2044,10 +2737,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>20.52006cm</Top>
-          <Left>13.01818cm</Left>
+          <Left>13.07462cm</Left>
           <Height>0.52944cm</Height>
-          <Width>1.27233cm</Width>
-          <ZIndex>44</ZIndex>
+          <Width>1.21589cm</Width>
+          <ZIndex>46</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2079,7 +2772,7 @@
           <Left>14.36106cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.15711cm</Width>
-          <ZIndex>45</ZIndex>
+          <ZIndex>47</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2108,10 +2801,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>20.52006cm</Top>
-          <Left>15.65929cm</Left>
+          <Left>15.68045cm</Left>
           <Height>0.52944cm</Height>
-          <Width>1.23705cm</Width>
-          <ZIndex>46</ZIndex>
+          <Width>1.23706cm</Width>
+          <ZIndex>48</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2143,7 +2836,7 @@
           <Left>16.98805cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.12184cm</Width>
-          <ZIndex>47</ZIndex>
+          <ZIndex>49</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2175,7 +2868,7 @@
           <Left>18.21572cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.23705cm</Width>
-          <ZIndex>48</ZIndex>
+          <ZIndex>50</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2207,7 +2900,7 @@
           <Left>19.52333cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.03229cm</Width>
-          <ZIndex>49</ZIndex>
+          <ZIndex>51</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2230,9 +2923,50 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>14.Предписания за плащане на навлото/instructions as to payment for carriage
- Предплатено// Carriage paid
- Дължимо / Carriage forward
+                  <Value>14.İade</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>General</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Return to</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>İnstructiuni de plata</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">
                   </Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
@@ -2243,17 +2977,19 @@
                   </Style>
                 </TextRun>
               </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
               <Style>
-                <TextAlign>General</TextAlign>
+                <TextAlign>Left</TextAlign>
               </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>21.08477cm</Top>
+          <Top>20.19577cm</Top>
           <Left>1.1986cm</Left>
-          <Height>1.76559cm</Height>
+          <Height>2.65459cm</Height>
           <Width>9.2208cm</Width>
-          <ZIndex>50</ZIndex>
+          <ZIndex>52</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -2272,9 +3008,8 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>
-                    ВСИЧКО
-                    TOTAL   :
+                  <Value>Toplam
+TOTAL   :
                   </Value>
                   <Style>
                     <FontSize>4pt</FontSize>
@@ -2288,8 +3023,8 @@
           <Top>22.21509cm</Top>
           <Left>10.59579cm</Left>
           <Height>0.6cm</Height>
-          <Width>2.42239cm</Width>
-          <ZIndex>51</ZIndex>
+          <Width>2.3871cm</Width>
+          <ZIndex>53</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2307,24 +3042,42 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>
-                    Други такси
-                    Other charges :
-                  </Value>
+                  <Value>Diğer ücretler</Value>
                   <Style>
+                    <FontStyle>Normal</FontStyle>
                     <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
                   </Style>
                 </TextRun>
               </TextRuns>
               <Style />
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Other charges :</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>21.68564cm</Top>
           <Left>10.59579cm</Left>
           <Height>0.56472cm</Height>
-          <Width>2.38749cm</Width>
-          <ZIndex>52</ZIndex>
+          <Width>2.373cm</Width>
+          <ZIndex>54</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2342,24 +3095,49 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>
-                    Добавки
-                    Supplem charges:
+                  <Value>Ek ücretler</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Supplem charges:</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>4pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value xml:space="preserve">
                   </Value>
                   <Style>
                     <FontSize>4pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
-              <Style />
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>21.01509cm</Top>
           <Left>10.59579cm</Left>
           <Height>0.56472cm</Height>
-          <Width>2.42239cm</Width>
-          <ZIndex>53</ZIndex>
+          <Width>2.38711cm</Width>
+          <ZIndex>55</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2388,10 +3166,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>21.12092cm</Top>
-          <Left>13.01856cm</Left>
+          <Left>13.07462cm</Left>
           <Height>0.52944cm</Height>
-          <Width>1.27233cm</Width>
-          <ZIndex>54</ZIndex>
+          <Width>1.21627cm</Width>
+          <ZIndex>56</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2423,7 +3201,7 @@
           <Left>14.36145cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.15711cm</Width>
-          <ZIndex>55</ZIndex>
+          <ZIndex>57</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2453,9 +3231,9 @@
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>21.72092cm</Top>
           <Left>14.36144cm</Left>
-          <Height>0.52944cm</Height>
+          <Height>0.49417cm</Height>
           <Width>1.15711cm</Width>
-          <ZIndex>56</ZIndex>
+          <ZIndex>58</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2484,10 +3262,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>21.72092cm</Top>
-          <Left>13.01856cm</Left>
-          <Height>0.52944cm</Height>
-          <Width>1.27233cm</Width>
-          <ZIndex>57</ZIndex>
+          <Left>13.07462cm</Left>
+          <Height>0.49417cm</Height>
+          <Width>1.21627cm</Width>
+          <ZIndex>59</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2516,10 +3294,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>22.28565cm</Top>
-          <Left>13.05345cm</Left>
+          <Left>13.07462cm</Left>
           <Height>0.52944cm</Height>
-          <Width>1.27233cm</Width>
-          <ZIndex>58</ZIndex>
+          <Width>1.25116cm</Width>
+          <ZIndex>60</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2547,11 +3325,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
-          <Top>22.32092cm</Top>
+          <Top>22.28565cm</Top>
           <Left>14.36144cm</Left>
-          <Height>0.52944cm</Height>
+          <Height>0.56471cm</Height>
           <Width>1.15711cm</Width>
-          <ZIndex>59</ZIndex>
+          <ZIndex>61</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2579,11 +3357,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
-          <Top>22.32092cm</Top>
-          <Left>15.65967cm</Left>
-          <Height>0.52944cm</Height>
-          <Width>1.23705cm</Width>
-          <ZIndex>60</ZIndex>
+          <Top>22.28565cm</Top>
+          <Left>15.68046cm</Left>
+          <Height>0.56471cm</Height>
+          <Width>1.21626cm</Width>
+          <ZIndex>62</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2611,11 +3389,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
-          <Top>22.32092cm</Top>
+          <Top>22.28565cm</Top>
           <Left>16.98843cm</Left>
-          <Height>0.52944cm</Height>
+          <Height>0.56471cm</Height>
           <Width>1.12184cm</Width>
-          <ZIndex>61</ZIndex>
+          <ZIndex>63</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2645,9 +3423,9 @@
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>21.72092cm</Top>
           <Left>16.98843cm</Left>
-          <Height>0.52944cm</Height>
+          <Height>0.49417cm</Height>
           <Width>1.12184cm</Width>
-          <ZIndex>62</ZIndex>
+          <ZIndex>64</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2676,10 +3454,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>21.72092cm</Top>
-          <Left>15.68083cm</Left>
-          <Height>0.52944cm</Height>
-          <Width>1.23705cm</Width>
-          <ZIndex>63</ZIndex>
+          <Left>15.68046cm</Left>
+          <Height>0.49417cm</Height>
+          <Width>1.23741cm</Width>
+          <ZIndex>65</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2708,10 +3486,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>21.12092cm</Top>
-          <Left>15.68084cm</Left>
+          <Left>15.68045cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.23705cm</Width>
-          <ZIndex>64</ZIndex>
+          <ZIndex>66</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2743,7 +3521,7 @@
           <Left>16.98844cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.12184cm</Width>
-          <ZIndex>65</ZIndex>
+          <ZIndex>67</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2775,7 +3553,7 @@
           <Left>18.21611cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.23705cm</Width>
-          <ZIndex>66</ZIndex>
+          <ZIndex>68</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2807,7 +3585,7 @@
           <Left>19.52372cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.03229cm</Width>
-          <ZIndex>67</ZIndex>
+          <ZIndex>69</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2844,7 +3622,7 @@
           <Left>19.52371cm</Left>
           <Height>0.52944cm</Height>
           <Width>1.03229cm</Width>
-          <ZIndex>68</ZIndex>
+          <ZIndex>70</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2879,9 +3657,9 @@
           <rd:DefaultName>Textbox65</rd:DefaultName>
           <Top>21.72092cm</Top>
           <Left>18.2161cm</Left>
-          <Height>0.52944cm</Height>
+          <Height>0.49417cm</Height>
           <Width>1.23705cm</Width>
-          <ZIndex>69</ZIndex>
+          <ZIndex>71</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2909,11 +3687,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
-          <Top>22.32092cm</Top>
+          <Top>22.28565cm</Top>
           <Left>18.2161cm</Left>
-          <Height>0.52944cm</Height>
+          <Height>0.56471cm</Height>
           <Width>1.23705cm</Width>
-          <ZIndex>70</ZIndex>
+          <ZIndex>72</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2941,11 +3719,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
-          <Top>22.32092cm</Top>
+          <Top>22.28565cm</Top>
           <Left>19.52371cm</Left>
-          <Height>0.52944cm</Height>
+          <Height>0.56471cm</Height>
           <Width>1.03229cm</Width>
-          <ZIndex>71</ZIndex>
+          <ZIndex>73</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2968,14 +3746,30 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>
-                    21.Изготвена в……………………….…на…………………...…..………………
-                    Established in………...……….……..on……………..…..…..…………...…..
-                  </Value>
+                  <Value>21</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontFamily>Arial Tur</FontFamily>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>.</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
                     <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>Tanzim Yeri</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                   </Style>
@@ -2985,13 +3779,49 @@
                 <TextAlign>General</TextAlign>
               </Style>
             </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Established in</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Incheiat la</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
           <Top>22.92092cm</Top>
           <Left>1.1986cm</Left>
           <Height>1.17292cm</Height>
           <Width>9.2208cm</Width>
-          <ZIndex>72</ZIndex>
+          <ZIndex>74</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -3010,11 +3840,10 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>15. Наложен платеж</Value>
+                  <Value>15. Navlunun ödenmesi için talimatlar</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>6pt</FontSize>
+                    <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                   </Style>
@@ -3027,11 +3856,28 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>      Cash on delivery</Value>
+                  <Value>Directions as of freight payment</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>6pt</FontSize>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Plata se face la livrare</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                   </Style>
@@ -3049,7 +3895,7 @@
           <Left>10.52523cm</Left>
           <Height>1.17292cm</Height>
           <Width>10.06605cm</Width>
-          <ZIndex>73</ZIndex>
+          <ZIndex>75</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -3084,11 +3930,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>24.19967cm</Top>
+          <Top>24.1644cm</Top>
           <Left>1.1986cm</Left>
           <Height>4.08687cm</Height>
           <Width>7.56351cm</Width>
-          <ZIndex>74</ZIndex>
+          <ZIndex>76</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -3127,7 +3973,7 @@
           <Left>8.86795cm</Left>
           <Height>4.08686cm</Height>
           <Width>6.17357cm</Width>
-          <ZIndex>75</ZIndex>
+          <ZIndex>77</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -3156,7 +4002,7 @@
                   </Style>
                 </TextRun>
                 <TextRun>
-                  <Value xml:space="preserve">  </Value>
+                  <Value xml:space="preserve"> </Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
                     <FontFamily>Arial Tur</FontFamily>
@@ -3167,13 +4013,13 @@
                   </Style>
                 </TextRun>
                 <TextRun>
-                  <Value>.Стоките получени /  Goods received</Value>
+                  <Value>Mallar teslim alındı / Goods received</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
                     <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -3187,7 +4033,7 @@
           <Left>15.14735cm</Left>
           <Height>4.05159cm</Height>
           <Width>5.44392cm</Width>
-          <ZIndex>76</ZIndex>
+          <ZIndex>78</ZIndex>
           <Style>
             <Border>
               <Style>Solid</Style>
@@ -3206,35 +4052,63 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>.  </Value>
+                  <Value>Malı gönderenin imzası ve kaşesi</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
                     <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
-                  </Style>
-                </TextRun>
-                <TextRun>
-                  <Value>Подпис и печат на изпращача</Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>7pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
-                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
               <Style />
             </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Signatuer and stamp of the sender</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Stampila si semnatura expeditorului</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox120</rd:DefaultName>
-          <Top>27.68653cm</Top>
+          <Top>26.81023cm</Top>
           <Left>1.1986cm</Left>
-          <Height>0.6cm</Height>
+          <Height>1.16586cm</Height>
           <Width>7.49296cm</Width>
-          <ZIndex>77</ZIndex>
+          <ZIndex>79</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3252,13 +4126,13 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Подпис и печат на превозвача</Value>
+                  <Value>Nakliyeci ve kaşesi</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>7pt</FontSize>
+                    <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -3267,13 +4141,32 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Signature and stamp of the carrier</Value>
+                  <Value>Stamp of the carrier and carrier</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>7pt</FontSize>
+                    <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Stampila si semnatura transportatorului</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -3285,11 +4178,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox120</rd:DefaultName>
-          <Top>27.3902cm</Top>
-          <Left>8.79739cm</Left>
-          <Height>0.89633cm</Height>
-          <Width>6.24413cm</Width>
-          <ZIndex>78</ZIndex>
+          <Top>26.81023cm</Top>
+          <Left>8.86795cm</Left>
+          <Height>1.16586cm</Height>
+          <Width>6.1383cm</Width>
+          <ZIndex>80</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3307,13 +4200,13 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Подпис и печат на получателя</Value>
+                  <Value>Malı gönderenin imzası ve kaşesi</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>7pt</FontSize>
+                    <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -3322,13 +4215,32 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Signature and stamp of the consignee</Value>
+                  <Value>Signatuer and stamp of the sender</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Arial Tur</FontFamily>
-                    <FontSize>7pt</FontSize>
+                    <FontSize>6pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <LeftIndent>0cm</LeftIndent>
+              <RightIndent>0cm</RightIndent>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Stampila si semnatura expeditorului</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>6pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -3340,11 +4252,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox120</rd:DefaultName>
-          <Top>27.3902cm</Top>
-          <Left>15.21791cm</Left>
-          <Height>0.89633cm</Height>
+          <Top>26.81023cm</Top>
+          <Left>15.18264cm</Left>
+          <Height>1.16586cm</Height>
           <Width>5.3381cm</Width>
-          <ZIndex>79</ZIndex>
+          <ZIndex>81</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3373,14 +4285,14 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>1.43087cm</Top>
-          <Left>16.69594cm</Left>
+          <Top>0.9652cm</Top>
+          <Left>16.98844cm</Left>
           <Height>0.6cm</Height>
           <Width>2.5cm</Width>
-          <ZIndex>80</ZIndex>
+          <ZIndex>82</ZIndex>
           <Style>
             <Border>
-              <Style>Solid</Style>
+              <Style>None</Style>
             </Border>
             <PaddingLeft>2pt</PaddingLeft>
             <PaddingRight>2pt</PaddingRight>
@@ -3403,11 +4315,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>13.70773cm</Top>
+          <Top>14.00406cm</Top>
           <Left>15.21396cm</Left>
           <Height>0.6cm</Height>
           <Width>2.5cm</Width>
-          <ZIndex>81</ZIndex>
+          <ZIndex>83</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3433,11 +4345,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>24.50273cm</Top>
+          <Top>24.77796cm</Top>
           <Left>1.55151cm</Left>
-          <Height>1.24856cm</Height>
-          <Width>6.2465cm</Width>
-          <ZIndex>82</ZIndex>
+          <Height>0.55006cm</Height>
+          <Width>7.14005cm</Width>
+          <ZIndex>84</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3463,11 +4375,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>25.85712cm</Top>
+          <Top>25.32802cm</Top>
           <Left>1.55151cm</Left>
-          <Height>0.64233cm</Height>
-          <Width>3.73707cm</Width>
-          <ZIndex>83</ZIndex>
+          <Height>0.46594cm</Height>
+          <Width>7.14005cm</Width>
+          <ZIndex>85</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3493,11 +4405,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>26.60529cm</Top>
+          <Top>25.86451cm</Top>
           <Left>1.55151cm</Left>
-          <Height>0.64233cm</Height>
-          <Width>2.95142cm</Width>
-          <ZIndex>84</ZIndex>
+          <Height>0.47299cm</Height>
+          <Width>7.14005cm</Width>
+          <ZIndex>86</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3526,8 +4438,8 @@
           <Top>8.54258cm</Top>
           <Left>1.55151cm</Left>
           <Height>0.6cm</Height>
-          <Width>3.73707cm</Width>
-          <ZIndex>85</ZIndex>
+          <Width>8.86789cm</Width>
+          <ZIndex>87</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3553,11 +4465,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>4.7432cm</Top>
+          <Top>5.84286cm</Top>
           <Left>1.55151cm</Left>
-          <Height>1.19267cm</Height>
-          <Width>6.2465cm</Width>
-          <ZIndex>86</ZIndex>
+          <Height>0.62117cm</Height>
+          <Width>8.86789cm</Width>
+          <ZIndex>88</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3583,11 +4495,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>6.0417cm</Top>
+          <Top>6.46403cm</Top>
           <Left>1.55151cm</Left>
           <Height>0.6cm</Height>
-          <Width>6.2465cm</Width>
-          <ZIndex>87</ZIndex>
+          <Width>8.86789cm</Width>
+          <ZIndex>89</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3613,11 +4525,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>13.80093cm</Top>
-          <Left>1.23388cm</Left>
+          <Top>14.30893cm</Top>
+          <Left>1.55151cm</Left>
           <Height>0.6cm</Height>
-          <Width>2.64112cm</Width>
-          <ZIndex>88</ZIndex>
+          <Width>2.28821cm</Width>
+          <ZIndex>90</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3643,11 +4555,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>1.43087cm</Top>
+          <Top>1.92476cm</Top>
           <Left>1.55151cm</Left>
-          <Height>1.24856cm</Height>
-          <Width>6.2465cm</Width>
-          <ZIndex>89</ZIndex>
+          <Height>0.61356cm</Height>
+          <Width>8.86789cm</Width>
+          <ZIndex>91</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3673,11 +4585,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>2.85582cm</Top>
+          <Top>2.53832cm</Top>
           <Left>1.55151cm</Left>
           <Height>0.64233cm</Height>
-          <Width>6.2465cm</Width>
-          <ZIndex>90</ZIndex>
+          <Width>8.86789cm</Width>
+          <ZIndex>92</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3703,11 +4615,11 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>3.67454cm</Top>
+          <Top>3.18065cm</Top>
           <Left>1.55151cm</Left>
           <Height>0.64233cm</Height>
-          <Width>6.2465cm</Width>
-          <ZIndex>91</ZIndex>
+          <Width>8.86789cm</Width>
+          <ZIndex>93</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3718,29 +4630,169 @@
             <PaddingBottom>2pt</PaddingBottom>
           </Style>
         </Textbox>
-        <Textbox Name="Textbox4">
+        <Textbox Name="LoadCode13">
           <CanGrow>true</CanGrow>
           <KeepTogether>true</KeepTogether>
           <Paragraphs>
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value />
-                  <Style />
+                  <Value>=First(Fields!ShipperFirmName.Value, "DS1")</Value>
+                  <Style>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
                 </TextRun>
               </TextRuns>
               <Style />
             </Paragraph>
           </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>0.38498cm</Top>
-          <Left>10.64518cm</Left>
-          <Height>4.06117cm</Height>
-          <Width>9.91044cm</Width>
-          <ZIndex>92</ZIndex>
+          <rd:DefaultName>LoadCode</rd:DefaultName>
+          <Top>1.3112cm</Top>
+          <Left>1.55151cm</Left>
+          <Height>0.61356cm</Height>
+          <Width>8.86789cm</Width>
+          <ZIndex>94</ZIndex>
           <Style>
             <Border>
-              <Style>Solid</Style>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="LoadCode14">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=First(Fields!BuyerFirmName.Value, "DS1")</Value>
+                  <Style>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>LoadCode</rd:DefaultName>
+          <Top>5.22169cm</Top>
+          <Left>1.55151cm</Left>
+          <Height>0.62117cm</Height>
+          <Width>8.86789cm</Width>
+          <ZIndex>95</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="LoadCode15">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=First(Fields!VehicleTraillerPlate.Value, "DS1")</Value>
+                  <Style>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>LoadCode</rd:DefaultName>
+          <Top>8.54258cm</Top>
+          <Left>11.08874cm</Left>
+          <Height>0.6cm</Height>
+          <Width>8.86789cm</Width>
+          <ZIndex>96</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="LoadCode16">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=First(Fields!ShipperFirmName.Value, "DS1")</Value>
+                  <Style>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>LoadCode</rd:DefaultName>
+          <Top>24.27023cm</Top>
+          <Left>1.55151cm</Left>
+          <Height>0.50773cm</Height>
+          <Width>7.14005cm</Width>
+          <ZIndex>97</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox112">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value xml:space="preserve">
+     </Value>
+                  <Style>
+                    <FontSize>4pt</FontSize>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>Tarih on Data</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontSize>7pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                    <TextDecoration>None</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox65</rd:DefaultName>
+          <Top>22.99147cm</Top>
+          <Left>5.84482cm</Left>
+          <Height>0.99654cm</Height>
+          <Width>2.54939cm</Width>
+          <ZIndex>98</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
             </Border>
             <PaddingLeft>2pt</PaddingLeft>
             <PaddingRight>2pt</PaddingRight>
@@ -3799,6 +4851,10 @@
           <DataField>OveralQuantity</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ShipperFirmName">
+          <DataField>ShipperFirmName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="ShipperCountry">
           <DataField>ShipperCountry</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -3811,6 +4867,10 @@
           <DataField>ShipperAddress</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="BuyerFirmName">
+          <DataField>BuyerFirmName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="BuyerCountry">
           <DataField>BuyerCountry</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -3821,6 +4881,10 @@
         </Field>
         <Field Name="BuyerAddress">
           <DataField>BuyerAddress</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="VehicleTraillerPlate">
+          <DataField>VehicleTraillerPlate</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

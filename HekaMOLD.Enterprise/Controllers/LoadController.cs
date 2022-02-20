@@ -70,7 +70,7 @@ namespace HekaMOLD.Enterprise.Controllers
             CityModel[] citys = new CityModel[0];
             CountryModel[] countrys = new CountryModel[0];
             FirmModel[] firmArrivalCustoms = new FirmModel[0];
-
+            VehicleModel[] vehicles = new VehicleModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -82,6 +82,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 citys = bObj.GetCityList();
                 countrys = bObj.GetCountryList();
                 firmArrivalCustoms = bObj.GetFirmCustomsList();
+                vehicles = bObj.GetVehicleList();
             }
             using (UsersBO bObj = new UsersBO())
             {
@@ -98,7 +99,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 Users = users,
                 Citys = citys,
                 Countrys = countrys,
-                FirmArrivalCustoms = firmArrivalCustoms
+                FirmArrivalCustoms = firmArrivalCustoms,
+                Vehicles = vehicles
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
@@ -273,18 +275,18 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
 
-        [HttpPost]
-        public JsonResult ApproveLoad(int rid)
-        {
-            BusinessResult result = new BusinessResult();
+        //[HttpPost]
+        //public JsonResult ApproveLoad(int rid)
+        //{
+        //    BusinessResult result = new BusinessResult();
 
-            using (LoadBO bObj = new LoadBO())
-            {
-                result = bObj.ApproveLoad(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
-            }
+        //    using (LoadBO bObj = new LoadBO())
+        //    {
+        //        result = bObj.ApproveLoad(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+        //    }
 
-            return Json(result);
-        }
+        //    return Json(result);
+        //}
         [HttpGet]
         public JsonResult GetNextRecord(int Id)
         {

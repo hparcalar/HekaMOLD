@@ -1,4 +1,4 @@
-﻿namespace Heka.DataAccess.Context.Models
+﻿namespace Heka.DataAccess.Context
 {
     public class LoadCalendarModel 
     {

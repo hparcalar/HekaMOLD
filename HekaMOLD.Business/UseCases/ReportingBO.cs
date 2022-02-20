@@ -7,17 +7,14 @@ using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core.Base;
 using Microsoft.Reporting.WebForms;
-using QRCoder;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -65,14 +62,17 @@ namespace HekaMOLD.Business.UseCases
                             Id = objectId,
                             LoadCode = dbObj.LoadCode,
                             OveralWeight = Convert.ToString(dbObj.OveralWeight) + " KG",
-                            ShipperCountry = dbObj.CountryShipper != null ? dbObj.CountryShipper.CountryName:"",
-                            ShipperCity = dbObj.CityShipper != null ? dbObj.CityShipper.PostCode+" " +dbObj.CityShipper.CityName : "",
+                            ShipperFirmName = dbObj.FirmShipper != null ? dbObj.FirmShipper.FirmName:"",
+                            ShipperCountry = dbObj.CountryShipper != null ? dbObj.CountryShipper.CountryName : "",
+                            ShipperCity = dbObj.CityShipper != null ? dbObj.CityShipper.PostCode + " " + dbObj.CityShipper.CityName : "",
                             ShipperAddress = dbObj.ShipperFirmExplanation,
+                            BuyerFirmName = dbObj.FirmBuyer != null ? dbObj.FirmBuyer.FirmName : "",
                             BuyerCountry = dbObj.CountryBuyer != null ? dbObj.CountryBuyer.CountryName : "",
                             BuyerCity = dbObj.CityBuyer != null ? dbObj.CityBuyer.PostCode + " " + dbObj.CityBuyer.CityName : "",
                             BuyerAddress = dbObj.BuyerFirmExplanation,
                             OveralQuantity = Convert.ToString(dbObj.OveralQuantity) + " KAP",
-                        }) ;
+                            VehicleTraillerPlate = dbObj.Vehicle != null ? dbObj.Vehicle.Plate:""
+                        });
 
                         return data;
                     }
@@ -101,7 +101,7 @@ namespace HekaMOLD.Business.UseCases
                 if (dbTemplate == null)
                     throw new Exception("Rapor şablonu bulunamadı.");
 
-                PrintReportTemplate<T>(dataModel, dbTemplate.FileName, dbPrinter.PageWidth ?? 0, 
+                PrintReportTemplate<T>(dataModel, dbTemplate.FileName, dbPrinter.PageWidth ?? 0,
                     dbPrinter.PageHeight ?? 0, dbPrinter.AccessPath);
 
                 result.Result = true;
@@ -141,7 +141,7 @@ namespace HekaMOLD.Business.UseCases
         }
 
         #region GENERIC PRINTING METHOD
-        protected BusinessResult PrintReportTemplate<T>(T model, string fileName, 
+        protected BusinessResult PrintReportTemplate<T>(T model, string fileName,
             decimal pageWidth, decimal pageHeight, string printerName)
         {
             BusinessResult result = new BusinessResult();
@@ -435,7 +435,7 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 DateTime dtStart, dtEnd;
-                
+
                 if (string.IsNullOrEmpty(filter.StartDate))
                     filter.StartDate = "01.01." + DateTime.Now.Year;
                 if (string.IsNullOrEmpty(filter.EndDate))
@@ -468,7 +468,7 @@ namespace HekaMOLD.Business.UseCases
                         WorkDate = d.Key.WorkDate,
                         //WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.Key.WorkDate),
                         WorkOrderDetailId = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.Id : 0,
-                        MachineId =  d.Key.Machine.Id,
+                        MachineId = d.Key.Machine.Id,
                         MachineCode = d.Key.Machine.MachineCode,
                         MachineName = d.Key.Machine.MachineName,
                         OrderQuantity = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ItemOrderDetail.Quantity ?? 0 : 0,
@@ -511,8 +511,8 @@ namespace HekaMOLD.Business.UseCases
                    .Select(d => new ProductionHistoryModel
                    {
                        WorkDate = d.Key.WorkDate,
-                        //WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.Key.WorkDate),
-                        WorkOrderDetailId = d.Key.WorkOrderDetail.Id,
+                       //WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.Key.WorkDate),
+                       WorkOrderDetailId = d.Key.WorkOrderDetail.Id,
                        MachineId = d.Key.WorkOrderDetail.MachineId,
                        MachineCode = d.Key.WorkOrderDetail.Machine.MachineCode,
                        MachineName = d.Key.WorkOrderDetail.Machine.MachineName,

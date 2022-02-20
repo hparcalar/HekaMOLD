@@ -638,7 +638,7 @@ namespace HekaMOLD.Business.UseCases
                     Explanation = dbOrder.Explanation,
                     ItemOrder = dbOrder,
                     LoadCode = newLoadCode,
-                    LoadStatusType = (int)LoadStatusType.Created,
+                    LoadStatusType = (int)LoadStatusType.Ready,
                     ForexTypeId = dbOrder.ForexTypeId,
                     PlantId = dbOrder.PlantId.Value,
                 };
@@ -670,7 +670,7 @@ namespace HekaMOLD.Business.UseCases
                         Stackable = dbOrderDetail.Stackable,
                         Volume = dbOrderDetail.Volume,
                         Weight = dbOrderDetail.Weight,
-                        LoadStatus = (int)LoadStatusType.Created
+                        LoadStatus = (int)LoadStatusType.Ready
                     };
                     repoLoadDetail.Add(dbLoadDetail);
 
@@ -718,7 +718,7 @@ namespace HekaMOLD.Business.UseCases
                             {
                                 IsProcessed = false,
                                 Message ="Yük Kodu: "+ newLoadCode
-                                + " yeni bir yük oluşturuldu. Onayınız bekleniyor.",
+                                + " yeni bir yük oluşturuldu. Hazır bekleniyor.",
                                 Title = NotifyType.ItemLoadWaitForApproval.ToCaption(),
                                 NotifyType = (int)NotifyType.ItemLoadWaitForApproval,
                                 SeenStatus = 0,

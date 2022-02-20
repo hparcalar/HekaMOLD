@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Heka.DataAccess.Context.Models
+namespace Heka.DataAccess.Context
 {
    public partial class FirmTariff
     {

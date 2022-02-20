@@ -30,6 +30,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public Nullable<int> CustomerFirmId { get; set; }
         public int? ShipperFirmId { get; set; }
         public int? BuyerFirmId { get; set; }
+        public Nullable<int> VehicleTraillerId { get; set; }
         //Hazır olma Tarihi
         public DateTime? ReadinessDate { get; set; }
         //Müşteriden teslim Alınış Tarihi
@@ -117,6 +118,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string ScheduledUploadWeek { get; set; }
         public string LoadAddress { get; set; }
         public string DischargeAddress { get; set; }
+        public string Plate { get; set; }
+        public string Mark { get; set; }
+        public string Versiyon { get; set; }
 
 
         #endregion

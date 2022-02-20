@@ -57,12 +57,14 @@
                     return;
 
                 var deadlineClass = '', item = e.data;
-                if (item.LoadStatusType == 2) {
+                if (item.LoadStatusType == 1)
                     deadlineClass = 'bg-danger';
-                }
-                if (item.LoadStatusType == 1) {
-                    deadlineClass = 'bg-primary';
-                }
+                if (item.LoadStatusType == 2)
+                    deadlineClass = 'bg-secondary';
+                if (item.LoadStatusType == 11)
+                    deadlineClass = 'bg-success';
+                if (!item.LoadStatusType == 11 || !item.LoadStatusType == 1 || !item.LoadStatusType == 2)
+                    deadlineClass = 'bg-white';
                 //else {
                 //    if (item.DateOfNeedStr != null && item.DateOfNeedStr.length > 0) {
                 //        var dtDeadline = moment(item.DateOfNeedStr, 'DD.MM.YYYY');
@@ -72,9 +74,9 @@
                 //            deadlineClass = 'bg-warning';
                 //    }
                 //}
-                if (item.LoadStatusType == 5) {
-                    deadlineClass = 'bg-success';
-                }
+                //if (item.LoadStatusType == 5) {
+                //    deadlineClass = 'bg-success';
+                //}
 
                 if (deadlineClass.length > 0)
                     e.rowElement.addClass(deadlineClass);

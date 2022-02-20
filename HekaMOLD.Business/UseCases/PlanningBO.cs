@@ -886,9 +886,7 @@ namespace HekaMOLD.Business.UseCases
             var repo = _unitOfWork.GetRepository<ItemLoad>();
             data = repo.Filter(d =>
                 (
-                    d.LoadStatusType == (int)LoadStatusType.Created
-                    ||
-                    d.LoadStatusType == (int)LoadStatusType.Approved
+                    d.LoadStatusType == (int)LoadStatusType.Ready
                 )
             ).ToList().Select(d => new ItemLoadModel
             {

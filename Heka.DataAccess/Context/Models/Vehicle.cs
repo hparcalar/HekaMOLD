@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Heka.DataAccess.Context.Models
+namespace Heka.DataAccess.Context
 {
     public class Vehicle
     {
@@ -13,7 +13,7 @@ namespace Heka.DataAccess.Context.Models
             this.VehicleTire = new HashSet<VehicleTire>();
             this.VoyageByTowinfVehicle = new HashSet<Voyage>();
             this.VoyageByTraillerVehicle = new HashSet<Voyage>();
-
+            this.ItemLoad = new HashSet<ItemLoad>();
         }
         public int Id { get; set; }
         public string Plate { get; set; }
@@ -76,6 +76,9 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("TraillerVehicle")]
         public virtual ICollection<Voyage> VoyageByTraillerVehicle { get; set; }
+
+        [InverseProperty("Vehicle")]
+        public virtual ICollection<ItemLoad> ItemLoad { get; set; }
 
     }
 }

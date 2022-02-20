@@ -158,9 +158,9 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Planlanan yükleme tarihi giriniz !");
 
                 if ((int)model.OrderStatus == (int)OrderStatusType.Loaded)
-                {
                     throw new Exception("Yüke dönüştürülülen siparişte değişiklik yapılamaz !");
-                }
+                if ((int)model.OrderStatus == (int)OrderStatusType.Cancelled)
+                    throw new Exception("İptal edilen siparişte değişiklik yapılamaz !");
                 if ( model.OrderTransactionDirectionType == null)
                     throw new Exception("İşlem yönü seçilmelidir !");
 
