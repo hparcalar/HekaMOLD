@@ -25,7 +25,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? FirmId { get; set; }
         public int? ItemId { get; set; }
         public int? ForexTypeId { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? BuyingPrice { get; set; }
+        public decimal? SalesPrice { get; set; }
 
         public YarnRecipeMixModel[] YarnRecipeMixes { get; set; }
 

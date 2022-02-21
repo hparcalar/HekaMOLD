@@ -30,7 +30,8 @@ namespace Heka.DataAccess.Context.Models
         //Karisim 
         public bool? Mix { get; set; }
         public int? YarnRecipeType { get; set; }
-        public decimal ? Price { get; set; }
+        public decimal ? BuyingPrice { get; set; }
+        public decimal? SalesPrice { get; set; }
 
         public Nullable<int> PlantId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
