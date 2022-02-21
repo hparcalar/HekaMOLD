@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Logistics;
+﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.UseCases;
 using System.Web.Mvc;
 
@@ -30,6 +31,33 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        [HttpGet]
+        public JsonResult GetSelectables()
+        {
+            VehicleModel[] vehicles = new VehicleModel[0];
+            DriverModel[] drivers = new DriverModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                vehicles = bObj.GetVehicleList();
+
+            }
+            using (UsersBO bObj = new UsersBO())
+            {
+                drivers = bObj.GetDriverList();
+
+            }
+
+            var jsonResult = Json(new
+            {
+                Vehicles = vehicles,
+                Drivers = drivers
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         [HttpGet]
         public JsonResult GetWaitingLoads()
         {

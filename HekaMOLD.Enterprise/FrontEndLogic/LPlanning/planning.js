@@ -1,10 +1,17 @@
 ﻿DevExpress.localization.locale('tr');
 
 app.controller('lPlanningCtrl', function lPlanningCtrl($scope, $http) {
-    $scope.modelObject = { Id: 0 };
+    $scope.modelObject = { Id: 0, VoyageDateStr:moment().format('DD.MM.YYYY'),};
     $scope.saveStatus = 0;
 
     $scope.waitingLoadVisible = true;
+
+    $scope.driverList = [];
+    $scope.selectedDriver = {}
+
+    $scope.vehicleTraillerList = [];
+    $scope.selectedVehicleTrailler = {}
+
 
     $scope.machineList = [];
     $scope.selectedMachineList = [];
@@ -37,12 +44,36 @@ app.controller('lPlanningCtrl', function lPlanningCtrl($scope, $http) {
     // DATA GET METHODS
     $scope.loadMachineList = function () {
         $scope.machineList.splice(0, $scope.machineList.length);
-        for (var i = 1; i < 7; i++) {
-            var dateOfDay = moment().day(i).week(moment().week());
+        alert($scope.VoyageDateStr);
+        for (var i = 1; i < 2; i++) {
+            var dateOfDay = VoyageDateStr.getDay();
             $scope.machineList.push({ PlanDate: dateOfDay, PlanDateTitle: dateOfDay.format('DD.MM.YYYY') })
         }
 
         $scope.loadRunningBoard();
+    }
+    $scope.VoyageDateChange = function () {
+        alert($scope.VoyageDateStr);
+
+        $scope.loadMachineList();
+    }
+    // GET SELECTABLE DATA
+    $scope.loadSelectables = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'LPlanning/GetSelectables', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.vehicleTraillerList = resp.data.Vehicles;
+                        $scope.driverList = resp.data.Drivers;
+                        $scope.VoyageDateStr = moment().format('DD.MM.YYYY')
+
+
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prmReq;
     }
     $scope.loadRunningBoard = function () {
         $http.get(HOST_URL + 'Delivery/GetProductionPlans', {}, 'json')
@@ -379,6 +410,10 @@ app.controller('lPlanningCtrl', function lPlanningCtrl($scope, $http) {
     // ON LOAD EVENTS
     $scope.loadMachineList();
     $scope.loadWaitingPlanList();
+    // ON LOAD EVENTS
+    $scope.loadSelectables().then(function (data) {
+
+    });
 });
     
 

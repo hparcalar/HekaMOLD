@@ -71,6 +71,7 @@ namespace HekaMOLD.Enterprise.Controllers
             CountryModel[] countrys = new CountryModel[0];
             FirmModel[] firmArrivalCustoms = new FirmModel[0];
             VehicleModel[] vehicles = new VehicleModel[0];
+            DriverModel[] drivers = new DriverModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -83,10 +84,13 @@ namespace HekaMOLD.Enterprise.Controllers
                 countrys = bObj.GetCountryList();
                 firmArrivalCustoms = bObj.GetFirmCustomsList();
                 vehicles = bObj.GetVehicleList();
+
             }
             using (UsersBO bObj = new UsersBO())
             {
                 users = bObj.GetUserList();
+                drivers = bObj.GetDriverList();
+
             }
 
             var jsonResult = Json(new
@@ -100,7 +104,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 Citys = citys,
                 Countrys = countrys,
                 FirmArrivalCustoms = firmArrivalCustoms,
-                Vehicles = vehicles
+                Vehicles = vehicles,
+                Drivers = drivers
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
