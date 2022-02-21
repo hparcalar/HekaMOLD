@@ -15,6 +15,7 @@
         public string BuyerCity { get; set; }
         public string BuyerAddress { get; set; }
         public string VehicleTraillerPlate { get; set; }
+        public string LoadingDateStr { get; set; }
 
     }
 }

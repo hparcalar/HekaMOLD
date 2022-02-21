@@ -206,11 +206,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="HekaLogisticsDataItemLoadCmr.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HekaLogisticsDataItemLoadCmr.xsd</DependentUpon>
-    </Compile>
     <Compile Include="HekaLogisticsDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -4527,17 +4522,6 @@
     <Content Include="Scripts\ckeditor.js.map" />
     <Content Include="HekaLogisticsDataSet.xsc">
       <DependentUpon>HekaLogisticsDataSet.xsd</DependentUpon>
-    </Content>
-    <Content Include="HekaLogisticsDataItemLoadCmr.xsc">
-      <DependentUpon>HekaLogisticsDataItemLoadCmr.xsd</DependentUpon>
-    </Content>
-    <None Include="HekaLogisticsDataItemLoadCmr.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>HekaLogisticsDataItemLoadCmr.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <Content Include="HekaLogisticsDataItemLoadCmr.xss">
-      <DependentUpon>HekaLogisticsDataItemLoadCmr.xsd</DependentUpon>
     </Content>
     <None Include="HekaLogisticsDataSet.xsd">
       <Generator>MSDataSetGenerator</Generator>

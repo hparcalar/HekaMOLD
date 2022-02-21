@@ -71,7 +71,8 @@ namespace HekaMOLD.Business.UseCases
                             BuyerCity = dbObj.CityBuyer != null ? dbObj.CityBuyer.PostCode + " " + dbObj.CityBuyer.CityName : "",
                             BuyerAddress = dbObj.BuyerFirmExplanation,
                             OveralQuantity = Convert.ToString(dbObj.OveralQuantity) + " KAP",
-                            VehicleTraillerPlate = dbObj.Vehicle != null ? dbObj.Vehicle.Plate:""
+                            VehicleTraillerPlate = dbObj.Vehicle != null ? dbObj.Vehicle.Plate:"",
+                            LoadingDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadingDate),
                         });
 
                         return data;
