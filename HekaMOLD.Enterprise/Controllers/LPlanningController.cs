@@ -72,5 +72,20 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        [HttpGet]
+        public JsonResult GetNextVoyageCode(int Id)
+        {
+            string voyageCode = "";
+
+            using (VoyageBO bObj = new VoyageBO())
+            {
+                voyageCode = bObj.GetNextVoyageCode(Id);
+            }
+
+            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(voyageCode), VoyageCode = voyageCode }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
     }
 }

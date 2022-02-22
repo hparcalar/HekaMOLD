@@ -301,6 +301,7 @@
     <Compile Include="UseCases\ReportingBO.cs" />
     <Compile Include="UseCases\RequestBO.cs" />
     <Compile Include="UseCases\UsersBO.cs" />
+    <Compile Include="UseCases\VoyageBO.cs" />
     <Compile Include="Web References\IntSvc_WebTicari\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -15,8 +15,9 @@
             allowColumnReordering: true,
             allowColumnResizing: true,
             columnAutoWidth: true,
-            columnChooser: {
+            export: {
                 enabled: true,
+                allowExportSelectedData: true,
             },
             columnFixing: {
                 enabled: true,

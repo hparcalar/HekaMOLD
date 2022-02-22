@@ -39,6 +39,19 @@
         }
     </style>
     <!--end::Global Stylesheets Bundle-->
+
+    <script src="~/Scripts/exceljs.min.js"></script>
+
+    <script src="~/Scripts/jszip.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="~/Scripts/polyfill.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.0.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.9/jspdf.plugin.autotable.min.js"></script>
+
+
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -385,12 +398,12 @@
                                                 <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
                                                 <span class="svg-icon svg-icon-dark svg-icon-2">
                                                     @*<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                         viewBox="0 0 47.416 47.416" style="enable-background:new 0 0 47.416 47.416;" xml:space="preserve"><g><path style="fill:#010002;" d="M0,30.739h11.083v11.083H0V30.739z M0,18.072h11.083v11.083H0V18.072z M0,5.406h11.083v11.083H0
-		                                                    V5.406z M12.667,5.406H23.75v11.083H12.667V5.406zM12.667,18.072H23.75v11.083H12.667V18.072z M12.667,30.739H23.75v11.083H12.667V30.739z M15.833,33.906v4.75h4.75v-4.75H15.833z M43.644,39.603l-6.271,
-                                                         2.407l-11.572-5.152l5.152-11.572l6.271-2.407l-3.6,8.088c3.104-0.998,5.787-3.264,7.217-6.477c1.949-4.378,1.036-9.305-1.935-12.683c-0.828-0.499-1.382-1.406-1.382-2
-                                                       .443c0-1.574,1.276-2.85,2.85-2.85c0.998,0,1.876,0.513,2.385,1.289c4.6,4.959,6.071,12.371,3.146,18.941c-2.03,4.56-5.779,7.818-10.143,9.351L43.644,39.603z" />
-                                                       </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
-                                                    </svg>*@
+                                                             viewBox="0 0 47.416 47.416" style="enable-background:new 0 0 47.416 47.416;" xml:space="preserve"><g><path style="fill:#010002;" d="M0,30.739h11.083v11.083H0V30.739z M0,18.072h11.083v11.083H0V18.072z M0,5.406h11.083v11.083H0
+                                                                V5.406z M12.667,5.406H23.75v11.083H12.667V5.406zM12.667,18.072H23.75v11.083H12.667V18.072z M12.667,30.739H23.75v11.083H12.667V30.739z M15.833,33.906v4.75h4.75v-4.75H15.833z M43.644,39.603l-6.271,
+                                                             2.407l-11.572-5.152l5.152-11.572l6.271-2.407l-3.6,8.088c3.104-0.998,5.787-3.264,7.217-6.477c1.949-4.378,1.036-9.305-1.935-12.683c-0.828-0.499-1.382-1.406-1.382-2
+                                                           .443c0-1.574,1.276-2.85,2.85-2.85c0.998,0,1.876,0.513,2.385,1.289c4.6,4.959,6.071,12.371,3.146,18.941c-2.03,4.56-5.779,7.818-10.143,9.351L43.644,39.603z" />
+                                                           </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+                                                        </svg>*@
                                                 </span>
                                                 <!--end::Svg Icon-->
                                             </span>
@@ -2566,6 +2579,9 @@ Rectangle&gt;" class="cls-1" width="32" height="32" />
 
     @RenderSection("scripts", required: false)
     @RenderSection("calendarJS", required: false)
+
+   
+
 
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->

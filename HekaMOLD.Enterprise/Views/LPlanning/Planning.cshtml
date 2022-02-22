@@ -18,11 +18,11 @@
             </div>
             <!--end::Page title-->
             <!--begin::Actions-->
-            @*<div class="d-flex align-items-center py-1">
-                    <a class="btn btn-sm btn-primary" href="@Url.Action("PrintTemplate", "Planning")">
-                        Planlama Çizelgesi
-                    </a>
-                </div>*@
+            <div class="d-flex align-items-center py-1">
+                <a class="btn btn-sm btn-success" ng-click="showNewVoyageForm()">
+                    Yeni Sefer
+                </a>
+            </div>
             <!--end::Actions-->
         </div>
         <!--end::Container-->
@@ -37,13 +37,18 @@
                 <!--begin::Col-->
                 <div class="col-xxl-12">
                     @*<div class="d-flex flex-row">
-                        <h4>{{ getCurrentWeekNumber() }}. HAFTA</h4>
-                    </div>*@
+                            <h4>{{ getCurrentWeekNumber() }}. HAFTA</h4>
+                        </div>*@
                     <div class="d-flex flex-row flex-fill">
                         <div class="row col-xxl-4">
 
                             <div class="row gy-5 bg-white">
                                 <div class="col-xxl-12">
+                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Kodu</label>
+                                    <!--begin::Input group-->
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.VoyageCode" placeholder="" />
+                                    </div>
                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Planlanan Sefer Tarihi</label>
                                     <!--begin::Input group-->
                                     <div class="mb-3">
@@ -63,11 +68,16 @@
                                                 ng-model="selectedDriver" data-allow-clear="true" data-control="select2">
                                         </select>
                                     </div>
-
+                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşlem Yönü</label>
+                                    <div class="mb-3">
+                                        <select class="form-select form-select-solid" ng-change="getNextVoyageCode()" ng-options="item.Text for item in orderTransactionDirectionTypeList"
+                                                ng-model="selectedOrderTransactionDirectionType" data-allow-clear="true" data-control="select2">
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex flex-column flex-fill col-xxl-4">
+                        @*<div class="d-flex flex-column flex-fill col-xxl-4">
                             <div class="d-flex flex-row flex-fill mt-2 py-0">
                                 <div class="d-flex flex-column flex-fill machine-box mr-1 mt-0 border-top-0 border-right-0 alert-secondary"
                                      style="border: 1px solid #009EF7;"
@@ -94,8 +104,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="d-flex flex-column w-35 col-xxl-4" ng-class="{'collapsed-panel': waitingLoadVisible == false}">
+                        </div>*@
+                        <div class="d-flex flex-column w-35 col-xxl-8" ng-class="{'collapsed-panel': waitingLoadVisible == false}">
                             <div class="card" ng-class="{'collapsed-body': !waitingLoadVisible}">
                                 <div class="card-header min-h-10px px-1">
                                     @*<span ng-show="waitingPlansVisible" class="mx-auto">Bekleyen İş Emirleri</span>*@
@@ -130,8 +140,11 @@
             <!--end::Container-->
         </div>
         <!--end::Post-->
+        <div id="dial-voyage" title="Sefer Bilgisi" style="display:none;">
+            <ng-include src="'../Components/Views/EditVoyage.html'"></ng-include>
+        </div>
     </div>
-
+</div>
     @section scripts{
         <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
         <script src="~/Scripts/dx.all.js"></script>
@@ -139,4 +152,6 @@
 
         <link href="~/Content/planning.css" rel="stylesheet" />
         <script src="~/FrontEndLogic/LPlanning/planning.js"></script>
+        <script src="~/Components/Controllers/edit-voyage.js"></script>
     }
+

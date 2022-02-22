@@ -1,62 +1,26 @@
 ﻿DevExpress.localization.locale('tr');
 
-app.controller('lPlanningCtrl', function lPlanningCtrl($scope, $http) {
-    $scope.modelObject = { Id: 0, VoyageDateStr:moment().format('DD.MM.YYYY'),};
+app.controller('lPlanningCtrl', function deliveryPlanningCtrl($scope, $http) {
+    $scope.modelObject = { Id: 0, VoyageDateStr: moment().format('DD.MM.YYYY'), };
     $scope.saveStatus = 0;
 
-    $scope.waitingLoadVisible = true;
+    $scope.waitingPlansVisible = true;
 
     $scope.driverList = [];
     $scope.selectedDriver = {}
 
     $scope.vehicleTraillerList = [];
     $scope.selectedVehicleTrailler = {}
-
-
+    $scope.selectedOrderTransactionDirectionType = {};
+    $scope.orderTransactionDirectionTypeList = [{ Id: 1, Text: 'İhracat' }, { Id: 2, Text: 'İthalat' },
+    { Id: 3, Text: 'Yurt İçi' }, { Id: 4, Text: 'Transit' }];
     $scope.machineList = [];
     $scope.selectedMachineList = [];
     $scope.boardPlanList = [];
-    $scope.waitingLoadList = [];
+    $scope.waitingPlanList = [];
     $scope.selectedPlan = { Id: 0 };
     $scope.copiedPlan = { Id: 0 };
     $scope.selectedSource = { Id: 0 }; // Plan queue of a selected machine for highlighting
-
-    $scope.getMachinePlans = function (machine) {
-        return $scope.boardPlanList.filter(d => d.PlanDateStr == machine.PlanDateTitle);
-    }
-
-    $scope.toggleWaitingLoad = function () {
-        $scope.waitingLoadVisible = !$scope.waitingLoadVisible;
-    }
-
-    $scope.selectPlan = function (planItem) {
-        $scope.selectedPlan = planItem;
-        $scope.selectedSource = $scope.machineList.find(d => d.Id == planItem.MachineId);
-    }
-
-    $scope.selectSource = function (planDate) {
-        $scope.selectedSource = $scope.machineList.find(d => d.PlanDate == planDate);
-    }
-
-    $scope.getCurrentWeekNumber = function () {
-        return moment().week();
-    }
-    // DATA GET METHODS
-    $scope.loadMachineList = function () {
-        $scope.machineList.splice(0, $scope.machineList.length);
-        alert($scope.VoyageDateStr);
-        for (var i = 1; i < 2; i++) {
-            var dateOfDay = VoyageDateStr.getDay();
-            $scope.machineList.push({ PlanDate: dateOfDay, PlanDateTitle: dateOfDay.format('DD.MM.YYYY') })
-        }
-
-        $scope.loadRunningBoard();
-    }
-    $scope.VoyageDateChange = function () {
-        alert($scope.VoyageDateStr);
-
-        $scope.loadMachineList();
-    }
     // GET SELECTABLE DATA
     $scope.loadSelectables = function () {
         var prmReq = new Promise(function (resolve, reject) {
@@ -75,6 +39,65 @@ app.controller('lPlanningCtrl', function lPlanningCtrl($scope, $http) {
 
         return prmReq;
     }
+    //GET NEXT VOYAGE CODE
+    $scope.getNextVoyageCode = function () {
+
+        let directionId = 0;
+
+        if (typeof $scope.selectedOrderTransactionDirectionType.Id == 'undefined')
+            directionId = 0;
+        else
+            directionId = $scope.selectedOrderTransactionDirectionType.Id;
+
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'LPlanning/GetNextVoyageCode?Id=' + directionId, {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            resolve(resp.data.VoyageCode);
+                            $scope.modelObject.VoyageCode = resp.data.VoyageCode;
+                        }
+                        else {
+                            toastr.error('Sıradaki yük numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prms;
+    }
+    $scope.getMachinePlans = function (machine) {
+        return $scope.boardPlanList.filter(d => d.PlanDateStr == machine.PlanDateTitle);
+    }
+
+    $scope.toggleWaitingPlans = function () {
+        $scope.waitingPlansVisible = !$scope.waitingPlansVisible;
+    }
+
+    $scope.selectPlan = function (planItem) {
+        $scope.selectedPlan = planItem;
+        $scope.selectedSource = $scope.machineList.find(d => d.Id == planItem.MachineId);
+    }
+
+    $scope.selectSource = function (planDate) {
+        $scope.selectedSource = $scope.machineList.find(d => d.PlanDate == planDate);
+    }
+
+    $scope.getCurrentWeekNumber = function () {
+        return moment().week();
+    }
+
+    // DATA GET METHODS
+    $scope.loadMachineList = function () {
+        $scope.machineList.splice(0, $scope.machineList.length);
+        for (var i = 1; i < 7; i++) {
+            var dateOfDay = moment().day(i).week(moment().week());
+            $scope.machineList.push({ PlanDate: dateOfDay, PlanDateTitle: dateOfDay.format('DD.MM.YYYY') })
+        }
+
+        $scope.loadRunningBoard();
+    }
     $scope.loadRunningBoard = function () {
         $http.get(HOST_URL + 'Delivery/GetProductionPlans', {}, 'json')
             .then(function (resp) {
@@ -85,10 +108,10 @@ app.controller('lPlanningCtrl', function lPlanningCtrl($scope, $http) {
             }).catch(function (err) { });
     }
     $scope.loadWaitingPlanList = function () {
-        $http.get(HOST_URL + 'LPlanning/GetWaitingLoads', {}, 'json')
+        $http.get(HOST_URL + 'Delivery/GetWaitingPlans', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.waitingLoadList = resp.data;
+                    $scope.waitingPlanList = resp.data;
                     $scope.loadWaitingPlans();
                 }
             }).catch(function (err) { });
@@ -250,11 +273,32 @@ app.controller('lPlanningCtrl', function lPlanningCtrl($scope, $http) {
             }).catch(function (err) { });
     }
 
+    // #region VOYAGE MANAGEMENT
+    $scope.showNewVoyageForm = function () {
+        $scope.$broadcast('loadVoyage', { id: 0 });
+
+        $('#dial-voyage').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: window.innerWidth * 0.7,
+            height: window.innerHeight * 0.8,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.$on('editVoyageEnd', function (e, data) {
+        console.log(data);
+    });
+    // #endregion
+
     // WAITING PLANS GRID
     $scope.lastProcessedPlanId = '';
     $scope.loadWaitingPlans = function () {
-        $('#waitingLoadList').dxDataGrid({
-            dataSource: $scope.waitingLoadList,
+        $('#waitingPlanList').dxDataGrid({
+            dataSource: $scope.waitingPlanList,
             keyExpr: 'Id',
             showColumnLines: false,
             showRowLines: true,
@@ -280,78 +324,67 @@ app.controller('lPlanningCtrl', function lPlanningCtrl($scope, $http) {
                 allowUpdating: false,
                 allowDeleting: false
             },
-            //onContentReady: function () {
-            //    $('.waiting-plan-row').on('dragstart', function (de) {
-            //        de.originalEvent.dataTransfer.setData('text/plain', $(this).attr('data-id'));
+            onContentReady: function () {
+                $('.waiting-plan-row').on('dragstart', function (de) {
+                    de.originalEvent.dataTransfer.setData('text/plain', $(this).attr('data-id'));
 
-            //        $('.machine-box').bind('drop', function (event) {
-            //            event.preventDefault();
+                    $('.machine-box').bind('drop', function (event) {
+                        event.preventDefault();
 
-            //            var planId = event.originalEvent.dataTransfer.getData("text/plain");
-            //            if (planId == $scope.lastProcessedPlanId)
-            //                return;
-            //            else
-            //                $scope.lastProcessedPlanId = planId;
+                        var planId = event.originalEvent.dataTransfer.getData("text/plain");
+                        if (planId == $scope.lastProcessedPlanId)
+                            return;
+                        else
+                            $scope.lastProcessedPlanId = planId;
 
-            //            var machineId = $(this).attr('data-id');
+                        var machineId = $(this).attr('data-id');
 
-            //            if (typeof machineId != 'undefined') {
-            //                var planObj = $scope.waitingPlanList.find(d => d.Id == parseInt(planId));
-            //                if (typeof planObj != 'undefined') {
-            //                    planObj.DeliveryPlanDateStr = machineId;
-            //                    $scope.saveModel(planObj);
-            //                }
-            //            }
-            //        });
-            //    });
+                        if (typeof machineId != 'undefined') {
+                            var planObj = $scope.waitingPlanList.find(d => d.Id == parseInt(planId));
+                            if (typeof planObj != 'undefined') {
+                                planObj.DeliveryPlanDateStr = machineId;
+                                $scope.saveModel(planObj);
+                            }
+                        }
+                    });
+                });
 
-            //    $('.waiting-plan-row').on('drop', function (de) {
-            //        return false;
-            //    });
+                $('.waiting-plan-row').on('drop', function (de) {
+                    return false;
+                });
 
-            //    $('.machine-box').on('dragover', function (event) {
-            //        event.preventDefault();
-            //    });
-            //},
-            //rowTemplate: function (container, item) {
-            //    var data = item.data,
-            //        markup =
-            //            "<tr draggable=\"true\" class=\"dx-row dx-data-row dx-row-lines waiting-plan-row\" data-id=\"" + data.Id + "\">" +
-            //            "<td>" + data.WorkOrderDateStr + "</td>" +
-            //            "<td>" + data.SaleOrderDeadline + "</td>" +
-            //            "<td>" + data.FirmName + "</td>" +
-            //            "<td>" + data.ProductCode + "</td>" +
-            //            "<td>" + data.ProductName + "</td>" +
-            //            "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
-            //            "</tr>";
+                $('.machine-box').on('dragover', function (event) {
+                    event.preventDefault();
+                });
+            },
+            rowTemplate: function (container, item) {
+                var data = item.data,
+                    markup =
+                        "<tr draggable=\"true\" class=\"dx-row dx-data-row dx-row-lines waiting-plan-row\" data-id=\"" + data.Id + "\">" +
+                        "<td>" + data.WorkOrderDateStr + "</td>" +
+                        "<td>" + data.SaleOrderDeadline + "</td>" +
+                        "<td>" + data.FirmName + "</td>" +
+                        "<td>" + data.ProductCode + "</td>" +
+                        "<td>" + data.ProductName + "</td>" +
+                        "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
+                        "</tr>";
 
-            //    container.append(markup);
-            //},
+                container.append(markup);
+            },
             columns: [
-                { dataField: 'LoadCode', caption: 'Yük Kodu' },
-                //{
-                //    dataField: 'LoadingDateStr',
-                //    caption: 'Yükleme Tarih', dataType: 'date', format: 'dd.MM.yyyy'
-                //},
-                //{
-                //    dataField: 'LoadOutDateStr',
-                //    caption: 'Boşaltma Tarih', dataType: 'date', format: 'dd.MM.yyyy'
-                //},
-                { dataField: 'CustomerFirmName', caption: 'Müşteri' },
                 {
-                    dataField: 'OveralQuantity', caption: 'Top. Miktar',
-                    dataType: 'number', format: { type: "fixedPoint", precision: 2 }
+                    dataField: 'WorkOrderDateStr',
+                    caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy'
                 },
-                //{
-                //    dataField: 'OveralWeight', caption: 'Top. Ağırlık',
-                //    dataType: 'number', format: { type: "fixedPoint", precision: 2 }
-                //},
-                //{
-                //    dataField: 'OveralVolume', caption: 'Top. Hacim',
-                //    dataType: 'number', format: { type: "fixedPoint", precision: 2 }
-                //},
                 {
-                    dataField: 'OverallTotal', caption: 'Top. Tutar',
+                    dataField: 'SaleOrderDeadline',
+                    caption: 'Termin', dataType: 'date', format: 'dd.MM.yyyy'
+                },
+                { dataField: 'FirmName', caption: 'Firma' },
+                { dataField: 'ProductCode', caption: 'Ürün Kodu' },
+                { dataField: 'ProductName', caption: 'Ürün Adı' },
+                {
+                    dataField: 'Quantity', caption: 'Miktar',
                     dataType: 'number', format: { type: "fixedPoint", precision: 2 }
                 }
             ]
@@ -415,6 +448,3 @@ app.controller('lPlanningCtrl', function lPlanningCtrl($scope, $http) {
 
     });
 });
-    
-
-   

@@ -28,8 +28,6 @@ namespace HekaMOLD.Business.UseCases
                     .FirstOrDefault();
                 defaultValue = dbCodeCounter.FirstValue + string.Format("{0:00000}", Convert.ToInt32(directionId == 1 ? (int)dbCodeCounter.Export : directionId == 2 ? (int)dbCodeCounter.Import : directionId == 3 ? (int)dbCodeCounter.Domestic : directionId == 4 ?
                     (int)dbCodeCounter.Transit : dbCodeCounter.Id) + 1) + ((OrderTransactionDirectionType)directionId).ToCaption();
-
-                //defaultValue = DateTime.Now.Year + "-" + string.Format("{0:000000}", Convert.ToInt32(lastOrderNo) + 1);
                 return defaultValue;
             }
             catch (Exception)
