@@ -12,20 +12,37 @@
                 },
                 key: 'Id'
             },
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnAutoWidth: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
+            columnFixing: {
+                enabled: true,
+            },
             showColumnLines: false,
             showRowLines: true,
-            rowAlternationEnabled: true,
+            rowAlternationEnabled: false,
             focusedRowEnabled: true,
             showBorders: true,
             filterRow: {
-                visible: true
+                visible: true,
             },
             headerFilter: {
                 visible: true
             },
+            pager: {
+                allowedPageSizes: [5, 8, 15, 30],
+                showInfo: true,
+                showNavigationButtons: true,
+                showPageSizeSelector: true,
+                visible: true,
+            },
             paging: {
                 enabled: true,
-                pageSize: 13,
+                pageSize: 8,
                 pageIndex: 0
             },
             groupPanel: {
