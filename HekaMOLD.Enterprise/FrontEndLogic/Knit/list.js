@@ -12,20 +12,53 @@
                 },
                 key: 'Id'
             },
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnAutoWidth: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
+            onExporting(e) {
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet(e.data);
+
+                DevExpress.excelExporter.exportDataGrid({
+                    component: e.component,
+                    worksheet,
+                    autoFilterEnabled: true,
+                }).then(() => {
+                    workbook.xlsx.writeBuffer().then((buffer) => {
+                        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
+                    });
+                });
+                e.cancel = true;
+            },
+            columnFixing: {
+                enabled: true,
+            },
             showColumnLines: false,
             showRowLines: true,
-            rowAlternationEnabled: true,
+            rowAlternationEnabled: false,
             focusedRowEnabled: true,
             showBorders: true,
+            //allowColumnReordering = true,
             filterRow: {
-                visible: true
+                visible: true,
             },
             headerFilter: {
                 visible: true
             },
+            pager: {
+                allowedPageSizes: [5, 8, 15, 30],
+                showInfo: true,
+                showNavigationButtons: true,
+                showPageSizeSelector: true,
+                visible: true,
+            },
             paging: {
                 enabled: true,
-                pageSize: 13,
+                pageSize: 8,
                 pageIndex: 0
             },
             groupPanel: {

@@ -4097,6 +4097,9 @@ namespace HekaMOLD.Business.UseCases
             {
                 CostModel containerObj = new CostModel();
                 d.MapTo(containerObj);
+                containerObj.CostCategoryName = d.CostCategory != null ? d.CostCategory.CostCategoryName:"";
+                containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                containerObj.UnitTypeCode = d.UnitType != null ? d.UnitType.UnitCode : "";
                 data.Add(containerObj);
             });
 

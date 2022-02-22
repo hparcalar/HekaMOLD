@@ -4093,6 +4093,7 @@
     <Content Include="FrontEndLogic\CostCategory\index.js" />
     <Content Include="FrontEndLogic\CostCategory\list.js" />
     <Content Include="FrontEndLogic\Cost\index.js" />
+    <Content Include="FrontEndLogic\Cost\list.js" />
     <Content Include="FrontEndLogic\Delivery\planning.js" />
     <Content Include="FrontEndLogic\Document\index.js" />
     <Content Include="FrontEndLogic\Document\list.js" />
@@ -4698,6 +4699,7 @@
     <Content Include="Views\CostCategory\Index.cshtml" />
     <Content Include="Views\CostCategory\List.cshtml" />
     <Content Include="Views\Cost\Index.cshtml" />
+    <Content Include="Views\Cost\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
