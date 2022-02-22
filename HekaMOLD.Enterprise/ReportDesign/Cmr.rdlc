@@ -497,9 +497,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>4.5167cm</Top>
+          <Top>4.48143cm</Top>
           <Left>1.1986cm</Left>
-          <Height>2.99888cm</Height>
+          <Height>3.03415cm</Height>
           <Width>9.37602cm</Width>
           <ZIndex>4</ZIndex>
           <Style>
@@ -4077,10 +4077,10 @@ TOTAL   :
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
-          <Top>24.1644cm</Top>
+          <Top>24.19967cm</Top>
           <Left>1.1986cm</Left>
-          <Height>4.08687cm</Height>
-          <Width>7.56351cm</Width>
+          <Height>4.44669cm</Height>
+          <Width>9.2208cm</Width>
           <ZIndex>76</ZIndex>
           <Style>
             <Border>
@@ -4117,9 +4117,9 @@ TOTAL   :
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
           <Top>24.19967cm</Top>
-          <Left>8.86795cm</Left>
-          <Height>4.08686cm</Height>
-          <Width>6.17357cm</Width>
+          <Left>10.52523cm</Left>
+          <Height>4.44669cm</Height>
+          <Width>5.04939cm</Width>
           <ZIndex>77</ZIndex>
           <Style>
             <Border>
@@ -4177,9 +4177,9 @@ TOTAL   :
           </Paragraphs>
           <rd:DefaultName>Textbox10</rd:DefaultName>
           <Top>24.19967cm</Top>
-          <Left>15.14735cm</Left>
-          <Height>4.05159cm</Height>
-          <Width>5.44392cm</Width>
+          <Left>15.71534cm</Left>
+          <Height>4.44669cm</Height>
+          <Width>4.91082cm</Width>
           <ZIndex>78</ZIndex>
           <Style>
             <Border>
@@ -4251,10 +4251,10 @@ TOTAL   :
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox120</rd:DefaultName>
-          <Top>26.81023cm</Top>
-          <Left>1.1986cm</Left>
+          <Top>26.88783cm</Top>
+          <Left>1.30444cm</Left>
           <Height>1.16586cm</Height>
-          <Width>7.49296cm</Width>
+          <Width>9.04441cm</Width>
           <ZIndex>79</ZIndex>
           <Style>
             <Border>
@@ -4325,10 +4325,10 @@ TOTAL   :
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox120</rd:DefaultName>
-          <Top>26.81023cm</Top>
-          <Left>8.86795cm</Left>
+          <Top>26.88783cm</Top>
+          <Left>10.59579cm</Left>
           <Height>1.16586cm</Height>
-          <Width>6.1383cm</Width>
+          <Width>4.94355cm</Width>
           <ZIndex>80</ZIndex>
           <Style>
             <Border>
@@ -4399,10 +4399,10 @@ TOTAL   :
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox120</rd:DefaultName>
-          <Top>26.81023cm</Top>
-          <Left>15.18264cm</Left>
+          <Top>26.88783cm</Top>
+          <Left>15.71534cm</Left>
           <Height>1.16586cm</Height>
-          <Width>5.3381cm</Width>
+          <Width>4.84028cm</Width>
           <ZIndex>81</ZIndex>
           <Style>
             <Border>
@@ -4495,7 +4495,7 @@ TOTAL   :
           <Top>24.77796cm</Top>
           <Left>1.55151cm</Left>
           <Height>0.55006cm</Height>
-          <Width>7.14005cm</Width>
+          <Width>8.79734cm</Width>
           <ZIndex>84</ZIndex>
           <Style>
             <Border>
@@ -4522,8 +4522,8 @@ TOTAL   :
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>25.32802cm</Top>
-          <Left>1.55151cm</Left>
+          <Top>25.39858cm</Top>
+          <Left>1.58679cm</Left>
           <Height>0.46594cm</Height>
           <Width>3.75192cm</Width>
           <ZIndex>85</ZIndex>
@@ -4552,8 +4552,8 @@ TOTAL   :
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>LoadCode</rd:DefaultName>
-          <Top>25.32097cm</Top>
-          <Left>5.40926cm</Left>
+          <Top>25.39858cm</Top>
+          <Left>5.5151cm</Left>
           <Height>0.47299cm</Height>
           <Width>3.2823cm</Width>
           <ZIndex>86</ZIndex>
@@ -4863,7 +4863,7 @@ TOTAL   :
           <Top>24.27023cm</Top>
           <Left>1.55151cm</Left>
           <Height>0.50773cm</Height>
-          <Width>7.14005cm</Width>
+          <Width>8.79734cm</Width>
           <ZIndex>96</ZIndex>
           <Style>
             <Border>
@@ -4882,13 +4882,6 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value xml:space="preserve">
-     </Value>
-                  <Style>
-                    <FontSize>4pt</FontSize>
-                  </Style>
-                </TextRun>
-                <TextRun>
                   <Value>Tarih on Data</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
@@ -4902,10 +4895,10 @@ TOTAL   :
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox65</rd:DefaultName>
-          <Top>22.99147cm</Top>
-          <Left>5.84482cm</Left>
+          <Top>23.02674cm</Top>
+          <Left>6.7437cm</Left>
           <Height>0.99654cm</Height>
-          <Width>2.54939cm</Width>
+          <Width>1.36455cm</Width>
           <ZIndex>97</ZIndex>
           <Style>
             <Border>
@@ -5112,6 +5105,66 @@ TOTAL   :
             </Border>
           </Style>
         </Image>
+        <Textbox Name="LoadCode23">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=First(Fields!ShipperCity.Value, "DS1")</Value>
+                  <Style />
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>LoadCode</rd:DefaultName>
+          <Top>23.34568cm</Top>
+          <Left>3.00307cm</Left>
+          <Height>0.64233cm</Height>
+          <Width>3.56424cm</Width>
+          <ZIndex>105</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="LoadCode24">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=First(Fields!LoadingDateStr.Value, "DS1")</Value>
+                  <Style />
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>LoadCode</rd:DefaultName>
+          <Top>23.34568cm</Top>
+          <Left>8.21408cm</Left>
+          <Height>0.51533cm</Height>
+          <Width>2.13477cm</Width>
+          <ZIndex>106</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
       </ReportItems>
       <Style>
         <Border>

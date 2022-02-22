@@ -4219,9 +4219,9 @@ namespace HekaMOLD.Business.UseCases
 
                 var repo = _unitOfWork.GetRepository<City>();
 
-                if (repo.Any(d => (d.CityName == model.CityName)
+                if (repo.Any(d => (d.CityName == model.CityName && d.PostCode ==model.PostCode)
                     && d.Id != model.Id))
-                    throw new Exception("Aynı isme sahip başka bir şehir mevcuttur. Lütfen farklı bir isim giriniz.");
+                    throw new Exception("Aynı isme ve posta koduna sahip başka bir şehir mevcuttur. Lütfen farklı bir isim veya posta kodu giriniz.");
 
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)

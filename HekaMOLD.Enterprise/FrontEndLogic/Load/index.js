@@ -40,8 +40,8 @@
     $scope.orderCalculationTypeList = [{ Id: 1, Text: 'Ağırlık' }, { Id: 2, Text: 'Metreküp' }, { Id: 3, Text: 'Ladametre' }, { Id: 4, Text: 'Komple' }, { Id: 5, Text: 'Minimun' }];
 
     $scope.selectedLoadStatusType = { Id: 0 };
-    $scope.loadStatusTypeList = [{ Id: 2, Text: 'Hazır Bekliyor' }, { Id: 3, Text: 'Yük Depoda' }, { Id: 4, Text: 'Müşteriden Alınacak' }, { Id: 5, Text: 'Yurtiçi Gümrükte' },
-        { Id: 6, Text: 'Kapıkulede' }, { Id: 7, Text: 'Yurtdışı Yolda' }, { Id: 8, Text: 'Yurtdışı Gümrükte' }, { Id: 9, Text: 'Boşaltmada' },
+    $scope.loadStatusTypeList = [{ Id: 2, Text: 'Hazır Bekliyor' }, { Id: 3, Text: 'Yük Depoda' }, { Id: 4, Text: 'Müşteriden Alınacak' }, { Id: 12, Text: 'Yüklemede' }, { Id: 13, Text: 'Yüklendi' },
+        { Id: 5, Text: 'Yurtiçi Gümrükte' }, { Id: 6, Text: 'Kapıkulede' }, { Id: 7, Text: 'Yurtdışı Yolda' }, { Id: 8, Text: 'Yurtdışı Gümrükte' }, { Id: 9, Text: 'Boşaltmada' },
         { Id: 10, Text: 'Boşaltıldı' }, { Id: 11, Text: 'Tamamlandı' }];
 
     $scope.selectedTrailerType = {};

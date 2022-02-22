@@ -89,10 +89,11 @@ namespace HekaMOLD.Business.UseCases
             {
                 LoadCalendarModel containerObj = new LoadCalendarModel();
                 d.MapTo(containerObj);
-                containerObj.text = d.FirmCustomer != null ? d.FirmCustomer.FirmName + " Kap:" + d.OveralQuantity + " Yük Kodu :" + d.LoadCode+ " İşlem Yönü :"+((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption(): "" ;
+                containerObj.text = d.FirmCustomer != null ? d.FirmCustomer.FirmName + "\r\nYük Kodu : " + d.LoadCode + "\r\nKap : " + d.OveralQuantity +"\r\nYükleme Tarihi : "+string.Format("{0:yyyy-MM-dd}", d.LoadDate)
+                + "\r\nİşlem Yönü : " + ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption(): "" ;
 
-                containerObj.startDate = string.Format("{0:yyyy-MM-dd}", d.LoadDate) + "T00:00:00.000Z"; ;
-                containerObj.endDate = string.Format("{0:yyyy-MM-dd}", d.LoadDate) + "T00:00:00.000Z"; ;
+                containerObj.startDate = string.Format("{0:yyyy-MM-dd}", d.LoadDate) + "T00:00:00.000Z"; 
+                containerObj.endDate = string.Format("{0:yyyy-MM-dd}", d.LoadDate) + "T00:00:00.000Z";
                 containerObj.allDay = true;
                 data.Add(containerObj);
             });

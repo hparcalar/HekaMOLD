@@ -13,7 +13,9 @@
         AtCustomsAbroad = 8, // Yurtdisi Gumrukte
         BeingEmptied = 9, // Bosaltmada
         Emptied =10,
-        Completed = 11
+        Completed = 11,
+        InLoading = 12,
+        Loaded=13
 
     }
 }

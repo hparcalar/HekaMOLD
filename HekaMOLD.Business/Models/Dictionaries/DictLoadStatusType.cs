@@ -24,6 +24,9 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { LoadStatusType.BeingEmptied, "Boşaltmada"},
             { LoadStatusType.Emptied, "Boşaltıldı"},
             { LoadStatusType.Completed, "Tamamlandı"},
+            { LoadStatusType.InLoading, "Yüklemede"},
+            { LoadStatusType.Loaded, "Yüklendi"},
+
 
 };
 
