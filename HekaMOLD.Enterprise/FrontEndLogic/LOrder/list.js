@@ -15,8 +15,23 @@
             allowColumnReordering: true,
             allowColumnResizing: true,
             columnAutoWidth: true,
-            columnChooser: {
+            export: {
                 enabled: true,
+                allowExportSelectedData: true,
+            }, onExporting(e) {
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('Sipariş Listesi');
+
+                DevExpress.excelExporter.exportDataGrid({
+                    component: e.component,
+                    worksheet,
+                    autoFilterEnabled: true,
+                }).then(() => {
+                    workbook.xlsx.writeBuffer().then((buffer) => {
+                        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Sipariş Listesi.xlsx');
+                    });
+                });
+                e.cancel = true;
             },
             columnFixing: {
                 enabled: true,

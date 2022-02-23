@@ -17,6 +17,24 @@
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            }, onExporting(e) {
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('Mal Listesi');
+
+                DevExpress.excelExporter.exportDataGrid({
+                    component: e.component,
+                    worksheet,
+                    autoFilterEnabled: true,
+                }).then(() => {
+                    workbook.xlsx.writeBuffer().then((buffer) => {
+                        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Mal Listesi.xlsx');
+                    });
+                });
+                e.cancel = true;
+            },
             filterRow: {
                 visible: true
             },

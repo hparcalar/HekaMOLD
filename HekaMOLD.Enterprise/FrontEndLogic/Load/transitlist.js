@@ -26,8 +26,27 @@
             rowAlternationEnabled: false,
             focusedRowEnabled: true,
             showBorders: true,
-            //allowColumnReordering = true,
-            filterRow: {
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
+            onExporting(e) {
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('Transit Yük Listesi');
+
+                DevExpress.excelExporter.exportDataGrid({
+                    component: e.component,
+                    worksheet,
+                    autoFilterEnabled: true,
+                }).then(() => {
+                    workbook.xlsx.writeBuffer().then((buffer) => {
+                        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Transit Yük Listesi.xlsx');
+                    });
+                });
+                e.cancel = true;
+            }, filterRow: {
+                visible: true,
+            },            filterRow: {
                 visible: true,
             },
             headerFilter: {

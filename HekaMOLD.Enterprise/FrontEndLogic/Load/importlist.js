@@ -26,8 +26,25 @@
             rowAlternationEnabled: false,
             focusedRowEnabled: true,
             showBorders: true,
-            //allowColumnReordering = true,
-            filterRow: {
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
+            onExporting(e) {
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('İthalat Yük Listesi');
+
+                DevExpress.excelExporter.exportDataGrid({
+                    component: e.component,
+                    worksheet,
+                    autoFilterEnabled: true,
+                }).then(() => {
+                    workbook.xlsx.writeBuffer().then((buffer) => {
+                        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'İthalat Yük Listesi.xlsx');
+                    });
+                });
+                e.cancel = true;
+            },            filterRow: {
                 visible: true,
             },
             headerFilter: {

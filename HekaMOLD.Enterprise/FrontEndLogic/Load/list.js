@@ -18,6 +18,20 @@
             export: {
                 enabled: true,
                 allowExportSelectedData: true,
+            }, onExporting(e) {
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('Yük Listesi');
+
+                DevExpress.excelExporter.exportDataGrid({
+                    component: e.component,
+                    worksheet,
+                    autoFilterEnabled: true,
+                }).then(() => {
+                    workbook.xlsx.writeBuffer().then((buffer) => {
+                        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Yük Listesi.xlsx');
+                    });
+                });
+                e.cancel = true;
             },
             columnFixing: {
                 enabled: true,
