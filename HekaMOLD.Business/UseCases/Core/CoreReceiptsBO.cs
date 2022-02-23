@@ -1,5 +1,4 @@
 ﻿using Heka.DataAccess.Context;
-using Heka.DataAccess.Context.Models;
 using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Models.Constants;
@@ -117,6 +116,69 @@ namespace HekaMOLD.Business.UseCases.Core
                     lastReceiptNo = 0;
 
                 return "FR" + string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+        public string GetNextKnitNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Item>();
+                var lastReceiptNo = repo.Filter(d => d.ItemType == (int)ItemType.Product).OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(Convert.ToString(lastReceiptNo)))
+                    lastReceiptNo = 0;
+
+                return "FR-" + string.Format("{0:00000}", Convert.ToInt32(lastReceiptNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+        public string GetNextAttemptNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Item>();
+                var lastReceiptNo = repo.Filter(d=>d.ItemType == (int)ItemType.Attempt).OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(Convert.ToString(lastReceiptNo)))
+                    lastReceiptNo = 0;
+
+                return "FR-D" + string.Format("{0:000}", Convert.ToInt32(lastReceiptNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+        public string GetNextVariantNo(int ItemId)
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemVariant>();
+                var lastReceiptNo = repo.Filter(d => d.ItemId == ItemId).OrderByDescending(d => d.Id)
+                    .Select(d => d.Id)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(Convert.ToString(lastReceiptNo)))
+                    lastReceiptNo = 0;
+
+                return "-V"+string.Format("{0:000}", Convert.ToInt32(lastReceiptNo) + 1);
             }
             catch (Exception)
             {

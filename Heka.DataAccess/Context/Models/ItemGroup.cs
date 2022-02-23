@@ -20,8 +20,10 @@ namespace Heka.DataAccess.Context
         {
             this.EntryQualityPlan = new HashSet<EntryQualityPlan>();
             this.Item = new HashSet<Item>();
+            this.ItemVariant = new HashSet<ItemVariant>();
+
         }
-    
+
         public int Id { get; set; }
         public string ItemGroupCode { get; set; }
         public string ItemGroupName { get; set; }
@@ -38,6 +40,9 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ItemGroup")]
         public virtual ICollection<EntryQualityPlan> EntryQualityPlan { get; set; }
+
+        [InverseProperty("ItemGroup")]
+        public virtual ICollection<ItemVariant> ItemVariant { get; set; }
 
         [InverseProperty("ItemGroup")]
         public virtual ICollection<Item> Item { get; set; }

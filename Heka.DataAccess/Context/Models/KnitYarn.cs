@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Heka.DataAccess.Context.Models
+namespace Heka.DataAccess.Context
 {
     public partial class KnitYarn
     {
@@ -19,6 +19,9 @@ namespace Heka.DataAccess.Context.Models
 
         [ForeignKey("Item")]
         public int ItemId { get; set; }
+
+        [ForeignKey("ItemVariant")]
+        public Nullable<int> ItemVariantId { get; set; }
 
         public int? YarnType { get; set; }
 
@@ -38,6 +41,8 @@ namespace Heka.DataAccess.Context.Models
         public virtual Firm Firm { get; set; }
         public virtual YarnRecipe YarnRecipe { get; set; }
         public virtual Item Item { get; set; }
+        public virtual ItemVariant ItemVariant { get; set; }
+
 
 
     }

@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Dokuma Desen Tanımları";
+    ViewBag.Title = "Desen Varyant Tanımları";
 }
 
-<div ng-controller="knitCtrl">
+<div ng-controller="variantCtrl">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -195,14 +195,14 @@
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Mamul En(cm)</label>
                             <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid"  ng-model="modelObject.ProductWidth" placeholder="" />
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.ProductWidth" placeholder="" />
                             </div>
                         </div>
                         <div class="col-xxl-6">
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Mamul Gramaj(gr/m²)</label>
                             <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid"  ng-model="modelObject.ProductGramaj" placeholder="" />
+                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.ProductGramaj" placeholder="" />
                             </div>
                         </div>
                     </div>
@@ -290,7 +290,7 @@
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tarak En(cm)</label>
                             <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-change="valueChanged('{{modelObject.CombWidth}}',2)"  ng-model="modelObject.CombWidth" placeholder="" />
+                                <input type="number" class="form-control form-control-solid" ng-change="valueChanged('{{modelObject.CombWidth}}',2)" ng-model="modelObject.CombWidth" placeholder="" />
                             </div>
                         </div>
                         <div class="col-xxl-4">
@@ -330,31 +330,61 @@
             <!--end::Row-->
 
             <div class="row gy-5 gx-xl-12 bg-white">
-                <div class="col-xxl-12 bg-white">
-                    <div class="card card-px-0">
-                        <div class="card-header">
-                            <h6 class="card-title">Atkı İplikler</h6>
+                <div ng-repeat="ItemVariant in itemVariantList">
+                    <div class="row gy-5">
+                        <div class="col-xxl-6 bg-white">
+                            <div class="card card-px-0">
+                                <div class="card-header">
+                                    <h6 class="card-title">Atkı İplikler</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="dx-viewport ">
+                                        <div id="weftYarnList"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="dx-viewport ">
-                                <div id="weftYarnList"></div>
+                        <div class="col-xxl-6 bg-white">
+                            <div class="card card-px-0">
+                                <div class="card-header ">
+                                    <h6 class="card-title">Çözgü İplikler</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="dx-viewport">
+                                        <div id="warpYarnList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row gy-5">
+                        <div class="col-xxl-6 bg-white">
+                            <div class="card card-px-0">
+                                <div class="card-header">
+                                    <h6 class="card-title">Atkı İplikler</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="dx-viewport ">
+                                        <div id="weftYarnList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 bg-white">
+                            <div class="card card-px-0">
+                                <div class="card-header ">
+                                    <h6 class="card-title">Çözgü İplikler</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="dx-viewport">
+                                        <div id="warpYarnList"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xxl-12 bg-white">
-                    <div class="card card-px-0">
-                        <div class="card-header ">
-                            <h6 class="card-title">Çözgü İplikler</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="dx-viewport">
-                                <div id="warpYarnList"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+               
             </div>
         </div>
         <!--end::Container-->

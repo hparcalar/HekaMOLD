@@ -1,6 +1,5 @@
 ﻿namespace Heka.DataAccess.Context
 {
-    using Heka.DataAccess.Context.Models;
     using System.Data.Entity;
     using System.Data.Entity.ModelConfiguration.Conventions;
 
@@ -118,6 +117,8 @@
         public virtual DbSet<SerialQualityWinding> SerialQualityWinding { get; set; }
         public virtual DbSet<SerialQualityWindingFault> SerialQualityWindingFault { get; set; }
         public virtual DbSet<CostCategory> CostCategory { get; set; }
+        public virtual DbSet<ItemVariant> ItemVariant { get; set; }
+
 
 
     }

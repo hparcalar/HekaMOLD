@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Heka.DataAccess.Context.Models
+namespace Heka.DataAccess.Context
 {
-   public partial class ItemQualityType
+    public partial class ItemQualityType
     {
         public ItemQualityType()
         {
             this.Item = new HashSet<Item>();
+            this.ItemVariant = new HashSet<ItemVariant>();
+
         }
         public int Id { get; set; }
         public string ItemQualityTypeCode { get; set; }
@@ -19,6 +17,9 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("ItemQualityType")]
         public virtual ICollection<Item> Item { get; set; }
+
+        [InverseProperty("ItemQualityType")]
+        public virtual ICollection<ItemVariant> ItemVariant { get; set; }
 
     }
 }

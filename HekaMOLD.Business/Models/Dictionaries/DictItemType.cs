@@ -15,7 +15,9 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { ItemType.RawMaterials, "Hammadde" },
             { ItemType.Commercial, "Ticari Mal" },
             { ItemType.SemiProduct, "Yarı Mamul" },
-            { ItemType.Product, "Mamul" }
+            { ItemType.Product, "Mamul" },
+            { ItemType.Attempt, "Deneme Ürünü" }
+
         };
     }
 }

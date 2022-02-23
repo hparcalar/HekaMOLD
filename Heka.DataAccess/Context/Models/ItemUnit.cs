@@ -20,8 +20,12 @@ namespace Heka.DataAccess.Context
         [ForeignKey("Item")]
         public Nullable<int> ItemId { get; set; }
 
+        [ForeignKey("ItemVariant")]
+        public Nullable<int> ItemVariantId { get; set; }
+
         [ForeignKey("UnitType")]
         public Nullable<int> UnitId { get; set; }
+
         public Nullable<bool> IsMainUnit { get; set; }
         public Nullable<decimal> MultiplierFactor { get; set; }
         public Nullable<decimal> DividerFactor { get; set; }
@@ -31,6 +35,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> UpdatedUserId { get; set; }
     
         public virtual Item Item { get; set; }
+        public virtual ItemVariant ItemVariant { get; set; }
         public virtual UnitType UnitType { get; set; }
     }
 }

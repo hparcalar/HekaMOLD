@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Heka.DataAccess.Context.Models
+namespace Heka.DataAccess.Context
 {
    public partial class YarnColourGroup
     {

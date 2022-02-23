@@ -4701,6 +4701,7 @@
     <Content Include="Views\CostCategory\List.cshtml" />
     <Content Include="Views\Cost\Index.cshtml" />
     <Content Include="Views\Cost\List.cshtml" />
+    <Content Include="Views\Knit\Variant.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,7 +9,6 @@
 
 namespace Heka.DataAccess.Context
 {
-    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;

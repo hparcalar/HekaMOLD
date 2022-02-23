@@ -39,8 +39,10 @@ namespace Heka.DataAccess.Context
             this.Route = new HashSet<Route>();
             this.MachineGroup = new HashSet<MachineGroup>();
             this.WorkOrder = new HashSet<WorkOrder>();
+            this.ItemVariant = new HashSet<ItemVariant>();
+
         }
-    
+
         public int Id { get; set; }
         public string PlantCode { get; set; }
         public string PlantName { get; set; }
@@ -108,5 +110,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Plant")]
         public virtual ICollection<WorkOrder> WorkOrder { get; set; }
+
+        [InverseProperty("Plant")]
+        public virtual ICollection<ItemVariant> ItemVariant { get; set; }
     }
 }

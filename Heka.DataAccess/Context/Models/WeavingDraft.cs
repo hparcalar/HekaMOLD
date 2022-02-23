@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Heka.DataAccess.Context.Models
+namespace Heka.DataAccess.Context
 {
    public class WeavingDraft
     {
@@ -10,6 +10,8 @@ namespace Heka.DataAccess.Context.Models
         {
             this.Item = new HashSet<Item>();
             this.Machine = new HashSet<Machine>();
+            this.ItemVariant = new HashSet<ItemVariant>();
+
         }
         public int Id { get; set; }
         public string WeavingDraftCode { get; set; }
@@ -34,5 +36,8 @@ namespace Heka.DataAccess.Context.Models
 
         [InverseProperty("WeavingDraft")]
         public virtual ICollection<Machine> Machine { get; set; }
+
+        [InverseProperty("WeavingDraft")]
+        public virtual ICollection<ItemVariant> ItemVariant { get; set; }
     }
 }

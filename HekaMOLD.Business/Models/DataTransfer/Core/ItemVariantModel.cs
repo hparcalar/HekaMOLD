@@ -1,23 +1,20 @@
 ﻿using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Models.DataTransfer.Production;
+using System;
 
 namespace HekaMOLD.Business.Models.DataTransfer.Core
 {
-    public class ItemModel : IDataObject
+    public class ItemVariantModel : IDataObject
     {
         public int Id { get; set; }
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
-        public int? ItemType { get; set; }
-        public int? ItemCutType { get; set; }
-        public int? ItemApparelType { get; set; }
-        public int? ItemBulletType { get; set; }
-        public int? ItemDyeHouseType { get; set; }
-        public int? ItemCategoryId { get; set; }
-        public int? ItemGroupId { get; set; }
-        public int? SupplierFirmId { get; set; }
-        public int? PlantId { get; set; }
-        public int? MoldId { get; set; }
+        public Nullable<int> ItemType { get; set; }
+        public Nullable<int> ItemCategoryId { get; set; }
+        public Nullable<int> ItemGroupId { get; set; }
+        public Nullable<int> SupplierFirmId { get; set; }
+        public Nullable<int> PlantId { get; set; }
+        public Nullable<int> TaxRate { get; set; }
         //Desen
         public int? Pattern { get; set; }
         //Ham
@@ -29,8 +26,15 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         //Cozgu Tel sayisi
         public decimal? WarpWireCount { get; set; }
         public decimal? MeterGramaj { get; set; }
+        //Kesme	
+        public Nullable<int> ItemCutType { get; set; }
+        //Boyahane
+        public Nullable<int> ItemDyeHouseType { get; set; }
+        //konfeksiyon
+        public Nullable<int> ItemApparelType { get; set; }
+        //Kursun
+        public Nullable<int> ItemBulletType { get; set; }
         public string AttemptNo { get; set; }
-        //Tarak En
         public decimal? CombWidth { get; set; }
         //Atki Rapor Boyu
         public decimal? WeftReportLength { get; set; }
@@ -42,16 +46,13 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? AverageWarpDensity { get; set; }
 
         public int? WeavingDraftId { get; set; }
+
         public int? ItemQualityTypeId { get; set; }
 
-        public ItemWarehouseModel[] Warehouses { get; set; }
-        public ItemUnitModel[] Units { get; set; }
-        public ItemLiveStatusModel[] LiveStatus { get; set; }
-        public KnitYarnModel[] KnitYarns { get; set; }
+        public int? ItemId { get; set; }
 
-        public decimal? TotalInQuantity { get; set; }
-        public decimal? TotalOutQuantity { get; set; }
-        public decimal? TotalOverallQuantity { get; set; }
+        public ItemUnitModel[] Units { get; set; }
+        public KnitYarnModel[] KnitYarns { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemTypeStr { get; set; }

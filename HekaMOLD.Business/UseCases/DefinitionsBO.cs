@@ -1,5 +1,4 @@
 ﻿using Heka.DataAccess.Context;
-using Heka.DataAccess.Context.Models;
 using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
@@ -618,7 +617,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 Id = d.Id,
                 ItemNo = d.ItemNo,
-                TestNo = d.TestNo,
+                AttemptNo = d.AttemptNo,
                 ItemCutTypeStr = d.ItemCutType == 1 ? "Var" : d.ItemCutType == 2 ? "Yok" : "",
                 ItemBulletTypeStr = d.ItemBulletType == 1 ? "Var" : d.ItemBulletType == 2 ? "Yok" : "",
                 ItemApparelTypeStr = d.ItemApparelType == 1 ? "Var" : d.ItemApparelType == 2 ? "Yok" : "",
@@ -676,15 +675,15 @@ namespace HekaMOLD.Business.UseCases
             BusinessResult result = new BusinessResult();
             try
             {
-                if (string.IsNullOrEmpty(model.ItemNo) && string.IsNullOrEmpty(model.TestNo))
-                    throw new Exception("Dokuma Desen veya Deneme numarası girilmelidir.");
+                if (string.IsNullOrEmpty(model.ItemNo))
+                    throw new Exception("Desen numarası girilmelidir.");
                 var repo = _unitOfWork.GetRepository<Item>();
                 var repoKnitYarns = _unitOfWork.GetRepository<KnitYarn>();
 
 
                 if (repo.Any(d => (d.ItemNo == model.ItemNo)
                     && d.Id != model.Id))
-                    throw new Exception("Aynı numaraya sahip başka bir Dokuma Desen mevcuttur. Lütfen farklı bir numara giriniz.");
+                    throw new Exception("Aynı numaraya sahip başka bir Desen mevcuttur. Lütfen farklı bir numara giriniz.");
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
@@ -785,6 +784,116 @@ namespace HekaMOLD.Business.UseCases
             return result;
 
         }
+        public BusinessResult SaveOrUpdateVariant(ItemVariantModel model)
+        {
+            BusinessResult result = new BusinessResult();
+            try
+            {
+                if (string.IsNullOrEmpty(model.ItemNo))
+                    throw new Exception("Desen numarası girilmelidir.");
+                var repo = _unitOfWork.GetRepository<ItemVariant>();
+                var repoKnitYarns = _unitOfWork.GetRepository<KnitYarn>();
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ItemVariant();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+                if (dbObj.ItemName == null)
+                {
+                    model.ItemName = model.ItemNo;
+                }
+                var crDate = dbObj.CreatedDate;
+                dbObj.ItemType = model.ItemType;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+                dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE WAREHOUSE PRM
+                //if (model.Warehouses == null)
+                //    model.Warehouses = new ItemWarehouseModel[0];
+
+                //var toBeRemovedWarehouses = dbObj.ItemWarehouse
+                //    .Where(d => !model.Warehouses.Select(m => m.Id).ToArray().Contains(d.Id))
+                //    .ToArray();
+                //foreach (var item in toBeRemovedWarehouses)
+                //{
+                //    repoWarehouses.Delete(item);
+                //}
+
+                //foreach (var item in model.Warehouses
+                //    .Where(d => !toBeRemovedWarehouses.Any(m => m.WarehouseId == d.WarehouseId)))
+                //{
+                //    var dbItemWr = repoWarehouses.GetById(item.Id);
+                //    if (dbItemWr == null || item.Id == 0)
+                //    {
+                //        dbItemWr = new ItemWarehouse();
+                //        item.MapTo(dbItemWr);
+                //        dbItemWr.Item = dbObj;
+                //        repoWarehouses.Add(dbItemWr);
+                //    }
+                //    else
+                //    {
+                //        item.MapTo(dbItemWr);
+                //        dbItemWr.Item = dbObj;
+                //    }
+                //}
+                #endregion
+
+                #region SAVE KNITYARN
+                if (model.KnitYarns == null)
+                    model.KnitYarns = new KnitYarnModel[0];
+
+                var toBeRemovedKnitYarns = dbObj.KnitYarn
+                    .Where(d => !model.KnitYarns.Where(m => m.NewDetail == false).Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedKnitYarns)
+                {
+                    repoKnitYarns.Delete(item);
+                }
+
+                foreach (var item in model.KnitYarns)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbKnitYarn = new KnitYarn();
+                        item.MapTo(dbKnitYarn);
+                        //dbKnitYarn.Firm = dbObj.Firm;
+                        dbKnitYarn.ItemVariant = dbObj;
+                        repoKnitYarns.Add(dbKnitYarn);
+                    }
+                    else if (!toBeRemovedKnitYarns.Any(d => d.Id == item.Id))
+                    {
+                        var dbKnitYarn = repoKnitYarns.GetById(item.Id);
+                        item.MapTo(dbKnitYarn);
+                        dbKnitYarn.ItemVariant = dbObj;
+                        //dbKnitYarn.Firm = dbObj.Firm;
+                    }
+                }
+
+                #endregion
+                _unitOfWork.SaveChanges();
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+
+                if (ex.InnerException != null)
+                    result.ErrorMessage = ex.InnerException.Message;
+                else
+                    result.ErrorMessage = ex.Message;
+            }
+            return result;
+
+        }
 
         public BusinessResult DeleteKnit(int id)
         {
@@ -836,6 +945,25 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        #endregion
+
+        #region ITEMVARIANT BUSINESS
+        public ItemVariantModel[] GetItemVariantList()
+        {
+            List<ItemVariantModel> data = new List<ItemVariantModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemVariant>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ItemVariantModel containerObj = new ItemVariantModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
         #endregion
 
         #region ITEM CATEGORY BUSINESS

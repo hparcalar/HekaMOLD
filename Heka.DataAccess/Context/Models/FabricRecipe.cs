@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Heka.DataAccess.Context.Models
+namespace Heka.DataAccess.Context
 {
     public partial class FabricRecipe
     {

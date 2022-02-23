@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Heka.DataAccess.Context.Models
+namespace Heka.DataAccess.Context
 {
     public partial class YarnRecipe
     {
@@ -30,7 +27,7 @@ namespace Heka.DataAccess.Context.Models
         //Karisim 
         public bool? Mix { get; set; }
         public int? YarnRecipeType { get; set; }
-        public decimal ? BuyingPrice { get; set; }
+        public decimal? BuyingPrice { get; set; }
         public decimal? SalesPrice { get; set; }
 
         public Nullable<int> PlantId { get; set; }

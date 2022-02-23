@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\HekaEntities.cs" />
+    <Compile Include="Context\ItemVariant.cs" />
     <Compile Include="Context\Models\ActualRouteHistory.cs" />
     <Compile Include="Context\Models\AllocatedCode.cs" />
     <Compile Include="Context\Models\Attachment.cs" />
@@ -101,8 +102,6 @@
     <Compile Include="Context\Models\KnitYarn.cs" />
     <Compile Include="Context\Models\LayoutItem.cs" />
     <Compile Include="Context\Models\LayoutObjectType.cs" />
-    <Compile Include="Context\Models\LogisticsOrder.cs" />
-    <Compile Include="Context\Models\LogisticsOrderProductDetail.cs" />
     <Compile Include="Context\Models\Machine.cs" />
     <Compile Include="Context\Models\MachineBreed.cs" />
     <Compile Include="Context\Models\MachineGroup.cs" />
@@ -370,6 +369,14 @@
     <Compile Include="Migrations\202202210925158_YarnRecipeUpdate%28SalesPriceAdd%29.designer.cs">
       <DependentUpon>202202210925158_YarnRecipeUpdate%28SalesPriceAdd%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202230932482_ItemTypeUpdate%28AttemptNo%29.cs" />
+    <Compile Include="Migrations\202202230932482_ItemTypeUpdate%28AttemptNo%29.designer.cs">
+      <DependentUpon>202202230932482_ItemTypeUpdate%28AttemptNo%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202231116340_ItemVariantAdd.cs" />
+    <Compile Include="Migrations\202202231116340_ItemVariantAdd.designer.cs">
+      <DependentUpon>202202231116340_ItemVariantAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -539,6 +546,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202202210925158_YarnRecipeUpdate%28SalesPriceAdd%29.resx">
       <DependentUpon>202202210925158_YarnRecipeUpdate%28SalesPriceAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202230932482_ItemTypeUpdate%28AttemptNo%29.resx">
+      <DependentUpon>202202230932482_ItemTypeUpdate%28AttemptNo%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202231116340_ItemVariantAdd.resx">
+      <DependentUpon>202202231116340_ItemVariantAdd.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

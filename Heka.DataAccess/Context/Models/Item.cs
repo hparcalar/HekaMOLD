@@ -1,13 +1,12 @@
 namespace Heka.DataAccess.Context
 {
-    using Heka.DataAccess.Context.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
 
     public partial class Item
     {
-        
+
         public Item()
         {
             this.EntryQualityData = new HashSet<EntryQualityData>();
@@ -18,7 +17,7 @@ namespace Heka.DataAccess.Context
             this.ItemRequestDetail = new HashSet<ItemRequestDetail>();
             this.ItemUnit = new HashSet<ItemUnit>();
             this.ItemWarehouse = new HashSet<ItemWarehouse>();
-            
+
             this.MoldProduct = new HashSet<MoldProduct>();
             this.ProductQualityData = new HashSet<ProductQualityData>();
             this.ProductRecipe = new HashSet<ProductRecipe>();
@@ -30,6 +29,8 @@ namespace Heka.DataAccess.Context
             this.FabricRecipe = new HashSet<FabricRecipe>();
             this.ItemKnitDensity = new HashSet<ItemKnitDensity>();
             this.KnitYarn = new HashSet<KnitYarn>();
+            this.ItemVariant = new HashSet<ItemVariant>();
+
         }
 
         public int Id { get; set; }
@@ -73,7 +74,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> ItemApparelType { get; set; }
         //Kursun
         public Nullable<int> ItemBulletType { get; set; }
-        public string TestNo { get; set; }
+        public string AttemptNo { get; set; }
         public decimal? CombWidth { get; set; }
         //Atki Rapor Boyu
         public decimal? WeftReportLength { get; set; }
@@ -89,6 +90,7 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("ItemQualityType")]
         public int? ItemQualityTypeId { get; set; }
+
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
@@ -101,6 +103,8 @@ namespace Heka.DataAccess.Context
         public virtual Plant Plant { get; set; }
         public virtual ItemQualityType ItemQualityType { get; set; }
         public virtual WeavingDraft WeavingDraft { get; set; }
+        public ItemVariant[] ItemVariants { get; set; }
+
 
         [InverseProperty("Item")]
         public virtual ICollection<ItemLiveStatus> ItemLiveStatus { get; set; }
@@ -162,5 +166,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Item")]
         public virtual ICollection<KnitYarn> KnitYarn { get; set; }
+
+        [InverseProperty("Item")]
+        public virtual ICollection<ItemVariant> ItemVariant { get; set; }
     }
 }

@@ -129,6 +129,7 @@
     <Compile Include="Models\DataTransfer\Core\ItemModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemQualityTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemUnitModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\ItemVariantModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemWarehouseModel.cs" />
     <Compile Include="Models\DataTransfer\Core\NotificationModel.cs" />
     <Compile Include="Models\DataTransfer\Core\PlantModel.cs" />

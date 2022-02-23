@@ -11,6 +11,7 @@
 
     $scope.selectedQualityType = {};
     $scope.qualityTypeList = [];
+    $scope.itemVariantList = [];
 
     $scope.selectedDyeHouse = {};
     $scope.dyeHouseList = [{ Id: 1, Text: 'FR - FİKSE' }];
@@ -27,7 +28,25 @@
     $scope.bulletTypeList = [{ Id: 1, Text: 'Var' },
     { Id: 2, Text: 'Yok' }];
 
+    //GET TEST NO
+    $scope.getNextAttemptNo = function () {
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Knit/GetNextAttemptNo', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            resolve(resp.data.AttemptNo);
+                        }
+                        else {
+                            toastr.error('Sıradaki deneme numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            resolve('');
+                        }
+                    }
+                }).catch(function (err) { });
+        });
 
+        return prms;
+    }
     // GET SELECTABLE DATA
     $scope.loadSelectables = function () {
         var prmReq = new Promise(function (resolve, reject) {
@@ -39,6 +58,7 @@
                         $scope.weavingDraftList = resp.data.WeavingDrafts;
                         $scope.yarnRecipeList = resp.data.YarnRecipes;
                         $scope.firmList = resp.data.Firms;
+                        $scope.itemVariantList = resp.data.ItemVariants;
                         resolve(resp.data);
                     }
                 }).catch(function (err) { });
@@ -65,7 +85,11 @@
             $scope.bindWeftYarnList();        }
     }
     $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0,  KnitYarns: [] };
+        $scope.modelObject = { Id: 0, KnitYarns: [] };
+        $scope.getNextAttemptNo().then(function (rNo) {
+            $scope.modelObject.AttemptNo = rNo;
+            $scope.$apply();
+        });
         $scope.bindWeftYarnList();
         $scope.bindWarpYarnList();
         $scope.selectedApparelType = {};
@@ -189,6 +213,101 @@
 
         $http.post(HOST_URL + 'Knit/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.saveStatus = 0;
+
+                    if (resp.data.Status == 1) {
+                        toastr.success('Kayıt başarılı.', 'Bilgilendirme');
+
+                        $scope.bindModel(resp.data.RecordId);
+                    }
+                    else
+                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                }
+            }).catch(function (err) { });
+    }
+    $scope.creatVariant = function () {
+        $scope.saveStatus = 1;
+
+        if (typeof $scope.selectedQualityType != 'undefined' && $scope.selectedQualityType != null)
+            $scope.modelObject.ItemQualityTypeId = $scope.selectedQualityType.Id;
+        else
+            $scope.modelObject.ItemQualityTypeId = null;
+
+        if (typeof $scope.selectedDyeHouse != 'undefined' && $scope.selectedDyeHouse != null)
+            $scope.modelObject.ItemDyeHouseType = $scope.selectedDyeHouse.Id;
+        else
+            $scope.modelObject.ItemDyeHouseType = null;
+
+        if (typeof $scope.selectedCutType != 'undefined' && $scope.selectedCutType != null)
+            $scope.modelObject.ItemCutType = $scope.selectedCutType.Id;
+        else
+            $scope.modelObject.ItemCutType = null;
+
+        if (typeof $scope.selectedBulletType != 'undefined' && $scope.selectedBulletType != null)
+            $scope.modelObject.ItemBulletType = $scope.selectedBulletType.Id;
+        else
+            $scope.modelObject.ItemBulletType = null;
+
+        if (typeof $scope.selectedApparelType != 'undefined' && $scope.selectedApparelType != null)
+            $scope.modelObject.ItemApparelType = $scope.selectedApparelType.Id;
+        else
+            $scope.modelObject.ItemApparelType = null;
+
+        if (typeof $scope.selectedWeavingDraft != 'undefined' && $scope.selectedWeavingDraft != null)
+            $scope.modelObject.WeavingDraftId = $scope.selectedWeavingDraft.Id;
+        else
+            $scope.modelObject.WeavingDraftId = null;
+
+        $http.post(HOST_URL + 'Knit/creatVariant', $scope.modelObject, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.saveStatus = 0;
+
+                    if (resp.data.Status == 1) {
+                        toastr.success('Kayıt başarılı.', 'Bilgilendirme');
+
+                        $scope.bindModel(resp.data.RecordId);
+                    }
+                    else
+                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                }
+            }).catch(function (err) { });
+    }
+    $scope.creatKnit = function () {
+        $scope.saveStatus = 1;
+
+        if (typeof $scope.selectedQualityType != 'undefined' && $scope.selectedQualityType != null)
+            $scope.modelObject.ItemQualityTypeId = $scope.selectedQualityType.Id;
+        else
+            $scope.modelObject.ItemQualityTypeId = null;
+
+        if (typeof $scope.selectedDyeHouse != 'undefined' && $scope.selectedDyeHouse != null)
+            $scope.modelObject.ItemDyeHouseType = $scope.selectedDyeHouse.Id;
+        else
+            $scope.modelObject.ItemDyeHouseType = null;
+
+        if (typeof $scope.selectedCutType != 'undefined' && $scope.selectedCutType != null)
+            $scope.modelObject.ItemCutType = $scope.selectedCutType.Id;
+        else
+            $scope.modelObject.ItemCutType = null;
+
+        if (typeof $scope.selectedBulletType != 'undefined' && $scope.selectedBulletType != null)
+            $scope.modelObject.ItemBulletType = $scope.selectedBulletType.Id;
+        else
+            $scope.modelObject.ItemBulletType = null;
+
+        if (typeof $scope.selectedApparelType != 'undefined' && $scope.selectedApparelType != null)
+            $scope.modelObject.ItemApparelType = $scope.selectedApparelType.Id;
+        else
+            $scope.modelObject.ItemApparelType = null;
+
+        if (typeof $scope.selectedWeavingDraft != 'undefined' && $scope.selectedWeavingDraft != null)
+            $scope.modelObject.WeavingDraftId = $scope.selectedWeavingDraft.Id;
+        else
+            $scope.modelObject.WeavingDraftId = null;
+
+        $http.post(HOST_URL + 'Knit/creatKnit', $scope.modelObject, 'json').then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.saveStatus = 0;
 
@@ -540,7 +659,12 @@
     $scope.loadSelectables().then(function (data) {
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
-        else
+        else {
+            $scope.getNextAttemptNo().then(function (rNo) {
+                $scope.modelObject.AttemptNo = rNo;
+                $scope.$apply();
+            });
             $scope.bindModel(0);
+        }
     });
 });
