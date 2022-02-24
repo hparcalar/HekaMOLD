@@ -115,7 +115,55 @@
 
         }
     }
+    $scope.bindReceiptDetails = function () {
+        $('#WaitingLoadList').dxDataGrid({
+            dataSource: {
+                load: function () {
+                    return $.getJSON(HOST_URL + 'LPlanning/GetWaitingLoads', function (data) {
 
+                    });
+                },
+                key: 'Id'
+            },
+            onFocusedRowChanged(e) {
+                $scope.selectedDetail = e.row.data;
+            },
+            showColumnLines: false,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: true,
+            showBorders: true,
+            filterRow: {
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+            paging: {
+                enabled: true,
+                pageSize: 13,
+                pageIndex: 0
+            },
+            groupPanel: {
+                visible: false
+            },
+            editing: {
+                allowUpdating: false,
+                allowDeleting: false,
+                mode: 'cell'
+            },
+            columns: [
+                { dataField: 'LoadCode', caption: 'Yük Kodu', allowEditing: false },
+                { dataField: 'LoadingDateStr', caption: 'Yükleme Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
+                { dataField: 'CustomerFirmName', caption: 'Firma', allowEditing: false },
+                { dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü', allowEditing: false },
+                { dataField: 'OveralQuantity', caption: 'Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık', allowEditing: false },
+                { dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'OveralVolume', caption: 'Toplam Hacim', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+           ]
+        });
+    }
     $scope.printLabel = function () {
         $scope.$broadcast('showPrintOptions');
 
@@ -155,7 +203,7 @@
     $scope.$on('cancelPrinting', function (e, d) {
         $('#dial-print-options').dialog('close');
     });
-
+    $scope.bindReceiptDetails();
     // ON LOAD EVENTS
     $scope.$on('loadEditPlan', function (e, d) {
         $scope.modelObject.Id = d.id;
