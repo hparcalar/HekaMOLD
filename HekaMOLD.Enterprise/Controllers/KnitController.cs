@@ -146,7 +146,7 @@ namespace HekaMOLD.Enterprise.Controllers
                     model.AttemptNo = "";
                     using (RequestBO rObj = new RequestBO())
                     {
-                        model.ItemNo = model.ItemNo + rObj.GetNextVariantNo((int)model.Id);
+                        model.ItemNo = model.ItemNo + rObj.GetNextVariantNo((int)model.ItemId);
                     }
                     result = bObj.SaveOrUpdateVariant(model);
                 }

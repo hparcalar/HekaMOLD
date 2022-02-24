@@ -331,6 +331,7 @@
 
             <div class="row gy-5 gx-xl-12 bg-white">
                 <div ng-repeat="ItemVariant in itemVariantList">
+                    
                     <div class="row gy-5">
                         <div class="col-xxl-6 bg-white">
                             <div class="card card-px-0">
@@ -339,7 +340,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="dx-viewport ">
-                                        <div id="weftYarnList"></div>
+                                        <div id="weftYarnList{{ItemVariant.Id}}"></div>
                                     </div>
                                 </div>
                             </div>
@@ -351,7 +352,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="dx-viewport">
-                                        <div id="warpYarnList"></div>
+                                        <div id="warpYarnList{{ItemVariant.Id}}"></div>
                                     </div>
                                 </div>
                             </div>

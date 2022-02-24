@@ -1,6 +1,5 @@
 ﻿app.controller('knitCtrl', function ($scope, $http) {
     $scope.modelObject = { Id: 0, KnitYarns:[]};
-    $scope.modelObjectTmp = { Id: 0, KnitYarns: [] };
     $scope.saveStatus = 0;
 
     $scope.yarnRecipeList = [];
@@ -228,6 +227,8 @@
     }
     $scope.creatVariant = function () {
         $scope.saveStatus = 1;
+        $scope.modelObject.ItemId = $scope.modelObject.Id;
+        $scope.modelObject.Id = 0;
 
         if (typeof $scope.selectedQualityType != 'undefined' && $scope.selectedQualityType != null)
             $scope.modelObject.ItemQualityTypeId = $scope.selectedQualityType.Id;
@@ -268,6 +269,7 @@
                         toastr.success('Kayıt başarılı.', 'Bilgilendirme');
 
                         $scope.bindModel(resp.data.RecordId);
+                        window.location.href = HOST_URL + 'Knit/Variant?rid=' + e.row.data.Id;
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
@@ -653,6 +655,68 @@
         let count = 0;
         $scope.modelObject.KnitYarns.filter(d => d.YarnType == 2).forEach(element => { averageWeftDensity += parseFloat(element.Density != null ? element.Density : 0); element.Density != null ? count++ : count; });
         $scope.modelObject.AverageWeftDensity = parseInt(averageWeftDensity / count);
+    }
+    // ON LOAD EVENTS
+    DevExpress.localization.locale('tr');
+    $scope.loadSelectables().then(function (data) {
+        if (PRM_ID > 0)
+            $scope.bindModel(PRM_ID);
+        else {
+            $scope.getNextAttemptNo().then(function (rNo) {
+                $scope.modelObject.AttemptNo = rNo;
+                $scope.$apply();
+            });
+            $scope.bindModel(0);
+        }
+    });
+});
+app.controller('variantCtrl', function ($scope, $http) {
+    $scope.modelObject = { Id: 0, KnitYarns: [] };
+    $scope.saveStatus = 0;
+
+    $scope.yarnRecipeList = [];
+    $scope.firmList = [];
+
+    $scope.selectedWeavingDraft = {};
+    $scope.weavingDraftList = [];
+
+    $scope.selectedQualityType = {};
+    $scope.qualityTypeList = [];
+    $scope.itemVariantList = [];
+
+    $scope.selectedDyeHouse = {};
+    $scope.dyeHouseList = [{ Id: 1, Text: 'FR - FİKSE' }];
+
+    $scope.selectedCutType = {};
+    $scope.cutTypeList = [{ Id: 1, Text: 'Var' },
+    { Id: 2, Text: 'Yok' }];
+
+    $scope.selectedApparelType = {};
+    $scope.apparelTypeList = [{ Id: 1, Text: 'Var' },
+    { Id: 2, Text: 'Yok' }];
+
+    $scope.selectedBulletType = {};
+    $scope.bulletTypeList = [{ Id: 1, Text: 'Var' },
+        { Id: 2, Text: 'Yok' }];
+    // GET SELECTABLE DATA
+    $scope.loadSelectables = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Knit/GetSelectables', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+
+                        $scope.qualityTypeList = resp.data.QualityType;
+                        $scope.weavingDraftList = resp.data.WeavingDrafts;
+                        $scope.yarnRecipeList = resp.data.YarnRecipes;
+                        $scope.firmList = resp.data.Firms;
+                        $scope.itemVariantList = resp.data.ItemVariants;
+                        console.log($scope.itemVariantList);
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prmReq;
     }
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
