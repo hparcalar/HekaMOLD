@@ -215,8 +215,8 @@
 
                                 @if (Html.IsGranted("ModuleProduction"))
                                 {
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "Planning$|ProductionNeeds$|ContractWorks$") ? "show":"")">
-                                        <span class="menu-link @(Regex.IsMatch(ctrl, "Planning$|ProductionNeeds$|ContractWorks$") ? "active" : "")">
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "Planning$|ProductionNeeds$|ContractWorks$|Delivery$") ? "show":"")">
+                                        <span class="menu-link @(Regex.IsMatch(ctrl, "Planning$|ProductionNeeds$|ContractWorks$|Delivery$") ? "active" : "")">
                                             <span class="menu-icon">
                                                 <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
                                                 <span class="svg-icon svg-icon-dark svg-icon-2">
@@ -269,6 +269,23 @@
                                                         <!--end::Svg Icon-->
                                                     </span>
                                                     <span class="menu-title">Malzeme İhtiyaçları</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "Delivery$") ? "active" : "")" href="@Url.Action("Planning","Delivery")">
+                                                    <span class="menu-icon">
+                                                        <!--begin::Svg Icon | path: icons/duotone/Interface/Settings-02.svg-->
+                                                        <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path opacity="0.25" d="M13 5H2C0.895431 5 0 5.89543 0 7V15C0 16.1046 0.895431 17 2 17H3H7H14.5C14.7761 17 15 16.7761 15 16.5V7.00057C15 5.896 14.1046 5 13 5Z" fill="#12131A" />
+                                                                <path d="M15.5 8C15.2239 8 15 8.22386 15 8.5V16.5C15 16.7761 15.2239 17 15.5 17H18H21H23C23.5523 17 24 16.5523 24 16V12.6637C24 12.0249 23.6948 11.4244 23.1786 11.0479L19.5267 8.38417C19.1844 8.13452 18.7717 8 18.3481 8H15.5Z" fill="#12131A" />
+                                                                <path d="M5 19C6.10457 19 7 18.1046 7 17C7 15.8954 6.10457 15 5 15C3.89543 15 3 15.8954 3 17C3 18.1046 3.89543 19 5 19Z" fill="#12131A" />
+                                                                <path d="M19 19C20.1046 19 21 18.1046 21 17C21 15.8954 20.1046 15 19 15C17.8954 15 17 15.8954 17 17C17 18.1046 17.8954 19 19 19Z" fill="#12131A" />
+                                                            </svg>
+                                                        </span>
+                                                        <!--end::Svg Icon-->
+                                                    </span>
+                                                    <span class="menu-title">Sevkiyat Planlama</span>
                                                 </a>
                                             </div>
                                             <div class="menu-item">
@@ -641,18 +658,16 @@
 
                                 @if (Html.IsGranted("ModuleItems"))
                                 {
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "Delivery$") 
-                                        || (Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "2") 
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @((Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "2") 
                                         || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "States") 
                                         || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "ManageItems") 
-                                        || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState")) 
+                                        || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState" || actn == "MachineProductState")) 
                                         || (Regex.IsMatch(ctrl, "Item$") && actn == "Extract")
                                         ? "show":"")">
-                                        <span class="menu-link @(Regex.IsMatch(ctrl, "Delivery$") 
-                                            || (Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "2") 
+                                        <span class="menu-link @((Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "2") 
                                             || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "States") 
                                             || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "ManageItems") 
-                                            || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState")) 
+                                            || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState" || actn == "MachineProductState")) 
                                             || (Regex.IsMatch(ctrl, "Item$") && actn == "Extract")
                                             ? "active" : "")">
                                             <span class="menu-icon">
@@ -728,28 +743,12 @@
                                                     <span class="menu-title">Stok Yönetimi</span>
                                                 </a>
                                             </div>
-                                            <div class="menu-item">
-                                                <a class="menu-link @(Regex.IsMatch(ctrl, "Delivery$") ? "active" : "")" href="@Url.Action("Planning","Delivery")">
-                                                    <span class="menu-icon">
-                                                        <!--begin::Svg Icon | path: icons/duotone/Interface/Settings-02.svg-->
-                                                        <span class="svg-icon svg-icon-dark svg-icon-2">
-                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <path opacity="0.25" d="M13 5H2C0.895431 5 0 5.89543 0 7V15C0 16.1046 0.895431 17 2 17H3H7H14.5C14.7761 17 15 16.7761 15 16.5V7.00057C15 5.896 14.1046 5 13 5Z" fill="#12131A" />
-                                                                <path d="M15.5 8C15.2239 8 15 8.22386 15 8.5V16.5C15 16.7761 15.2239 17 15.5 17H18H21H23C23.5523 17 24 16.5523 24 16V12.6637C24 12.0249 23.6948 11.4244 23.1786 11.0479L19.5267 8.38417C19.1844 8.13452 18.7717 8 18.3481 8H15.5Z" fill="#12131A" />
-                                                                <path d="M5 19C6.10457 19 7 18.1046 7 17C7 15.8954 6.10457 15 5 15C3.89543 15 3 15.8954 3 17C3 18.1046 3.89543 19 5 19Z" fill="#12131A" />
-                                                                <path d="M19 19C20.1046 19 21 18.1046 21 17C21 15.8954 20.1046 15 19 15C17.8954 15 17 15.8954 17 17C17 18.1046 17.8954 19 19 19Z" fill="#12131A" />
-                                                            </svg>
-                                                        </span>
-                                                        <!--end::Svg Icon-->
-                                                    </span>
-                                                    <span class="menu-title">Sevkiyat Planlama</span>
-                                                </a>
-                                            </div>
+                                            
                                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion @((Regex.IsMatch(ctrl, "Warehouse$") && actn == "States")
-                                            || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState"))
+                                            || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState" || actn == "MachineProductState"))
                                             || (Regex.IsMatch(ctrl, "Item$") && actn == "Extract") ? "show":"")">
                                                 <span class="menu-link @((Regex.IsMatch(ctrl, "Warehouse$") && actn == "States")
-                                            || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState"))
+                                            || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState" || actn == "MachineProductState"))
                                             || (Regex.IsMatch(ctrl, "Item$") && actn == "Extract") ? "active" : "")">
                                                     <span class="menu-icon">
                                                         <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
@@ -809,9 +808,28 @@
                                                             <span class="menu-title">Bitmiş Ürün Durumu</span>
                                                         </a>
                                                     </div>
-                                                    <div class="menu-item">
+                                                    <!--<div class="menu-item">
                                                         <a class="menu-link @(Regex.IsMatch(ctrl, "Warehouse") && Regex.IsMatch(actn, "FinishedProductState$") ? "active" : "")"
                                                            href="@Url.Action("FinishedProductState","Warehouse")">
+                                                            <span class="menu-icon">-->
+                                                                <!--begin::Svg Icon | path: icons/stockholm/General/User.svg-->
+                                                                <!--<span class="svg-icon svg-icon-dark svg-icon-2">
+                                                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                                        <g id="Stockholm-icons-/-Shopping-/-Box3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                                            <path d="M20.4061385,6.73606154 C20.7672665,6.89656288 21,7.25468437 21,7.64987309 L21,16.4115967 C21,16.7747638 20.8031081,17.1093844 20.4856429,17.2857539 L12.4856429,21.7301984 C12.1836204,21.8979887 11.8163796,21.8979887 11.5143571,21.7301984 L3.51435707,17.2857539 C3.19689188,17.1093844 3,16.7747638 3,16.4115967 L3,7.64987309 C3,7.25468437 3.23273352,6.89656288 3.59386153,6.73606154 L11.5938615,3.18050598 C11.8524269,3.06558805 12.1475731,3.06558805 12.4061385,3.18050598 L20.4061385,6.73606154 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
+                                                                            <polygon id="Combined-Shape-Copy" fill="#000000" points="14.9671522 4.22441676 7.5999999 8.31727912 7.5999999 12.9056825 9.5999999 13.9056825 9.5999999 9.49408582 17.25507 5.24126912"></polygon>
+                                                                        </g>
+                                                                    </svg>
+                                                                </span>-->
+                                                                <!--end::Svg Icon-->
+                                                            <!--</span>
+                                                            <span class="menu-title">Bitmiş Ürün Girişleri</span>
+                                                        </a>
+                                                    </div>-->
+                                                    <div class="menu-item">
+                                                        <a class="menu-link @(Regex.IsMatch(ctrl, "Warehouse") && Regex.IsMatch(actn, "MachineProductState") ? "active" : "")"
+                                                           href="@Url.Action("MachineProductState","Warehouse")">
                                                             <span class="menu-icon">
                                                                 <!--begin::Svg Icon | path: icons/stockholm/General/User.svg-->
                                                                 <span class="svg-icon svg-icon-dark svg-icon-2">
@@ -825,12 +843,11 @@
                                                                 </span>
                                                                 <!--end::Svg Icon-->
                                                             </span>
-                                                            <span class="menu-title">Bitmiş Ürün Girişleri</span>
+                                                            <span class="menu-title">Makine Üretimleri</span>
                                                         </a>
                                                     </div>
                                                 </div>
                                             </div>
-
 
                                             <div class="menu-item">
                                                 <a class="menu-link"

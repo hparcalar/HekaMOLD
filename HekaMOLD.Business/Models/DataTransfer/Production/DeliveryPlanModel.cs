@@ -18,6 +18,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
 
         #region VISUAL ELEMENTS
         public string PlanDateStr { get; set; }
+        public string HourPart { get; set; }
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
         public string FirmName { get; set; }

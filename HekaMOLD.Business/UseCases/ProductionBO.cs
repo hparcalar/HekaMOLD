@@ -2678,37 +2678,118 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region WAREHOUSE PRODUCT DELIVERY
-        public ItemSerialModel[] GetSerialsWaitingForDelivery()
+        public ItemSerialModel[] GetCurrentSerials(int itemId)
         {
             ItemSerialModel[] data = new ItemSerialModel[0];
 
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemSerial>();
-                data = repo.Filter(d => d.SerialStatus == (int)SerialStatusType.Placed
-                    && d.ItemReceiptDetailId != null
-                    && d.SerialNo != null && d.SerialNo.Length > 0)
-                    .ToList()
-                    .Select(d => new ItemSerialModel
+                var repoItemReceipt = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var allMovements = repoItemReceipt.Filter(d => d.ItemId == itemId);
+                var totalRemaining = (allMovements.Where(d => d.ItemReceipt.ReceiptType < 100).Sum(d => d.Quantity) ?? 0)
+                    - (allMovements.Where(d => d.ItemReceipt.ReceiptType > 100).Sum(d => d.Quantity) ?? 0);
+
+                if (totalRemaining > 0)
+                {
+                    var currentPackages = repo.Filter(d => d.ItemReceiptDetail.ItemId == itemId)
+                       .OrderByDescending(d => d.Id)
+                       .ToArray();
+
+                    List<ItemSerialModel> pickedPackages = new List<ItemSerialModel>();
+
+                    int packageIndex = currentPackages.Length - 1;
+                    while (totalRemaining > 0)
                     {
-                        Id = d.Id,
-                        ItemId = d.ItemReceiptDetail != null ? d.ItemReceiptDetail.ItemId : (int?)null,
-                        ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemNo : "",
-                        ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
-                        CreatedDate = d.CreatedDate,
-                        CreatedDateStr = d.CreatedDate != null ?
-                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "",
-                        MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
-                            d.WorkOrderDetail.Machine.MachineCode : "",
-                        MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
-                            d.WorkOrderDetail.Machine.MachineName : "",
-                        FirstQuantity = d.FirstQuantity,
-                        InPackageQuantity = d.InPackageQuantity,
-                        LiveQuantity = d.LiveQuantity,
-                        SerialNo = d.SerialNo,
-                        FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
-                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
-                    }).ToArray();
+                        if (packageIndex < 0)
+                            break;
+
+                        var pack = currentPackages[packageIndex];
+
+                        ItemSerialModel containerPack = new ItemSerialModel();
+                        pack.MapTo(containerPack);
+                        containerPack.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", pack.ItemReceiptDetail.ItemReceipt.ReceiptDate);
+                        containerPack.MachineCode = pack.WorkOrderDetail != null &&
+                            pack.WorkOrderDetail.Machine != null ? pack.WorkOrderDetail.Machine.MachineCode : "";
+
+                        pickedPackages.Add(containerPack);
+
+                        totalRemaining -= pack.FirstQuantity ?? 0;
+                        packageIndex--;
+                    }
+
+                    data = pickedPackages.ToArray();
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        public ItemSerialModel[] GetSerialsWaitingForDelivery()
+        {
+            ItemSerialModel[] data = new ItemSerialModel[0];
+
+            int pWrId = 0;
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                var wrModel = bObj.GetProductWarehouse();
+                if (wrModel != null && wrModel.Id > 0)
+                    pWrId = wrModel.Id;
+            }
+
+            ItemStateModel[] dataProducts = new ItemStateModel[0];
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                dataProducts = bObj.GetItemStates(new int[] { pWrId });
+            }
+            
+            try
+            {
+                DateTime dtYearStart = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                List<ItemSerialModel> allSerials = new List<ItemSerialModel>();
+
+                foreach (var item in dataProducts)
+                {
+                    var itemSerials = GetCurrentSerials(item.ItemId);
+                    if (itemSerials.Length > 0)
+                        allSerials.AddRange(itemSerials);
+                }
+
+                data = allSerials.ToArray();
+
+                //var repo = _unitOfWork.GetRepository<ItemSerial>();
+                //data = repo.Filter(d => d.SerialStatus == (int)SerialStatusType.Placed
+                //    && d.ItemReceiptDetailId != null
+                //    && d.ItemReceiptDetail.ItemReceipt.ReceiptDate > dtYearStart
+                //    && d.SerialNo != null && d.SerialNo.Length > 0)
+                //    .ToList()
+                //    .Select(d => new ItemSerialModel
+                //    {
+                //        Id = d.Id,
+                //        ItemId = d.ItemReceiptDetail != null ? d.ItemReceiptDetail.ItemId : (int?)null,
+                //        ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                //        ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
+                //        CreatedDate = d.CreatedDate,
+                //        CreatedDateStr = d.ItemReceiptDetail.ItemReceipt.ReceiptDate != null ?
+                //            string.Format("{0:dd.MM.yyyy}", d.ItemReceiptDetail.ItemReceipt.ReceiptDate) : "",
+                //        MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                //            d.WorkOrderDetail.Machine.MachineCode : "",
+                //        MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                //            d.WorkOrderDetail.Machine.MachineName : "",
+                //        FirstQuantity = d.FirstQuantity,
+                //        InPackageQuantity = d.InPackageQuantity,
+                //        LiveQuantity = d.LiveQuantity,
+                //        SerialNo = d.SerialNo,
+                //        FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                //        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
+                //    }).ToArray();
             }
             catch (Exception)
             {
@@ -2723,9 +2804,13 @@ namespace HekaMOLD.Business.UseCases
 
             try
             {
+                DateTime dtYearStart = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                 var repo = _unitOfWork.GetRepository<ItemSerial>();
                 data = repo.Filter(d => d.SerialStatus == (int)SerialStatusType.Placed
                     && d.ItemReceiptDetailId != null
+                    && d.ItemReceiptDetail.ItemReceipt.ReceiptDate > dtYearStart
                     && d.SerialNo != null && d.SerialNo.Length > 0)
                     .ToList()
                     .Select(d => new ItemSerialModel
@@ -2734,7 +2819,7 @@ namespace HekaMOLD.Business.UseCases
                         ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemNo : "",
                         ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item.ItemName : "",
                         CreatedDate = d.CreatedDate,
-                        CreatedDateStr = d.CreatedDate != null ?
+                        CreatedDateStr = d.ItemReceiptDetail.ItemReceipt.ReceiptDate != null ?
                             string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "",
                         MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
                             d.WorkOrderDetail.Machine.MachineCode : "",

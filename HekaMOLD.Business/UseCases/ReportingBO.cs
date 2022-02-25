@@ -478,6 +478,53 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
+
+        public ItemStateModel[] GetMachineStatesOnlyEntries(int[] warehouseList, BasicRangeFilter filter)
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(filter.StartDate))
+                    filter.StartDate = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(filter.EndDate))
+                    filter.EndDate = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repoSerial = _unitOfWork.GetRepository<ItemSerial>();
+                var serialData = repoSerial.Filter(d =>
+                    warehouseList.Contains(d.ItemReceiptDetail.ItemReceipt.InWarehouseId ?? 0)
+                    && d.ItemReceiptDetail.ItemReceipt.ReceiptType < 100
+                    && d.ItemReceiptDetail.ItemReceipt.ReceiptDate >= dtStart && d.ItemReceiptDetail.ItemReceipt.ReceiptDate <= dtEnd);
+
+                data = serialData.GroupBy(d => new { Item = d.ItemReceiptDetail.Item, Machine = d.WorkOrderDetail.Machine })
+                    .Select(d => new ItemStateModel
+                    {
+                        ItemId = d.Key.Item.Id,
+                        ItemNo = d.Key.Item.ItemNo,
+                        ItemName = d.Key.Item.ItemName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
+                        TotalQty = d.Sum(m => m.FirstQuantity) ?? 0,
+                        MachineCode = d.Key.Machine != null ? d.Key.Machine.MachineCode : "",
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         public ProductionHistoryModel[] GetProductionHistory(BasicRangeFilter filter)
         {
             ProductionHistoryModel[] data = new ProductionHistoryModel[0];
@@ -650,6 +697,47 @@ namespace HekaMOLD.Business.UseCases
             {
 
             }
+
+            return data;
+        }
+
+        public ItemStateModel[] GetConsumedRecipeData(ItemStateModel[] products)
+        {
+            products = products.GroupBy(d => new { ItemId = d.ItemId, Quantity = d.TotalQty })
+                .Select(d => new ItemStateModel
+                {
+                    ItemId = d.Key.ItemId,
+                    TotalQty = d.Sum(m => m.TotalQty),
+                }).ToArray();
+
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            var repoRecipe = _unitOfWork.GetRepository<ProductRecipeDetail>();
+
+            List<ItemStateModel> tmpData = new List<ItemStateModel>();
+            foreach (var prd in products)
+            {
+                var items = repoRecipe.Filter(d => d.ProductRecipe.ProductId == prd.ItemId).ToArray();
+                foreach (var item in items)
+                {
+                    tmpData.Add(new ItemStateModel
+                    {
+                        ItemId = item.ItemId ?? 0,
+                        ItemNo = item.Item.ItemNo,
+                        ItemName = item.Item.ItemName,
+                        TotalQty = item.Quantity * prd.TotalQty,
+                    });
+                }
+            }
+
+            data = tmpData.GroupBy(d => new { d.ItemId, d.ItemNo, d.ItemName })
+                .Select(d => new ItemStateModel
+                {
+                    ItemId = d.Key.ItemId,
+                    ItemNo = d.Key.ItemNo,
+                    ItemName = d.Key.ItemName,
+                    TotalQty = d.Sum(m => m.TotalQty) ?? 0,
+                }).ToArray();
 
             return data;
         }

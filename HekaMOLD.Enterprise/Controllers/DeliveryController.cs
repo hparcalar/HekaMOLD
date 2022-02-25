@@ -70,13 +70,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetPlanDetail(int workOrderDetailId)
+        public JsonResult GetPlanDetail(int rid)
         {
-            WorkOrderDetailModel result = new WorkOrderDetailModel();
+            DeliveryPlanModel result = new DeliveryPlanModel();
 
-            using (PlanningBO bObj = new PlanningBO())
+            using (DeliveryBO bObj = new DeliveryBO())
             {
-                result = bObj.GetWorkOrderDetail(workOrderDetailId);
+                result = bObj.GetDeliveryPlan(rid);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -102,6 +102,19 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        public JsonResult EditPlan(DeliveryPlanModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DeliveryBO bObj = new DeliveryBO())
+            {
+                result = bObj.SavePlan(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
         public JsonResult DeletePlan(int rid)
         {
             BusinessResult result = new BusinessResult();
@@ -109,6 +122,19 @@ namespace HekaMOLD.Enterprise.Controllers
             using (DeliveryBO bObj = new DeliveryBO())
             {
                 result = bObj.DeletePlan(rid);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult CompletePlan(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DeliveryBO bObj = new DeliveryBO())
+            {
+                result = bObj.CompletePlan(rid);
             }
 
             return Json(result);

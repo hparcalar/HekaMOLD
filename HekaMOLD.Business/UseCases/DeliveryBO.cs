@@ -143,13 +143,75 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult SavePlan(DeliveryPlanModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<DeliveryPlan>();
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                    throw new Exception("Plan kaydına ulaşılamadı.");
+
+                dbObj.Quantity = model.Quantity;
+
+                if (!string.IsNullOrEmpty(model.HourPart))
+                    dbObj.PlanDate = DateTime.ParseExact(string.Format("{0:dd.MM.yyyy}", dbObj.PlanDate) + " "
+                        + model.HourPart, "dd.MM.yyyy HH:mm",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult CompletePlan(int planId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<DeliveryPlan>();
+                var dbObj = repo.Get(d => d.Id == planId);
+                if (dbObj != null)
+                {
+                    dbObj.PlanStatus = 1;
+                    _unitOfWork.SaveChanges();
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public WorkOrderDetailModel[] GetWaitingWorkOrders()
         {
             WorkOrderDetailModel[] data = new WorkOrderDetailModel[0];
 
+            DateTime dtYearStart = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd",
+                System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
             var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
             data = repo.Filter(d =>
                 d.WorkOrder.WorkOrderStatus != (int)WorkOrderStatusType.Delivered
+                && d.WorkOrder.WorkOrderDate > dtYearStart
                 && !d.DeliveryPlan.Any()
             ).ToList().Select(d => new WorkOrderDetailModel
             {
@@ -167,6 +229,39 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        public DeliveryPlanModel GetDeliveryPlan(int id)
+        {
+            DeliveryPlanModel data = new DeliveryPlanModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<DeliveryPlan>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj != null)
+                {
+                    dbObj.MapTo(data);
+
+                    data.ProductCode = dbObj.WorkOrderDetail != null ?
+                            dbObj.WorkOrderDetail.Item.ItemNo : "";
+                    data.ProductName = dbObj.WorkOrderDetail != null ?
+                            dbObj.WorkOrderDetail.Item.ItemName : "";
+                    data.FirmName = dbObj.WorkOrderDetail != null &&
+                            dbObj.WorkOrderDetail.WorkOrder.Firm != null ?
+                                dbObj.WorkOrderDetail.WorkOrder.Firm.FirmName : "";
+                    data.HourPart = string.Format("{0:HH:mm}", dbObj.PlanDate);
+
+                    if ((data.Quantity ?? 0) <= 0)
+                        data.Quantity = dbObj.WorkOrderDetail.Quantity ?? 0;
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         public DeliveryPlanModel[] GetDeliveryPlans()
         {
             DeliveryPlanModel[] data = new DeliveryPlanModel[0];
@@ -191,7 +286,7 @@ namespace HekaMOLD.Business.UseCases
                         MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
                         MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
                         CreatedDate = d.WorkOrderDetail.CreatedDate,
-                        Quantity = d.WorkOrderDetail.Quantity,
+                        Quantity = d.Quantity > 0 ? d.Quantity : d.WorkOrderDetail.Quantity,
                         WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
                         WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
                         FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
@@ -231,7 +326,7 @@ namespace HekaMOLD.Business.UseCases
                     FirmId = d.WorkOrderDetail.WorkOrder.FirmId,
                     FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
                             d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
-                    Quantity = d.WorkOrderDetail.Quantity,
+                    Quantity = d.Quantity > 0 ? d.Quantity : d.WorkOrderDetail.Quantity,
                     WorkOrder = new WorkOrderDetailModel
                     {
                         ItemId = d.WorkOrderDetail.ItemId,
@@ -242,7 +337,7 @@ namespace HekaMOLD.Business.UseCases
                         MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
                         MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
                         CreatedDate = d.WorkOrderDetail.CreatedDate,
-                        Quantity = d.WorkOrderDetail.Quantity,
+                        Quantity = d.Quantity > 0 ? d.Quantity : d.WorkOrderDetail.Quantity,
                         WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
                         WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
                         FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?

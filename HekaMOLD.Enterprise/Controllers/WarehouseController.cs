@@ -121,6 +121,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult MachineProductState()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetStatesData(string warehouseList)
         {
@@ -323,6 +328,54 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
             jsonResponse.MaxJsonLength = int.MaxValue;
             return jsonResponse;
+        }
+
+        [HttpGet]
+        public JsonResult GetMachineProductState(string dt1, string dt2)
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                int pWrId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var wrModel = bObj.GetProductWarehouse();
+                    if (wrModel != null && wrModel.Id > 0)
+                        pWrId = wrModel.Id;
+                }
+
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetMachineStatesOnlyEntries(new int[] { pWrId }, new Business.Models.Filters.BasicRangeFilter
+                    {
+                        StartDate = dt1,
+                        EndDate = dt2,
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpPost]
+        public JsonResult GetConsumedRecipeData(ItemStateModel[] model)
+        {
+            ItemStateModel[] result = new ItemStateModel[0];
+
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                result = bObj.GetConsumedRecipeData(model);
+            }
+
+            return Json(result);
         }
         #endregion
     }

@@ -239,6 +239,10 @@
     <Compile Include="Migrations\202202061614272_MachinePlanView.designer.cs">
       <DependentUpon>202202061614272_MachinePlanView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202250957430_Quantity_DeliveryPlan.cs" />
+    <Compile Include="Migrations\202202250957430_Quantity_DeliveryPlan.designer.cs">
+      <DependentUpon>202202250957430_Quantity_DeliveryPlan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -312,6 +316,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202202061614272_MachinePlanView.resx">
       <DependentUpon>202202061614272_MachinePlanView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202250957430_Quantity_DeliveryPlan.resx">
+      <DependentUpon>202202250957430_Quantity_DeliveryPlan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

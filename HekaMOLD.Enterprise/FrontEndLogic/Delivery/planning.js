@@ -223,6 +223,17 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
     // WAITING PLANS GRID
     $scope.lastProcessedPlanId = '';
     $scope.loadWaitingPlans = function () {
+        var cFilter = null;
+
+        try {
+            var dataGrid = $("#waitingPlanList").dxDataGrid("instance");
+            if (dataGrid != null) {
+                cFilter = dataGrid.getCombinedFilter(true);
+            }
+        } catch (e) {
+
+        }
+
         $('#waitingPlanList').dxDataGrid({
             dataSource: $scope.waitingPlanList,
             keyExpr: 'Id',
@@ -231,6 +242,8 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
             cacheEnabled: false,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             showBorders: true,
             filterRow: {
                 visible: true
@@ -245,7 +258,15 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
                 mode: "virtual"
             },
             height: 450,
-            width:450,
+            width: 450,
+            onEditorPreparing: function (e) {
+                if (e.parentType === "filterRow") {
+                    let onValueChanged = e.editorOptions.onValueChanged
+                    e.editorOptions.onValueChanged = function (args) {
+                        e.component.columnOption(e.dataField, "filterValue", args.value.toUpperCase())
+                    }
+                }
+            },
             editing: {
                 allowUpdating: false,
                 allowDeleting: false
@@ -315,6 +336,10 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
                 }
             ]
         });
+
+        var dGrid = $("#waitingPlanList").dxDataGrid("instance");
+        if (cFilter != null)
+            dGrid.filter(cFilter);
     }
     $scope.refreshList = function () {
         var dataGrid = $("#waitingPlanList").dxDataGrid("instance");
@@ -325,6 +350,28 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
     toastr.options.timeOut = 2000;
     toastr.options.progressBar = true;
     toastr.options.preventDuplicates = true;
+
+    // EDIT PLAN DETAILS
+    $scope.showPlanDetails = function (plan, uiElement) {
+        $scope.$broadcast('loadEditPlan', { id: plan.Id });
+
+        $('#dial-plan').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: 600,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.$on('editPlanEnd', function (e, d) {
+        $('#dial-plan').dialog('close');
+
+        $scope.loadMachineList();
+        $scope.loadWaitingPlanList();
+    });
 
     // KEYBOARD EVENTS
     $(document).keyup(function (event) {
