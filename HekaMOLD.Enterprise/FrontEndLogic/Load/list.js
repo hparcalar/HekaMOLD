@@ -80,6 +80,8 @@
                     deadlineClass = 'bg-success';
                 if (!item.LoadStatusType == 11 || !item.LoadStatusType == 1 || !item.LoadStatusType == 2 )
                     deadlineClass = 'bg-white';
+                if (item.LoadStatusType == 14)
+                    deadlineClass = 'bg-primary';
                 //else {
                 //    if (item.DateOfNeedStr != null && item.DateOfNeedStr.length > 0) {
                 //        var dtDeadline = moment(item.DateOfNeedStr, 'DD.MM.YYYY');

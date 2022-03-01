@@ -1,5 +1,5 @@
 ﻿app.controller('firmCtrl', function ($scope, $http) {
-    $scope.modelObject = {};
+    $scope.modelObject = { Id: 0, Addresses: [], Authors : [] };
 
     $scope.saveStatus = 0;
     $scope.forexTypeList = [];
@@ -169,8 +169,9 @@
                         $scope.selectedCountry = $scope.countryList.find(d => d.Id == $scope.modelObject.CountryId);
                     else
                         $scope.selectedcity = {};
-
+                    $scope.bindAddressesList();
                     $scope.bindAuthorList();
+
                 }
             }).catch(function (err) { });
     }
@@ -236,7 +237,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 200,
+            height: 300,
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
@@ -252,82 +253,131 @@
             ]
         });
     }
-    //$scope.bindTariffList = function () {
-    //    $('#tariffList').dxDataGrid({
-    //        dataSource: {
-    //            load: function () {
-    //                return $scope.modelObject.Tariff;
-    //            },
-    //            update: function (key, values) {
-    //                var obj = $scope.modelObject.Tariffs.find(d => d.Id == key);
-    //                if (obj != null) {
-    //                    if (typeof values.LadametrePrice != 'undefined') { obj.LadametrePrice = values.LadametrePrice; }
-    //                    if (typeof values.MeterCupPrice != 'undefined') { obj.MeterCupPrice = values.MeterCupPrice; }
-    //                    if (typeof values.WeightPrice != 'undefined') { obj.WeightPrice = values.WeightPrice; }
-    //                    if (typeof values. != 'undefined') { obj.Phone = values.Phone; }
-    //                    if (typeof values.SendMailForPurchaseOrder != 'undefined') { obj.SendMailForPurchaseOrder = values.SendMailForPurchaseOrder; }
-    //                }
-    //            },
-    //            remove: function (key) {
-    //                var obj = $scope.modelObject.Authors.find(d => d.Id == key);
-    //                if (obj != null) {
-    //                    $scope.modelObject.Authors.splice($scope.modelObject.Authors.indexOf(obj), 1);
-    //                }
-    //            },
-    //            insert: function (values) {
-    //                var newId = 1;
-    //                if ($scope.modelObject.Authors.length > 0) {
-    //                    newId = $scope.modelObject.Authors.map(d => d.Id).reduce((max, n) => n > max ? n : max)
-    //                    newId++;
-    //                }
+    $scope.bindAddressesList = function () {
+        $('#addressList').dxDataGrid({
+            dataSource: {
+                load: function () {
+                    return $scope.modelObject.Addresses;
+                },
+                update: function (key, values) {
+                    var obj = $scope.modelObject.Addresses.find(d => d.Id == key);
+                    if (obj != null) {
+                        if (typeof values.AddressName != 'undefined') { obj.AddressName = values.AddressName; }
+                        if (typeof values.AddressType != 'undefined') { obj.AddressType = values.AddressType; }
+                        if (typeof values.Address1 != 'undefined') { obj.Address1 = values.Address1; }
+                        if (typeof values.Address2 != 'undefined') { obj.Address2 = values.Address2; }
+                        if (typeof values.MobilePhone != 'undefined') { obj.MobilePhone = values.MobilePhone; }
+                        if (typeof values.Fax != 'undefined') { obj.Fax = values.Fax; }
+                        if (typeof values.OfficePhone != 'undefined') { obj.OfficePhone = values.OfficePhone; }
+                        if (typeof values.AuthorizedInfo != 'undefined') { obj.AuthorizedInfo = values.AuthorizedInfo; }
+                        if (typeof values.AddressType != 'undefined') { obj.AddressType = values.AddressType; }
+                        if (typeof values.CityId != 'undefined') {
+                            var cityObj = $scope.cityList.find(d => d.Id == values.CityId);
+                            obj.CityId = cityObj.Id;
+                        }
+                        if (typeof values.CountryId != 'undefined') {
+                            var countryObj = $scope.countryList.find(d => d.Id == values.CountryId);
+                            obj.CountryId = countryObj.Id;
+                        }
 
-    //                var newObj = {
-    //                    Id: newId,
-    //                    AuthorName: values.AuthorName,
-    //                    Title: values.Title,
-    //                    Email: values.Email,
-    //                    Phone: values.Phone,
-    //                    SendMailForPurchaseOrder: values.SendMailForPurchaseOrder,
-    //                    NewDetail: true
-    //                };
+                    }
 
-    //                $scope.modelObject.Authors.push(newObj);
-    //            },
-    //            key: 'Id'
-    //        },
-    //        showColumnLines: true,
-    //        showRowLines: true,
-    //        rowAlternationEnabled: true,
-    //        focusedRowEnabled: false,
-    //        showBorders: true,
-    //        filterRow: {
-    //            visible: false
-    //        },
-    //        headerFilter: {
-    //            visible: false
-    //        },
-    //        groupPanel: {
-    //            visible: false
-    //        },
-    //        scrolling: {
-    //            mode: "virtual"
-    //        },
-    //        height: 200,
-    //        editing: {
-    //            allowUpdating: true,
-    //            allowDeleting: true,
-    //            allowAdding: true,
-    //            mode: 'cell'
-    //        },
-    //        columns: [
-    //            { dataField: 'AuthorName', caption: 'Yetkili', validationRules: [{ type: "required" }] },
-    //            { dataField: 'Title', caption: 'Ünvan' },
-    //            { dataField: 'Email', caption: 'E-Posta' },
-    //            { dataField: 'Phone', caption: 'Telefon' },
-    //            { dataField: 'SendMailForPurchaseOrder', caption: 'Mail Gönder', dataType: 'boolean' },
-    //        ]
-    //    });
-    //}
+                },
+                remove: function (key) {
+                    var obj = $scope.modelObject.Addresses.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.modelObject.Addresses.splice($scope.modelObject.Addresses.indexOf(obj), 1);
+                    }
+                },
+                insert: function (values) {
+                    var newId = 1;
+                    if ($scope.modelObject.Addresses.length > 0) {
+                        newId = $scope.modelObject.Addresses.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                        newId++;
+                    }
+
+                    var newObj = {
+                        Id: newId,
+                        //FirmId: $scope.modelObject.Id,
+                        AddressName: values.AddressName,
+                        CityId: values.CityId,
+                        CountryId: values.CountryId,
+                        Address1: values.Address1,
+                        Address2: values.Address2,
+                        MobilePhone: values.MobilePhone,
+                        Fax: values.Fax,
+                        OfficePhone: values.OfficePhone,
+                        AuthorizedInfo: values.AuthorizedInfo,
+                        AddressType: values.AddressType,
+                        NewDetail: true
+                    };
+                    $scope.modelObject.Addresses.push(newObj);
+                },
+                key: 'Id'
+            },
+            showColumnLines: true,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: false,
+            showBorders: true,
+            filterRow: {
+                visible: false
+            },
+            headerFilter: {
+                visible: false
+            },
+            groupPanel: {
+                visible: false
+            },
+            scrolling: {
+                mode: "virtual"
+            },
+            height: 300,
+            editing: {
+                allowUpdating: true,
+                allowDeleting: true,
+                allowAdding: true,
+                mode: 'cell'
+            },
+            columns: [
+                { dataField: 'AddressName', caption: 'Adres İsmi' },
+                {
+                    dataField: 'CityId', caption: 'Şehir',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: $scope.cityList,
+                        valueExpr: "Id",
+                        displayExpr: "CityName"
+                    }
+                },
+                {
+                    dataField: 'CountryId', caption: 'Ülke',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: $scope.countryList,
+                        valueExpr: "Id",
+                        displayExpr: "CountryName"
+                    }
+                },
+                { dataField: 'Address1', caption: 'Adres1', width: 300},
+                { dataField: 'MobilePhone', caption: 'Mobil telefon', dataType:'number'},
+                { dataField: 'Fax', caption: 'Fax', dataType : 'number' },
+                { dataField: 'OfficePhone', caption: 'İş Telefon', dataType : 'number' },
+                { dataField: 'AuthorizedInfo', caption: 'Yetkili Kişi' ,width : 200 },
+                {
+                    dataField: 'AddressType', caption: 'Adres Tipi',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: [{ Id: 1, Text: 'Depo Adresi' }, { Id: 2, Text: 'Firma Adresi' }],
+                        valueExpr: "Id",
+                        displayExpr: "Text"
+                    },
+                    validationRules: [{ type: "required" }]
+                },
+
+            ]
+        });
+    }
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');

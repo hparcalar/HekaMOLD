@@ -53,9 +53,9 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
                 containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
                 containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
-                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
                 containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
                 containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
+                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
                 containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
                 containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
                 containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
@@ -64,18 +64,20 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
                 containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
                 containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE: d.OrderCalculationType==4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM:"" ;
-                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName:"";
-                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName:"";
+                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
+                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
+                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
                 containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
                 containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
                 containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
                 containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+
                 data.Add(containerObj);
             });
 
             return data.ToArray();
+
         }
         public LoadCalendarModel[] GetLoadCalendarList()
         {

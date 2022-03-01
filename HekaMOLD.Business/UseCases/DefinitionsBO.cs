@@ -101,6 +101,8 @@ namespace HekaMOLD.Business.UseCases
 
                 var repo = _unitOfWork.GetRepository<Firm>();
                 var repoAuthors = _unitOfWork.GetRepository<FirmAuthor>();
+                var repoAddresses = _unitOfWork.GetRepository<FirmAddress>();
+
 
                 if (repo.Any(d => (d.FirmCode == model.FirmCode) && d.Id != model.Id))
                     throw new Exception("Aynı koda sahip başka bir firma mevcuttur. Lütfen farklı bir kod giriniz.");
@@ -150,6 +152,36 @@ namespace HekaMOLD.Business.UseCases
                         var dbItemAu = repoAuthors.GetById(item.Id);
                         item.MapTo(dbItemAu);
                         dbItemAu.Firm = dbObj;
+                    }
+                }
+                #endregion
+                #region SAVE ADDRESS LIST
+                if (model.Addresses == null)
+                    model.Addresses = new FirmAddressModel[0];
+
+                var toBeRemovedAddres = dbObj.FirmAddress
+                    .Where(d => !model.Addresses.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedAddres)
+                {
+                    repoAddresses.Delete(item);
+                }
+
+                foreach (var item in model.Addresses)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemAa = new FirmAddress();
+                        item.MapTo(dbItemAa);
+                        dbItemAa.Firm = dbObj;
+                        repoAddresses.Add(dbItemAa);
+                    }
+                    else if (!toBeRemovedAddres.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemAa = repoAddresses.GetById(item.Id);
+                        item.MapTo(dbItemAa);
+                        dbItemAa.Firm = dbObj;
                     }
                 }
                 #endregion
@@ -211,6 +243,16 @@ namespace HekaMOLD.Business.UseCases
                 });
                 model.Authors = authorList.ToArray();
                 #endregion
+                #region GET ADDRESS LIST
+                List<FirmAddressModel> addressList = new List<FirmAddressModel>();
+                dbObj.FirmAddress.ToList().ForEach(d =>
+                {
+                    FirmAddressModel addressModel = new FirmAddressModel();
+                    d.MapTo(addressModel);
+                    addressList.Add(addressModel);
+                });
+                model.Addresses = addressList.ToArray();
+                #endregion
             }
 
             return model;
@@ -235,6 +277,17 @@ namespace HekaMOLD.Business.UseCases
                     authorList.Add(authorModel);
                 });
                 model.Authors = authorList.ToArray();
+                #endregion
+
+                #region GET ADDRESS LIST
+                List<FirmAddressModel> addressList = new List<FirmAddressModel>();
+                dbObj.FirmAddress.ToList().ForEach(d =>
+                {
+                    FirmAddressModel addressModel = new FirmAddressModel();
+                    d.MapTo(addressModel);
+                    addressList.Add(addressModel);
+                });
+                model.Addresses = addressList.ToArray();
                 #endregion
             }
 

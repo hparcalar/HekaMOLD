@@ -14,6 +14,7 @@ namespace Heka.DataAccess.Context
             this.VoyageByTowinfVehicle = new HashSet<Voyage>();
             this.VoyageByTraillerVehicle = new HashSet<Voyage>();
             this.ItemLoad = new HashSet<ItemLoad>();
+            this.VoyageDetail = new HashSet<VoyageDetail>();
         }
         public int Id { get; set; }
         public string Plate { get; set; }
@@ -79,6 +80,9 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Vehicle")]
         public virtual ICollection<ItemLoad> ItemLoad { get; set; }
+
+        [InverseProperty("Vehicle")]
+        public virtual ICollection<VoyageDetail> VoyageDetail { get; set; }
 
     }
 }

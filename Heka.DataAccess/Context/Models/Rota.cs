@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Heka.DataAccess.Context
@@ -7,7 +8,7 @@ namespace Heka.DataAccess.Context
     {
         public Rota()
         {
-
+            this.VoyageDetail = new HashSet<VoyageDetail>();
         }
         public int Id { get; set; }
 
@@ -27,6 +28,7 @@ namespace Heka.DataAccess.Context
 
         public virtual City CityStart { get; set; }
         public virtual City CityEnd { get; set; }
-
+        [InverseProperty("Rota")]
+        public virtual ICollection<VoyageDetail> VoyageDetail { get; set; }
     }
 }

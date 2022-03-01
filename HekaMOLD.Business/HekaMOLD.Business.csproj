@@ -112,6 +112,7 @@
     <Compile Include="Models\Constants\SubscriptionCategory.cs" />
     <Compile Include="Models\Constants\SyncPointType.cs" />
     <Compile Include="Models\Constants\VehicleTireType.cs" />
+    <Compile Include="Models\Constants\VoyageStatus.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\Constants\WorkOrderSerialType.cs" />
     <Compile Include="Models\Constants\WorkOrderStatusType.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Models\DataTransfer\Authentication\UserAuthTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Authentication\UserRoleModel.cs" />
     <Compile Include="Models\DataTransfer\Core\AllocatedCodeModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\FirmAddressModel.cs" />
     <Compile Include="Models\DataTransfer\Core\FirmAuthorModel.cs" />
     <Compile Include="Models\DataTransfer\Core\FirmModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ForexHistoryModel.cs" />
@@ -173,6 +175,8 @@
     <Compile Include="Models\DataTransfer\Logistics\VehicleTireDirectionTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleTireModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleTypeModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VoyageDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VoyageModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
@@ -250,6 +254,7 @@
     <Compile Include="Models\Dictionaries\DictReportType.cs" />
     <Compile Include="Models\Dictionaries\DictSubscriptionCategory.cs" />
     <Compile Include="Models\Dictionaries\DictOrderTransactionDirectionType.cs" />
+    <Compile Include="Models\Dictionaries\DictVoyageStatus.cs" />
     <Compile Include="Models\Dictionaries\DictWorkOrderStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptCategoryType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptStatusType.cs" />

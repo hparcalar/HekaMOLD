@@ -14,6 +14,8 @@ namespace Heka.DataAccess.Context
             this.ItemLoadByExits = new HashSet<ItemLoad>();
             this.VoyageByLoadCustoms = new HashSet<Voyage>();
             this.VoyageByDischargeCustoms = new HashSet<Voyage>();
+            this.VoyageDetailByEntries = new HashSet<VoyageDetail>();
+            this.VoyageDetailByExits = new HashSet<VoyageDetail>();
         }
         public int Id { get; set; }
         public string CustomsCode { get; set; }
@@ -48,6 +50,10 @@ namespace Heka.DataAccess.Context
         [InverseProperty("DischargeCustoms")]
         public virtual ICollection<Voyage> VoyageByDischargeCustoms { get; set; }
 
+        [InverseProperty("CustomsEntry")]
+        public virtual ICollection<VoyageDetail> VoyageDetailByEntries { get; set; }
 
+        [InverseProperty("CustomsExit")]
+        public virtual ICollection<VoyageDetail> VoyageDetailByExits { get; set; }
     }
 }

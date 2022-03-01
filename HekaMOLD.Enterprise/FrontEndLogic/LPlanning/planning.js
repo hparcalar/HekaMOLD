@@ -1,54 +1,41 @@
-﻿DevExpress.localization.locale('tr');
-
-app.controller('lPlanningCtrl', function deliveryPlanningCtrl($scope, $http) {
-    $scope.modelObject = { Id: 0, VoyageDateStr: moment().format('DD.MM.YYYY'), };
-    $scope.saveStatus = 0;
-
-    $scope.waitingPlansVisible = true;
+﻿app.controller('lPlanningCtrl', function ($scope, $http) {
+    $scope.modelObject = { Id: 0, VoyageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: [], };
 
     $scope.driverList = [];
-    $scope.selectedDriver = {}
+    $scope.plannedLoadList= [];
+    $scope.rotaList = [];
+    $scope.traillerVehicleList = [];
+    $scope.forexTypeList = [];
 
-    $scope.vehicleTraillerList = [];
-    $scope.selectedVehicleTrailler = {}
+    $scope.selectedDriver = {}
+    $scope.selectedTraillerVehicle = {}
     $scope.selectedOrderTransactionDirectionType = {};
     $scope.orderTransactionDirectionTypeList = [{ Id: 1, Text: 'İhracat' }, { Id: 2, Text: 'İthalat' },
     { Id: 3, Text: 'Yurt İçi' }, { Id: 4, Text: 'Transit' }];
-    $scope.machineList = [];
-    $scope.selectedMachineList = [];
-    $scope.boardPlanList = [];
-    $scope.waitingPlanList = [];
-    $scope.selectedPlan = { Id: 0 };
-    $scope.copiedPlan = { Id: 0 };
-    $scope.selectedSource = { Id: 0 }; // Plan queue of a selected machine for highlighting
-    // GET SELECTABLE DATA
-    $scope.loadSelectables = function () {
-        var prmReq = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'LPlanning/GetSelectables', {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        $scope.vehicleTraillerList = resp.data.Vehicles;
-                        $scope.driverList = resp.data.Drivers;
-                        $scope.VoyageDateStr = moment().format('DD.MM.YYYY')
 
+    $scope.selectedFirm = {};
+    $scope.selectedForexType = {};
 
-                        resolve(resp.data);
-                    }
-                }).catch(function (err) { });
-        });
+    $scope.saveStatus = 0;
 
-        return prmReq;
+    // CRUD
+    $scope.openNewRecord = function () {
+        $scope.modelObject = { Id: 0, VoyageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: [], OrderStatus: 0 };
+
+        $scope.selectedDriver = {}
+        $scope.selectedTraillerVehicle = {}
+        $scope.selectedOrderTransactionDirectionType = {};
+        $scope.selectedForexType = {};
+        $scope.bindVoyageDetails();
     }
+    // RECEIPT FUNCTIONS
     //GET NEXT VOYAGE CODE
     $scope.getNextVoyageCode = function () {
-
         let directionId = 0;
-
         if (typeof $scope.selectedOrderTransactionDirectionType.Id == 'undefined')
             directionId = 0;
         else
             directionId = $scope.selectedOrderTransactionDirectionType.Id;
-
         var prms = new Promise(function (resolve, reject) {
             $http.get(HOST_URL + 'LPlanning/GetNextVoyageCode?Id=' + directionId, {}, 'json')
                 .then(function (resp) {
@@ -67,212 +54,6 @@ app.controller('lPlanningCtrl', function deliveryPlanningCtrl($scope, $http) {
 
         return prms;
     }
-    $scope.getMachinePlans = function (machine) {
-        return $scope.boardPlanList.filter(d => d.PlanDateStr == machine.PlanDateTitle);
-    }
-
-    $scope.toggleWaitingPlans = function () {
-        $scope.waitingPlansVisible = !$scope.waitingPlansVisible;
-    }
-
-    $scope.selectPlan = function (planItem) {
-        $scope.selectedPlan = planItem;
-        $scope.selectedSource = $scope.machineList.find(d => d.Id == planItem.MachineId);
-    }
-
-    $scope.selectSource = function (planDate) {
-        $scope.selectedSource = $scope.machineList.find(d => d.PlanDate == planDate);
-    }
-
-    $scope.getCurrentWeekNumber = function () {
-        return moment().week();
-    }
-
-    // DATA GET METHODS
-    $scope.loadMachineList = function () {
-        $scope.machineList.splice(0, $scope.machineList.length);
-        for (var i = 1; i < 7; i++) {
-            var dateOfDay = moment().day(i).week(moment().week());
-            $scope.machineList.push({ PlanDate: dateOfDay, PlanDateTitle: dateOfDay.format('DD.MM.YYYY') })
-        }
-
-        $scope.loadRunningBoard();
-    }
-    $scope.loadRunningBoard = function () {
-        $http.get(HOST_URL + 'Delivery/GetProductionPlans', {}, 'json')
-            .then(function (resp) {
-                if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.boardPlanList = resp.data;
-                    setTimeout(function () { $scope.bindBoardDragDropEvents(); }, 250);
-                }
-            }).catch(function (err) { });
-    }
-    $scope.loadWaitingPlanList = function () {
-        $http.get(HOST_URL + 'Delivery/GetWaitingPlans', {}, 'json')
-            .then(function (resp) {
-                if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.waitingPlanList = resp.data;
-                    $scope.loadWaitingPlans();
-                }
-            }).catch(function (err) { });
-    }
-
-    // BOARD DRAG & DROP EVENTS
-    $scope.bindBoardDragDropEvents = function () {
-        var takenPlanId = null;
-
-        $('.plan-box').unbind('dragstart');
-        $('.plan-box').unbind('dragenter');
-        $('.plan-box').unbind('dragleave');
-        $('.plan-box').unbind('drop');
-
-        $('.machine-box').unbind('drop');
-        $('.machine-box').unbind('dragover');
-
-        $('.plan-box').on('dragstart', function (de) {
-            var planId = $(this).attr('data-plan-id');
-            takenPlanId = planId;
-
-            var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
-            if (planObj != null) {
-                //if (planObj.WorkOrder.WorkOrderStatus != 1) {
-                //    toastr.error('Tamamlanmış bir planı değiştiremezsiniz.', 'Uyarı');
-                //    return false;
-                //}
-
-                de.originalEvent.dataTransfer.setData('text/plain', planId);
-            }
-        });
-
-        var refCounter = 0;
-        $('.plan-box').on('dragenter', function (de) {
-            de.preventDefault();
-
-            refCounter++;
-
-            var planId = $(this).attr('data-plan-id');
-            if (takenPlanId == planId)
-                return false;
-            //else {
-            //    var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
-            //    if (planObj.WorkOrder.WorkOrderStatus != 1) {
-            //        toastr.error('Tamamlanmış bir planın önüne üretim alamazsınız.', 'Uyarı');
-            //        return false;
-            //    }
-            //}
-
-            $('.plan-box').removeClass('drag-over');
-            $(this).addClass('drag-over');
-        });
-
-        $('.plan-box').on('dragleave', function (de) {
-            //refCounter--;
-
-            //if (refCounter == 0)
-            //$(this).removeClass('drag-over');
-        });
-
-        $('.plan-box').on('drop', function (de) {
-            de.preventDefault();
-
-            var hoverPlanId = $(this).attr('data-plan-id');
-            var hoverPlanObj = $scope.boardPlanList.find(d => d.Id == parseInt(hoverPlanId));
-
-            if (hoverPlanObj != null) {
-                var planId = de.originalEvent.dataTransfer.getData("text/plain");
-                var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
-                if (planObj != null) {
-                    planObj.OrderNo = hoverPlanObj.OrderNo;
-                    planObj.PlanDateStr = hoverPlanObj.PlanDateStr;
-
-                    $scope.reOrderPlan(planObj);
-                }
-            }
-
-            refCounter = 0;
-            $(this).removeClass('drag-over');
-            return false;
-        });
-
-        $('.machine-box').on('drop', function (event) {
-            event.preventDefault();
-
-            refCounter = 0;
-
-            var planId = event.originalEvent.dataTransfer.getData("text/plain");
-            var machineId = $(this).attr('data-id');
-
-            if (typeof machineId != 'undefined') {
-                var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
-                if (typeof planObj != 'undefined') {
-                    planObj.PlanDateStr = machineId;
-                    planObj.OrderNo = -1; // SET AS LAST ORDER OF SELECTED MACHINE
-
-                    $scope.reOrderPlan(planObj);
-                }
-            }
-        });
-
-        $('.machine-box').on('dragover', function (event) {
-            event.preventDefault();
-        });
-    }
-
-    $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0 };
-    }
-
-    $scope.saveModel = function (planObj) {
-        $scope.saveStatus = 1;
-
-        $http.post(HOST_URL + 'Delivery/SaveModel', planObj, 'json')
-            .then(function (resp) {
-                if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.saveStatus = 0;
-
-                    if (resp.data.Result == true) {
-                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
-
-                        $scope.loadMachineList();
-                        $scope.loadWaitingPlanList();
-                    }
-                    else
-                        toastr.error(resp.data.ErrorMessage, 'Hata');
-                }
-            }).catch(function (err) { });
-    }
-
-    $scope.reOrderPlan = function (planObj) {
-        $scope.saveStatus = 1;
-
-        $http.post(HOST_URL + 'Delivery/ReOrderPlan', planObj, 'json')
-            .then(function (resp) {
-                if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.saveStatus = 0;
-
-                    if (resp.data.Result == true) {
-                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
-
-                        $scope.loadMachineList();
-                        $scope.loadWaitingPlanList();
-
-                        $scope.selectPlan(planObj);
-                    }
-                    else
-                        toastr.error(resp.data.ErrorMessage, 'Hata');
-                }
-            }).catch(function (err) { });
-    }
-
-    $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'Delivery/BindModel?rid=' + id, {}, 'json')
-            .then(function (resp) {
-                if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.modelObject = resp.data;
-                }
-            }).catch(function (err) { });
-    }
-
     // #region VOYAGE MANAGEMENT
     $scope.showNewVoyageForm = function () {
         $scope.$broadcast('loadVoyage', { id: 0 });
@@ -289,162 +70,351 @@ app.controller('lPlanningCtrl', function deliveryPlanningCtrl($scope, $http) {
         });
     }
 
-    $scope.$on('editVoyageEnd', function (e, data) {
-        console.log(data);
+    $scope.$on('editVoyageEnd', function (e, d) {
+
+        d.forEach(x => {
+            if ($scope.modelObject.VoyageDetails.filter(m => m.LoadCode == x.LoadCode).length > 0) {
+                toastr.warning(x.LoadCode + ' nolu yük, ' + x.OveralVolume + ' / ' + x.OveralWeight + ', ' + x.OveralQuantity
+                    + ' miktarlı yük detayı zaten aktarıldığı için tekrar dahil edilmedi.', 'Uyarı');
+            }
+            else {
+                //alert();
+                var newId = 1;
+                if ($scope.modelObject.VoyageDetails.length > 0) {
+                    newId = $scope.modelObject.VoyageDetails.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                    newId++;
+                }
+                $scope.modelObject.VoyageDetails.push({
+                    Id: newId,
+                    DischargeLineNo: newId,
+                    ItemLoadId : x.Id,
+                    LoadCode : x.LoadCode,
+                    LoadingDateStr : x.LoadingDateStr,
+                    LoadOutDate :x.LoadOutDateStr,
+                    CustomerFirmName : x.CustomerFirmName,
+                    OrderTransactionDirectionType : x.OrderTransactionDirectionType,
+                    OrderTransactionDirectionTypeStr : x.OrderTransactionDirectionTypeStr,
+                    OrderCalculationType : x.OrderCalculationType,
+                    OrderCalculationTypeStr : x.OrderCalculationTypeStr,
+                    OveralQuantity : x.OveralQuantity,
+                    OveralWeight : x.OveralWeight,
+                    OveralLadametre : x.OveralLadametre,
+                    OveralVolume : x.OveralVolume,
+                    OverallTotal : x.OverallTotal,
+                    OrderNo : x.OrderNo,
+                    LoadDate : x.LoadDateStr,
+                    DischargeDate : x.DischargeDateStr,
+                    CalculationTypePrice :x.CalculationTypePrice,
+                    DocumentNo : x.DocumentNo,
+                    OrderUploadType : x.OrderUploadType,
+                    OrderUploadTypeStr : x.OrderUploadTypeStr,
+                    OrderUploadPointType : x.OrderUploadPointType,
+                    OrderUploadPointTypeStr : x.OrderUploadPointTypeStr,
+                    ScheduledUploadDate : x.ScheduledUploadDateStr,
+                    DateOfNeed : x.DateOfNeedStr,
+                    InvoiceId : x.InvoiceId,
+                    ForexTypeId : x.ForexTypeId,
+                    TraillerVehicleId : x.VehicleTraillerId,
+                    InvoiceStatus : x.InvoiceStatus,
+                    InvoiceFreightPrice : x.InvoiceFreightPrice,
+                    CmrNo : x.CmrNo,
+                    CmrStatus : x.CmrStatus,
+                    ShipperFirmExplanation : x.ShipperFirmExplanation,
+                    BuyerFirmExplanation : x.BuyerFirmExplanation,
+                    ReadinessDate : x.ReadinessDateStr,
+                    DeliveryFromCustomerDate : x.DeliveryFromCustomerDateStr,
+                    IntendedArrivalDate : x.IntendedArrivalDateStr,
+                    FirmCustomsArrivalId : x.FirmCustomsArrivalId,
+                    CustomsExplanation : x.CustomsExplanation,
+                    T1T2No : x.T1T2No,
+                    TClosingDate : x.TClosingDateStr,
+                    HasCmrDeliveryed : x.HasCmrDeliveryed,
+                    ItemPrice : x.ItemPrice,
+                    TrailerType : x.TrailerType,
+                    HasItemInsurance : x.HasItemInsurance,
+                    HasItemDangerous : x.HasItemDangerous,
+                    CmrCustomerDeliveryDate : x.CmrCustomerDeliveryDateStr,
+                    BringingToWarehousePlate : x.BringingToWarehousePlate,
+                    ShipperCityId : x.ShipperCityId,
+                    BuyerCityId : x.BuyerCityId,
+                    ShipperCountryId : x.ShipperCountryId,
+                    BuyerCountryId : x.BuyerCountryId,
+                    CustomerFirmId : x.CustomerFirmId,
+                    ShipperFirmId : x.ShipperFirmId,
+                    BuyerFirmId : x.BuyerFirmId,
+                    EntryCustomsId : x.EntryCustomsId,
+                    ExitCustomsId : x.ExitCustomsId,
+                    PlantId: x.PlantId,
+                    RotaId: null,
+                    NewDetail: true,
+                });
+                $scope.plannedLoadList = $scope.modelObject.VoyageDetails;
+                console.log($scope.plannedLoadList);
+            }
+        });
+        $scope.bindVoyageDetails();
+        console.log($scope.modelObject.VoyageDetails);
+        $('#dial-voyage').dialog('close');
     });
     // #endregion
 
-    // WAITING PLANS GRID
-    $scope.lastProcessedPlanId = '';
-    $scope.loadWaitingPlans = function () {
-        $('#waitingPlanList').dxDataGrid({
-            dataSource: $scope.waitingPlanList,
-            keyExpr: 'Id',
-            showColumnLines: false,
+    $scope.performDelete = function () {
+        bootbox.confirm({
+            message: "Bu siparişi silmek istediğinizden emin misiniz?",
+            closeButton: false,
+            buttons: {
+                confirm: {
+                    label: 'Evet',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'Hayır',
+                    className: 'btn-light'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $scope.saveStatus = 1;
+                    $http.post(HOST_URL + 'PIOrder/DeleteModel', { rid: $scope.modelObject.Id }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                $scope.saveStatus = 0;
+
+                                if (resp.data.Status == 1) {
+                                    toastr.success('Kayıt başarıyla silindi.', 'Bilgilendirme');
+
+                                    $scope.openNewRecord();
+                                }
+                                else
+                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                            }
+                        }).catch(function (err) { });
+                }
+            }
+        });
+    }
+
+    $scope.saveModel = function () {
+        $scope.saveStatus = 1;
+
+        if (typeof $scope.selectedFirm != 'undefined' && $scope.selectedFirm != null)
+            $scope.modelObject.FirmId = $scope.selectedFirm.Id;
+        else
+            $scope.modelObject.FirmId = null;
+
+        if (typeof $scope.selectedTraillerVehicle != 'undefined' && $scope.selectedTraillerVehicle != null)
+            $scope.modelObject.TraillerVehicleId = $scope.selectedTraillerVehicle.Id;
+        else
+            $scope.modelObject.TraillerVehicleId = null;
+
+        if (typeof $scope.selectedDriver != 'undefined' && $scope.selectedDriver != null)
+            $scope.modelObject.DriverId = $scope.selectedDriver.Id;
+        else
+            $scope.modelObject.DriverId = null;
+
+        if (typeof $scope.selectedOrderTransactionDirectionType != 'undefined' && $scope.selectedOrderTransactionDirectionType != null)
+            $scope.modelObject.OrderTransactionDirectionType = $scope.selectedOrderTransactionDirectionType.Id;
+        else
+            $scope.modelObject.OrderTransactionDirectionType = null;
+
+        if (typeof $scope.selectedForexType != 'undefined' && $scope.selectedForexType != null)
+            $scope.modelObject.ForexTypeId = $scope.selectedForexType.Id;
+        else
+            $scope.modelObject.ForexTypeId = null;
+
+        $http.post(HOST_URL + 'LPlanning/SaveModel', $scope.modelObject, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.saveStatus = 0;
+
+                    if (resp.data.Status == 1) {
+                        toastr.success('Kayıt başarılı.', 'Bilgilendirme');
+                        $scope.openNewRecord();
+                    }
+                    else
+                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                }
+            }).catch(function (err) { });
+    }
+
+    $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
+        return $("<div>").dxDropDownBox({
+            dropDownOptions: { width: 600 },
+            dataSource: $scope.rotaList,
+            value: cellInfo.value,
+            valueExpr: "Id",
+            displayExpr: "Id",
+            contentTemplate: function (e) {
+                return $("<div>").dxDataGrid({
+                    dataSource: $scope.rotaList,
+                    remoteOperations: true,
+                    columns: [
+                        { dataField: 'CityStartPostCode', caption: 'Başlama Şehri Posta Kodu' },
+                        { dataField: 'CityStartName', caption: 'Başlama Şehri' },
+                        { dataField: 'CityEndPostCode', caption: 'Bitiş Şehri Posta Kodu' },
+                        { dataField: 'CityEndName', caption: 'Bitiş Şehri' },
+                        { dataField: 'KmHour', caption: 'Km' }
+                    ],
+                    hoverStateEnabled: true,
+                    keyExpr: "Id",
+                    scrolling: { mode: "virtual" },
+                    height: 250,
+                    filterRow: { visible: true },
+                    selection: { mode: "single" },
+                    selectedRowKeys: [cellInfo.value],
+                    focusedRowEnabled: true,
+                    focusedRowKey: cellInfo.value,
+                    allowColumnResizing: true,
+                    wordWrapEnabled: true,
+                    onSelectionChanged: function (selectionChangedArgs) {
+                        e.component.option("value", selectionChangedArgs.selectedRowKeys[0]);
+                        cellInfo.setValue(selectionChangedArgs.selectedRowKeys[0]);
+                        if (selectionChangedArgs.selectedRowKeys.length > 0) {
+                            e.component.close();
+                        }
+                    }
+                });
+            },
+        });
+    }
+
+    $scope.bindVoyageDetails = function () {
+        $('#plannedLoadList').dxDataGrid({
+            dataSource:
+            {
+                load: function () { return $scope.modelObject.VoyageDetails },
+                remove: function (key) {
+                    var obj = $scope.modelObject.VoyageDetails.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.modelObject.VoyageDetails.splice($scope.modelObject.VoyageDetails.indexOf(obj), 1);
+                    }
+                },
+                update: function (key, values) {
+                    var obj = $scope.modelObject.VoyageDetails.find(d => d.Id == key);
+                    if (obj != null) {
+
+                        if (typeof values.RotaId != 'undefined') {
+                            var rotaObj = $scope.rotaList.find(d => d.Id == values.RotaId);
+                            obj.RotaId = rotaObj.Id;
+                            obj.CityStartName = rotaObj.CityStartName;
+                            obj.CityStartPostCode = rotaObj.CityStartPostCode;
+                            obj.CityEndName = rotaObj.CityEndName;
+                            obj.CityEndPostCode = rotaObj.CityEndPostCode;
+                            obj.KmHour = rotaObj.KmHour;
+                       }
+  
+                    }
+                },
+                key: 'Id'
+            },
+            showColumnLines: true,
             showRowLines: true,
             rowAlternationEnabled: true,
-            focusedRowEnabled: true,
-            cacheEnabled: false,
+            focusedRowEnabled: false,
+            columnAutoWidth: true,
             showBorders: true,
             filterRow: {
-                visible: true
+                visible: false
             },
             headerFilter: {
-                visible: true
+                visible: false
             },
             groupPanel: {
                 visible: false
             },
+            remoteOperations: false,
             scrolling: {
-                mode: "virtual"
+                mode: "single"
             },
-            height: 450,
-            width: 450,
+            height: 400,
             editing: {
-                allowUpdating: false,
-                allowDeleting: false
+                allowUpdating: true,
+                allowDeleting: true,
+                allowAdding: true,
+                mode: 'cell'
             },
-            onContentReady: function () {
-                $('.waiting-plan-row').on('dragstart', function (de) {
-                    de.originalEvent.dataTransfer.setData('text/plain', $(this).attr('data-id'));
-
-                    $('.machine-box').bind('drop', function (event) {
-                        event.preventDefault();
-
-                        var planId = event.originalEvent.dataTransfer.getData("text/plain");
-                        if (planId == $scope.lastProcessedPlanId)
-                            return;
-                        else
-                            $scope.lastProcessedPlanId = planId;
-
-                        var machineId = $(this).attr('data-id');
-
-                        if (typeof machineId != 'undefined') {
-                            var planObj = $scope.waitingPlanList.find(d => d.Id == parseInt(planId));
-                            if (typeof planObj != 'undefined') {
-                                planObj.DeliveryPlanDateStr = machineId;
-                                $scope.saveModel(planObj);
-                            }
-                        }
-                    });
-                });
-
-                $('.waiting-plan-row').on('drop', function (de) {
-                    return false;
-                });
-
-                $('.machine-box').on('dragover', function (event) {
-                    event.preventDefault();
-                });
-            },
-            rowTemplate: function (container, item) {
-                var data = item.data,
-                    markup =
-                        "<tr draggable=\"true\" class=\"dx-row dx-data-row dx-row-lines waiting-plan-row\" data-id=\"" + data.Id + "\">" +
-                        "<td>" + data.WorkOrderDateStr + "</td>" +
-                        "<td>" + data.SaleOrderDeadline + "</td>" +
-                        "<td>" + data.FirmName + "</td>" +
-                        "<td>" + data.ProductCode + "</td>" +
-                        "<td>" + data.ProductName + "</td>" +
-                        "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
-                        "</tr>";
-
-                container.append(markup);
-            },
+            repaintChangesOnly: true,
             columns: [
+                { dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası', allowEditing: true },
+                { dataField: 'LoadCode', caption: 'Yük Kodu', allowEditing: false },
+                { dataField: 'LoadingDateStr', caption: 'Yükleme Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
+                //{ dataField: 'CustomerFirmName', caption: 'Firma', allowEditing: false },
+                //{ dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü', allowEditing: false },
+                { dataField: 'OveralQuantity', caption: 'Toplam Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık', allowEditing: false },
+                { dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'OveralVolume', caption: 'Toplam Hacim', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
-                    dataField: 'WorkOrderDateStr',
-                    caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy'
+                    dataField: 'RotaId', caption: 'Rota',
+                    lookup: {
+                        dataSource: $scope.rotaList,
+                        valueExpr: "Id",
+                        displayExpr: "RotaId"
+                    },
+                    allowSorting: false,
+                    validationRules: [{ type: "required" }],
+                    editCellTemplate: $scope.dropDownBoxEditorTemplate,
+                    cellTemplate: function (container, options) {
+                        if (typeof options.row.data.RotaId != 'undefined'
+                            && options.row.data.RotaId != null && options.row.data.RotaId.length > 0)
+                            container.text(options.row.data.RotaId);
+                        else
+                            container.text(options.displayValue);
+                    }
                 },
-                {
-                    dataField: 'SaleOrderDeadline',
-                    caption: 'Termin', dataType: 'date', format: 'dd.MM.yyyy'
-                },
-                { dataField: 'FirmName', caption: 'Firma' },
-                { dataField: 'ProductCode', caption: 'Ürün Kodu' },
-                { dataField: 'ProductName', caption: 'Ürün Adı' },
-                {
-                    dataField: 'Quantity', caption: 'Miktar',
-                    dataType: 'number', format: { type: "fixedPoint", precision: 2 }
-                }
+                { dataField: 'CityStartPostCode', caption: 'Başlama Şehri Posta Kodu' },
+                { dataField: 'CityStartName', caption: 'Başlama' },
+                { dataField: 'CityEndPostCode', caption: 'Bitiş Şehri Posta Kodu' },
+                { dataField: 'CityEndName', caption: 'Bitiş Şehri' },
+                { dataField: 'KmHour', caption: 'Km' }
+
             ]
         });
     }
-    $scope.refreshList = function () {
-        var dataGrid = $("#waitingPlanList").dxDataGrid("instance");
-        dataGrid.refresh();
+
+    $scope.loadSelectables = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'LPlanning/GetSelectables', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.traillerVehicleList = resp.data.Vehicles;
+                        $scope.driverList = resp.data.Drivers;
+                        $scope.VoyageDateStr = moment().format('DD.MM.YYYY')
+                        $scope.rotaList = resp.data.Rotas;
+                        $scope.forexTypeList = resp.data.ForexTypes;
+
+                        resolve(resp.data);
+                    }
+                }).catch(function (err) { });
+        });
+
+        return prmReq;
     }
 
-    // TOASTR SETTINGS
-    toastr.options.timeOut = 2000;
-    toastr.options.progressBar = true;
-    toastr.options.preventDuplicates = true;
+    // INFORMATIONS & ATTACHMENTS
+    $scope.showRecordInformation = function () {
+        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType: 'ItemOrder' });
+    }
 
-    // KEYBOARD EVENTS
-    $(document).keyup(function (event) {
-        if (event.key == 'Delete') // DEL
-        {
-            if ($scope.selectedPlan != null && $scope.selectedPlan.Id > 0) {
-                bootbox.confirm({
-                    message: "Bu sevkiyat planını silmek istediğinizden emin misiniz?",
-                    closeButton: false,
-                    buttons: {
-                        confirm: {
-                            label: 'Evet',
-                            className: 'btn-primary'
-                        },
-                        cancel: {
-                            label: 'Hayır',
-                            className: 'btn-light'
-                        }
-                    },
-                    callback: function (result) {
-                        if (result) {
-                            $http.post(HOST_URL + 'Delivery/DeletePlan', { rid: $scope.selectedPlan.Id }, 'json')
-                                .then(function (resp) {
-                                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                                        if (resp.data.Result == true) {
-                                            toastr.success('Plan başarıyla silindi.', 'Bilgilendirme');
+    $scope.showAttachmentList = function () {
+        $scope.$broadcast('showAttachmentList',
+            { RecordId: $scope.modelObject.Id, RecordType: 1 });
 
-                                            $scope.loadMachineList();
-                                            $scope.loadWaitingPlanList();
-                                        }
-                                        else
-                                            toastr.error(resp.data.ErrorMessage, 'Hata');
-                                    }
-                                }).catch(function (err) { });
-                        }
-                    }
-                });
-            }
-        }
-    });
+        $('#dial-attachments').dialog({
+            width: 500,
+            height: 400,
+            //height: window.innerHeight * 0.6,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
 
     // ON LOAD EVENTS
-    $scope.loadMachineList();
-    $scope.loadWaitingPlanList();
-    // ON LOAD EVENTS
-    $scope.loadSelectables().then(function (data) {
-
-    });
+    DevExpress.localization.locale('tr');
+    $scope.loadSelectables();
+    $scope.bindVoyageDetails();
 });

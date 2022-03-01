@@ -15,6 +15,9 @@ namespace Heka.DataAccess.Context
             this.Driver = new HashSet<Driver>();
             this.VoyageByLoadCountry = new HashSet<Voyage>();
             this.VoyageByDischargeCountry = new HashSet<Voyage>();
+            this.VoyageDetailByCountryShipper = new HashSet<VoyageDetail>();
+            this.VoyageDetailByCountryBuyer = new HashSet<VoyageDetail>();
+            this.FirmAddress = new HashSet<FirmAddress>();
 
         }
         public int Id { get; set; }
@@ -49,5 +52,13 @@ namespace Heka.DataAccess.Context
         [InverseProperty("DischargeCountry")]
         public virtual ICollection<Voyage> VoyageByDischargeCountry { get; set; }
 
+        [InverseProperty("CountryShipper")]
+        public virtual ICollection<VoyageDetail> VoyageDetailByCountryShipper { get; set; }
+
+        [InverseProperty("CountryBuyer")]
+        public virtual ICollection<VoyageDetail> VoyageDetailByCountryBuyer { get; set; }
+
+        [InverseProperty("Country")]
+        public virtual ICollection<FirmAddress> FirmAddress { get; set; }
     }
 }

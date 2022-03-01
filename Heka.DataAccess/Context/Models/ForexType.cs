@@ -30,6 +30,8 @@ namespace Heka.DataAccess.Context
             this.ItemOrder = new HashSet<ItemOrder>();
             this.ItemLoad = new HashSet<ItemLoad>();
             this.ItemLoadCost = new HashSet<ItemLoadCost>();
+            this.VoyageDetail = new HashSet<VoyageDetail>();
+            this.Voyage = new HashSet<Voyage>();
 
         }
 
@@ -71,6 +73,12 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ForexType")]
         public virtual ICollection<ItemLoadCost> ItemLoadCost { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<VoyageDetail> VoyageDetail { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<Voyage> Voyage { get; set; }
 
     }
 }

@@ -1,9 +1,5 @@
 ﻿using HekaMOLD.Business.Models.Constants;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.Models.Dictionaries
 {
@@ -23,11 +19,10 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { LoadStatusType.AtCustomsAbroad, "Yurtdışı Gümrükte"},
             { LoadStatusType.BeingEmptied, "Boşaltmada"},
             { LoadStatusType.Emptied, "Boşaltıldı"},
-            { LoadStatusType.Completed, "Tamamlandı"},
             { LoadStatusType.InLoading, "Yüklemede"},
             { LoadStatusType.Loaded, "Yüklendi"},
-
-
+            { LoadStatusType.Completed, "Tamamlandı"},
+            { LoadStatusType.ConvertedToVoyage, "Sefere Dönüştürüldü"},
 };
 
     }

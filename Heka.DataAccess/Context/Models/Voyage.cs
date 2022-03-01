@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Heka.DataAccess.Context
@@ -7,7 +8,7 @@ namespace Heka.DataAccess.Context
     {
         public Voyage()
         {
-
+            this.VoyageDetail = new HashSet<VoyageDetail>();
         }
         public int Id { get; set; }
         public string VoyageCode { get; set; }
@@ -17,6 +18,7 @@ namespace Heka.DataAccess.Context
         public Nullable<DateTime> LoadDate { get; set; }
         public Nullable<DateTime> EndDate { get; set; }
         public int? TraillerType { get; set; }
+        public int? OrderTransactionDirectionType { get; set; }
         public int? UploadType { get; set; }
         public bool? HasTraillerTransportation { get; set; }
         public bool? EmptyGo { get; set; }
@@ -27,6 +29,7 @@ namespace Heka.DataAccess.Context
         public Nullable<DateTime> TraillerRationCardClosedDate { get; set; }
         public decimal? OverallQuantity { get; set; }
         public decimal? OverallVolume { get; set; }
+        public decimal? OverallWeight { get; set; }
         public decimal? OverallGrossWeight { get; set; }
         public decimal? OverallLadametre { get; set; }
         public int? PositionKmHour { get; set; }
@@ -41,6 +44,7 @@ namespace Heka.DataAccess.Context
         public int? RouteKmHour { get; set; }
         public string RouteDefinition { get; set; }
         public Nullable<DateTime> EndTime { get; set; }
+        public decimal? DriverSubsistence { get; set; }
         public string Explanation { get; set; }
 
         [ForeignKey("User")]
@@ -88,6 +92,8 @@ namespace Heka.DataAccess.Context
         [ForeignKey("TraillerVehicle")]
         public int? TraillerVehicleId { get; set; }
 
+        [ForeignKey("ForexType")]
+        public int? ForexTypeId { get; set; }
 
         public Nullable<int> PlantId { get; set; }
         public Nullable<int> SyncStatus { get; set; }
@@ -114,7 +120,9 @@ namespace Heka.DataAccess.Context
         public virtual Driver Driver { get; set; }
         public virtual Vehicle TowinfVehicle { get; set; }
         public virtual Vehicle TraillerVehicle { get; set; }
+        public virtual ForexType ForexType { get; set; }
 
-
+        [InverseProperty("Voyage")]
+        public virtual ICollection<VoyageDetail> VoyageDetail { get; set; }
     }
 }

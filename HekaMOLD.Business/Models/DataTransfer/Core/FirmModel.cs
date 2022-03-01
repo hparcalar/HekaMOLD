@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Base;
+﻿using Heka.DataAccess.Context;
+using HekaMOLD.Business.Base;
 
 namespace HekaMOLD.Business.Models.DataTransfer.Core
 {
@@ -30,6 +31,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? CityId { get; set; }
         public int? CountryId { get; set; }
         public FirmAuthorModel[] Authors { get; set; }
+        public FirmAddressModel[] Addresses { get; set; }
 
         #region VISUAL ELEMENTS
         public string FirmTypeStr { get; set; }

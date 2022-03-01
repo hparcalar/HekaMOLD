@@ -1,10 +1,8 @@
 ﻿app.controller('editVoyageCtrl', function ($scope, $http) {
-    $scope.modelObject = {
-        Id: 0,
-        Quantity: 0,
-        CompleteQuantity: 0,
-        WastageQuantity: 0,
-    };
+    DevExpress.localization.locale('tr');
+    $scope.waitingLoadList = [];
+
+    $scope.modelObject = { Id: 0};
 
     $scope.save = function () {
         if ($scope.modelObject.Quantity <= 0) {
@@ -65,68 +63,27 @@
         });
     }
 
-    $scope.holdPlan = function () {
-        bootbox.confirm({
-            message: "Bu üretim planını beklemeye almak istediğinizden emin misiniz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.$emit('editVoyageEnd', { text: 'Beklemeye Al Deneme Butonu' });
-                    //try {
-                    //    $http.post(HOST_URL + 'Mobile/HoldWorkOrder',
-                    //        { workOrderDetailId: $scope.modelObject.Id }, 'json')
-                    //        .then(function (resp) {
-                    //            if (typeof resp.data != 'undefined' && resp.data != null) {
-                    //                if (resp.data.Result == true)
-                    //                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
-                    //                else
-                    //                    toastr.error('Hata: ' + resp.data.ErrorMessage, 'Uyarı');
-                    //            }
-
-                    //            $scope.$emit('editVoyageEnd', $scope.modelObject);
-                    //        }).catch(function (err) { });
-                    //} catch (e) {
-
-                    //}
-                }
-            }
-        });
-    }
-
-    $scope.bindPlanDetail = function () {
-        try {
-            $http.get(HOST_URL + 'Planning/GetPlanDetail?workOrderDetailId=' + $scope.modelObject.Id, {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        $scope.modelObject = resp.data;
-                    }
-                }).catch(function (err) { });
-        } catch (e) {
-
-        }
-    }
-    $scope.bindReceiptDetails = function () {
+    $scope.bindWaitingLoadList = function () {
         $('#WaitingLoadList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'LPlanning/GetWaitingLoads', function (data) {
+                    if ($scope.waitingLoadList.length == 0)
+                        $scope.waitingLoadList = $.getJSON(HOST_URL + 'LPlanning/GetWaitingLoads', function (data) {
+                            data.forEach(d => {
+                                d.IsChecked = false;
+                            }
+                            );
+                        });
 
-                    });
+                    return $scope.waitingLoadList;
+                },
+                update: function (key, values) {
+                    var obj = $scope.waitingLoadList.responseJSON.find(d => d.Id == key);
+                    if (obj != null) {
+                        obj.IsChecked = values.IsChecked;
+                    }
                 },
                 key: 'Id'
-            },
-            onFocusedRowChanged(e) {
-                $scope.selectedDetail = e.row.data;
             },
             showColumnLines: false,
             showRowLines: true,
@@ -148,7 +105,7 @@
                 visible: false
             },
             editing: {
-                allowUpdating: false,
+                allowUpdating: true,
                 allowDeleting: false,
                 mode: 'cell'
             },
@@ -161,53 +118,25 @@
                 { dataField: 'OveralWeight', caption: 'Toplam Ağırlık', allowEditing: false },
                 { dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'OveralVolume', caption: 'Toplam Hacim', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'IsChecked', caption: 'Seç' }
+
            ]
         });
     }
-    $scope.printLabel = function () {
-        $scope.$broadcast('showPrintOptions');
+    $scope.transferSelections = function () {
+        if ($scope.waitingLoadList.responseJSON.filter(d => d.IsChecked == true).length == 0) {
+            toastr.warning('Aktarmak için bir veya daha fazla yük seçmelisiniz.', 'Uyarı');
+            return;
+        }
 
-        $('#dial-print-options').dialog({
-            hide: true,
-            modal: true,
-            resizable: false,
-            width: 300,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
-        });
+        var selectedDetails = $scope.waitingLoadList.responseJSON.filter(d => d.IsChecked == true);
+        $scope.$emit('editVoyageEnd', selectedDetails);
     }
 
-    $scope.$on('printOptionsApproved', function (e, d) {
-        $('#dial-print-options').dialog('close');
-
-        try {
-            $http.post(HOST_URL + 'Planning/AllocateAndPrintLabel', {
-                model: { PrinterId: d.PrinterId, RecordType: 4 },
-                labelCount: d.PrintCount,
-                workOrderDetailId: $scope.modelObject.Id,
-            }, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        if (resp.data.Result == true)
-                            toastr.success('İstek yazıcıya iletildi.', 'Bilgilendirme');
-                        else
-                            toastr.error('Hata: ' + resp.data.ErrorMessage, 'Uyarı');
-                    }
-                }).catch(function (err) { });
-        } catch (e) {
-
-        }
-    });
-
-    $scope.$on('cancelPrinting', function (e, d) {
-        $('#dial-print-options').dialog('close');
-    });
-    $scope.bindReceiptDetails();
+    $scope.bindWaitingLoadList();
     // ON LOAD EVENTS
     $scope.$on('loadEditPlan', function (e, d) {
         $scope.modelObject.Id = d.id;
-
-        $scope.bindPlanDetail();
     });
+    $scope.bindWaitingLoadList();
 });

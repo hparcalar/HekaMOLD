@@ -10,6 +10,7 @@ namespace Heka.DataAccess.Context
         {
             this.ItemLoadDetail = new HashSet<ItemLoadDetail>();
             this.ItemLoadCost = new HashSet<ItemLoadCost>();
+            this.VoyageDetail = new HashSet<VoyageDetail>();
 
         }
         public int Id { get; set; }
@@ -73,6 +74,7 @@ namespace Heka.DataAccess.Context
         public int? TrailerType { get; set; }
         public bool? HasItemInsurance { get; set; }
         public string ItemInsuranceDraftNo { get; set; }
+        public string VoyageCode { get; set; }
         //Tehlikeli Madde var
         public bool? HasItemDangerous { get; set; }
         //Cmr Müşteri Teslim Tarihi
@@ -114,10 +116,14 @@ namespace Heka.DataAccess.Context
         [ForeignKey("Plant")]
         public Nullable<int> PlantId { get; set; }
 
+        [ForeignKey("Driver")]
+        public Nullable<int> DriverId { get; set; }
+
         [ForeignKey("User")]
         public Nullable<int> CreatedUserId { get; set; }
 
-
+        [ForeignKey("UserVoyage")]
+        public Nullable<int> VoyageCreatedUserId { get; set; }
 
         public Nullable<System.DateTime> CreatDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
@@ -140,12 +146,17 @@ namespace Heka.DataAccess.Context
         public virtual City CityBuyer { get; set; }
         public virtual ForexType ForexType { get; set; }
         public virtual Vehicle Vehicle { get; set; }
+        public virtual Driver Driver { get; set; }
+        public virtual User UserVoyage { get; set; }
 
         [InverseProperty("ItemLoad")]
         public virtual ICollection<ItemLoadDetail> ItemLoadDetail { get; set; }
 
         [InverseProperty("ItemLoad")]
         public virtual ICollection<ItemLoadCost> ItemLoadCost { get; set; }
+
+        [InverseProperty("ItemLoad")]
+        public virtual ICollection<VoyageDetail> VoyageDetail { get; set; }
 
     }
 }

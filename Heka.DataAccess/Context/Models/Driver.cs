@@ -9,6 +9,8 @@ namespace Heka.DataAccess.Context
         public Driver()
         {
             this.Voyage = new HashSet<Voyage>();
+            this.ItemLoad = new HashSet<ItemLoad>();
+
         }
         public int Id { get; set; }
         public string DriverName { get; set; }
@@ -32,5 +34,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Driver")]
         public virtual ICollection<Voyage> Voyage { get; set; }
+
+        [InverseProperty("Driver")]
+        public virtual ICollection<ItemLoad> ItemLoad { get; set; }
     }
 }

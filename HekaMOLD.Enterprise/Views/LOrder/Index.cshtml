@@ -503,30 +503,7 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
-    @* DIALOG FORMS *@
-    <div id="dial-firm" title="Firma Seçimi" style="display:none;">
-        <div class="mb-5 input-group">
-            <input type="text" class="form-control form-control-solid" ng-model="firmFilter" placeholder="" />
-            <div class="input-group-append">
-                <button id="btnSelectFirm" class="btn btn-primary" type="button" ng-click="showFirmDialog()">
-                    <i class="fas fa-filter"></i>
-                </button>
-            </div>
-        </div>
-
-        <table class="table table-dark table-borderless table-dialog">
-            <tbody>
-                <tr class="trow-table-dialog" ng-repeat="item in firmList | filter:firmFilter">
-                    <td class="w-75 bg-transparent"><span class="label-table-dialog pt-2">{{item.FirmName}}</span></td>
-                    <td class="w-25 bg-transparent">
-                        <button class="btn btn-sm btn-light-primary btn-block" ng-click="selectFirm(item)">
-                            <i class="fas fa-check-circle"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+ 
 
     <div id="dial-attachments" title="Ekler" style="display:none;">
         <ng-include src="'Components/Views/AttachmentList.html'"></ng-include>

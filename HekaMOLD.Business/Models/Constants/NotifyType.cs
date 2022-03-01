@@ -22,5 +22,8 @@ namespace HekaMOLD.Business.Models.Constants
         ItemAtMaximumInWarehouse=12,
         ItemLoadWaitForApproval=13,
         ItemLoadIsApproved = 14,
+        VoyageWaitForApproval = 15,
+        VoyageIsApproved = 16,
+
     }
 }

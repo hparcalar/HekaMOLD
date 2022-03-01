@@ -57,7 +57,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? ExitCustomsId { get; set; }
         public DateTime? DateOfNeed { get; set; }
         public int? OveralQuantity { get; set; }
+        public string VoyageCode { get; set; }
 
+        public Nullable<int> DriverId { get; set; }
         public int? UserAuthorId { get; set; }
         public DateTime? LoadingDate { get; set; }
         public int? InvoiceId { get; set; }
@@ -73,6 +75,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public Nullable<int> ItemOrderId { get; set; }
         public Nullable<int> PlantId { get; set; }
         public Nullable<int> ForexTypeId { get; set; }
+        public Nullable<int> VoyageCreatedUserId { get; set; }
         public ItemLoadDetailModel[] Details { get; set; }
 
 
@@ -121,6 +124,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string Plate { get; set; }
         public string Mark { get; set; }
         public string Versiyon { get; set; }
+        public string DriverNameAndSurname { get; set; }
+        public string VoyageCreatedUserName { get; set; }
 
 
         #endregion

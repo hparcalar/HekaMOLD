@@ -180,6 +180,7 @@
     <Compile Include="Controllers\VehicleTireController.cs" />
     <Compile Include="Controllers\VehicleTireDirectionTypeController.cs" />
     <Compile Include="Controllers\VehicleTypeController.cs" />
+    <Compile Include="Controllers\VoyageController.cs" />
     <Compile Include="Controllers\WorkOrderCategoryController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Controllers\MoldTestController.cs" />
@@ -4236,6 +4237,9 @@
     <Content Include="FrontEndLogic\VehicleType\list.js" />
     <Content Include="FrontEndLogic\Vehicle\index.js" />
     <Content Include="FrontEndLogic\Vehicle\list.js" />
+    <Content Include="FrontEndLogic\Voyage\index.js" />
+    <Content Include="FrontEndLogic\Voyage\list1.js" />
+    <Content Include="FrontEndLogic\Voyage\list.js" />
     <Content Include="FrontEndLogic\Warehouse\finished-product-state.js" />
     <Content Include="FrontEndLogic\Warehouse\finished-products.js" />
     <Content Include="FrontEndLogic\Warehouse\index.js" />
@@ -4760,6 +4764,9 @@
     <Content Include="Views\Rota\Index.cshtml" />
     <Content Include="Views\Rota\List.cshtml" />
     <Content Include="Views\Load\Calendar.cshtml" />
+    <Content Include="Views\LPlanning\List.cshtml" />
+    <Content Include="Views\Voyage\Index.cshtml" />
+    <Content Include="Views\Voyage\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

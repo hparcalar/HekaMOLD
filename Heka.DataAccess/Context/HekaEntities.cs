@@ -122,6 +122,7 @@
         public virtual DbSet<ItemLoadCost> ItemLoadCost { get; set; }
         public virtual DbSet<Rota> Rota { get; set; }
         public virtual DbSet<Voyage> Voyage { get; set; }
+        public virtual DbSet<VoyageDetail> VoyageDetail { get; set; }
 
 
     }

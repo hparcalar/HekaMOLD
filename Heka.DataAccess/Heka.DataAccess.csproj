@@ -76,6 +76,7 @@
     <Compile Include="Context\Models\Equipment.cs" />
     <Compile Include="Context\Models\EquipmentCategory.cs" />
     <Compile Include="Context\Models\Firm.cs" />
+    <Compile Include="Context\Models\FirmAddress.cs" />
     <Compile Include="Context\Models\FirmAuthor.cs" />
     <Compile Include="Context\Models\FirmTariff.cs" />
     <Compile Include="Context\Models\ForexHistory.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Context\Models\VehicleTireDirectionType.cs" />
     <Compile Include="Context\Models\VehicleType.cs" />
     <Compile Include="Context\Models\Voyage.cs" />
+    <Compile Include="Context\Models\VoyageDetail.cs" />
     <Compile Include="Context\Models\Warehouse.cs" />
     <Compile Include="Context\Models\WorkOrder.cs" />
     <Compile Include="Context\Models\WorkOrderAllocation.cs" />
@@ -472,6 +474,34 @@
     <Compile Include="Migrations\202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.designer.cs">
       <DependentUpon>202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202251948237_VoyageDetailAdd.cs" />
+    <Compile Include="Migrations\202202251948237_VoyageDetailAdd.designer.cs">
+      <DependentUpon>202202251948237_VoyageDetailAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202260944527_VoyageDetailUpdate%28RotaAdd%29.cs" />
+    <Compile Include="Migrations\202202260944527_VoyageDetailUpdate%28RotaAdd%29.designer.cs">
+      <DependentUpon>202202260944527_VoyageDetailUpdate%28RotaAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.cs" />
+    <Compile Include="Migrations\202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.designer.cs">
+      <DependentUpon>202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.cs" />
+    <Compile Include="Migrations\202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.designer.cs">
+      <DependentUpon>202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.cs" />
+    <Compile Include="Migrations\202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.designer.cs">
+      <DependentUpon>202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202281216510_VoyageUpdate%28OverallWeightAdd%29.cs" />
+    <Compile Include="Migrations\202202281216510_VoyageUpdate%28OverallWeightAdd%29.designer.cs">
+      <DependentUpon>202202281216510_VoyageUpdate%28OverallWeightAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203011032432_FirmAddressAdd.cs" />
+    <Compile Include="Migrations\202203011032432_FirmAddressAdd.designer.cs">
+      <DependentUpon>202203011032432_FirmAddressAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -711,6 +741,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.resx">
       <DependentUpon>202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202251948237_VoyageDetailAdd.resx">
+      <DependentUpon>202202251948237_VoyageDetailAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202260944527_VoyageDetailUpdate%28RotaAdd%29.resx">
+      <DependentUpon>202202260944527_VoyageDetailUpdate%28RotaAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.resx">
+      <DependentUpon>202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.resx">
+      <DependentUpon>202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.resx">
+      <DependentUpon>202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202281216510_VoyageUpdate%28OverallWeightAdd%29.resx">
+      <DependentUpon>202202281216510_VoyageUpdate%28OverallWeightAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203011032432_FirmAddressAdd.resx">
+      <DependentUpon>202203011032432_FirmAddressAdd.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
