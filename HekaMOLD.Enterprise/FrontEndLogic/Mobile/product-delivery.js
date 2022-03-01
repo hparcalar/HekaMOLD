@@ -1,10 +1,12 @@
-﻿app.controller('productDeliveryCtrl', function ($scope, $http) {
+﻿app.controller('productDeliveryCtrl', function ($scope, $http, $timeout) {
     $scope.modelObject = {
         Id:0,
         DocumentNo: '', FirmId: 0,
         FirmCode:'', FirmName:'',
         Details: [], OrderDetails: [],
     };
+
+    $scope.barcodeBox = '';
 
     $scope.lastRecordId = 0;
     $scope.reportTemplateId = 0;
@@ -14,15 +16,105 @@
     $scope.summaryList = [];
     $scope.selectedProducts = [];
 
+    $scope.sumTotalCount = 0;
+    $scope.sumTotalQty = 0;
+
     $scope.bindModel = function () {
-        $http.get(HOST_URL + 'Mobile/GetProductsForDelivery', {}, 'json')
+        $scope.pickupList = [];
+        $scope.filteredPickupList = [];
+        $scope.summaryList = [];
+
+        //$http.get(HOST_URL + 'Mobile/GetProductsForDelivery', {}, 'json')
+        //    .then(function (resp) {
+        //        if (typeof resp.data != 'undefined' && resp.data != null) {
+        //            $scope.pickupList = resp.data.Serials;
+        //            $scope.filteredPickupList = $scope.pickupList;
+        //            $scope.summaryList = resp.data.Summaries;
+        //        }
+        //    }).catch(function (err) { });
+    }
+
+    $scope.onBarcodeKeyUp = function (e) {
+        if (e.keyCode == '13') {
+            $scope.getSerialByBarcode($scope.barcodeBox);
+        }
+    }
+
+    $scope.getSerialByBarcode = function (barcode) {
+        if ($scope.pickupList.some(m => m.SerialNo == barcode)) {
+            toastr.warning('Okutulan koli zaten çeki listesine eklenmiş.');
+            return;
+        }
+
+        $http.get(HOST_URL + 'Mobile/GetItemSerialByBarcode?barcode=' + barcode, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data.Serials;
-                    $scope.filteredPickupList = $scope.pickupList;
-                    $scope.summaryList = resp.data.Summaries;
+                    $timeout(function () {
+                        if (resp.data.Id > 0) {
+                            $scope.pickupList.push(resp.data);
+                            toastr.success('Okutulan koli çeki listesine eklendi.');
+                            $scope.updateSummaryList();
+                        }
+                        else
+                            toastr.error('Okutulan barkoda ait bir koli bulunamadı.');
+
+                        $scope.barcodeBox = '';
+                    })
                 }
             }).catch(function (err) { });
+    }
+
+    $scope.removeFromPickup = function (item) {
+        try {
+            $timeout(function () {
+                var indexOfItem = $scope.pickupList.indexOf(item);
+                $scope.pickupList.splice(indexOfItem, 1);
+
+                $scope.updateSummaryList();
+            })
+        } catch (e) {
+
+        }
+    }
+
+    $scope.updateSummaryList = function () {
+        $timeout(function () {
+            $scope.summaryList.splice(0, $scope.summaryList.length);
+            $scope.sumTotalCount = 0;
+            $scope.sumTotalQty = 0;
+
+            $scope.summaryList = [...$scope.pickupList.map((d) => {
+                return {
+                    ItemName: d.ItemName,
+                    SerialSum: d.FirstQuantity,
+                    SerialCount: 1,
+                };
+            }).reduce(
+                (map, item) => {
+                    const { ItemName: key, SerialCount, SerialSum } = item;
+                    const prev = map.get(key);
+
+                    $scope.sumTotalQty += SerialSum;
+                    $scope.sumTotalCount += SerialCount;
+
+                    if (prev) {
+                        prev.SerialSum += SerialSum
+                        prev.SerialCount += SerialCount
+                    } else {
+                        map.set(key, Object.assign({}, item))
+                    }
+
+                    return map
+                },
+                new Map())
+                ];
+        });
+
+        try {
+            $scope.$applyAsync();
+        } catch (e) {
+
+        }
     }
 
     $scope.getListSum = function (list, key) {
@@ -108,8 +200,9 @@
             },
             qrCodeMessage => {
                 if (!$scope.isBarcodeRead) {
-                    $scope.processBarcodeResult(qrCodeMessage);
-                    setTimeout(() => { $scope.isBarcodeRead = false; }, 1500);
+                    $scope.getSerialByBarcode(qrCodeMessage);
+                    /*$scope.processBarcodeResult(qrCodeMessage);*/
+                    setTimeout(() => { $scope.isBarcodeRead = false; }, 1200);
                 }
             },
             errorMessage => {
@@ -197,6 +290,22 @@
         $scope.$broadcast('loadOpenSoList');
 
         $('#dial-orderlist').dialog({
+            width: window.innerWidth * 0.95,
+            height: window.innerHeight * 0.95,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.showSelectProductDialog = function () {
+        // DO BROADCAST
+        $scope.$broadcast('loadProductList', { productSelection: true, list: $scope.pickupList, });
+
+        $('#dial-wr-manager').dialog({
             width: window.innerWidth * 0.95,
             height: window.innerHeight * 0.95,
             hide: true,
@@ -328,6 +437,13 @@
         $('#dial-orderlist').dialog('close');
     });
 
+    // RECEIVE EMIT SELECTED PACKAGE DATA
+    $scope.$on('packageSelected', function (e, d) {
+        $scope.getSerialByBarcode(d.SerialNo);
+
+        //$('#dial-wr-manager').dialog('close');
+    });
+
     $scope.clearSelectedOrders = function () {
         $scope.modelObject.OrderDetails.splice(0, $scope.modelObject.OrderDetails.length);
     }
@@ -364,25 +480,25 @@
                     else
                         $scope.modelObject.FirmId = null;
 
-                    if ($scope.modelObject.InWarehouseId == null) {
-                        toastr.error('Depo seçmelisiniz.');
-                        return;
-                    }
+                    //if ($scope.modelObject.InWarehouseId == null) {
+                    //    toastr.error('Depo seçmelisiniz.');
+                    //    return;
+                    //}
 
                     if ($scope.modelObject.FirmId == null) {
                         toastr.error('Firma seçmelisiniz.');
                         return;
                     }
 
-                    if ($scope.selectedWarehouse.WarehouseType != 2) {
-                        toastr.error('Ürün deposu seçmelisiniz.');
-                        return;
-                    }
+                    //if ($scope.selectedWarehouse.WarehouseType != 2) {
+                    //    toastr.error('Ürün deposu seçmelisiniz.');
+                    //    return;
+                    //}
 
                     $http.post(HOST_URL + 'Mobile/SaveProductDelivery', {
                         receiptModel: $scope.modelObject,
-                        model: $scope.selectedProducts,
-                        orderDetails: $scope.modelObject.OrderDetails.map(m => m.Id),
+                        model: $scope.pickupList,
+                        orderDetails: $scope.modelObject.OrderDetails.map(m => m.ItemOrderDetailId),
                     }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {

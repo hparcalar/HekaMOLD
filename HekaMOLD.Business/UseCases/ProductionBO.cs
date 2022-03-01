@@ -119,6 +119,8 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 dbObj.MapTo(data);
+                data.ShiftCode = dbObj.Shift != null ? dbObj.Shift.ShiftCode : "";
+                data.ShiftName = dbObj.Shift != null ? dbObj.Shift.ShiftName : "";
             }
 
             return data;
@@ -2889,6 +2891,15 @@ namespace HekaMOLD.Business.UseCases
                 List<ItemReceiptDetailModel> receiptDetails = new List<ItemReceiptDetailModel>();
                 int receiptLineNumber = 1;
 
+                int? selectedOrderDetailId = null;
+                if (orderDetails != null && orderDetails.Length > 0)
+                {
+                    int cDetailId = orderDetails[0];
+                    var dbOrderDetail = repoOrderDetail.Get(d => d.Id == cDetailId);
+                    if (dbOrderDetail != null)
+                        selectedOrderDetailId = dbOrderDetail.ItemOrderId;
+                }
+
                 // PROCESS SERIALS
                 foreach (var item in model)
                 {
@@ -2954,6 +2965,8 @@ namespace HekaMOLD.Business.UseCases
                             .FirstOrDefault();
                         if (currentOrder != null)
                         {
+                            selectedOrderDetailId = currentOrder.ItemOrderId;
+
                             var ordConsumedObj = orderConsumedList.FirstOrDefault(d =>
                                 d.ConsumedReceiptDetailId == dbSerial.ItemReceiptDetailId
                                 && d.ItemOrderDetailId == currentOrder.Id);
@@ -3001,6 +3014,7 @@ namespace HekaMOLD.Business.UseCases
                 BusinessResult receiptResult = new BusinessResult();
                 using (ReceiptBO bObj = new ReceiptBO())
                 {
+                    receiptModel.ItemOrderId = selectedOrderDetailId;
                     receiptResult = bObj.SaveOrUpdateItemReceipt(receiptModel);
                 }
 

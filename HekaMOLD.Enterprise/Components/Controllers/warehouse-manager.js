@@ -11,6 +11,9 @@
         }
     };
 
+    $scope.productSelection = false;
+    $scope.inverseSelectionList = [];
+
     $scope.tpIndex = 0;
     $scope.packageList = [];
     $scope.itemList = [];
@@ -217,7 +220,7 @@
                         },
                         showColumnLines: false,
                         showRowLines: true,
-                        rowAlternationEnabled: true,
+                        rowAlternationEnabled: false,
                         allowColumnResizing: true,
                         wordWrapEnabled: true,
                         focusedRowEnabled: true,
@@ -245,6 +248,17 @@
                             allowUpdating: false,
                             allowDeleting: false
                         },
+                        onRowPrepared: function (e) {
+                            if (e.rowType != "data")
+                                return;
+
+                            if ($scope.productSelection == true) {
+                                var rowData = e.data;
+
+                                if ($scope.inverseSelectionList.some(m => m.SerialNo == rowData.SerialNo))
+                                    e.rowElement.addClass('bg-light-success');
+                            }
+                        },
                         columns: [
                             { dataField: 'SerialNo', caption: 'Barkod' },
                             { dataField: 'CreatedDateStr', caption: 'Tarih' },
@@ -254,17 +268,40 @@
                                 type: "buttons",
                                 buttons: [
                                     {
-                                        name: 'editPack', cssClass: 'fas fa-edit', text: '', onClick: function (e) {
+                                        name: 'editPack', cssClass: 'fas fa-edit', text: '',
+                                        visible: $scope.productSelection == false,
+                                        onClick: function (e) {
                                             var dataGrid = $("#packList").dxDataGrid("instance");
                                             $scope.selectedPackage = e.row.data;
                                             $scope.changePackageQuantity();
                                         }
                                     },
                                     {
-                                        name: 'removePack', cssClass: 'fas fa-trash text-danger', text: '', onClick: function (e) {
+                                        name: 'removePack', cssClass: 'fas fa-trash text-danger', text: '',
+                                        visible: $scope.productSelection == false,
+                                        onClick: function (e) {
                                             var dataGrid = $("#packList").dxDataGrid("instance");
                                             $scope.selectedPackage = e.row.data;
                                             $scope.removePackage();
+                                        }
+                                    },
+                                    {
+                                        name: 'selectPack', cssClass: 'fas fa-play text-success', text: '',
+                                        visible: $scope.productSelection == true,
+                                        onClick: function (e) {
+                                            var dataGrid = $("#packList").dxDataGrid("instance");
+                                            $scope.selectedPackage = e.row.data;
+
+                                            if ($scope.inverseSelectionList.some(m => m.SerialNo == $scope.selectedPackage.SerialNo)) {
+                                                toastr.warning('Bu kolinin barkodu zaten okutulmuş.');
+                                                return;
+                                            }
+                                            else {
+                                                $scope.$emit('packageSelected', e.row.data);
+                                                $scope.inverseSelectionList.push(e.row.data);
+                                                var dataGrid = $("#packList").dxDataGrid("instance");
+                                                dataGrid.refresh();
+                                            }
                                         }
                                     }
                                 ]
@@ -293,5 +330,12 @@
     // ON LOAD EVENTS
     $scope.loadSelectables().then(function () {
         $scope.bindList();
+    });
+
+    $scope.$on('loadProductList', function (e, d) {
+        $scope.productSelection = d.productSelection;
+        $scope.inverseSelectionList = d.list;
+
+        $scope.setPage(0);
     });
 });

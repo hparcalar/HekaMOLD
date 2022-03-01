@@ -30,7 +30,7 @@ namespace HekaPrintingService
 
         ApiHelper _api = null;
 
-        private string[] _printerNames = new string[0];
+        private string[] _printerNames = new string[] { "ArgoxUretim" };
         private string _printers = string.Empty;
         protected string Printers
         {
@@ -40,19 +40,27 @@ namespace HekaPrintingService
                 {
                     _printers = ConfigurationManager.AppSettings["Printers"];
 
-                    int[] printerList = _printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
-                    List<string> pNames = new List<string>();
-
-                    using (CoreSystemBO bObj = new CoreSystemBO())
+                    try
                     {
-                        foreach (var item in printerList)
-                        {
-                            var dbPrinter = bObj.GetPrinter(item);
-                            pNames.Add(dbPrinter != null ? dbPrinter.AccessPath : "");
-                        }
+                        int[] printerList = _printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
+                        List<string> pNames = new List<string>();
 
-                        _printerNames = pNames.ToArray();
+                        using (CoreSystemBO bObj = new CoreSystemBO())
+                        {
+                            foreach (var item in printerList)
+                            {
+                                var dbPrinter = bObj.GetPrinter(item);
+                                pNames.Add(dbPrinter != null ? dbPrinter.AccessPath : "");
+                            }
+
+                            _printerNames = pNames.ToArray();
+                        }
                     }
+                    catch (Exception)
+                    {
+
+                    }
+                    
                 }
 
                 return _printers;
@@ -141,6 +149,10 @@ namespace HekaPrintingService
                                     {
                                         var serialModel = await _api.GetData<WorkOrderSerialModel>("Common/GetWorkOrderSerial?id=" + queueModel.RecordId.Value);
                                         var workModel = await _api.GetData<WorkOrderDetailModel>("Common/GetWorkOrderDetail?id=" + serialModel.WorkOrderDetailId.Value);
+
+                                        //var currentShift = await _api.GetData<ShiftModel>("Common/GetCurrentShift");
+                                        //serialModel.ShiftCode = currentShift != null ? currentShift.ShiftCode : "";
+                                        //serialModel.ShiftName = currentShift != null ? currentShift.ShiftCode : "";
 
                                         using (ProductionBO prodBo = new ProductionBO())
                                         {
@@ -304,7 +316,10 @@ namespace HekaPrintingService
                 }
                 catch (Exception ex)
                 {
-
+                    this.BeginInvoke((Action)delegate
+                    {
+                        lstLog.Items.Add(ex.Message);
+                    });
                 }
                 
                 await Task.Delay(100);

@@ -664,7 +664,8 @@ namespace HekaMOLD.Business.UseCases
                 if (totalRemaining > 0)
                 {
                     var currentPackages = repo.Filter(d => d.ItemReceiptDetail.ItemId == itemId
-                       && d.ItemReceiptDetail.ItemReceipt.InWarehouseId == warehosueId)
+                       && d.ItemReceiptDetail.ItemReceipt.InWarehouseId == warehosueId && d.SerialStatus != (int)SerialStatusType.Used
+                        && d.SerialStatus != (int)SerialStatusType.Scrap)
                        .OrderByDescending(d => d.Id)
                        .ToArray();
 
@@ -701,6 +702,39 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        public ItemSerialModel GetSerialByBarcode(string serialNo)
+        {
+            ItemSerialModel data = new ItemSerialModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemSerial>();
+                var repoItemReceipt = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var dbPack = repo.Filter(d => d.SerialStatus != (int)SerialStatusType.Used &&
+                    d.SerialStatus != (int)SerialStatusType.Scrap
+                    && d.SerialNo == serialNo)
+                       .FirstOrDefault();
+
+                ItemSerialModel containerPack = new ItemSerialModel();
+                dbPack.MapTo(containerPack);
+                containerPack.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", dbPack.ItemReceiptDetail.ItemReceipt.ReceiptDate);
+                containerPack.MachineCode = dbPack.WorkOrderDetail != null &&
+                    dbPack.WorkOrderDetail.Machine != null ? dbPack.WorkOrderDetail.Machine.MachineCode : "";
+                containerPack.ItemNo = dbPack.WorkOrderDetail != null &&
+                    dbPack.WorkOrderDetail.Item != null ? dbPack.WorkOrderDetail.Item.ItemNo : "";
+                containerPack.ItemName = dbPack.WorkOrderDetail != null &&
+                    dbPack.WorkOrderDetail.Item != null ? dbPack.WorkOrderDetail.Item.ItemName : "";
+
+                data = containerPack;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         public ItemStateModel[] GetConsumedRecipeData(ItemStateModel[] products)
         {
             products = products.GroupBy(d => new { ItemId = d.ItemId, Quantity = d.TotalQty })

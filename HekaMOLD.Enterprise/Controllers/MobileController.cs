@@ -791,6 +791,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetItemSerialByBarcode(string barcode)
+        {
+            ItemSerialModel result = new ItemSerialModel();
+
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                result = bObj.GetSerialByBarcode(barcode);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult GetProductDeliveryHistory()
         {
             ItemReceiptModel[] result = new ItemReceiptModel[0];
@@ -814,10 +829,20 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 BusinessResult result = null;
 
+                int wrId = 0;
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    wrId = bObj.GetWarehouseList()
+                        .Where(d => d.WarehouseType == (int)WarehouseType.ProductWarehouse)
+                        .Select(d => d.Id)
+                        .FirstOrDefault();
+                }
+
                 receiptModel.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
                 if (receiptModel.Id == 0)
                 {
                     receiptModel.CreatedDate = DateTime.Now;
+                    receiptModel.InWarehouseId = wrId;
                     receiptModel.CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
                 }
 

@@ -11,56 +11,69 @@
             <div class="row gy-5 mt-0 gx-xl-8 bg-white">
                 <div class="col-sm-8 col-xs-8 col-xxl-8">
                     <div class="row">
-                        <div class="col-sm-3 col-xs-3 col-xxl-3">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Belge No</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control"
-                                       ng-model="modelObject.DocumentNo"
-                                       placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-xs-3 col-xxl-3">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Depo</label>
-                            <!--begin::Input group-->
-                            <select class="form-select form-select-solid" data-allow-clear="false"
-                                    ng-options="item.WarehouseName for item in warehouseList" ng-model="selectedWarehouse"
-                                    data-control="select2" data-placeholder="-- Seçiniz --"></select>
-                        </div>
-                        <div class="col-sm-3 col-xs-3 col-xxl-3">
+                        <!--<div class="col-sm-3 col-xs-3 col-xxl-3">
+                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Depo</label>-->
+                        <!--begin::Input group-->
+                        <!--<select class="form-select form-select-solid" data-allow-clear="false"
+                                ng-options="item.WarehouseName for item in warehouseList" ng-model="selectedWarehouse"
+                                data-control="select2" data-placeholder="-- Seçiniz --"></select>
+                    </div>-->
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Firma</label>
                             <!--begin::Input group-->
                             <select class="form-select form-select-solid" data-allow-clear="false"
                                     ng-options="item.FirmName for item in firmList" ng-model="selectedFirm"
                                     data-control="select2" data-placeholder="-- Seçiniz --"></select>
                         </div>
-                        <div class="col-sm-3 col-xs-3 col-xxl-3">
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Barkod</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control bg-light-warning"
+                                       ng-model="barcodeBox"
+                                       ng-keyup="onBarcodeKeyUp($event)"
+                                       placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-xs-4 col-xxl-4">
                             <div class="d-flex flex-row h-75 py-0 my-0 mt-2">
                                 <button type="button"
                                         ng-click="readBarcode()"
-                                        class="btn btn-sm btn-primary btn-block h-100 mx-1 flex-fill">
+                                        class="btn btn-sm btn-light-primary btn-block h-100 fw-bolder mx-1 flex-fill">
                                     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M5,7 L19,7 C20.1045695,7 21,7.8954305 21,9 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,9 C3,7.8954305 3.8954305,7 5,7 Z M12,17 C14.209139,17 16,15.209139 16,13 C16,10.790861 14.209139,9 12,9 C9.790861,9 8,10.790861 8,13 C8,15.209139 9.790861,17 12,17 Z" id="Combined-Shape" fill="#000000"></path>
                                         <rect id="Rectangle" fill="#000000" opacity="0.3" x="9" y="4" width="6" height="2" rx="1"></rect>
                                         <circle id="Oval-2" fill="#000000" opacity="0.3" cx="12" cy="13" r="2"></circle>
                                     </svg>
-                                    Barkod Okut
+                                    Barkod
                                 </button>
 
                                 <button type="button"
                                         ng-click="showOrderList()"
-                                        class="btn btn-sm btn-warning btn-block h-100 flex-fill">
+                                        class="btn btn-sm btn-light-warning btn-block h-100 fw-bolder flex-fill">
                                     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                         <g id="Stockholm-icons-/-Text-/-Dots" stroke="none" stroke-width="1">
                                             <rect x="14" y="9" width="6" height="6" rx="3" fill="black" />
                                             <rect x="3" y="9" width="6" height="6" rx="3" fill="black" fill-opacity="0.7" />
                                         </g>
                                     </svg>
-                                    Açık Siparişler
+                                    Sipariş
+                                </button>
+
+                                <button type="button"
+                                        ng-click="showSelectProductDialog()"
+                                        class="btn btn-sm btn-light-success btn-block h-100 fw-bolder mx-1 flex-fill">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Text-/-Dots" stroke="none" stroke-width="1">
+                                            <rect x="14" y="9" width="6" height="6" rx="3" fill="black" />
+                                            <rect x="3" y="9" width="6" height="6" rx="3" fill="black" fill-opacity="0.7" />
+                                        </g>
+                                    </svg>
+                                    Ürün Seç
                                 </button>
                             </div>
                             <div ng-cloak ng-if="modelObject.OrderDetails.length > 0"
-                                  class="d-flex flex-row justify-content-end mt-2">
+                                 class="d-flex flex-row justify-content-end mt-2">
                                 <span class="fw-bolder pl-2"
                                       ng-bind="modelObject.OrderDetails.length + ' sipariş seçildi'"></span>
                                 <button type="button" style="margin-left:10px;" class="btn btn-sm btn-danger py-1 px-1"
@@ -124,7 +137,7 @@
                     <div class="table-scroller-md">
                         <table ng-cloak class="table table-bordered table-hk-md table-striped table-hk-sm">
                             <tbody>
-                                <tr ng-repeat="item in filteredPickupList"
+                                <tr ng-repeat="item in pickupList"
                                     ng-class="{'bg-warning': isSelectedProduct(item)}">
                                     <td class="w-10 px-2">{{item.CreatedDateStr}}</td>
                                     <td class="w-10 px-2">{{item.MachineCode}}</td>
@@ -137,9 +150,9 @@
                                                ng-model="item.FirstQuantity" />
                                     </td>
                                     <td class="w-10 px-2">
-                                        <button type="button" ng-click="selectProduct(item)"
-                                                class="btn btn-sm btn-primary">
-                                            {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}
+                                        <button type="button" ng-click="removeFromPickup(item)"
+                                                class="btn btn-sm btn-danger">
+                                            Sil
                                         </button>
                                     </td>
                                 </tr>
@@ -164,9 +177,9 @@
                         <table ng-cloak class="table table-bordered table-striped table-hk-md">
                             <tbody>
                                 <tr ng-repeat="item in summaryList">
-                                    <td class="w-50 px-2">{{item.ItemName}}</td>
-                                    <td class="w-25 px-2">{{item.SerialCount}}</td>
-                                    <td class="w-25 px-2">{{item.SerialSum}}</td>
+                                    <td class="w-50 px-2 ">{{item[1].ItemName}}</td>
+                                    <td class="w-25 px-2 fw-bolder fs-6">{{item[1].SerialCount}}</td>
+                                    <td class="w-25 px-2 fw-bolder fs-6">{{item[1].SerialSum}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -175,8 +188,8 @@
                         <tfoot>
                             <tr class="bg-primary text-white">
                                 <th class="w-50 px-2"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2"><b>{{ getListSum(summaryList, 'SerialCount') }} KOLİ</b></th>
-                                <th class="w-25 px-2"><b>{{ getListSum(summaryList, 'SerialSum') }} ADET</b></th>
+                                <th class="w-25 px-2"><b>{{ sumTotalCount }} KOLİ</b></th>
+                                <th class="w-25 px-2"><b>{{ sumTotalQty }} ADET</b></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -201,6 +214,10 @@
         <div id="dial-orderlist" title="Açık Siparişler" style="display:none;">
             <ng-include src="'../Components/Views/OpenSoList.html'"></ng-include>
         </div>
+
+        <div id="dial-wr-manager" title="Ürün Seç" style="display:none;">
+            <ng-include src="'../Components/Views/WarehouseManager.html'"></ng-include>
+        </div>
     </div>
     <!--end::Post-->
 </div>
@@ -213,6 +230,7 @@
     <script src="~/Components/Controllers/open-so-list.js"></script>
     <script src="~/Components/Controllers/print-options.js"></script>
     <script src="~/Components/Controllers/report-template-list.js"></script>
+    <script src="~/Components/Controllers/warehouse-manager.js"></script>
     <script src="~/Scripts/html5-qrcode.min.js"></script>
     <script src="~/FrontEndLogic/Mobile/product-delivery.js"></script>
 }

@@ -74,7 +74,7 @@ namespace HekaMOLD.Business.UseCases
                     ItemName = d.Item != null ? d.Item.ItemName : "",
                     Quantity = d.Quantity,
                 })
-                .OrderByDescending(d => d.OrderDate)
+                .OrderByDescending(d => d.OrderNo)
                 .ToArray();
         }
 
@@ -939,6 +939,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         Id = d.Id,
                         Quantity = d.Quantity,
+                        DocumentNo = d.ItemOrder.DocumentNo,
                         FirmId = d.ItemOrder.FirmId,
                         FirmCode = d.ItemOrder.Firm != null ?
                             d.ItemOrder.Firm.FirmCode : "",
@@ -957,7 +958,9 @@ namespace HekaMOLD.Business.UseCases
                         UnitId = d.UnitId,
                         UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
                         UnitName = d.UnitType != null ? d.UnitType.UnitName : ""
-                    }).ToArray();
+                    })
+                    .OrderByDescending(d => d.OrderNo)
+                    .ToArray();
             }
             catch (Exception)
             {
