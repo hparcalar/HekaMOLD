@@ -237,6 +237,7 @@
             }).catch(function (err) { });
     }
 
+<<<<<<< Updated upstream
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
             dropDownOptions: { width: 600 },
@@ -275,6 +276,30 @@
                     }
                 });
             },
+=======
+    $scope.bindModel = function (id) {
+        $http.get(HOST_URL + 'Delivery/BindModel?rid=' + id, {}, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.modelObject = resp.data;
+                }
+            }).catch(function (err) { });
+    }
+
+    // #region VOYAGE MANAGEMENT
+    $scope.showNewVoyageForm = function () {
+        $scope.$broadcast('loadVoyage', { id: 0 });
+
+        $('#dial-voyage').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: window.innerWidth * 0.8,
+            height: window.innerHeight * 0.8,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+>>>>>>> Stashed changes
         });
     }
 
