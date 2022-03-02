@@ -2,7 +2,7 @@
     $scope.modelObject = { Id: 0, VoyageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: [], };
 
     $scope.driverList = [];
-    $scope.plannedLoadList= [];
+    $scope.plannedLoadList = [];
     $scope.rotaList = [];
     $scope.traillerVehicleList = [];
     $scope.forexTypeList = [];
@@ -87,63 +87,63 @@
                 $scope.modelObject.VoyageDetails.push({
                     Id: newId,
                     DischargeLineNo: newId,
-                    ItemLoadId : x.Id,
-                    LoadCode : x.LoadCode,
-                    LoadingDateStr : x.LoadingDateStr,
-                    LoadOutDate :x.LoadOutDateStr,
-                    CustomerFirmName : x.CustomerFirmName,
-                    OrderTransactionDirectionType : x.OrderTransactionDirectionType,
-                    OrderTransactionDirectionTypeStr : x.OrderTransactionDirectionTypeStr,
-                    OrderCalculationType : x.OrderCalculationType,
-                    OrderCalculationTypeStr : x.OrderCalculationTypeStr,
-                    OveralQuantity : x.OveralQuantity,
-                    OveralWeight : x.OveralWeight,
-                    OveralLadametre : x.OveralLadametre,
-                    OveralVolume : x.OveralVolume,
-                    OverallTotal : x.OverallTotal,
-                    OrderNo : x.OrderNo,
-                    LoadDate : x.LoadDateStr,
-                    DischargeDate : x.DischargeDateStr,
-                    CalculationTypePrice :x.CalculationTypePrice,
-                    DocumentNo : x.DocumentNo,
-                    OrderUploadType : x.OrderUploadType,
-                    OrderUploadTypeStr : x.OrderUploadTypeStr,
-                    OrderUploadPointType : x.OrderUploadPointType,
-                    OrderUploadPointTypeStr : x.OrderUploadPointTypeStr,
-                    ScheduledUploadDate : x.ScheduledUploadDateStr,
-                    DateOfNeed : x.DateOfNeedStr,
-                    InvoiceId : x.InvoiceId,
-                    ForexTypeId : x.ForexTypeId,
-                    TraillerVehicleId : x.VehicleTraillerId,
-                    InvoiceStatus : x.InvoiceStatus,
-                    InvoiceFreightPrice : x.InvoiceFreightPrice,
-                    CmrNo : x.CmrNo,
-                    CmrStatus : x.CmrStatus,
-                    ShipperFirmExplanation : x.ShipperFirmExplanation,
-                    BuyerFirmExplanation : x.BuyerFirmExplanation,
-                    ReadinessDate : x.ReadinessDateStr,
-                    DeliveryFromCustomerDate : x.DeliveryFromCustomerDateStr,
-                    IntendedArrivalDate : x.IntendedArrivalDateStr,
-                    FirmCustomsArrivalId : x.FirmCustomsArrivalId,
-                    CustomsExplanation : x.CustomsExplanation,
-                    T1T2No : x.T1T2No,
-                    TClosingDate : x.TClosingDateStr,
-                    HasCmrDeliveryed : x.HasCmrDeliveryed,
-                    ItemPrice : x.ItemPrice,
-                    TrailerType : x.TrailerType,
-                    HasItemInsurance : x.HasItemInsurance,
-                    HasItemDangerous : x.HasItemDangerous,
-                    CmrCustomerDeliveryDate : x.CmrCustomerDeliveryDateStr,
-                    BringingToWarehousePlate : x.BringingToWarehousePlate,
-                    ShipperCityId : x.ShipperCityId,
-                    BuyerCityId : x.BuyerCityId,
-                    ShipperCountryId : x.ShipperCountryId,
-                    BuyerCountryId : x.BuyerCountryId,
-                    CustomerFirmId : x.CustomerFirmId,
-                    ShipperFirmId : x.ShipperFirmId,
-                    BuyerFirmId : x.BuyerFirmId,
-                    EntryCustomsId : x.EntryCustomsId,
-                    ExitCustomsId : x.ExitCustomsId,
+                    ItemLoadId: x.Id,
+                    LoadCode: x.LoadCode,
+                    LoadingDateStr: x.LoadingDateStr,
+                    LoadOutDate: x.LoadOutDateStr,
+                    CustomerFirmName: x.CustomerFirmName,
+                    OrderTransactionDirectionType: x.OrderTransactionDirectionType,
+                    OrderTransactionDirectionTypeStr: x.OrderTransactionDirectionTypeStr,
+                    OrderCalculationType: x.OrderCalculationType,
+                    OrderCalculationTypeStr: x.OrderCalculationTypeStr,
+                    OveralQuantity: x.OveralQuantity,
+                    OveralWeight: x.OveralWeight,
+                    OveralLadametre: x.OveralLadametre,
+                    OveralVolume: x.OveralVolume,
+                    OverallTotal: x.OverallTotal,
+                    OrderNo: x.OrderNo,
+                    LoadDate: x.LoadDateStr,
+                    DischargeDate: x.DischargeDateStr,
+                    CalculationTypePrice: x.CalculationTypePrice,
+                    DocumentNo: x.DocumentNo,
+                    OrderUploadType: x.OrderUploadType,
+                    OrderUploadTypeStr: x.OrderUploadTypeStr,
+                    OrderUploadPointType: x.OrderUploadPointType,
+                    OrderUploadPointTypeStr: x.OrderUploadPointTypeStr,
+                    ScheduledUploadDate: x.ScheduledUploadDateStr,
+                    DateOfNeed: x.DateOfNeedStr,
+                    InvoiceId: x.InvoiceId,
+                    ForexTypeId: x.ForexTypeId,
+                    TraillerVehicleId: x.VehicleTraillerId,
+                    InvoiceStatus: x.InvoiceStatus,
+                    InvoiceFreightPrice: x.InvoiceFreightPrice,
+                    CmrNo: x.CmrNo,
+                    CmrStatus: x.CmrStatus,
+                    ShipperFirmExplanation: x.ShipperFirmExplanation,
+                    BuyerFirmExplanation: x.BuyerFirmExplanation,
+                    ReadinessDate: x.ReadinessDateStr,
+                    DeliveryFromCustomerDate: x.DeliveryFromCustomerDateStr,
+                    IntendedArrivalDate: x.IntendedArrivalDateStr,
+                    FirmCustomsArrivalId: x.FirmCustomsArrivalId,
+                    CustomsExplanation: x.CustomsExplanation,
+                    T1T2No: x.T1T2No,
+                    TClosingDate: x.TClosingDateStr,
+                    HasCmrDeliveryed: x.HasCmrDeliveryed,
+                    ItemPrice: x.ItemPrice,
+                    TrailerType: x.TrailerType,
+                    HasItemInsurance: x.HasItemInsurance,
+                    HasItemDangerous: x.HasItemDangerous,
+                    CmrCustomerDeliveryDate: x.CmrCustomerDeliveryDateStr,
+                    BringingToWarehousePlate: x.BringingToWarehousePlate,
+                    ShipperCityId: x.ShipperCityId,
+                    BuyerCityId: x.BuyerCityId,
+                    ShipperCountryId: x.ShipperCountryId,
+                    BuyerCountryId: x.BuyerCountryId,
+                    CustomerFirmId: x.CustomerFirmId,
+                    ShipperFirmId: x.ShipperFirmId,
+                    BuyerFirmId: x.BuyerFirmId,
+                    EntryCustomsId: x.EntryCustomsId,
+                    ExitCustomsId: x.ExitCustomsId,
                     PlantId: x.PlantId,
                     RotaId: null,
                     NewDetail: true,
@@ -237,7 +237,6 @@
             }).catch(function (err) { });
     }
 
-<<<<<<< Updated upstream
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
             dropDownOptions: { width: 600 },
@@ -276,30 +275,6 @@
                     }
                 });
             },
-=======
-    $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'Delivery/BindModel?rid=' + id, {}, 'json')
-            .then(function (resp) {
-                if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.modelObject = resp.data;
-                }
-            }).catch(function (err) { });
-    }
-
-    // #region VOYAGE MANAGEMENT
-    $scope.showNewVoyageForm = function () {
-        $scope.$broadcast('loadVoyage', { id: 0 });
-
-        $('#dial-voyage').dialog({
-            hide: true,
-            modal: true,
-            resizable: false,
-            width: window.innerWidth * 0.8,
-            height: window.innerHeight * 0.8,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
->>>>>>> Stashed changes
         });
     }
 
@@ -326,8 +301,8 @@
                             obj.CityEndName = rotaObj.CityEndName;
                             obj.CityEndPostCode = rotaObj.CityEndPostCode;
                             obj.KmHour = rotaObj.KmHour;
-                       }
-  
+                        }
+
                     }
                 },
                 key: 'Id'
