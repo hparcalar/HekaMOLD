@@ -78,6 +78,16 @@ namespace HekaMOLD.Enterprise.Controllers
                 shiftData = bObj.GetCurrentShift();
             }
 
+            if (shiftData != null)
+            {
+                DateTime dt1 = DateTime.ParseExact(t1, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));    
+                if (shiftData.ShiftBelongsToDate < dt1.Date)
+                {
+                    t1 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                    t2 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                }
+            }
+
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 result = bObj.GetMachineStats(t1, t2);
@@ -166,6 +176,22 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult GetMachineStatsByMachineId(int machineId, string t1, string t2)
         {
             MachineModel[] result = new MachineModel[0];
+
+            ShiftModel shiftData = null;
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                shiftData = bObj.GetCurrentShift();
+            }
+
+            if (shiftData != null)
+            {
+                DateTime dt1 = DateTime.ParseExact(t1, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                if (shiftData.ShiftBelongsToDate < dt1.Date)
+                {
+                    t1 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                    t2 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                }
+            }
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {

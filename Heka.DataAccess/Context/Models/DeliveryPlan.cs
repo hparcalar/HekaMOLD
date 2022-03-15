@@ -19,6 +19,9 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("WorkOrderDetail")]
         public Nullable<int> WorkOrderDetailId { get; set; }
+
+        [ForeignKey("ItemOrderDetail")]
+        public Nullable<int> ItemOrderDetailId { get; set; }
         public Nullable<System.DateTime> PlanDate { get; set; }
         public Nullable<int> OrderNo { get; set; }
         public Nullable<int> PlanStatus { get; set; }
@@ -29,5 +32,6 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> Quantity { get; set; }
 
         public virtual WorkOrderDetail WorkOrderDetail { get; set; }
+        public virtual ItemOrderDetail ItemOrderDetail { get; set; }
     }
 }

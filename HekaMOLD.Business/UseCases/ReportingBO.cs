@@ -718,13 +718,24 @@ namespace HekaMOLD.Business.UseCases
 
                 ItemSerialModel containerPack = new ItemSerialModel();
                 dbPack.MapTo(containerPack);
-                containerPack.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", dbPack.ItemReceiptDetail.ItemReceipt.ReceiptDate);
+                try
+                {
+                    containerPack.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", dbPack.ItemReceiptDetail.ItemReceipt.ReceiptDate);
+                }
+                catch (Exception)
+                {
+
+                }
+               
                 containerPack.MachineCode = dbPack.WorkOrderDetail != null &&
                     dbPack.WorkOrderDetail.Machine != null ? dbPack.WorkOrderDetail.Machine.MachineCode : "";
+                containerPack.ItemId = dbPack.ItemReceiptDetail.ItemId;
                 containerPack.ItemNo = dbPack.WorkOrderDetail != null &&
                     dbPack.WorkOrderDetail.Item != null ? dbPack.WorkOrderDetail.Item.ItemNo : "";
                 containerPack.ItemName = dbPack.WorkOrderDetail != null &&
                     dbPack.WorkOrderDetail.Item != null ? dbPack.WorkOrderDetail.Item.ItemName : "";
+                containerPack.FirmName = dbPack.WorkOrderDetail != null &&
+                    dbPack.WorkOrderDetail.WorkOrder.Firm != null ? dbPack.WorkOrderDetail.WorkOrder.Firm.FirmName : "";
 
                 data = containerPack;
             }

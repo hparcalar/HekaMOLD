@@ -51,7 +51,9 @@
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $timeout(function () {
                         if (resp.data.Id > 0) {
-                            $scope.pickupList.push(resp.data);
+                            $scope.pickupList.push({ ...resp.data });
+                            $scope.pickupList = $scope.pickupList.filter(d => d.ItemNo != null);
+
                             toastr.success('Okutulan koli çeki listesine eklendi.');
                             $scope.updateSummaryList();
                         }
@@ -59,7 +61,7 @@
                             toastr.error('Okutulan barkoda ait bir koli bulunamadı.');
 
                         $scope.barcodeBox = '';
-                    })
+                    });
                 }
             }).catch(function (err) { });
     }
@@ -326,8 +328,8 @@
             firstOrderRecord = d[0];
 
         d.forEach(x => {
-            if (!productsOfPlan.some(m => m == x.WorkOrder.ItemId))
-                productsOfPlan.push(x.WorkOrder.ItemId);
+            if (!productsOfPlan.some(m => m == x.ItemOrder.ItemId))
+                productsOfPlan.push(x.ItemOrder.ItemId);
         });
 
         $scope.filteredPickupList = $scope.pickupList.filter(m => productsOfPlan.includes(m.ItemId));

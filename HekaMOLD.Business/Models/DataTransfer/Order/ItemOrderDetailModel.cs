@@ -59,6 +59,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         #region PLANNING ELEMENTS
         public int? MachineId { get; set; }
         public string DeadlineDateStr { get; set; }
+        public DateTime? DeliveryPlanDate { get; set; }
+        public string DeliveryPlanDateStr { get; set; }
         #endregion
     }
 }

@@ -2,6 +2,7 @@
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using System;
@@ -15,25 +16,25 @@ namespace HekaMOLD.Business.UseCases
     public class DeliveryBO : IBusinessObject
     {
         #region PLANNING BUSINESS
-        public BusinessResult CreateDeliveryPlan(WorkOrderDetailModel model)
+        public BusinessResult CreateDeliveryPlan(ItemOrderDetailModel model)
         {
             BusinessResult result = new BusinessResult();
 
             try
             {
-                var repo = _unitOfWork.GetRepository<WorkOrder>();
-                var repoDetails = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repo = _unitOfWork.GetRepository<ItemOrder>();
+                var repoDetails = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoItem = _unitOfWork.GetRepository<Item>();
                 var repoDeliveryPlan = _unitOfWork.GetRepository<DeliveryPlan>();
 
                 var dbWorkOrderDetail = repoDetails.Get(d => d.Id == model.Id);
                 if (dbWorkOrderDetail == null)
-                    throw new Exception("Planlanması istenen iş emrinin kaydına ulaşılamadı.");
+                    throw new Exception("Planlanması istenen siparişin kaydına ulaşılamadı.");
 
                 dbWorkOrderDetail.MapTo(model);
 
                 #region CHECK/ADD DELIVERY PLAN QUEUE
-                var dbDeliveryPlan = repoDeliveryPlan.Get(d => d.WorkOrderDetailId == dbWorkOrderDetail.Id);
+                var dbDeliveryPlan = repoDeliveryPlan.Get(d => d.ItemOrderDetailId == dbWorkOrderDetail.Id);
                 if (dbDeliveryPlan == null)
                 {
                     int? lastOrderNo = repoDeliveryPlan.Filter(d => d.PlanDate == model.DeliveryPlanDate)
@@ -45,7 +46,7 @@ namespace HekaMOLD.Business.UseCases
 
                     dbDeliveryPlan = new DeliveryPlan
                     {
-                        WorkOrderDetail = dbWorkOrderDetail,
+                        ItemOrderDetail = dbWorkOrderDetail,
                         PlanDate = model.DeliveryPlanDate,
                         OrderNo = lastOrderNo
                     };
@@ -217,13 +218,42 @@ namespace HekaMOLD.Business.UseCases
             {
                 Id = d.Id,
                 WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate),
+                ItemOrderDocumentNo = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemOrder.DocumentNo : "",
                 SaleOrderDeadline = d.ItemOrderDetail != null ?
                     string.Format("{0:dd.MM.yyyy}", d.ItemOrderDetail.ItemOrder.DateOfNeed) : "",
                 ProductCode = d.Item != null ? d.Item.ItemNo : "",
                 ProductName = d.Item != null ? d.Item.ItemName : "",
                 FirmName = d.WorkOrder.Firm != null ?
                     d.WorkOrder.Firm.FirmName : "",
-                Quantity = d.Quantity,
+                Quantity = d.ItemOrderDetail != null ? d.ItemOrderDetail.Quantity : d.Quantity,
+            }).ToArray();
+
+            return data;
+        }
+
+        public ItemOrderDetailModel[] GetWaitingItemOrders()
+        {
+            ItemOrderDetailModel[] data = new ItemOrderDetailModel[0];
+
+            DateTime dtYearStart = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd",
+                System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+            var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+            data = repo.Filter(d =>
+                d.ItemOrder.OrderDate > dtYearStart
+                && !d.DeliveryPlan.Any()
+            ).ToList().Select(d => new ItemOrderDetailModel
+            {
+                Id = d.Id,
+                OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
+                DocumentNo = d.ItemOrder != null ? d.ItemOrder.DocumentNo : "",
+                DeadlineDateStr = d.ItemOrder != null ?
+                    string.Format("{0:dd.MM.yyyy}", d.ItemOrder.DateOfNeed) : "",
+                ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                ItemName = d.Item != null ? d.Item.ItemName : "",
+                FirmName = d.ItemOrder.Firm != null ?
+                    d.ItemOrder.Firm.FirmName : "",
+                Quantity = d.Quantity, //d.ItemOrderDetail != null ? d.ItemOrderDetail.Quantity : d.Quantity,
             }).ToArray();
 
             return data;
@@ -269,33 +299,29 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<DeliveryPlan>();
-                data = repo.GetAll().ToList().Select(d => new DeliveryPlanModel
+                data = repo.Filter(d => d.ItemOrderDetailId != null).ToList().Select(d => new DeliveryPlanModel
                 {
                     Id = d.Id,
                     PlanDate = d.PlanDate,
                     PlanStatus = d.PlanStatus,
                     PlanDateStr = string.Format("{0:dd.MM.yyyy}", d.PlanDate),
                     OrderNo = d.OrderNo,
-                    WorkOrderDetailId = d.WorkOrderDetailId,
-                    WorkOrder = new WorkOrderDetailModel
+                    ItemOrderDetailId = d.ItemOrderDetailId,
+                    ItemOrder = new ItemOrderDetailModel
                     {
-                        ProductCode = d.WorkOrderDetail.Item.ItemNo,
-                        ProductName = d.WorkOrderDetail.Item.ItemName,
-                        WorkOrderId = d.WorkOrderDetail.WorkOrderId,
-                        MoldId = d.WorkOrderDetail.MoldId,
-                        MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
-                        MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
-                        CreatedDate = d.WorkOrderDetail.CreatedDate,
-                        Quantity = d.Quantity > 0 ? d.Quantity : d.WorkOrderDetail.Quantity,
-                        WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
-                        WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
-                        FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
-                            d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
-                        FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
-                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
-                        WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
-                        WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
-                        CompleteQuantity = d.WorkOrderDetail.WorkOrderSerial.Count()
+                        ItemNo = d.ItemOrderDetail.Item.ItemNo,
+                        ItemName = d.ItemOrderDetail.Item.ItemName,
+                        ItemOrderId = d.ItemOrderDetail.ItemOrderId,
+                        CreatedDate = d.ItemOrderDetail.CreatedDate,
+                        Quantity = d.Quantity > 0 ? d.Quantity : d.ItemOrderDetail.Quantity,
+                        DocumentNo = d.ItemOrderDetail.ItemOrder.DocumentNo,
+                        OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrderDetail.ItemOrder.OrderDate),
+                        FirmCode = d.ItemOrderDetail.ItemOrder.Firm != null ?
+                            d.ItemOrderDetail.ItemOrder.Firm.FirmCode : "",
+                        FirmName = d.ItemOrderDetail.ItemOrder.Firm != null ?
+                            d.ItemOrderDetail.ItemOrder.Firm.FirmName : "",
+                        OrderStatus = d.ItemOrderDetail.OrderStatus,
+                        OrderStatusStr = ((OrderStatusType)d.ItemOrderDetail.OrderStatus).ToCaption(),
                     }
                 }).OrderBy(d => d.OrderNo).ToArray();
             }
@@ -313,40 +339,35 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<DeliveryPlan>();
-                data = repo.Filter(d => (d.PlanStatus ?? 0) == 0 && d.PlanDate == planDate).ToList().Select(d => new DeliveryPlanModel
+                data = repo.Filter(d => (d.PlanStatus ?? 0) == 0 && d.PlanDate == planDate && d.ItemOrderDetailId != null)
+                    .ToList().Select(d => new DeliveryPlanModel
                 {
                     Id = d.Id,
                     PlanDate = d.PlanDate,
                     PlanStatus = d.PlanStatus,
+                    
                     PlanDateStr = string.Format("{0:dd.MM.yyyy}", d.PlanDate),
                     OrderNo = d.OrderNo,
-                    WorkOrderDetailId = d.WorkOrderDetailId,
-                    ProductCode = d.WorkOrderDetail.Item.ItemNo,
-                    ProductName = d.WorkOrderDetail.Item.ItemName,
-                    FirmId = d.WorkOrderDetail.WorkOrder.FirmId,
-                    FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
-                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
-                    Quantity = d.Quantity > 0 ? d.Quantity : d.WorkOrderDetail.Quantity,
-                    WorkOrder = new WorkOrderDetailModel
+                    ItemOrderDetailId = d.ItemOrderDetailId,
+                    ProductCode = d.ItemOrderDetail != null ? d.ItemOrderDetail.Item.ItemName : "",
+                    FirmName = d.ItemOrderDetail != null && d.ItemOrderDetail.ItemOrder.Firm != null 
+                        ? d.ItemOrderDetail.ItemOrder.Firm.FirmName : "",
+                    ItemOrder = new ItemOrderDetailModel
                     {
-                        ItemId = d.WorkOrderDetail.ItemId,
-                        ProductCode = d.WorkOrderDetail.Item.ItemNo,
-                        ProductName = d.WorkOrderDetail.Item.ItemName,
-                        WorkOrderId = d.WorkOrderDetail.WorkOrderId,
-                        MoldId = d.WorkOrderDetail.MoldId,
-                        MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
-                        MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
-                        CreatedDate = d.WorkOrderDetail.CreatedDate,
-                        Quantity = d.Quantity > 0 ? d.Quantity : d.WorkOrderDetail.Quantity,
-                        WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
-                        WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
-                        FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
-                            d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
-                        FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
-                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
-                        WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
-                        WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
-                        CompleteQuantity = d.WorkOrderDetail.WorkOrderSerial.Count()
+                        ItemId = d.ItemOrderDetail.ItemId,
+                        ItemNo = d.ItemOrderDetail.Item.ItemNo,
+                        ItemName = d.ItemOrderDetail.Item.ItemName,
+                        ItemOrderId = d.ItemOrderDetail.ItemOrderId,
+                        CreatedDate = d.ItemOrderDetail.CreatedDate,
+                        Quantity = d.Quantity > 0 ? d.Quantity : d.ItemOrderDetail.Quantity,
+                        DocumentNo = d.ItemOrderDetail.ItemOrder.DocumentNo,
+                        OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrderDetail.ItemOrder.OrderDate),
+                        FirmCode = d.ItemOrderDetail.ItemOrder.Firm != null ?
+                            d.ItemOrderDetail.ItemOrder.Firm.FirmCode : "",
+                        FirmName = d.ItemOrderDetail.ItemOrder.Firm != null ?
+                            d.ItemOrderDetail.ItemOrder.Firm.FirmName : "",
+                        OrderStatus = d.ItemOrderDetail.OrderStatus,
+                        OrderStatusStr = ((OrderStatusType)d.ItemOrderDetail.OrderStatus).ToCaption(),
                     }
                 }).OrderBy(d => d.OrderNo).ToArray();
             }

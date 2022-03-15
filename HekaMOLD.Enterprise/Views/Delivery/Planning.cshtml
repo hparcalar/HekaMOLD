@@ -57,12 +57,11 @@
                                              ng-class="{ 'plan-selected': plan.Id == selectedPlan.Id}"
                                              ng-repeat="plan in getMachinePlans(machine)">
 
-                                            <p>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
-                                            <p>{{plan.WorkOrder.FirmName}}&nbsp;</p>
-                                            <p><b>{{plan.WorkOrder.ProductName}}</b>&nbsp;</p>
+                                            <p>{{plan.ItemOrder.OrderDateStr}}&nbsp;</p>
+                                            <p>{{plan.ItemOrder.FirmName}}&nbsp;</p>
+                                            <p><b>{{plan.ItemOrder.ItemName}}</b>&nbsp;</p>
                                             <p>
-                                                {{plan.WorkOrder.CompleteQuantity}} /
-                                                {{plan.WorkOrder.Quantity}}
+                                                {{plan.ItemOrder.Quantity}}
                                             </p>
                                         </div>
                                     </div>

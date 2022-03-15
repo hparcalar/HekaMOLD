@@ -601,10 +601,16 @@
     // #endregion
 
     // #region PRINTING LOGIC
+    $scope.printingTemplateType = 6;
+    $scope.printCheckList = function () {
+        $scope.printingTemplateType = 2;
+        $scope.showPrintTemplates();
+    }
+
     $scope.showPrintTemplates = function () {
-        if ($scope.selectedRow.Id > 0) {
+        if ($scope.modelObject.Id > 0 || $scope.selectedRow.Id > 0) {
             // DO BROADCAST
-            $scope.$broadcast('loadTemplateList', [6]);
+            $scope.$broadcast('loadTemplateList', [$scope.printingTemplateType]);
 
             $('#dial-reports').dialog({
                 width: window.innerWidth * 0.65,
@@ -641,9 +647,9 @@
             if (d.exportType == 'PDF') {
                 try {
                     $http.post(HOST_URL + 'Printing/ExportAsPdf', {
-                        objectId: $scope.selectedRow.Id,
+                        objectId: $scope.printingTemplateType == 6 ? $scope.selectedRow.Id : $scope.modelObject.Id,
                         reportId: $scope.reportTemplateId,
-                        reportType: 6,
+                        reportType: $scope.printingTemplateType,
                     }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -668,7 +674,7 @@
 
         try {
             $http.post(HOST_URL + 'Printing/AddToPrintQueue', {
-                objectId: $scope.selectedRow.Id,
+                objectId: $scope.printingTemplateType == 6 ? $scope.selectedRow.Id : $scope.modelObject.Id,
                 reportId: $scope.reportTemplateId,
                 printerId: d.PrinterId,
                 recordType: 6, // item receipt detail type
@@ -687,6 +693,7 @@
     });
 
     $scope.printMaterialLabel = function () {
+        $scope.printingTemplateType = 6;
         $scope.onRowMenuItemClicked();
         $scope.showPrintTemplates();
     }

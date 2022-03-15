@@ -23,8 +23,16 @@
     $scope.selectedPackage = { Id: 0 };
 
     $scope.onWarehouseChanged = function (e) {
-        $scope.selectedWarehouse = e;
-        $scope.bindList();
+        $timeout(function () {
+            $scope.selectedWarehouse = e;
+            $scope.bindList();
+        });
+
+        try {
+            $scope.$applyAsync();
+        } catch (e) {
+
+        }
     }
 
     $scope.setPage = function (pageIndex) {

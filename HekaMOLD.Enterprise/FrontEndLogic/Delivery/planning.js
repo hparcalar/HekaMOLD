@@ -308,11 +308,12 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
                 var data = item.data,
                     markup =
                         "<tr draggable=\"true\" class=\"dx-row dx-data-row dx-row-lines waiting-plan-row\" data-id=\"" + data.Id + "\">" +
-                        "<td>" + data.WorkOrderDateStr + "</td>" +
-                        "<td>" + data.SaleOrderDeadline + "</td>" +
+                        "<td>" + data.OrderDateStr + "</td>" +
+                        "<td>" + data.DeadlineDateStr + "</td>" +
+                        "<td>" + data.DocumentNo + "</td>" +
                         "<td>" + data.FirmName + "</td>" +
-                        "<td>" + data.ProductCode + "</td>" +
-                        "<td>" + data.ProductName + "</td>" +
+                        "<td>" + data.ItemNo + "</td>" +
+                        "<td>" + data.ItemName + "</td>" +
                         "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
                         "</tr>";
 
@@ -320,16 +321,17 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
             },
             columns: [
                 {
-                    dataField: 'WorkOrderDateStr',
+                    dataField: 'OrderDateStr',
                     caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy'
                 },
                 {
-                    dataField: 'SaleOrderDeadline',
+                    dataField: 'DeadlineDateStr',
                     caption: 'Termin', dataType: 'date', format: 'dd.MM.yyyy'
                 },
+                { dataField: 'DocumentNo', caption: 'Sipariş No' },
                 { dataField: 'FirmName', caption: 'Firma' },
-                { dataField: 'ProductCode', caption: 'Ürün Kodu' },
-                { dataField: 'ProductName', caption: 'Ürün Adı' },
+                { dataField: 'ItemNo', caption: 'Ürün Kodu' },
+                { dataField: 'ItemName', caption: 'Ürün Adı' },
                 {
                     dataField: 'Quantity', caption: 'Miktar',
                     dataType: 'number', format: { type: "fixedPoint", precision: 2 }

@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Production;
+﻿using HekaMOLD.Business.Models.DataTransfer.Order;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -57,11 +58,11 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult GetWaitingPlans()
         {
-            WorkOrderDetailModel[] result = new WorkOrderDetailModel[0];
+            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
 
             using (DeliveryBO bObj = new DeliveryBO())
             {
-                result = bObj.GetWaitingWorkOrders();
+                result = bObj.GetWaitingItemOrders();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -141,7 +142,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(WorkOrderDetailModel model)
+        public JsonResult SaveModel(ItemOrderDetailModel model)
         {
             BusinessResult result = new BusinessResult();
 

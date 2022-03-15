@@ -2667,6 +2667,7 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception(receiptResult.ErrorMessage);
                 }
 
+                result.RecordId = receiptResult.RecordId;
                 result.Result = true;
             }
             catch (Exception ex)

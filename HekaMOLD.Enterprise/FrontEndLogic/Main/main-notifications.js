@@ -44,17 +44,25 @@
         }
     }
 
+    $scope.updateNotifyFlag = false;
     $scope.updateNotifications = function () {
+        if ($scope.updateNotifyFlag == true)
+            return;
+
+        $scope.updateNotifyFlag = true;
         try {
             $http.get(HOST_URL + 'Common/GetNotifications', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.notificationList = resp.data;
                         setTimeout($scope.bindNotificationEvents, 300);
+                        $scope.updateNotifyFlag = false;
                     }
-                }).catch(function (err) { });
+                }).catch(function (err) {
+                    $scope.updateNotifyFlag = false;
+                });
         } catch (e) {
-
+            $scope.updateNotifyFlag = false;
         }
     }
 
