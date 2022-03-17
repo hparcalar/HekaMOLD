@@ -48,7 +48,8 @@ namespace HekaMOLD.Business.UseCases
                     {
                         ItemOrderDetail = dbWorkOrderDetail,
                         PlanDate = model.DeliveryPlanDate,
-                        OrderNo = lastOrderNo
+                        OrderNo = lastOrderNo,
+                        PlanStatus = 0,
                     };
                     repoDeliveryPlan.Add(dbDeliveryPlan);
                 }
@@ -240,8 +241,9 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
             data = repo.Filter(d =>
-                d.ItemOrder.OrderDate > dtYearStart
-                && !d.DeliveryPlan.Any()
+                d.ItemOrder.OrderType == (int)ItemOrderType.Sale
+                && d.ItemOrder.OrderDate > dtYearStart
+                && (d.DeliveryPlan.Sum(m => m.Quantity ?? m.ItemOrderDetail.Quantity) ?? 0) < d.Quantity
             ).ToList().Select(d => new ItemOrderDetailModel
             {
                 Id = d.Id,
@@ -253,7 +255,7 @@ namespace HekaMOLD.Business.UseCases
                 ItemName = d.Item != null ? d.Item.ItemName : "",
                 FirmName = d.ItemOrder.Firm != null ?
                     d.ItemOrder.Firm.FirmName : "",
-                Quantity = d.Quantity, //d.ItemOrderDetail != null ? d.ItemOrderDetail.Quantity : d.Quantity,
+                Quantity = d.Quantity - (d.DeliveryPlan.Sum(m => m.Quantity ?? m.ItemOrderDetail.Quantity) ?? 0),
             }).ToArray();
 
             return data;
@@ -345,7 +347,7 @@ namespace HekaMOLD.Business.UseCases
                     Id = d.Id,
                     PlanDate = d.PlanDate,
                     PlanStatus = d.PlanStatus,
-                    
+                    FirmId = d.ItemOrderDetail.ItemOrder.FirmId,
                     PlanDateStr = string.Format("{0:dd.MM.yyyy}", d.PlanDate),
                     OrderNo = d.OrderNo,
                     ItemOrderDetailId = d.ItemOrderDetailId,

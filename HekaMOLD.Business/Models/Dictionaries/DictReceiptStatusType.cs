@@ -17,7 +17,9 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { ReceiptStatusType.WaitingQualityApprove, "Kalite Onayı Bekliyor" },
             { ReceiptStatusType.QualityIsApproved, "Kalite Onayladı" },
             { ReceiptStatusType.Blocked, "Blokeli" },
-            { ReceiptStatusType.Closed, "Kapalı" }
+            { ReceiptStatusType.Closed, "Kapalı" },
+            { ReceiptStatusType.OffTheRecord, "OTR" },
+            { ReceiptStatusType.ReadyToSync, "Transfer Onaylandı" },
         };
     }
 }

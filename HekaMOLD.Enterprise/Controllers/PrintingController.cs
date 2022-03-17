@@ -34,6 +34,22 @@ namespace HekaMOLD.Enterprise.Controllers
 
         [HttpPost]
         [FreeAction]
+        public JsonResult ExportAsExcel(int objectId, int reportId, int reportType)
+        {
+            string outputFile = Session.SessionID + ".xls";
+
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                var reportData = bObj.PrepareReportData(objectId, (ReportType)reportType);
+                bObj.ExportReportAsExcel(reportId, reportData, Server.MapPath("~/Outputs") + "/",
+                    Session.SessionID + ".xls");
+            }
+
+            return Json(new { Status = 1, Path = outputFile });
+        }
+
+        [HttpPost]
+        [FreeAction]
         public JsonResult AddToPrintQueue(int objectId, int reportId, int printerId, int recordType)
         {
             BusinessResult result = new BusinessResult();

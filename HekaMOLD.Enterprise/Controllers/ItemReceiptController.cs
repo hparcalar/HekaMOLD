@@ -6,6 +6,7 @@ using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -114,6 +115,37 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        #region OFF THE RECORD FUNCTIONS
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetOTRList(int listType)
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                switch (listType)
+                {
+                    case 1:
+                        data = bObj.GetWaitingForSyncSalesList();
+                        break;
+                    case 2:
+                        data = bObj.GetReadyToSyncSalesList();
+                        break;
+                    case 3:
+                        data = bObj.GetOffTheRecordList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+        #endregion
 
         [HttpGet]
         public JsonResult BindModel(int rid)

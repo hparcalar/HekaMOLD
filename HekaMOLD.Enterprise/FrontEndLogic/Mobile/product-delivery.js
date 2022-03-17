@@ -10,6 +10,7 @@
 
     $scope.lastRecordId = 0;
     $scope.reportTemplateId = 0;
+    $scope.selectedDeliveryPlans = [];
 
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
@@ -20,9 +21,29 @@
     $scope.sumTotalQty = 0;
 
     $scope.bindModel = function () {
-        $scope.pickupList = [];
+        $scope.pickupList.splice(0, $scope.pickupList.length);
         $scope.filteredPickupList = [];
         $scope.summaryList = [];
+        $scope.selectedDeliveryPlans = [];
+
+        try {
+            $timeout(function () {
+                if (localStorage.getItem('readings') != null && localStorage.getItem('readings').length > 0) {
+                    var tmpList = JSON.parse(localStorage.getItem('readings'));
+                    for (var i = 0; i < tmpList.length; i++) {
+                        var tmpItem = tmpList[i];
+                        $scope.pickupList.push(tmpItem);
+                    }
+                    $scope.filteredPickupList = $scope.pickupList;
+                }
+            });
+
+            $scope.$applyAsync();
+        } catch (e) {
+
+        }
+
+        $scope.updateSummaryList();
 
         //$http.get(HOST_URL + 'Mobile/GetProductsForDelivery', {}, 'json')
         //    .then(function (resp) {
@@ -43,6 +64,7 @@
     $scope.getSerialByBarcode = function (barcode) {
         if ($scope.pickupList.some(m => m.SerialNo == barcode)) {
             toastr.warning('Okutulan koli zaten çeki listesine eklenmiş.');
+            $scope.barcodeBox = '';
             return;
         }
 
@@ -56,6 +78,11 @@
 
                             toastr.success('Okutulan koli çeki listesine eklendi.');
                             $scope.updateSummaryList();
+                            try {
+                                localStorage.setItem('readings', JSON.stringify($scope.pickupList));
+                            } catch (e) {
+
+                            }
                         }
                         else
                             toastr.error('Okutulan barkoda ait bir koli bulunamadı.');
@@ -140,7 +167,12 @@
     }
 
     $scope.isSelectedProduct = function (item) {
-        return $scope.selectedProducts.some(d => d.Id == item.Id);
+        try {
+            return $scope.selectedProducts.some(d => d.Id == item.Id);
+        } catch (e) {
+
+        }
+        return false;
     }
 
     $scope.processBarcodeResult = function (barcode) {
@@ -332,12 +364,14 @@
                 productsOfPlan.push(x.ItemOrder.ItemId);
         });
 
-        $scope.filteredPickupList = $scope.pickupList.filter(m => productsOfPlan.includes(m.ItemId));
+        /*$scope.filteredPickupList = $scope.pickupList.filter(m => productsOfPlan.includes(m.ItemId));*/
 
         if (firstOrderRecord != null) {
             $scope.selectedFirm = $scope.firmList.find(m => m.Id == firstOrderRecord.FirmId);
             refreshArray($scope.firmList);
         }
+
+        $scope.selectedDeliveryPlans = d;
 
         $('#dial-deliveryplans').dialog('close');
     });
@@ -501,6 +535,7 @@
                         receiptModel: $scope.modelObject,
                         model: $scope.pickupList,
                         orderDetails: $scope.modelObject.OrderDetails.map(m => m.ItemOrderDetailId),
+                        deliveryPlans: $scope.selectedDeliveryPlans,
                     }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -518,6 +553,12 @@
                                         Details: [], OrderDetails: [],
                                     };
 
+                                    try {
+                                        localStorage.removeItem('readings');
+                                    } catch (e) {
+
+                                    }
+                                    $scope.selectedDeliveryPlans = [];
                                     $scope.bindModel();
                                 }
                                 else
@@ -532,6 +573,7 @@
     // LOAD EVENTS
     $scope.loadSelectables().then(function () {
         refreshArray($scope.warehouseList);
+
         $scope.bindModel();
     });
 });

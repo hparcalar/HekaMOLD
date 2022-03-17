@@ -660,6 +660,22 @@
 
                 }
             }
+            else if (d.exportType == 'EXCEL') {
+                try {
+                    $http.post(HOST_URL + 'Printing/ExportAsExcel', {
+                        objectId: $scope.printingTemplateType == 6 ? $scope.selectedRow.Id : $scope.modelObject.Id,
+                        reportId: $scope.reportTemplateId,
+                        reportType: $scope.printingTemplateType,
+                    }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                window.open(HOST_URL + 'Outputs/' + resp.data.Path);
+                            }
+                        }).catch(function (err) { });
+                } catch (e) {
+
+                }
+            }
             else {
                 $scope.showPrintOptions();
             }

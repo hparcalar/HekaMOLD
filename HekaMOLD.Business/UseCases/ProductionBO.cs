@@ -2855,7 +2855,8 @@ namespace HekaMOLD.Business.UseCases
         public BusinessResult CreateSerialDelivery(
             ItemReceiptModel receiptModel,
             ItemSerialModel[] model, 
-            int[] orderDetails = null)
+            int[] orderDetails = null,
+            DeliveryPlanModel[] deliveryPlans = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -2866,6 +2867,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
                 var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoWr = _unitOfWork.GetRepository<Warehouse>();
+                var repoDeliveryPlan = _unitOfWork.GetRepository<DeliveryPlan>();
 
                 if (!repoWr.Any(d => d.Id == receiptModel.InWarehouseId))
                     throw new Exception("Depo seçmelisiniz.");
@@ -2899,6 +2901,18 @@ namespace HekaMOLD.Business.UseCases
                     var dbOrderDetail = repoOrderDetail.Get(d => d.Id == cDetailId);
                     if (dbOrderDetail != null)
                         selectedOrderDetailId = dbOrderDetail.ItemOrderId;
+                }
+                else if (deliveryPlans != null && deliveryPlans.Length > 0)
+                {
+                    selectedOrderDetailId = deliveryPlans[0].ItemOrderDetailId;
+                    foreach (var item in deliveryPlans)
+                    {
+                        var dbDeliveryPlan = repoDeliveryPlan.Get(d => d.Id == item.Id);
+                        if (dbDeliveryPlan != null)
+                        {
+                            dbDeliveryPlan.PlanStatus = 1;
+                        }
+                    }
                 }
 
                 // PROCESS SERIALS

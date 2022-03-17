@@ -140,6 +140,31 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult ExportReportAsExcel<T>(int reportId, T dataModel, string outputPath, string outputFileName)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ReportTemplate>();
+
+                var dbTemplate = repo.Get(d => d.Id == reportId);
+                if (dbTemplate == null)
+                    throw new Exception("Rapor şablonu bulunamadı.");
+
+                ExcelReportTemplate<T>(dataModel, dbTemplate.FileName, 21, 29.7m, "", outputPath, outputFileName);
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         #region GENERIC PRINTING METHOD
         protected BusinessResult PrintReportTemplate<T>(T model, string fileName, 
             decimal pageWidth, decimal pageHeight, string printerName)
@@ -192,6 +217,37 @@ namespace HekaMOLD.Business.UseCases
 
                 report.DataSources.Add(new ReportDataSource("DS1", dataList));
                 ExportPdf(report, pageWidth, pageHeight, outputPath, outputFileName);
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        protected BusinessResult ExcelReportTemplate<T>(T model, string fileName,
+           decimal pageWidth, decimal pageHeight, string printerName, string outputPath, string outputFileName)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                dynamic dataList = new List<T>() {
+                    model
+                };
+
+                if (model.GetType().GetGenericArguments().Length > 0)
+                    dataList = model;
+
+                LocalReport report = new LocalReport();
+                report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\" + fileName;
+
+                report.DataSources.Add(new ReportDataSource("DS1", dataList));
+                ExportExcel(report, pageWidth, pageHeight, outputPath, outputFileName);
 
                 result.Result = true;
             }
@@ -710,11 +766,24 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ItemSerial>();
                 var repoItemReceipt = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoWorkSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
 
-                var dbPack = repo.Filter(d => d.SerialStatus != (int)SerialStatusType.Used &&
+                var dbPack = repo.Filter(d => 
                     d.SerialStatus != (int)SerialStatusType.Scrap
                     && d.SerialNo == serialNo)
                        .FirstOrDefault();
+
+                if (dbPack != null && dbPack.SerialStatus == (int)SerialStatusType.Used)
+                    return data;
+
+                //if (dbPack == null)
+                //{
+                //    var dbSerial = repoWorkSerial.Get(d => d.SerialNo == serialNo);
+                //    if (dbSerial != null)
+                //    {
+
+                //    }
+                //}
 
                 ItemSerialModel containerPack = new ItemSerialModel();
                 dbPack.MapTo(containerPack);

@@ -434,6 +434,43 @@ namespace HekaMOLD.Business.UseCases.Core.Base
             }
         }
 
+        protected void ExportExcel(LocalReport report, decimal pageWidth, decimal pageHeight,
+            string outputPath, string outputFileName)
+        {
+            string deviceInfo =
+          @"<DeviceInfo>
+                <OutputFormat>EMF</OutputFormat>
+                <PageWidth>{PageWidth}</PageWidth>
+                <PageHeight>{PageHeight}</PageHeight>
+                <MarginTop>{MarginTop}</MarginTop>
+                <MarginLeft>{MarginLeft}</MarginLeft>
+                <MarginRight>{MarginRight}</MarginRight>
+                <MarginBottom>{MarginBottom}</MarginBottom>
+             </DeviceInfo>"
+            .Replace("{PageWidth}", string.Format("{0:N2}", pageWidth).Replace(",", ".") + "cm")
+            .Replace("{PageHeight}", string.Format("{0:N2}", pageHeight).Replace(",", ".") + "cm")
+            .Replace("{MarginTop}", "0.2cm")
+            .Replace("{MarginLeft}", "0.0cm")
+            .Replace("{MarginRight}", "0.0cm")
+            .Replace("{MarginBottom}", "0.0cm");
+
+            Warning[] warnings;
+
+            string[] streamids;
+            string mimeType;
+            string encoding;
+            string filenameExtension;
+
+            byte[] bytes = report.Render(
+                "Excel", null, out mimeType, out encoding, out filenameExtension,
+                out streamids, out warnings);
+
+            using (FileStream fs = new FileStream(outputPath + outputFileName, FileMode.Create))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
+        }
+
         // Handler for PrintPageEvents
         protected void PrintPage(object sender, PrintPageEventArgs ev)
         {

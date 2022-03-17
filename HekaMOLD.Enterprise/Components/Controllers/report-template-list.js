@@ -43,6 +43,10 @@
         {
             $scope.$emit('printTemplate', { templateId: $scope.selectedTemplateId, exportType: 'PRINTER' });
         }
+        else if (exportType == 3) // EXCEL
+        {
+            $scope.$emit('printTemplate', { templateId: $scope.selectedTemplateId, exportType: 'EXCEL' });
+        }
     }
 
     // ON LOAD EVENTS

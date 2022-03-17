@@ -74,7 +74,7 @@
             columns: [
                 { dataField: 'OrderNo', caption: 'Sipariş No', allowEditing: false },
                 { dataField: 'FirmName', caption: 'Firma', allowEditing: false },
-                { dataField: 'ProductName', caption: 'Ürün Adı', allowEditing: false },
+                { dataField: 'ItemName', caption: 'Ürün Adı', allowEditing: false },
                 { dataField: 'Quantity', caption: 'Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'IsChecked', caption: 'Seç' }
             ]

@@ -4087,6 +4087,7 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="FrontEndLogic\Boss\delivery-management.js" />
     <Content Include="FrontEndLogic\Boss\finished-products.js" />
     <Content Include="FrontEndLogic\ContractWorks\index.js" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
@@ -4686,6 +4687,7 @@
     <Content Include="Views\Boss\ProductionStatus.cshtml" />
     <Content Include="Views\Boss\Warehouse.cshtml" />
     <Content Include="Views\Warehouse\MachineProductState.cshtml" />
+    <Content Include="Views\Boss\RedirectSaleReceipts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4734,7 +4736,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56183</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56195/</IISUrl>
+          <IISUrl>http://localhost:56198/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

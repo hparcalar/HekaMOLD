@@ -221,6 +221,7 @@
     // LOAD EVENTS
     $scope.loadSelectables().then(function () {
         refreshArray($scope.warehouseList);
+        
         $scope.bindModel();
     });
 });

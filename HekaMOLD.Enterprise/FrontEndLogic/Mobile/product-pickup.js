@@ -4,8 +4,16 @@
         DocumentNo: '', FirmId: 0,
         FirmCode: '', FirmName: '',
         ShowOnlyOk: false,
-        Details: []
+        Details: [],
     };
+
+    $scope.barcodeBox = '';
+
+    $scope.onBarcodeKeyUp = function (e) {
+        if (e.keyCode == '13') {
+            $scope.processBarcodeResult($scope.barcodeBox);
+        }
+    }
 
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
@@ -232,6 +240,7 @@
             else {
                 toastr.warning('Bu ürün barkodu zaten okutulmuş.');
                 $scope.isBarcodeRead = true;
+                $scope.barcodeBox = '';
                 return;
             }
 
@@ -242,10 +251,13 @@
             } catch (e) {
 
             }
+
+            $scope.barcodeBox = '';
         }
         else {
             $scope.isBarcodeRead = true;
             toastr.error('Okutulan barkoda ait bir kayıt bulunamadı.');
+            $scope.barcodeBox = '';
         }
     }
 

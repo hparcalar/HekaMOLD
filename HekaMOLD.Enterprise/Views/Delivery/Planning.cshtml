@@ -54,7 +54,7 @@
                                              data-plan-id="{{plan.Id}}"
                                              ng-dblclick="showPlanDetails(plan, $event.currentTarget)"
                                              ng-click="selectPlan(plan)"
-                                             ng-class="{ 'plan-selected': plan.Id == selectedPlan.Id}"
+                                             ng-class="{ 'plan-selected': plan.Id == selectedPlan.Id, 'plan-box-completed': selectedPlan.PlanStatus == 1}"
                                              ng-repeat="plan in getMachinePlans(machine)">
 
                                             <p>{{plan.ItemOrder.OrderDateStr}}&nbsp;</p>

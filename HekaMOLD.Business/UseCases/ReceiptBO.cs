@@ -82,6 +82,199 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        #region OFF THE RECORD MANAGEMENT
+        public ItemReceiptDetailModel[] GetOffTheRecordList()
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+            data = repo.Filter(d =>
+                d.ReceiptStatus == (int)ReceiptStatusType.OffTheRecord
+            )
+                .ToList()
+                .Select(d => new ItemReceiptDetailModel
+                {
+                    Id = d.Id,
+                    CreatedDate = d.CreatedDate,
+                    CreatedUserId = d.CreatedUserId,
+                    DiscountAmount = d.DiscountAmount,
+                    Explanation = d.Explanation,
+                    FirmCode = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
+                    FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                    ForexId = d.ForexId,
+                    GrossQuantity = d.GrossQuantity,
+                    ForexRate = d.ForexRate,
+                    ForexUnitPrice = d.ForexUnitPrice,
+                    ItemId = d.ItemId,
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ItemOrderDetailId = d.ItemOrderDetailId,
+                    ItemReceiptId = d.ItemReceiptId,
+                    LineNumber = d.LineNumber,
+                    NetQuantity = d.NetQuantity,
+                    OverallTotal = d.OverallTotal,
+                    Quantity = d.Quantity,
+                    ReceiptDateStr = d.ItemReceipt.ReceiptDate != null ?
+                        string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
+                    ReceiptStatus = d.ReceiptStatus,
+                    ReceiptNo = d.ItemReceipt.ReceiptNo,
+                    SyncDate = d.SyncDate,
+                    SyncStatus = d.SyncStatus ?? 0,
+                    TaxAmount = d.TaxAmount,
+                    TaxIncluded = d.TaxIncluded,
+                    TaxRate = d.TaxRate,
+                    UnitId = d.UnitId,
+                    UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
+                    UnitName = d.UnitType != null ? d.UnitType.UnitName : "",
+                    UnitPrice = d.UnitPrice,
+                    SubTotal = d.SubTotal,
+                })
+                .OrderByDescending(d => d.Id)
+                .ToArray();
+
+            return data;
+        }
+
+        public ItemReceiptDetailModel[] GetWaitingForSyncSalesList()
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+            var dtStart = DateTime.ParseExact("16.03.2022", "dd.MM.yyyy",
+                System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+            data = repo.Filter(d =>
+                d.ReceiptStatus != (int)ReceiptStatusType.OffTheRecord &&
+                d.ReceiptStatus != (int)ReceiptStatusType.ReadyToSync &&
+                d.ItemReceipt.ReceiptType == (int)ItemReceiptType.ItemSelling
+                && d.ItemReceipt.ReceiptDate > dtStart
+            )
+                .ToList()
+                .Select(d => new ItemReceiptDetailModel
+                {
+                    Id = d.Id,
+                    CreatedDate = d.CreatedDate,
+                    CreatedUserId = d.CreatedUserId,
+                    DiscountAmount = d.DiscountAmount,
+                    Explanation = d.Explanation,
+                    FirmCode = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
+                    FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                    ForexId = d.ForexId,
+                    GrossQuantity = d.GrossQuantity,
+                    ForexRate = d.ForexRate,
+                    ForexUnitPrice = d.ForexUnitPrice,
+                    ItemId = d.ItemId,
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ItemOrderDetailId = d.ItemOrderDetailId,
+                    ItemReceiptId = d.ItemReceiptId,
+                    LineNumber = d.LineNumber,
+                    NetQuantity = d.NetQuantity,
+                    OverallTotal = d.OverallTotal,
+                    Quantity = d.Quantity,
+                    ReceiptDateStr = d.ItemReceipt.ReceiptDate != null ?
+                        string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
+                    ReceiptStatus = d.ReceiptStatus,
+                    ReceiptNo = d.ItemReceipt.ReceiptNo,
+                    SyncDate = d.SyncDate,
+                    SyncStatus = d.SyncStatus ?? 0,
+                    TaxAmount = d.TaxAmount,
+                    TaxIncluded = d.TaxIncluded,
+                    TaxRate = d.TaxRate,
+                    UnitId = d.UnitId,
+                    UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
+                    UnitName = d.UnitType != null ? d.UnitType.UnitName : "",
+                    UnitPrice = d.UnitPrice,
+                    SubTotal = d.SubTotal,
+                })
+                .OrderByDescending(d => d.Id)
+                .ToArray();
+
+            return data;
+        }
+
+        public ItemReceiptDetailModel[] GetReadyToSyncSalesList()
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+            data = repo.Filter(d =>
+                d.ReceiptStatus == (int)ReceiptStatusType.ReadyToSync
+            )
+                .ToList()
+                .Select(d => new ItemReceiptDetailModel
+                {
+                    Id = d.Id,
+                    CreatedDate = d.CreatedDate,
+                    CreatedUserId = d.CreatedUserId,
+                    DiscountAmount = d.DiscountAmount,
+                    Explanation = d.Explanation,
+                    FirmCode = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
+                    FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                    ForexId = d.ForexId,
+                    GrossQuantity = d.GrossQuantity,
+                    ForexRate = d.ForexRate,
+                    ForexUnitPrice = d.ForexUnitPrice,
+                    ItemId = d.ItemId,
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ItemOrderDetailId = d.ItemOrderDetailId,
+                    ItemReceiptId = d.ItemReceiptId,
+                    LineNumber = d.LineNumber,
+                    NetQuantity = d.NetQuantity,
+                    OverallTotal = d.OverallTotal,
+                    Quantity = d.Quantity,
+                    ReceiptDateStr = d.ItemReceipt.ReceiptDate != null ?
+                        string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
+                    ReceiptStatus = d.ReceiptStatus,
+                    ReceiptNo = d.ItemReceipt.ReceiptNo,
+                    SyncDate = d.SyncDate,
+                    SyncStatus = d.SyncStatus ?? 0,
+                    TaxAmount = d.TaxAmount,
+                    TaxIncluded = d.TaxIncluded,
+                    TaxRate = d.TaxRate,
+                    UnitId = d.UnitId,
+                    UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
+                    UnitName = d.UnitType != null ? d.UnitType.UnitName : "",
+                    UnitPrice = d.UnitPrice,
+                    SubTotal = d.SubTotal,
+                })
+                .OrderByDescending(d => d.Id)
+                .ToArray();
+
+            return data;
+        }
+
+        public BusinessResult ChangeOTRStatus(int itemReceiptDetailId, int otrStatus)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var dbObj = repo.Get(d => d.Id == itemReceiptDetailId);
+                if (dbObj == null)
+                    throw new Exception("İrsaliye kaydına ulaşılamadı.");
+
+                dbObj.ReceiptStatus = otrStatus;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        #endregion
+
         public ItemReceiptDetailModel[] GetOpenWarehouseEntries()
         {
             ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];

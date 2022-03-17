@@ -7,6 +7,14 @@
         Details: []
     };
 
+    $scope.barcodeBox = '';
+
+    $scope.onBarcodeKeyUp = function (e) {
+        if (e.keyCode == '13') {
+            $scope.processBarcodeResult($scope.barcodeBox);
+        }
+    }
+
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
     $scope.shiftList = [];
@@ -281,6 +289,11 @@
 
             }
         }
+        else {
+            toastr.error('Okutulan barkod bulunamadı.', 'Uyarı');
+        }
+
+        $scope.barcodeBox = '';
     }
 
     $scope.isBarcodeRead = false;
