@@ -785,6 +785,8 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemReceipt>();
                 var repoDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoConsume = _unitOfWork.GetRepository<ItemReceiptConsume>();
+                var repoOrderConsume = _unitOfWork.GetRepository<ItemOrderConsume>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
@@ -794,6 +796,8 @@ namespace HekaMOLD.Business.UseCases
                 //    throw new Exception("İrsaliyesi girilmiş olan bir sipariş silinemez.");
 
                 List<int> itemsMustBeUpdated = new List<int>();
+                List<int> ordersMustBeUpdated = new List<int>();
+                List<int> receiptDetailsMustBeUpdated = new List<int>();
 
                 // CLEAR DETAILS
                 if (dbObj.ItemReceiptDetail.Any())
@@ -811,6 +815,43 @@ namespace HekaMOLD.Business.UseCases
                             item.ItemOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
                         }
                         #endregion
+
+                        // CLEAR CONSUMINGS
+                        if (item.ItemReceiptConsumeByConsumed.Any())
+                        {
+                            var relatedData = item.ItemReceiptConsumeByConsumed.ToArray();
+                            foreach (var rItem in relatedData)
+                            {
+                                if (!receiptDetailsMustBeUpdated.Contains(rItem.ConsumerReceiptDetailId ?? 0))
+                                    receiptDetailsMustBeUpdated.Add(rItem.ConsumerReceiptDetailId ?? 0);
+                                repoConsume.Delete(rItem);
+                            }
+                        }
+
+                        if (item.ItemReceiptConsumeByConsumer.Any())
+                        {
+                            var relatedData = item.ItemReceiptConsumeByConsumer.ToArray();
+                            foreach (var rItem in relatedData)
+                            {
+                                if (!receiptDetailsMustBeUpdated.Contains(rItem.ConsumedReceiptDetailId ?? 0))
+                                    receiptDetailsMustBeUpdated.Add(rItem.ConsumedReceiptDetailId ?? 0);
+                                repoConsume.Delete(rItem);
+                            }
+                        }
+
+                        //if (item.ItemOrderConsumeByConsumed.Any())
+                        //{
+                        //    var relatedData = item.ItemOrderConsumeByConsumed.ToArray();
+                        //    foreach (var rItem in relatedData)
+                        //    {
+                        //        if (!ordersMustBeUpdated.Contains(rItem.ItemOrderDetailId ?? 0))
+                        //            ordersMustBeUpdated.Add(rItem.ItemOrderDetailId ?? 0);
+                        //        repoOrderConsume.Delete(rItem);
+                        //    }
+                        //}
+
+                        // UPDATE ORDER STATUS
+
 
                         repoDetail.Delete(item);
                     }
@@ -830,6 +871,28 @@ namespace HekaMOLD.Business.UseCases
 
                 repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
+
+                if (ordersMustBeUpdated.Any(d => d > 0))
+                {
+                    foreach (var item in ordersMustBeUpdated)
+                    {
+                        using (OrdersBO bObj = new OrdersBO())
+                        {
+                            var res = bObj.CheckOrderDetailStatus(item).Result;
+                        }
+                    }
+                }
+
+                if (receiptDetailsMustBeUpdated.Any(d => d > 0))
+                {
+                    foreach (var item in receiptDetailsMustBeUpdated)
+                    {
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            var res = bObj.CheckReceiptDetailStatus(item).Result;
+                        }
+                    }
+                }
 
                 // TRG-POINT-ITEM-STATUS
                 if (itemsMustBeUpdated.Count() > 0)
@@ -1819,15 +1882,19 @@ namespace HekaMOLD.Business.UseCases
                 if (dbDetail == null)
                     throw new Exception("İrsaliye kalemi bulunamadı.");
 
-                var availableQty = dbDetail.Quantity;
-                var usedQty = repoConsumption.Filter(d => d.ConsumedReceiptDetailId == dbDetail.Id)
-                    .Sum(d => d.UsedQuantity ?? 0);
-                if (availableQty <= usedQty && usedQty > 0)
-                    dbDetail.ReceiptStatus = (int)ReceiptStatusType.Closed;
-                else if (usedQty > 0 && availableQty > usedQty)
-                    dbDetail.ReceiptStatus = (int)ReceiptStatusType.InUse;
-                else if (usedQty == 0)
-                    dbDetail.ReceiptStatus = (int)ReceiptStatusType.Created;
+                if (dbDetail.ReceiptStatus != (int)ReceiptStatusType.OffTheRecord &&
+                    dbDetail.ReceiptStatus != (int)ReceiptStatusType.ReadyToSync)
+                {
+                    var availableQty = dbDetail.Quantity;
+                    var usedQty = repoConsumption.Filter(d => d.ConsumedReceiptDetailId == dbDetail.Id)
+                        .Sum(d => d.UsedQuantity ?? 0);
+                    if (availableQty <= usedQty && usedQty > 0)
+                        dbDetail.ReceiptStatus = (int)ReceiptStatusType.Closed;
+                    else if (usedQty > 0 && availableQty > usedQty)
+                        dbDetail.ReceiptStatus = (int)ReceiptStatusType.InUse;
+                    else if (usedQty == 0)
+                        dbDetail.ReceiptStatus = (int)ReceiptStatusType.Created;
+                }
 
                 _unitOfWork.SaveChanges();
 

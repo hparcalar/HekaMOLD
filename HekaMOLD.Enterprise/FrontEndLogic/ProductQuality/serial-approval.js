@@ -10,9 +10,14 @@
     $scope.barcodeBox = '';
 
     $scope.onBarcodeKeyUp = function (e) {
-        if (e.keyCode == '13') {
-            $scope.processBarcodeResult($scope.barcodeBox);
+        try {
+            if (e.keyCode == '13' || $scope.barcodeBox.length >= 8) {
+                $scope.processBarcodeResult($scope.barcodeBox);
+            }
+        } catch (e) {
+
         }
+        
     }
 
     $scope.pickupList = [];

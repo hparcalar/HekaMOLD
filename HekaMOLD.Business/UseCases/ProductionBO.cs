@@ -3029,7 +3029,14 @@ namespace HekaMOLD.Business.UseCases
                 BusinessResult receiptResult = new BusinessResult();
                 using (ReceiptBO bObj = new ReceiptBO())
                 {
-                    receiptModel.ItemOrderId = selectedOrderDetailId;
+                    int? itemOrderId = null;
+                    if (selectedOrderDetailId > 0)
+                    {
+                        var dbItemOrderDetail = repoOrderDetail.Get(d => d.Id == selectedOrderDetailId);
+                        if (dbItemOrderDetail != null)
+                            itemOrderId = dbItemOrderDetail.ItemOrderId;
+                    }
+                    receiptModel.ItemOrderId = itemOrderId;
                     receiptResult = bObj.SaveOrUpdateItemReceipt(receiptModel);
                 }
 

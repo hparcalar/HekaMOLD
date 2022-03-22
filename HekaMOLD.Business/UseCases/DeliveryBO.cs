@@ -274,17 +274,17 @@ namespace HekaMOLD.Business.UseCases
                 {
                     dbObj.MapTo(data);
 
-                    data.ProductCode = dbObj.WorkOrderDetail != null ?
-                            dbObj.WorkOrderDetail.Item.ItemNo : "";
+                    data.ProductCode = dbObj.ItemOrderDetail != null ?
+                            dbObj.ItemOrderDetail.Item.ItemNo : "";
                     data.ProductName = dbObj.WorkOrderDetail != null ?
-                            dbObj.WorkOrderDetail.Item.ItemName : "";
-                    data.FirmName = dbObj.WorkOrderDetail != null &&
-                            dbObj.WorkOrderDetail.WorkOrder.Firm != null ?
-                                dbObj.WorkOrderDetail.WorkOrder.Firm.FirmName : "";
+                            dbObj.ItemOrderDetail.Item.ItemName : "";
+                    data.FirmName = dbObj.ItemOrderDetail != null &&
+                            dbObj.ItemOrderDetail.ItemOrder.Firm != null ?
+                                dbObj.ItemOrderDetail.ItemOrder.Firm.FirmName : "";
                     data.HourPart = string.Format("{0:HH:mm}", dbObj.PlanDate);
 
                     if ((data.Quantity ?? 0) <= 0)
-                        data.Quantity = dbObj.WorkOrderDetail.Quantity ?? 0;
+                        data.Quantity = dbObj.ItemOrderDetail.Quantity ?? 0;
                 }
             }
             catch (Exception)
@@ -394,8 +394,8 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                     throw new Exception("Silmeye çalıştığınız plan kaydı bulunamadı.");
 
-                var dbWorkOrderDetail = dbObj.WorkOrderDetail;
-                int saleOrderDetailId = dbWorkOrderDetail.SaleOrderDetailId ?? 0;
+                //var dbWorkOrderDetail = dbObj.WorkOrderDetail;
+                //int? saleOrderDetailId = dbObj.ItemOrderDetailId; //dbWorkOrderDetail.SaleOrderDetailId ?? 0;
 
                 repo.Delete(dbObj);
 

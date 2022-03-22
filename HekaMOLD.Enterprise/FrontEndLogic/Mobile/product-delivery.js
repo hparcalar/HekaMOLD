@@ -56,8 +56,12 @@
     }
 
     $scope.onBarcodeKeyUp = function (e) {
-        if (e.keyCode == '13') {
-            $scope.getSerialByBarcode($scope.barcodeBox);
+        try {
+            if (e.keyCode == '13' || $scope.barcodeBox.length >= 8) {
+                $scope.getSerialByBarcode($scope.barcodeBox);
+            }
+        } catch (e) {
+
         }
     }
 
