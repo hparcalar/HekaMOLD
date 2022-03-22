@@ -3852,7 +3852,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         var dbYarnRecipeMix = new YarnRecipeMix();
                         item.MapTo(dbYarnRecipeMix);
-                        dbYarnRecipeMix.YarnRecipe = dbObj;
+                        dbYarnRecipeMix.YarnRecipeId = dbObj.Id;
                         repoYarnRecipeMixes.Add(dbYarnRecipeMix);
                     }
                     else if (!toBeRemovedYarnRecipeMixes.Any(d => d.Id == item.Id))

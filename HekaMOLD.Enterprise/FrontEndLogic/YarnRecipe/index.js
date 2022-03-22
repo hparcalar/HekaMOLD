@@ -51,11 +51,11 @@
     }
 
     $scope.performDelete = function () {
-        bootbox.conyarnRecipe({
-            message: "Bu iplik tanımını silmek istediğinizden emin misiniz?",
+        bootbox.confirm({
+            message: "Bu iplik cinsini silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
-                conyarnRecipe: {
+                confirm: {
                     label: 'Evet',
                     className: 'btn-primary'
                 },
@@ -148,7 +148,6 @@
         }
         else
             $scope.modelObject.TwistDirection = null;
-
         $http.post(HOST_URL + 'YarnRecipe/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -287,16 +286,14 @@
                         newId++;
                     }
                     var itemObj = $scope.yarnBreedList.find(d => d.Id == values.YarnBreedId);
-
                     var newObj = {
                         Id: newId,
                         YarnBreedId: itemObj.Id,
                         YarnBreedCode: itemObj.YarnBreedCode,
                         YarnBreedName: itemObj.YarnBreedName,
                         Percentage: values.Percentage,
-                        NewDetail: true
+                        NewDetail: true,
                     };
-
                     $scope.modelObject.YarnRecipeMixes.push(newObj);
                 },
                 key: 'Id'

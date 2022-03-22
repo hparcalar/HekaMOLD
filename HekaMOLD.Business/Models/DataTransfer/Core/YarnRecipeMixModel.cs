@@ -15,7 +15,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string YarnRecipeName { get; set; }
         public string YarnBreedCode { get; set; }
         public string YarnBreedName { get; set; }
-        public bool NewDetail { get; internal set; }
+        public bool NewDetail { get; set; }
         #endregion
     }
 }
