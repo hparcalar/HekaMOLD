@@ -24,6 +24,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string FirmName { get; set; }
         public string CityName { get; set; }
         public string CountryName { get; set; }
+        public string AddressTypeStr { get; set; }
         public bool NewDetail { get; set; }
         #endregion
     }

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Sefer Tanımları";
+    ViewBag.Title = "Sefer Kartı";
 }
 
 <div ng-controller="voyageCtrl">
@@ -31,6 +31,36 @@
             <div class="d-flex align-items-center py-1">
                 <!--begin::Wrapper-->
                 <div class="me-4">
+                    <a class="btn btn-sm btn-light-primary" ng-click="getBackRecord()" ng-show="modelObject.Id > 0">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                                <title>Stockholm-icons / Media / Back</title>
+                                <desc>Created with Sketch.</desc>
+                                <defs></defs>
+                                <g id="Stockholm-icons-/-Media-/-Back" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                    <path d="M11.0879549,18.2771971 L17.8286578,12.3976203 C18.0367595,12.2161036 18.0583109,11.9002555 17.8767943,11.6921539 C17.8622027,11.6754252 17.8465132,11.6596867 17.8298301,11.6450431 L11.0891271,5.72838979 C10.8815919,5.54622572 10.5656782,5.56679309 10.3835141,5.7743283 C10.3034433,5.86555116 10.2592899,5.98278612 10.2592899,6.10416552 L10.2592899,17.9003957 C10.2592899,18.1765381 10.4831475,18.4003957 10.7592899,18.4003957 C10.8801329,18.4003957 10.9968872,18.3566309 11.0879549,18.2771971 Z" id="Path-10-Copy" fill="#000000" transform="translate(14.129645, 12.002277) scale(-1, 1) translate(-14.129645, -12.002277) "></path>
+                                    <rect id="Rectangle-Copy" fill="#000000" opacity="0.3" x="6" y="6" width="3" height="12" rx="1"></rect>
+                                </g>
+                            </svg>
+                        </span>
+                    </a>
+                    <a class="btn btn-sm btn-light-primary" ng-click="getNextRecord()" ng-show="modelObject.Id > 0">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                                <title>Stockholm-icons / Media / Next</title>
+                                <desc>Created with Sketch.</desc>
+                                <defs></defs>
+                                <g id="Stockholm-icons-/-Media-/-Next" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                    <path d="M6.82866499,18.2771971 L13.5693679,12.3976203 C13.7774696,12.2161036 13.7990211,11.9002555 13.6175044,11.6921539 C13.6029128,11.6754252 13.5872233,11.6596867 13.5705402,11.6450431 L6.82983723,5.72838979 C6.62230202,5.54622572 6.30638833,5.56679309 6.12422426,5.7743283 C6.04415337,5.86555116 6,5.98278612 6,6.10416552 L6,17.9003957 C6,18.1765381 6.22385763,18.4003957 6.5,18.4003957 C6.62084305,18.4003957 6.73759731,18.3566309 6.82866499,18.2771971 Z" id="Path-10-Copy" fill="#000000"></path>
+                                    <rect id="Rectangle-Copy" fill="#000000" opacity="0.3" transform="translate(16.500000, 12.000000) scale(-1, 1) translate(-16.500000, -12.000000) " x="15" y="6" width="3" height="12" rx="1"></rect>
+                                </g>
+                            </svg>
+                        </span>
+                    </a>
                     <a href="@Url.Action("List","Voyage")" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -74,18 +104,18 @@
                     </a>
                     <!--end::Button-->
                     <!--begin::Button-->
-                    <a class="btn btn-sm btn-light-primary" ng-click="performDelete()">
-                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
-                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Stockholm-icons-/-General-/-Trash" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                                    <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" id="round" fill="#000000" fill-rule="nonzero"></path>
-                                    <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" id="Shape" fill="#000000" opacity="0.3"></path>
-                                </g>
-                            </svg>
-                        </span>
-                        Sil
-                    </a>
+                    @*<a class="btn btn-sm btn-light-primary" ng-click="performDelete()">
+                            <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g id="Stockholm-icons-/-General-/-Trash" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                        <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" id="round" fill="#000000" fill-rule="nonzero"></path>
+                                        <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" id="Shape" fill="#000000" opacity="0.3"></path>
+                                    </g>
+                                </svg>
+                            </span>
+                            Sil
+                        </a>*@
                     <!--end::Button-->
                 </div>
                 <!--end::Wrapper-->
@@ -107,14 +137,14 @@
 
                     <div class="row  gx-xl-8">
 
-                        <div class="tabs">
+                        <div class="tabs dx-viewport">
                             <div class="tab-button-outer">
                                 <ul id="tab-button">
-                                    <li><a href="#tab01">Temel Bilgi</a></li>
-                                    <li><a href="#tab02">Yükleme/Boşaltma Bilgisi</a></li>
+                                    <li><a href="#tab01">Sefer Bilgi</a></li>
+                                    <li><a href="#tab02">Yük Bilgisi</a></li>
                                     <li><a href="#tab03">Araç/Şoför Bilgi</a></li>
                                     <li><a href="#tab04">Gümrük Bilgi</a></li>
-                                    <li><a href="#tab05">Rota Bilgi</a></li>
+                                    <li><a href="#tab05">Mevcut Konum</a></li>
 
                                 </ul>
                             </div>
@@ -132,140 +162,325 @@
                             <div id="tab01" class="tab-contents">
                                 <div class="row gy-5 gx-xl-8 bg-white mt-1">
                                     <div class="col-xxl-6">
-                                        <div class="row">
-                                            <div class="col-xxl-6">
-
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer No</label>
-                                                <span class="badge badge-light-primary" ng-cloak ng-show="modelObject.Id > 0">{{modelObject.VoyageStatusStr}}</span>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <input type="text" class="form-control form-control-solid" readonly="readonly" ng-model="modelObject.VoyageCode" placeholder="" />
-                                                </div>
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Tarihi</label>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <input type="datetime" class="form-control form-control-solid datepicker" ng-change="VoyageDateChange()" ng-model="modelObject.VoyageDateStr" placeholder="" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xxl-6">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Taşıyıcı Firma</label>
-                                                <div class="mb-3">
-                                                    <select class="form-select form-select-solid" ng-options="item.FirmName for item in firmList"
-                                                            ng-model="selectedCarrierFirm" data-allow-clear="true" data-control="select2">
-                                                    </select>
-                                                </div>
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşlem Yönü</label>
-                                                <div class="mb-3">
-                                                    <select class="form-select form-select-solid" ng-change="getNextVoyageCode()" ng-options="item.Text for item in orderTransactionDirectionTypeList"
-                                                            ng-model="selectedOrderTransactionDirectionType" data-allow-clear="true" data-control="select2">
-                                                    </select>
-                                                </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer No</label>
+                                            <span class="badge badge-light-primary" ng-cloak ng-show="modelObject.Id > 0">{{modelObject.VoyageStatusStr}}</span>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3">
+                                                <input type="text" class="form-control form-control-solid" readonly="readonly" ng-model="modelObject.VoyageCode" placeholder="" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6">
-                                        <div class="row">
-                                            <div class="col-xxl-4">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Başlangıç Tarihi</label>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.StartDateStr" placeholder="" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xxl-4">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yükleme Tarihi</label>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.LoadDateStr" placeholder="" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xxl-4">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Bitiş Tarihi</label>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.EndDateStr" placeholder="" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
-                                        <!--begin::Input group-->
-                                        <div class="mb-3 d-flex flex-fill flex-column">
-                                            <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.Explanation" placeholder=""></textarea>
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Durum</label>
+                                            <select class="form-select form-select-solid mb-3" data-allow-clear="true"
+                                                    ng-options="item.Text for item in voyageStatusList" ng-model="selectedVoyageStatus"
+                                                    data-control="select2" data-placeholder="-- Seçiniz --">
+                                            </select>
                                         </div>
                                     </div>
 
                                 </div>
-                            </div>
-                            <div id="tab02" class="tab-contents">
-                                <h2>Adres Bilgi</h2>
-                            </div>
-                            <div id="tab03" class="tab-contents">
-                                <div class="row gy-5 gx-xl-8 bg-white mt-1">
+                                <div class="row">
                                     <div class="col-xxl-6">
-                                        <div class="row">
-                                            <div class="col-xxl-6">
-
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Plaka</label>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <select class="form-select form-select-solid" ng-options="item.Plate +' / '+item.Mark+' / '+item.Versiyon for item in vehicleList"
-                                                            ng-model="selectedTraillerVehicle" data-allow-clear="true" data-control="select2">
-                                                    </select>
-                                                </div>
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şoför</label>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <select class="form-select form-select-solid" ng-options="item.DriverName +' / '+item.DriverSurName for item in driverList"
-                                                            ng-model="selectedDriver" data-allow-clear="true" data-control="select2">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-xxl-6">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Tipi</label>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <select class="form-select form-select-solid" ng-options="item.Text for item in traillerTypeList"
-                                                            ng-model="selectedTraillerType" data-allow-clear="true" data-control="select2">
-                                                    </select>
-                                                </div>
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çekici Plaka</label>
-                                                <div class="mb-3">
-                                                    <select class="form-select form-select-solid" ng-options="item.Plate +' / '+item.Mark+' / '+item.Versiyon for item in vehicleList"
-                                                            ng-model="selectedTowinfVehicle" data-allow-clear="true" data-control="select2">
-                                                    </select>
-                                                </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Başlama Tarih</label>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3">
+                                                <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.StartDateStr" placeholder="" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6">
-                                        <div class="row">
-                                            <div class="col-xxl-6">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Karne Kapanış Tarihi</label>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.TraillerRationCardClosedDateStr" placeholder="" />
-                                                </div>
-
-                                            </div>
-                                            <div class="col-xxl-6">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Çıkış Tarihi</label>
-                                                <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.VehicleExitDateStr" placeholder="" />
-                                                </div>
-
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Bitiş Tarih</label>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3">
+                                                <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.EndDateStr" placeholder="" />
                                             </div>
                                         </div>
+                                    </div>
 
+                                </div>
+                                <div class="row">
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İlk Yükleme Tarih</label>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3">
+                                                <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.FirstLoadDateStr" placeholder="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Son Bitiş Tarih</label>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3">
+                                                <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.EndDischargeDateStr" placeholder="" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kapıkule Pasaport Çıkış Tarih</label>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3">
+                                                <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.KapikulePassportExitDateStr" placeholder="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Kapıkule Pasaport Giriş Tarih</label>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3">
+                                                <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.KapikulePassportEntryDateStr" placeholder="" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-xxl-6">
                                         <div class="row">
-                                            <div class="col-xxl-4">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Karne No</label>
-                                                <!--begin::Input group-->
+                                            <div class="col-xxl-6">
                                                 <div class="mb-3">
-                                                    <input type="text" class="form-control form-control-solid " ng-model="modelObject.TraillerRationCardNo" placeholder="" />
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Hafta</label>
+                                                        <!--begin::Input group-->
+                                                        <div class="mb-3">
+                                                            <input type="text" class="form-control form-control-solid" readonly="readonly" ng-model="modelObject.VoyageWeek" placeholder="" />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xxl-4">
+                                            <div class="col-xxl-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ring Kodu</label>
+                                                    <!--begin::Input group-->
+                                                    <div class="mb-3">
+                                                        <input type="text" class="form-control form-control-solid" ng-model="modelObject.RingCode" placeholder="" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
+                                            <!--begin::Input group-->
+                                            <div class="mb-3 d-flex flex-fill flex-column">
+                                                <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.Explanation" placeholder=""></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row gy-2 gx-xl-8 bg-white mt-1">
+                                    <div class="card mt-2 gy-2">
+                                        <div class="card-header min-h-10px px-1">
+                                            <button type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
+                                                style="float:right;">
+
+                                                Yükleme / Boşaltma Bilgileri
+                                            </button>
+                                        </div>
+                                        <div class="card-body p-0" @*style="height:200px;*@>
+                                            <div class="row gy-5 gx-xl-8 bg-white mt-1">
+                                                <div class="col-xxl-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Çıkış Yeri Adres</label>
+                                                        <!--begin::Input group-->
+                                                        <div class="mb-3">
+                                                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.StartAddress" placeholder="" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Çıkış Yeri Şehir</label>
+                                                        <!--begin::Input group-->
+                                                        <select data-allow-clear="true" ng-options="item.PostCode +' / '+item.CityName for item in cityList"
+                                                                ng-model="selectedStartCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-xxl-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Çıkış Yeri Ülke</label>
+                                                        <!--begin::Input group-->
+                                                        <select data-allow-clear="true" ng-options="item.CountryName for item in countryList"
+                                                                ng-model="selectedStartCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row ">
+                                                <div class="col-xxl-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Yükleme Yeri Adres</label>
+                                                        <!--begin::Input group-->
+                                                        <div class="mb-3">
+                                                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.LoadAddress" placeholder="" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Yükleme Yeri Şehir</label>
+                                                        <!--begin::Input group-->
+                                                        <select data-allow-clear="true" ng-options="item.PostCode +' / '+item.CityName for item in cityList"
+                                                                ng-model="selectedLoadCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-xxl-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Yükleme Yeri Ülke</label>
+                                                        <!--begin::Input group-->
+                                                        <select data-allow-clear="true" ng-options="item.CountryName for item in countryList"
+                                                                ng-model="selectedLoadCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row ">
+                                                <div class="col-xxl-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Boşaltma Yeri Adres</label>
+                                                        <!--begin::Input group-->
+                                                        <div class="mb-3">
+                                                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.DischargeAddress" placeholder="" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Bitiş Yeri Şehir</label>
+                                                        <!--begin::Input group-->
+                                                        <select data-allow-clear="true" ng-options="item.PostCode +' / '+item.CityName for item in cityList"
+                                                                ng-model="selectedDischargeCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-xxl-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Bitiş Yeri Ülke</label>
+                                                        <!--begin::Input group-->
+                                                        <select data-allow-clear="true" ng-options="item.CountryName for item in countryList"
+                                                                ng-model="selectedDischargeCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <div id="tab02" class="tab-contents">
+                                <div class="row gx-xl-8 mt-2">
+                                    <div class="card mt-2 gy-2">
+                                        <div class="card-header min-h-10px px-1">
+                                            <button type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
+                                                    style="float:right;">
+                                                Yük Bilgileri
+                                            </button>
+                                        </div>
+                                        <div class="card-body p-0" @*style="height:200px;*@>
+                                                <div id="plannedLoadList"></div>
+                                            <div class="separator border-dark separator-dashed my-4"></div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div id="tab03" class="tab-contents">
+                                <div class="row gy-5 gx-xl-8 bg-white mt-1">
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Plaka</label>
+                                            <!--begin::Input group-->
+                                            <select class="form-select form-select-solid" ng-options="item.Plate +' / '+item.Mark+' / '+item.Versiyon for item in trailerVehicleList"
+                                                    ng-model="selectedTraillerVehicle" data-allow-clear="true" data-control="select2">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Tipi</label>
+                                            <!--begin::Input group-->
+                                            <select class="form-select form-select-solid" ng-options="item.Text for item in traillerTypeList"
+                                                    ng-model="selectedTraillerType" data-allow-clear="true" data-control="select2">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çekici Plaka</label>
+                                            <select class="form-select form-select-solid" ng-options="item.Plate +' / '+item.Mark+' / '+item.Versiyon for item in towingVehicleList"
+                                                    ng-model="selectedTowingVehicle" data-allow-clear="true" data-control="select2">
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şoför</label>
+                                            <!--begin::Input group-->
+                                            <select class="form-select form-select-solid" ng-options="item.DriverName +' / '+item.DriverSurName for item in driverList"
+                                                    ng-model="selectedDriver" data-allow-clear="true" data-control="select2">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Karne Kapanış Tarihi</label>
+                                            <!--begin::Input group-->
+                                            <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.TraillerRationCardClosedDateStr" placeholder="" />
+                                        </div>
+
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Çıkış Tarihi</label>
+                                            <!--begin::Input group-->
+                                            <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.VehicleExitDateStr" placeholder="" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-xxl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Karne No</label>
+                                            <!--begin::Input group-->
+                                            <input type="text" class="form-control form-control-solid " ng-model="modelObject.TraillerRationCardNo" placeholder="" />
+                                        </div>
+
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <div class="row">
+                                            <div class="col-xxl-6">
                                                 <div class="flex-fill px-5">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">&nbsp;</label>
                                                     <label class="form-check form-check-custom form-check-solid w-50 mt-3">
@@ -276,7 +491,7 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="col-xxl-4">
+                                            <div class="col-xxl-6">
                                                 <div class="flex-fill px-5">
                                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">&nbsp;</label>
                                                     <label class="form-check form-check-custom form-check-solid w-50 mt-3">
@@ -288,60 +503,85 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
 
                                 </div>
+                                <div class="row">
+                                    <div class="col-xxl-12">
+                                        <div id="driverList"></div>
+                                    </div>
+                                    <div class="col-xxl-4">
+                                        <div id="towingVehicleList"></div>
+                                    </div>
+
+                                </div>
+
                             </div>
                             <div id="tab04" class="tab-contents">
                                 <div class="row gy-5 gx-xl-8 bg-white mt-1">
-                                    <div class="col-xxl-6">
-                                        <div class="row">
-                                            <div class="col-xxl-6">
-
+                                    <div class="row">
+                                        <div class="col-xxl-6">
+                                            <div class="mb-3">
+                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çıkış Gümrük</label>
+                                                <!--begin::Input group-->
+                                                <select aria-label="Gönderici Firma Ülke" data-allow-clear="true" ng-options="item.CustomsName for item in customsList"
+                                                        ng-model="selectedExitCustoms" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6">
+                                            <div class="mb-3">
+                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İlk Varış Gümrük</label>
+                                                <!--begin::Input group-->
+                                                <select aria-label="Gönderici Firma Ülke" data-allow-clear="true" ng-options="item.CustomsName for item in customsList"
+                                                        ng-model="selectedEntryCustoms" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xxl-6">
+                                            <div class=" mb-3">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çıkış Gümrük Kapısı</label>
                                                 <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <select class="form-select form-select-solid" ng-options="item.CustomsDoorName for item in cDoorList"
-                                                            ng-model="selectedCDoorEntry" data-allow-clear="true" data-control="select2">
-                                                    </select>
-                                                </div>
+                                                <select class="form-select form-select-solid" ng-options="item.CustomsDoorName for item in cDoorList"
+                                                        ng-model="selectedCDoorEntry" data-allow-clear="true" data-control="select2">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6">
+                                            <div class=" mb-3">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Varış Gümrük Kapısı</label>
                                                 <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <select class="form-select form-select-solid" ng-options="item.CustomsDoorName for item in cDoorList"
-                                                            ng-model="selectedCDoorExit" data-allow-clear="true" data-control="select2">
-                                                    </select>
-                                                </div>
+                                                <select class="form-select form-select-solid" ng-options="item.CustomsDoorName for item in cDoorList"
+                                                        ng-model="selectedCDoorExit" data-allow-clear="true" data-control="select2">
+                                                </select>
                                             </div>
-                                            <div class="col-xxl-6">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xxl-6">
+                                            <div class=" mb-3">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çıkış Gümrük Kapısı Giriş Tarihi</label>
                                                 <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.CustomsDoorEntryDateStr" placeholder="" />
-                                                </div>
+                                                <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.CustomsDoorEntryDateStr" placeholder="" />
+
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6">
+                                            <div class=" mb-3">
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Çıkış Gümrük Kapısı Çıkış Tarihi</label>
                                                 <!--begin::Input group-->
-                                                <div class="mb-3">
-                                                    <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.CustomsDoorExitDateStr" placeholder="" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-6">
-                                        <div class="row">
-
-                                            <div class="col-xxl-6">
-                                            </div>
-                                            <div class="col-xxl-6">
+                                                <input type="datetime" class="form-control form-control-solid datepicker" ng-model="modelObject.CustomsDoorExitDateStr" placeholder="" />
 
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                             <div id="tab05" class="tab-contents">
-                                <h2>Rota Bilgi</h2>
+                                <h2>Konum Bilgi</h2>
                             </div>
 
                         </div>
@@ -349,9 +589,7 @@
                     <div class="row gx-xl-8 mt-2">
                         <div class="col-xxl-12 px-0">
 
-                            <div class="dx-viewport">
-                                <div id="plannedLoadList"></div>
-                            </div>
+
                         </div>
                     </div>
 

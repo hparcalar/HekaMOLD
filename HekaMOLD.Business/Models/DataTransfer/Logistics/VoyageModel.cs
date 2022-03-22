@@ -32,6 +32,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string RingCode { get; set; }
         public string DocumentNo { get; set; }
         public bool? HasOperation { get; set; }
+        public string StartAddress { get; set; }
         public string LoadAddress { get; set; }
         public string DischargeAddress { get; set; }
         public Nullable<DateTime> ClosedDate { get; set; }
@@ -39,23 +40,29 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? RouteKmHour { get; set; }
         public string RouteDefinition { get; set; }
         public Nullable<DateTime> EndTime { get; set; }
+        public decimal? DriverSubsistence { get; set; }
+        public Nullable<DateTime> FirstLoadDate { get; set; }
+        public Nullable<DateTime> EndDischargeDate { get; set; }
+        public Nullable<DateTime> KapikulePassportEntryDate { get; set; }
+        public Nullable<DateTime> KapikulePassportExitDate { get; set; }
+
         public string Explanation { get; set; }
 
         public int? StartCityId { get; set; }
         public int? EndCityId { get; set; }
         public int? LoadCityId { get; set; }
         public int? DischargeCityId { get; set; }
+        public int? StartCountryId { get; set; }
         public int? DischargeCountryId { get; set; }
         public int? LoadCountryId { get; set; }
-        public int? LoadCustomsId { get; set; }
-        public int? DischargeCustomsId { get; set; }
+        public int? ExitCustomsId { get; set; }
+        public int? EntryCustomsId { get; set; }
         public int? CustomsDoorEntryId { get; set; }
         public int? CustomsDoorExitId { get; set; }
         public int? CarrierFirmId { get; set; }
         public int? DriverId { get; set; }
         public int? TowinfVehicleId { get; set; }
         public int? TraillerVehicleId { get; set; }
-        public decimal? DriverSubsistence { get; set; }
         public int? ForexTypeId { get; set; }
 
 
@@ -66,6 +73,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public Nullable<int> SyncUserId { get; set; }
         public string SyncKey { get; set; }
         public VoyageDetailModel[] VoyageDetails { get; set; }
+        public VoyageDriverModel[] VoyageDrivers { get; set; }
+        public VoyageTowingVehicleModel[] VoyageTowingVehicles { get; set; }
 
         #region VISUAL ELEMENTS
         public string VoyageDateStr { get; set; }
@@ -88,10 +97,11 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string LoadCityName { get; set; }
         public string DischargeCityPostCode { get; set; }
         public string DischargeCityName { get; set; }
-        public string DischargeCountryPostCode { get; set; }
+        public string StartCountryName { get; set; }
         public string DischargeCountryName { get; set; }
-        public string LoadCustomsName { get; set; }
-        public string DischargeCustomsName { get; set; }
+        public string LoadCountryName { get; set; }
+        public string ExitCustomsName { get; set; }
+        public string EntryCustomsName { get; set; }
         public string CustomsDoorEntryName { get; set; }
         public string CustomsDoorExitName { get; set; }
         public string CarrierFirmCode { get; set; }
@@ -104,6 +114,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string OrderTransactionDirectionTypeStr { get; set; }
         public string VoyageStatusStr { get; internal set; }
         public string ForexTypeCode { get; internal set; }
+        public string FirstLoadDateStr { get; set; }
+        public string EndDischargeDateStr { get; set; }
+        public string KapikulePassportEntryDateStr { get; set; }
+        public string KapikulePassportExitDateStr { get; set; }
 
         #endregion
     }

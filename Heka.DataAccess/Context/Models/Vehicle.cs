@@ -15,6 +15,12 @@ namespace Heka.DataAccess.Context
             this.VoyageByTraillerVehicle = new HashSet<Voyage>();
             this.ItemLoad = new HashSet<ItemLoad>();
             this.VoyageDetail = new HashSet<VoyageDetail>();
+            this.ItemLoadByTowinfVehicle = new HashSet<ItemLoad>();
+            this.VoyageDriver = new HashSet<VoyageDriver>();
+            this.VoyageTowingVehicle = new HashSet<VoyageTowingVehicle>();
+            this.VoyageCostDetail = new HashSet<VoyageCostDetail>();
+            this.DriverAccountDetailByTowingVehicle = new HashSet<DriverAccountDetail>();
+
         }
         public int Id { get; set; }
         public string Plate { get; set; }
@@ -51,7 +57,7 @@ namespace Heka.DataAccess.Context
         public bool? Approval { get; set; }
         public bool? Invalidation { get; set; }
         public bool? KmHourControl { get; set; }
-        public bool? HasLoadPlannig{ get; set; }
+        public bool? HasLoadPlannig { get; set; }
 
         public Nullable<int> PlantId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
@@ -83,6 +89,22 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Vehicle")]
         public virtual ICollection<VoyageDetail> VoyageDetail { get; set; }
+
+        [InverseProperty("TowinfVehicle")]
+        public virtual ICollection<ItemLoad> ItemLoadByTowinfVehicle { get; set; }
+
+        [InverseProperty("Vehicle")]
+        public virtual ICollection<VoyageDriver> VoyageDriver { get; set; }
+
+        [InverseProperty("Vehicle")]
+        public virtual ICollection<VoyageTowingVehicle> VoyageTowingVehicle { get; set; }
+
+        [InverseProperty("Vehicle")]
+        public virtual ICollection<VoyageCostDetail> VoyageCostDetail { get; set; }
+
+        [InverseProperty("TowingVehicle")]
+        public virtual ICollection<DriverAccountDetail> DriverAccountDetailByTowingVehicle { get; set; }
+
 
     }
 }

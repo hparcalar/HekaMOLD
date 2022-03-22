@@ -71,7 +71,7 @@
                     return;
 
                 var deadlineClass = '', item = e.data;
-                if (item.OrderStatus == 2 ) {
+                if (item.OrderStatus == 2) {
                     deadlineClass = 'bg-danger';
                 }
                 if (item.OrderStatus == 1) {
@@ -94,23 +94,23 @@
                     e.rowElement.addClass(deadlineClass);
             },
             columns: [
-                { dataField: 'Id', caption: 'Id', visible: false,sortOrder: "desc", },
+                { dataField: 'Id', caption: 'Id', visible: false, sortOrder: "desc", },
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
+                { dataField: 'OrderStatusStr', caption: 'Durum' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
                 { dataField: 'OrderDateWeek', caption: 'Sipariş Hafta', },
                 { dataField: 'OrderDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'DateOfNeedStr', caption: 'Teslim Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'ScheduledUploadDateStr', caption: 'Pl. Yükleme Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'CustomerFirmName', caption: 'Müşteri Firma Adı' },
-                { dataField: 'OrderStatusStr', caption: 'Durum' },
                 { dataField: 'LoadPostCode', caption: 'Yükleme Şehri Posta Kodu' },
                 { dataField: 'LoadCityName', caption: 'Yükleme Şehri' },
                 { dataField: 'LoadCountryName', caption: 'Yükleme Ülke' },
                 { dataField: 'DischangePostCode', caption: 'Boşaltma Şehri Posta Kodu' },
                 { dataField: 'DischangeCityName', caption: 'Boşaltma Şehri' },
                 { dataField: 'DischangeCountryName', caption: 'Boşaltma Ülke' },
-                { dataField: 'EntryCustomsName', caption: 'Çıkış Gümrüğü'},
-                { dataField: 'ExitCustomsName', caption: 'Varış Gümrüğü' }, 
+                { dataField: 'EntryCustomsName', caption: 'Çıkış Gümrüğü' },
+                { dataField: 'ExitCustomsName', caption: 'Varış Gümrüğü' },
                 { dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü' },
                 { dataField: 'OrderUploadTypeStr', caption: 'Yükleme Tipi' },
                 { dataField: 'OrderUploadPointTypeStr', caption: 'Yükleme Noktası Tipi' },

@@ -136,8 +136,8 @@
             }).catch(function (err) { });
     }
     $scope.getNextRecord = function () {
-            var prms = new Promise(function (resolve, reject) {
-                $http.get(HOST_URL + 'LOrder/GetNextRecord?Id=' + $scope.modelObject.Id, {},'json')
+        var prms = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'LOrder/GetNextRecord?Id=' + $scope.modelObject.Id, {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         if (resp.data.Result) {
@@ -472,7 +472,7 @@
                         if (typeof values.UnitId != 'undefined') {
                             var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                             obj.UnitId = unitObj.Id;
-                            obj.UnitName = itemObj.UnitCode;
+                            obj.UnitName = unitObj.UnitCode;
                             calculateRowAgain = true;
                         }
 
@@ -637,10 +637,10 @@
                     column: 'Quantity',
                     summaryType: 'sum',
                 },
-                 {
+                {
                     column: 'Weight',
                     summaryType: 'sum',
-                     format: { type: "fixedPoint", precision: 2 }
+                    format: { type: "fixedPoint", precision: 2 }
                 },
                 {
                     column: 'Volume',

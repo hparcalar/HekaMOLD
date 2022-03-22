@@ -149,6 +149,26 @@ namespace HekaMOLD.Business.UseCases
                     model.LoadOutDate = DateTime.ParseExact(model.LoadOutDateStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
+                if (!string.IsNullOrEmpty(model.ArrivalWarehouseDateStr))
+                {
+                    model.ArrivalWarehouseDate = DateTime.ParseExact(model.ArrivalWarehouseDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.ReceiptFromCustomerDateStr))
+                {
+                    model.ReceiptFromCustomerDate = DateTime.ParseExact(model.ReceiptFromCustomerDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.EstimatedUplodDateStr))
+                {
+                    model.EstimatedUplodDate = DateTime.ParseExact(model.EstimatedUplodDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.IntendedArrivalDateStr))
+                {
+                    model.IntendedArrivalDate = DateTime.ParseExact(model.IntendedArrivalDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
                 if (!string.IsNullOrEmpty(model.ScheduledUploadDateStr))
                 {
                     model.ScheduledUploadDate = DateTime.ParseExact(model.ScheduledUploadDateStr, "dd.MM.yyyy",
@@ -462,6 +482,10 @@ namespace HekaMOLD.Business.UseCases
                 model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate);
                 model.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadOutDate);
                 model.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ScheduledUploadDate);
+                model.ArrivalWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ArrivalWarehouseDate);
+                model.ReceiptFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ReceiptFromCustomerDate);
+                model.EstimatedUplodDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.EstimatedUplodDate);
+                model.IntendedArrivalDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.IntendedArrivalDate);
                 model.OrderStatusStr = ((OrderStatusType)model.OrderStatus).ToCaption();
                 model.CustomerFirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
                 model.CustomerFirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
@@ -940,6 +964,65 @@ namespace HekaMOLD.Business.UseCases
                         UnitId = d.UnitId,
                         UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
                         UnitName = d.UnitType != null ? d.UnitType.UnitName : ""
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public ItemOrderDetailModel[] GetItemOrderDetails(int ItemOrderId)
+        {
+            ItemOrderDetailModel[] data = new ItemOrderDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+                data = repo.Filter(d => d.ItemOrder.Id == ItemOrderId)
+                    .ToList()
+                    .Select(d => new ItemOrderDetailModel
+                    {
+                        Id = d.Id,
+                        ItemId = d.ItemId,
+                        CreatedDate = d.CreatedDate,
+                        CreatedUserId = d.CreatedUserId,
+                        Explanation = d.Explanation,
+                        ForexId = d.ForexId,
+                        ForexRate = d.ForexRate,
+                        ForexUnitPrice = d.ForexUnitPrice,
+                        GrossQuantity = d.GrossQuantity,
+                        ItemOrderId = d.ItemOrderId,
+                        ItemRequestDetailId = d.ItemRequestDetailId,
+                        LineNumber = d.LineNumber,
+                        NetQuantity = d.NetQuantity,
+                        NewDetail = false,
+                        OrderStatus = d.OrderStatus,
+                        OverallTotal = d.OverallTotal,
+                        Quantity = d.Quantity,
+                        ShortWidth = d.ShortWidth,
+                        LongWidth = d.LongWidth,
+                        Height = d.Height,
+                        Weight = d.Weight,
+                        Volume = d.Volume,
+                        Ladametre = d.Ladametre,
+                        Stackable = d.Stackable,
+                        PackageInNumber = d.PackageInNumber,
+                        SubTotal = d.SubTotal,
+                        TaxAmount = d.TaxAmount,
+                        TaxIncluded = d.TaxIncluded,
+                        TaxRate = d.TaxRate,
+                        UnitId = d.UnitId,
+                        UnitPrice = d.UnitPrice,
+                        UpdatedDate = d.UpdatedDate,
+                        UpdatedUserId = d.UpdatedUserId,
+                        ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                        ItemName = d.Item != null ? d.Item.ItemName : "",
+                        UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
+                        UnitName = d.UnitType != null ? d.UnitType.UnitName : "",
                     }).ToArray();
             }
             catch (Exception)

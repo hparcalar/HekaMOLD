@@ -26,8 +26,8 @@ namespace HekaMOLD.Business.UseCases
                     .OrderByDescending(d => d.Id)
                     .Select(d => d)
                     .FirstOrDefault();
-                defaultValue = dbCodeCounter.FirstValue + string.Format("{0:00000}", Convert.ToInt32(directionId == 1 ? (int)dbCodeCounter.Export : directionId == 2 ? (int)dbCodeCounter.Import : directionId == 3 ? (int)dbCodeCounter.Domestic : directionId == 4 ?
-                    (int)dbCodeCounter.Transit : dbCodeCounter.Id) + 1) + ((OrderTransactionDirectionType)directionId).ToCaption();
+                defaultValue = dbCodeCounter.FirstValue + string.Format("{0:00000}", Convert.ToInt32(directionId == 1 ? (int)dbCodeCounter.OwnExport : directionId == 2 ? (int)dbCodeCounter.OwnImport : directionId == 3 ? (int)dbCodeCounter.OwnDomestic : directionId == 4 ?
+                    (int)dbCodeCounter.OwnTransit : dbCodeCounter.Id) + 1) + ((OrderTransactionDirectionType)directionId).ToCaption();
                 return defaultValue;
             }
             catch (Exception)
@@ -54,11 +54,16 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
                 containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
                 containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
+                containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
+                containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
+                containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
                 containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
                 containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
                 containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
                 containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
                 containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
+                containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
                 containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
                 containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
@@ -72,11 +77,43 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
                 containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
+                containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
 
                 data.Add(containerObj);
             });
 
             return data.ToArray();
+            //return repo.GetAll().Select(d => new ItemLoadModel
+            //{
+            //    Id = d.Id,
+            //LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption(),
+            //DischargeDateStr = d.DischargeDate.ToString(),
+            //LoadingDateStr = DateTime.Now.ToString("MM/dd/yyyy"),
+            //LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
+            //DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+            //LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+            //ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
+            //ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate)),
+            //OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null),
+            //CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "",
+            //EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
+            //ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "",
+            //ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "",
+            //BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "",
+            //OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+            //OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
+            //OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
+            //OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+            //ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "",
+            //BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "",
+            //ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "",
+            //BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "",
+            //ShipperFirmExplanation = d.ShipperFirmExplanation,
+            //BuyerFirmExplanation = d.BuyerFirmExplanation,
+            //ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
+
+            //}).ToArray();
 
         }
         public LoadCalendarModel[] GetLoadCalendarList()
@@ -116,11 +153,16 @@ namespace HekaMOLD.Business.UseCases
                  containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
                  containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
                  containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
+                 containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
+                 containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
+                 containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
                  containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
                  containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
                  containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
                  containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
                  containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                 containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
+                 containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
                  containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
                  containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
                  containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
@@ -134,6 +176,8 @@ namespace HekaMOLD.Business.UseCases
                  containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
                  containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                  containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                 containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
+                 containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
 
                  data.Add(containerObj);
              });
@@ -155,11 +199,16 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
                 containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
                 containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
+                containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
+                containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
+                containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
                 containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
                 containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
                 containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
                 containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
                 containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
+                containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
                 containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
                 containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
@@ -173,6 +222,8 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
                 containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
+                containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
 
                 data.Add(containerObj);
             });
@@ -194,11 +245,16 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
                 containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
                 containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
+                containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
+                containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
+                containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
                 containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
                 containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
                 containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
                 containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
                 containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
+                containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
                 containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
                 containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
@@ -212,6 +268,8 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
                 containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
+                containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
 
                 data.Add(containerObj);
             });
@@ -233,11 +291,17 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
                 containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
                 containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
-                containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
+                containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
+                containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
+                containerObj.LoadExitDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadExitDate);
+                containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
+                containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate)); 
                 containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
                 containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
                 containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
                 containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+                containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
+                containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
                 containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
                 containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
@@ -251,12 +315,13 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
                 containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
+                containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
                 data.Add(containerObj);
             });
 
             return data.ToArray();
         }
-
         public ItemLoadModel GetLoad(int id)
         {
             ItemLoadModel model = new ItemLoadModel { Details = new ItemLoadDetailModel[0] };
@@ -265,23 +330,30 @@ namespace HekaMOLD.Business.UseCases
             var repoDetails = _unitOfWork.GetRepository<ItemLoadDetail>();
 
             var dbObj = repo.Get(d => d.Id == id);
-            if (dbObj != null)
+            if (dbObj != null) 
             {
                 model = dbObj.MapTo(model);
                 model.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", dbObj.DateOfNeed);
-                model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrder != null ? dbObj.ItemOrder.OrderDate : null);
+                model.OrderDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.OrderDate);
                 model.OrderCreatUser = dbObj.ItemOrder != null ? dbObj.ItemOrder.User != null ? dbObj.ItemOrder.User.UserName : "": "";
                 model.LoadStatusTypeStr = ((LoadStatusType)dbObj.LoadStatusType).ToCaption() != null ? ((LoadStatusType)dbObj.LoadStatusType).ToCaption() : "";
                 model.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.DischargeDate);
                 model.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadingDate);
                 model.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadOutDate);
                 model.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ScheduledUploadDate);
-                model.LoadDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadOutDate);
+                model.LoadDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadDate);
+                model.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.BringingToWarehouseDate);
                 model.ReadinessDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ReadinessDate);
                 model.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.DeliveryFromCustomerDate);
                 model.IntendedArrivalDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.IntendedArrivalDate);
                 model.TClosingDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.TClosingDate);
                 model.CmrCustomerDeliveryDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.CmrCustomerDeliveryDate);
+                model.LoadExitDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.LoadExitDate);
+                model.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.DeliveryDate);
+                model.VoyageExitDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.VoyageExitDate);
+                model.VoyageEndDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.VoyageEndDate);
+                model.KapikuleEntryDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.KapikuleEntryDate);
+                model.KapikuleExitDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.KapikuleExitDate);
 
                 model.OrderNo = dbObj.OrderNo;
                 model.CustomerFirmCode = dbObj.FirmCustomer != null ? dbObj.FirmCustomer.FirmCode : "";
@@ -434,6 +506,41 @@ namespace HekaMOLD.Business.UseCases
                     model.LoadDate = DateTime.ParseExact(model.LoadDateStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
+                if (!string.IsNullOrEmpty(model.VoyageExitDateStr))
+                {
+                    model.VoyageExitDate = DateTime.ParseExact(model.VoyageExitDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.VoyageEndDateStr))
+                {
+                    model.VoyageEndDate = DateTime.ParseExact(model.VoyageEndDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.KapikuleEntryDateStr))
+                {
+                    model.KapikuleEntryDate = DateTime.ParseExact(model.KapikuleEntryDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.KapikuleExitDateStr))
+                {
+                    model.KapikuleExitDate = DateTime.ParseExact(model.KapikuleExitDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.LoadDateStr))
+                {
+                    model.LoadDate = DateTime.ParseExact(model.LoadDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.LoadExitDateStr))
+                {
+                    model.LoadExitDate = DateTime.ParseExact(model.LoadExitDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
+                if (!string.IsNullOrEmpty(model.DeliveryDateStr))
+                {
+                    model.DeliveryDate = DateTime.ParseExact(model.DeliveryDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
                 if (!string.IsNullOrEmpty(model.DischargeDateStr))
                 {
                     model.DischargeDate = DateTime.ParseExact(model.DischargeDateStr, "dd.MM.yyyy",
@@ -479,16 +586,23 @@ namespace HekaMOLD.Business.UseCases
                     model.CmrCustomerDeliveryDate = DateTime.ParseExact(model.CmrCustomerDeliveryDateStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
+                if (!string.IsNullOrEmpty(model.BringingToWarehouseDateStr))
+                {
+                    model.BringingToWarehouseDate = DateTime.ParseExact(model.BringingToWarehouseDateStr, "dd.MM.yyyy",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                }
                 if (!string.IsNullOrEmpty(model.ScheduledUploadDateStr))
                 {
                     model.ScheduledUploadDate = DateTime.ParseExact(model.ScheduledUploadDateStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
-                else if (string.IsNullOrEmpty(model.ScheduledUploadDateStr))
-                    throw new Exception("Planlanan yükleme tarihi bilgisini giriniz !");
+                //else if (string.IsNullOrEmpty(model.ScheduledUploadDateStr))
+                //    throw new Exception("Planlanan yükleme tarihi bilgisini giriniz !");
+
                 if ((int)model.LoadStatusType == (int)LoadStatusType.Cancelled)
                     throw new Exception("İptal edilen yükte değişiklik yapılamaz !");
-
+                if ((int)model.LoadStatusType == (int)LoadStatusType.Completed)
+                    throw new Exception("Tamamlanan yükte değişiklik yapılamaz !");
                 if (model.OrderTransactionDirectionType == null)
                     throw new Exception("İşlem yönü seçilmelidir !");
 
@@ -603,19 +717,19 @@ namespace HekaMOLD.Business.UseCases
                 {
                     if (model.OrderTransactionDirectionType == 1)
                     {
-                        dbrepoCodeCounter.Export++;
+                        dbrepoCodeCounter.OwnExport++;
                     }
                     if (model.OrderTransactionDirectionType == 2)
                     {
-                        dbrepoCodeCounter.Import++;
+                        dbrepoCodeCounter.OwnImport++;
                     }
                     if (model.OrderTransactionDirectionType == 3)
                     {
-                        dbrepoCodeCounter.Domestic++;
+                        dbrepoCodeCounter.OwnDomestic++;
                     }
                     if (model.OrderTransactionDirectionType == 4)
                     {
-                        dbrepoCodeCounter.Transit++;
+                        dbrepoCodeCounter.OwnTransit++;
                     }
                 }
                 #endregion

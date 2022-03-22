@@ -69,6 +69,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         //Depoya Getiren Araç
         public string BringingToWarehousePlate { get; set; }
         public int? DischargeLineNo { get; set; }
+        public int? LoadingLineNo { get; set; }
         public Nullable<int> ShipperCityId { get; set; }
 
         public int? BuyerCityId { get; set; }
@@ -144,7 +145,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string RotaEndCityName { get; set; }
         public string RotaEndCityPostCode { get; set; }
         public string VoyageCode { get; set; }
-        public bool NewDetail { get; internal set; }
+        public bool NewDetail { get;  set; }
 
         #endregion
     }

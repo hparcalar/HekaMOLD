@@ -146,18 +146,19 @@
     <Compile Include="Controllers\CityController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ContractWorksController.cs" />
+    <Compile Include="Controllers\CostCategoryController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\CustomsController.cs" />
     <Compile Include="Controllers\CustomsDoorController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DistrictController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
+    <Compile Include="Controllers\DriverAccountController.cs" />
     <Compile Include="Controllers\DriverController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
     <Compile Include="Controllers\LoadController.cs" />
-    <Compile Include="Controllers\LoadCostCategoryController.cs" />
     <Compile Include="Controllers\LOrderController.cs" />
     <Compile Include="Controllers\LPlanningController.cs" />
     <Compile Include="Controllers\MachineGroupController.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Controllers\VehicleTireDirectionTypeController.cs" />
     <Compile Include="Controllers\VehicleTypeController.cs" />
     <Compile Include="Controllers\VoyageController.cs" />
+    <Compile Include="Controllers\VoyageCostController.cs" />
     <Compile Include="Controllers\WorkOrderCategoryController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Controllers\MoldTestController.cs" />
@@ -1832,7 +1834,7 @@
     <Content Include="assets\media\icons\stockholm\Weather\Thunder.svg" />
     <Content Include="assets\media\icons\stockholm\Weather\Umbrella.svg" />
     <Content Include="assets\media\icons\stockholm\Weather\Wind.svg" />
-    <Content Include="assets\media\logos\batusan-logo-org.png" />
+    <Content Include="assets\media\logos\heka.png" />
     <Content Include="assets\media\logos\logo-3.svg" />
     <Content Include="assets\media\logos\favicon.ico" />
     <Content Include="assets\media\logos\batusan-logo.png" />
@@ -3978,6 +3980,8 @@
     <Content Include="Components\Controllers\related-request-list.js" />
     <Content Include="Components\Controllers\report-template-list.js" />
     <Content Include="Components\Controllers\shift-targets.js" />
+    <Content Include="Components\Controllers\transferBuyerFirmAddress.js" />
+    <Content Include="Components\Controllers\transferShipperFirmAddress.js" />
     <Content Include="Components\Controllers\trial-work-form.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
@@ -4000,6 +4004,8 @@
     <Content Include="Components\Views\ProductionHistoryList.html" />
     <Content Include="Components\Views\ReportTemplateList.html" />
     <Content Include="Components\Views\ShiftTargets.html" />
+    <Content Include="Components\Views\TransferBuyerFirmAddress.html" />
+    <Content Include="Components\Views\TransferShipperFirmAddress.html" />
     <Content Include="Components\Views\TrialWorkForm.html" />
     <Content Include="Components\VisualMechanics\camera-manager.js" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -4095,6 +4101,8 @@
     <Content Include="FrontEndLogic\City\list.js" />
     <Content Include="FrontEndLogic\ContractWorks\index.js" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
+    <Content Include="FrontEndLogic\CostCategory\index.js" />
+    <Content Include="FrontEndLogic\CostCategory\list.js" />
     <Content Include="FrontEndLogic\Country\index.js" />
     <Content Include="FrontEndLogic\Country\list.js" />
     <Content Include="FrontEndLogic\CustomsDoor\index.js" />
@@ -4107,6 +4115,8 @@
     <Content Include="FrontEndLogic\Document\index.js" />
     <Content Include="FrontEndLogic\Document\list.js" />
     <Content Include="FrontEndLogic\Document\preview.js" />
+    <Content Include="FrontEndLogic\DriverAccount\index.js" />
+    <Content Include="FrontEndLogic\DriverAccount\list.js" />
     <Content Include="FrontEndLogic\Driver\index.js" />
     <Content Include="FrontEndLogic\Driver\list.js" />
     <Content Include="FrontEndLogic\Dye\index.js" />
@@ -4202,8 +4212,6 @@
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\ReportTemplate\index.js" />
     <Content Include="FrontEndLogic\ReportTemplate\list.js" />
-    <Content Include="FrontEndLogic\LoadCostCategory\index.js" />
-    <Content Include="FrontEndLogic\LoadCostCategory\list.js" />
     <Content Include="FrontEndLogic\Rota\index.js" />
     <Content Include="FrontEndLogic\Rota\list.js" />
     <Content Include="FrontEndLogic\Shift\index.js" />
@@ -4237,8 +4245,9 @@
     <Content Include="FrontEndLogic\VehicleType\list.js" />
     <Content Include="FrontEndLogic\Vehicle\index.js" />
     <Content Include="FrontEndLogic\Vehicle\list.js" />
+    <Content Include="FrontEndLogic\VoyageCost\index.js" />
+    <Content Include="FrontEndLogic\VoyageCost\list.js" />
     <Content Include="FrontEndLogic\Voyage\index.js" />
-    <Content Include="FrontEndLogic\Voyage\list1.js" />
     <Content Include="FrontEndLogic\Voyage\list.js" />
     <Content Include="FrontEndLogic\Warehouse\finished-product-state.js" />
     <Content Include="FrontEndLogic\Warehouse\finished-products.js" />
@@ -4755,18 +4764,25 @@
     <Content Include="Views\Load\ImportList.cshtml" />
     <Content Include="Views\Load\DomesticList.cshtml" />
     <Content Include="Views\Load\TransitList.cshtml" />
-    <Content Include="Views\Load\ScheduLoad.cshtml" />
     <Content Include="Views\driver\Index.cshtml" />
     <Content Include="Views\driver\List.cshtml" />
     <Content Include="Views\LPlanning\Planning.cshtml" />
-    <Content Include="Views\LoadCostCategory\Index.cshtml" />
-    <Content Include="Views\LoadCostCategory\List.cshtml" />
     <Content Include="Views\Rota\Index.cshtml" />
     <Content Include="Views\Rota\List.cshtml" />
     <Content Include="Views\Load\Calendar.cshtml" />
     <Content Include="Views\LPlanning\List.cshtml" />
     <Content Include="Views\Voyage\Index.cshtml" />
     <Content Include="Views\Voyage\List.cshtml" />
+    <Content Include="Views\Load\IndexDomestic.cshtml" />
+    <Content Include="Views\Load\IndexExport.cshtml" />
+    <Content Include="Views\Load\IndexImport.cshtml" />
+    <Content Include="Views\Load\IndexTransit.cshtml" />
+    <Content Include="Views\VoyageCost\List.cshtml" />
+    <Content Include="Views\VoyageCost\Index.cshtml" />
+    <Content Include="Views\CostCategory\Index.cshtml" />
+    <Content Include="Views\CostCategory\List.cshtml" />
+    <Content Include="Views\DriverAccount\List.cshtml" />
+    <Content Include="Views\DriverAccount\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

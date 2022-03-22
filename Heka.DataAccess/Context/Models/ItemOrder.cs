@@ -72,6 +72,9 @@ namespace Heka.DataAccess.Context
         [ForeignKey("ForexType")]
         public Nullable<int> ForexTypeId { get; set; }
 
+        [ForeignKey("ReelOwnerFirm")]
+        public int? ReelOwnerFirmId { get; set; }
+
         public Nullable<int> PlantId { get; set; }
         public string Explanation { get; set; }
         public Nullable<int> OrderStatus { get; set; }
@@ -87,6 +90,15 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public string SyncKey { get; set; }
+        //Depoya gelis Tarihi
+        public Nullable<System.DateTime> ArrivalWarehouseDate { get; set; }
+        //musteriden alinis Tarihi
+        public Nullable<System.DateTime> ReceiptFromCustomerDate { get; set; }
+        //Tahmini Yukleme Tarihi
+        public Nullable<System.DateTime> EstimatedUplodDate { get; set; }
+        //Istenilen Varis Tarihi
+        public Nullable<System.DateTime> IntendedArrivalDate { get; set; }
+
 
         public virtual Firm Firm { get; set; }
         public virtual Customs CustomsEntry { get; set; }
@@ -100,6 +112,7 @@ namespace Heka.DataAccess.Context
         public virtual ForexType ForexType { get; set; }
         public virtual City LoadCity { get; set; }
         public virtual City DischargeCity { get; set; }
+        public virtual Firm ReelOwnerFirm { get; set; }
 
         [InverseProperty("ItemOrder")]
         public virtual ICollection<ItemOrderDetail> ItemOrderDetail { get; set; }

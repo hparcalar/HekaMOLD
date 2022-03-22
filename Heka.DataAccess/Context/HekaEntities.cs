@@ -123,7 +123,13 @@
         public virtual DbSet<Rota> Rota { get; set; }
         public virtual DbSet<Voyage> Voyage { get; set; }
         public virtual DbSet<VoyageDetail> VoyageDetail { get; set; }
-
+        public virtual DbSet<VoyageDriver> VoyageDriver { get; set; }
+        public virtual DbSet<VoyageTowingVehicle> VoyageTowingVehicle { get; set; }
+        public virtual DbSet<CostCategory> CostCategory { get; set; }
+        public virtual DbSet<VoyageCost> VoyageCost { get; set; }
+        public virtual DbSet<VoyageCostDetail> VoyageCostDetail { get; set; }
+        public virtual DbSet<DriverAccount> DriverAccount { get; set; }
+        public virtual DbSet<DriverAccountDetail> DriverAccountDetail { get; set; }
 
     }
 }

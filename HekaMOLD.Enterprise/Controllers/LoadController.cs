@@ -22,6 +22,22 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
+        public ActionResult IndexExport()
+        {
+            return View();
+        }
+        public ActionResult IndexImport()
+        {
+            return View();
+        }
+        public ActionResult IndexDomestic()
+        {
+            return View();
+        }
+        public ActionResult IndexTransit()
+        {
+            return View();
+        }
         public ActionResult ExportList()
         {
             return View();
@@ -69,8 +85,10 @@ namespace HekaMOLD.Enterprise.Controllers
             UserModel[] users = new UserModel[0];
             CityModel[] citys = new CityModel[0];
             CountryModel[] countrys = new CountryModel[0];
-            FirmModel[] firmArrivalCustoms = new FirmModel[0];
-            VehicleModel[] vehicles = new VehicleModel[0];
+            FirmModel[] firmCustoms = new FirmModel[0];
+            VehicleModel[] vehicleTrailers = new VehicleModel[0];
+            VehicleModel[] vehicleTowinfs = new VehicleModel[0];
+
             DriverModel[] drivers = new DriverModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
@@ -82,8 +100,9 @@ namespace HekaMOLD.Enterprise.Controllers
                 customs = bObj.GetCustomsList();
                 citys = bObj.GetCityList();
                 countrys = bObj.GetCountryList();
-                firmArrivalCustoms = bObj.GetFirmCustomsList();
-                vehicles = bObj.GetVehicleList();
+                firmCustoms = bObj.GetFirmCustomsList();
+                vehicleTrailers = bObj.GetVehicleCanBePlanedList();
+                vehicleTowinfs = bObj.GetVehicleTowingList();
 
             }
             using (UsersBO bObj = new UsersBO())
@@ -103,8 +122,9 @@ namespace HekaMOLD.Enterprise.Controllers
                 Users = users,
                 Citys = citys,
                 Countrys = countrys,
-                FirmArrivalCustoms = firmArrivalCustoms,
-                Vehicles = vehicles,
+                FirmCustoms = firmCustoms,
+                VehicleTrailers = vehicleTrailers,
+                VehicleTowinfs = vehicleTowinfs,
                 Drivers = drivers
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;

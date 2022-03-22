@@ -12,12 +12,19 @@ namespace Heka.DataAccess.Context
             this.Firm = new HashSet<Firm>();
             this.ItemLoadByCountryShipper = new HashSet<ItemLoad>();
             this.ItemLoadByCountryBuyer = new HashSet<ItemLoad>();
+            this.ItemLoadByCountryCmrShipper = new HashSet<ItemLoad>();
+            this.ItemLoadByCountryCmrBuyer = new HashSet<ItemLoad>();
             this.Driver = new HashSet<Driver>();
+            this.VoyageByStartCountry = new HashSet<Voyage>();
             this.VoyageByLoadCountry = new HashSet<Voyage>();
             this.VoyageByDischargeCountry = new HashSet<Voyage>();
             this.VoyageDetailByCountryShipper = new HashSet<VoyageDetail>();
             this.VoyageDetailByCountryBuyer = new HashSet<VoyageDetail>();
             this.FirmAddress = new HashSet<FirmAddress>();
+            this.ItemLoadByVoyageStartCountry = new HashSet<ItemLoad>();
+            this.ItemLoadByVoyageEndCountry = new HashSet<ItemLoad>();
+            this.VoyageCostDetail = new HashSet<VoyageCostDetail>();
+            this.DriverAccountDetail = new HashSet<DriverAccountDetail>();
 
         }
         public int Id { get; set; }
@@ -43,8 +50,17 @@ namespace Heka.DataAccess.Context
         [InverseProperty("CountryBuyer")]
         public virtual ICollection<ItemLoad> ItemLoadByCountryBuyer { get; set; }
 
+        [InverseProperty("CountryCmrShipper")]
+        public virtual ICollection<ItemLoad> ItemLoadByCountryCmrShipper { get; set; }
+
+        [InverseProperty("CountryCmrBuyer")]
+        public virtual ICollection<ItemLoad> ItemLoadByCountryCmrBuyer { get; set; }
+
         [InverseProperty("Country")]
         public virtual ICollection<Driver> Driver { get; set; }
+
+        [InverseProperty("StartCountry")]
+        public virtual ICollection<Voyage> VoyageByStartCountry { get; set; }
 
         [InverseProperty("LoadCountry")]
         public virtual ICollection<Voyage> VoyageByLoadCountry { get; set; }
@@ -60,5 +76,17 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Country")]
         public virtual ICollection<FirmAddress> FirmAddress { get; set; }
+
+        [InverseProperty("VoyageStartCountry")]
+        public virtual ICollection<ItemLoad> ItemLoadByVoyageStartCountry { get; set; }
+
+        [InverseProperty("VoyageEndCountry")]
+        public virtual ICollection<ItemLoad> ItemLoadByVoyageEndCountry { get; set; }
+
+        [InverseProperty("Country")]
+        public virtual ICollection<VoyageCostDetail> VoyageCostDetail { get; set; }
+
+        [InverseProperty("Country")]
+        public virtual ICollection<DriverAccountDetail> DriverAccountDetail { get; set; }
     }
 }

@@ -39,6 +39,21 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+        
+        [HttpGet]
+        public JsonResult GetVehicleCanBePlanedList()
+        {
+            VehicleModel[] result = new VehicleModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.GetVehicleCanBePlanedList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         [HttpGet]
         public JsonResult GetVehicleList()
         {
@@ -47,6 +62,36 @@ namespace HekaMOLD.Enterprise.Controllers
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 result = bObj.GetVehicleList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetVehicleTowingList()
+        {
+            VehicleModel[] result = new VehicleModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.GetVehicleTowingList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetVehicleTrailerList()
+        {
+            VehicleModel[] result = new VehicleModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.GetVehicleTrailerList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

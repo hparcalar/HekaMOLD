@@ -52,6 +52,7 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
         [HttpGet]
         public JsonResult GetFirmList()
         {
@@ -60,6 +61,23 @@ namespace HekaMOLD.Enterprise.Controllers
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 result = bObj.GetFirmList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetFirmAddressList(int Id)
+        
+        
+        {
+            FirmAddressModel[] result = new FirmAddressModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.GetFirmAddressList(Id);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

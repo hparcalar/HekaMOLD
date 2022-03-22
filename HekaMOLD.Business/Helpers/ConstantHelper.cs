@@ -56,6 +56,13 @@ namespace HekaMOLD.Business.Helpers
                         .Select(d => d.Value)
                         .FirstOrDefault();
                 }
+                else if (obj.GetType() == typeof(TrailerType))
+                {
+                    return DictTrailerType.Values
+                        .Where(d => d.Key == (TrailerType)obj)
+                        .Select(d => d.Value)
+                        .FirstOrDefault();
+                }
                 else if (obj.GetType() == typeof(VoyageStatus))
                 {
                     return DictVoyageStatus.Values

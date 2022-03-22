@@ -83,6 +83,7 @@
     <Compile Include="Base\IDataObject.cs" />
     <Compile Include="Helpers\ConstantHelper.cs" />
     <Compile Include="Helpers\Mapper.cs" />
+    <Compile Include="Models\Constants\ActionType.cs" />
     <Compile Include="Models\Constants\CodeCounterType.cs" />
     <Compile Include="Models\Constants\LoadStatusType.cs" />
     <Compile Include="Models\Constants\OrderCalculationType.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Models\Constants\OrderTransactionDirectionType.cs" />
     <Compile Include="Models\Constants\OrderUploadPointType.cs" />
     <Compile Include="Models\Constants\OrderUploadType.cs" />
+    <Compile Include="Models\Constants\PayType.cs" />
     <Compile Include="Models\Constants\PostureStatusType.cs" />
     <Compile Include="Models\Constants\ProcessStatusType.cs" />
     <Compile Include="Models\Constants\QualityStatusType.cs" />
@@ -111,7 +113,10 @@
     <Compile Include="Models\Constants\SerialStatusType.cs" />
     <Compile Include="Models\Constants\SubscriptionCategory.cs" />
     <Compile Include="Models\Constants\SyncPointType.cs" />
+    <Compile Include="Models\Constants\TrailerType.cs" />
+    <Compile Include="Models\Constants\VehicleAllocationType.cs" />
     <Compile Include="Models\Constants\VehicleTireType.cs" />
+    <Compile Include="Models\Constants\VehicleType.cs" />
     <Compile Include="Models\Constants\VoyageStatus.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\Constants\WorkOrderSerialType.cs" />
@@ -154,10 +159,13 @@
     <Compile Include="Models\DataTransfer\Layout\LayoutObjectTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\CityModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\CodeCounterModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\CostCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\CountryModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\CustomsDoorModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\CustomsModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\DistrictModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\DriverAccountDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\DriverAccountModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\DriverModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\FirmTariffModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\ItemLoadCostModel.cs" />
@@ -175,8 +183,12 @@
     <Compile Include="Models\DataTransfer\Logistics\VehicleTireDirectionTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleTireModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleTypeModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VoyageCostModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VoyageCostDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VoyageDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VoyageDriverModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VoyageModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\VoyageTowingVehicleModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
@@ -254,6 +266,7 @@
     <Compile Include="Models\Dictionaries\DictReportType.cs" />
     <Compile Include="Models\Dictionaries\DictSubscriptionCategory.cs" />
     <Compile Include="Models\Dictionaries\DictOrderTransactionDirectionType.cs" />
+    <Compile Include="Models\Dictionaries\DictTrailerType.cs" />
     <Compile Include="Models\Dictionaries\DictVoyageStatus.cs" />
     <Compile Include="Models\Dictionaries\DictWorkOrderStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictReceiptCategoryType.cs" />
@@ -288,6 +301,7 @@
     <Compile Include="UseCases\DefinitionsBO.cs" />
     <Compile Include="UseCases\DeliveryBO.cs" />
     <Compile Include="UseCases\DocumentBO.cs" />
+    <Compile Include="UseCases\DriverAccountBO.cs" />
     <Compile Include="UseCases\FilesBO.cs" />
     <Compile Include="UseCases\HekaBO.cs" />
     <Compile Include="UseCases\Integrations\IntegratorBase.cs" />

@@ -22,8 +22,8 @@ namespace Heka.DataAccess.Context
         public int? PersonnelId { get; set; }
         [ForeignKey("UnitType")]
         public int? UnitTypeId { get; set; }
-        [ForeignKey("ForexType")]
-        public int? ForexTypeId { get; set; }
+        //[ForeignKey("ForexType")]
+        //public int? ForexTypeId { get; set; }
         public decimal? Amount { get; set; }
         public string Explanation { get; set; }
         public string DocumentNo { get; set; }
@@ -37,7 +37,7 @@ namespace Heka.DataAccess.Context
         public virtual UnitType UnitType { get; set; }
         public virtual VehicleInsuranceType VehicleInsuranceType { get; set; }
         public virtual Firm Firm { get; set; }
-        public virtual ForexType ForexType { get; set; }
+        //public virtual ForexType ForexType { get; set; }
         public virtual Vehicle Vehicle { get; set; }
 
     }

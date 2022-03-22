@@ -1,0 +1,785 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5505497B-D26E-4DF1-B217-15CB4E53E831}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Heka.DataAccess</RootNamespace>
+    <AssemblyName>Heka.DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Context\HekaEntities.cs" />
+    <Compile Include="Context\LSabit.cs" />
+    <Compile Include="Context\Models\ActualRouteHistory.cs" />
+    <Compile Include="Context\Models\AllocatedCode.cs" />
+    <Compile Include="Context\Models\Attachment.cs" />
+    <Compile Include="Context\Models\City.cs" />
+    <Compile Include="Context\Models\CodeCounter.cs" />
+    <Compile Include="Context\Models\ContractWorkFlow.cs" />
+    <Compile Include="Context\Models\Country.cs" />
+    <Compile Include="Context\Models\Customs.cs" />
+    <Compile Include="Context\Models\CustomsDoor.cs" />
+    <Compile Include="Context\Models\DeliveryPlan.cs" />
+    <Compile Include="Context\Models\District.cs" />
+    <Compile Include="Context\Models\Driver.cs" />
+    <Compile Include="Context\Models\Dye.cs" />
+    <Compile Include="Context\Models\EntryQualityData.cs" />
+    <Compile Include="Context\Models\EntryQualityDataDetail.cs" />
+    <Compile Include="Context\Models\EntryQualityPlan.cs" />
+    <Compile Include="Context\Models\EntryQualityPlanDetail.cs" />
+    <Compile Include="Context\Models\Equipment.cs" />
+    <Compile Include="Context\Models\EquipmentCategory.cs" />
+    <Compile Include="Context\Models\Firm.cs" />
+    <Compile Include="Context\Models\FirmAddress.cs" />
+    <Compile Include="Context\Models\FirmAuthor.cs" />
+    <Compile Include="Context\Models\FirmTariff.cs" />
+    <Compile Include="Context\Models\ForexHistory.cs" />
+    <Compile Include="Context\Models\ForexType.cs" />
+    <Compile Include="Context\Models\Incident.cs" />
+    <Compile Include="Context\Models\IncidentCategory.cs" />
+    <Compile Include="Context\Models\Invoice.cs" />
+    <Compile Include="Context\Models\Item.cs" />
+    <Compile Include="Context\Models\ItemCategory.cs" />
+    <Compile Include="Context\Models\ItemGroup.cs" />
+    <Compile Include="Context\Models\ItemLiveStatus.cs" />
+    <Compile Include="Context\Models\ItemLoad.cs" />
+    <Compile Include="Context\Models\ItemLoadCost.cs" />
+    <Compile Include="Context\Models\ItemLoadDetail.cs" />
+    <Compile Include="Context\Models\ItemOrder.cs" />
+    <Compile Include="Context\Models\ItemOrderConsume.cs" />
+    <Compile Include="Context\Models\ItemOrderDetail.cs" />
+    <Compile Include="Context\Models\ItemOrderItemNeeds.cs" />
+    <Compile Include="Context\Models\ItemPrice.cs" />
+    <Compile Include="Context\Models\ItemReceipt.cs" />
+    <Compile Include="Context\Models\ItemReceiptConsume.cs" />
+    <Compile Include="Context\Models\ItemReceiptDetail.cs" />
+    <Compile Include="Context\Models\ItemRequest.cs" />
+    <Compile Include="Context\Models\ItemRequestApproveLog.cs" />
+    <Compile Include="Context\Models\ItemRequestCategory.cs" />
+    <Compile Include="Context\Models\ItemRequestDetail.cs" />
+    <Compile Include="Context\Models\ItemSerial.cs" />
+    <Compile Include="Context\Models\ItemUnit.cs" />
+    <Compile Include="Context\Models\ItemWarehouse.cs" />
+    <Compile Include="Context\Models\LayoutItem.cs" />
+    <Compile Include="Context\Models\LayoutObjectType.cs" />
+    <Compile Include="Context\Models\LoadCalendarModel.cs" />
+    <Compile Include="Context\Models\LoadCostCategory.cs" />
+    <Compile Include="Context\Models\Machine.cs" />
+    <Compile Include="Context\Models\MachineGroup.cs" />
+    <Compile Include="Context\Models\MachineMaintenanceInstruction.cs" />
+    <Compile Include="Context\Models\MachineMaintenanceInstructionEntry.cs" />
+    <Compile Include="Context\Models\MachinePlan.cs" />
+    <Compile Include="Context\Models\MachineSignal.cs" />
+    <Compile Include="Context\Models\Mold.cs" />
+    <Compile Include="Context\Models\MoldProduct.cs" />
+    <Compile Include="Context\Models\MoldTest.cs" />
+    <Compile Include="Context\Models\Notification.cs" />
+    <Compile Include="Context\Models\Plant.cs" />
+    <Compile Include="Context\Models\PostureCategory.cs" />
+    <Compile Include="Context\Models\PrinterQueue.cs" />
+    <Compile Include="Context\Models\Process.cs" />
+    <Compile Include="Context\Models\ProcessGroup.cs" />
+    <Compile Include="Context\Models\ProductionPosture.cs" />
+    <Compile Include="Context\Models\ProductQualityData.cs" />
+    <Compile Include="Context\Models\ProductQualityDataDetail.cs" />
+    <Compile Include="Context\Models\ProductQualityPlan.cs" />
+    <Compile Include="Context\Models\ProductRecipe.cs" />
+    <Compile Include="Context\Models\ProductRecipeDetail.cs" />
+    <Compile Include="Context\Models\ProductWastage.cs" />
+    <Compile Include="Context\Models\ReportTemplate.cs" />
+    <Compile Include="Context\Models\Rota.cs" />
+    <Compile Include="Context\Models\RoundCostCategory.cs" />
+    <Compile Include="Context\Models\Route.cs" />
+    <Compile Include="Context\Models\RouteItem.cs" />
+    <Compile Include="Context\Models\SectionSetting.cs" />
+    <Compile Include="Context\Models\Shift.cs" />
+    <Compile Include="Context\Models\ShiftTarget.cs" />
+    <Compile Include="Context\Models\SyncPoint.cs" />
+    <Compile Include="Context\Models\SystemParameter.cs" />
+    <Compile Include="Context\Models\SystemPrinter.cs" />
+    <Compile Include="Context\Models\TransactionLog.cs" />
+    <Compile Include="Context\Models\UnitType.cs" />
+    <Compile Include="Context\Models\UsageDocument.cs" />
+    <Compile Include="Context\Models\User.cs" />
+    <Compile Include="Context\Models\UserAuth.cs" />
+    <Compile Include="Context\Models\UserAuthType.cs" />
+    <Compile Include="Context\Models\UserRole.cs" />
+    <Compile Include="Context\Models\UserRoleSubscription.cs" />
+    <Compile Include="Context\Models\UserWorkOrderHistory.cs" />
+    <Compile Include="Context\Models\Vehicle.cs" />
+    <Compile Include="Context\Models\VehicleCare.cs" />
+    <Compile Include="Context\Models\VehicleCareType.cs" />
+    <Compile Include="Context\Models\VehicleInsurance.cs" />
+    <Compile Include="Context\Models\VehicleInsuranceType.cs" />
+    <Compile Include="Context\Models\VehicleNotification.cs" />
+    <Compile Include="Context\Models\VehicleTire.cs" />
+    <Compile Include="Context\Models\VehicleTireDirectionType.cs" />
+    <Compile Include="Context\Models\VehicleType.cs" />
+    <Compile Include="Context\Models\Voyage.cs" />
+    <Compile Include="Context\Models\VoyageDetail.cs" />
+    <Compile Include="Context\Models\Warehouse.cs" />
+    <Compile Include="Context\Models\WorkOrder.cs" />
+    <Compile Include="Context\Models\WorkOrderAllocation.cs" />
+    <Compile Include="Context\Models\WorkOrderCategory.cs" />
+    <Compile Include="Context\Models\WorkOrderControl.cs" />
+    <Compile Include="Context\Models\WorkOrderControlType.cs" />
+    <Compile Include="Context\Models\WorkOrderDetail.cs" />
+    <Compile Include="Context\Models\WorkOrderItemNeeds.cs" />
+    <Compile Include="Context\Models\WorkOrderSerial.cs" />
+    <Compile Include="Migrations\202201081555394_vehiclelmqwefwee.cs" />
+    <Compile Include="Migrations\202201081555394_vehiclelmqwefwee.designer.cs">
+      <DependentUpon>202201081555394_vehiclelmqwefwee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201120203257_VehicleCareUpdate-VehicleType.cs" />
+    <Compile Include="Migrations\202201120203257_VehicleCareUpdate-VehicleType.designer.cs">
+      <DependentUpon>202201120203257_VehicleCareUpdate-VehicleType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201120334008_VehicleInsuranceUpdate.cs" />
+    <Compile Include="Migrations\202201120512407_VehicleInsuranceUpdate%28Unit-forex%29.cs" />
+    <Compile Include="Migrations\202201120838456_commit.cs" />
+    <Compile Include="Migrations\202201120838456_commit.designer.cs">
+      <DependentUpon>202201120838456_commit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201121825187_VehicleCareUpdate-Genel.cs" />
+    <Compile Include="Migrations\202201121825187_VehicleCareUpdate-Genel.designer.cs">
+      <DependentUpon>202201121825187_VehicleCareUpdate-Genel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201131608569_VehicleTireUpdate.cs" />
+    <Compile Include="Migrations\202201131608569_VehicleTireUpdate.designer.cs">
+      <DependentUpon>202201131608569_VehicleTireUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201132115020_VehicleTireDirectionType.cs" />
+    <Compile Include="Migrations\202201132115020_VehicleTireDirectionType.designer.cs">
+      <DependentUpon>202201132115020_VehicleTireDirectionType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201161132322_ItemOrderUpdateGeneric.cs" />
+    <Compile Include="Migrations\202201161132322_ItemOrderUpdateGeneric.designer.cs">
+      <DependentUpon>202201161132322_ItemOrderUpdateGeneric.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201162158483_ItemOrderDetails%28Dhl-deci%29.cs" />
+    <Compile Include="Migrations\202201162158483_ItemOrderDetails%28Dhl-deci%29.designer.cs">
+      <DependentUpon>202201162158483_ItemOrderDetails%28Dhl-deci%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.cs" />
+    <Compile Include="Migrations\202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.designer.cs">
+      <DependentUpon>202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201171926132_CustomsUpdate.cs" />
+    <Compile Include="Migrations\202201171926132_CustomsUpdate.designer.cs">
+      <DependentUpon>202201171926132_CustomsUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201172255155_UpdateVehicle%28Model-Versiyon%29.cs" />
+    <Compile Include="Migrations\202201172255155_UpdateVehicle%28Model-Versiyon%29.designer.cs">
+      <DependentUpon>202201172255155_UpdateVehicle%28Model-Versiyon%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201180834517_ItemOrderAdded%28OrderUploadPointType%29.cs" />
+    <Compile Include="Migrations\202201180834517_ItemOrderAdded%28OrderUploadPointType%29.designer.cs">
+      <DependentUpon>202201180834517_ItemOrderAdded%28OrderUploadPointType%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.cs" />
+    <Compile Include="Migrations\202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.designer.cs">
+      <DependentUpon>202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201190803097_ItemOrderAdded-OveralLAdametre.cs" />
+    <Compile Include="Migrations\202201190803097_ItemOrderAdded-OveralLAdametre.designer.cs">
+      <DependentUpon>202201190803097_ItemOrderAdded-OveralLAdametre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201190917368_FirmTariffAdded.cs" />
+    <Compile Include="Migrations\202201190917368_FirmTariffAdded.designer.cs">
+      <DependentUpon>202201190917368_FirmTariffAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201191435427_FirmTariffUpdate.cs" />
+    <Compile Include="Migrations\202201191435427_FirmTariffUpdate.designer.cs">
+      <DependentUpon>202201191435427_FirmTariffUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201192042462_ItemOrderandItemOrderDetailUpdate.cs" />
+    <Compile Include="Migrations\202201192042462_ItemOrderandItemOrderDetailUpdate.designer.cs">
+      <DependentUpon>202201192042462_ItemOrderandItemOrderDetailUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201192145585_ItemOrderUpdateCalculationTypePrice.cs" />
+    <Compile Include="Migrations\202201192145585_ItemOrderUpdateCalculationTypePrice.designer.cs">
+      <DependentUpon>202201192145585_ItemOrderUpdateCalculationTypePrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201192208440_ItemOrderUpdateCalculationTypePrice2.cs" />
+    <Compile Include="Migrations\202201192208440_ItemOrderUpdateCalculationTypePrice2.designer.cs">
+      <DependentUpon>202201192208440_ItemOrderUpdateCalculationTypePrice2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201200021574_DeleteItemKnitDensity.cs" />
+    <Compile Include="Migrations\202201200021574_DeleteItemKnitDensity.designer.cs">
+      <DependentUpon>202201200021574_DeleteItemKnitDensity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201200048589_DeleteItemQuality.cs" />
+    <Compile Include="Migrations\202201200048589_DeleteItemQuality.designer.cs">
+      <DependentUpon>202201200048589_DeleteItemQuality.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201211437370_CountryAdd.cs" />
+    <Compile Include="Migrations\202201211437370_CountryAdd.designer.cs">
+      <DependentUpon>202201211437370_CountryAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201211537475_CityAdd.cs" />
+    <Compile Include="Migrations\202201211537475_CityAdd.designer.cs">
+      <DependentUpon>202201211537475_CityAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201211859183_DsitrictAdd.cs" />
+    <Compile Include="Migrations\202201211859183_DsitrictAdd.designer.cs">
+      <DependentUpon>202201211859183_DsitrictAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201212040455_LOrderAddedCity.cs" />
+    <Compile Include="Migrations\202201212040455_LOrderAddedCity.designer.cs">
+      <DependentUpon>202201212040455_LOrderAddedCity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201221441037_customsUpdate2.cs" />
+    <Compile Include="Migrations\202201221441037_customsUpdate2.designer.cs">
+      <DependentUpon>202201221441037_customsUpdate2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201221445529_customsUpdate3.cs" />
+    <Compile Include="Migrations\202201221445529_customsUpdate3.designer.cs">
+      <DependentUpon>202201221445529_customsUpdate3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201231748374_ItemLoadAdded.cs" />
+    <Compile Include="Migrations\202201231748374_ItemLoadAdded.designer.cs">
+      <DependentUpon>202201231748374_ItemLoadAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201232225148_firmUpdate%28Ladametre%29.cs" />
+    <Compile Include="Migrations\202201232225148_firmUpdate%28Ladametre%29.designer.cs">
+      <DependentUpon>202201232225148_firmUpdate%28Ladametre%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201242111028_ItemLoadDetailUpdate.cs" />
+    <Compile Include="Migrations\202201242111028_ItemLoadDetailUpdate.designer.cs">
+      <DependentUpon>202201242111028_ItemLoadDetailUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.cs" />
+    <Compile Include="Migrations\202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.designer.cs">
+      <DependentUpon>202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.cs" />
+    <Compile Include="Migrations\202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.designer.cs">
+      <DependentUpon>202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.cs" />
+    <Compile Include="Migrations\202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.designer.cs">
+      <DependentUpon>202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.cs" />
+    <Compile Include="Migrations\202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.designer.cs">
+      <DependentUpon>202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.cs" />
+    <Compile Include="Migrations\202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.designer.cs">
+      <DependentUpon>202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201261113074_UpdateItemLoad%28OrderNo%29.cs" />
+    <Compile Include="Migrations\202201261113074_UpdateItemLoad%28OrderNo%29.designer.cs">
+      <DependentUpon>202201261113074_UpdateItemLoad%28OrderNo%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201271324033_ItemOrderUpdate%28UserAdded%29.cs" />
+    <Compile Include="Migrations\202201271324033_ItemOrderUpdate%28UserAdded%29.designer.cs">
+      <DependentUpon>202201271324033_ItemOrderUpdate%28UserAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201271328263_ItemOrderUpdate%28UserAdded2%29.cs" />
+    <Compile Include="Migrations\202201271328263_ItemOrderUpdate%28UserAdded2%29.designer.cs">
+      <DependentUpon>202201271328263_ItemOrderUpdate%28UserAdded2%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.cs" />
+    <Compile Include="Migrations\202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.designer.cs">
+      <DependentUpon>202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.cs" />
+    <Compile Include="Migrations\202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.designer.cs">
+      <DependentUpon>202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201281420386_FirmUpdate%28CityAndCountryAdd%29.cs" />
+    <Compile Include="Migrations\202201281420386_FirmUpdate%28CityAndCountryAdd%29.designer.cs">
+      <DependentUpon>202201281420386_FirmUpdate%28CityAndCountryAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.cs" />
+    <Compile Include="Migrations\202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.designer.cs">
+      <DependentUpon>202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.cs" />
+    <Compile Include="Migrations\202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.designer.cs">
+      <DependentUpon>202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.cs" />
+    <Compile Include="Migrations\202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.designer.cs">
+      <DependentUpon>202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201291352386_ItemOrderAndItemLoad%28Update%29.cs" />
+    <Compile Include="Migrations\202201291352386_ItemOrderAndItemLoad%28Update%29.designer.cs">
+      <DependentUpon>202201291352386_ItemOrderAndItemLoad%28Update%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.cs" />
+    <Compile Include="Migrations\202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.designer.cs">
+      <DependentUpon>202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201311235218_CodeCounterAdd.cs" />
+    <Compile Include="Migrations\202201311235218_CodeCounterAdd.designer.cs">
+      <DependentUpon>202201311235218_CodeCounterAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202011319346_ItemLoadRevize.cs" />
+    <Compile Include="Migrations\202202011319346_ItemLoadRevize.designer.cs">
+      <DependentUpon>202202011319346_ItemLoadRevize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.cs" />
+    <Compile Include="Migrations\202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.designer.cs">
+      <DependentUpon>202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.cs" />
+    <Compile Include="Migrations\202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.designer.cs">
+      <DependentUpon>202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.cs" />
+    <Compile Include="Migrations\202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.designer.cs">
+      <DependentUpon>202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202022201418_Vehicle%28CareInsuranceTire%29Update.cs" />
+    <Compile Include="Migrations\202202022201418_Vehicle%28CareInsuranceTire%29Update.designer.cs">
+      <DependentUpon>202202022201418_Vehicle%28CareInsuranceTire%29Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202042126417_VehicleUpdate%28HasLoadPlannig%29.cs" />
+    <Compile Include="Migrations\202202042126417_VehicleUpdate%28HasLoadPlannig%29.designer.cs">
+      <DependentUpon>202202042126417_VehicleUpdate%28HasLoadPlannig%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202052046395_Driveradd.cs" />
+    <Compile Include="Migrations\202202052046395_Driveradd.designer.cs">
+      <DependentUpon>202202052046395_Driveradd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202052049123_Driverupdate.cs" />
+    <Compile Include="Migrations\202202052049123_Driverupdate.designer.cs">
+      <DependentUpon>202202052049123_Driverupdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.cs" />
+    <Compile Include="Migrations\202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.designer.cs">
+      <DependentUpon>202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.cs" />
+    <Compile Include="Migrations\202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.designer.cs">
+      <DependentUpon>202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.cs" />
+    <Compile Include="Migrations\202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.designer.cs">
+      <DependentUpon>202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202111044135_RoundCostCategoryAdd.cs" />
+    <Compile Include="Migrations\202202111044135_RoundCostCategoryAdd.designer.cs">
+      <DependentUpon>202202111044135_RoundCostCategoryAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.cs" />
+    <Compile Include="Migrations\202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.designer.cs">
+      <DependentUpon>202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131321387_RoundCostCategoryDelete.cs" />
+    <Compile Include="Migrations\202202131321387_RoundCostCategoryDelete.designer.cs">
+      <DependentUpon>202202131321387_RoundCostCategoryDelete.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131322322_RoundCostCategoryAdd1.cs" />
+    <Compile Include="Migrations\202202131322322_RoundCostCategoryAdd1.designer.cs">
+      <DependentUpon>202202131322322_RoundCostCategoryAdd1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131416140_ItemLoadCostAdd.cs" />
+    <Compile Include="Migrations\202202131416140_ItemLoadCostAdd.designer.cs">
+      <DependentUpon>202202131416140_ItemLoadCostAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131417266_ItemLoadCostAdd%28FprexTypeId%29.cs" />
+    <Compile Include="Migrations\202202131417266_ItemLoadCostAdd%28FprexTypeId%29.designer.cs">
+      <DependentUpon>202202131417266_ItemLoadCostAdd%28FprexTypeId%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131547435_RotaAdded.cs" />
+    <Compile Include="Migrations\202202131547435_RotaAdded.designer.cs">
+      <DependentUpon>202202131547435_RotaAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202131556035_RotaUpdate%28CityAdd%29.cs" />
+    <Compile Include="Migrations\202202131556035_RotaUpdate%28CityAdd%29.designer.cs">
+      <DependentUpon>202202131556035_RotaUpdate%28CityAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151542143_VoyageAdd.cs" />
+    <Compile Include="Migrations\202202151542143_VoyageAdd.designer.cs">
+      <DependentUpon>202202151542143_VoyageAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151604269_VoyageUpdate%28StartCityadd%29.cs" />
+    <Compile Include="Migrations\202202151604269_VoyageUpdate%28StartCityadd%29.designer.cs">
+      <DependentUpon>202202151604269_VoyageUpdate%28StartCityadd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151629325_VoyageUpdate%28LoadCityadd%29.cs" />
+    <Compile Include="Migrations\202202151629325_VoyageUpdate%28LoadCityadd%29.designer.cs">
+      <DependentUpon>202202151629325_VoyageUpdate%28LoadCityadd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151633420_VoyageUpdate%28LoadCountryAdd%29.cs" />
+    <Compile Include="Migrations\202202151633420_VoyageUpdate%28LoadCountryAdd%29.designer.cs">
+      <DependentUpon>202202151633420_VoyageUpdate%28LoadCountryAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151639306_VoyageUpdate%28LoadCustomsAdd%29.cs" />
+    <Compile Include="Migrations\202202151639306_VoyageUpdate%28LoadCustomsAdd%29.designer.cs">
+      <DependentUpon>202202151639306_VoyageUpdate%28LoadCustomsAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.cs" />
+    <Compile Include="Migrations\202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.designer.cs">
+      <DependentUpon>202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202151708454_VoyageUpdate%28VehicleAdd%29.cs" />
+    <Compile Include="Migrations\202202151708454_VoyageUpdate%28VehicleAdd%29.designer.cs">
+      <DependentUpon>202202151708454_VoyageUpdate%28VehicleAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.cs" />
+    <Compile Include="Migrations\202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.designer.cs">
+      <DependentUpon>202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.cs" />
+    <Compile Include="Migrations\202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.designer.cs">
+      <DependentUpon>202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202251948237_VoyageDetailAdd.cs" />
+    <Compile Include="Migrations\202202251948237_VoyageDetailAdd.designer.cs">
+      <DependentUpon>202202251948237_VoyageDetailAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202260944527_VoyageDetailUpdate%28RotaAdd%29.cs" />
+    <Compile Include="Migrations\202202260944527_VoyageDetailUpdate%28RotaAdd%29.designer.cs">
+      <DependentUpon>202202260944527_VoyageDetailUpdate%28RotaAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.cs" />
+    <Compile Include="Migrations\202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.designer.cs">
+      <DependentUpon>202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.cs" />
+    <Compile Include="Migrations\202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.designer.cs">
+      <DependentUpon>202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.cs" />
+    <Compile Include="Migrations\202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.designer.cs">
+      <DependentUpon>202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202281216510_VoyageUpdate%28OverallWeightAdd%29.cs" />
+    <Compile Include="Migrations\202202281216510_VoyageUpdate%28OverallWeightAdd%29.designer.cs">
+      <DependentUpon>202202281216510_VoyageUpdate%28OverallWeightAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203011032432_FirmAddressAdd.cs" />
+    <Compile Include="Migrations\202203011032432_FirmAddressAdd.designer.cs">
+      <DependentUpon>202203011032432_FirmAddressAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Migrations.cs" />
+    <Compile Include="Migration\MigrationManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\EFRepository.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="UnitOfWork\EFUnitOfWork.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWork.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202201081555394_vehiclelmqwefwee.resx">
+      <DependentUpon>202201081555394_vehiclelmqwefwee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201120203257_VehicleCareUpdate-VehicleType.resx">
+      <DependentUpon>202201120203257_VehicleCareUpdate-VehicleType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201120838456_commit.resx">
+      <DependentUpon>202201120838456_commit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201121825187_VehicleCareUpdate-Genel.resx">
+      <DependentUpon>202201121825187_VehicleCareUpdate-Genel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201131608569_VehicleTireUpdate.resx">
+      <DependentUpon>202201131608569_VehicleTireUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201132115020_VehicleTireDirectionType.resx">
+      <DependentUpon>202201132115020_VehicleTireDirectionType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201161132322_ItemOrderUpdateGeneric.resx">
+      <DependentUpon>202201161132322_ItemOrderUpdateGeneric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201162158483_ItemOrderDetails%28Dhl-deci%29.resx">
+      <DependentUpon>202201162158483_ItemOrderDetails%28Dhl-deci%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.resx">
+      <DependentUpon>202201171417151_ItemOrderUpdate%28OveralVolumeAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201171926132_CustomsUpdate.resx">
+      <DependentUpon>202201171926132_CustomsUpdate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201172255155_UpdateVehicle%28Model-Versiyon%29.resx">
+      <DependentUpon>202201172255155_UpdateVehicle%28Model-Versiyon%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201180834517_ItemOrderAdded%28OrderUploadPointType%29.resx">
+      <DependentUpon>202201180834517_ItemOrderAdded%28OrderUploadPointType%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.resx">
+      <DependentUpon>202201190744415_ItemOrderDetailAded-        public decimal Ladametre { get%3b set%3b }.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201190803097_ItemOrderAdded-OveralLAdametre.resx">
+      <DependentUpon>202201190803097_ItemOrderAdded-OveralLAdametre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201190917368_FirmTariffAdded.resx">
+      <DependentUpon>202201190917368_FirmTariffAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201191435427_FirmTariffUpdate.resx">
+      <DependentUpon>202201191435427_FirmTariffUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201192042462_ItemOrderandItemOrderDetailUpdate.resx">
+      <DependentUpon>202201192042462_ItemOrderandItemOrderDetailUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201192145585_ItemOrderUpdateCalculationTypePrice.resx">
+      <DependentUpon>202201192145585_ItemOrderUpdateCalculationTypePrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201192208440_ItemOrderUpdateCalculationTypePrice2.resx">
+      <DependentUpon>202201192208440_ItemOrderUpdateCalculationTypePrice2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201200021574_DeleteItemKnitDensity.resx">
+      <DependentUpon>202201200021574_DeleteItemKnitDensity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201200048589_DeleteItemQuality.resx">
+      <DependentUpon>202201200048589_DeleteItemQuality.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201211437370_CountryAdd.resx">
+      <DependentUpon>202201211437370_CountryAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201211537475_CityAdd.resx">
+      <DependentUpon>202201211537475_CityAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201211859183_DsitrictAdd.resx">
+      <DependentUpon>202201211859183_DsitrictAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201212040455_LOrderAddedCity.resx">
+      <DependentUpon>202201212040455_LOrderAddedCity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201221441037_customsUpdate2.resx">
+      <DependentUpon>202201221441037_customsUpdate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201221445529_customsUpdate3.resx">
+      <DependentUpon>202201221445529_customsUpdate3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201231748374_ItemLoadAdded.resx">
+      <DependentUpon>202201231748374_ItemLoadAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201232225148_firmUpdate%28Ladametre%29.resx">
+      <DependentUpon>202201232225148_firmUpdate%28Ladametre%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201242111028_ItemLoadDetailUpdate.resx">
+      <DependentUpon>202201242111028_ItemLoadDetailUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.resx">
+      <DependentUpon>202201242112466_ItemLoadDetailUpdate%28ItemorderDetailIdAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.resx">
+      <DependentUpon>202201242131493_ItemLoadDetailUpdate%28LoadStatusdAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.resx">
+      <DependentUpon>202201242301456_ItemLoadUpdate%28LoadStatusdUpdate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.resx">
+      <DependentUpon>202201260046053_ItemLoadUpdate%28ıtemOrdercheck%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.resx">
+      <DependentUpon>202201260128185_ItemLoadUpdate%28ıtemOrdercheck%292.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201261113074_UpdateItemLoad%28OrderNo%29.resx">
+      <DependentUpon>202201261113074_UpdateItemLoad%28OrderNo%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201271324033_ItemOrderUpdate%28UserAdded%29.resx">
+      <DependentUpon>202201271324033_ItemOrderUpdate%28UserAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201271328263_ItemOrderUpdate%28UserAdded2%29.resx">
+      <DependentUpon>202201271328263_ItemOrderUpdate%28UserAdded2%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.resx">
+      <DependentUpon>202201280157087_ItemLoadUpdate%28LoadAuthorAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.resx">
+      <DependentUpon>202201280215299_ItemLoadUpdate%28UserAuthorAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201281420386_FirmUpdate%28CityAndCountryAdd%29.resx">
+      <DependentUpon>202201281420386_FirmUpdate%28CityAndCountryAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.resx">
+      <DependentUpon>202201281712058_ItemLoadUpdate%28CityAndCountryAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.resx">
+      <DependentUpon>202201281721252_ItemLoadUpdate%28CityAndCountryAdd%292.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.resx">
+      <DependentUpon>202201282111171_ItemLoadUpdate%28ShipperFirmExplanationAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201291352386_ItemOrderAndItemLoad%28Update%29.resx">
+      <DependentUpon>202201291352386_ItemOrderAndItemLoad%28Update%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.resx">
+      <DependentUpon>202201301628406_ItelLoadAndItemOrderUpdate%28ForexTypeId%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201311235218_CodeCounterAdd.resx">
+      <DependentUpon>202201311235218_CodeCounterAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202011319346_ItemLoadRevize.resx">
+      <DependentUpon>202202011319346_ItemLoadRevize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.resx">
+      <DependentUpon>202202021314129_ItemLoadUpdate%28HasCmrDeliveryed%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.resx">
+      <DependentUpon>202202021316281_ItemLoadUpdate%28HasCmrDeliveryed2%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.resx">
+      <DependentUpon>202202021916311_ItemLoadUpdate%28createdUserIdUpdate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202022201418_Vehicle%28CareInsuranceTire%29Update.resx">
+      <DependentUpon>202202022201418_Vehicle%28CareInsuranceTire%29Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202042126417_VehicleUpdate%28HasLoadPlannig%29.resx">
+      <DependentUpon>202202042126417_VehicleUpdate%28HasLoadPlannig%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202052046395_Driveradd.resx">
+      <DependentUpon>202202052046395_Driveradd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202052049123_Driverupdate.resx">
+      <DependentUpon>202202052049123_Driverupdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.resx">
+      <DependentUpon>202202080957498_ItemLoadUpdate%28CustomsArrivalAdded%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.resx">
+      <DependentUpon>202202081004549_ItemLoadUpdate%28CustomsArrivalDelete%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.resx">
+      <DependentUpon>202202081006567_ItemLoadUpdate%28FirmCustomsArrivalAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202111044135_RoundCostCategoryAdd.resx">
+      <DependentUpon>202202111044135_RoundCostCategoryAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.resx">
+      <DependentUpon>202202111257562_ItemLoadAndItemOrderAdd%28ScheduledUpdateDate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131321387_RoundCostCategoryDelete.resx">
+      <DependentUpon>202202131321387_RoundCostCategoryDelete.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131322322_RoundCostCategoryAdd1.resx">
+      <DependentUpon>202202131322322_RoundCostCategoryAdd1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131416140_ItemLoadCostAdd.resx">
+      <DependentUpon>202202131416140_ItemLoadCostAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131417266_ItemLoadCostAdd%28FprexTypeId%29.resx">
+      <DependentUpon>202202131417266_ItemLoadCostAdd%28FprexTypeId%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131547435_RotaAdded.resx">
+      <DependentUpon>202202131547435_RotaAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202131556035_RotaUpdate%28CityAdd%29.resx">
+      <DependentUpon>202202131556035_RotaUpdate%28CityAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151542143_VoyageAdd.resx">
+      <DependentUpon>202202151542143_VoyageAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151604269_VoyageUpdate%28StartCityadd%29.resx">
+      <DependentUpon>202202151604269_VoyageUpdate%28StartCityadd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151629325_VoyageUpdate%28LoadCityadd%29.resx">
+      <DependentUpon>202202151629325_VoyageUpdate%28LoadCityadd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151633420_VoyageUpdate%28LoadCountryAdd%29.resx">
+      <DependentUpon>202202151633420_VoyageUpdate%28LoadCountryAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151639306_VoyageUpdate%28LoadCustomsAdd%29.resx">
+      <DependentUpon>202202151639306_VoyageUpdate%28LoadCustomsAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.resx">
+      <DependentUpon>202202151701449_VoyageUpdate%28,CustomsDoorAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202151708454_VoyageUpdate%28VehicleAdd%29.resx">
+      <DependentUpon>202202151708454_VoyageUpdate%28VehicleAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.resx">
+      <DependentUpon>202202181131563_ItemLoadUpdate%28VehicleIdAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.resx">
+      <DependentUpon>202202181201506_ItemLoadUpdate%28VehicleIUpdate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202251948237_VoyageDetailAdd.resx">
+      <DependentUpon>202202251948237_VoyageDetailAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202260944527_VoyageDetailUpdate%28RotaAdd%29.resx">
+      <DependentUpon>202202260944527_VoyageDetailUpdate%28RotaAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.resx">
+      <DependentUpon>202202261228486_VoyageDetailUpdate%28DischargeLineNoAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.resx">
+      <DependentUpon>202202262044000_ItemLoadUpdate%28VoyageCreatedUserAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.resx">
+      <DependentUpon>202202281041068_VoyageUpdate%28DriverSubsistenceAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202281216510_VoyageUpdate%28OverallWeightAdd%29.resx">
+      <DependentUpon>202202281216510_VoyageUpdate%28OverallWeightAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203011032432_FirmAddressAdd.resx">
+      <DependentUpon>202203011032432_FirmAddressAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.0.6.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.0.3.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.0.2.sql" />
+    <EmbeddedResource Include="Migration\Versions\1.0.0.1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

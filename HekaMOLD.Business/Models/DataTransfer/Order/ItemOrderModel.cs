@@ -15,6 +15,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public int? OrderUploadPointType { get; set; }
         public int? OrderTransactionDirectionType { get; set; }
         public Nullable<int> CustomerFirmId { get; set; }
+        public int? ReelOwnerFirmId { get; set; }
         //Gönderici Firma
         public int? ShipperFirmId { get; set; }
         public int? BuyerFirmId { get; set; }
@@ -46,12 +47,20 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public DateTime? SyncDate { get; set; }
         public int? SyncUserId { get; set; }
         public string SyncKey { get; set; }
+        public Nullable<System.DateTime> ArrivalWarehouseDate { get; set; }
+        //musteriden alinis Tarihi
+        public Nullable<System.DateTime> ReceiptFromCustomerDate { get; set; }
+        //Tahmini Yukleme Tarihi
+        public Nullable<System.DateTime> EstimatedUplodDate { get; set; }
+        //Istenilen Varis Tarihi
+        public Nullable<System.DateTime> IntendedArrivalDate { get; set; }
         public Nullable<int> ForexTypeId { get; set; }
         public ItemOrderDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS
         public string CustomerFirmCode { get; set; }
         public string CustomerFirmName { get; set; }
+        public string ReelOwnerFirmName { get; set; }
         public string ShipperFirmCode { get; set; }
         public string ShipperFirmName { get; set; }
         public string BuyerFirmCode { get; set; }
@@ -79,6 +88,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string ForexTypeCode { get; set; }
         public string OrderDateWeek { get; set; }
         public string ScheduledUploadDateStr { get; set; }
+        public string ArrivalWarehouseDateStr { get; set; }
+        public string ReceiptFromCustomerDateStr { get; set; }
+        public string EstimatedUplodDateStr { get; set; }
+        public string IntendedArrivalDateStr { get; set; }
         #endregion
     }
 }

@@ -37,7 +37,7 @@
         else
             directionId = $scope.selectedOrderTransactionDirectionType.Id;
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'LPlanning/GetNextVoyageCode?Id=' + directionId, {}, 'json')
+            $http.get(HOST_URL + 'Voyage/GetVoyageCode?strParam=' + directionId + '-' + $scope.selectedTraillerVehicle.VehicleAllocationType, {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         if (resp.data.Result) {
@@ -92,6 +92,8 @@
                     LoadingDateStr: x.LoadingDateStr,
                     LoadOutDate: x.LoadOutDateStr,
                     CustomerFirmName: x.CustomerFirmName,
+                    ShipperFirmName: x.ShipperFirmName,
+                    BuyerFirmName: x.BuyerFirmName,
                     OrderTransactionDirectionType: x.OrderTransactionDirectionType,
                     OrderTransactionDirectionTypeStr: x.OrderTransactionDirectionTypeStr,
                     OrderCalculationType: x.OrderCalculationType,
@@ -136,9 +138,13 @@
                     CmrCustomerDeliveryDate: x.CmrCustomerDeliveryDateStr,
                     BringingToWarehousePlate: x.BringingToWarehousePlate,
                     ShipperCityId: x.ShipperCityId,
+                    ShipperCityName: x.ShipperCityName,
                     BuyerCityId: x.BuyerCityId,
+                    BuyerCityName: x.BuyerCityName,
                     ShipperCountryId: x.ShipperCountryId,
+                    ShipperCountryName: x.ShipperCountryName,
                     BuyerCountryId: x.BuyerCountryId,
+                    BuyerCountryName: x.BuyerCountryName,
                     CustomerFirmId: x.CustomerFirmId,
                     ShipperFirmId: x.ShipperFirmId,
                     BuyerFirmId: x.BuyerFirmId,
@@ -291,8 +297,10 @@
                 },
                 update: function (key, values) {
                     var obj = $scope.modelObject.VoyageDetails.find(d => d.Id == key);
-                    if (obj != null) {
 
+                    if (obj != null) {
+                        if (typeof values.LoadingLineNo != 'undefined') { obj.LoadingLineNo = values.LoadingLineNo; }
+                        if (typeof values.DischargeLineNo != 'undefined') { obj.DischargeLineNo = values.DischargeLineNo; }
                         if (typeof values.RotaId != 'undefined') {
                             var rotaObj = $scope.rotaList.find(d => d.Id == values.RotaId);
                             obj.RotaId = rotaObj.Id;
@@ -330,44 +338,26 @@
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
-                allowAdding: true,
+                allowAdding: false,
                 mode: 'cell'
             },
             repaintChangesOnly: true,
             columns: [
+                { dataField: 'LoadingLineNo', caption: 'Yükleme Sırası', allowEditing: true },
                 { dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası', allowEditing: true },
                 { dataField: 'LoadCode', caption: 'Yük Kodu', allowEditing: false },
                 { dataField: 'LoadingDateStr', caption: 'Yükleme Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
-                //{ dataField: 'CustomerFirmName', caption: 'Firma', allowEditing: false },
-                //{ dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü', allowEditing: false },
+                { dataField: 'CustomerFirmName', caption: 'Müşteri', allowEditing: false },
+                { dataField: 'ShipperFirmName', caption: 'Gönderici Firma', allowEditing: false },
+                { dataField: 'BuyerFirmName', caption: 'Alıcı Firma', allowEditing: false },
                 { dataField: 'OveralQuantity', caption: 'Toplam Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık', allowEditing: false },
-                { dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OveralVolume', caption: 'Toplam Hacim', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                {
-                    dataField: 'RotaId', caption: 'Rota',
-                    lookup: {
-                        dataSource: $scope.rotaList,
-                        valueExpr: "Id",
-                        displayExpr: "RotaId"
-                    },
-                    allowSorting: false,
-                    validationRules: [{ type: "required" }],
-                    editCellTemplate: $scope.dropDownBoxEditorTemplate,
-                    cellTemplate: function (container, options) {
-                        if (typeof options.row.data.RotaId != 'undefined'
-                            && options.row.data.RotaId != null && options.row.data.RotaId.length > 0)
-                            container.text(options.row.data.RotaId);
-                        else
-                            container.text(options.displayValue);
-                    }
-                },
-                { dataField: 'CityStartPostCode', caption: 'Başlama Şehri Posta Kodu' },
-                { dataField: 'CityStartName', caption: 'Başlama' },
-                { dataField: 'CityEndPostCode', caption: 'Bitiş Şehri Posta Kodu' },
-                { dataField: 'CityEndName', caption: 'Bitiş Şehri' },
-                { dataField: 'KmHour', caption: 'Km' }
-
+                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)', allowEditing: false },
+                { dataField: 'BuyerCityName', caption: 'Boş. Şehri', allowEditing: false },
+                { dataField: 'BuyerCountryName', caption: 'Boş. Ülke', allowEditing: false },
+                { dataField: 'ShipperCityName', caption: 'Yük. Şehri', allowEditing: false },
+                { dataField: 'ShipperCountryName', caption: 'Yük. Ülke', allowEditing: false },
+                //{ dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'OveralVolume', caption: 'Toplam Hacim', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
             ]
         });
     }

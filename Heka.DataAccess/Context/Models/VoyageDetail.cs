@@ -77,6 +77,7 @@ namespace Heka.DataAccess.Context
         //Depoya Getiren Araç
         public string BringingToWarehousePlate { get; set; }
         public int? DischargeLineNo { get; set; }
+        public int? LoadingLineNo { get; set; }
 
         [ForeignKey("CityShipper")]
         public Nullable<int> ShipperCityId { get; set; }

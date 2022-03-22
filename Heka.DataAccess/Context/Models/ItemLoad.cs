@@ -35,19 +35,6 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> DateOfNeed { get; set; }
         public int? OveralQuantity { get; set; }
 
-        [ForeignKey("UserAuthor")]
-        public int? UserAuthorId { get; set; }
-        public DateTime? LoadingDate { get; set; }
-
-        [ForeignKey("Invoice")]
-        public int? InvoiceId { get; set; }
-
-        [ForeignKey("ForexType")]
-        public Nullable<int> ForexTypeId { get; set; }
-
-        [ForeignKey("Vehicle")]
-        public Nullable<int> VehicleTraillerId { get; set; }
-
         public int? InvoiceStatus { get; set; }
         //Navlun bedeli
         public decimal? InvoiceFreightPrice { get; set; }
@@ -57,14 +44,16 @@ namespace Heka.DataAccess.Context
         public string Explanation { get; set; }
         public string ShipperFirmExplanation { get; set; }
         public string BuyerFirmExplanation { get; set; }
+        public string BuyerFirmAddress { get; set; }
+        public string ShipperFirmAddress { get; set; }
+        public string CmrBuyerFirmAddress { get; set; }
+        public string CmrShipperFirmAddress { get; set; }
         //Hazır olma Tarihi
         public DateTime? ReadinessDate { get; set; }
         //Müşteriden teslim Alınış Tarihi
         public DateTime? DeliveryFromCustomerDate { get; set; }
         //İstenen Varış Tarihi
         public DateTime? IntendedArrivalDate { get; set; }
-        [ForeignKey("FirmCustomsArrival")]
-        public int? FirmCustomsArrivalId { get; set; }
         public string CustomsExplanation { get; set; }
         public string T1T2No { get; set; }
         //T Kapanış Tarihi
@@ -81,6 +70,20 @@ namespace Heka.DataAccess.Context
         public DateTime? CmrCustomerDeliveryDate { get; set; }
         //Depoya Getiren Araç
         public string BringingToWarehousePlate { get; set; }
+        public DateTime? BringingToWarehouseDate { get; set; }
+        public DateTime? LoadExitDate { get; set; }
+        public DateTime? DeliveryDate { get; set; }
+        public string DeclarationX1No { get; set; }
+        public DateTime? VoyageExitDate { get; set; }
+        public DateTime? VoyageEndDate { get; set; }
+        public string VoyageStartAddress { get; set; }
+        public string VoyageEndAddress { get; set; }
+        public int? LoadingLineNo { get; set; }
+        public int? DischargeLineNo { get; set; }
+        public Nullable<System.DateTime> OrderDate { get; set; }
+        public Nullable<System.DateTime> KapikuleEntryDate { get; set; }
+
+        public Nullable<System.DateTime> KapikuleExitDate { get; set; }
 
         [ForeignKey("CityShipper")]
         public Nullable<int> ShipperCityId { get; set; }
@@ -88,11 +91,23 @@ namespace Heka.DataAccess.Context
         [ForeignKey("CityBuyer")]
         public int? BuyerCityId { get; set; }
 
+        [ForeignKey("CityCmrShipper")]
+        public Nullable<int> CmrShipperCityId { get; set; }
+
+        [ForeignKey("CityCmrBuyer")]
+        public int? CmrBuyerCityId { get; set; }
+
         [ForeignKey("CountryShipper")]
         public Nullable<int> ShipperCountryId { get; set; }
 
         [ForeignKey("CountryBuyer")]
         public int? BuyerCountryId { get; set; }
+
+        [ForeignKey("CountryCmrShipper")]
+        public Nullable<int> CmrShipperCountryId { get; set; }
+
+        [ForeignKey("CountryCmrBuyer")]
+        public int? CmrBuyerCountryId { get; set; }
 
         [ForeignKey("FirmCustomer")]
         public Nullable<int> CustomerFirmId { get; set; }
@@ -103,6 +118,18 @@ namespace Heka.DataAccess.Context
         [ForeignKey("FirmBuyer")]
         public int? BuyerFirmId { get; set; }
 
+        [ForeignKey("FirmCmrShipper")]
+        public int? CmrShipperFirmId { get; set; }
+
+        [ForeignKey("FirmCmrBuyer")]
+        public int? CmrBuyerFirmId { get; set; }
+
+        [ForeignKey("FirmManufacturer")]
+        public int? ManufacturerFirmId { get; set; }
+
+        [ForeignKey("FirmReelOwner")]
+        public int? ReelOwnerFirmId { get; set; }
+
         [ForeignKey("CustomsEntry")]
         public int? EntryCustomsId { get; set; }
 
@@ -111,7 +138,6 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("ItemOrder")]
         public Nullable<int> ItemOrderId { get; set; }
-
 
         [ForeignKey("Plant")]
         public Nullable<int> PlantId { get; set; }
@@ -125,6 +151,40 @@ namespace Heka.DataAccess.Context
         [ForeignKey("UserVoyage")]
         public Nullable<int> VoyageCreatedUserId { get; set; }
 
+        [ForeignKey("UserAuthor")]
+        public int? UserAuthorId { get; set; }
+        public DateTime? LoadingDate { get; set; }
+
+        [ForeignKey("Invoice")]
+        public int? InvoiceId { get; set; }
+
+        [ForeignKey("ForexType")]
+        public Nullable<int> ForexTypeId { get; set; }
+
+        [ForeignKey("Vehicle")]
+        public Nullable<int> VehicleTraillerId { get; set; }
+
+        [ForeignKey("TowinfVehicle")]
+        public int? TowinfVehicleId { get; set; }
+
+        [ForeignKey("FirmCustomsArrival")]
+        public int? FirmCustomsArrivalId { get; set; }
+
+        [ForeignKey("FirmCustomsExit")]
+        public int? FirmCustomsExitId { get; set; }
+
+        [ForeignKey("VoyageStartCity")]
+        public int? VoyageStartCityId { get; set; }
+
+        [ForeignKey("VoyageEndCity")]
+        public int? VoyageEndCityId { get; set; }
+
+        [ForeignKey("VoyageStartCountry")]
+        public int? VoyageStartCountryId { get; set; }
+
+        [ForeignKey("VoyageEndCountry")]
+        public int? VoyageEndCountryId { get; set; }
+
         public Nullable<System.DateTime> CreatDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
@@ -136,18 +196,32 @@ namespace Heka.DataAccess.Context
         public virtual Firm FirmShipper { get; set; }
         public virtual Firm FirmBuyer { get; set; }
         public virtual Firm FirmCustomer { get; set; }
+        public virtual Firm FirmCmrBuyer { get; set; }
+        public virtual Firm FirmCmrShipper { get; set; }
         public virtual Customs CustomsEntry { get; set; }
         public virtual Customs CustomsExit { get; set; }
         public virtual Firm FirmCustomsArrival { get; set; }
+        public virtual Firm FirmCustomsExit { get; set; }
         public virtual Invoice Invoice { get; set; }
         public virtual Country CountryShipper { get; set; }
         public virtual Country CountryBuyer { get; set; }
+        public virtual Country CountryCmrShipper { get; set; }
+        public virtual Country CountryCmrBuyer { get; set; }
         public virtual City CityShipper { get; set; }
         public virtual City CityBuyer { get; set; }
+        public virtual City CityCmrShipper { get; set; }
+        public virtual City CityCmrBuyer { get; set; }
         public virtual ForexType ForexType { get; set; }
         public virtual Vehicle Vehicle { get; set; }
         public virtual Driver Driver { get; set; }
         public virtual User UserVoyage { get; set; }
+        public virtual Firm FirmManufacturer { get; set; }
+        public virtual Firm FirmReelOwner { get; set; }
+        public virtual Vehicle TowinfVehicle { get; set; }
+        public virtual City VoyageStartCity { get; set; }
+        public virtual City VoyageEndCity { get; set; }
+        public virtual Country VoyageStartCountry { get; set; }
+        public virtual Country VoyageEndCountry { get; set; }
 
         [InverseProperty("ItemLoad")]
         public virtual ICollection<ItemLoadDetail> ItemLoadDetail { get; set; }

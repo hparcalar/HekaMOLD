@@ -110,14 +110,17 @@
                 mode: 'cell'
             },
             columns: [
+
                 { dataField: 'LoadCode', caption: 'Yük Kodu', allowEditing: false },
                 { dataField: 'LoadingDateStr', caption: 'Yükleme Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
-                { dataField: 'CustomerFirmName', caption: 'Firma', allowEditing: false },
-                { dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü', allowEditing: false },
-                { dataField: 'OveralQuantity', caption: 'Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık', allowEditing: false },
-                { dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OveralVolume', caption: 'Toplam Hacim', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'CustomerFirmName', caption: 'Müşteri', allowEditing: true },
+                { dataField: 'ShipperFirmName', caption: 'Gönderici Firma', allowEditing: true },
+                { dataField: 'BuyerFirmName', caption: 'Alıcı Firma', allowEditing: true },
+                //{ dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü', allowEditing: false },
+                { dataField: 'OveralQuantity', caption: 'Toplam Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)', allowEditing: false },
+                //{ dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'OveralVolume', caption: 'Toplam Hacim', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'IsChecked', caption: 'Seç' }
 
            ]

@@ -617,6 +617,8 @@ namespace HekaMOLD.Business.UseCases
                 var dbLoad = new ItemLoad
                 {
                     CreatDate = DateTime.Now,
+                    OrderDate = dbOrder.OrderDate,
+                    DocumentNo = dbOrder.DocumentNo,
                     OrderNo = dbOrder.OrderNo,
                     CreatedUserId = userId,
                     DateOfNeed = dbOrder.DateOfNeed,
@@ -688,19 +690,19 @@ namespace HekaMOLD.Business.UseCases
                 var dbrepoCodeCounter = repoCodeCounter.Get(d => d.Id == objCodeCounter.Id);
                 if (dbOrder.OrderTransactionDirectionType == 1)
                 {
-                    dbrepoCodeCounter.Export++;
+                    dbrepoCodeCounter.OwnExport++;
                 }
                 if (dbOrder.OrderTransactionDirectionType == 2)
                 {
-                    dbrepoCodeCounter.Import++;
+                    dbrepoCodeCounter.OwnImport++;
                 }
                 if (dbOrder.OrderTransactionDirectionType == 3)
                 {
-                    dbrepoCodeCounter.Domestic++;
+                    dbrepoCodeCounter.OwnDomestic++;
                 }
                 if (dbOrder.OrderTransactionDirectionType == 4)
                 {
-                    dbrepoCodeCounter.Transit++;
+                    dbrepoCodeCounter.OwnTransit++;
                 }
                 #endregion
                 _unitOfWork.SaveChanges();

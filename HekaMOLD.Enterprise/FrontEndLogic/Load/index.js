@@ -5,17 +5,24 @@
     $scope.unitList = [];
     $scope.firmList = [];
     $scope.forexList = [];
+    $scope.driverList = [];
+
+    $scope.itemOrderDetailList = [];
+
     $scope.customsList = [];
     $scope.usersList = [];
     $scope.cityList = [];
     $scope.countryList = [];
     $scope.firmArrivalCustoms = [];
-    $scope.vehicleTraillerList = [];
+    $scope.vehicleTrailerList = [];
+    $scope.vehicleTowinfList = [];
 
     $scope.selectedUser = {};
+    $scope.selectedDriver = {};
     $scope.selectedCustomerFirm = {};
     $scope.selectedRow = { Id: 0 };
-    $scope.selectedVehicleTrailler = { };
+    $scope.selectedVehicleTrailer = {};
+    $scope.selectedTowinfVehicle = {};
 
     $scope.selectedEntryCustoms = {};
     $scope.selectedExitCustoms = {};
@@ -23,10 +30,28 @@
     $scope.selectedBuyerCountry = {};
     $scope.selectedShipperCity = {};
     $scope.selectedShipperCountry = {};
+    $scope.selectedCmrBuyerCity = {};
+    $scope.selectedCmrBuyerCountry = {};
+    $scope.selectedCmrShipperCity = {};
+    $scope.selectedCmrShipperCountry = {};
     $scope.selectedForexType = {};
-    $scope.selectedFirmArrivalCustoms = {};
-
+    $scope.selectedFirmCustomsArrival = {};
+    $scope.selectedFirmCustomsExit = {};
+    $scope.selectedFirmReelOwner = {};
+    $scope.selectedFirmManufacturer = {};
     $scope.selectedOrderUploadType = {};
+    $scope.selectedBuyerFirm = {};
+    $scope.selectedShipperFirm = {};
+    $scope.selectedCmrBuyerFirm = {};
+    $scope.selectedCmrShipperFirm = {};
+
+    $scope.selectedVoyageStartCity = {};
+    $scope.selectedVoyageStartCountry = {};
+    $scope.selectedVoyageEndCity = {};
+    $scope.selectedVoyageEndCountry = {};
+
+    $scope.modelObject.ShipperFirmAddress = "";
+    $scope.modelObject.BuyerFirmAddress = "";
     $scope.orderUploadTypeList = [{ Id: 1, Text: 'Grupaj' }, { Id: 2, Text: 'Komple' }];
 
     $scope.selectedOrderTransactionDirectionType = {};
@@ -40,9 +65,9 @@
     $scope.orderCalculationTypeList = [{ Id: 1, Text: 'Ağırlık' }, { Id: 2, Text: 'Metreküp' }, { Id: 3, Text: 'Ladametre' }, { Id: 4, Text: 'Komple' }, { Id: 5, Text: 'Minimun' }];
 
     $scope.selectedLoadStatusType = { Id: 0 };
-    $scope.loadStatusTypeList = [{ Id: 2, Text: 'Hazır Bekliyor' }, { Id: 3, Text: 'Yük Depoda' }, { Id: 4, Text: 'Müşteriden Alınacak' }, { Id: 12, Text: 'Yüklemede' }, { Id: 13, Text: 'Yüklendi' },
-        { Id: 5, Text: 'Yurtiçi Gümrükte' }, { Id: 6, Text: 'Kapıkulede' }, { Id: 7, Text: 'Yurtdışı Yolda' }, { Id: 8, Text: 'Yurtdışı Gümrükte' }, { Id: 9, Text: 'Boşaltmada' },
-        { Id: 10, Text: 'Boşaltıldı' }, { Id: 11, Text: 'Tamamlandı' }];
+    $scope.loadStatusTypeList = [{ Id: 2, Text: 'Hazır Bekliyor' }, { Id: 3, Text: 'Yük Depoda' }, { Id: 4, Text: 'Müşteriden Yüklendi' },
+    { Id: 5, Text: 'Yurtiçi Gümrükte' }, { Id: 6, Text: 'Kapıkulede' }, { Id: 7, Text: 'Yurtdışı Yolda' }, { Id: 8, Text: 'Yurtdışı Gümrükte' }, { Id: 9, Text: 'Boşaltmada' },
+    { Id: 10, Text: 'Boşaltıldı' }, { Id: 11, Text: 'Yüklemede' }, { Id: 12, Text: 'Yüklendi' }, { Id: 13, Text: 'Tamamlandı' }];
 
     $scope.selectedTrailerType = {};
     $scope.trailerTypeList = [{ Id: 1, Text: 'Çadırlı' },
@@ -139,6 +164,10 @@
         }
     });
     // #endregion
+    // INFORMATIONS & ATTACHMENTS
+    $scope.showRecordInformation = function () {
+        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType: 'ItemOrder' });
+    }
     // FUNCTIONS
     $scope.getNextOrderNo = function () {
 
@@ -204,23 +233,34 @@
         return prms;
     }
     // SELECTABLES
-    $scope.showFirmDialog = function () {
-        $('#dial-firm').dialog({
-            position: { my: 'left top', at: 'right top', of: $('#btnSelectFirm') },
+    // #region VOYAGE MANAGEMENT
+    $scope.showNewShipperFirmAddressForm = function () {
+        $scope.$broadcast('loadShipperFirmAddress', { Id: $scope.selectedShipperFirm.Id });
+
+        $('#dial-ShipperFirmAddress').dialog({
             hide: true,
-            modal: false,
+            modal: true,
             resizable: false,
+            width: window.innerWidth * 0.6,
+            height: window.innerHeight * 0.7,
             show: true,
             draggable: false,
             closeText: "KAPAT"
         });
     }
-    $scope.selectFirm = function (item) {
-        $scope.modelObject.FirmId = item.Id;
-        $scope.modelObject.FirmCode = item.FirmCode;
-        $scope.modelObject.FirmName = item.FirmName;
+    $scope.showNewBuyerFirmAddressForm = function () {
+        $scope.$broadcast('loadBuyerFirmAddress', { Id: $scope.selectedBuyerFirm.Id });
 
-        $('#dial-firm').dialog("close");
+        $('#dial-BuyerFirmAddress').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: window.innerWidth * 0.6,
+            height: window.innerHeight * 0.7,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
     }
 
     // CRUD
@@ -228,6 +268,8 @@
         $scope.modelObject = { Id: 0, Details: [], LoadStatus: 0 };
         $scope.selectedFirm = {};
         $scope.selectedUser = {};
+        $scope.selectedDriver = {};
+
         $scope.selectedOrderUploadType = {};
         $scope.selectedOrderTransactionDirectionType = {};
         $scope.selectedOrderCalculationType = { Id: 0 };
@@ -238,21 +280,34 @@
         $scope.selectedBuyerCountry = {};
         $scope.selectedShipperCity = {};
         $scope.selectedShipperCountry = {};
-        $scope.modelObject.ShipperFirmExplanation = "";
-        $scope.modelObject.BuyerFirmExplanation = "";
+        $scope.modelObject.ShipperFirmAddress = "";
+        $scope.modelObject.BuyerFirmAddress = "";
         $scope.modelObject.Explanation = "";
         $scope.selectedBuyerFirm = {};
         $scope.selectedShipperFirm = {};
         $scope.selectedCustomerFirm = {};
+        $scope.selectedCmrShipperFirm = {};
+        $scope.selectedCmrBuyerFirm = {};
         $scope.modelObject.Explanation = "";
         $scope.modelObject.OrderNo = "";
-        $scope.selectedFirmArrivalCustoms = {};
-        $scope.selectedVehicleTrailler = {};
-
-        $scope.getNextOrderNo().then(function (rNo) {
-            $scope.modelObject.OrderNo = rNo;
-            $scope.$apply();
-        });
+        $scope.selectedFirmCustomsArrival = {};
+        $scope.selectedFirmCustomsExit = {};
+        $scope.selectedVehicleTrailer = {};
+        $scope.selectedFirmReelOwner = {};
+        $scope.selectedFirmManufacturer = {};
+        $scope.selectedTowinfVehicle = {};
+        $scope.selectedVoyageStartCity = {};
+        $scope.selectedVoyageStartCountry = {};
+        $scope.selectedVoyageEndCity = {};
+        $scope.selectedVoyageEndCountry = {};
+        $scope.selectedCmrBuyerCity = {};
+        $scope.selectedCmrBuyerCountry = {};
+        $scope.selectedCmrShipperCity = {};
+        $scope.selectedCmrShipperCountry = {};
+        //$scope.getNextOrderNo().then(function (rNo) {
+        //    $scope.modelObject.OrderNo = rNo;
+        //    $scope.$apply();
+        //});
         $scope.bindDetails();
     }
 
@@ -310,6 +365,16 @@
         else
             $scope.modelObject.BuyerFirmId = null;
 
+        if (typeof $scope.selectedCmrShipperFirm != 'undefined' && $scope.selectedCmrShipperFirm != null)
+            $scope.modelObject.CmrShipperFirmId = $scope.selectedCmrShipperFirm.Id;
+        else
+            $scope.modelObject.CmrShipperFirmId = null;
+
+        if (typeof $scope.selectedCmrBuyerFirm != 'undefined' && $scope.selectedCmrBuyerFirm != null)
+            $scope.modelObject.CmrBuyerFirmId = $scope.selectedCmrBuyerFirm.Id;
+        else
+            $scope.modelObject.CmrBuyerFirmId = null;
+
         if (typeof $scope.selectedEntryCustoms != 'undefined' && $scope.selectedEntryCustoms != null)
             $scope.modelObject.EntryCustomsId = $scope.selectedEntryCustoms.Id;
         else
@@ -355,6 +420,16 @@
         else
             $scope.modelObject.BuyerCountryId = null;
 
+        if (typeof $scope.selectedCmrShipperCountry != 'undefined' && $scope.selectedCmrShipperCountry != null)
+            $scope.modelObject.CmrShipperCountryId = $scope.selectedCmrShipperCountry.Id;
+        else
+            $scope.modelObject.CmrShipperCountryId = null;
+
+        if (typeof $scope.selectedCmrBuyerCountry != 'undefined' && $scope.selectedCmrBuyerCountry != null)
+            $scope.modelObject.CmrBuyerCountryId = $scope.selectedCmrBuyerCountry.Id;
+        else
+            $scope.modelObject.CmrBuyerCountryId = null;
+
         if (typeof $scope.selectedShipperCity != 'undefined' && $scope.selectedShipperCity != null)
             $scope.modelObject.ShipperCityId = $scope.selectedShipperCity.Id;
         else
@@ -364,6 +439,16 @@
             $scope.modelObject.BuyerCityId = $scope.selectedBuyerCity.Id;
         else
             $scope.modelObject.BuyerCityId = null;
+
+        if (typeof $scope.selectedCmrShipperCity != 'undefined' && $scope.selectedCmrShipperCity != null)
+            $scope.modelObject.CmrShipperCityId = $scope.selectedCmrShipperCity.Id;
+        else
+            $scope.modelObject.CmrShipperCityId = null;
+
+        if (typeof $scope.selectedCmrBuyerCity != 'undefined' && $scope.selectedCmrBuyerCity != null)
+            $scope.modelObject.CmrBuyerCityId = $scope.selectedCmrBuyerCity.Id;
+        else
+            $scope.modelObject.CmrBuyerCityId = null;
 
         if (typeof $scope.selectedForexType != 'undefined' && $scope.selectedForexType != null)
             $scope.modelObject.ForexTypeId = $scope.selectedForexType.Id;
@@ -375,13 +460,18 @@
         else
             $scope.modelObject.TrailerType = null;
 
-        if (typeof $scope.selectedFirmArrivalCustoms != 'undefined' && $scope.selectedFirmArrivalCustoms != null)
-            $scope.modelObject.FirmCustomsArrivalId = $scope.selectedFirmArrivalCustoms.Id;
+        if (typeof $scope.selectedFirmCustomsArrival != 'undefined' && $scope.selectedFirmCustomsArrival != null)
+            $scope.modelObject.FirmCustomsArrivalId = $scope.selectedFirmCustomsArrival.Id;
         else
             $scope.modelObject.FirmCustomsArrivalId = null;
 
-        if (typeof $scope.selectedVehicleTrailler != 'undefined' && $scope.selectedVehicleTrailler != null)
-            $scope.modelObject.VehicleTraillerId = $scope.selectedVehicleTrailler.Id;
+        if (typeof $scope.selectedFirmCustomsExit != 'undefined' && $scope.selectedFirmCustomsExit != null)
+            $scope.modelObject.FirmCustomsExitId = $scope.selectedFirmCustomsExit.Id;
+        else
+            $scope.modelObject.FirmCustomsExitId = null;
+
+        if (typeof $scope.selectedVehicleTrailer != 'undefined' && $scope.selectedVehicleTrailer != null)
+            $scope.modelObject.VehicleTraillerId = $scope.selectedVehicleTrailer.Id;
         else
             $scope.modelObject.VehicleTraillerId = null;
 
@@ -389,6 +479,51 @@
             $scope.modelObject.LoadStatusType = $scope.selectedLoadStatusType.Id;
         else
             $scope.modelObject.LoadStatusType = null;
+
+        if (typeof $scope.selectedFirmManufacturer != 'undefined' && $scope.selectedFirmManufacturer != null)
+            $scope.modelObject.ManufacturerFirmId = $scope.selectedFirmManufacturer.Id;
+        else
+            $scope.modelObject.ManufacturerFirmId = null;
+
+        if (typeof $scope.selectedFirmReelOwner != 'undefined' && $scope.selectedFirmReelOwner != null)
+            $scope.modelObject.ReelOwnerFirmId = $scope.selectedFirmReelOwner.Id;
+        else
+            $scope.modelObject.ReelOwnerFirmId = null;
+
+        if (typeof $scope.selectedVehicleTrailer != 'undefined' && $scope.selectedVehicleTrailer != null)
+            $scope.modelObject.VehicleTraillerId = $scope.selectedVehicleTrailer.Id;
+        else
+            $scope.modelObject.VehicleTraillerId = null;
+
+        if (typeof $scope.selectedTowinfVehicle != 'undefined' && $scope.selectedTowinfVehicle != null)
+            $scope.modelObject.TowinfVehicleId = $scope.selectedTowinfVehicle.Id;
+        else
+            $scope.modelObject.TowinfVehicleId = null;
+
+        if (typeof $scope.selectedDriver != 'undefined' && $scope.selectedDriver != null)
+            $scope.modelObject.DriverId = $scope.selectedDriver.Id;
+        else
+            $scope.modelObject.DriverId = null;
+
+        if (typeof $scope.selectedVoyageStartCity != 'undefined' && $scope.selectedVoyageStartCity != null)
+            $scope.modelObject.VoyageStartCityId = $scope.selectedVoyageStartCity.Id;
+        else
+            $scope.modelObject.VoyageStartCityId = null;
+
+        if (typeof $scope.selectedVoyageStartCountry != 'undefined' && $scope.selectedVoyageStartCountry != null)
+            $scope.modelObject.VoyageStartCountryId = $scope.selectedVoyageStartCountry.Id;
+        else
+            $scope.modelObject.VoyageStartCountryId = null;
+
+        if (typeof $scope.selectedVoyageEndCity != 'undefined' && $scope.selectedVoyageEndCity != null)
+            $scope.modelObject.VoyageEndCityId = $scope.selectedVoyageEndCity.Id;
+        else
+            $scope.modelObject.VoyageEndCityId = null;
+
+        if (typeof $scope.selectedVoyageEndCountry != 'undefined' && $scope.selectedVoyageEndCountry != null)
+            $scope.modelObject.VoyageEndCountryId = $scope.selectedVoyageEndCountry.Id;
+        else
+            $scope.modelObject.VoyageEndCountryId = null;
 
         $http.post(HOST_URL + 'Load/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
@@ -463,6 +598,16 @@
                     else
                         $scope.selectedBuyerFirm = {};
 
+                    if (typeof $scope.modelObject.CmrShipperFirmId != 'undefined' && $scope.modelObject.CmrShipperFirmId != null)
+                        $scope.selectedCmrShipperFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.CmrShipperFirmId);
+                    else
+                        $scope.selectedCmrShipperFirm = {};
+
+                    if (typeof $scope.modelObject.CmrBuyerFirmId != 'undefined' && $scope.modelObject.CmrBuyerFirmId != null)
+                        $scope.selectedCmrBuyerFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.CmrBuyerFirmId);
+                    else
+                        $scope.selectedCmrBuyerFirm = {};
+
                     if (typeof $scope.modelObject.CustomerFirmId != 'undefined' && $scope.modelObject.CustomerFirmId != null)
                         $scope.selectedCustomerFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.CustomerFirmId);
                     else
@@ -513,6 +658,16 @@
                     else
                         $scope.selectedBuyerCountry = {};
 
+                    if (typeof $scope.modelObject.CmrShipperCountryId != 'undefined' && $scope.modelObject.CmrShipperCountryId != null)
+                        $scope.selectedCmrShipperCountry = $scope.countryList.find(d => d.Id == $scope.modelObject.CmrShipperCountryId);
+                    else
+                        $scope.selectedCmrShipperCountry = {};
+
+                    if (typeof $scope.modelObject.CmrBuyerCountryId != 'undefined' && $scope.modelObject.CmrBuyerCountryId != null)
+                        $scope.selectedCmrBuyerCountry = $scope.countryList.find(d => d.Id == $scope.modelObject.CmrBuyerCountryId);
+                    else
+                        $scope.selectedCmrBuyerCountry = {};
+
                     if (typeof $scope.modelObject.ShipperCityId != 'undefined' && $scope.modelObject.ShipperCityId != null)
                         $scope.selectedShipperCity = $scope.cityList.find(d => d.Id == $scope.modelObject.ShipperCityId);
                     else
@@ -522,6 +677,16 @@
                         $scope.selectedBuyerCity = $scope.cityList.find(d => d.Id == $scope.modelObject.BuyerCityId);
                     else
                         $scope.selectedBuyerCity = {};
+
+                    if (typeof $scope.modelObject.CmrShipperCityId != 'undefined' && $scope.modelObject.CmrShipperCityId != null)
+                        $scope.selectedCmrShipperCity = $scope.cityList.find(d => d.Id == $scope.modelObject.CmrShipperCityId);
+                    else
+                        $scope.selectedCmrShipperCity = {};
+
+                    if (typeof $scope.modelObject.CmrBuyerCityId != 'undefined' && $scope.modelObject.CmrBuyerCityId != null)
+                        $scope.selectedCmrBuyerCity = $scope.cityList.find(d => d.Id == $scope.modelObject.CmrBuyerCityId);
+                    else
+                        $scope.selectedCmrBuyerCity = {};
 
                     if (typeof $scope.modelObject.ForexTypeId != 'undefined' && $scope.modelObject.ForexTypeId != null)
                         $scope.selectedForexType = $scope.forexList.find(d => d.Id == $scope.modelObject.ForexTypeId);
@@ -534,24 +699,69 @@
                         $scope.selectedTrailerType = {};
 
                     if (typeof $scope.modelObject.FirmCustomsArrivalId != 'undefined' && $scope.modelObject.FirmCustomsArrivalId != null)
-                        $scope.selectedFirmArrivalCustoms = $scope.firmArrivalCustomsList.find(d => d.Id == $scope.modelObject.FirmCustomsArrivalId
-                        );
+                        $scope.selectedFirmCustomsArrival = $scope.firmCustomsList.find(d => d.Id == $scope.modelObject.FirmCustomsArrivalId);
                     else
-                        $scope.selectedFirmArrivalCustoms = {};
+                        $scope.selectedFirmCustomsArrival = {};
 
-                    if (typeof $scope.modelObject.VehicleTraillerId != 'undefined' && $scope.modelObject.VehicleTraillerId != null)
-                        $scope.selectedVehicleTrailler = $scope.vehicleTraillerList.find(d => d.Id == $scope.modelObject.VehicleTraillerId
-                        );
+                    if (typeof $scope.modelObject.FirmCustomsExitId != 'undefined' && $scope.modelObject.FirmCustomsExitId != null)
+                        $scope.selectedFirmCustomsExit = $scope.firmCustomsList.find(d => d.Id == $scope.modelObject.FirmCustomsExitId);
                     else
-                        $scope.selectedFirmArrivalCustoms = {};
+                        $scope.selectedFirmCustomsExit = {};
 
                     if (typeof $scope.modelObject.LoadStatusType != 'undefined' && $scope.modelObject.LoadStatusType != null)
-                        $scope.selectedLoadStatusType = $scope.loadStatusTypeList.find(d => d.Id == $scope.modelObject.LoadStatusType
-                        );
+                        $scope.selectedLoadStatusType = $scope.loadStatusTypeList.find(d => d.Id == $scope.modelObject.LoadStatusType);
                     else
                         $scope.selectedLoadStatusType = {};
 
+                    if (typeof $scope.modelObject.ManufacturerFirmId != 'undefined' && $scope.modelObject.ManufacturerFirmId != null)
+                        $scope.selectedFirmManufacturer = $scope.firmList.find(d => d.Id == $scope.modelObject.ManufacturerFirmId);
+                    else
+                        $scope.selectedFirmManufacturer = {};
+
+                    if (typeof $scope.modelObject.ReelOwnerFirmId != 'undefined' && $scope.modelObject.ReelOwnerFirmId != null)
+                        $scope.selectedFirmReelOwner = $scope.firmList.find(d => d.Id == $scope.modelObject.ReelOwnerFirmId);
+                    else
+                        $scope.selectedFirmReelOwner = {};
+
+                    if (typeof $scope.modelObject.VehicleTraillerId != 'undefined' && $scope.modelObject.VehicleTraillerId != null)
+                        $scope.selectedVehicleTrailer = $scope.vehicleTrailerList.find(d => d.Id == $scope.modelObject.VehicleTraillerId);
+                    else
+                        $scope.selectedVehicleTrailer = {};
+
+                    if (typeof $scope.modelObject.TowinfVehicleId != 'undefined' && $scope.modelObject.TowinfVehicleId != null)
+                        $scope.selectedTowinfVehicle = $scope.vehicleTowinfList.find(d => d.Id == $scope.modelObject.TowinfVehicleId);
+                    else
+                        $scope.selectedTowinfVehicle = {};
+
+                    if (typeof $scope.modelObject.DriverId != 'undefined' && $scope.modelObject.DriverId != null)
+                        $scope.selectedDriver = $scope.driverList.find(d => d.Id == $scope.modelObject.DriverId);
+                    else
+                        $scope.selectedDriver = {};
+
+                    if (typeof $scope.modelObject.VoyageStartCityId != 'undefined' && $scope.modelObject.VoyageStartCityId != null)
+                        $scope.selectedVoyageStartCity = $scope.cityList.find(d => d.Id == $scope.modelObject.VoyageStartCityId);
+                    else
+                        $scope.selectedVoyageStartCity = {};
+
+                    if (typeof $scope.modelObject.VoyageStartCountryId != 'undefined' && $scope.modelObject.VoyageStartCountryId != null)
+                        $scope.selectedVoyageStartCountry = $scope.countryList.find(d => d.Id == $scope.modelObject.VoyageStartCountryId);
+                    else
+                        $scope.selectedVoyageStartCountry = {};
+
+                    if (typeof $scope.modelObject.VoyageEndCityId != 'undefined' && $scope.modelObject.VoyageEndCityId != null)
+                        $scope.selectedVoyageEndCity = $scope.cityList.find(d => d.Id == $scope.modelObject.VoyageEndCityId);
+                    else
+                        $scope.selectedVoyageEndCity = {};
+
+                    if (typeof $scope.modelObject.VoyageEndCountryId != 'undefined' && $scope.modelObject.VoyageEndCountryId != null)
+                        $scope.selectedVoyageEndCountry = $scope.countryList.find(d => d.Id == $scope.modelObject.VoyageEndCountryId);
+                    else
+                        $scope.selectedVoyageEndCountry = {};
+
                     $scope.bindDetails();
+                    if (typeof $scope.modelObject.ItemOrderId != 'undefined' && $scope.modelObject.ItemOrderId != null) {
+                        $scope.loadItemOrderDetailList();
+                    }
                 }
             }).catch(function (err) { });
     }
@@ -561,40 +771,43 @@
         $scope.calculateOveralTotal();
 
     }
-    $scope.approveLoad = function () {
-        bootbox.confirm({
-            message: "Bu yük talebi onaylamak istediğinizden emin misiniz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'Load/ApproveLoad', { rid: $scope.modelObject.Id }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
+    //$scope.approveLoad = function () {
+    //    bootbox.confirm({
+    //        message: "Bu yük talebi onaylamak istediğinizden emin misiniz?",
+    //        closeButton: false,
+    //        buttons: {
+    //            confirm: {
+    //                label: 'Evet',
+    //                className: 'btn-primary'
+    //            },
+    //            cancel: {
+    //                label: 'Hayır',
+    //                className: 'btn-light'
+    //            }
+    //        },
+    //        callback: function (result) {
+    //            if (result) {
+    //                $scope.saveStatus = 1;
+    //                $http.post(HOST_URL + 'Load/ApproveLoad', { rid: $scope.modelObject.Id }, 'json')
+    //                    .then(function (resp) {
+    //                        if (typeof resp.data != 'undefined' && resp.data != null) {
+    //                            $scope.saveStatus = 0;
 
-                                if (resp.data.Result) {
-                                    toastr.success('Onay işlemi başarılı.', 'Bilgilendirme');
+    //                            if (resp.data.Result) {
+    //                                toastr.success('Onay işlemi başarılı.', 'Bilgilendirme');
 
-                                    $scope.bindModel($scope.modelObject.Id);
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
-        });
+    //                                $scope.bindModel($scope.modelObject.Id);
+    //                            }
+    //                            else
+    //                                toastr.error(resp.data.ErrorMessage, 'Hata');
+    //                        }
+    //                    }).catch(function (err) { });
+    //            }
+    //        }
+    //    });
+    //}
+    $scope.showOrderDetails = function () {
+        $scope.orderDetailsVisible = !$scope.orderDetailsVisible;
     }
     $scope.calculateValumeAndDesi = function (row) {
         if (row.ShortWidth == 'undefined' || row.ShortWidth == null)
@@ -663,7 +876,7 @@
                         if (typeof values.UnitId != 'undefined') {
                             var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                             obj.UnitId = unitObj.Id;
-                            obj.UnitName = itemObj.UnitCode;
+                            obj.UnitName = unitObj.UnitCode;
                             calculateRowAgain = true;
                         }
 
@@ -852,29 +1065,152 @@
         });
     }
 
-    $scope.findAddressShipperFirm = function () {
-        if (typeof $scope.selectedShipperFirm != 'undefined' && $scope.selectedShipperFirm != null) {
-            $scope.selectedShipperCountry.CountryName = "";
-            $scope.selectedShipperCountry = $scope.countryList.find(d => d.Id == $scope.selectedShipperFirm.CountryId);
-            $scope.selectedShipperCity.CityName = "";
-            $scope.selectedShipperCity = $scope.cityList.find(d => d.Id == $scope.selectedShipperFirm.CityId);
-            $scope.modelObject.ShipperFirmExplanation = "";
-            $scope.modelObject.ShipperFirmExplanation = $scope.selectedShipperFirm.Address;
-        }
-        else
-            $scope.selectedShipperFirm = {};
+    $scope.loadItemOrderDetailList = function () {
+        $('#orderDetailList').dxDataGrid({
+            dataSource: {
+                load: function () {
+                    return $.getJSON(HOST_URL + 'LOrder/GetItemOrderDetails?ItemOrderId=' + $scope.modelObject.ItemOrderId, function (data) {
+
+                    });
+                },
+                key: 'Id'
+            },
+            showColumnLines: true,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: false,
+            showBorders: true,
+            filterRow: {
+                visible: false
+            },
+            headerFilter: {
+                visible: false
+            },
+            groupPanel: {
+                visible: false
+            },
+            scrolling: {
+                mode: "virtual"
+            },
+            height: 200,
+            editing: {
+                allowUpdating: false,
+                allowDeleting: false,
+                allowAdding: false,
+                mode: 'cell'
+            },
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            onInitNewRow: function (e) {
+                e.data.UnitPrice = 0;
+                e.data.TaxIncluded = 0;
+            },
+            repaintChangesOnly: true,
+            onCellPrepared: function (e) {
+                if (e.rowType === "data") {
+                    e.cellElement.css("background-color", "Green");
+                    //e.cellElement.css("color", "white");
+                }
+            },
+            columns: [
+                {
+                    dataField: 'ItemId', caption: 'Mal Kodu',
+                    lookup: {
+                        dataSource: $scope.itemList,
+                        valueExpr: "Id",
+                        displayExpr: "ItemNo"
+                    },
+                    allowSorting: false,
+                    width: 70,
+                    validationRules: [{ type: "required" }],
+                    editCellTemplate: $scope.dropDownBoxEditorTemplate,
+                    cellTemplate: function (container, options) {
+                        if (typeof options.row.data.ItemNo != 'undefined'
+                            && options.row.data.ItemNo != null && options.row.data.ItemNo.length > 0)
+                            container.text(options.row.data.ItemNo);
+                        else
+                            container.text(options.displayValue);
+                    }
+                },
+                { dataField: 'ItemName', caption: 'Mal Adı', allowEditing: false },
+                {
+                    dataField: 'UnitId', caption: 'Birim',
+                    allowSorting: false,
+                    lookup: {
+                        dataSource: $scope.unitList,
+                        valueExpr: "Id",
+                        displayExpr: "UnitCode"
+                    }, width: 60
+                },
+                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                { dataField: 'ShortWidth', caption: 'Kısa En (CM)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'LongWidth', caption: 'Uzun En (CM)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Height', caption: 'Yükseklik (CM)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Weight', caption: 'Ağırlık (KG)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Volume', caption: 'Hacim (M3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, allowEditing: false },
+                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90 },
+                { dataField: 'PackageInNumber', caption: 'Koli iç Adet', width: 90 },
+
+                {
+                    type: "buttons",
+                    buttons: [
+                        {
+                            name: 'delete', cssClass: '', text: '', onClick: function (e) {
+                                $('#dataList').dxDataGrid('instance').deleteRow(e.row.rowIndex);
+                            }
+                        }
+                    ]
+                }
+            ]
+            ,
+            summary: {
+                totalItems: [{
+                    column: 'Quantity',
+                    summaryType: 'sum',
+                },
+                {
+                    column: 'Weight',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                },
+                {
+                    column: 'Volume',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                },
+                {
+                    column: 'Ladametre',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                }]
+            },
+        });
     }
-    $scope.findAddressBuyerFirm = function () {
-        if (typeof $scope.selectedBuyerFirm != 'undefined' && $scope.selectedBuyerFirm != null) {
-            $scope.selectedBuyerCountry.CountryName = "";
-            $scope.selectedBuyerCountry = $scope.countryList.find(d => d.Id == $scope.selectedBuyerFirm.CountryId);
-            $scope.selectedBuyerCity.CityName = "";
-            $scope.selectedBuyerCity = $scope.cityList.find(d => d.Id == $scope.selectedBuyerFirm.CityId);
-            $scope.modelObject.BuyerFirmExplanation = "";
-            $scope.modelObject.BuyerFirmExplanation = $scope.selectedBuyerFirm.Address;
+
+    $scope.findAddressCmrShipperFirm = function () {
+        if (typeof $scope.selectedCmrShipperFirm != 'undefined' && $scope.selectedCmrShipperFirm != null) {
+            $scope.selectedCmrShipperCountry.CountryName = "";
+            $scope.selectedCmrShipperCountry = $scope.countryList.find(d => d.Id == $scope.selectedCmrShipperFirm.CountryId);
+            $scope.selectedCmrShipperCity.CityName = "";
+            $scope.selectedCmrShipperCity = $scope.cityList.find(d => d.Id == $scope.selectedCmrShipperFirm.CityId);
+            $scope.modelObject.CmrShipperFirmAddress = "";
+            $scope.modelObject.CmrShipperFirmAddress = $scope.selectedCmrShipperFirm.Address;
         }
         else
-            $scope.selectedBuyerFirm = {};
+            $scope.selectedCmrShipperFirm = {};
+    }
+    $scope.findAddressCmrBuyerFirm = function () {
+        if (typeof $scope.selectedCmrBuyerFirm != 'undefined' && $scope.selectedCmrBuyerFirm != null) {
+            $scope.selectedCmrBuyerCountry.CountryName = "";
+            $scope.selectedCmrBuyerCountry = $scope.countryList.find(d => d.Id == $scope.selectedCmrBuyerFirm.CountryId);
+            $scope.selectedCmrBuyerCity.CityName = "";
+            $scope.selectedCmrBuyerCity = $scope.cityList.find(d => d.Id == $scope.selectedCmrBuyerFirm.CityId);
+            $scope.modelObject.CmrBuyerFirmAddress = "";
+            $scope.modelObject.CmrBuyerFirmAddress = $scope.selectedCmrBuyerFirm.Address;
+        }
+        else
+            $scope.selectedCmrBuyerFirm = {};
     }
     $scope.loadSelectables = function () {
         var prms = new Promise(function (resolve, reject) {
@@ -885,13 +1221,14 @@
                         $scope.unitList = resp.data.Units;
                         $scope.firmList = resp.data.Firms;
                         $scope.forexList = resp.data.Forexes;
-                        $scope.forexList = resp.data.Forexes;
                         $scope.customsList = resp.data.Customs;
                         $scope.usersList = resp.data.Users;
                         $scope.cityList = resp.data.Citys;
                         $scope.countryList = resp.data.Countrys;
-                        $scope.firmArrivalCustomsList = resp.data.FirmArrivalCustoms;
-                        $scope.vehicleTraillerList = resp.data.Vehicles;
+                        $scope.firmCustomsList = resp.data.FirmCustoms;
+                        $scope.vehicleTrailerList = resp.data.VehicleTrailers;
+                        $scope.vehicleTowinfList = resp.data.VehicleTowinfs;
+                        $scope.driverList = resp.data.Drivers;
                         resolve();
                     }
                 }).catch(function (err) { });
@@ -899,26 +1236,36 @@
 
         return prms;
     }
+    //$scope.loadItemOrderDetailList = function () {
+    //    var prms = new Promise(function (resolve, reject) {
+    //        $http.get(HOST_URL + 'LOrder/GetItemOrderDetails?ItemOrderId='+$scope.modelObject.ItemOrderId, 'json')
+    //            .then(function (resp) {
+    //                if (typeof resp.data != 'undefined' && resp.data != null) {
+    //                    $scope.itemOrderDetailList = resp.data.result;
+    //                    console.log(resp.data);
+    //                   console.log(resp.data.result);
+    //                    resolve();
+    //                }
+    //            }).catch(function (err) { });
+    //    });
 
-    // INFORMATIONS & ATTACHMENTS
-    $scope.showRecordInformation = function () {
-        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType: 'ItemOrder' });
-    }
+    //    return prms;
+    //}
 
-    $scope.showRequestInformation = function () {
-        $scope.$broadcast('loadRelatedRequestList', $scope.modelObject.Id);
+    //$scope.showRequestInformation = function () {
+    //    $scope.$broadcast('loadRelatedRequestList', $scope.modelObject.Id);
 
-        $('#dial-related-requests').dialog({
-            width: 500,
-            //height: window.innerHeight * 0.6,
-            hide: true,
-            modal: true,
-            resizable: false,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
-        });
-    }
+    //    $('#dial-related-requests').dialog({
+    //        width: 500,
+    //        //height: window.innerHeight * 0.6,
+    //        hide: true,
+    //        modal: true,
+    //        resizable: false,
+    //        show: true,
+    //        draggable: false,
+    //        closeText: "KAPAT"
+    //    });
+    //}
 
     $scope.showAttachmentList = function () {
         $scope.$broadcast('showAttachmentList',
@@ -937,101 +1284,68 @@
         });
     }
 
-    // APPROVALS
-    $scope.approveOrderPrice = function () {
-        bootbox.confirm({
-            message: "Bu siparişin fiyatını onaylamak istediğinizden emin misiniz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'PIOrder/ApproveOrderPrice', { rid: $scope.modelObject.Id }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
 
-                                if (resp.data.Result) {
-                                    toastr.success('Onay işlemi başarılı.', 'Bilgilendirme');
+    //$scope.showItemRequestList = function () {
+    //    // DO BROADCAST
+    //    $scope.$broadcast('loadApprovedRequestDetails');
 
-                                    $scope.bindModel($scope.modelObject.Id);
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
-        });
-    }
+    //    $('#dial-requests').dialog({
+    //        width: window.innerWidth * 0.6,
+    //        height: window.innerHeight * 0.6,
+    //        hide: true,
+    //        modal: true,
+    //        resizable: false,
+    //        show: true,
+    //        draggable: false,
+    //        closeText: "KAPAT"
+    //    });
+    //}
+    // Loading Firm Address
+    $scope.$on('loadShipperFirmAddressEnd', function (e, d) {
 
-    $scope.showItemRequestList = function () {
-        // DO BROADCAST
-        $scope.$broadcast('loadApprovedRequestDetails');
-
-        $('#dial-requests').dialog({
-            width: window.innerWidth * 0.6,
-            height: window.innerHeight * 0.6,
-            hide: true,
-            modal: true,
-            resizable: false,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
-        });
-    }
-
-    $scope.$on('transferRequestDetails', function (e, d) {
         d.forEach(x => {
-            if ($scope.modelObject.Details.filter(m => m.ItemRequestDetailId == x.Id).length > 0) {
-                toastr.warning(x.RequestNo + ' nolu talep, ' + x.ItemNo + ' / ' + x.ItemName + ', ' + x.Quantity
-                    + ' miktarlı talep detayı zaten aktarıldığı için tekrar dahil edilmedi.', 'Uyarı');
-            }
-            else {
-                var newId = 1;
-                if ($scope.modelObject.Details.length > 0) {
-                    newId = $scope.modelObject.Details.map(d => d.Id).reduce((max, n) => n > max ? n : max)
-                    newId++;
-                }
 
-                $scope.modelObject.Details.push({
-                    Id: newId,
-                    ItemId: x.ItemId,
-                    ItemNo: x.ItemNo,
-                    ItemName: x.ItemName,
-                    UnitId: x.UnitId,
-                    UnitName: x.UnitCode,
-                    Quantity: x.Quantity,
-                    UnitPrice: 0,
-                    NewDetail: true,
-                    ItemRequestDetailId: x.Id
-                });
-
-                var detailsGrid = $("#dataList").dxDataGrid("instance");
-                detailsGrid.refresh();
-            }
+            $scope.selectedShipperCountry.CountryName = "";
+            $scope.selectedShipperCountry = {}
+            $scope.selectedShipperCountry = $scope.countryList.find(d => d.Id == x.CountryId);
+            $scope.selectedShipperCity.CityName = "";
+            $scope.selectedShipperCity = {}
+            $scope.selectedShipperCity = $scope.cityList.find(d => d.Id == x.CityId);
+            $scope.modelObject.ShipperFirmAddress = "";
+            $scope.modelObject.ShipperFirmAddress = x.Address1;
         });
 
-        $('#dial-requests').dialog('close');
+        $('#dial-ShipperFirmAddress').dialog('close');
     });
+    $scope.$on('loadBuyerFirmAddressEnd', function (e, d) {
+
+        d.forEach(x => {
+
+            $scope.selectedBuyerCountry.CountryName = "";
+            $scope.selectedBuyerCountry = {}
+            $scope.selectedBuyerCountry = $scope.countryList.find(d => d.Id == x.CountryId);
+            $scope.selectedBuyerCity.CityName = "";
+            $scope.selectedBuyerCity = {}
+            $scope.selectedBuyerCity = $scope.cityList.find(d => d.Id == x.CityId);
+            $scope.modelObject.BuyerFirmAddress = "";
+            $scope.modelObject.BuyerFirmAddress = x.Address1;
+        });
+
+        $('#dial-BuyerFirmAddress').dialog('close');
+    });
+    // #endregion
+
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
     $scope.loadSelectables().then(function () {
-        if (PRM_ID > 0)
+        if (PRM_ID > 0) {
             $scope.bindModel(PRM_ID);
+        }
         else {
-            $scope.bindDetails();
+            $scope.bindModel(0);
 
         }
     });
+
 });

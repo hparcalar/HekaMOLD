@@ -12,7 +12,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { LoadStatusType.Cancelled, "Yük İptal Edildi" },
             { LoadStatusType.Ready, "Hazır Bekliyor" },
             { LoadStatusType.InWarehouse, "Yük Depoda" },
-            { LoadStatusType.ToBeLoadedFromCustomer, "Müşteriden Alınacak" },
+            { LoadStatusType.ToBeLoadedFromCustomer, "Müşteriden Yüklendi" },
             { LoadStatusType.AtDomesticCustoms, "Yurtiçi Gümrükte"},
             { LoadStatusType.InKapukule, "Kapıkulede"},
             { LoadStatusType.OnTheWayAbroad, "Yurtdışı Yolda"},

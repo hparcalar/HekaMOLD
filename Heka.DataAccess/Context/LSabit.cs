@@ -28,5 +28,27 @@
         public static string GET_MINIMUM { get { return "Minimum"; } }
 
         #endregion
+
+        #region CODECOUNTERTYPE
+        public static int GET_OWN_EXPORT { get { return 1; } }
+        public static int GET_OWN_IMPORT { get { return 2; } }
+        public static int GET_OWN_DOMESTIC { get { return 3; } }
+        public static int GET_OWN_TRANSIT { get { return 4; } }
+        public static int GET_RENTAL_EXPORT { get { return 5; } }
+        public static int GET_RENTAL_IMPORT { get { return 6; } }
+        public static int GET_RENTAL_DOMESTIC { get { return 7; } }
+        public static int GET_RENTAL_TRANSIT { get { return 8; } }
+        #endregion
+
+        #region VOYAGECOSTTYPE
+        public static int GET_VOYAGECOST_CASH { get { return 1; } }
+        public static int GET_VOYAGECOST_CREDIT { get { return 2; } }
+        #endregion
+
+        #region FOREXTYPE
+        public static int GET_FOREXTYPE_TL { get { return 1; } }
+        public static int GET_FOREXTYPE_USD { get { return 2; } }
+        public static int GET_FOREXTYPE_EURO { get { return 3; } }
+        #endregion
     }
 }

@@ -9,6 +9,11 @@ namespace Heka.DataAccess.Context
         public Voyage()
         {
             this.VoyageDetail = new HashSet<VoyageDetail>();
+            this.VoyageDriver = new HashSet<VoyageDriver>();
+            this.VoyageTowingVehicle = new HashSet<VoyageTowingVehicle>();
+            this.VoyageCost = new HashSet<VoyageCost>();
+            this.DriverAccountDetail = new HashSet<DriverAccountDetail>();
+
         }
         public int Id { get; set; }
         public string VoyageCode { get; set; }
@@ -37,6 +42,7 @@ namespace Heka.DataAccess.Context
         public string RingCode { get; set; }
         public string DocumentNo { get; set; }
         public bool? HasOperation { get; set; }
+        public string StartAddress { get; set; }
         public string LoadAddress { get; set; }
         public string DischargeAddress { get; set; }
         public Nullable<DateTime> ClosedDate { get; set; }
@@ -45,6 +51,11 @@ namespace Heka.DataAccess.Context
         public string RouteDefinition { get; set; }
         public Nullable<DateTime> EndTime { get; set; }
         public decimal? DriverSubsistence { get; set; }
+        public Nullable<DateTime> FirstLoadDate { get; set; }
+        public Nullable<DateTime> EndDischargeDate { get; set; }
+        public Nullable<DateTime> KapikulePassportEntryDate { get; set; }
+        public Nullable<DateTime> KapikulePassportExitDate { get; set; }
+
         public string Explanation { get; set; }
 
         [ForeignKey("User")]
@@ -62,17 +73,20 @@ namespace Heka.DataAccess.Context
         [ForeignKey("DischargeCity")]
         public int? DischargeCityId { get; set; }
 
+        [ForeignKey("StartCountry")]
+        public int? StartCountryId { get; set; }
+
         [ForeignKey("DischargeCountry")]
         public int? DischargeCountryId { get; set; }
 
         [ForeignKey("LoadCountry")]
         public int? LoadCountryId { get; set; }
 
-        [ForeignKey("LoadCustoms")]
-        public int? LoadCustomsId { get; set; }
+        [ForeignKey("ExitCustoms")]
+        public int? ExitCustomsId { get; set; }
 
-        [ForeignKey("DischargeCustoms")]
-        public int? DischargeCustomsId { get; set; }
+        [ForeignKey("EntryCustoms")]
+        public int? EntryCustomsId { get; set; }
 
         [ForeignKey("CustomsDoorEntry")]
         public int? CustomsDoorEntryId { get; set; }
@@ -110,10 +124,11 @@ namespace Heka.DataAccess.Context
         public virtual City EndCity { get; set; }
         public virtual City LoadCity { get; set; }
         public virtual City DischargeCity { get; set; }
+        public virtual Country StartCountry { get; set; }
         public virtual Country LoadCountry { get; set; }
         public virtual Country DischargeCountry { get; set; }
-        public virtual Customs LoadCustoms { get; set; }
-        public virtual Customs DischargeCustoms { get; set; }
+        public virtual Customs ExitCustoms { get; set; }
+        public virtual Customs EntryCustoms { get; set; }
         public virtual CustomsDoor CustomsDoorEntry { get; set; }
         public virtual CustomsDoor CustomsDoorExit { get; set; }
         public virtual Firm CarrierFirm { get; set; }
@@ -124,5 +139,17 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Voyage")]
         public virtual ICollection<VoyageDetail> VoyageDetail { get; set; }
+
+        [InverseProperty("Voyage")]
+        public virtual ICollection<VoyageDriver> VoyageDriver { get; set; }
+
+        [InverseProperty("Voyage")]
+        public virtual ICollection<VoyageTowingVehicle> VoyageTowingVehicle { get; set; }
+
+        [InverseProperty("Voyage")]
+        public virtual ICollection<VoyageCost> VoyageCost { get; set; }
+
+        [InverseProperty("Voyage")]
+        public virtual ICollection<DriverAccountDetail> DriverAccountDetail { get; set; }
     }
 }

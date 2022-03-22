@@ -10,6 +10,11 @@ namespace Heka.DataAccess.Context
         {
             this.Voyage = new HashSet<Voyage>();
             this.ItemLoad = new HashSet<ItemLoad>();
+            this.VoyageDriver = new HashSet<VoyageDriver>();
+            this.VoyageTowingVehicle = new HashSet<VoyageTowingVehicle>();
+            this.VoyageCostDetail = new HashSet<VoyageCostDetail>();
+            this.DriverAccountDetail = new HashSet<DriverAccountDetail>();
+            this.DriverAccount = new HashSet<DriverAccount>();
 
         }
         public int Id { get; set; }
@@ -37,5 +42,21 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Driver")]
         public virtual ICollection<ItemLoad> ItemLoad { get; set; }
+
+        [InverseProperty("Driver")]
+        public virtual ICollection<VoyageDriver> VoyageDriver { get; set; }
+
+        [InverseProperty("Driver")]
+        public virtual ICollection<VoyageTowingVehicle> VoyageTowingVehicle { get; set; }
+
+        [InverseProperty("Driver")]
+        public virtual ICollection<VoyageCostDetail> VoyageCostDetail { get; set; }
+
+        [InverseProperty("Driver")]
+        public virtual ICollection<DriverAccountDetail> DriverAccountDetail { get; set; }
+
+        [InverseProperty("Driver")]
+        public virtual ICollection<DriverAccount> DriverAccount { get; set; }
+
     }
 }

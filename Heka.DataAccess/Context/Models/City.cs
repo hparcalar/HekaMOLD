@@ -8,7 +8,7 @@ namespace Heka.DataAccess.Context
     {
         public City()
         {
-            this.District =new HashSet<District>();
+            this.District = new HashSet<District>();
             this.ItemOrderByLoad = new HashSet<ItemOrder>();
             this.ItemOrderByDischarge = new HashSet<ItemOrder>();
             this.Customs = new HashSet<Customs>();
@@ -16,6 +16,8 @@ namespace Heka.DataAccess.Context
             this.Firm = new HashSet<Firm>();
             this.ItemLoadByCityShipper = new HashSet<ItemLoad>();
             this.ItemLoadByCityBuyer = new HashSet<ItemLoad>();
+            this.ItemLoadByCityCmrShipper = new HashSet<ItemLoad>();
+            this.ItemLoadByCityCmrBuyer = new HashSet<ItemLoad>();
             this.RotaByCityStart = new HashSet<Rota>();
             this.RotaByCityEnd = new HashSet<Rota>();
             this.VoyageByStartCity = new HashSet<Voyage>();
@@ -25,6 +27,8 @@ namespace Heka.DataAccess.Context
             this.VoyageDetailByCityShipper = new HashSet<VoyageDetail>();
             this.VoyageDetailByCityBuyer = new HashSet<VoyageDetail>();
             this.FirmAddress = new HashSet<FirmAddress>();
+            this.ItemLoadByVoyageEndCity = new HashSet<ItemLoad>();
+            this.ItemLoadByVoyageStartCity = new HashSet<ItemLoad>();
 
         }
         public int Id { get; set; }
@@ -65,6 +69,12 @@ namespace Heka.DataAccess.Context
         [InverseProperty("CityBuyer")]
         public virtual ICollection<ItemLoad> ItemLoadByCityBuyer { get; set; }
 
+        [InverseProperty("CityCmrShipper")]
+        public virtual ICollection<ItemLoad> ItemLoadByCityCmrShipper { get; set; }
+
+        [InverseProperty("CityCmrBuyer")]
+        public virtual ICollection<ItemLoad> ItemLoadByCityCmrBuyer { get; set; }
+
         [InverseProperty("CityStart")]
         public virtual ICollection<Rota> RotaByCityStart { get; set; }
 
@@ -91,5 +101,11 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("City")]
         public virtual ICollection<FirmAddress> FirmAddress { get; set; }
+
+        [InverseProperty("VoyageStartCity")]
+        public virtual ICollection<ItemLoad> ItemLoadByVoyageStartCity { get; set; }
+
+        [InverseProperty("VoyageEndCity")]
+        public virtual ICollection<ItemLoad> ItemLoadByVoyageEndCity { get; set; }
     }
 }

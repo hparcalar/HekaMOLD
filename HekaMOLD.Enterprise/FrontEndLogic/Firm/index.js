@@ -368,7 +368,7 @@
                     dataField: 'AddressType', caption: 'Adres Tipi',
                     allowSorting: false,
                     lookup: {
-                        dataSource: [{ Id: 1, Text: 'Depo Adresi' }, { Id: 2, Text: 'Firma Adresi' }],
+                        dataSource: [{ Id: 1, Text: 'Yükleme/Boşaltma Adresi' }, { Id: 2, Text: 'Firma Adresi' }],
                         valueExpr: "Id",
                         displayExpr: "Text"
                     },

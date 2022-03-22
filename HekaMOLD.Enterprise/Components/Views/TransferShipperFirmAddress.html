@@ -1,0 +1,45 @@
+﻿<div ng-controller="transferShipperFirmAddressCtrl">
+    <div class="row mb-2">
+        <div class="col-xxl-12 px-1 py-1">
+            <div class="dx-viewport">
+                <div id="waitingShipperFirmAddressList"></div>
+            </div>
+        </div>
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack" style="padding:0px;">
+
+            <button type="button" class="btn btn-block  py-2" ng-click="transferSelections()">
+                Aktar
+                <div class="container">
+                    <div class="box rotate"></div>
+                </div>
+            </button>
+        </div>
+
+    </div>
+
+    <!--<div id="dial-print-options" title="Yazdırma Seçenekleri" style="display:none;">
+        <ng-include src="'../Components/Views/PrintOptions.html'"></ng-include>
+    </div>-->
+</div>
+<style>
+    .box {
+        margin: 0px auto;
+        background: #35baf6;
+        width: 30px;
+        height: 30px;
+    }
+
+        .box:hover {
+            transform: rotate(360deg);
+            background: #36b046;
+            border-radius: 30%;
+        }
+
+    .rotate {
+        transition: all 0.5s ease-in-out;
+    }
+
+        .rotate:hover {
+            transition: all 1s ease-in-out;
+        }
+</style>

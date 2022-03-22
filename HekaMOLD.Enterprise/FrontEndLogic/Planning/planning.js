@@ -12,7 +12,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
     $scope.waitingPlanList = [];
     $scope.selectedPlan = { Id: 0 };
     $scope.copiedPlan = { Id: 0 };
-    $scope.selectedSource = { Id:0 }; // Plan queue of a selected machine for highlighting
+    $scope.selectedSource = { Id: 0 }; // Plan queue of a selected machine for highlighting
 
     $scope.getMachinePlans = function (machine, isActive = true) {
         return $scope.boardPlanList.filter(d => d.MachineId == machine.Id
@@ -160,7 +160,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
             //refCounter--;
 
             //if (refCounter == 0)
-                //$(this).removeClass('drag-over');
+            //$(this).removeClass('drag-over');
         });
 
         $('.plan-box').on('drop', function (de) {
@@ -277,7 +277,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
         } catch (e) {
 
         }
-        
+
         $('#waitingPlanList').dxDataGrid({
             dataSource: $scope.waitingPlanList,
             keyExpr: 'Id',
@@ -303,14 +303,6 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
             },
             height: 450,
             width: 450,
-            onEditorPreparing: function (e) {
-                if (e.parentType === "filterRow") {
-                    let onValueChanged = e.editorOptions.onValueChanged
-                    e.editorOptions.onValueChanged = function (args) {
-                        e.component.columnOption(e.dataField, "filterValue", args.value.toUpperCase())
-                    }
-                }
-            },
             editing: {
                 allowUpdating: false,
                 allowDeleting: false
@@ -363,13 +355,13 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 var markup =
                     "<tr draggable=\"true\" "
                     + "class=\"dx-row dx-data-row dx-row-lines waiting-plan-row " + deadlineClass + "\" data-id=\"" + data.Id + "\">" +
-                        "<td>" + data.OrderDateStr + "</td>" +
-                        "<td>" + data.DeadlineDateStr + "</td>" +
-                        "<td>" + data.FirmName + "</td>" +
-                        "<td>" + data.ItemNo + "</td>" +
-                        "<td>" + data.ItemName + "</td>" +
-                        "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
-                        "</tr>";
+                    "<td>" + data.OrderDateStr + "</td>" +
+                    "<td>" + data.DeadlineDateStr + "</td>" +
+                    "<td>" + data.FirmName + "</td>" +
+                    "<td>" + data.ItemNo + "</td>" +
+                    "<td>" + data.ItemName + "</td>" +
+                    "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
+                    "</tr>";
 
                 container.append(markup);
             },

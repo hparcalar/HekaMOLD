@@ -689,7 +689,7 @@ namespace HekaMOLD.Business.UseCases
         public BusinessResult SaveOrUpdateDriver(DriverModel model)
         {
             BusinessResult result = new BusinessResult();
-
+            bool newRecord = false;
             try
             {
                 if (string.IsNullOrEmpty(model.DriverName))
@@ -704,8 +704,9 @@ namespace HekaMOLD.Business.UseCases
                     model.VisaEndDate = DateTime.ParseExact(model.VisaEndDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
                 var repo = _unitOfWork.GetRepository<Driver>();
+                var repoAccount = _unitOfWork.GetRepository<DriverAccount>();
 
-                if (repo.Any(d => (d.Tc == model.Tc)
+                if (model.Tc != null && repo.Any(d => (d.Tc == model.Tc)
                     && d.Id != model.Id))
                     throw new Exception("Aynı Tc bilgisine sahip başka bir şoför mevcuttur. Lütfen farklı bir giriş bilgisi giriniz.");
 
@@ -715,6 +716,7 @@ namespace HekaMOLD.Business.UseCases
                     dbObj = new Driver();
                     dbObj.CreatedDate = DateTime.Now;
                     dbObj.CreatedUserId = model.CreatedUserId;
+                    newRecord = true;
                     repo.Add(dbObj);
                 }
 
@@ -726,7 +728,38 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedDate = crDate;
 
                 dbObj.UpdatedDate = DateTime.Now;
+                var driverAccountList = repoAccount.Filter(d => d.DriverId == model.Id).ToArray();
+                if (newRecord)
+                {
+                    var dbTlAccount = repoAccount.Filter(d => d.DriverId == model.Id && d.ForexTypeId == LSabit.GET_FOREXTYPE_TL).ToArray();
+                    if(dbTlAccount.Length == 0)
+                    {
+                        var dbTlAcc = new DriverAccount();
+                        dbTlAcc.ForexTypeId = LSabit.GET_FOREXTYPE_TL;
+                        dbTlAcc.DriverId = model.Id;
+                        dbTlAcc.Balance = 0;
+                        repoAccount.Add(dbTlAcc);
+                    }
+                    var dbUsdAccount = repoAccount.Filter(d => d.DriverId == model.Id && d.ForexTypeId == LSabit.GET_FOREXTYPE_USD).ToArray();
+                    if (dbUsdAccount.Length == 0)
+                    {
+                        var dbUsdAcc = new DriverAccount();
+                        dbUsdAcc.ForexTypeId = LSabit.GET_FOREXTYPE_USD;
+                        dbUsdAcc.DriverId = model.Id;
+                        dbUsdAcc.Balance = 0;
+                        repoAccount.Add(dbUsdAcc);
+                    }
+                    var dbEuroAccount = repoAccount.Filter(d => d.DriverId == model.Id && d.ForexTypeId == LSabit.GET_FOREXTYPE_EURO).ToArray();
+                    if (dbUsdAccount.Length == 0)
+                    {
+                        var dbEuroAcc = new DriverAccount();
+                        dbEuroAcc.ForexTypeId = LSabit.GET_FOREXTYPE_EURO;
+                        dbEuroAcc.DriverId = model.Id;
+                        dbEuroAcc.Balance = 0;
+                        repoAccount.Add(dbEuroAcc);
+                    }
 
+                }
                 _unitOfWork.SaveChanges();
 
                 result.Result = true;

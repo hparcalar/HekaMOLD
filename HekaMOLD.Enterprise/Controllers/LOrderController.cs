@@ -269,6 +269,22 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
 
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetItemOrderDetails(int ItemOrderId)
+        {
+            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                result = bObj.GetItemOrderDetails(ItemOrderId);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
         [HttpPost]
         public JsonResult CreateLoad(int rid)
         {

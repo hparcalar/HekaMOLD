@@ -49,7 +49,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
-                vehicles = bObj.GetVehicleList();
+                vehicles = bObj.GetVehicleCanBePlanedList();
                 firms = bObj.GetFirmList();
                 cDoors = bObj.GetCustomsDoorList();
                 forexTypes = bObj.GetForexTypeList();
@@ -114,21 +114,6 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
-        }
-
-        [HttpGet]
-        public JsonResult GetNextVoyageCode(int Id)
-        {
-            string voyageCode = "";
-
-            using (VoyageBO bObj = new VoyageBO())
-            {
-                voyageCode = bObj.GetNextVoyageCode(Id);
-            }
-
-            var jsonResult = Json(new { Result = !string.IsNullOrEmpty(voyageCode), VoyageCode = voyageCode }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

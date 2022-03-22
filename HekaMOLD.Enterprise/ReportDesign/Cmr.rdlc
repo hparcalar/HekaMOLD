@@ -4484,7 +4484,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperAddress.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperAddress.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -4514,7 +4514,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperCity.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperCity.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -4544,7 +4544,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperCountry.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperCountry.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -4574,7 +4574,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!BuyerAddress.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrBuyerAddress.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -4604,7 +4604,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!BuyerCity.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrBuyerCity.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -4664,7 +4664,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperAddress.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperAddress.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -4694,7 +4694,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperCity.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperCity.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -4724,7 +4724,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperCountry.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperCountry.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -4754,7 +4754,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperFirmName.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperFirmName.Value, "DS1")</Value>
                   <Style>
                     <FontWeight>Bold</FontWeight>
                   </Style>
@@ -4786,7 +4786,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!BuyerFirmName.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrBuyerFirmName.Value, "DS1")</Value>
                   <Style>
                     <FontWeight>Bold</FontWeight>
                   </Style>
@@ -4850,7 +4850,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperFirmName.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperFirmName.Value, "DS1")</Value>
                   <Style>
                     <FontWeight>Bold</FontWeight>
                   </Style>
@@ -4917,7 +4917,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperCity.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperCity.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -4947,7 +4947,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperCountry.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperCountry.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -5007,7 +5007,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!BuyerCountry.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrBuyerCountry.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -5037,7 +5037,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!BuyerCity.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrBuyerCity.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -5067,7 +5067,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!BuyerCountry.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrBuyerCountry.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -5112,7 +5112,7 @@ TOTAL   :
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=First(Fields!ShipperCity.Value, "DS1")</Value>
+                  <Value>=First(Fields!CmrShipperCity.Value, "DS1")</Value>
                   <Style />
                 </TextRun>
               </TextRuns>
@@ -5216,36 +5216,36 @@ TOTAL   :
           <DataField>OveralQuantity</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ShipperFirmName">
-          <DataField>ShipperFirmName</DataField>
+        <Field Name="CmrShipperFirmName">
+          <DataField>CmrShipperFirmName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ShipperCountry">
-          <DataField>ShipperCountry</DataField>
+        <Field Name="CmrShipperCountry">
+          <DataField>CmrShipperCountry</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ShipperCity">
-          <DataField>ShipperCity</DataField>
+        <Field Name="CmrShipperCity">
+          <DataField>CmrShipperCity</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ShipperAddress">
-          <DataField>ShipperAddress</DataField>
+        <Field Name="CmrShipperAddress">
+          <DataField>CmrShipperAddress</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="BuyerFirmName">
-          <DataField>BuyerFirmName</DataField>
+        <Field Name="CmrBuyerFirmName">
+          <DataField>CmrBuyerFirmName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="BuyerCountry">
-          <DataField>BuyerCountry</DataField>
+        <Field Name="CmrBuyerCountry">
+          <DataField>CmrBuyerCountry</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="BuyerCity">
-          <DataField>BuyerCity</DataField>
+        <Field Name="CmrBuyerCity">
+          <DataField>CmrBuyerCity</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="BuyerAddress">
-          <DataField>BuyerAddress</DataField>
+        <Field Name="CmrBuyerAddress">
+          <DataField>CmrBuyerAddress</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="VehicleTraillerPlate">

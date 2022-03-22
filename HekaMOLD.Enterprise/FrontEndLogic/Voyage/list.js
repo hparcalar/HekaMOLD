@@ -12,7 +12,7 @@
                 },
                 key: 'Id'
             },
-            
+
             showBorders: true,
             columnAutoWidth: true,
             allowColumnReordering: true,
@@ -67,16 +67,17 @@
                 visible: true
             },
             columns: [
+                { dataField: 'Id', caption: 'Id', visible: false, sortOrder: "desc" },
                 { dataField: 'VoyageCode', caption: 'Sefer Kodu' },
                 { dataField: 'VoyageStatusStr', caption: 'Sefer Durumu' },
-                { dataField: 'VoyageDateStr', caption: 'Sefer Tarihi', dataType: 'date', format: 'dd.MM.yyyy'},
+                { dataField: 'VoyageDateStr', caption: 'Sefer Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'CarrierFirmName', caption: 'Taşıyıcı Firma' },
                 { dataField: 'CustomsDoorEntryDateStr', caption: 'Giriş Gümrük Kapısı Giriş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'CustomsDoorEntryName', caption: 'Giriş Gümrük Kapısı' },
                 { dataField: 'CustomsDoorExitDateStr', caption: 'Çıkış Gümrük Kapısı Çıkış Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'DriverNameAndSurname', caption: 'Sürücü' },
-                { dataField: 'StartDateStr', caption: 'Başlama Tarihi', dataType: 'date', format: 'dd.MM.yyyy'},
-                { dataField: 'LoadDateStr', caption: 'Bitiş Tarihi', dataType: 'date', format: 'dd.MM.yyyy'},
+                { dataField: 'StartDateStr', caption: 'Başlama Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'LoadDateStr', caption: 'Yükleme Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'EndDateStr', caption: 'Bitiş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü' },
                 { dataField: 'TraillerVehiclePlate', caption: 'Romörk Plaka' },

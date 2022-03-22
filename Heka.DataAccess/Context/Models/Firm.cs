@@ -16,7 +16,7 @@ namespace Heka.DataAccess.Context
 
     public partial class Firm
     {
-        
+
         public Firm()
         {
             this.EntryQualityData = new HashSet<EntryQualityData>();
@@ -35,13 +35,19 @@ namespace Heka.DataAccess.Context
             this.ItemOrderByCustomer = new HashSet<ItemLoad>();
             this.ItemOrderByShipper = new HashSet<ItemLoad>();
             this.ItemOrderByBuyer = new HashSet<ItemLoad>();
+            this.ItemLoadByCmrShipper = new HashSet<ItemLoad>();
+            this.ItemLoadByCmrBuyer = new HashSet<ItemLoad>();
             this.ItemLoadByFirmCustomsArrival = new HashSet<ItemLoad>();
+            this.ItemLoadByFirmCustomsExit = new HashSet<ItemLoad>();
             this.VoyageByCarrierFirm = new HashSet<Voyage>();
             this.VoyageDetailByCustomer = new HashSet<VoyageDetail>();
             this.VoyageDetailByShipper = new HashSet<VoyageDetail>();
             this.VoyageDetailByBuyer = new HashSet<VoyageDetail>();
             this.VoyageDetailByFirmCustomsArrival = new HashSet<VoyageDetail>();
             this.FirmAddress = new HashSet<FirmAddress>();
+            this.ItemLoadByFirmManufacturer = new HashSet<ItemLoad>();
+            this.ItemLoadByFirmReelOwner = new HashSet<ItemLoad>();
+            this.ItemOrderByReelOwnerFirm = new HashSet<ItemOrder>();
 
         }
 
@@ -82,8 +88,8 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
-    
-        
+
+
         public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
         public virtual Plant Plant { get; set; }
         public virtual ForexType ForexType { get; set; }
@@ -116,7 +122,7 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Firm")]
         public virtual ICollection<ItemReceipt> ItemReceipt { get; set; }
-        
+
         [InverseProperty("Firm")]
         public virtual ICollection<Mold> Mold { get; set; }
 
@@ -136,6 +142,9 @@ namespace Heka.DataAccess.Context
         [InverseProperty("FirmCustomsArrival")]
         public virtual ICollection<ItemLoad> ItemLoadByFirmCustomsArrival { get; set; }
 
+        [InverseProperty("FirmCustomsExit")]
+        public virtual ICollection<ItemLoad> ItemLoadByFirmCustomsExit { get; set; }
+
         [InverseProperty("CarrierFirm")]
         public virtual ICollection<Voyage> VoyageByCarrierFirm { get; set; }
 
@@ -148,10 +157,25 @@ namespace Heka.DataAccess.Context
         [InverseProperty("FirmBuyer")]
         public virtual ICollection<VoyageDetail> VoyageDetailByBuyer { get; set; }
 
+        [InverseProperty("FirmCmrShipper")]
+        public virtual ICollection<ItemLoad> ItemLoadByCmrShipper { get; set; }
+
+        [InverseProperty("FirmCmrBuyer")]
+        public virtual ICollection<ItemLoad> ItemLoadByCmrBuyer { get; set; }
+
         [InverseProperty("FirmCustomsArrival")]
         public virtual ICollection<VoyageDetail> VoyageDetailByFirmCustomsArrival { get; set; }
 
         [InverseProperty("Firm")]
         public virtual ICollection<FirmAddress> FirmAddress { get; set; }
+
+        [InverseProperty("FirmManufacturer")]
+        public virtual ICollection<ItemLoad> ItemLoadByFirmManufacturer { get; set; }
+
+        [InverseProperty("FirmReelOwner")]
+        public virtual ICollection<ItemLoad> ItemLoadByFirmReelOwner { get; set; }
+
+        [InverseProperty("ReelOwnerFirm")]
+        public virtual ICollection<ItemOrder> ItemOrderByReelOwnerFirm { get; set; }
     }
 }

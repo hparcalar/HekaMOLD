@@ -79,41 +79,21 @@
                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Plaka</label>
                                     <!--begin::Input group-->
                                     <div class="mb-3">
-                                        <select class="form-select form-select-solid" ng-options="item.Plate +' / '+item.Mark+' / '+item.Versiyon for item in traillerVehicleList"
+                                        <select class="form-select form-select-solid" @*ng-change="getNextVoyageCode()"*@ ng-options="item.Plate +' / '+item.Mark+' / '+item.Versiyon + (item.VehicleAllocationType == 1 ? ' / OZ' :' / KR') for item in traillerVehicleList"
                                                 ng-model="selectedTraillerVehicle" data-allow-clear="true" data-control="select2">
                                         </select>
                                     </div>
 
-                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şoför</label>
+                                    @*<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şoför</label>
                                     <div class="mb-3">
                                         <select class="form-select form-select-solid" ng-options="item.DriverName +' '+item.DriverSurName for item in driverList"
                                                 ng-model="selectedDriver" data-allow-clear="true" data-control="select2">
                                         </select>
-                                    </div>
-                                    <!--<div class="row">
-                                        <div class="col-xxl-6">
-
-                                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şoför Harcırah</label>-->
-                                    <!--begin::Input group-->
-                                    <!--<div class="mb-3">
-                                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.DriverSubsistence" placeholder="" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-6">
-
-                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Doviz Kodu</label>-->
-                                    <!--begin::Input group-->
-                                    <!--<div class="mb-5">
-                                                <select aria-label="Doviz Kodu" ng-options="item.ForexTypeCode for item in forexTypeList"
-                                                        ng-model="selectedForexType" class="form-select form-select-solid">
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>-->
+                                    </div>*@
 
                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşlem Yönü</label>
                                     <div class="mb-3">
-                                        <select class="form-select form-select-solid" ng-change="getNextVoyageCode()" ng-options="item.Text for item in orderTransactionDirectionTypeList"
+                                        <select class="form-select form-select-solid" @*ng-disabled="modelObject.selectedTraillerVehicle.Plate == null"*@  ng-change="getNextVoyageCode()" ng-options="item.Text for item in orderTransactionDirectionTypeList"
                                                 ng-model="selectedOrderTransactionDirectionType" data-allow-clear="true" data-control="select2">
                                         </select>
                                     </div>

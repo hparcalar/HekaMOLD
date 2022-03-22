@@ -9,13 +9,13 @@
 
     $scope.selectedTrailerType = {};
     $scope.trailerTypeList = [{ Id: 1, Text: 'Çadırlı' },
-        { Id: 2, Text: 'Frigo' }, { Id: 3, Text: 'Kapalı Kasa' }, { Id: 4, Text: 'Optima' }, { Id: 5, Text: 'Mega' }
+    { Id: 2, Text: 'Frigo' }, { Id: 3, Text: 'Kapalı Kasa' }, { Id: 4, Text: 'Optima' }, { Id: 5, Text: 'Mega' }
         , { Id: 6, Text: 'Konteyner' }, { Id: 7, Text: 'Swapboddy' }, { Id: 8, Text: 'Lowbed' }
         , { Id: 9, Text: 'Kamyon Romörk' }, { Id: 10, Text: 'Standart' }, { Id: 10, Text: 'Minivan' }];
 
     $scope.selectedVehicleAllocationType = {};
-    $scope.vehicleAllocationTypeList = [{ Id: 1, Text: 'Satın Alma' },
-        { Id: 2, Text: 'Kiralık' }];
+    $scope.vehicleAllocationTypeList = [{ Id: 1, Text: 'Öz Mal' },
+    { Id: 2, Text: 'Kiralık' }];
 
     $scope.selectedForexType = {};
     $scope.forexTypeList = [];
@@ -148,7 +148,7 @@
                 { dataField: 'CareDateStr', caption: 'Bakım Tarihi', format: 'dd.MM.yyyy' },
                 { dataField: 'VehicleCareTypeName', caption: 'Bakım Tip' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },
-                { dataField: 'Amount', caption: 'Fiyat'},
+                { dataField: 'Amount', caption: 'Fiyat' },
                 { dataField: 'ForexTypeCode', caption: 'Döviz Kodu' },
             ]
         });
@@ -300,7 +300,7 @@
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
-                { dataField: 'MontageDateStr', caption: 'İşlem Tarihi', format: 'dd.MM.yyyy'},
+                { dataField: 'MontageDateStr', caption: 'İşlem Tarihi', format: 'dd.MM.yyyy' },
                 { dataField: 'VehicleTireDirectionTypeName', caption: 'Lastik Yön Tipi' },
                 { dataField: 'VehicleTireTypeStr', caption: 'Lastik İşlem Tipi' },
                 { dataField: 'FirmName', caption: 'İşlem Firma' },

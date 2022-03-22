@@ -1,61 +1,113 @@
 ﻿app.controller('voyageCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id: 0, VoayageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: []};
+    $scope.modelObject = { Id: 0, VoayageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: [], VoyageDrivers: [], VoyageTowingVehicles: [] };
 
     $scope.driverList = [];
     $scope.plannedLoadList = [];
     $scope.rotaList = [];
-    $scope.vehicleList = [];
+    $scope.towingVehicleList = [];
+    $scope.trailerVehicleList = [];
     $scope.firmList = [];
     $scope.cDoorList = [];
+    $scope.cityList = [];
+    $scope.countryList = [];
+    $scope.customsList = [];
+    $scope.waitingLoadList = [];
 
     $scope.selectedDriver = {}
     $scope.selectedTraillerVehicle = {}
     $scope.selectedOrderTransactionDirectionType = {};
     $scope.orderTransactionDirectionTypeList = [{ Id: 1, Text: 'İhracat' }, { Id: 2, Text: 'İthalat' },
-        { Id: 3, Text: 'Yurt İçi' }, { Id: 4, Text: 'Transit' }];
+    { Id: 3, Text: 'Yurt İçi' }, { Id: 4, Text: 'Transit' }];
     $scope.selectedCarrierFirm = {};
     $scope.selectedCDoorExtry = {}
     $scope.selectedCDoorExit = {}
     $scope.selectedTraillerType = {};
     $scope.selectedTowinfVehicle = {};
 
+    $scope.selectedStartCity = {}
+    $scope.selectedStartCountry = {}
+    $scope.selectedStartAddress = {}
+
+    $scope.selectedLoadCity = {}
+    $scope.selectedLoadCountry = {}
+    $scope.selectedLoadAddress = {}
+
+    $scope.selectedDischargeCity = {}
+    $scope.selectedDischargeCountry = {}
+    $scope.selectedDischargeAddress = {}
+
+    $scope.selectedEntryCustoms = {}
+    $scope.selectedExitCustoms = {}
+
     $scope.traillerTypeList = [{ Id: 1, Text: 'Çadırlı' },
     { Id: 2, Text: 'Frigo' }, { Id: 3, Text: 'Kapalı Kasa' }, { Id: 4, Text: 'Optima' }, { Id: 5, Text: 'Mega' }
         , { Id: 6, Text: 'Konteyner' }, { Id: 7, Text: 'Swapboddy' }, { Id: 8, Text: 'Lowbed' }
         , { Id: 9, Text: 'Kamyon Romörk' }, { Id: 10, Text: 'Standart' }, { Id: 10, Text: 'Minivan' }];
 
+    $scope.selectedVoyageStatus = { Id: 0 };
+    $scope.voyageStatusList = [{ Id: 2, Text: 'Hazır Bekliyor' }, { Id: 3, Text: 'Depoda' }, { Id: 4, Text: 'Müşteriden Yüklendi' },
+    { Id: 5, Text: 'Yurtiçi Gümrükte' }, { Id: 6, Text: 'Kapıkulede' }, { Id: 7, Text: 'Yurtdışı Yolda' }, { Id: 8, Text: 'Yurtdışı Gümrükte' }, { Id: 9, Text: 'Boşaltmada' },
+    { Id: 10, Text: 'Boşaltıldı' }, { Id: 11, Text: 'Yüklemede' }, { Id: 12, Text: 'Yüklendi' }, { Id: 13, Text: 'Tamamlandı' }];
+
     $scope.saveStatus = 0;
 
-    // RECEIPT FUNCTIONS
-    $scope.getNextOrderNo = function () {
-        var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'LOrder/GetNextOrderNo', {}, 'json')
+    $scope.openNewRecord = function () {
+        $scope.modelObject = { Id: 0, VoyageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: [], VoyageDrivers: [], VoyageTowingVehicles: [] };
+
+        $scope.selectedDriver = {}
+        $scope.selectedTraillerVehicle = {}
+        $scope.selectedOrderTransactionDirectionType = {};
+
+        $scope.selectedStartCity = {}
+        $scope.selectedStartCountry = {}
+        $scope.selectedStartCity = {}
+        $scope.selectedStartCountry = {}
+
+        $scope.selectedLoadCity = {}
+        $scope.selectedLoadCountry = {}
+
+        $scope.selectedDischargeCity = {}
+        $scope.selectedDischargeCountry = {}
+
+        $scope.selectedEntryCustoms = {}
+        $scope.selectedExitCustoms = {}
+        $scope.bindVoyageDetails();
+
+    }
+    $scope.loadSelectables = function () {
+        var prmReq = new Promise(function (resolve, reject) {
+            $http.get(HOST_URL + 'Voyage/GetSelectables', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
-                        if (resp.data.Result) {
-                            resolve(resp.data.ReceiptNo);
-                        }
-                        else {
-                            toastr.error('Sıradaki sipariş numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
-                            resolve('');
-                        }
+                        $scope.towingVehicleList = resp.data.TowinfVehicles;
+                        $scope.trailerVehicleList = resp.data.TrailerVehicles;
+                        $scope.driverList = resp.data.Drivers;
+                        $scope.VoyageDateStr = moment().format('DD.MM.YYYY')
+                        $scope.rotaList = resp.data.Rotas;
+                        $scope.firmList = resp.data.Firms;
+                        $scope.cDoorList = resp.data.CDoors;
+                        $scope.cityList = resp.data.Citys;
+                        $scope.countryList = resp.data.Countrys;
+                        $scope.customsList = resp.data.Customs;
+                        $scope.waitingLoadList = resp.data.WaitingLoads;
+
+                        resolve(resp.data);
                     }
                 }).catch(function (err) { });
         });
 
-        return prms;
+        return prmReq;
     }
-    // SELECTABLES
     $scope.getNextRecord = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'LOrder/GetNextRecord?Id=' + $scope.modelObject.Id, {}, 'json')
+            $http.get(HOST_URL + 'Voyage/GetNextRecord?Id=' + $scope.modelObject.Id, {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         if (resp.data.Result) {
-                            window.location.href = HOST_URL + 'LOrder?rid=' + resp.data.NextNo;
+                            window.location.href = HOST_URL + 'Voyage?rid=' + resp.data.NextNo;
                         }
                         else {
-                            toastr.warning('Sıradaki sipariş numarasına ulaşılamadı. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            toastr.warning('Sıradaki sefer numarasına ulaşılamadı. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
                             resolve('');
                         }
                     }
@@ -66,14 +118,14 @@
     }
     $scope.getBackRecord = function () {
         var prms = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'LOrder/GetBackRecord?Id=' + $scope.modelObject.Id, {}, 'json')
+            $http.get(HOST_URL + 'Voyage/GetBackRecord?Id=' + $scope.modelObject.Id, {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         if (resp.data.Result) {
-                            window.location.href = HOST_URL + 'LOrder?rid=' + resp.data.NextNo;
+                            window.location.href = HOST_URL + 'Voyage?rid=' + resp.data.NextNo;
                         }
                         else {
-                            toastr.warning('Sıradaki sipariş numarasına ulaşılamadı. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            toastr.warning('Sıradaki sefer numarasına ulaşılamadı. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
                             resolve('');
                         }
                     }
@@ -81,34 +133,6 @@
         });
 
         return prms;
-    }
-    // CRUD
-    $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0, VoyageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: [], OrderStatus: 0 };
-
-        $scope.selectedDriver = {}
-        $scope.selectedTraillerVehicle = {}
-        $scope.selectedOrderTransactionDirectionType = {};
-        $scope.bindVoyageDetails();
-    }
-    $scope.loadSelectables = function () {
-        var prmReq = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'LPlanning/GetSelectables', {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        $scope.vehicleList = resp.data.Vehicles;
-                        $scope.driverList = resp.data.Drivers;
-                        $scope.VoyageDateStr = moment().format('DD.MM.YYYY')
-                        $scope.rotaList = resp.data.Rotas;
-                        $scope.firmList = resp.data.Firms;
-                        $scope.cDoorList = resp.data.CDoors;
-
-                        resolve(resp.data);
-                    }
-                }).catch(function (err) { });
-        });
-
-        return prmReq;
     }
     $scope.performDelete = function () {
         bootbox.confirm({
@@ -199,6 +223,51 @@
         else
             $scope.modelObject.ForexTypeId = null;
 
+        if (typeof $scope.selectedStartCity != 'undefined' && $scope.selectedStartCity != null)
+            $scope.modelObject.StartCityId = $scope.selectedStartCity.Id;
+        else
+            $scope.modelObject.StartCityId = null;
+
+        if (typeof $scope.selectedStartCountry != 'undefined' && $scope.selectedStartCountry != null)
+            $scope.modelObject.StartCountryId = $scope.selectedStartCountry.Id;
+        else
+            $scope.modelObject.StartCountryId = null;
+
+        if (typeof $scope.selectedLoadCity != 'undefined' && $scope.selectedLoadCity != null)
+            $scope.modelObject.LoadCityId = $scope.selectedLoadCity.Id;
+        else
+            $scope.modelObject.LoadCityId = null;
+
+        if (typeof $scope.selectedLoadCountry != 'undefined' && $scope.selectedLoadCountry != null)
+            $scope.modelObject.LoadCountryId = $scope.selectedLoadCountry.Id;
+        else
+            $scope.modelObject.LoadCountryId = null;
+
+        if (typeof $scope.selectedDischargeCity != 'undefined' && $scope.selectedDischargeCity != null)
+            $scope.modelObject.DischargeCityId = $scope.selectedDischargeCity.Id;
+        else
+            $scope.modelObject.DischargeCityId = null;
+
+        if (typeof $scope.selectedDischargeCountry != 'undefined' && $scope.selectedDischargeCountry != null)
+            $scope.modelObject.DischargeCountryId = $scope.selectedDischargeCountry.Id;
+        else
+            $scope.modelObject.DischargeCountryId = null;
+
+        if (typeof $scope.selectedEntryCustoms != 'undefined' && $scope.selectedEntryCustoms != null)
+            $scope.modelObject.EntryCustomsId = $scope.selectedEntryCustoms.Id;
+        else
+            $scope.modelObject.EntryCustomsId = null;
+
+        if (typeof $scope.selectedExitCustoms != 'undefined' && $scope.selectedExitCustoms != null)
+            $scope.modelObject.ExitCustomsId = $scope.selectedExitCustoms.Id;
+        else
+            $scope.modelObject.ExitCustomsId = null;
+
+        if (typeof $scope.selectedVoyageStatus != 'undefined' && $scope.selectedVoyageStatus != null)
+            $scope.modelObject.VoyageStatus = $scope.selectedVoyageStatus.Id;
+        else
+            $scope.modelObject.VoyageStatus = null;
+
         $http.post(HOST_URL + 'LPlanning/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -255,15 +324,134 @@
             },
         });
     }
+    $scope.dropDownBoxEditorWaitingLoadTemplate = function (cellElement, cellInfo) {
+        return $("<div>").dxDropDownBox({
+            dropDownOptions: { width: 1200 },
+            dataSource: $scope.waitingLoadList,
+            value: cellInfo.value,
+            valueExpr: "Id",
+            displayExpr: "LoadCode",
+            contentTemplate: function (e) {
+                return $("<div>").dxDataGrid({
+                    dataSource: $scope.waitingLoadList,
+                    remoteOperations: true,
+                    columns: [
+                        { dataField: 'LoadCode', caption: 'Yük Kodu' },
+                        { dataField: 'CustomerFirmName', caption: 'Müşteri' },
+                        { dataField: 'ShipperFirmName', caption: 'Gönderici Firma' },
+                        { dataField: 'BuyerFirmName', caption: 'Alıcı Firma' },
+                        { dataField: 'OveralQuantity', caption: 'Toplam Miktar' },
+                        { dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)' },
+                        { dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası' },
+                        { dataField: 'BuyerCityName', caption: 'Boş. Şehri' },
+                        { dataField: 'BuyerCountryName', caption: 'Boş. Ülke' },
+                    ],
+                    hoverStateEnabled: true,
+                    keyExpr: "Id",
+                    scrolling: { mode: "virtual" },
+                    columnAutoWidth: true,
+                    height: 500,
+                    width: 1200,
+                    filterRow: { visible: true },
+                    selection: { mode: "single" },
+                    selectedRowKeys: [cellInfo.value],
+                    focusedRowEnabled: true,
+                    focusedRowKey: cellInfo.value,
+                    allowColumnResizing: true,
+                    wordWrapEnabled: true,
+                    onSelectionChanged: function (selectionChangedArgs) {
+                        e.component.option("value", selectionChangedArgs.selectedRowKeys[0]);
+                        cellInfo.setValue(selectionChangedArgs.selectedRowKeys[0]);
+                        if (selectionChangedArgs.selectedRowKeys.length > 0) {
+                            e.component.close();
+                        }
+                    }
+                });
+            },
+        });
+    }
+    $scope.dropDownBoxEditorDriverTemplate = function (cellElement, cellInfo) {
+        return $("<div>").dxDropDownBox({
+            dropDownOptions: { width: 600 },
+            dataSource: $scope.driverList,
+            value: cellInfo.value,
+            valueExpr: "Id",
+            displayExpr: "DriverName",
+            contentTemplate: function (e) {
+                return $("<div>").dxDataGrid({
+                    dataSource: $scope.driverList,
+                    remoteOperations: true,
+                    columns: [
+                        { dataField: 'DriverName', caption: 'Ad' },
+                        { dataField: 'DriverSurName', caption: 'Soyad' }
+                    ],
+                    hoverStateEnabled: true,
+                    keyExpr: "Id",
+                    scrolling: { mode: "virtual" },
+                    height: 250,
+                    filterRow: { visible: true },
+                    selection: { mode: "single" },
+                    selectedRowKeys: [cellInfo.value],
+                    focusedRowEnabled: true,
+                    focusedRowKey: cellInfo.value,
+                    allowColumnResizing: true,
+                    wordWrapEnabled: true,
+                    onSelectionChanged: function (selectionChangedArgs) {
+                        e.component.option("value", selectionChangedArgs.selectedRowKeys[0]);
+                        cellInfo.setValue(selectionChangedArgs.selectedRowKeys[0]);
+                        if (selectionChangedArgs.selectedRowKeys.length > 0) {
+                            e.component.close();
+                        }
+                    }
+                });
+            },
+        });
+    }
+    $scope.dropDownBoxEditorTowingVehicleTemplate = function (cellElement, cellInfo) {
+        return $("<div>").dxDropDownBox({
+            dropDownOptions: { width: 600 },
+            dataSource: $scope.towingVehicleList,
+            value: cellInfo.value,
+            valueExpr: "Id",
+            displayExpr: "Plate",
+            contentTemplate: function (e) {
+                return $("<div>").dxDataGrid({
+                    dataSource: $scope.towingVehicleList,
+                    remoteOperations: true,
+                    columns: [
+                        { dataField: 'Plate', caption: 'Plaka' },
+                        { dataField: 'Mark', caption: 'Marka' },
+                        { dataField: 'Versiyon', caption: 'Model' }
+                    ],
+                    hoverStateEnabled: true,
+                    keyExpr: "Id",
+                    scrolling: { mode: "virtual" },
+                    height: 250,
+                    filterRow: { visible: true },
+                    selection: { mode: "single" },
+                    selectedRowKeys: [cellInfo.value],
+                    focusedRowEnabled: true,
+                    focusedRowKey: cellInfo.value,
+                    allowColumnResizing: true,
+                    wordWrapEnabled: true,
+                    onSelectionChanged: function (selectionChangedArgs) {
+                        e.component.option("value", selectionChangedArgs.selectedRowKeys[0]);
+                        cellInfo.setValue(selectionChangedArgs.selectedRowKeys[0]);
+                        if (selectionChangedArgs.selectedRowKeys.length > 0) {
+                            e.component.close();
+                        }
+                    }
+                });
+            },
+        });
+    }
+
 
     $scope.bindModel = function (id) {
         $http.get(HOST_URL + 'Voyage/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
-                    console.log(resp.data);
-                    //$scope.modelObject.DateOfNeed = $scope.modelObject.DateOfNeedStr;
-                    //$scope.modelObject.OrderDate = $scope.modelObject.OrderDateStr;
 
                     if (typeof $scope.modelObject.CarrierFirmId != 'undefined' && $scope.modelObject.CarrierFirmId != null)
                         $scope.selectedCarrierFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.CarrierFirmId);
@@ -286,13 +474,13 @@
                         $scope.selectedDriver = {};
 
                     if ($scope.modelObject.TraillerVehicleId > 0)
-                        $scope.selectedTraillerVehicle = $scope.vehicleList.find(d => d.Id == $scope.modelObject.TraillerVehicleId);
+                        $scope.selectedTraillerVehicle = $scope.trailerVehicleList.find(d => d.Id == $scope.modelObject.TraillerVehicleId);
                     else
                         $scope.selectedTraillerVehicle = {};
 
 
                     if ($scope.modelObject.TowinfVehicleId > 0)
-                        $scope.selectedTowinfVehicle = $scope.vehicleList.find(d => d.Id == $scope.modelObject.TowinfVehicleId);
+                        $scope.selectedTowinfVehicle = $scope.towingVehicleList.find(d => d.Id == $scope.modelObject.TowinfVehicleId);
                     else
                         $scope.selectedTowinfVehicle = {};
 
@@ -316,7 +504,53 @@
                     else
                         $scope.selectedForexType = {};
 
+                    if (typeof $scope.modelObject.StartCityId != 'undefined' && $scope.modelObject.StartCityId != null)
+                        $scope.selectedStartCity = $scope.cityList.find(d => d.Id == $scope.modelObject.StartCityId);
+                    else
+                        $scope.selectedStartCity = {};
+
+                    if (typeof $scope.modelObject.LoadCityId != 'undefined' && $scope.modelObject.LoadCityId != null)
+                        $scope.selectedLoadCity = $scope.cityList.find(d => d.Id == $scope.modelObject.LoadCityId);
+                    else
+                        $scope.selectedLoadCity = {};
+
+                    if (typeof $scope.modelObject.DischargeCityId != 'undefined' && $scope.modelObject.DischargeCityId != null)
+                        $scope.selectedDischargeCity = $scope.cityList.find(d => d.Id == $scope.modelObject.DischargeCityId);
+                    else
+                        $scope.selectedDischargeCity = {};
+
+                    if (typeof $scope.modelObject.StartCountryId != 'undefined' && $scope.modelObject.StartCountryId != null)
+                        $scope.selectedStartCountry = $scope.countryList.find(d => d.Id == $scope.modelObject.StartCountryId);
+                    else
+                        $scope.selectedStartCountry = {};
+
+                    if (typeof $scope.modelObject.LoadCountryId != 'undefined' && $scope.modelObject.LoadCountryId != null)
+                        $scope.selectedLoadCountry = $scope.countryList.find(d => d.Id == $scope.modelObject.LoadCountryId);
+                    else
+                        $scope.selectedLoadCountry = {};
+
+                    if (typeof $scope.modelObject.DischargeCountryId != 'undefined' && $scope.modelObject.DischargeCountryId != null)
+                        $scope.selectedDischargeCountry = $scope.countryList.find(d => d.Id == $scope.modelObject.DischargeCountryId);
+                    else
+                        $scope.selectedDischargeCountry = {};
+
+                    if (typeof $scope.modelObject.ExitCustomsId != 'undefined' && $scope.modelObject.ExitCustomsId != null)
+                        $scope.selectedExitCustoms = $scope.customsList.find(d => d.Id == $scope.modelObject.ExitCustomsId);
+                    else
+                        $scope.selectedExitCustoms = {};
+
+                    if (typeof $scope.modelObject.EntryCustomsId != 'undefined' && $scope.modelObject.EntryCustomsId != null)
+                        $scope.selectedEntryCustoms = $scope.customsList.find(d => d.Id == $scope.modelObject.EntryCustomsId);
+                    else
+                        $scope.selectedEntryCustoms = {};
+
+                    if (typeof $scope.modelObject.VoyageStatus != 'undefined' && $scope.modelObject.VoyageStatus != null)
+                        $scope.selectedVoyageStatus = $scope.voyageStatusList.find(d => d.Id == $scope.modelObject.VoyageStatus);
+                    else
+                        $scope.selectedVoyageStatus = {};
+
                     $scope.bindVoyageDetails();
+                    $scope.bindVoyageDrivers();
                 }
             }).catch(function (err) { });
     }
@@ -335,14 +569,92 @@
                 update: function (key, values) {
                     var obj = $scope.modelObject.VoyageDetails.find(d => d.Id == key);
                     if (obj != null) {
-
-                        if (typeof values.RotaId != 'undefined') {
-                            var rotaObj = $scope.rotaList.find(d => d.Id == values.RotaId);
-                            obj.RotaId = itemObj.Id;
-                            obj.CityStartName = rotaObj.CityStartName;
-                        }
-
+                        if (typeof values.LoadingLineNo != 'undefined') { obj.LoadingLineNo = values.LoadingLineNo; }
+                        if (typeof values.DischargeLineNo != 'undefined') { obj.DischargeLineNo = values.DischargeLineNo; }
                     }
+                },
+                insert: function (values) {
+                    var newId = 1;
+                    if ($scope.modelObject.VoyageDetails.length > 0) {
+                        newId = $scope.modelObject.VoyageDetails.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                        newId++;
+                    }
+
+                    var loadObj = $scope.waitingLoadList.find(d => d.Id == values.LoadCode);
+
+                    var newObj = {
+                        Id: newId,
+                        DischargeLineNo: newId,
+                        LoadingLineNo: loadObj.LoadingLineNo,
+                        ItemLoadId: loadObj.Id,
+                        LoadCode: loadObj.LoadCode,
+                        LoadingDateStr: loadObj.LoadingDateStr,
+                        LoadOutDate: loadObj.LoadOutDateStr,
+                        CustomerFirmName: loadObj.CustomerFirmName,
+                        ShipperFirmName: loadObj.ShipperFirmName,
+                        BuyerFirmName: loadObj.BuyerFirmName,
+                        OrderTransactionDirectionType: loadObj.OrderTransactionDirectionType,
+                        OrderTransactionDirectionTypeStr: loadObj.OrderTransactionDirectionTypeStr,
+                        OrderCalculationType: loadObj.OrderCalculationType,
+                        OrderCalculationTypeStr: loadObj.OrderCalculationTypeStr,
+                        OveralQuantity: loadObj.OveralQuantity,
+                        OveralWeight: loadObj.OveralWeight,
+                        OveralLadametre: loadObj.OveralLadametre,
+                        OveralVolume: loadObj.OveralVolume,
+                        OverallTotal: loadObj.OverallTotal,
+                        OrderNo: loadObj.OrderNo,
+                        LoadDate: loadObj.LoadDateStr,
+                        DischargeDate: loadObj.DischargeDateStr,
+                        CalculationTypePrice: loadObj.CalculationTypePrice,
+                        DocumentNo: loadObj.DocumentNo,
+                        OrderUploadType: loadObj.OrderUploadType,
+                        OrderUploadTypeStr: loadObj.OrderUploadTypeStr,
+                        OrderUploadPointType: loadObj.OrderUploadPointType,
+                        OrderUploadPointTypeStr: loadObj.OrderUploadPointTypeStr,
+                        ScheduledUploadDate: loadObj.ScheduledUploadDateStr,
+                        DateOfNeed: loadObj.DateOfNeedStr,
+                        InvoiceId: loadObj.InvoiceId,
+                        ForexTypeId: loadObj.ForexTypeId,
+                        TraillerVehicleId: loadObj.VehicleTraillerId,
+                        InvoiceStatus: loadObj.InvoiceStatus,
+                        InvoiceFreightPrice: loadObj.InvoiceFreightPrice,
+                        CmrNo: loadObj.CmrNo,
+                        CmrStatus: loadObj.CmrStatus,
+                        ShipperFirmExplanation: loadObj.ShipperFirmExplanation,
+                        BuyerFirmExplanation: loadObj.BuyerFirmExplanation,
+                        ReadinessDate: loadObj.ReadinessDateStr,
+                        DeliveryFromCustomerDate: loadObj.DeliveryFromCustomerDateStr,
+                        IntendedArrivalDate: loadObj.IntendedArrivalDateStr,
+                        FirmCustomsArrivalId: loadObj.FirmCustomsArrivalId,
+                        CustomsExplanation: loadObj.CustomsExplanation,
+                        T1T2No: loadObj.T1T2No,
+                        TClosingDate: loadObj.TClosingDateStr,
+                        HasCmrDeliveryed: loadObj.HasCmrDeliveryed,
+                        ItemPrice: loadObj.ItemPrice,
+                        TrailerType: loadObj.TrailerType,
+                        HasItemInsurance: loadObj.HasItemInsurance,
+                        HasItemDangerous: loadObj.HasItemDangerous,
+                        CmrCustomerDeliveryDate: loadObj.CmrCustomerDeliveryDateStr,
+                        BringingToWarehousePlate: loadObj.BringingToWarehousePlate,
+                        ShipperCityId: loadObj.ShipperCityId,
+                        ShipperCityName: loadObj.ShipperCityName,
+                        BuyerCityId: loadObj.BuyerCityId,
+                        BuyerCityName: loadObj.BuyerCityName,
+                        ShipperCountryId: loadObj.ShipperCountryId,
+                        ShipperCountryName: loadObj.ShipperCountryName,
+                        BuyerCountryId: loadObj.BuyerCountryId,
+                        BuyerCountryName: loadObj.BuyerCountryName,
+                        CustomerFirmId: loadObj.CustomerFirmId,
+                        ShipperFirmId: loadObj.ShipperFirmId,
+                        BuyerFirmId: loadObj.BuyerFirmId,
+                        EntryCustomsId: loadObj.EntryCustomsId,
+                        ExitCustomsId: loadObj.ExitCustomsId,
+                        PlantId: loadObj.PlantId,
+                        RotaId: null,
+                        NewDetail: true,
+                    };
+
+                    $scope.modelObject.VoyageDetails.push(newObj);
                 },
                 key: 'Id'
             },
@@ -365,114 +677,173 @@
             scrolling: {
                 mode: "single"
             },
-            height: 200,
+            height: 400,
             editing: {
+                allowUpdating: true,
                 allowDeleting: true,
-                allowEditing: true,
+                allowAdding: true,
                 mode: 'cell'
             },
             repaintChangesOnly: true,
             columns: [
-                { dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası', allowEditing: true },
-                { dataField: 'LoadCode', caption: 'Yük Kodu', allowEditing: false },
-                { dataField: 'LoadingDateStr', caption: 'Yükleme Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
-                { dataField: 'CustomerFirmName', caption: 'Firma', allowEditing: false },
-                { dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü', allowEditing: false },
-                { dataField: 'OveralQuantity', caption: 'Toplam Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)', allowEditing: false },
-                { dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OveralVolume', caption: 'Toplam Hacim(M3)', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
-                    dataField: 'RotaId', caption: 'Rota',
+                    dataField: 'LoadCode', caption: 'Yük Kodu',
                     lookup: {
-                        dataSource: $scope.rotaList,
-                        valueExpr: "Id",
-                        displayExpr: "CityStartName"
+                        dataSource: $scope.waitingLoadList,
+                        valueExpr: "LoadCode",
+                        displayExpr: "Yük Kodu"
                     },
                     allowSorting: false,
+                    //width: 70,
                     validationRules: [{ type: "required" }],
-                    editCellTemplate: $scope.dropDownBoxEditorTemplate,
+                    editCellTemplate: $scope.dropDownBoxEditorWaitingLoadTemplate,
                     cellTemplate: function (container, options) {
-                        if (typeof options.row.data.CityStartName != 'undefined'
-                            && options.row.data.CityStartName != null && options.row.data.CityStartName.length > 0)
-                            container.text(options.row.data.CityStartName);
+                        if (typeof options.row.data.LoadCode != 'undefined'
+                            && options.row.data.LoadCode != null && options.row.data.LoadCode.length > 0)
+                            container.text(options.row.data.LoadCode);
                         else
                             container.text(options.displayValue);
                     }
                 },
+                //{ dataField: 'LoadCode', caption: 'Yük Kodu', allowEditing: false, width:150},
+                //{ dataField: 'VoyageStatusStr', caption: 'Yük Durum', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
+                { dataField: 'CustomerFirmName', caption: 'Müşteri', allowEditing: false },
+                { dataField: 'ShipperFirmName', caption: 'Gönderici Firma', allowEditing: false },
+                { dataField: 'BuyerFirmName', caption: 'Alıcı Firma', allowEditing: false },
+                //{ dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü', allowEditing: false },
+                { dataField: 'OveralQuantity', caption: 'Toplam Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)', allowEditing: false },
+                { dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası', allowEditing: true },
+                { dataField: 'LoadingLineNo', caption: 'Yükleme Sırası', allowEditing: true },
+                { dataField: 'BuyerCityName', caption: 'Boş. Şehri', allowEditing: false },
+                { dataField: 'BuyerCountryName', caption: 'Boş. Ülke', allowEditing: false },
+                //{ dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'OveralVolume', caption: 'Toplam Hacim(M3)', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+
             ]
         });
     }
-    // APPROVALS
-    $scope.approveLOrder = function () {
-        bootbox.confirm({
-            message: "Bu Sipariş talebi onaylamak istediğinizden emin misiniz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
+    $scope.bindVoyageDrivers = function () {
+        $('#driverList').dxDataGrid({
+            dataSource:
+            {
+                load: function () { return $scope.modelObject.VoyageDrivers },
+                remove: function (key) {
+                    var obj = $scope.modelObject.VoyageDrivers.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.modelObject.VoyageDrivers.splice($scope.modelObject.VoyageDrivers.indexOf(obj), 1);
+                    }
                 },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'LOrder/ApproveOrderPrice', { rid: $scope.modelObject.Id }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
-
-                                if (resp.data.Result) {
-                                    toastr.success('Onay işlemi başarılı.', 'Bilgilendirme');
-
-                                    $scope.bindModel($scope.modelObject.Id);
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
-        });
-    }
-
-    $scope.cancelledLOrder = function () {
-        bootbox.confirm({
-            message: "Bu Sipariş talebi İptal etmek istediğinizden emin misiniz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
+                update: function (key, values) {
+                    var obj = $scope.modelObject.VoyageDrivers.find(d => d.Id == key);
+                    if (obj != null) {
+                        if (typeof values.DriverId != 'undefined') {
+                            var driverObj = $scope.driverList.find(d => d.Id == values.DriverId);
+                            obj.DriverId = driverObj.Id;
+                        }
+                        if (typeof values.TowinfVehicleId != 'undefined') {
+                            var tVehicleObj = $scope.towingVehicleList.find(d => d.Id == values.TowinfVehicleId);
+                            obj.TowinfVehicleId = tVehicleObj.Id;
+                        }
+                        if (typeof values.StartDateStr != 'undefined') { obj.StartDateStr = values.StartDateStr; }
+                        if (typeof values.EndDate != 'undefined') { obj.EndDate = values.EndDate; }
+                        if (typeof values.StartKmHour != 'undefined') { obj.StartKmHour = values.StartKmHour; }
+                        if (typeof values.EndKmHour != 'undefined') { obj.EndKmHour = values.EndKmHour; }
+                    }
                 },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
+                insert: function (values) {
+                    var newId = 1;
+                    if ($scope.modelObject.VoyageDrivers.length > 0) {
+                        newId = $scope.modelObject.VoyageDrivers.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                        newId++;
+                    }
+                    var driverObj = $scope.driverList.find(d => d.Id == values.DriverId);
+
+                    var towingVehicleObj = $scope.towingVehicleList.find(d => d.Id == values.TowingVehicleId);
+
+                    var newObj = {
+                        Id: newId,
+                        DriverId: driverObj.Id,
+                        TowingVehicleId: towingVehicleObj.Id,
+                        StartDateStr: values.StartDateStr,
+                        EndDate: values.EndDate,
+                        StartKmHour: values.StartKmHour,
+                        EndKmHour: values.EndKmHour,
+                        NewDetail: true,
+                    };
+
+                    $scope.modelObject.VoyageDrivers.push(newObj);
+                },
+                key: 'Id'
             },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'LOrder/CancelledOrderPrice', { rid: $scope.modelObject.Id }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
-
-                                if (resp.data.Result) {
-                                    toastr.success('İptal işlemi başarılı.', 'Bilgilendirme');
-
-                                    $scope.bindModel($scope.modelObject.Id);
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
+            showColumnLines: true,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: false,
+            columnAutoWidth: true,
+            showBorders: true,
+            filterRow: {
+                visible: false
+            },
+            headerFilter: {
+                visible: false
+            },
+            groupPanel: {
+                visible: false
+            },
+            remoteOperations: false,
+            scrolling: {
+                mode: "single"
+            },
+            height: 300,
+            editing: {
+                allowUpdating: true,
+                allowDeleting: true,
+                allowAdding: true,
+                mode: 'cell'
+            },
+            repaintChangesOnly: true,
+            columns: [
+                {
+                    dataField: 'DriverId', caption: 'Şoför',
+                    lookup: {
+                        dataSource: $scope.driverList,
+                        valueExpr: "Id",
+                        displayExpr: "DriverName"
+                    },
+                    allowSorting: false,
+                    validationRules: [{ type: "required" }],
+                    editCellTemplate: $scope.dropDownBoxEditorDriverTemplate,
+                    cellTemplate: function (container, options) {
+                        if (typeof options.row.data.DriverId != 'undefined'
+                            && options.row.data.DriverId != null && options.row.data.DriverId.length > 0)
+                            container.text(options.row.data.DriverId);
+                        else
+                            container.text(options.displayValue);
+                    }
+                },
+                { dataField: 'StartDateStr', caption: 'Başlama Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
+                { dataField: 'EndDate', caption: 'Bitiş Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
+                { dataField: 'StartKmHour', caption: 'Başlama KM', allowEditing: true },
+                { dataField: 'EndKmHour', caption: 'Bitiş KM', allowEditing: true },
+                {
+                    dataField: 'TowingVehicleId', caption: 'Çekici',
+                    lookup: {
+                        dataSource: $scope.towingVehicleList,
+                        valueExpr: "Id",
+                        displayExpr: "Plate"
+                    },
+                    allowSorting: false,
+                    validationRules: [{ type: "required" }],
+                    editCellTemplate: $scope.dropDownBoxEditorTowingVehicleTemplate,
+                    cellTemplate: function (container, options) {
+                        if (typeof options.row.data.Plate != 'undefined'
+                            && options.row.data.Plate != null && options.row.data.Plate.length > 0)
+                            container.text(options.row.data.Plate);
+                        else
+                            container.text(options.displayValue);
+                    }
+                },            ]
         });
     }
 
@@ -498,112 +869,33 @@
         });
     }
 
-    // ROW MENU ACTIONS
-    $scope.showRowMenu = function () {
-        if ($scope.selectedRow && $scope.selectedRow.Id > 0) {
-            $scope.$apply();
+    //// ROW MENU ACTIONS
+    //$scope.showRowMenu = function () {
+    //    if ($scope.selectedRow && $scope.selectedRow.Id > 0) {
+    //        $scope.$apply();
 
-            $('#dial-row-menu').dialog({
-                width: 300,
-                //height: window.innerHeight * 0.6,
-                hide: true,
-                modal: true,
-                resizable: false,
-                show: true,
-                draggable: false,
-                closeText: "KAPAT"
-            });
-        }
-    }
-    $scope.toggleOrderDetailStatus = function () {
-        if ($scope.selectedRow && $scope.selectedRow.Id > 0) {
-            $('#dial-row-menu').dialog("close");
+    //        $('#dial-row-menu').dialog({
+    //            width: 300,
+    //            //height: window.innerHeight * 0.6,
+    //            hide: true,
+    //            modal: true,
+    //            resizable: false,
+    //            show: true,
+    //            draggable: false,
+    //            closeText: "KAPAT"
+    //        });
+    //    }
+    //}
 
-            bootbox.confirm({
-                message: "Bu sipariş kaleminin durumunu değiştirmek istediğinizden emin misiniz?",
-                closeButton: false,
-                buttons: {
-                    confirm: {
-                        label: 'Evet',
-                        className: 'btn-primary'
-                    },
-                    cancel: {
-                        label: 'Hayır',
-                        className: 'btn-light'
-                    }
-                },
-                callback: function (result) {
-                    if (result) {
-                        $scope.saveStatus = 1;
-                        $http.post(HOST_URL + 'LOrder/ToggleOrderDetailStatus', { detailId: $scope.selectedRow.Id }, 'json')
-                            .then(function (resp) {
-                                if (typeof resp.data != 'undefined' && resp.data != null) {
-                                    $scope.saveStatus = 0;
-
-                                    if (resp.data.Status == 1) {
-                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
-
-                                        $scope.bindModel($scope.modelObject.Id);
-                                    }
-                                    else
-                                        toastr.error(resp.data.ErrorMessage, 'Hata');
-                                }
-                            }).catch(function (err) { });
-                    }
-                }
-            });
-        }
-    }
-
-    // APPROVALS
-    $scope.approveOrderPrice = function () {
-        bootbox.confirm({
-            message: "Bu siparişin fiyatını onaylamak istediğinizden emin misiniz?",
-            closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $scope.saveStatus = 1;
-                    $http.post(HOST_URL + 'LOrder/ApproveOrderPrice', { rid: $scope.modelObject.Id }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
-
-                                if (resp.data.Result) {
-                                    toastr.success('Onay işlemi başarılı.', 'Bilgilendirme');
-
-                                    $scope.bindModel($scope.modelObject.Id);
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
-                }
-            }
-        });
-    }
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
     $scope.loadSelectables().then(function () {
         if (PRM_ID > 0)
             $scope.bindModel(PRM_ID);
-        else {
-            $scope.getNextOrderNo().then(function (rNo) {
-                $scope.modelObject.OrderNo = rNo;
-                $scope.$apply();
+        else
+            $scope.bindModel();
 
-                $scope.bindVoyageDetails();
-            });
-        }
     });
+
 });

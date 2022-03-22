@@ -22,7 +22,7 @@ namespace Heka.DataAccess.Context
             this.ForexHistory = new HashSet<ForexHistory>();
             this.ItemOrderDetail = new HashSet<ItemOrderDetail>();
             this.ItemReceiptDetail = new HashSet<ItemReceiptDetail>();
-            this.VehicleInsurance = new HashSet<VehicleInsurance>();
+            //this.VehicleInsurance = new HashSet<VehicleInsurance>();
             this.VehicleCare = new HashSet<VehicleCare>();
             this.VehicleTire = new HashSet<VehicleTire>();
             this.FirmTariff = new HashSet<FirmTariff>();
@@ -32,7 +32,9 @@ namespace Heka.DataAccess.Context
             this.ItemLoadCost = new HashSet<ItemLoadCost>();
             this.VoyageDetail = new HashSet<VoyageDetail>();
             this.Voyage = new HashSet<Voyage>();
-
+            this.VoyageCostDetail = new HashSet<VoyageCostDetail>();
+            this.DriverAccountDetail = new HashSet<DriverAccountDetail>();
+            this.DriverAccount = new HashSet<DriverAccount>();
         }
 
         public int Id { get; set; }
@@ -50,8 +52,8 @@ namespace Heka.DataAccess.Context
         [InverseProperty("ForexType")]
         public virtual ICollection<ItemReceiptDetail> ItemReceiptDetail { get; set; }
 
-        [InverseProperty("ForexType")]
-        public virtual ICollection<VehicleInsurance> VehicleInsurance { get; set; }
+        //[InverseProperty("ForexType")]
+        //public virtual ICollection<VehicleInsurance> VehicleInsurance { get; set; }
 
         [InverseProperty("ForexType")]
         public virtual ICollection<VehicleCare> VehicleCare { get; set; }
@@ -79,6 +81,16 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ForexType")]
         public virtual ICollection<Voyage> Voyage { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<VoyageCostDetail> VoyageCostDetail { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<DriverAccountDetail> DriverAccountDetail { get; set; }
+
+        [InverseProperty("ForexType")]
+        public virtual ICollection<DriverAccount> DriverAccount { get; set; }
+
 
     }
 }
