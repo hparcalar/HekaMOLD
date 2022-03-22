@@ -745,7 +745,7 @@
                             var tVehicleObj = $scope.towingVehicleList.find(d => d.Id == values.TowinfVehicleId);
                             obj.TowinfVehicleId = tVehicleObj.Id;
                         }
-                        if (typeof values.StartDateStr != 'undefined') { obj.StartDateStr = values.StartDateStr; }
+                        if (typeof values.StartDate != 'undefined') { obj.StartDate = values.StartDate; }
                         if (typeof values.EndDate != 'undefined') { obj.EndDate = values.EndDate; }
                         if (typeof values.StartKmHour != 'undefined') { obj.StartKmHour = values.StartKmHour; }
                         if (typeof values.EndKmHour != 'undefined') { obj.EndKmHour = values.EndKmHour; }
@@ -822,7 +822,7 @@
                             container.text(options.displayValue);
                     }
                 },
-                { dataField: 'StartDateStr', caption: 'Başlama Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
+                { dataField: 'StartDate', caption: 'Başlama Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
                 { dataField: 'EndDate', caption: 'Bitiş Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
                 { dataField: 'StartKmHour', caption: 'Başlama KM', allowEditing: true },
                 { dataField: 'EndKmHour', caption: 'Bitiş KM', allowEditing: true },

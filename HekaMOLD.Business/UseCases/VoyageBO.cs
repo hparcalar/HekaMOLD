@@ -216,11 +216,11 @@ namespace HekaMOLD.Business.UseCases
                 }
                 foreach (var item in model.VoyageDrivers)
                 {
-                    if (!string.IsNullOrEmpty(item.StartDateStr))
-                    {
-                        item.StartDate = DateTime.ParseExact(item.StartDateStr, "dd.MM.yyyy",
-                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                    }
+                    //if (!string.IsNullOrEmpty(item.StartDateStr))
+                    //{
+                    //    item.StartDate = DateTime.ParseExact(item.StartDateStr, "dd/MM/yyyy",
+                    //        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                    //}
                     //if (!string.IsNullOrEmpty(item.EndDateStr))
                     //{
                     //    item.EndDate = DateTime.ParseExact(item.EndDateStr, "dd.MM.yyyy",
@@ -296,7 +296,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         var dbItemLoad = repoLoad.Get(d => d.Id == x.ItemLoadId);
 
-                        if(dbObj.VoyageStatus != (int)(int)VoyageStatus.Created && dbObj.VoyageStatus != (int)(int)VoyageStatus.Approved && dbObj.VoyageStatus != (int)VoyageStatus.Ready)
+                        if(dbObj.VoyageStatus != (int)VoyageStatus.Created && dbObj.VoyageStatus != (int)VoyageStatus.Approved && dbObj.VoyageStatus != (int)VoyageStatus.Ready)
                             dbItemLoad.LoadStatusType = model.VoyageStatus;
                         dbItemLoad.VoyageCode = model.VoyageCode;
                         dbItemLoad.VoyageCreatedUserId = model.CreatedUserId;
@@ -700,7 +700,8 @@ namespace HekaMOLD.Business.UseCases
                     {
                         Id = d.Id,
                         DriverId = d.DriverId,
-                        StartDateStr = d.StartDate.ToString(),
+                        StartDate = d.StartDate,
+                        //StartDate = string.Format("{0:dd.MM.yyyy}", d.StartDate),
                         //EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate),
                         StartKmHour = d.StartKmHour,
                         EndKmHour = d.EndKmHour,
@@ -920,7 +921,7 @@ namespace HekaMOLD.Business.UseCases
 
             var dbObj = repo.Get(d => d.Id == id);
             var dbVoyageObj = repoVoyage.Get(d => d.Id == vid);
-            if (dbVoyageObj != null)
+            if (dbObj==null && dbVoyageObj != null)
             {
                 model.VoyageCode = dbVoyageObj.VoyageCode;
                 model.VoyageStatusStr = ((VoyageStatus)dbVoyageObj.VoyageStatus).ToCaption();

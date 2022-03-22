@@ -11,6 +11,7 @@
     $scope.selectedLoadCity = {};
     $scope.selectedDischargeCity = {};
 
+    $scope.selectedReelOwnerFirm = {};
     $scope.selectedCustomerFirm = {};
     $scope.selectedRow = { Id: 0 };
 
@@ -175,6 +176,7 @@
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus: 0 };
         $scope.selectedCustomerFirm = {};
+        $scope.selectedReelOwnerFirm = {};
         $scope.selectedOrderCalculationType = { Id: 0 };
         $scope.selectedOrderUploadPointType = {};
         $scope.selectedOrderTransactionDirectionType = {};
@@ -235,6 +237,11 @@
             $scope.modelObject.CustomerFirmId = $scope.selectedCustomerFirm.Id;
         else
             $scope.modelObject.CustomerFirmId = null;
+
+        if (typeof $scope.selectedReelOwnerFirm != 'undefined' && $scope.selectedReelOwnerFirm != null)
+            $scope.modelObject.ReelOwnerFirmId = $scope.selectedReelOwnerFirm.Id;
+        else
+            $scope.modelObject.ReelOwnerFirmId = null;
 
         if (typeof $scope.selectedEntryCustoms != 'undefined' && $scope.selectedEntryCustoms != null)
             $scope.modelObject.EntryCustomsId = $scope.selectedEntryCustoms.Id;
@@ -350,6 +357,11 @@
                         $scope.selectedCustomerFirm = $scope.customerFirmList.find(d => d.Id == $scope.modelObject.CustomerFirmId);
                     else
                         $scope.selectedCustomerFirm = {};
+
+                    if (typeof $scope.modelObject.ReelOwnerFirmId != 'undefined' && $scope.modelObject.ReelOwnerFirmId != null)
+                        $scope.selectedReelOwnerFirm = $scope.customerFirmList.find(d => d.Id == $scope.modelObject.ReelOwnerFirmId);
+                    else
+                        $scope.selectedReelOwnerFirm = {};
 
                     if ($scope.modelObject.OrderTransactionDirectionType > 0)
                         $scope.selectedOrderTransactionDirectionType = $scope.orderTransactionDirectionTypeList.find(d => d.Id == $scope.modelObject.OrderTransactionDirectionType);

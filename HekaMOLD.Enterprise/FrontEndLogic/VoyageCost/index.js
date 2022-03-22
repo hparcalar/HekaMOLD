@@ -60,8 +60,7 @@
 
                     if (resp.data.Status == 1) {
                         toastr.success('Kayıt başarılı.', 'Bilgilendirme');
-
-                        $scope.bindModel(resp.data.RecordId);
+                        $scope.bindModel(resp.data.RecordId, VID_ID);
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
@@ -258,8 +257,8 @@
             },
             height: 300,
             editing: {
-                allowUpdating: true,
-                allowDeleting: true,
+                allowUpdating: false,
+                allowDeleting: false,
                 allowAdding: true,
                 mode: 'cell'
             },
@@ -438,8 +437,8 @@
             },
             height: 300,
             editing: {
-                allowUpdating: true,
-                allowDeleting: true,
+                allowUpdating: false,
+                allowDeleting: false,
                 allowAdding: true,
                 mode: 'cell'
             },
