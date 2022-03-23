@@ -1,4 +1,5 @@
-﻿app.controller('knitCtrl', function ($scope, $http) {
+﻿
+app.controller('knitVariantCtrl', function ($scope, $http) {
     $scope.modelObject = { Id: 0, KnitYarns: [] };
     $scope.saveStatus = 0;
 
@@ -317,8 +318,8 @@
         }).catch(function (err) { });
     }
 
-    $scope.bindModel = function (id) {
-        $http.get(HOST_URL + 'Knit/BindModel?rid=' + id, {}, 'json')
+    $scope.bindModel = function (id, kid) {
+        $http.get(HOST_URL + 'KnitVariant/BindModel?rid=' + id, '&kid=' + kid, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;

@@ -157,6 +157,7 @@
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
     <Compile Include="Controllers\KnitController.cs" />
+    <Compile Include="Controllers\KnitVariantController.cs" />
     <Compile Include="Controllers\LojisticOrderController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
@@ -4123,6 +4124,7 @@
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\extract.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
+    <Content Include="FrontEndLogic\KnitVariant\index.js" />
     <Content Include="FrontEndLogic\Knit\index.js" />
     <Content Include="FrontEndLogic\Knit\list.js" />
     <Content Include="FrontEndLogic\LayoutObjectType\index.js" />
@@ -4702,6 +4704,7 @@
     <Content Include="Views\Cost\Index.cshtml" />
     <Content Include="Views\Cost\List.cshtml" />
     <Content Include="Views\Knit\Variant.cshtml" />
+    <Content Include="Views\KnitVariant\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
