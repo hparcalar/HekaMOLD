@@ -313,19 +313,19 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xxl-6">
+                                    <div class="col-xxl-5">
                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşlem Yön Tipi</label>
                                         <select class="form-select form-select-solid mb-3" data-allow-clear="true"
                                                 ng-options="item.Text for item in orderTransactionDirectionTypeList" ng-change="getNextOrderNo()" ng-model="selectedOrderTransactionDirectionType"
                                                 data-control="select2" data-placeholder="-- Seçiniz --">
                                         </select>
                                     </div>
-                                    <div class="col-xxl-6">
+                                    <div class="col-xxl-7">
 
                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
                                         <!--begin::Input group-->
                                         <div class="mb-3 d-flex flex-fill flex-column">
-                                            <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.Explanation" placeholder=""></textarea>
+                                            <textarea class="form-control form-control-solid flex-fill" rows="4" ng-model="modelObject.Explanation" placeholder=""></textarea>
                                         </div>
                                     </div>
                                 </div>

@@ -745,8 +745,8 @@
                             var tVehicleObj = $scope.towingVehicleList.find(d => d.Id == values.TowinfVehicleId);
                             obj.TowinfVehicleId = tVehicleObj.Id;
                         }
-                        if (typeof values.StartDate != 'undefined') { obj.StartDate = values.StartDate; }
-                        if (typeof values.EndDate != 'undefined') { obj.EndDate = values.EndDate; }
+                        if (typeof values.StartDateStr != 'undefined') { obj.StartDateStr = values.StartDateStr; }
+                        if (typeof values.EndDateStr != 'undefined') { obj.EndDateStr = values.EndDateStr; }
                         if (typeof values.StartKmHour != 'undefined') { obj.StartKmHour = values.StartKmHour; }
                         if (typeof values.EndKmHour != 'undefined') { obj.EndKmHour = values.EndKmHour; }
                     }
@@ -766,7 +766,7 @@
                         DriverId: driverObj.Id,
                         TowingVehicleId: towingVehicleObj.Id,
                         StartDateStr: values.StartDateStr,
-                        EndDate: values.EndDate,
+                        EndDateStr: values.EndDateStr,
                         StartKmHour: values.StartKmHour,
                         EndKmHour: values.EndKmHour,
                         NewDetail: true,
@@ -822,8 +822,8 @@
                             container.text(options.displayValue);
                     }
                 },
-                { dataField: 'StartDate', caption: 'Başlama Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
-                { dataField: 'EndDate', caption: 'Bitiş Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
+                { dataField: 'StartDateStr', caption: 'Başlama Tarih', dataType: 'date', format: 'dd/MM/yyyy', allowEditing: true },
+                { dataField: 'EndDateStr', caption: 'Bitiş Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
                 { dataField: 'StartKmHour', caption: 'Başlama KM', allowEditing: true },
                 { dataField: 'EndKmHour', caption: 'Bitiş KM', allowEditing: true },
                 {

@@ -44,76 +44,93 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemLoad>();
 
-            repo.GetAll().ToList().ForEach(d =>
-            {
-                ItemLoadModel containerObj = new ItemLoadModel();
-                d.MapTo(containerObj);
-                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
-                containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
-                containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
-                containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
-                containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
-                containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
-                containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
-                containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
-                containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
-                containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
-                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
-                containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
-                containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
-                containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
-                containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
-                containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
-                containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
-                containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
-                containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
-                containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
-                containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
-                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
-                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
-                containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
-                containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
-                containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
-                containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
-                containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
-                containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
-                containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
-
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
-            //return repo.GetAll().Select(d => new ItemLoadModel
+            //repo.GetAll().ToList().ForEach(d =>
             //{
-            //    Id = d.Id,
-            //LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption(),
-            //DischargeDateStr = d.DischargeDate.ToString(),
-            //LoadingDateStr = DateTime.Now.ToString("MM/dd/yyyy"),
-            //LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
-            //DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
-            //LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
-            //ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
-            //ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate)),
-            //OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null),
-            //CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "",
-            //EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
-            //ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "",
-            //ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "",
-            //BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "",
-            //OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
-            //OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
-            //OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
-            //OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
-            //ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "",
-            //BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "",
-            //ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "",
-            //BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "",
-            //ShipperFirmExplanation = d.ShipperFirmExplanation,
-            //BuyerFirmExplanation = d.BuyerFirmExplanation,
-            //ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
+            //    ItemLoadModel containerObj = new ItemLoadModel();
+            //    d.MapTo(containerObj);
+            //    containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
+            //    containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
+            //    containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
+            //    containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
+            //    containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
+            //    containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
+            //    containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
+            //    containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
+            //    containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
+            //    containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
+            //    containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
+            //    containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
+            //    containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
+            //    containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+            //    containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
+            //    containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
+            //    containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
+            //    containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
+            //    containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
+            //    containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
+            //    containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
+            //    containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
+            //    containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
+            //    containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
+            //    containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
+            //    containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
+            //    containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
+            //    containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
+            //    containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+            //    containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
+            //    containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
 
-            //}).ToArray();
+            //    data.Add(containerObj);
+            //});
+
+            //return data.ToArray();
+            return repo.GetAll().ToList().Select(d => new ItemLoadModel
+            {
+                Id = d.Id,
+                LoadCode = d.LoadCode,
+                OrderNo = d.OrderNo,
+                LoadStatusType = d.LoadStatusType,
+                LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption(),
+                DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate),
+                LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
+                DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate),
+                DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate),
+                DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate),
+                ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
+                CmrCustomerDeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.CmrCustomerDeliveryDate),
+                IntendedArrivalDateStr = string.Format("{0:dd.MM.yyyy}", d.IntendedArrivalDate),
+                LoadExitDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadExitDate),
+                LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate),
+                ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate)),
+                OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null),
+                CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "",
+                EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
+                ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "",
+                ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "",
+                BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "",
+                OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+                OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
+                OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
+                OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+                ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "",
+                BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "",
+                ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "",
+                BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "",
+                ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName:"",
+                ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "",
+                ShipperFirmExplanation = d.ShipperFirmExplanation,
+                BuyerFirmExplanation = d.BuyerFirmExplanation,
+                OveralLadametre = d.OveralLadametre,
+                OveralQuantity = d.OveralQuantity,
+                OveralWeight = d.OveralWeight,
+                OveralVolume = d.OveralVolume,
+                OverallTotal = d.OverallTotal,
+                Explanation = d.Explanation,
+                ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
+
+            }).ToArray();
 
         }
         public LoadCalendarModel[] GetLoadCalendarList()
@@ -143,46 +160,93 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemLoad>();
 
-            repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Export).ToList().ForEach(d =>
-             {
-                 ItemLoadModel containerObj = new ItemLoadModel();
-                 d.MapTo(containerObj);
-                 containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
-                 containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
-                 containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
-                 containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
-                 containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
-                 containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
-                 containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
-                 containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
-                 containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
-                 containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
-                 containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
-                 containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
-                 containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
-                 containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
-                 containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
-                 containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
-                 containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
-                 containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
-                 containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
-                 containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
-                 containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                 containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
-                 containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
-                 containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
-                 containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
-                 containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
-                 containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
-                 containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
-                 containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
-                 containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
-                 containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
+            //repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Export).ToList().ForEach(d =>
+            // {
+            //     ItemLoadModel containerObj = new ItemLoadModel();
+            //     d.MapTo(containerObj);
+            //     containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
+            //     containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
+            //     containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
+            //     containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
+            //     containerObj.LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate);
+            //     containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
+            //     containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
+            //     containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
+            //     containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
+            //     containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
+            //     containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
+            //     containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
+            //     containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
+            //     containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
+            //     containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
+            //     containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
+            //     containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
+            //     containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
+            //     containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
+            //     containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
+            //     containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
+            //     containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
+            //     containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
+            //     containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
+            //     containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
+            //     containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
+            //     containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
+            //     containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
+            //     containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+            //     containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
+            //     containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
 
-                 data.Add(containerObj);
-             });
+            //     data.Add(containerObj);
+            // });
 
-            return data.ToArray();
+            //return data.ToArray();
+            return repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Export).ToList().Select(d => new ItemLoadModel
+            {
+                Id = d.Id,
+                LoadCode = d.LoadCode,
+                OrderNo = d.OrderNo,
+                LoadStatusType = d.LoadStatusType,
+                LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption(),
+                DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate),
+                LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
+                DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate),
+                DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate),
+                DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate),
+                ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
+                CmrCustomerDeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.CmrCustomerDeliveryDate),
+                IntendedArrivalDateStr = string.Format("{0:dd.MM.yyyy}", d.IntendedArrivalDate),
+                LoadExitDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadExitDate),
+                LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate),
+                ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate)),
+                OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null),
+                CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "",
+                EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
+                ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "",
+                ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "",
+                BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "",
+                OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+                OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
+                OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
+                OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+                ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "",
+                BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "",
+                ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "",
+                BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "",
+                ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "",
+                ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "",
+                ShipperFirmExplanation = d.ShipperFirmExplanation,
+                BuyerFirmExplanation = d.BuyerFirmExplanation,
+                OveralLadametre = d.OveralLadametre,
+                OveralQuantity = d.OveralQuantity,
+                OveralWeight = d.OveralWeight,
+                OveralVolume = d.OveralVolume,
+                OverallTotal = d.OverallTotal,
+                Explanation = d.Explanation,
+                ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
+
+            }).ToArray();
         }
         public ItemLoadModel[] GetItemLoadImportList()
         {
@@ -190,45 +254,54 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemLoad>();
 
-            repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Import).ToList().ForEach(d =>
+            return repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Import).ToList().Select(d => new ItemLoadModel
             {
-                ItemLoadModel containerObj = new ItemLoadModel();
-                d.MapTo(containerObj);
-                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
-                containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
-                containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
-                containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
-                containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
-                containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
-                containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
-                containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
-                containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
-                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
-                containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
-                containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
-                containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
-                containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
-                containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
-                containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
-                containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
-                containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
-                containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
-                containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
-                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
-                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
-                containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
-                containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
-                containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
-                containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
-                containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
-                containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
-                containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
+                Id = d.Id,
+                LoadCode = d.LoadCode,
+                OrderNo = d.OrderNo,
+                LoadStatusType = d.LoadStatusType,
+                LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption(),
+                DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate),
+                LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
+                DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate),
+                DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate),
+                DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate),
+                ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
+                CmrCustomerDeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.CmrCustomerDeliveryDate),
+                IntendedArrivalDateStr = string.Format("{0:dd.MM.yyyy}", d.IntendedArrivalDate),
+                LoadExitDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadExitDate),
+                LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate),
+                ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate)),
+                OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null),
+                CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "",
+                EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
+                ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "",
+                ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "",
+                BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "",
+                OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+                OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
+                OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
+                OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+                ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "",
+                BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "",
+                ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "",
+                BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "",
+                ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "",
+                ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "",
+                ShipperFirmExplanation = d.ShipperFirmExplanation,
+                BuyerFirmExplanation = d.BuyerFirmExplanation,
+                OveralLadametre = d.OveralLadametre,
+                OveralQuantity = d.OveralQuantity,
+                OveralWeight = d.OveralWeight,
+                OveralVolume = d.OveralVolume,
+                OverallTotal = d.OverallTotal,
+                Explanation = d.Explanation,
+                ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
 
-                data.Add(containerObj);
-            });
+            }).ToArray();
 
-            return data.ToArray();
         }
         public ItemLoadModel[] GetItemLoadDomesticList()
         {
@@ -236,91 +309,108 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemLoad>();
 
-            repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Domestic).ToList().ForEach(d =>
+            return repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Domestic).ToList().Select(d => new ItemLoadModel
             {
-                ItemLoadModel containerObj = new ItemLoadModel();
-                d.MapTo(containerObj);
-                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
-                containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
-                containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
-                containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
-                containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
-                containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
-                containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
-                containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
-                containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate));
-                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
-                containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
-                containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
-                containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
-                containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
-                containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
-                containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
-                containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
-                containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
-                containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
-                containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
-                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
-                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
-                containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
-                containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
-                containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
-                containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
-                containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
-                containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
-                containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
+                Id = d.Id,
+                LoadCode = d.LoadCode,
+                OrderNo = d.OrderNo,
+                LoadStatusType = d.LoadStatusType,
+                LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption(),
+                DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate),
+                LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
+                DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate),
+                DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate),
+                DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate),
+                ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
+                CmrCustomerDeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.CmrCustomerDeliveryDate),
+                IntendedArrivalDateStr = string.Format("{0:dd.MM.yyyy}", d.IntendedArrivalDate),
+                LoadExitDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadExitDate),
+                LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate),
+                ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate)),
+                OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null),
+                CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "",
+                EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
+                ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "",
+                ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "",
+                BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "",
+                OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+                OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
+                OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
+                OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+                ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "",
+                BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "",
+                ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "",
+                BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "",
+                ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "",
+                ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "",
+                ShipperFirmExplanation = d.ShipperFirmExplanation,
+                BuyerFirmExplanation = d.BuyerFirmExplanation,
+                OveralLadametre = d.OveralLadametre,
+                OveralQuantity = d.OveralQuantity,
+                OveralWeight = d.OveralWeight,
+                OveralVolume = d.OveralVolume,
+                OverallTotal = d.OverallTotal,
+                Explanation = d.Explanation,
+                ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
 
-                data.Add(containerObj);
-            });
+            }).ToArray();
 
-            return data.ToArray();
         }
         public ItemLoadModel[] GetItemLoadTransitList()
         {
             List<ItemLoadModel> data = new List<ItemLoadModel>();
 
             var repo = _unitOfWork.GetRepository<ItemLoad>();
-
-            repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Transit).ToList().ForEach(d =>
+            return repo.Filter(d => d.OrderTransactionDirectionType == (int)OrderTransactionDirectionType.Transit).ToList().Select(d => new ItemLoadModel
             {
-                ItemLoadModel containerObj = new ItemLoadModel();
-                d.MapTo(containerObj);
-                containerObj.LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption();
-                containerObj.DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate);
-                containerObj.LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate);
-                containerObj.DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed);
-                containerObj.ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate);
-                containerObj.BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate);
-                containerObj.DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate);
-                containerObj.LoadExitDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadExitDate);
-                containerObj.DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate);
-                containerObj.ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate)); 
-                containerObj.OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null);
-                containerObj.CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "";
-                containerObj.EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "";
-                containerObj.ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "";
-                containerObj.ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "";
-                containerObj.ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "";
-                containerObj.ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "";
-                containerObj.BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "";
-                containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
-                containerObj.OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
-                containerObj.OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
-                containerObj.OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "";
-                containerObj.ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "";
-                containerObj.BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "";
-                containerObj.ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "";
-                containerObj.BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "";
-                containerObj.ShipperFirmExplanation = d.ShipperFirmExplanation;
-                containerObj.BuyerFirmExplanation = d.BuyerFirmExplanation;
-                containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
-                containerObj.VehicleTraillerPlate = d.Vehicle != null ? d.Vehicle.Plate : "";
-                containerObj.VehicleTraillerMarkAndModel = d.Vehicle != null ? d.Vehicle.Mark + "/" + d.Vehicle.Versiyon : "";
-                data.Add(containerObj);
-            });
+                Id = d.Id,
+                LoadCode = d.LoadCode,
+                OrderNo = d.OrderNo,
+                LoadStatusType = d.LoadStatusType,
+                LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption(),
+                DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate),
+                LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
+                DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                BringingToWarehouseDateStr = string.Format("{0:dd.MM.yyyy}", d.BringingToWarehouseDate),
+                DeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryDate),
+                DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate),
+                ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
+                CmrCustomerDeliveryDateStr = string.Format("{0:dd.MM.yyyy}", d.CmrCustomerDeliveryDate),
+                IntendedArrivalDateStr = string.Format("{0:dd.MM.yyyy}", d.IntendedArrivalDate),
+                LoadExitDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadExitDate),
+                LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate),
+                ScheduledUploadWeek = getYearAndWeekOfNumber(Convert.ToString(d.ScheduledUploadDate)),
+                OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder != null ? d.ItemOrder.OrderDate : null),
+                CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName : "",
+                EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
+                ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "",
+                ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "",
+                BuyerFirmName = d.FirmBuyer != null ? d.FirmBuyer.FirmName : "",
+                OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+                OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
+                OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
+                OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+                ShipperCityName = d.CityShipper != null ? d.CityShipper.CityName : "",
+                BuyerCityName = d.CityBuyer != null ? d.CityBuyer.CityName : "",
+                ShipperCountryName = d.CountryShipper != null ? d.CountryShipper.CountryName : "",
+                BuyerCountryName = d.CountryBuyer != null ? d.CountryBuyer.CountryName : "",
+                ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName : "",
+                ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName : "",
+                ShipperFirmExplanation = d.ShipperFirmExplanation,
+                BuyerFirmExplanation = d.BuyerFirmExplanation,
+                OveralLadametre = d.OveralLadametre,
+                OveralQuantity = d.OveralQuantity,
+                OveralWeight = d.OveralWeight,
+                OveralVolume = d.OveralVolume,
+                OverallTotal = d.OverallTotal,
+                Explanation = d.Explanation,
+                ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
 
-            return data.ToArray();
+            }).ToArray();
+
         }
         public ItemLoadModel GetLoad(int id)
         {

@@ -216,11 +216,11 @@ namespace HekaMOLD.Business.UseCases
                 }
                 foreach (var item in model.VoyageDrivers)
                 {
-                    //if (!string.IsNullOrEmpty(item.StartDateStr))
-                    //{
-                    //    item.StartDate = DateTime.ParseExact(item.StartDateStr, "dd/MM/yyyy",
-                    //        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                    //}
+                    if (!string.IsNullOrEmpty(item.StartDateStr))
+                    {
+                        item.StartDate = DateTime.ParseExact(item.StartDateStr, "{0:dd.MM.yyyy}",
+                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                    }
                     //if (!string.IsNullOrEmpty(item.EndDateStr))
                     //{
                     //    item.EndDate = DateTime.ParseExact(item.EndDateStr, "dd.MM.yyyy",
@@ -627,7 +627,7 @@ namespace HekaMOLD.Business.UseCases
                 model.KapikulePassportEntryDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.KapikulePassportEntryDate);
                 model.KapikulePassportExitDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.KapikulePassportExitDate);
                 model.VoyageDetails =
-                    repoDetails.Filter(d => d.VoyageId == dbObj.Id)
+                    repoDetails.Filter(d => d.VoyageId == dbObj.Id).ToList()
                     .Select(d => new VoyageDetailModel
                     {
                         Id = d.Id,
@@ -695,14 +695,14 @@ namespace HekaMOLD.Business.UseCases
                         RotaId = d.RotaId,
                     }).ToArray();
                 model.VoyageDrivers =
-                    repoDrivers.Filter(d => d.VoyageId == dbObj.Id)
+                    repoDrivers.Filter(d => d.VoyageId == dbObj.Id).ToList()
                     .Select(d => new VoyageDriverModel
                     {
                         Id = d.Id,
                         DriverId = d.DriverId,
-                        StartDate = d.StartDate,
-                        //StartDate = string.Format("{0:dd.MM.yyyy}", d.StartDate),
-                        //EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate),
+                        //StartDate = d.StartDate,
+                        StartDateStr = string.Format("{0:dd.MM.yyyy}", d.StartDate),
+                        EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate),
                         StartKmHour = d.StartKmHour,
                         EndKmHour = d.EndKmHour,
                         TowingVehicleId = d.TowingVehicleId
@@ -719,42 +719,74 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<Voyage>();
 
-            repo.GetAll().ToList().ForEach(d =>
-            {
-                VoyageModel containerObj = new VoyageModel();
-                d.MapTo(containerObj);
-                    containerObj.Id = d.Id;
-                    containerObj.VoyageCode = d.VoyageCode;
-                    containerObj.VoyageDateStr = string.Format("{0:dd.MM.yyyy}", d.VoyageDate);
-                    containerObj.VoyageStatusStr = d.VoyageStatus != null ? ((VoyageStatus)d.VoyageStatus).ToCaption() : "";
-                    containerObj.CarrierFirmName = d.CarrierFirm != null ? d.CarrierFirm.FirmName : "";
-                    containerObj.CustomsDoorEntryDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorEntryDate);
-                    containerObj.CustomsDoorEntryName = d.CustomsDoorEntry != null ? d.CustomsDoorEntry.CustomsDoorName : "";
-                    containerObj.CustomsDoorExitDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorExitDate);
-                    containerObj.CustomsDoorExitName = d.CustomsDoorExit != null ? d.CustomsDoorExit.CustomsDoorName : "";
-                    containerObj.DriverNameAndSurname = d.Driver != null ? d.Driver.DriverName + " " + d.Driver.DriverSurName : "";
-                    containerObj.DriverSubsistence = d.DriverSubsistence;
-                    containerObj.EmptyGo = d.EmptyGo;
-                    containerObj.EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate);
-                    containerObj.StartDateStr = string.Format("{0:dd.MM.yyyy}", d.StartDate);
-                    containerObj.LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate);
-                    containerObj.Explanation = d.Explanation;
-                    containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
-                    containerObj.OverallQuantity = d.OverallQuantity;
-                    containerObj.OverallVolume = d.OverallVolume;
-                    containerObj.OverallWeight = d.OverallWeight;
-                    containerObj.OverallGrossWeight = d.OverallGrossWeight;
-                    containerObj.PositionKmHour = d.PositionKmHour;
-                    containerObj.TowinfVehiclePlate = d.TowinfVehicle != null ? d.TowinfVehicle.Plate : "";
-                    containerObj.TowinfVehicleMarkAndModel = d.TowinfVehicle != null ? d.TowinfVehicle.Mark + " " + d.TowinfVehicle.Versiyon : "";
-                    containerObj.TraillerVehiclePlate = d.TraillerVehicle != null ? d.TraillerVehicle.Plate : "";
-                    containerObj.TraillerVehicleMarkAndModel = d.TraillerVehicle != null ? d.TraillerVehicle.Mark + " " + d.TraillerVehicle.Versiyon : "";
-                    containerObj.VehicleExitDateStr = string.Format("{0:dd.MM.yyyy}", d.VehicleExitDate);
-                    containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
-                    data.Add(containerObj);
-            });
+            //repo.GetAll().ToList().ForEach(d =>
+            //{
+            //    VoyageModel containerObj = new VoyageModel();
+            //    d.MapTo(containerObj);
+            //        containerObj.Id = d.Id;
+            //        containerObj.VoyageCode = d.VoyageCode;
+            //        containerObj.VoyageDateStr = string.Format("{0:dd.MM.yyyy}", d.VoyageDate);
+            //        containerObj.VoyageStatusStr = d.VoyageStatus != null ? ((VoyageStatus)d.VoyageStatus).ToCaption() : "";
+            //        containerObj.CarrierFirmName = d.CarrierFirm != null ? d.CarrierFirm.FirmName : "";
+            //        containerObj.CustomsDoorEntryDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorEntryDate);
+            //        containerObj.CustomsDoorEntryName = d.CustomsDoorEntry != null ? d.CustomsDoorEntry.CustomsDoorName : "";
+            //        containerObj.CustomsDoorExitDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorExitDate);
+            //        containerObj.CustomsDoorExitName = d.CustomsDoorExit != null ? d.CustomsDoorExit.CustomsDoorName : "";
+            //        containerObj.DriverNameAndSurname = d.Driver != null ? d.Driver.DriverName + " " + d.Driver.DriverSurName : "";
+            //        containerObj.DriverSubsistence = d.DriverSubsistence;
+            //        containerObj.EmptyGo = d.EmptyGo;
+            //        containerObj.EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate);
+            //        containerObj.StartDateStr = string.Format("{0:dd.MM.yyyy}", d.StartDate);
+            //        containerObj.LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate);
+            //        containerObj.Explanation = d.Explanation;
+            //        containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
+            //        containerObj.OverallQuantity = d.OverallQuantity;
+            //        containerObj.OverallVolume = d.OverallVolume;
+            //        containerObj.OverallWeight = d.OverallWeight;
+            //        containerObj.OverallGrossWeight = d.OverallGrossWeight;
+            //        containerObj.PositionKmHour = d.PositionKmHour;
+            //        containerObj.TowinfVehiclePlate = d.TowinfVehicle != null ? d.TowinfVehicle.Plate : "";
+            //        containerObj.TowinfVehicleMarkAndModel = d.TowinfVehicle != null ? d.TowinfVehicle.Mark + " " + d.TowinfVehicle.Versiyon : "";
+            //        containerObj.TraillerVehiclePlate = d.TraillerVehicle != null ? d.TraillerVehicle.Plate : "";
+            //        containerObj.TraillerVehicleMarkAndModel = d.TraillerVehicle != null ? d.TraillerVehicle.Mark + " " + d.TraillerVehicle.Versiyon : "";
+            //        containerObj.VehicleExitDateStr = string.Format("{0:dd.MM.yyyy}", d.VehicleExitDate);
+            //        containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+            //        data.Add(containerObj);
+            //});
 
-            return data.ToArray();
+            //return data.ToArray();
+            return repo.GetAll().ToList().Select(d => new VoyageModel
+            {
+                Id = d.Id,
+                VoyageCode = d.VoyageCode,
+                VoyageDateStr = string.Format("{0:dd.MM.yyyy}", d.VoyageDate),
+                VoyageStatusStr = d.VoyageStatus != null ? ((VoyageStatus)d.VoyageStatus).ToCaption() : "",
+                CarrierFirmName = d.CarrierFirm != null ? d.CarrierFirm.FirmName : "",
+                CustomsDoorEntryDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorEntryDate),
+                CustomsDoorEntryName = d.CustomsDoorEntry != null ? d.CustomsDoorEntry.CustomsDoorName : "",
+                CustomsDoorExitDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorExitDate),
+                CustomsDoorExitName = d.CustomsDoorExit != null ? d.CustomsDoorExit.CustomsDoorName : "",
+                DriverNameAndSurname = d.Driver != null ? d.Driver.DriverName + " " + d.Driver.DriverSurName : "",
+                DriverSubsistence = d.DriverSubsistence,
+                EmptyGo = d.EmptyGo,
+                EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate),
+                StartDateStr = string.Format("{0:dd.MM.yyyy}", d.StartDate),
+                LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate),
+                Explanation = d.Explanation,
+                OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+                OverallQuantity = d.OverallQuantity,
+                OverallVolume = d.OverallVolume,
+                OverallWeight = d.OverallWeight,
+                OverallGrossWeight = d.OverallGrossWeight,
+                PositionKmHour = d.PositionKmHour,
+                TowinfVehiclePlate = d.TowinfVehicle != null ? d.TowinfVehicle.Plate : "",
+                TowinfVehicleMarkAndModel = d.TowinfVehicle != null ? d.TowinfVehicle.Mark + " " + d.TowinfVehicle.Versiyon : "",
+                TraillerVehiclePlate = d.TraillerVehicle != null ? d.TraillerVehicle.Plate : "",
+                TraillerVehicleMarkAndModel = d.TraillerVehicle != null ? d.TraillerVehicle.Mark + " " + d.TraillerVehicle.Versiyon : "",
+                VehicleExitDateStr = string.Format("{0:dd.MM.yyyy}", d.VehicleExitDate),
+                ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
+
+        }).ToArray();
         }
         public VoyageDetailModel[] GetVoyageDetailList()
         {
@@ -939,13 +971,14 @@ namespace HekaMOLD.Business.UseCases
                 model.TrailerPlate = dbObj.Voyage.TraillerVehicle != null ? dbObj.Voyage.TraillerVehicle.Plate : "";
                 model.OrderTransationDirectionTypeStr = dbObj.Voyage.OrderTransactionDirectionType != null ? (int)dbObj.Voyage.OrderTransactionDirectionType == 1 ? LSabit.GET_EXPORT.ToString() : (int)dbObj.Voyage.OrderTransactionDirectionType == 2 ? LSabit.GET_IMPORT.ToString(): (int)dbObj.Voyage.OrderTransactionDirectionType == 3 ? LSabit.GET_DOMESTIC.ToString(): (int)dbObj.Voyage.OrderTransactionDirectionType == 4 ? LSabit.GET_TRASFER.ToString():"" :"";
                 model.VoyageCostDetails =
-                    repoDetails.Filter(d => d.VoyageCostId == dbObj.Id)
+                    repoDetails.Filter(d => d.VoyageCostId == dbObj.Id).ToList()
                     .Select(d => new VoyageCostDetailModel
                     {
                         Id = d.Id,
                         CostCategoryId = d.CostCategoryId,
                         CostCategoryName = d.CostCategory != null ? d.CostCategory.CostCategoryName:"",
                         CountryId = d.CountryId,
+                        OperationDateStr = string.Format("{0:dd.MM.yyyy}", d.OperationDate),
                         CountryName = d.Country != null ? d.Country.CountryName:"",
                         DriverId = d.DriverId,
                         DriverNameAndSurName = d.Driver != null ?  d.Driver.DriverName +"/"+d.Driver.DriverSurName:"",
