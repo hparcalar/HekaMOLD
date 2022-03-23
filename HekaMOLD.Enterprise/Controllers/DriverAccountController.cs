@@ -31,7 +31,7 @@ namespace HekaMOLD.Enterprise.Controllers
             ForexTypeModel[] forexTypes = new ForexTypeModel[0];
             UnitTypeModel[] unitTypes = new UnitTypeModel[0];
             CountryModel[] countrys = new CountryModel[0];
-            ItemLoadModel[] waitingLoads = new ItemLoadModel[0];
+            //ItemLoadModel[] waitingLoads = new ItemLoadModel[0];
             CostCategoryModel[] costCategorys = new CostCategoryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
@@ -49,7 +49,7 @@ namespace HekaMOLD.Enterprise.Controllers
             }
             using (PlanningBO bObj = new PlanningBO())
             {
-                waitingLoads = bObj.GetWaitingLoads();
+                //waitingLoads = bObj.GetWaitingLoads();
             }
             var jsonResult = Json(new
             {
@@ -58,7 +58,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 Drivers = drivers,
                 ForexTypes = forexTypes,
                 Countrys = countrys,
-                WaitingLoads = waitingLoads,
+                //WaitingLoads = waitingLoads,
                 CostCategorys = costCategorys,
                 UnitTypes = unitTypes
             }, JsonRequestBehavior.AllowGet);

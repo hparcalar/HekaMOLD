@@ -60,7 +60,11 @@
 
                     if (resp.data.Status == 1) {
                         toastr.success('Kayıt başarılı.', 'Bilgilendirme');
-                        $scope.bindModel(resp.data.RecordId, VID_ID);
+
+                        if (PRM_ID == 0)
+                            window.location.href = HOST_URL + 'VoyageCost?rid=' + resp.data.RecordId + '&vid=' + VID_ID;
+                        else
+                            $scope.bindModel(resp.data.RecordId, VID_ID);
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
@@ -222,7 +226,8 @@
                         DriverId: values.DriverId,
                         CountryId: values.CountryId,
                         CostCategoryId: values.CostCategoryId,
-                        OperationDate: values.OperationDate,
+                        OperationDate: values.OperationDateStr,
+                        OperationDateStr: values.OperationDateStr,
                         Quantity: values.Quantity,
                         UnitTypeId: values.UnitTypeId,
                         OverallTotal: values.OverallTotal,
@@ -373,7 +378,7 @@
                     var obj = $scope.modelObject.VoyageCostDetails.find(d => d.Id == key);
                     if (obj != null) {
                         if (typeof values.OverallTotal != 'undefined') { obj.OverallTotal = values.OverallTotal; }
-                        if (typeof values.OperationDate != 'undefined') { obj.OperationDate = values.OperationDate; }
+                        if (typeof values.OperationDateStr != 'undefined') { obj.OperationDateStr = values.OperationDateStr; }
                         if (typeof values.DriverId != 'undefined') {
                             var driverObj = $scope.driverList.find(d => d.Id == values.DriverId);
                             obj.DriverId = driverObj.Id;
@@ -402,7 +407,8 @@
                         DriverId: values.DriverId,
                         CountryId: values.CountryId,
                         CostCategoryId: values.CostCategoryId,
-                        OperationDate: values.OperationDate,
+                        OperationDate: values.OperationDateStr,
+                        OperationDateStr: values.OperationDateStr,
                         Quantity: values.Quantity,
                         UnitTypeId: values.UnitTypeId,
                         OverallTotal: values.OverallTotal,
@@ -462,7 +468,7 @@
                             container.text(options.displayValue);
                     }
                 },
-                { dataField: 'OperationDate', caption: 'İşlem Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'OperationDateStr', caption: 'İşlem Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'OverallTotal', caption: 'Tutar', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
                     dataField: 'ForexTypeId', caption: 'Döviz',

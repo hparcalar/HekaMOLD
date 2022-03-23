@@ -216,16 +216,6 @@ namespace HekaMOLD.Business.UseCases
                 }
                 foreach (var item in model.VoyageDrivers)
                 {
-                    if (!string.IsNullOrEmpty(item.StartDateStr))
-                    {
-                        item.StartDate = DateTime.ParseExact(item.StartDateStr, "{0:dd.MM.yyyy}",
-                            System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                    }
-                    //if (!string.IsNullOrEmpty(item.EndDateStr))
-                    //{
-                    //    item.EndDate = DateTime.ParseExact(item.EndDateStr, "dd.MM.yyyy",
-                    //        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                    //}
 
                     if (item.NewDetail == true)
                     {
@@ -1120,6 +1110,7 @@ namespace HekaMOLD.Business.UseCases
                             dbDADetail.DriverAccountId = dbDriverAccount.Id;
                             dbDADetail.TowingVehicleId = dbDetail.TowingVehicleId;
                             dbDADetail.VoyageCostDetailId = dbDetail.Id;
+                            dbDADetail.OperationDate = dbDetail.OperationDate != null ? dbDetail.OperationDate : null;
                             dbDADetail.KmHour = dbDetail.KmHour;
                             dbDADetail.Quantity = dbDetail.Quantity;
                             dbDADetail.CountryId = dbDetail.CountryId;

@@ -138,7 +138,7 @@
                     if (obj != null) {
                         if (typeof values.OverallTotal != 'undefined') { obj.OverallTotal = values.OverallTotal; }
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; }
-                        if (typeof values.OperationDate != 'undefined') { obj.OperationDate = values.OperationDate; }
+                        if (typeof values.OperationDateStr != 'undefined') { obj.OperationDateStr = values.OperationDateStr; }
                         if (typeof values.PayType != 'undefined') { obj.PayType = values.PayType; }
                         if (typeof values.KmHour != 'undefined') { obj.KmHour = values.KmHour; }
                         if (typeof values.CountryId != 'undefined') {
@@ -181,7 +181,8 @@
                         DriverId: values.DriverId,
                         CountryId: values.CountryId,
                         CostCategoryId: values.CostCategoryId,
-                        OperationDate: values.OperationDate,
+                        OperationDate: values.OperationDateStr,
+                        OperationDateStr: values.OperationDateStr,
                         Quantity: values.Quantity,
                         UnitTypeId: values.UnitTypeId,
                         OverallTotal: values.OverallTotal,
@@ -260,7 +261,7 @@
                         displayExpr: "CostCategoryName"
                     }
                 },
-                { dataField: 'OperationDate', caption: 'İşlem Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'OperationDateStr', caption: 'İşlem Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number' },
                 {
                     dataField: 'UnitTypeId', caption: 'Birim',

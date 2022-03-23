@@ -766,7 +766,9 @@
                         DriverId: driverObj.Id,
                         TowingVehicleId: towingVehicleObj.Id,
                         StartDateStr: values.StartDateStr,
+                        StartDate: values.StartDateStr,
                         EndDateStr: values.EndDateStr,
+                        EndDate: values.EndDateStr,
                         StartKmHour: values.StartKmHour,
                         EndKmHour: values.EndKmHour,
                         NewDetail: true,
@@ -822,8 +824,8 @@
                             container.text(options.displayValue);
                     }
                 },
-                { dataField: 'StartDateStr', caption: 'Başlama Tarih', dataType: 'date', format: 'dd/MM/yyyy', allowEditing: true },
-                { dataField: 'EndDateStr', caption: 'Bitiş Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
+                { dataField: 'StartDateStr', caption: 'Başlama Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
+                { dataField: 'EndDate', caption: 'Bitiş Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
                 { dataField: 'StartKmHour', caption: 'Başlama KM', allowEditing: true },
                 { dataField: 'EndKmHour', caption: 'Bitiş KM', allowEditing: true },
                 {

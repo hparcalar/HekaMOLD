@@ -41,7 +41,7 @@ namespace HekaMOLD.Business.UseCases
                 model = dbObj.MapTo(model);
                 model.DriverNameAndSurName = dbObj.Driver != null ? dbObj.Driver.DriverName + " " + dbObj.Driver.DriverSurName:"";
                 model.ForexTypeCode = dbObj.ForexType != null ? dbObj.ForexType.ForexTypeCode : "";
-                model.DriverAccountDetails = repoDetail.Filter(d => d.DriverAccountId == dbObj.Id).Select(d => new DriverAccountDetailModel
+                model.DriverAccountDetails = repoDetail.Filter(d => d.DriverAccountId == dbObj.Id).ToList().Select(d => new DriverAccountDetailModel
                 {
                     Id = d.Id,
                     ActionTypeStr = d.ActionType == (int)ActionType.Entry ? "Giriş" : d.ActionType == (int)ActionType.Exit ? "Çıkış":"",
@@ -62,7 +62,7 @@ namespace HekaMOLD.Business.UseCases
                     KmHour = d.KmHour,
                     Quantity = d.Quantity,
                     UnitTypeId = d.UnitTypeId,
-                    OperationDate = d.OperationDate,
+                    OperationDateStr = string.Format("{0:dd.MM.yyyy}", d.OperationDate),
               
                 }).ToArray();
             }
