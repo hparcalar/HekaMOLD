@@ -223,33 +223,6 @@
             }).catch(function (err) { });
     }
 
-    $scope.calculateRow = function (row) {
-        if (typeof row != 'undefined' && row != null) {
-            try {
-                $http.post(HOST_URL + 'ItemReceipt/CalculateRow', row, 'json')
-                    .then(function (resp) {
-                        if (typeof resp.data != 'undefined' && resp.data != null) {
-                            row.OverallTotal = resp.data.OverallTotal;
-                            row.UnitPrice = resp.data.UnitPrice;
-                            row.TaxAmount = resp.data.TaxAmount;
-                            row.ForexUnitPrice = resp.data.ForexUnitPrice;
-                            row.NetQuantity = resp.data.NetQuantity;
-
-                            $scope.calculateHeader();
-                        }
-                    }).catch(function (err) { });
-            } catch (e) {
-
-            }
-        }
-    }
-
-    $scope.calculateHeader = function () {
-        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
-        $scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
-        $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
-    }
-
     $scope.bindDetails = function () {
         $('#dataList').dxDataGrid({
             dataSource: {
@@ -279,38 +252,46 @@
                         if (typeof values.UnitId != 'undefined') {
                             var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                             obj.UnitId = unitObj.Id;
-                            obj.UnitName = itemObj.UnitCode;
+                            //obj.UnitName = itemObj.UnitCode;
                             calculateRowAgain = true;
                         }
 
                         if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation; }
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
-                        if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
-                        if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
-                        if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
-                        if (typeof values.ForexRate != 'undefined') { obj.ForexRate = values.ForexRate; calculateRowAgain = true; }
-                        if (typeof values.ForexUnitPrice != 'undefined') {
-                            obj.ForexUnitPrice = values.ForexUnitPrice;
-                            if (typeof obj.ForexId != 'undefined' && obj.ForexId != null) {
-                                obj.UnitPrice = obj.ForexUnitPrice * obj.ForexRate;
-                                calculateRowAgain = true;
-                            }
-                        }
-                        if (typeof values.ForexId != 'undefined') {
-                            obj.ForexId = values.ForexId;
-                            var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
+                        if (typeof values.ShortWidth != 'undefined') { obj.ShortWidth = values.ShortWidth; calculateRowAgain = true; }
+                        if (typeof values.LongWidth != 'undefined') { obj.LongWidth = values.LongWidth; calculateRowAgain = true; }
+                        if (typeof values.Height != 'undefined') { obj.Height = values.Height; calculateRowAgain = true; }
+                        if (typeof values.Volume != 'undefined') { obj.Volume = values.Volume; calculateRowAgain = true; }
+                        if (typeof values.Weight != 'undefined') { obj.Weight = values.Weight; calculateRowAgain = true; }
+                        if (typeof values.Ladametre != 'undefined') { obj.Ladametre = values.Ladametre; calculateRowAgain = true; }
+                        if (typeof values.Stackable != 'undefined') { obj.Stackable = values.Stackable; calculateRowAgain = true; }
+                        if (typeof values.PackageInNumber != 'undefined') { obj.PackageInNumber = values.PackageInNumber; calculateRowAgain = true; }
+                        //if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
+                        //if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
+                        //if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
+                        //if (typeof values.ForexRate != 'undefined') { obj.ForexRate = values.ForexRate; calculateRowAgain = true; }
+                        //if (typeof values.ForexUnitPrice != 'undefined') {
+                        //    obj.ForexUnitPrice = values.ForexUnitPrice;
+                        //    if (typeof obj.ForexId != 'undefined' && obj.ForexId != null) {
+                        //        obj.UnitPrice = obj.ForexUnitPrice * obj.ForexRate;
+                        //        calculateRowAgain = true;
+                        //    }
+                        //}
+                        //if (typeof values.ForexId != 'undefined') {
+                        //    obj.ForexId = values.ForexId;
+                        //    var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
 
-                            $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
-                                + '&forexDate=' + $scope.modelObject.OrderDate, {}, 'json')
-                                .then(function (resp) {
-                                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                                        if (typeof resp.data.SalesForexRate != 'undefined') {
-                                            obj.ForexRate = resp.data.SalesForexRate;
-                                            $scope.calculateRow(obj);
-                                        }
-                                    }
-                                }).catch(function (err) { });
-                        }
+                        //    $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
+                        //        + '&forexDate=' + $scope.modelObject.OrderDate, {}, 'json')
+                        //        .then(function (resp) {
+                        //            if (typeof resp.data != 'undefined' && resp.data != null) {
+                        //                if (typeof resp.data.SalesForexRate != 'undefined') {
+                        //                    obj.ForexRate = resp.data.SalesForexRate;
+                        //                    $scope.calculateRow(obj);
+                        //                }
+                        //            }
+                        //        }).catch(function (err) { });
+                        //}
 
                         if (calculateRowAgain)
                             $scope.calculateRow(obj);
@@ -338,14 +319,23 @@
                         ItemNo: itemObj.ItemNo,
                         ItemName: itemObj.ItemName,
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
-                        UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
+                        //UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
                         Quantity: values.Quantity,
-                        TaxRate: values.TaxRate,
-                        TaxIncluded: values.TaxIncluded,
-                        UnitPrice: values.UnitPrice,
-                        ForexRate: values.ForexRate,
-                        ForexUnitPrice: values.ForexUnitPrice,
-                        ForexId: values.ForexId,
+                        ShortWidth: values.ShortWidth,
+                        LongWidth: values.LongWidth,
+                        Length: values.Length,
+                        Weight: values.Weight,
+                        Height: values.Height,
+                        Volume: values.Volume,
+                        Ladametre: values.Ladametre,
+                        Stackable: values.Stackable,
+                        PackageInNumber: values.PackageInNumber,
+                        //TaxRate: values.TaxRate,
+                        //TaxIncluded: values.TaxIncluded,
+                        //UnitPrice: values.UnitPrice,
+                        //ForexRate: values.ForexRate,
+                        //ForexUnitPrice: values.ForexUnitPrice,
+                        //ForexId: values.ForexId,
                         ItemOrderDetailId: null,
                         Explanation: values.Explanation,
                         NewDetail: true
@@ -416,33 +406,63 @@
                     }
                 },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                { dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                {
-                    dataField: 'TaxIncluded', caption: 'Kdv D/H',
-                    allowSorting: false,
-                    lookup: {
-                        dataSource: [{ Id: 1, Text: 'Dahil' }, { Id: 0, Text: 'Hariç' }],
-                        valueExpr: "Id",
-                        displayExpr: "Text"
-                    },
-                    validationRules: [{ type: "required" }]
-                },
-                { dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
-                {
-                    dataField: 'ForexId', caption: 'Döviz Cinsi',
-                    allowSorting: false,
-                    lookup: {
-                        dataSource: $scope.forexList,
-                        valueExpr: "Id",
-                        displayExpr: "ForexTypeCode"
-                    }
-                },
-                { dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'ShortWidth', caption: 'Kısa En (CM)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'LongWidth', caption: 'Uzun En (CM)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Height', caption: 'Yükseklik (CM)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Weight', caption: 'Ağırlık (KG)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Volume', caption: 'Hacim (M3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90 },
+                { dataField: 'PackageInNumber', caption: 'Koli İç Adet', dataType: 'number' },
+                //{ dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{
+                //    dataField: 'TaxIncluded', caption: 'Kdv D/H',
+                //    allowSorting: false,
+                //    lookup: {
+                //        dataSource: [{ Id: 1, Text: 'Dahil' }, { Id: 0, Text: 'Hariç' }],
+                //        valueExpr: "Id",
+                //        displayExpr: "Text"
+                //    },
+                //    validationRules: [{ type: "required" }]
+                //},
+                //{ dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                //{
+                //    dataField: 'ForexId', caption: 'Döviz Cinsi',
+                //    allowSorting: false,
+                //    lookup: {
+                //        dataSource: $scope.forexList,
+                //        valueExpr: "Id",
+                //        displayExpr: "ForexTypeCode"
+                //    }
+                //},
+                //{ dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Explanation', caption: 'Açıklama' }
-            ]
+            ],
+            summary: {
+                totalItems: [{
+                    column: 'Quantity',
+                    summaryType: 'sum',
+                },
+                {
+                    column: 'Weight',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                },
+                {
+                    column: 'Volume',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                },
+                {
+                    column: 'Ladametre',
+                    summaryType: 'sum',
+                    format: { type: "fixedPoint", precision: 2 }
+                }]
+            },
+
         });
     }
 
@@ -465,6 +485,35 @@
             $scope.modelObject.ReceiptType = $scope.selectedReceiptType.Id;
         else
             $scope.modelObject.ReceiptType = 0;
+    }
+    $scope.calculateRow = function (row) {
+        $scope.calculateValumeAndLadametre(row);
+
+    }
+    $scope.calculateValumeAndLadametre = function (row) {
+        if (row.ShortWidth == 'undefined' || row.ShortWidth == null)
+            row.ShortWidth = 0;
+        if (row.LongWidth == 'undefined' || row.LongWidth == null)
+            row.LongWidth = 0;
+        if (row.Height == 'undefined' || row.Height == null)
+            row.Height = 0;
+        row.Volume = row.Quantity * row.ShortWidth * row.LongWidth * row.Height / 1000000;
+        //CALCULATE VALUME AND WEIGHT AND LADAMETRE
+        let sumVolume = 0;
+        let sumWeight = 0;
+        let = sumLadametre = 0;
+        let = sumQuantity = 0;
+        $scope.modelObject.Details.forEach(element => {
+            sumVolume += parseFloat(element.Volume != null ? element.Volume : 0);
+            sumWeight += parseFloat(element.Weight != null ? element.Weight : 0);
+            sumLadametre += parseFloat(element.Ladametre != null ? element.Ladametre : 0);
+            sumQuantity += parseFloat(element.Quantity != null ? element.Quantity : 0);
+        });
+        $scope.modelObject.OveralVolume = sumVolume;
+        $scope.modelObject.OveralWeight = sumWeight;
+        $scope.modelObject.OveralLadametre = sumLadametre;
+        $scope.modelObject.OveralQuantity = sumQuantity;
+
     }
 
     $scope.loadSelectables = function () {

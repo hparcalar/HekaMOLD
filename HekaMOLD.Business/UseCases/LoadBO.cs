@@ -486,6 +486,7 @@ namespace HekaMOLD.Business.UseCases
                         UpdatedUserId = d.UpdatedUserId,
                         ItemCode = d.Item != null ? d.Item.ItemNo : "",
                         ItemName = d.Item != null ? d.Item.ItemName : "",
+                        Explanation = d.Explanation
 
                     }).ToArray();
             }

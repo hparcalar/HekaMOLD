@@ -39,6 +39,7 @@ namespace Heka.DataAccess.Context
         public bool? Stackable { get; set; }
         public decimal? Ladametre { get; set; }
         public Nullable<int> LoadStatus { get; set; }
+        public string Explanation { get; set; }
 
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }

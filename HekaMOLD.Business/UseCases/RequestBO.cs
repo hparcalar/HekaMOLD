@@ -672,7 +672,9 @@ namespace HekaMOLD.Business.UseCases
                         Stackable = dbOrderDetail.Stackable,
                         Volume = dbOrderDetail.Volume,
                         Weight = dbOrderDetail.Weight,
-                        LoadStatus = (int)LoadStatusType.Ready
+                        LoadStatus = (int)LoadStatusType.Ready,
+                        Explanation = dbOrderDetail.Explanation
+                        
                     };
                     repoLoadDetail.Add(dbLoadDetail);
 

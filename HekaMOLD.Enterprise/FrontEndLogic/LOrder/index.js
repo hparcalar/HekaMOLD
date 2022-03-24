@@ -414,11 +414,11 @@
     }
 
     $scope.calculateRow = function (row) {
-        $scope.calculateValumeAndDesi(row);
+        $scope.calculateValumeAndLadametre(row);
         $scope.calculateOveralTotal();
 
     }
-    $scope.calculateValumeAndDesi = function (row) {
+    $scope.calculateValumeAndLadametre = function (row) {
         if (row.ShortWidth == 'undefined' || row.ShortWidth == null)
             row.ShortWidth = 0;
         if (row.LongWidth == 'undefined' || row.LongWidth == null)
@@ -498,6 +498,7 @@
                         if (typeof values.Ladametre != 'undefined') { obj.Ladametre = values.Ladametre; calculateRowAgain = true; }
                         if (typeof values.Stackable != 'undefined') { obj.Stackable = values.Stackable; calculateRowAgain = true; }
                         if (typeof values.PackageInNumber != 'undefined') { obj.PackageInNumber = values.PackageInNumber; calculateRowAgain = true; }
+                        if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation}
 
                         if (calculateRowAgain)
                             $scope.calculateRow(obj);
@@ -623,7 +624,8 @@
                 { dataField: 'Volume', caption: 'Hacim (M3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, allowEditing: false },
                 { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90 },
-                { dataField: 'PackageInNumber', caption: 'Koli iç Adet', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 90 },
+                { dataField: 'PackageInNumber', caption: 'Koli iç Adet', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, width: 80 },
+                { dataField: 'Explanation', caption: 'Açıklama', dataType: 'text' ,width:120 },
 
                 {
                     type: "buttons",

@@ -27,6 +27,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public bool? Stackable { get; set; }
         public decimal? Ladametre { get; set; }
         public Nullable<int> LoadStatus { get; set; }
+        public string Explanation { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemCode { get; set; }

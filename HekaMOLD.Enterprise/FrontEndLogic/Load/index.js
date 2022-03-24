@@ -890,6 +890,7 @@
                         if (typeof values.Ladametre != 'undefined') { obj.Ladametre = values.Ladametre; calculateRowAgain = true; }
                         if (typeof values.Stackable != 'undefined') { obj.Stackable = values.Stackable; calculateRowAgain = true; }
                         if (typeof values.PackageInNumber != 'undefined') { obj.PackageInNumber = values.PackageInNumber; calculateRowAgain = true; }
+                        if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation }
 
                         if (calculateRowAgain)
                             $scope.calculateRow(obj);
@@ -1021,7 +1022,7 @@
                 { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90 },
                 { dataField: 'PackageInNumber', caption: 'Koli iç Adet', width: 90 },
-
+                { dataField: 'Explanation', caption: 'Açıklama', dataType: 'text', width: 120 },
                 {
                     type: "buttons",
                     buttons: [
@@ -1151,7 +1152,7 @@
                 { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90 },
                 { dataField: 'PackageInNumber', caption: 'Koli iç Adet', width: 90 },
-
+                { dataField: 'Explanation', caption: 'Açıklama' },
                 {
                     type: "buttons",
                     buttons: [

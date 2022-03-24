@@ -655,6 +655,18 @@
     <Compile Include="Migrations\202203211336592_ItemOrderUpdate%28ReelOwnerFirmAdd%29.designer.cs">
       <DependentUpon>202203211336592_ItemOrderUpdate%28ReelOwnerFirmAdd%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202203241119053_ItemReceiptUpdate%28LenghtAndWeightAdd%29.cs" />
+    <Compile Include="Migrations\202203241119053_ItemReceiptUpdate%28LenghtAndWeightAdd%29.designer.cs">
+      <DependentUpon>202203241119053_ItemReceiptUpdate%28LenghtAndWeightAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203241120565_ItemReceiptUpdate%28LenghtAndWeightUpdate%29.cs" />
+    <Compile Include="Migrations\202203241120565_ItemReceiptUpdate%28LenghtAndWeightUpdate%29.designer.cs">
+      <DependentUpon>202203241120565_ItemReceiptUpdate%28LenghtAndWeightUpdate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203241212123_ItemLoadDetailUpdate%28ExplanationAdd.cs" />
+    <Compile Include="Migrations\202203241212123_ItemLoadDetailUpdate%28ExplanationAdd.designer.cs">
+      <DependentUpon>202203241212123_ItemLoadDetailUpdate%28ExplanationAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1026,6 +1038,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202203211336592_ItemOrderUpdate%28ReelOwnerFirmAdd%29.resx">
       <DependentUpon>202203211336592_ItemOrderUpdate%28ReelOwnerFirmAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203241119053_ItemReceiptUpdate%28LenghtAndWeightAdd%29.resx">
+      <DependentUpon>202203241119053_ItemReceiptUpdate%28LenghtAndWeightAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203241120565_ItemReceiptUpdate%28LenghtAndWeightUpdate%29.resx">
+      <DependentUpon>202203241120565_ItemReceiptUpdate%28LenghtAndWeightUpdate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203241212123_ItemLoadDetailUpdate%28ExplanationAdd.resx">
+      <DependentUpon>202203241212123_ItemLoadDetailUpdate%28ExplanationAdd.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

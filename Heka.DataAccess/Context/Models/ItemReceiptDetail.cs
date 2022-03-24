@@ -51,6 +51,19 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> DiscountRate { get; set; }
         public Nullable<decimal> DiscountAmount { get; set; }
         public Nullable<decimal> SubTotal { get; set; }
+        public int? ShortWidth { get; set; }
+        public int? LongWidth { get; set; }
+        public decimal? Volume { get; set; }
+        public int? Height { get; set; }
+        public int? Weight { get; set; }
+        //istiflenebilir
+        public bool? Stackable { get; set; }
+        public decimal? Ladametre { get; set; }
+        public int? PackageInNumber { get; set; }
+        public Nullable<decimal> OverallWeight { get; set; }
+        public Nullable<decimal> OverallVolume { get; set; }
+        public Nullable<decimal> OverallLadametre { get; set; }
+        public Nullable<decimal> OverallQuantity { get; set; }
         public Nullable<decimal> OverallTotal { get; set; }
         public string Explanation { get; set; }
         public Nullable<int> ReceiptStatus { get; set; }
