@@ -33,6 +33,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public YarnRecipeMixModel[] YarnRecipeMixes { get; set; }
 
         #region VISUAL ELEMENTS
+        public string FirmCode { get; set; }
         public string FirmName { get; set; }
         public int? YarnColourCode { get; set; }
         public string YarnColourName { get; set; }

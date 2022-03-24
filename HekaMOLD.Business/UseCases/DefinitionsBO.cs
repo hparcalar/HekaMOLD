@@ -3804,16 +3804,16 @@ namespace HekaMOLD.Business.UseCases
                 YarnRecipeCode = d.YarnRecipeCode,
                 YarnRecipeName = d.YarnRecipeName,
                 Denier = d.Denier,
+                YarnDenier = d.YarnDenier,
                 Factor = d.Factor,
                 Twist = d.Twist,
                 CenterTypeStr =  d.CenterType ==1 ? "Kuvvetli Punta" : d.CenterType ==2 ? "Seyrek Punta":"",
                 Mix = d.Mix,
                 YarnLot = d.YarnLot,
                 FirmId=d.Firm != null ? d.Firm.Id:0,
-                FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                FirmName = d.Firm != null ? d.Firm.FirmCode +" / "+ d.Firm.FirmName : "",
                 YarnBreedName = d.YarnBreed != null ? d.YarnBreed.YarnBreedName : "",
-                YarnColourCode = d.YarnColour.YarnColourCode,
-                YarnColourName = d.YarnColour != null ? d.YarnColour.YarnColourName : "",
+                YarnColourName = d.YarnColour != null ? d.YarnColour.YarnColourCode + " / " + d.YarnColour.YarnColourName : "",
             }).ToArray();
         }
         public YarnRecipeModel GetYarnRecipe(int id)

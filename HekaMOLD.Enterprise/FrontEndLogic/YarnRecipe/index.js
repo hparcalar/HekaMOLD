@@ -87,7 +87,7 @@
     }
     $scope.GenerateCode = function () {
         var sBreedCode = $scope.selectedYarnBreed.YarnBreedCode;
-        var nDenier = $scope.modelObject.Denier;
+        var nYanrDenier = $scope.modelObject.YarnDenier;
         var nColourCode = $scope.selectedYarnColour.YarnColourCode;
         var sFirmCode = $scope.selectedFirm.FirmCode;
 
@@ -95,7 +95,7 @@
             toastr.error("Lütfen İplik Cinsi Seçiniz", 'Hata');
             return;
         }
-        if (nDenier == null || nDenier == 'undefined') {
+        if (nYanrDenier == null || nYanrDenier == 'undefined') {
             toastr.error("Lütfen İplik Denyesi Giriniz", 'Hata');
             return;
         }
@@ -108,7 +108,7 @@
             return;
         }
 
-        $scope.modelObject.YarnRecipeCode = sBreedCode + "-" + ("0000" + nDenier).slice(-4) + "-" + nColourCode + "-" + sFirmCode;
+        $scope.modelObject.YarnRecipeCode = sBreedCode + "-" + ("0000" + nYanrDenier).slice(-4) + "-" + nColourCode + "-" + sFirmCode;
     }
     $scope.saveModel = function () {
         $scope.saveStatus = 1;

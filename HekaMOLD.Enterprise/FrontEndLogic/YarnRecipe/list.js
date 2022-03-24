@@ -19,6 +19,21 @@
                 enabled: true,
                 allowExportSelectedData: true,
             },
+            //onExporting(e) {
+            //    const workbook = new ExcelJS.Workbook();
+            //    const worksheet = workbook.addWorksheet('İplik Listesi');
+
+            //    DevExpress.excelExporter.exportDataGrid({
+            //        component: e.component,
+            //        worksheet,
+            //        autoFilterEnabled: true,
+            //    }).then(() => {
+            //        workbook.xlsx.writeBuffer().then((buffer) => {
+            //            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'İplik Listesi.xlsx');
+            //        });
+            //    });
+            //    e.cancel = true;
+            //},
             columnFixing: {
                 enabled: true,
             },
@@ -57,9 +72,9 @@
                 { dataField: 'YarnRecipeName', caption: 'İplik Adı' },
                 { dataField: 'YarnBreedName', caption: 'İplik Cinsi' },
                 { dataField: 'FirmName', caption: 'Firma' },
-                { dataField: 'YarnColourCode', caption: 'Renk Kodu' },
                 { dataField: 'YarnColourName', caption: 'Renk' },
-                { dataField: 'Denier', caption: 'Denye' },
+                { dataField: 'Denier', caption: 'Fiili Denye' },
+                { dataField: 'YarnDenier', caption: 'İplik Denye' },
                 { dataField: 'Factor', caption: 'Katsayı' },
                 { dataField: 'Twist', caption: 'Büküm' },
                 { dataField: 'Center', caption: 'Punta' },

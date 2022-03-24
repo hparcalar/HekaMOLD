@@ -115,7 +115,7 @@ namespace HekaMOLD.Business.UseCases.Core
                 if (string.IsNullOrEmpty(Convert.ToString(lastReceiptNo)))
                     lastReceiptNo = 0;
 
-                return "FR" + string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
+                return string.Format("{0:0000}", Convert.ToInt32(lastReceiptNo) + 1);
             }
             catch (Exception)
             {
