@@ -16,19 +16,19 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
-        [HttpGet]
-        public JsonResult BindModel(int rid, int vid)
-        {
-            ItemVariantModel model= null;
-            using (DefinitionsBO bObj = new DefinitionsBO())
-            {
-                model = bObj.Get();
-            }
+        //[HttpGet]
+        //public JsonResult BindModel(int rid, int kid)
+        //{
+        //    ItemVariantModel model= null;
+        //    using (DefinitionsBO bObj = new DefinitionsBO())
+        //    {
+        //        model = bObj.GetKnitVariantList();
+        //    }
 
-            var jsonResponse = Json(model, JsonRequestBehavior.AllowGet);
-            jsonResponse.MaxJsonLength = int.MaxValue;
+        //    var jsonResponse = Json(model, JsonRequestBehavior.AllowGet);
+        //    jsonResponse.MaxJsonLength = int.MaxValue;
 
-            return jsonResponse;
-        }
+        //    return jsonResponse;
+        //}
     }
 }

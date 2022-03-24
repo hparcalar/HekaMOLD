@@ -10,6 +10,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string YarnRecipeName { get; set; }
         public int? YarnBreedId { get; set; }
         public int? Denier { get; set; }
+        public int? YarnDenier { get; set; }
+
         //Katsayi
         public int? Factor { get; set; }
         //Bukum
@@ -20,7 +22,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         //Karisim 
         public bool? Mix { get; set; }
         public int? YarnRecipeType { get; set; }
-        public int? YarnLot { get; set; }
+        public string YarnLot { get; set; }
         public int? YarnColourId { get; set; }
         public int? FirmId { get; set; }
         public int? ItemId { get; set; }

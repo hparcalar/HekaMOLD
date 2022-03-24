@@ -152,17 +152,28 @@
                                 <input type="text" class="form-control form-control-solid" ng-model="modelObject.YarnRecipeCode" placeholder="" />
                             </div>
                             <!--begin::Input group-->
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Fiili Denye</label>
-                            <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Denier" placeholder="" />
-                            </div>
-                            <!--begin::Input group-->
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Katsayı</label>
-                            <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Factor" placeholder="" />
-                            </div>
+                            <div class="row">
+                                <div class="col-xxl-6">
+                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Fiili Denye</label>
+                                    <div class="mb-5">
+                                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.Denier" placeholder="" />
+                                    </div>
+                                </div>
+                                <div class="col-xxl-6">
+                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Denye</label>
+                                    <div class="mb-5">
+                                        <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnDenier" placeholder="" />
+                                    </div>
+                                </div>
 
-                        </div>
+                            </div>
+                                <!--begin::Input group-->
+                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Katsayı</label>
+                                <div class="mb-5">
+                                    <input type="number" class="form-control form-control-solid" ng-model="modelObject.Factor" placeholder="" />
+                                </div>
+
+                            </div>
                         <div class="col-xxl-6">
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Ad</label>
@@ -177,7 +188,7 @@
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Lot</label>
                             <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.YarnLot" placeholder="" />
+                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.YarnLot" placeholder="" />
                             </div>
 
                         </div>
@@ -231,29 +242,29 @@
                                         data-control="select2" data-placeholder="-- Seçiniz --">
                                 </select>
                             </div>
-                            <div class="row">
-                                <div class="col-xxl-6">
+                            <!--<div class="row">
+                                <div class="col-xxl-6">-->
                                     <!--begin::Input group-->
-                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Alış Fiyat</label>
+                                    <!--<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Alış Fiyat</label>
                                     <div class="mb-5">
                                         <input type="number" class="form-control form-control-solid" ng-model="modelObject.BuyingPrice" placeholder="" />
                                     </div>
                                 </div>
-                                <div class="col-xxl-6">
+                                <div class="col-xxl-6">-->
                                     <!--begin::Input group-->
-                                    <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Satış Fiyat</label>
+                                    <!--<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Satış Fiyat</label>
                                     <div class="mb-5">
                                         <input type="number" class="form-control form-control-solid" ng-model="modelObject.SalesPrice" placeholder="" />
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
 
-                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Döviz Kodu</label>
+                                @*<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Döviz Kodu</label>
                                 <div class="mb-5">
                                     <select class="form-select form-select-solid" data-allow-clear="true" ng-options="item.ForexTypeCode for item in forexTypeList"
                                             ng-model="selectedForexType" data-control="select2" data-placeholder="-- Seçiniz --">
                                     </select>
-                                </div>
+                                </div>*@
                             </div>
 
                         </div>

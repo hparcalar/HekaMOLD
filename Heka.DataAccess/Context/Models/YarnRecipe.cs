@@ -17,6 +17,7 @@ namespace Heka.DataAccess.Context
         [ForeignKey("YarnBreed")]
         public int? YarnBreedId { get; set; }
         public int? Denier { get; set; }
+        public int? YarnDenier { get; set; }
         //Katsayi
         public int? Factor { get; set; }
         //Bukum
@@ -41,7 +42,7 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("Firm")]
         public int? FirmId { get; set; }
-        public int? YarnLot { get; set; }
+        public string YarnLot { get; set; }
 
         [ForeignKey("Item")]
         public Nullable<int> ItemId { get; set; }

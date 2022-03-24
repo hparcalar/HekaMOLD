@@ -613,7 +613,7 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
-            return repo.GetAll().Where(d=> d.ItemType ==(int)ItemType.Product).Select(d => new ItemModel
+            return repo.GetAll().ToList().Where(d=> d.ItemType ==(int)ItemType.Product).Select(d => new ItemModel
             {
                 Id = d.Id,
                 ItemNo = d.ItemNo,
@@ -963,7 +963,68 @@ namespace HekaMOLD.Business.UseCases
 
             return data.ToArray();
         }
+        public ItemVariantModel[] GetKnitVariantList()
+        {
+            var repo = _unitOfWork.GetRepository<ItemVariant>();
 
+            return repo.GetAll().ToList().Where(d => d.ItemType == (int)ItemType.Product).Select(d => new ItemVariantModel
+            {
+                Id = d.Id,
+                ItemNo = d.ItemNo,
+                AttemptNo = d.AttemptNo,
+                ItemCutTypeStr = d.ItemCutType == 1 ? "Var" : d.ItemCutType == 2 ? "Yok" : "",
+                ItemBulletTypeStr = d.ItemBulletType == 1 ? "Var" : d.ItemBulletType == 2 ? "Yok" : "",
+                ItemApparelTypeStr = d.ItemApparelType == 1 ? "Var" : d.ItemApparelType == 2 ? "Yok" : "",
+                ItemDyeHouseTypeStr = d.ItemDyeHouseType == 1 ? "FR - FİKSE" : "",
+                CrudeWidth = d.CrudeWidth,
+                CrudeGramaj = d.CrudeGramaj,
+                ProductWidth = d.ProductWidth,
+                ProductGramaj = d.ProductGramaj,
+                WarpWireCount = d.WarpWireCount,
+                MeterGramaj = d.MeterGramaj,
+                QualityTypeName = d.ItemQualityType != null ? d.ItemQualityType.ItemQualityTypeName : "",
+                CombWidth = d.CombWidth,
+                WeftReportLength = d.WeftReportLength,
+                WarpReportLength = d.WarpReportLength,
+                WeavingDraftCode = d.WeavingDraft != null ? d.WeavingDraft.WeavingDraftCode : "",
+                AverageWarpDensity = d.AverageWarpDensity,
+                AverageWeftDensity = d.AverageWeftDensity,
+            }).ToArray();
+        }
+        public ItemVariantModel GetKnitVariant(int id, int kid)
+        {
+            ItemVariantModel model = new ItemVariantModel { };
+
+            var repo = _unitOfWork.GetRepository<ItemVariant>();
+            var repoKnit = _unitOfWork.GetRepository<Item>();
+            var dbObj = repo.Get(d => d.Id == id);
+           //Buradatım var dbObj = repo.Get(d => d.Id == id);
+
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+                #region GET KNITYARN LIST
+                List<KnitYarnModel> knitYarnList = new List<KnitYarnModel>();
+                dbObj.KnitYarn.ToList().ForEach(d =>
+                {
+                    KnitYarnModel knitYarnModel = new KnitYarnModel();
+                    knitYarnModel.Denier = d.YarnRecipe != null ? d.YarnRecipe.Denier : 0;
+                    knitYarnModel.YarnRecipeCode = d.YarnRecipe != null ? d.YarnRecipe.YarnRecipeCode : "";
+                    knitYarnModel.YarnRecipeName = d.YarnRecipe != null ? d.YarnRecipe.YarnRecipeName : "";
+                    knitYarnModel.FirmName = d.YarnRecipe != null ? d.Firm.FirmName : "";
+                    knitYarnModel.FirmCode = d.YarnRecipe != null ? d.Firm.FirmCode : "";
+                    knitYarnModel.Gramaj = d.YarnRecipe != null ? d.Gramaj : 0;
+                    knitYarnModel.Density = d.YarnRecipe != null ? d.Density : 0;
+                    d.MapTo(knitYarnModel);
+                    knitYarnList.Add(knitYarnModel);
+                });
+                model.KnitYarns = knitYarnList.ToArray();
+                #endregion
+            }
+
+            return model;
+        }
         #endregion
 
         #region ITEM CATEGORY BUSINESS
@@ -3481,8 +3542,13 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<YarnColourGroup>();
-
+                var repoYarnColur = _unitOfWork.GetRepository<YarnColour>();
                 var dbObj = repo.Get(d => d.Id == id);
+                var dbColurObj = repoYarnColur.Get(d => d.YarnColourGroupId == id);
+                if (dbColurObj != null)
+                {
+
+                }
                 repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
 
