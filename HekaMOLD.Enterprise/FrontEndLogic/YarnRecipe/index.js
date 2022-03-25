@@ -12,7 +12,6 @@
     $scope.selectedYarnBreed = {};
     $scope.selectedFirm = {};
     $scope.selectedYarnColour = {};
-    $scope.selectedCustomerYarnColour = {};
     $scope.selectedCenterType = {};
     $scope.selectedForexType = {};
 
@@ -30,7 +29,6 @@
         $scope.selectedCenterType = {};
         $scope.selectedYarnColour = {};
         $scope.selectedTwistDirection = {};
-        $scope.selectedCustomerYarnColour = {};
     }
 
     // GET SELECTABLE DATA
@@ -139,12 +137,6 @@
         else
             $scope.modelObject.YarnColourId = null;
 
-        if (typeof $scope.selectedCustomerYarnColour != 'undefined' && $scope.selectedCustomerYarnColour != null) {
-            $scope.modelObject.CustomerYarnColourId = $scope.selectedCustomerYarnColour.Id;
-        }
-        else
-            $scope.modelObject.CustomerYarnColourId = null;
-
         if (typeof $scope.selectedForexType != 'undefined' && $scope.selectedForexType != null) {
             $scope.modelObject.ForexTypeId = $scope.selectedForexType.Id;
         }
@@ -227,11 +219,6 @@
                         $scope.selectedYarnColour = $scope.yarnColourList.find(d => d.Id == $scope.modelObject.YarnColourId);
                     else 
                         $scope.selectedYarnColour = {};
-
-                    if ($scope.modelObject.CustomerYarnColourId > 0)
-                        $scope.selectedCustomerYarnColour = $scope.yarnColourList.find(d => d.Id == $scope.modelObject.CustomerYarnColourId);
-                    else
-                        $scope.selectedCustomerYarnColour = {};
 
                     if ($scope.modelObject.YarnBreedId > 0) 
                         $scope.selectedYarnBreed = $scope.yarnBreedList.find(d => d.Id == $scope.modelObject.YarnBreedId);

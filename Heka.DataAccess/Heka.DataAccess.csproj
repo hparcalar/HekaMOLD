@@ -385,6 +385,10 @@
     <Compile Include="Migrations\202203251142186_YarnRecipeUpdate%28ExplanationAndCustomerYarnColourIdAdd%29.designer.cs">
       <DependentUpon>202203251142186_YarnRecipeUpdate%28ExplanationAndCustomerYarnColourIdAdd%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202203251330553_YarnRecipeUpdate%28CustomerYarnColourExplanationDeleteAndCustomerYarnColourExplanationAdd%29.cs" />
+    <Compile Include="Migrations\202203251330553_YarnRecipeUpdate%28CustomerYarnColourExplanationDeleteAndCustomerYarnColourExplanationAdd%29.designer.cs">
+      <DependentUpon>202203251330553_YarnRecipeUpdate%28CustomerYarnColourExplanationDeleteAndCustomerYarnColourExplanationAdd%29.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -566,6 +570,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202203251142186_YarnRecipeUpdate%28ExplanationAndCustomerYarnColourIdAdd%29.resx">
       <DependentUpon>202203251142186_YarnRecipeUpdate%28ExplanationAndCustomerYarnColourIdAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203251330553_YarnRecipeUpdate%28CustomerYarnColourExplanationDeleteAndCustomerYarnColourExplanationAdd%29.resx">
+      <DependentUpon>202203251330553_YarnRecipeUpdate%28CustomerYarnColourExplanationDeleteAndCustomerYarnColourExplanationAdd%29.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

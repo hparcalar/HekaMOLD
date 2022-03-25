@@ -249,10 +249,7 @@
                             </div>
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tedarikçi Renk</label>
                             <div class="mb-3">
-                                <select class="form-select form-select-solid" data-allow-clear="true"
-                                        ng-options="item.YarnColourCode +' / '+item.YarnColourName for item in yarnColourList" ng-model="selectedCustomerYarnColour"
-                                        data-control="select2" data-placeholder="-- Seçiniz --">
-                                </select>
+                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.CustomerYarnColorExplanation" placeholder="" />
                             </div>
                             <!--<div class="row">
                             <div class="col-xxl-6">-->

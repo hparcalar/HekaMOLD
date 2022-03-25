@@ -30,6 +30,7 @@ namespace Heka.DataAccess.Context
         public int? YarnRecipeType { get; set; }
         public decimal? BuyingPrice { get; set; }
         public decimal? SalesPrice { get; set; }
+        public string CustomerYarnColorExplanation { get; set; }
         public string Explanation { get; set; }
 
         public Nullable<int> PlantId { get; set; }
@@ -40,9 +41,6 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("YarnColour")]
         public int? YarnColourId { get; set; }
-
-        [ForeignKey("CustomerYarnColour")]
-        public int? CustomerYarnColourId { get; set; }
 
         [ForeignKey("Firm")]
         public int? FirmId { get; set; }
