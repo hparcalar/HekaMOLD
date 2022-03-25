@@ -11,7 +11,8 @@ namespace Heka.DataAccess.Context
     {
         public YarnColour()
         {
-            this.YarnRecipe = new HashSet<YarnRecipe>();   
+            this.YarnRecipe = new HashSet<YarnRecipe>();
+            this.YarnRecipeByCustomerYarnColour = new HashSet<YarnRecipe>();
         }
         public int Id { get; set; }
         public int YarnColourCode { get; set; }
@@ -29,6 +30,9 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("YarnColour")]
         public virtual ICollection<YarnRecipe> YarnRecipe { get; set; }
+
+        [InverseProperty("CustomerYarnColour")]
+        public virtual ICollection<YarnRecipe> YarnRecipeByCustomerYarnColour { get; set; }
 
 
     }

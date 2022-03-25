@@ -24,11 +24,13 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? YarnRecipeType { get; set; }
         public string YarnLot { get; set; }
         public int? YarnColourId { get; set; }
+        public int? CustomerYarnColourId { get; set; }
         public int? FirmId { get; set; }
         public int? ItemId { get; set; }
         public int? ForexTypeId { get; set; }
         public decimal? BuyingPrice { get; set; }
         public decimal? SalesPrice { get; set; }
+        public string Explanation { get; set; }
 
         public YarnRecipeMixModel[] YarnRecipeMixes { get; set; }
 
@@ -37,6 +39,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public string FirmName { get; set; }
         public int? YarnColourCode { get; set; }
         public string YarnColourName { get; set; }
+        public int? CustomerYarnColourCode { get; set; }
+        public string CustomerYarnColourName { get; set; }
         public string YarnBreedName { get; set; }
         public string YarnRecipeTypeStr { get; set; }
         public string CenterTypeStr { get; set; }

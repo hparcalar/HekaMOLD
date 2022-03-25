@@ -11,7 +11,8 @@
 
     $scope.selectedYarnBreed = {};
     $scope.selectedFirm = {};
-    $scope.selectedYarnColour = {}; 
+    $scope.selectedYarnColour = {};
+    $scope.selectedCustomerYarnColour = {};
     $scope.selectedCenterType = {};
     $scope.selectedForexType = {};
 
@@ -29,6 +30,7 @@
         $scope.selectedCenterType = {};
         $scope.selectedYarnColour = {};
         $scope.selectedTwistDirection = {};
+        $scope.selectedCustomerYarnColour = {};
     }
 
     // GET SELECTABLE DATA
@@ -135,7 +137,13 @@
             $scope.modelObject.YarnColourId = $scope.selectedYarnColour.Id;
         }
         else
-            $scope.modelObject.YarnBreedId = null;
+            $scope.modelObject.YarnColourId = null;
+
+        if (typeof $scope.selectedCustomerYarnColour != 'undefined' && $scope.selectedCustomerYarnColour != null) {
+            $scope.modelObject.CustomerYarnColourId = $scope.selectedCustomerYarnColour.Id;
+        }
+        else
+            $scope.modelObject.CustomerYarnColourId = null;
 
         if (typeof $scope.selectedForexType != 'undefined' && $scope.selectedForexType != null) {
             $scope.modelObject.ForexTypeId = $scope.selectedForexType.Id;
@@ -210,43 +218,42 @@
 
                     // BIND EXTERNAL FIRM TYPE
 
-                    if ($scope.modelObject.FirmId > 0) {
+                    if ($scope.modelObject.FirmId > 0) 
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
-                    }
-                    else {
+                    else 
                         $scope.selectedFirm = {};
-                    }
-                    if ($scope.modelObject.YarnColourId > 0) {
-                        $scope.selectedYarnColour = $scope.yarnColourList.find(d => d.Id == $scope.modelObject.YarnColourId);
-                    }
-                    else {
-                        $scope.selectedYarnColour = {};
-                    }
-                    if ($scope.modelObject.YarnBreedId > 0) {
-                        $scope.selectedYarnBreed = $scope.yarnBreedList.find(d => d.Id == $scope.modelObject.YarnBreedId);
-                    }
-                    else {
-                        $scope.selectedYarnBreed = {};
-                    }
-                    if ($scope.modelObject.CenterType > 0) {
-                        $scope.selectedCenterType = $scope.centerTypeList.find(d => d.Id == $scope.modelObject.CenterType);
-                    }
-                    else {
-                        $scope.selectedCenterType = {};
-                    }
 
-                    if ($scope.modelObject.ForexTypeId > 0) {
+                    if ($scope.modelObject.YarnColourId > 0) 
+                        $scope.selectedYarnColour = $scope.yarnColourList.find(d => d.Id == $scope.modelObject.YarnColourId);
+                    else 
+                        $scope.selectedYarnColour = {};
+
+                    if ($scope.modelObject.CustomerYarnColourId > 0)
+                        $scope.selectedCustomerYarnColour = $scope.yarnColourList.find(d => d.Id == $scope.modelObject.CustomerYarnColourId);
+                    else
+                        $scope.selectedCustomerYarnColour = {};
+
+                    if ($scope.modelObject.YarnBreedId > 0) 
+                        $scope.selectedYarnBreed = $scope.yarnBreedList.find(d => d.Id == $scope.modelObject.YarnBreedId);
+                    else 
+                        $scope.selectedYarnBreed = {};
+
+                    if ($scope.modelObject.CenterType > 0) 
+                        $scope.selectedCenterType = $scope.centerTypeList.find(d => d.Id == $scope.modelObject.CenterType);                 
+                    else 
+                        $scope.selectedCenterType = {};
+
+                    if ($scope.modelObject.ForexTypeId > 0) 
                         $scope.selectedForexType = $scope.forexTypeList.find(d => d.Id == $scope.modelObject.ForexTypeId);
-                    }
-                    else {
+                    else 
                         $scope.selectedForexType = {};
-                    }
-                    if ($scope.modelObject.TwistDirection > 0) {
+
+                    if ($scope.modelObject.TwistDirection > 0) 
                         $scope.selectedTwistDirection = $scope.twistDirectionList.find(d => d.Id == $scope.modelObject.TwistDirection);
-                    }
-                    else {
+
+                    else 
                         $scope.selectedTwistDirection = {};
-                    }
+   
                     $scope.bindMixList();
                 }
             }).catch(function (err) { });

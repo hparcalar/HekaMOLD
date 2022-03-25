@@ -3546,9 +3546,7 @@ namespace HekaMOLD.Business.UseCases
                 var dbObj = repo.Get(d => d.Id == id);
                 var dbColurObj = repoYarnColur.Get(d => d.YarnColourGroupId == id);
                 if (dbColurObj != null)
-                {
-
-                }
+                    throw new Exception("Bu Renk grubu iplik renklerinde kullanıldığı için silinemez ! . Kullanılan Renk: " + dbColurObj.YarnColourCode+" / "+dbColurObj.YarnColourName); 
                 repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
 
