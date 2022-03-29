@@ -34,7 +34,7 @@ namespace HekaMOLD.Business.UseCases
                 dbWorkOrderDetail.MapTo(model);
 
                 #region CHECK/ADD DELIVERY PLAN QUEUE
-                var dbDeliveryPlan = repoDeliveryPlan.Get(d => d.ItemOrderDetailId == dbWorkOrderDetail.Id);
+                var dbDeliveryPlan = repoDeliveryPlan.Get(d => d.Id == model.Id);
                 if (dbDeliveryPlan == null)
                 {
                     int? lastOrderNo = repoDeliveryPlan.Filter(d => d.PlanDate == model.DeliveryPlanDate)

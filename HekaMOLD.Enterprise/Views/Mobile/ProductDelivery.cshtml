@@ -71,6 +71,12 @@
                                     </svg>
                                     Ürün Seç
                                 </button>
+
+                                <button type="button"
+                                        ng-click="deleteTemp()"
+                                        class="btn btn-sm btn-light-danger btn-block h-100 fw-bolder mx-1 flex-fill">
+                                    Veriyi Sil
+                                </button>
                             </div>
                             <div ng-cloak ng-if="modelObject.OrderDetails.length > 0"
                                  class="d-flex flex-row justify-content-end mt-2">
@@ -232,5 +238,5 @@
     <script src="~/Components/Controllers/report-template-list.js"></script>
     <script src="~/Components/Controllers/warehouse-manager.js"></script>
     <script src="~/Scripts/html5-qrcode.min.js"></script>
-    <script src="~/FrontEndLogic/Mobile/product-delivery.js?v=2"></script>
+    <script src="~/FrontEndLogic/Mobile/product-delivery.js?v=4"></script>
 }

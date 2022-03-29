@@ -511,11 +511,13 @@ namespace HekaMOLD.Business.UseCases
                         InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100
                             && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd
                             ).Sum(m => m.Quantity) ?? 0,
-                        OutQty = d.Where(m => m.ItemReceipt.ReceiptType > 100
-                            && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd).Sum(m => m.Quantity) ?? 0,
-                        TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100
-                            && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd).Sum(m => m.Quantity) ?? 0)
-                            - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
+                        OutQty = 0,
+                        TotalQty = d.Where(m => m.ItemReceipt.ReceiptType < 100
+                            && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd
+                            ).Sum(m => m.Quantity) ?? 0
+                        //(d.Where(m => m.ItemReceipt.ReceiptType < 100
+                        //&& m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd).Sum(m => m.Quantity) ?? 0)
+                        //- (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
                     })
                     .OrderBy(d => d.ItemGroupId)
                     .ToArray();

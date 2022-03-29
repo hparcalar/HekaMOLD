@@ -57,9 +57,18 @@
 
     $scope.onBarcodeKeyUp = function (e) {
         try {
-            if (e.keyCode == '13' || $scope.barcodeBox.length >= 8) {
+            if ($scope.barcodeBox.length == 8) {
                 $scope.getSerialByBarcode($scope.barcodeBox);
             }
+        } catch (e) {
+
+        }
+    }
+
+    $scope.deleteTemp = function () {
+        try {
+            localStorage.removeItem('readings');
+            window.location.reload();
         } catch (e) {
 
         }
