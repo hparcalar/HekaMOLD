@@ -120,7 +120,6 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
-
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
