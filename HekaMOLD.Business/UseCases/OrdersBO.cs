@@ -63,6 +63,55 @@ namespace HekaMOLD.Business.UseCases
                 .OrderByDescending(d => d.OrderDate)
                 .ToArray();
         }
+        public ItemOrderModel[] GetApprovedItemOrderList(ItemOrderType orderType)
+        {
+            List<ItemOrderModel> data = new List<ItemOrderModel>();
+            var repo = _unitOfWork.GetRepository<ItemOrder>();
+
+            return repo.Filter(d => d.OrderType == (int)orderType && d.OrderStatus == (int)OrderLoadStatusType.Approved).ToList()
+                .Select(d => new ItemOrderModel
+                {
+                    Id = d.Id,
+                    OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
+                    OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.OrderDate),
+                    DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                    LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
+                    ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
+                    OrderDateWeek = getYearAndWeekOfNumber(Convert.ToString(d.OrderDate)),
+                    CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                    CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    LoadCityName = d.LoadCity != null ? d.LoadCity.CityName : "",
+                    LoadPostCode = d.LoadCity != null ? d.LoadCity.PostCode : "",
+                    EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
+                    ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName : "",
+                    DischangeCityName = d.DischargeCity != null ? d.DischargeCity.CityName : "",
+                    DischangePostCode = d.DischargeCity != null ? d.DischargeCity.PostCode : "",
+                    OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "",
+                    OrderUploadTypeStr = d.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : d.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "",
+                    OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : d.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "",
+                    OrderCalculationTypeStr = d.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : d.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : d.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : d.OrderCalculationType == 4 ? LSabit.GET_COMPLET : d.OrderCalculationType == 5 ? LSabit.GET_MINIMUM : "",
+                    CreatedUserName = d.User != null ? d.User.UserName : "",
+                    //OrderDateWeek = Convert.ToString( Convert.ToDateTime(d.OrderDate).GetDateTimeFormats()),
+                    //LoadCountryName = d.LoadCity.Country != null ? d.LoadCity.Country.CountryName :"",
+                    OveralQuantity = d.OveralQuantity,
+                    OveralWeight = d.OveralWeight,
+                    OveralVolume = d.OveralVolume,
+                    OveralLadametre = d.OveralLadametre,
+                    OverallTotal = d.OverallTotal,
+                    OrderNo = d.OrderNo,
+                    OrderDate = d.OrderDate,
+                    DocumentNo = d.DocumentNo,
+                    Explanation = d.Explanation,
+                    CustomerFirmId = d.CustomerFirmId,
+                    OrderStatus = d.OrderStatus,
+                    OrderType = d.OrderType,
+                    CalculationTypePrice = d.CalculationTypePrice,
+                    PlantId = d.PlantId,
+                    ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
+                })
+                .OrderByDescending(d => d.OrderDate)
+                .ToArray();
+        }
         public ItemOrderModel[] GetUnappovedItemOrderList(ItemOrderType orderType)
         {
             List<ItemOrderModel> data = new List<ItemOrderModel>();

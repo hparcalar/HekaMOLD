@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
@@ -24,7 +25,10 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
-
+        public ActionResult EntryExitList()
+        {
+            return View();
+        }
         [HttpGet]
         public JsonResult GetWarehouseList()
         {
@@ -137,7 +141,27 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResponse.MaxJsonLength = int.MaxValue;
             return jsonResponse;
         }
+        [HttpGet]
+        public JsonResult GetStatesDataControl()
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
 
+            try
+            {
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetItemStatesControl();
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
         [HttpGet]
         public JsonResult GetFinishedProducts()
         {
@@ -168,7 +192,21 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResponse.MaxJsonLength = int.MaxValue;
             return jsonResponse;
         }
+        [HttpGet]
+        public JsonResult GetEntryExitList(string warehouseList)
+        {
+            ItemReceiptDetailModel[] result = new ItemReceiptDetailModel[0];
+            int[] warehouseIds = warehouseList.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
 
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                result = bObj.GetWarehouseEntryExitList(warehouseIds);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         [HttpGet]
         public JsonResult GetFinishedProductState(string dt1, string dt2)
         {

@@ -5,6 +5,7 @@
     };
 
     $scope.itemList = [];
+    $scope.itemReceiptSatatusList = [];
     $scope.unitList = [];
     $scope.forexList = [];
 
@@ -157,23 +158,23 @@
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
             dropDownOptions: { width: 500 },
-            dataSource: $scope.itemList,
+            dataSource: $scope.itemReceiptSatatusList.filter(d => d.TotalQty > 0),
             value: cellInfo.value,
-            valueExpr: "Id",
+            valueExpr: "ItemId",
             displayExpr: "ItemNo",
             contentTemplate: function (e) {
                 return $("<div>").dxDataGrid({
-                    dataSource: $scope.itemList,
+                    dataSource: $scope.itemReceiptSatatusList.filter(d => d.TotalQty > 0),
                     remoteOperations: true,
                     columns: [
                         { dataField: 'ItemNo', caption: 'Stok Kodu' },
                         { dataField: 'ItemName', caption: 'Stok Adı' },
-                        { dataField: 'ItemTypeStr', caption: 'Stok Türü' },
-                        { dataField: 'GroupName', caption: 'Grup' },
-                        { dataField: 'CategoryName', caption: 'Kategori' }
+                        { dataField: 'TotalQty', caption: 'Kalan' },
+                        //{ dataField: 'GroupName', caption: 'Grup' },
+                        //{ dataField: 'CategoryName', caption: 'Kategori' }
                     ],
                     hoverStateEnabled: true,
-                    keyExpr: "Id",
+                    keyExpr: "ItemId",
                     scrolling: { mode: "virtual" },
                     height: 250,
                     filterRow: { visible: true },
@@ -227,13 +228,6 @@
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    $scope.modelObject.Details.forEach(d => {
-                        if (d.TaxIncluded == true)
-                            d.TaxIncluded = 1;
-                        else if (d.TaxIncluded == false)
-                            d.TaxIncluded = 0;
-                    });
-
                     return $scope.modelObject.Details;
                 },
                 update: function (key, values) {
@@ -242,8 +236,8 @@
                         let calculateRowAgain = false;
 
                         if (typeof values.ItemId != 'undefined') {
-                            var itemObj = $scope.itemList.find(d => d.Id == values.ItemId);
-                            obj.ItemId = itemObj.Id;
+                            var itemObj = $scope.itemReceiptSatatusList.find(d => d.ItemId == values.ItemId);
+                            obj.ItemId = itemObj.ItemId;
                             obj.ItemNo = itemObj.ItemNo;
                             obj.ItemName = itemObj.ItemName;
 
@@ -257,7 +251,12 @@
                         }
 
                         if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation; }
-                        if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
+                        if (typeof values.Quantity != 'undefined') {
+                            if (values.Quantity > itemObj.TotalQty) {
+                                toastr.warning('En fazla ekleyebileceğiniz miktar ' + itemObj.TotalQty, 'Uyarı');
+                            }
+                            obj.Quantity = values.Quantity; calculateRowAgain = true;
+                        }
                         if (typeof values.ShortWidth != 'undefined') { obj.ShortWidth = values.ShortWidth; calculateRowAgain = true; }
                         if (typeof values.LongWidth != 'undefined') { obj.LongWidth = values.LongWidth; calculateRowAgain = true; }
                         if (typeof values.Height != 'undefined') { obj.Height = values.Height; calculateRowAgain = true; }
@@ -310,16 +309,16 @@
                         newId++;
                     }
 
-                    var itemObj = $scope.itemList.find(d => d.Id == values.ItemId);
+                    var itemObj = $scope.itemReceiptSatatusList.find(d => d.ItemId == values.ItemId);
                     var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
-
                     var newObj = {
                         Id: newId,
-                        ItemId: itemObj.Id,
+                        ItemId: itemObj.ItemId,
                         ItemNo: itemObj.ItemNo,
                         ItemName: itemObj.ItemName,
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
                         //UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
+
                         Quantity: values.Quantity,
                         ShortWidth: values.ShortWidth,
                         LongWidth: values.LongWidth,
@@ -340,9 +339,12 @@
                         Explanation: values.Explanation,
                         NewDetail: true
                     };
-
-                    $scope.modelObject.Details.push(newObj);
-                    $scope.calculateRow(newObj);
+                    if (values.Quantity > itemObj.TotalQty) {
+                        toastr.warning('Ekleyebileceğiniz maximum miktar ' + itemObj.TotalQty, 'Uyarı');
+                    } else {
+                        $scope.modelObject.Details.push(newObj);
+                        $scope.calculateRow(newObj);
+                    }
                 },
                 key: 'Id'
             },
@@ -380,7 +382,7 @@
                 {
                     dataField: 'ItemId', caption: 'Stok Kodu',
                     lookup: {
-                        dataSource: $scope.itemList,
+                        dataSource: $scope.itemReceiptSatatusList,
                         valueExpr: "Id",
                         displayExpr: "ItemNo"
                     },
@@ -412,7 +414,7 @@
                 { dataField: 'Weight', caption: 'Ağırlık (KG)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Volume', caption: 'Hacim (M3)', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Ladametre', caption: 'Ladametre', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 90 },
+                { dataField: 'Stackable', caption: 'İstiflenebilir', dataType: 'boolean', width: 80 },
                 { dataField: 'PackageInNumber', caption: 'Koli İç Adet', dataType: 'number' },
                 //{ dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 //{
@@ -523,6 +525,7 @@
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.itemList = resp.data.Items;
+                        $scope.itemReceiptSatatusList = resp.data.ItemReceiptStatusList;
                         $scope.unitList = resp.data.Units;
                         $scope.forexList = resp.data.Forexes;
 

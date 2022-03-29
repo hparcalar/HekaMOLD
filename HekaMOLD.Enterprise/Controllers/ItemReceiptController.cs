@@ -3,6 +3,7 @@ using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
@@ -52,6 +53,7 @@ namespace HekaMOLD.Enterprise.Controllers
             FirmModel[] firms = new FirmModel[0];
             ForexTypeModel[] forexes = new ForexTypeModel[0];
             WarehouseModel[] warehouses = new WarehouseModel[0];
+            ItemStateModel[] itemReceiptStatusList = new ItemStateModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -61,12 +63,16 @@ namespace HekaMOLD.Enterprise.Controllers
                 forexes = bObj.GetForexTypeList();
                 warehouses = bObj.GetWarehouseList();
             }
-
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                itemReceiptStatusList = bObj.GetItemStatesControl();
+            }
             Dictionary<int, string> receiptTypes =
                 DictItemReceiptType.GetReceiptTypes((ReceiptCategoryType)receiptCategory);
 
             var jsonResult = Json(new { 
-                Items = items, Units = units, 
+                Items = items, Units = units,
+                ItemReceiptStatusList = itemReceiptStatusList,
                 Firms = firms, Forexes=forexes,
                 Warehouses = warehouses,
                 ReceiptTypes = receiptTypes.Select(d => new { 

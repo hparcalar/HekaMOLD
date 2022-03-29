@@ -1,6 +1,8 @@
 ﻿using Heka.DataAccess.Context;
 using Heka.DataAccess.Context.Models;
+using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Filters;
@@ -377,7 +379,72 @@ namespace HekaMOLD.Business.UseCases
 
             return data;
         }
+        public ItemReceiptDetailModel[] GetWarehouseEntryExitList(int[] warehouseList)
+        {
+            ItemReceiptDetailModel[] extract = new ItemReceiptDetailModel[0];
 
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                extract = repo.Filter(d => warehouseList.Contains(d.ItemReceipt.InWarehouseId ?? 0) && d.ItemReceipt.ReceiptType < 200).ToList()
+                    .Select(d => new ItemReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        ItemReceiptId = d.ItemReceiptId,
+                        ItemId = d.ItemId,
+                        ItemName = d.Item != null ? d.Item.ItemName:"",
+                        FirmCode = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        WarehouseCode = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseCode : "",
+                        WarehouseName = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseName : "",
+                        Quantity = d.Quantity,
+                        InQuantity = d.ItemReceipt.ReceiptType < 100 ? d.Quantity : (decimal?)null,
+                        OutQuantity = d.ItemReceipt.ReceiptType > 100 ? d.Quantity : (decimal?)null,
+                        ReceiptDateStr = d.ItemReceipt.ReceiptDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
+                        ReceiptTypeStr = ((ItemReceiptType)d.ItemReceipt.ReceiptType).ToCaption(),
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return extract;
+        }
+
+        public ItemStateModel[] GetItemStatesControl()
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var movements = repo.Filter(d => d.ItemReceipt.ReceiptType < 200);
+                data = movements.GroupBy(d => new { d.Item, d.ItemReceipt.Warehouse })
+                    .Select(d => new ItemStateModel
+                    {
+                        ItemId = d.Key.Item.Id,
+                        ItemNo = d.Key.Item.ItemNo,
+                        ItemName = d.Key.Item.ItemName,
+                        WarehouseId = d.Key.Warehouse.Id,
+                        WarehouseCode = d.Key.Warehouse.WarehouseCode,
+                        WarehouseName = d.Key.Warehouse.WarehouseName,
+                        InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0,
+                        OutQty = d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0,
+                        TotalQty = ((d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0)
+                            - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)) 
+                           
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         public ItemStateModel[] GetItemStates(int[] warehouseList, BasicRangeFilter filter)
         {
             ItemStateModel[] data = new ItemStateModel[0];

@@ -118,6 +118,28 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
 
+        [HttpGet]
+        public JsonResult GetApprovedItemOrderList()
+        {
+            ItemOrderModel[] result = new ItemOrderModel[0];
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                result = bObj.GetApprovedItemOrderList(ItemOrderType.Sale);
+
+                //foreach (var item in result)
+                //{
+                //    if (item.OrderStatus == (int)OrderStatusType.Created)
+                //        item.OrderStatusStr = "Onaylanması bekleniyor";
+                //    if (item.OrderStatus == (int)OrderStatusType.Approved)
+                //        item.OrderStatusStr = "Onaylandı.";
+                //}
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         [HttpPost]
         public JsonResult DeleteModel(int rid)
         {

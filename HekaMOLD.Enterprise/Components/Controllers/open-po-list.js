@@ -10,10 +10,8 @@
             dataSource: {
                 load: function () {
                     if ($scope.orderDetailList.length == 0)
-                        $scope.orderDetailList = $.getJSON(HOST_URL + 'PIOrder/GetApprovedOrderDetails', function (data) {
+                        $scope.orderDetailList = $.getJSON(HOST_URL + 'LOrder/GetApprovedItemOrderList', function (data) {
                             data.forEach(d => {
-                                d.CreatedDate = moment(parseInt(d.CreatedDate.toString().substr(6, d.CreatedDate.toString().length - 8)));
-                                d.OrderDate = moment(parseInt(d.OrderDate.toString().substr(6, d.OrderDate.toString().length - 8)));
                                 d.IsChecked = false;
                             }
                             );
@@ -54,12 +52,16 @@
                 mode: 'cell'
             },
             columns: [
-                { dataField: 'OrderNo', caption: 'Sipariş No', allowEditing: false },
-                { dataField: 'OrderDate', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
-                { dataField: 'FirmName', caption: 'Firma', allowEditing: false },
-                { dataField: 'ItemName', caption: 'Stok Adı', allowEditing: false },
-                { dataField: 'UnitCode', caption: 'Birim', allowEditing: false },
-                { dataField: 'Quantity', caption: 'Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Id', caption: 'Id', visible: false, sortOrder: "desc", },
+                { dataField: 'OrderNo', caption: 'Sipariş No' },
+                { dataField: 'OrderStatusStr', caption: 'Durum' },
+                { dataField: 'OrderDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'CustomerFirmName', caption: 'Müşteri Firma Adı' },
+                { dataField: 'OveralQuantity', caption: 'Toplam Miktar' },
+                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık' },
+                { dataField: 'OveralVolume', caption: 'Toplam Hacim' },
+                { dataField: 'OveralLadametre', caption: 'Toplam Ladametre' },
+                { dataField: 'Explanation', caption: 'Açıklama' },
                 { dataField: 'IsChecked', caption: 'Seç' }
             ]
         });

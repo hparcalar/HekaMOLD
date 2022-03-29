@@ -4249,6 +4249,7 @@
     <Content Include="FrontEndLogic\VoyageCost\list.js" />
     <Content Include="FrontEndLogic\Voyage\index.js" />
     <Content Include="FrontEndLogic\Voyage\list.js" />
+    <Content Include="FrontEndLogic\Warehouse\entryExit.js" />
     <Content Include="FrontEndLogic\Warehouse\finished-product-state.js" />
     <Content Include="FrontEndLogic\Warehouse\finished-products.js" />
     <Content Include="FrontEndLogic\Warehouse\index.js" />
@@ -4783,6 +4784,7 @@
     <Content Include="Views\CostCategory\List.cshtml" />
     <Content Include="Views\DriverAccount\List.cshtml" />
     <Content Include="Views\DriverAccount\Index.cshtml" />
+    <Content Include="Views\Warehouse\EntryExitList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
