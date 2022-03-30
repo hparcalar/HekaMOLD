@@ -68,17 +68,21 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'YarnRecipeCode', caption: 'İpik Kodu' },
-                { dataField: 'YarnRecipeName', caption: 'İplik Adı' },
-                { dataField: 'YarnBreedName', caption: 'İplik Cinsi' },
+                { dataField: 'YarnRecipeCode', caption: 'İpik Kod' },
+                { dataField: 'YarnRecipeName', caption: 'İplik Ad' },
+                { dataField: 'YarnBreedName', caption: 'İplik Cins' },
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'YarnColourName', caption: 'Renk' },
+                { dataField: 'CustomerYarnColorExplanation', caption: 'Tedarikçi Renk' },
                 { dataField: 'Denier', caption: 'Fiili Denye' },
                 { dataField: 'YarnDenier', caption: 'İplik Denye' },
                 { dataField: 'Factor', caption: 'Katsayı' },
                 { dataField: 'Twist', caption: 'Büküm' },
-                { dataField: 'Center', caption: 'Punta' },
-                { dataField: 'Mix', caption: 'Karışım' },
+                { dataField: 'TwistDirectionStr', caption: 'Büküm Tip' },
+                { dataField: 'YarnLot', caption: 'Lot' },
+                { dataField: 'CenterTypeStr', caption: 'Punta' },
+                { dataField: 'YarnRecipeTypeStr', caption: 'İplik Tip' }, 
+                { dataField: 'Explanation', caption: 'Açıklama' },
                {
                     type: "buttons",
                     buttons: [

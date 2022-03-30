@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Heka.DataAccess.Context
@@ -14,6 +15,11 @@ namespace Heka.DataAccess.Context
         public int Id { get; set; }
         public string ItemQualityTypeCode { get; set; }
         public string ItemQualityTypeName { get; set; }
+
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
+        public Nullable<int> UpdatedUserId { get; set; }
 
         [InverseProperty("ItemQualityType")]
         public virtual ICollection<Item> Item { get; set; }

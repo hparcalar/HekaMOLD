@@ -85,6 +85,8 @@ namespace Heka.DataAccess.Context
         //Ortalama Cozgu Sikligi
         public int? AverageWarpDensity { get; set; }
 
+        public string Explanation { get; set; }
+
         [ForeignKey("WeavingDraft")]
         public int? WeavingDraftId { get; set; }
 

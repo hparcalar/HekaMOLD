@@ -43,6 +43,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
 
         public int? WeavingDraftId { get; set; }
         public int? ItemQualityTypeId { get; set; }
+        public string Explanation { get; set; }
 
         public ItemWarehouseModel[] Warehouses { get; set; }
         public ItemUnitModel[] Units { get; set; }

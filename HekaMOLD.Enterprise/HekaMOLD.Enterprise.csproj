@@ -156,6 +156,7 @@
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
+    <Compile Include="Controllers\ItemQualityTypeController.cs" />
     <Compile Include="Controllers\KnitController.cs" />
     <Compile Include="Controllers\KnitVariantController.cs" />
     <Compile Include="Controllers\LojisticOrderController.cs" />
@@ -212,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\heka-mobile-styles.css" />
+    <Content Include="assets\css\HekaTab.css" />
     <Content Include="assets\css\pages\error\error-3.css" />
     <Content Include="assets\css\pages\error\error-4.css" />
     <Content Include="assets\css\pages\error\error-5.css" />
@@ -4119,6 +4121,8 @@
     <Content Include="FrontEndLogic\ItemCategory\list.js" />
     <Content Include="FrontEndLogic\ItemGroup\index.js" />
     <Content Include="FrontEndLogic\ItemGroup\list.js" />
+    <Content Include="FrontEndLogic\ItemQualityType\index.js" />
+    <Content Include="FrontEndLogic\ItemQualityType\list.js" />
     <Content Include="FrontEndLogic\ItemReceipt\index.js" />
     <Content Include="FrontEndLogic\ItemReceipt\list.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
@@ -4705,6 +4709,8 @@
     <Content Include="Views\Cost\List.cshtml" />
     <Content Include="Views\Knit\Variant.cshtml" />
     <Content Include="Views\KnitVariant\Index.cshtml" />
+    <Content Include="Views\ItemQualityType\Index.cshtml" />
+    <Content Include="Views\ItemQualityType\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

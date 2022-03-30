@@ -136,7 +136,7 @@ namespace HekaMOLD.Business.UseCases.Core
                 if (string.IsNullOrEmpty(Convert.ToString(lastReceiptNo)))
                     lastReceiptNo = 0;
 
-                return "FR-" + string.Format("{0:00000}", Convert.ToInt32(lastReceiptNo) + 1);
+                return string.Format("{0:0000}", Convert.ToInt32(lastReceiptNo) + 1);
             }
             catch (Exception)
             {
@@ -261,6 +261,46 @@ namespace HekaMOLD.Business.UseCases.Core
                 return ex.Message;
             }         
         }
+        public BusinessResult GetKnitNo(string param)
+        {
+            BusinessResult result = new BusinessResult();
+            //1000-2000
+            string[] Request = param.Split('-');
+
+            var firstValue = Convert.ToInt32(Request[0]);
+            var lastValue = Convert.ToInt32(Request[1]);
+            var itemQualityTypeId = Convert.ToInt32(Request[2]);
+
+            try
+            {
+                List<Item> tmpList = new List<Item>();
+                var repo = _unitOfWork.GetRepository<Item>();
+                tmpList = repo.Filter(x => x.ItemQualityTypeId == itemQualityTypeId )
+                    .ToList();
+                var lastReceiptNo = 0;
+                if (tmpList.Count == 0)
+                    lastReceiptNo = firstValue + 1;
+                else
+                {
+                    if (firstValue + tmpList.Count + 1 > lastValue)
+                    {
+                        result.Code = "";
+                        throw new Exception("Bir sonraki kayıt numarası: "+ tmpList.Count + 1 + " verilen aralık aşıldı !! Lütfen aralık değelerini değiştiriniz.");
+                    }
+                    lastReceiptNo = firstValue + tmpList.Count + 1;
+                }
+                result.Result = true;
+                result.Code = lastReceiptNo.ToString();
+            }
+            catch (Exception ex)
+            {
+                result.Result = true;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public BusinessResult UpdateConsume(int? consumedId, int? consumerId, decimal usedQuantity)
         {
             BusinessResult result = new BusinessResult();

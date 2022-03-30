@@ -27,6 +27,7 @@ namespace Heka.DataAccess.Context
         public int? CenterType { get; set; }
         //Karisim 
         public bool? Mix { get; set; }
+        public string YarnLot { get; set; }
         public int? YarnRecipeType { get; set; }
         public decimal? BuyingPrice { get; set; }
         public decimal? SalesPrice { get; set; }
@@ -44,7 +45,6 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("Firm")]
         public int? FirmId { get; set; }
-        public string YarnLot { get; set; }
 
         [ForeignKey("Item")]
         public Nullable<int> ItemId { get; set; }

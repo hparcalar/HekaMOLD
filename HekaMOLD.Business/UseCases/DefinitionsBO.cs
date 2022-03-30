@@ -613,10 +613,11 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
-            return repo.GetAll().ToList().Where(d=> d.ItemType ==(int)ItemType.Product).Select(d => new ItemModel
+            return repo.GetAll().ToList().Where(d=> d.ItemType == (int)ItemType.Product || d.ItemType == (int)ItemType.Attempt).Select(d => new ItemModel
             {
                 Id = d.Id,
                 ItemNo = d.ItemNo,
+                ItemName = d.ItemName,
                 AttemptNo = d.AttemptNo,
                 ItemCutTypeStr = d.ItemCutType == 1 ? "Var" : d.ItemCutType == 2 ? "Yok" : "",
                 ItemBulletTypeStr = d.ItemBulletType == 1 ? "Var" : d.ItemBulletType == 2 ? "Yok" : "",
@@ -635,6 +636,7 @@ namespace HekaMOLD.Business.UseCases
                 WeavingDraftCode = d.WeavingDraft != null ? d.WeavingDraft.WeavingDraftCode : "",
                 AverageWarpDensity = d.AverageWarpDensity,
                 AverageWeftDensity = d.AverageWeftDensity,
+                Explanation = d.Explanation
             }).ToArray();
         }
 
@@ -653,6 +655,7 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.KnitYarn.ToList().ForEach(d =>
                 {
                     KnitYarnModel knitYarnModel = new KnitYarnModel();
+                    d.MapTo(knitYarnModel);
                     knitYarnModel.Denier = d.YarnRecipe != null ? d.YarnRecipe.Denier : 0;
                     knitYarnModel.YarnRecipeCode = d.YarnRecipe != null ? d.YarnRecipe.YarnRecipeCode : "";
                     knitYarnModel.YarnRecipeName = d.YarnRecipe != null ? d.YarnRecipe.YarnRecipeName : "";
@@ -660,7 +663,6 @@ namespace HekaMOLD.Business.UseCases
                     knitYarnModel.FirmCode = d.YarnRecipe != null ? d.Firm.FirmCode : "";
                     knitYarnModel.Gramaj = d.YarnRecipe != null ? d.Gramaj : 0;
                     knitYarnModel.Density = d.YarnRecipe != null ? d.Density : 0;
-                    d.MapTo(knitYarnModel);
                     knitYarnList.Add(knitYarnModel);
                 });
                 model.KnitYarns = knitYarnList.ToArray();
@@ -675,15 +677,14 @@ namespace HekaMOLD.Business.UseCases
             BusinessResult result = new BusinessResult();
             try
             {
-                if (string.IsNullOrEmpty(model.ItemNo))
-                    throw new Exception("Desen numarası girilmelidir.");
+                //if (string.IsNullOrEmpty(model.ItemNo))
+                //    throw new Exception("Desen numarası girilmelidir.");
                 var repo = _unitOfWork.GetRepository<Item>();
                 var repoKnitYarns = _unitOfWork.GetRepository<KnitYarn>();
 
 
-                if (repo.Any(d => (d.ItemNo == model.ItemNo)
-                    && d.Id != model.Id))
-                    throw new Exception("Aynı numaraya sahip başka bir Desen mevcuttur. Lütfen farklı bir numara giriniz.");
+                if (repo.Any(d => (d.ItemNo == model.ItemNo) && d.Id != model.Id && model.ItemType == (int)ItemType.Product))
+                    throw new Exception("Aynı Desen Numarasına sahip başka bir desen mevcuttur. Lütfen farklı bir numara giriniz.");
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                 {
@@ -691,10 +692,6 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedDate = DateTime.Now;
                     dbObj.CreatedUserId = model.CreatedUserId;
                     repo.Add(dbObj);
-                }
-                if (dbObj.ItemName == null)
-                {
-                    model.ItemName = model.ItemNo;
                 }
                 var crDate = dbObj.CreatedDate;
                 dbObj.ItemType = model.ItemType;
@@ -3805,13 +3802,18 @@ namespace HekaMOLD.Business.UseCases
                 YarnDenier = d.YarnDenier,
                 Factor = d.Factor,
                 Twist = d.Twist,
-                CenterTypeStr =  d.CenterType ==1 ? "Kuvvetli Punta" : d.CenterType ==2 ? "Seyrek Punta":"",
+                CenterTypeStr =  d.CenterType ==1 ? "Kuvvetli Punta" : d.CenterType ==2 ? "Seyrek Punta": d.CenterType ==3 ? "YOK": "",
+                YarnRecipeTypeStr = d.YarnRecipeType == 1 ? "Dokuma" : d.YarnRecipeType == 2 ? "Brode" : "",
                 Mix = d.Mix,
                 YarnLot = d.YarnLot,
                 FirmId=d.Firm != null ? d.Firm.Id:0,
                 FirmName = d.Firm != null ? d.Firm.FirmCode +" / "+ d.Firm.FirmName : "",
                 YarnBreedName = d.YarnBreed != null ? d.YarnBreed.YarnBreedName : "",
                 YarnColourName = d.YarnColour != null ? d.YarnColour.YarnColourCode + " / " + d.YarnColour.YarnColourName : "",
+                CustomerYarnColorExplanation = d.CustomerYarnColorExplanation,
+                TwistDirectionStr = d.TwistDirection == 1 ? "Z" : d.TwistDirection == 2 ? "S" : d.TwistDirection == 3 ? "YOK":"",
+                Explanation = d.Explanation,
+
             }).ToArray();
         }
         public YarnRecipeModel GetYarnRecipe(int id)
@@ -4395,5 +4397,114 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
         #endregion
+
+        #region ITEMQUALITY BUSINESS
+        public ItemQualityTypeModel[] GetKnitQualityTypeList()
+        {
+            List<ItemQualityTypeModel> data = new List<ItemQualityTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemQualityType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ItemQualityTypeModel containerObj = new ItemQualityTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateKnitQualityType(ItemQualityTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.ItemQualityTypeCode))
+                    throw new Exception("Kalite kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.ItemQualityTypeName))
+                    throw new Exception("Kalite adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<ItemQualityType>();
+
+                if (repo.Any(d => (d.ItemQualityTypeCode == model.ItemQualityTypeCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir kayıt mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ItemQualityType();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteKnitQualityType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemQualityType>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
+                var dbObj = repo.Get(d => d.Id == id);
+                var dbItemObj = repoItem.Get(d => d.ItemQualityTypeId == id);
+                if (dbItemObj != null)
+                    throw new Exception("Bu Kumaş kalite grubu kullanıldığı için silinemez ! . Kullanılan Desen : " + dbItemObj.ItemNo + " / " + dbItemObj.ItemName);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ItemQualityTypeModel GetKnitQualityType(int id)
+        {
+            ItemQualityTypeModel model = new ItemQualityTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<ItemQualityType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        #endregion
+
     }
 }

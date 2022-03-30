@@ -215,5 +215,32 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        [HttpGet]
+        public JsonResult GetKnitNo(string strParam)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                using (RequestBO bObj = new RequestBO())
+                {
+                    result = bObj.GetKnitNo(strParam);
+                }
+                var jsonResult = Json(new { Result = !string.IsNullOrEmpty(result.Code), ItemNo = result.Code }, JsonRequestBehavior.AllowGet);
+                jsonResult.MaxJsonLength = int.MaxValue;
+                if (result.Result)
+                    return jsonResult;
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+
+            }
+
+
+        }
     }
 }

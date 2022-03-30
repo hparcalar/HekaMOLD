@@ -70,7 +70,8 @@
             },
             columns: [
                 { dataField: 'ItemNo', caption: 'Desen No' },
-                { dataField: 'TestNo', caption: 'Deneme No' },
+                { dataField: 'ItemName', caption: 'Desen Ad' },
+                { dataField: 'AttemptNo', caption: 'Deneme No' },
                 { dataField: 'QualityTypeName', caption: 'Kalite Türü' },
                 { dataField: 'WeavingDraftCode', caption: 'Tahar Kodu' },
                 { dataField: 'CrudeWidth', caption: 'Ham En' },

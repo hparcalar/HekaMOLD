@@ -27,6 +27,23 @@
     $scope.bulletTypeList = [{ Id: 1, Text: 'Var' },
     { Id: 2, Text: 'Yok' }];
 
+        //GET KNIT NO
+    $scope.getNextKnitNo = function (strCode) {
+        $scope.modelObject.ItemNo = "";
+        $http.get(HOST_URL + 'Knit/GetKnitNo?strParam=' + $scope.selectedQualityType.ItemQualityTypeCode + "-" + $scope.selectedQualityType.Id, {}, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+
+                    if (resp.data.Result) {
+                        $scope.modelObject.ItemNo = resp.data.ItemNo;
+                    }
+                    else {
+                        toastr.error('Sıradaki Desen numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                    }
+
+                }
+            }).catch(function (err) { });
+    }
     //GET TEST NO
     $scope.getNextAttemptNo = function () {
         var prms = new Promise(function (resolve, reject) {
@@ -356,7 +373,6 @@
                     }
                     else
                         $scope.selectedDyeHouse = {};
-
                     $scope.bindWarpYarnList();
                     $scope.bindWeftYarnList();
                 }
@@ -366,7 +382,10 @@
         $('#weftYarnList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $scope.modelObject.KnitYarns.filter(word => word.YarnType == 2);;
+                    if ($scope.modelObject.KnitYarns != null)
+                        return $scope.modelObject.KnitYarns.filter(word => word.YarnType == 2);
+                    else
+                        return $scope.modelObject.KnitYarns;
                 },
                 update: function (key, values) {
                     var obj = $scope.modelObject.KnitYarns.find(d => d.Id == key);
@@ -485,7 +504,10 @@
         $('#warpYarnList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $scope.modelObject.KnitYarns.filter(word => word.YarnType == 1);
+                    if ($scope.modelObject.KnitYarns != null)
+                        return $scope.modelObject.KnitYarns.filter(word => word.YarnType == 1);
+                    else
+                        return $scope.modelObject.KnitYarns;
                 },
                 update: function (key, values) {
                     var obj = $scope.modelObject.KnitYarns.find(d => d.Id == key);
@@ -660,70 +682,10 @@
             $scope.getNextAttemptNo().then(function (rNo) {
                 $scope.modelObject.AttemptNo = rNo;
                 $scope.$apply();
+
+                $scope.bindWarpYarnList();
+                $scope.bindWeftYarnList();
             });
-            $scope.bindModel(0);
-        }
-    });
-});
-app.controller('variantCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id: 0, KnitYarns: [] };
-    $scope.saveStatus = 0;
-
-    $scope.yarnRecipeList = [];
-    $scope.firmList = [];
-
-    $scope.selectedWeavingDraft = {};
-    $scope.weavingDraftList = [];
-
-    $scope.selectedQualityType = {};
-    $scope.qualityTypeList = [];
-    $scope.itemVariantList = [];
-
-    $scope.selectedDyeHouse = {};
-    $scope.dyeHouseList = [{ Id: 1, Text: 'FR - FİKSE' }];
-
-    $scope.selectedCutType = {};
-    $scope.cutTypeList = [{ Id: 1, Text: 'Var' },
-    { Id: 2, Text: 'Yok' }];
-
-    $scope.selectedApparelType = {};
-    $scope.apparelTypeList = [{ Id: 1, Text: 'Var' },
-    { Id: 2, Text: 'Yok' }];
-
-    $scope.selectedBulletType = {};
-    $scope.bulletTypeList = [{ Id: 1, Text: 'Var' },
-    { Id: 2, Text: 'Yok' }];
-    // GET SELECTABLE DATA
-    $scope.loadSelectables = function () {
-        var prmReq = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'Knit/GetSelectables', {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-
-                        $scope.qualityTypeList = resp.data.QualityType;
-                        $scope.weavingDraftList = resp.data.WeavingDrafts;
-                        $scope.yarnRecipeList = resp.data.YarnRecipes;
-                        $scope.firmList = resp.data.Firms;
-                        $scope.itemVariantList = resp.data.ItemVariants;
-                        console.log($scope.itemVariantList);
-                        resolve(resp.data);
-                    }
-                }).catch(function (err) { });
-        });
-
-        return prmReq;
-    }
-    // ON LOAD EVENTS
-    DevExpress.localization.locale('tr');
-    $scope.loadSelectables().then(function (data) {
-        if (PRM_ID > 0)
-            $scope.bindModel(PRM_ID);
-        else {
-            $scope.getNextAttemptNo().then(function (rNo) {
-                $scope.modelObject.AttemptNo = rNo;
-                $scope.$apply();
-            });
-            $scope.bindModel(0);
         }
     });
 });

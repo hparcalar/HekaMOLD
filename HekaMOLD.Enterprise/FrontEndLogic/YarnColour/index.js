@@ -30,11 +30,11 @@
     }
 
     $scope.performDelete = function () {
-        bootbox.conyarnRecipe({
+        bootbox.confirm({
             message: "Bu iplik tanımını silmek istediğinizden emin misiniz?",
             closeButton: false,
             buttons: {
-                conyarnRecipe: {
+                confirm: {
                     label: 'Evet',
                     className: 'btn-primary'
                 },

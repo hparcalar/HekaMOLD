@@ -14,13 +14,18 @@
     $scope.selectedYarnColour = {};
     $scope.selectedCenterType = {};
     $scope.selectedForexType = {};
+    $scope.selectedYarnRecipeType = {};
 
     $scope.centerTypeList = [{ Id: 1, Text: 'Kuvvetli Punta' },
-        { Id: 2, Text: 'Seyrek Punta' }, { Id: 3, Text: 'Yok' }];
+        { Id: 2, Text: 'Seyrek Punta' }, { Id: 3, Text: 'YOK' }];
 
     $scope.selectedTwistDirection = {};
     $scope.twistDirectionList = [{ Id: 1, Text: 'Z' },
-        { Id: 2, Text: 'S' },{ Id: 3, Text: 'Yok' }];
+        { Id: 2, Text: 'S' }, { Id: 3, Text: 'YOK' }];
+
+    $scope.yarnRecipeTypeList = [{ Id: 1, Text: 'Dokuma' },
+        { Id: 2, Text: 'Brode' }];
+
 
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0, YarnRecipeMixes: [] };
@@ -29,6 +34,7 @@
         $scope.selectedCenterType = {};
         $scope.selectedYarnColour = {};
         $scope.selectedTwistDirection = {};
+        $scope.selectedYarnRecipeType = {};
     }
 
     // GET SELECTABLE DATA
@@ -148,6 +154,13 @@
         }
         else
             $scope.modelObject.TwistDirection = null;
+
+        if (typeof $scope.selectedYarnRecipeType != 'undefined' && $scope.selectedYarnRecipeType != null) {
+            $scope.modelObject.YarnRecipeType = $scope.selectedYarnRecipeType.Id;
+        }
+        else
+            $scope.modelObject.YarnRecipeType = null;
+
         $http.post(HOST_URL + 'YarnRecipe/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -240,6 +253,12 @@
 
                     else 
                         $scope.selectedTwistDirection = {};
+
+                    if ($scope.modelObject.YarnRecipeType > 0)
+                        $scope.selectedYarnRecipeType = $scope.yarnRecipeTypeList.find(d => d.Id == $scope.modelObject.YarnRecipeType);
+
+                    else
+                        $scope.selectedYarnRecipeType = {};
    
                     $scope.bindMixList();
                 }

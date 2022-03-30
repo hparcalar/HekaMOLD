@@ -208,7 +208,7 @@
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Cins</label>
                             <div class="mb-3">
                                 <select ng-options="item.YarnBreedName for item in yarnBreedList"
-                                        ng-model="selectedYarnBreed" class="form-select form-select-solid">
+                                        ng-model="selectedYarnBreed" data-control="select2" data-allow-clear="true"  class="form-select form-select-solid">
                                 </select>
                             </div>
 
@@ -216,14 +216,21 @@
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Büküm Tipi</label>
                             <div class="mb-3">
                                 <select ng-options="item.Text for item in twistDirectionList"
-                                        ng-model="selectedTwistDirection" class="form-select form-select-solid">
+                                        ng-model="selectedTwistDirection" data-control="select2" data-allow-clear="true" class="form-select form-select-solid">
                                 </select>
                             </div>
                             <!--begin::Input group-->
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Punta</label>
                             <div class="mb-3">
-                                <select ng-options="item.Text for item in centerTypeList"
+                                <select data-allow-clear="true" data-control="select2" ng-options="item.Text for item in centerTypeList"
                                         ng-model="selectedCenterType" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                </select>
+                            </div>
+                            <!--begin::Input group-->
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İplik Tipi</label>
+                            <div class="mb-3">
+                                <select data-allow-clear="true" data-control="select2"  ng-options="item.Text for item in yarnRecipeTypeList"
+                                        ng-model="selectedYarnRecipeType" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
                                 </select>
                             </div>
                         </div>
@@ -249,7 +256,7 @@
                             </div>
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Tedarikçi Renk</label>
                             <div class="mb-3">
-                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.CustomerYarnColorExplanation" placeholder="" />
+                                <input type="text"  class="form-control form-control-solid"  ng-model="modelObject.CustomerYarnColorExplanation" placeholder="" />
                             </div>
                             <!--<div class="row">
                             <div class="col-xxl-6">-->
