@@ -1741,6 +1741,9 @@ namespace HekaMOLD.Business.UseCases
                 var openItemOrders = repoItemOrderDetail
                     .Filter(d => 
                         d.ItemOrder.OrderType == (int)ItemOrderType.Sale &&
+                        d.OrderStatus != (int)OrderStatusType.Completed &&
+                        d.OrderStatus != (int)OrderStatusType.Cancelled &&
+                        d.OrderStatus != (int)OrderStatusType.Delivered &&
                         (d.OrderStatus == (int)OrderStatusType.Created
                         || d.OrderStatus == (int)OrderStatusType.Approved
                         || d.OrderStatus == (int)OrderStatusType.Planned))

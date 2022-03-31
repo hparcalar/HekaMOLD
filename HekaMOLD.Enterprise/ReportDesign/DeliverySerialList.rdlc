@@ -75,7 +75,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Paket Tipi</Value>
+                              <Value>Koli Ölçüsü</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
@@ -250,7 +250,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Ölçümler (m3)</Value>
+                              <Value>Koli Adedi</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
@@ -320,7 +320,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>=Fields!PackageSize.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -470,7 +470,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>=Fields!PackageCount.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -1510,6 +1510,14 @@
         <Field Name="GrossWeight">
           <DataField>GrossWeight</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="PackageCount">
+          <DataField>PackageCount</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="PackageSize">
+          <DataField>PackageSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>

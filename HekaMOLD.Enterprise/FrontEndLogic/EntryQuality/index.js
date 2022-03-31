@@ -165,7 +165,7 @@
                     dataField: 'CheckType', caption: 'Seçim Türü',
                     allowSorting: false,
                     lookup: {
-                        dataSource: [{ Id: 1, Text: 'Check' }, { Id: 2, Text: 'Sayısal' }],
+                        dataSource: [{ Id: 1, Text: 'Check' }, { Id: 2, Text: 'Sayısal' }, { Id:3, Text:'Metin' }],
                         valueExpr: "Id",
                         displayExpr: "Text"
                     }

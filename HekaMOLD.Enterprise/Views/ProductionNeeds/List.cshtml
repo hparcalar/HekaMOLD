@@ -15,6 +15,15 @@
                     @ViewBag.Title
                 </h1>
                 <!--end::Title-->
+                <!-- Progress enabled state -->
+                <button type="button" class="btn btn-sm btn-dark mx-2" ng-show="saveStatus==1" data-kt-indicator="on">
+                    <span class="indicator-label">
+                        
+                    </span>
+                    <span class="indicator-progress">
+                        Hesaplanıyor, lütfen bekleyiniz... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
             </div>
             <!--end::Page title-->
             <!--begin::Actions-->
@@ -67,5 +76,5 @@
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-    <script src="~/FrontEndLogic/ProductionNeeds/list.js"></script>
+    <script src="~/FrontEndLogic/ProductionNeeds/list.js?v=2"></script>
 }

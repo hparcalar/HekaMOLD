@@ -55,9 +55,14 @@
         //    }).catch(function (err) { });
     }
 
+    $scope.runningBarcodeRead = false;
     $scope.onBarcodeKeyUp = function (e) {
+        if ($scope.runningBarcodeRead)
+            return;
+        
         try {
             if ($scope.barcodeBox.length == 8) {
+                $scope.runningBarcodeRead = true;
                 $scope.getSerialByBarcode($scope.barcodeBox);
             }
         } catch (e) {
@@ -78,6 +83,7 @@
         if ($scope.pickupList.some(m => m.SerialNo == barcode)) {
             toastr.warning('Okutulan koli zaten çeki listesine eklenmiş.');
             $scope.barcodeBox = '';
+            $scope.runningBarcodeRead = false;
             return;
         }
 
@@ -97,13 +103,17 @@
 
                             }
                         }
-                        else
+                        else {
                             toastr.error('Okutulan barkoda ait bir koli bulunamadı.');
+                        }
 
+                        $scope.runningBarcodeRead = false;
                         $scope.barcodeBox = '';
                     });
                 }
-            }).catch(function (err) { });
+            }).catch(function (err) {
+                $scope.runningBarcodeRead = false;
+            });
     }
 
     $scope.removeFromPickup = function (item) {
@@ -113,6 +123,12 @@
                 $scope.pickupList.splice(indexOfItem, 1);
 
                 $scope.updateSummaryList();
+
+                try {
+                    localStorage.setItem('readings', JSON.stringify($scope.pickupList));
+                } catch (e) {
+
+                }
             })
         } catch (e) {
 

@@ -1,6 +1,8 @@
 ﻿app.controller('productionNeedsCtrl', function sidebarCtrl($scope, $http) {
     DevExpress.localization.locale('tr');
 
+    $scope.saveStatus = 0;
+
     // LIST FUNCTIONS
     $scope.loadReport = function () {
         $('#dataList').dxDataGrid({
@@ -47,7 +49,7 @@
                     var dataGrid = $("#dataList").dxDataGrid("instance");
                     if (dataGrid != null) {
                         cFilter = dataGrid.getCombinedFilter(true);
-                        console.log(cFilter);
+                        
                     }
                 } catch (e) {
 
@@ -163,7 +165,9 @@
                                 else
                                     toastr.error(resp.data.ErrorMessage, 'Hata');
                             }
-                        }).catch(function (err) { });
+                        }).catch(function (err) {
+                            $scope.saveStatus = 0;
+                        });
                 }
             }
         });

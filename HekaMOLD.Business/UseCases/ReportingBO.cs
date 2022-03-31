@@ -33,6 +33,9 @@ namespace HekaMOLD.Business.UseCases
                 if (reportType == ReportType.DeliverySerialList)
                 {
                     var repo = _unitOfWork.GetRepository<ItemReceipt>();
+                    var repoItem = _unitOfWork.GetRepository<Item>();
+                    var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+
                     var dbObj = repo.Get(d => d.Id == objectId);
                     if (dbObj == null)
                         throw new Exception("İrsaliye kaydı bulunamadi.");
@@ -41,6 +44,18 @@ namespace HekaMOLD.Business.UseCases
 
                     foreach (var item in dbObj.ItemReceiptDetail)
                     {
+                        string packSize = "";
+                        var dbItem = repoItem.Get(d => d.Id == item.ItemId);
+                        if (dbItem != null)
+                        {
+                            var dbMoldTest = repoMoldTest.Filter(d => d.ProductCode == dbItem.ItemNo)
+                                .OrderByDescending(d => d.TestDate).FirstOrDefault();
+                            if (dbMoldTest != null)
+                            {
+                                packSize = dbMoldTest.PackageDimension;
+                            }
+                        }
+
                         data.Add(new DeliverySerialListModel
                         {
                             ProductCode = item.Item.ItemNo,
@@ -49,6 +64,8 @@ namespace HekaMOLD.Business.UseCases
                             ReceiptDate = string.Format("{0:dd.MM.yyyy}", dbObj.ReceiptDate),
                             ReceiverText = dbObj.Firm != null ? dbObj.Firm.FirmName + "\r\n" +
                                 dbObj.Firm.Address : "",
+                            PackageCount = item.ItemSerial.Count(),
+                            PackageSize = packSize,
                         });
                     }
 
