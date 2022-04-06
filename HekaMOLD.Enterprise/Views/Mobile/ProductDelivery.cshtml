@@ -154,7 +154,13 @@
                         <table ng-cloak class="table table-bordered table-striped table-hk-md">
                             <tbody>
                                 <tr ng-repeat="item in summaryList">
-                                    <td class="w-50 px-2">{{item.ItemName}}</td>
+                                    <td class="w-50 px-2">
+                                        {{item.ItemName}}
+                                        <img ng-if="item.PartVisualStr != null && item.PartVisualStr.length > 0"
+                                             class="mx-auto"
+                                             src="{{ 'data:image/png;base64,' + item.PartVisualStr }}"
+                                             height="40" />
+                                    </td>
                                     <td class="w-25 px-2">{{item.SerialCount}}</td>
                                     <td class="w-25 px-2">{{item.SerialSum}}</td>
                                 </tr>

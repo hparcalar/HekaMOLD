@@ -71,6 +71,10 @@ namespace Heka.DataAccess.Context
         public string LabelConfig { get; set; }
 
 
+        [ForeignKey("ItemOrderSheet")]
+        public Nullable<int> ItemOrderSheetId { get; set; }
+
+
         [InverseProperty("WorkOrderDetail")]
         public virtual ICollection<ActualRouteHistory> ActualRouteHistory { get; set; }
 
@@ -79,6 +83,7 @@ namespace Heka.DataAccess.Context
         public virtual Dye Dye { get; set; }
         public virtual Item Item { get; set; }
         public virtual ItemOrderDetail ItemOrderDetail { get; set; }
+        public virtual ItemOrderSheet ItemOrderSheet { get; set; }
 
         [InverseProperty("WorkOrderDetail")]
         public virtual ICollection<ItemSerial> ItemSerial { get; set; }

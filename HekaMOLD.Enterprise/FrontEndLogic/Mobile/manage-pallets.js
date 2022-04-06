@@ -22,6 +22,30 @@
             }).catch(function (err) { });
     }
 
+    $scope.deleteBox = function (item) {
+        if (confirm('Bu koliyi silmek istediğinizden emin misiniz?')) {
+            try {
+                $http.post(HOST_URL + 'Mobile/DeleteBox', {
+                    id: item.Id
+                }, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                            if (resp.data.Result == true) {
+                                toastr.success('Silme işlemi başarılı.', 'Bilgilendirme');
+                                $scope.bindModel();
+                            }
+                            else
+                                toastr.error('Hata: ' + resp.data.ErrorMessage, 'Uyarı');
+                        }
+                    }).catch(function (err) {
+                        
+                    });
+            } catch (e) {
+
+            }
+        }
+    }
+
     $scope.getListSum = function (list, key) {
         if (list != null && list.length > 0)
             return getSumOf(list, key);

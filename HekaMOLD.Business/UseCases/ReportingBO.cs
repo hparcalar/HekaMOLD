@@ -391,98 +391,50 @@ namespace HekaMOLD.Business.UseCases
                 dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
-                var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
                 var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
                 var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
 
-                if (repoSignal.Any(d => d.ShiftBelongsToDate >= dtStart && d.ShiftBelongsToDate <= dtEnd
-                    && d.SignalStatus == 1))
-                {
-                    var dataList = repoSignal.Filter(d => d.ShiftBelongsToDate >= dtStart && d.ShiftBelongsToDate <= dtEnd
-                    && d.WorkOrderDetail != null
-                    && d.SignalStatus == 1)
+                var dataList = repoSerial.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd
+                    && 
+                        (d.SerialStatus == (int)SerialStatusType.Approved || d.SerialStatus == (int)SerialStatusType.Placed))
                     .GroupBy(d => new
                     {
+                        Item = d.Item,
                         WorkOrderDetail = d.WorkOrderDetail,
-                        WorkDate = DbFunctions.TruncateTime(d.ShiftBelongsToDate),
-                        Machine = d.Machine,
+                        WorkDate = DbFunctions.TruncateTime(d.CreatedDate),
                         Shift = d.Shift,
                     })
                     .Select(d => new ProductionHistoryModel
                     {
+                        ItemOrderDetailId = d.Key.WorkOrderDetail.ItemOrderSheet.ItemOrder.ItemOrderDetail.Where(m => m.ItemId == d.Key.Item.Id).
+                            Select(m => (int?)m.Id).FirstOrDefault() ?? 0,
                         WorkDate = d.Key.WorkDate,
                         //WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.Key.WorkDate),
-                        WorkOrderDetailId = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.Id : 0,
-                        MachineId =  d.Key.Machine.Id,
-                        MachineCode = d.Key.Machine.MachineCode,
-                        MachineName = d.Key.Machine.MachineName,
-                        OrderQuantity = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ItemOrderDetail.Quantity ?? 0 : 0,
-                        CompleteQuantity = d.Count() -
-                            (d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ProductWastage
-                            .Where(m => m.ShiftBelongsToDate >= dtStart && m.ShiftBelongsToDate <= dtEnd && m.ShiftId == d.Key.Shift.Id)
-                            .Sum(m => m.Quantity) ?? 0 : 0),
-                        ProductId = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ItemId : 0,
-                        ProductCode = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.Item.ItemNo : "",
-                        ProductName = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.Item.ItemName : "",
-                        SaleOrderNo = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ItemOrderDetail.ItemOrder.DocumentNo : "",
+                        WorkOrderDetailId = d.Key.WorkOrderDetail.Id,
+                        MachineId = d.Key.WorkOrderDetail.MachineId,
+                        MachineCode = d.Key.WorkOrderDetail.Machine.MachineCode,
+                        MachineName = d.Key.WorkOrderDetail.Machine.MachineName,
+                        OrderQuantity = d.Key.WorkOrderDetail.ItemOrderSheet.ItemOrder.ItemOrderDetail.Where(m => m.ItemId == d.Key.Item.Id).
+                            Select(m => m.Quantity).FirstOrDefault() ?? 0,
+                        CompleteQuantity = d.Where(m => m.ItemId == d.Key.Item.Id).Sum(m => m.FirstQuantity) ?? 0,
+                        ProductId = d.Key.Item.Id,
+                        ProductCode = d.Key.Item.ItemNo,
+                        ProductName = d.Key.Item.ItemName,
+                        SaleOrderNo = d.Key.WorkOrderDetail.ItemOrderSheet.ItemOrder.OrderNo,
                         SerialCount = d.Count(),
                         ShiftId = d.Key.Shift.Id,
                         ShiftCode = d.Key.Shift.ShiftCode,
                         ShiftName = d.Key.Shift.ShiftName,
-                        WastageQuantity = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ProductWastage
-                            .Where(m => m.ShiftBelongsToDate >= dtStart && m.ShiftBelongsToDate <= dtEnd && m.ShiftId == d.Key.Shift.Id)
-                            .Sum(m => m.Quantity) ?? 0 : 0,
-                        WorkQuantity = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.Quantity : 0,
+                        WastageQuantity = d.Key.WorkOrderDetail.ProductWastage
+                            .Where(m => DbFunctions.TruncateTime(m.EntryDate) == d.Key.WorkDate)
+                            .Sum(m => m.Quantity) ?? 0,
                     }).ToList();
-                    dataList.ForEach(d =>
-                    {
-                        if (d.CompleteQuantity < 0)
-                            d.CompleteQuantity = 0;
-                        d.WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkDate);
-                    });
-
-                    data = dataList.ToArray();
-                }
-                else
+                dataList.ForEach(d =>
                 {
-                    var dataList = repoSerial.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd
-                   && d.SerialStatus == (int)SerialStatusType.Approved)
-                   .GroupBy(d => new
-                   {
-                       WorkOrderDetail = d.WorkOrderDetail,
-                       WorkDate = DbFunctions.TruncateTime(d.CreatedDate),
-                       Shift = d.Shift,
-                   })
-                   .Select(d => new ProductionHistoryModel
-                   {
-                       WorkDate = d.Key.WorkDate,
-                        //WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.Key.WorkDate),
-                        WorkOrderDetailId = d.Key.WorkOrderDetail.Id,
-                       MachineId = d.Key.WorkOrderDetail.MachineId,
-                       MachineCode = d.Key.WorkOrderDetail.Machine.MachineCode,
-                       MachineName = d.Key.WorkOrderDetail.Machine.MachineName,
-                       OrderQuantity = d.Key.WorkOrderDetail.ItemOrderDetail.Quantity ?? 0,
-                       CompleteQuantity = d.Sum(m => m.FirstQuantity) ?? 0,
-                       ProductId = d.Key.WorkOrderDetail.ItemId,
-                       ProductCode = d.Key.WorkOrderDetail.Item.ItemNo,
-                       ProductName = d.Key.WorkOrderDetail.Item.ItemName,
-                       SaleOrderNo = d.Key.WorkOrderDetail.ItemOrderDetail.ItemOrder.DocumentNo,
-                       SerialCount = d.Count(),
-                       ShiftId = d.Key.Shift.Id,
-                       ShiftCode = d.Key.Shift.ShiftCode,
-                       ShiftName = d.Key.Shift.ShiftName,
-                       WastageQuantity = d.Key.WorkOrderDetail.ProductWastage
-                           .Where(m => DbFunctions.TruncateTime(m.EntryDate) == d.Key.WorkDate)
-                           .Sum(m => m.Quantity) ?? 0,
-                       WorkQuantity = d.Key.WorkOrderDetail.Quantity,
-                   }).ToList();
-                    dataList.ForEach(d =>
-                    {
-                        d.WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkDate);
-                    });
+                    d.WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkDate);
+                });
 
-                    data = dataList.ToArray();
-                }
+                data = dataList.ToArray();
             }
             catch (Exception ex)
             {

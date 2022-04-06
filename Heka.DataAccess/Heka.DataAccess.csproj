@@ -116,10 +116,14 @@
     <Compile Include="Context\Models\ItemOffer.cs" />
     <Compile Include="Context\Models\ItemOfferDetail.cs" />
     <Compile Include="Context\Models\ItemOfferDetailRoutePricing.cs" />
+    <Compile Include="Context\Models\ItemOfferSheet.cs" />
+    <Compile Include="Context\Models\ItemOfferSheetUsage.cs" />
     <Compile Include="Context\Models\ItemOrder.cs" />
     <Compile Include="Context\Models\ItemOrderConsume.cs" />
     <Compile Include="Context\Models\ItemOrderDetail.cs" />
     <Compile Include="Context\Models\ItemOrderItemNeeds.cs" />
+    <Compile Include="Context\Models\ItemOrderSheet.cs" />
+    <Compile Include="Context\Models\ItemOrderSheetUsage.cs" />
     <Compile Include="Context\Models\ItemPrice.cs" />
     <Compile Include="Context\Models\ItemReceipt.cs" />
     <Compile Include="Context\Models\ItemReceiptConsume.cs" />
@@ -291,6 +295,26 @@
     <Compile Include="Migrations\202202111518428_OfferDetail_Tickness.designer.cs">
       <DependentUpon>202202111518428_OfferDetail_Tickness.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204030907431_OfferSheets.cs" />
+    <Compile Include="Migrations\202204030907431_OfferSheets.designer.cs">
+      <DependentUpon>202204030907431_OfferSheets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204030926047_SheetFix.cs" />
+    <Compile Include="Migrations\202204030926047_SheetFix.designer.cs">
+      <DependentUpon>202204030926047_SheetFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204031043247_SheetMultipleUsagesByParts.cs" />
+    <Compile Include="Migrations\202204031043247_SheetMultipleUsagesByParts.designer.cs">
+      <DependentUpon>202204031043247_SheetMultipleUsagesByParts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204031131562_SheetMultipleUsagesBySaleOrders.cs" />
+    <Compile Include="Migrations\202204031131562_SheetMultipleUsagesBySaleOrders.designer.cs">
+      <DependentUpon>202204031131562_SheetMultipleUsagesBySaleOrders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204031333291_WorkOrderSheets.cs" />
+    <Compile Include="Migrations\202204031333291_WorkOrderSheets.designer.cs">
+      <DependentUpon>202204031333291_WorkOrderSheets.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -379,6 +403,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202202111518428_OfferDetail_Tickness.resx">
       <DependentUpon>202202111518428_OfferDetail_Tickness.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204030907431_OfferSheets.resx">
+      <DependentUpon>202204030907431_OfferSheets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204030926047_SheetFix.resx">
+      <DependentUpon>202204030926047_SheetFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204031043247_SheetMultipleUsagesByParts.resx">
+      <DependentUpon>202204031043247_SheetMultipleUsagesByParts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204031131562_SheetMultipleUsagesBySaleOrders.resx">
+      <DependentUpon>202204031131562_SheetMultipleUsagesBySaleOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204031333291_WorkOrderSheets.resx">
+      <DependentUpon>202204031333291_WorkOrderSheets.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

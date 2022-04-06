@@ -258,64 +258,7 @@
                         </div>
                     </div>
                 </div>
-
-                @* PRODUCTION SUMMARY PANEL *@
-            <div class="flex-fill mx-2 p-0" ng-cloak ng-if="modelObject.IsProdChief == false && modelObject.MachineId > 0">
-                <div class="rounded-1 py-0 my-0 bg-light-dark" ng-cloak>
-                    <div class="m-2 my-0 py-0 border-1 rounded-1">
-                        <div class="d-flex flex-row justify-content-between pt-2 my-1">
-                            <button type="button" class="btn mx-2 btn-sm btn-warning flex-fill fs-4">
-                                Arızalar
-                                <span ng-if="modelObject.Stats.MachineStats.IncidentCount > 0"
-                                      class="badge badge-light-warning">{{ modelObject.Stats.MachineStats.IncidentCount }}</span>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-danger flex-fill fs-4">
-                                Duruşlar
-                                <span ng-if="modelObject.Stats.MachineStats.PostureCount > 0"
-                                      class="badge badge-light-danger">{{ modelObject.Stats.MachineStats.PostureCount }}</span>
-                            </button>
-                        </div>
-                        <h5 ng-if="modelObject.Stats.IsInPosture || modelObject.Stats.IsInIncident"
-                            class="text-center bg-danger text-light mt-1 rounded px-2 py-2 border-1 border-dark">
-                            {{modelObject.Stats.IsInPosture ? 'DURUŞ: ' + modelObject.Stats.ActivePostureText : 'BAKIM: ' + modelObject.Stats.ActiveIncidentText}}
-                        </h5>
-                        <div class="active-plan text-center py-0 min-h-55px">
-                            <p class="py-0 my-0 ellipsis-text fs-4" ng-show="modelObject.Stats.ActivePlan.Id > 0">
-                                <b>Firma:</b> {{modelObject.Stats.ActivePlan.WorkOrder.FirmName}}
-                            </p>
-                            <p class="py-0 my-0 ellipsis-text fs-4" ng-show="modelObject.Stats.ActivePlan.Id > 0"
-                               data-toggle="tooltip" title="{{modelObject.Stats.ActivePlan.WorkOrder.ProductName}}">
-                                <b>Ürün:</b> {{modelObject.Stats.ActivePlan.WorkOrder.ProductName}}
-                            </p>
-                            <p class="py-0 my-0 ellipsis-text fs-4" ng-show="modelObject.Stats.ActivePlan.Id > 0">
-                                <span class="badge badge-primary fs-4">Üretilen:</span> <b>{{getFixed(modelObject.Stats.ActivePlan.WorkOrder.CompleteQuantity,0)}}</b>
-                                <span class="badge badge-success fs-4">Sipariş:</span>
-                                <b>{{modelObject.Stats.ActivePlan.WorkOrder.Quantity}}</b>
-                            </p>
-                        </div>
-                        <div class="general-avg text-center py-0">
-                            <div class="d-flex flex-row">
-                                <div class="py-0 my-1 flex-grow-1" ng-repeat="shift in modelObject.Stats.MachineStats.ShiftStats">
-                                    <hr class="my-1" />
-                                    <h6 class="text-decoration-underline my-1 fs-5">{{ shift.ShiftCode }} Vardiyası</h6>
-                                    <p class="py-0 my-1 fs-5">Ort Çevrim: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
-                                    <p class="py-0 my-1 fs-5"><span class="badge badge-primary fs-5">Üretim:</span> <b>{{ shift.AvgProductionCount }} adet</b></p>
-                                    <p class="py-0 my-1 fs-5" ng-class="{'bg-danger': shift.WastageCount > 0}"><span class="badge badge-danger fs-5">Fire:</span> <b>{{ shift.WastageCount }} adet</b></p>
-                                </div>
-                            </div>
-                            <hr class="my-1" />
-                            <h6 class="text-decoration-underline my-1 fs-5">
-                                Genel Ortalama
-                            </h6>
-                            <p class="py-0 my-1 fs-5">Ort Çevrim: <b>{{getFixed(modelObject.Stats.MachineStats.AvgInflationTime,2)}}</b> sn</p>
-                            <p class="py-0 my-1 fs-5"><span class="badge badge-primary fs-5">Üretim:</span> <b>{{modelObject.Stats.MachineStats.AvgProductionCount}}</b> adet</p>
-                            <p class="py-0 my-1 fs-5" ng-class="{'bg-danger': modelObject.Stats.MachineStats.WastageCount > 0}">
-                                <span class="badge badge-danger fs-5">Fire:</span> <b>{{modelObject.Stats.MachineStats.WastageCount}}</b> adet
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
             </div>
 
         </div>
@@ -423,7 +366,7 @@
             }
 
             // ON LOAD EVENTS
-            $scope.loadStats();
+            /*$scope.loadStats();*/
         });
     </script>
 }

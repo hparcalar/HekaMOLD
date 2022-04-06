@@ -9,7 +9,7 @@
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
             <div class="row gy-5 mt-0 gx-xl-8 bg-white">
-                <div class="col-sm-6 col-xs-6 col-xxl-6">
+                <div class="col-sm-8 col-xs-8 col-xxl-8">
                     <a class="btn btn-sm btn-block w-100 mt-1 btn-primary" ng-click="readBarcode()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -23,7 +23,7 @@
                     </a>
                 </div>
 
-                <div class="col-sm-6 col-xs-6 col-xxl-6">
+                <div class="col-sm-4 col-xs-4 col-xxl-4">
                     <a class="btn btn-sm btn-block w-100 mt-1 btn-success" ng-click="createPallet()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -42,7 +42,7 @@
             <!--begin::DETAIL TABLE-->
             <div class="row gy-5 mt-4 gx-xl-8 bg-white">
                 @* KOLİ TABLOSU *@
-                <div class="col-xxl-6 col-sm-6">
+                <div class="col-xxl-8 col-sm-8">
                     <h5 class="hk-title-mobile">Koli Listesi</h5>
                     <table class="table table-bordered table-hk-md">
                         <thead>
@@ -74,7 +74,11 @@
                                     <td class="w-10 px-2">
                                         <button type="button" ng-click="addToPallet(item)"
                                                 class="btn btn-sm btn-primary">
-                                            Palete Ekle
+                                            Ekle
+                                        </button>
+                                        <button type="button" ng-click="deleteBox(item)"
+                                                class="btn btn-sm btn-danger">
+                                            Sil
                                         </button>
                                     </td>
                                 </tr>
@@ -84,7 +88,7 @@
                 </div>
 
                 @* PALET TABLOSU *@
-                <div class="col-xxl-6 col-sm-6">
+                <div class="col-xxl-4 col-sm-4">
                     <h5 class="hk-title-mobile">Palet Listesi</h5>
                     <table class="table table-bordered table-hk-md">
                         <thead>

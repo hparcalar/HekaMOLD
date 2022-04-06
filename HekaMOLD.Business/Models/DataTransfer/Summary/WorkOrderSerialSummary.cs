@@ -15,5 +15,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Summary
         public int? ShiftId { get; set; }
         public string ShiftCode { get; set; }
         public string ShiftName { get; set; }
+        public string PartVisualStr { get; set; }
     }
 }

@@ -31,9 +31,9 @@
             <!--end::Page title-->
             <!--begin::Actions-->
             <div class="d-flex align-items-center py-1">
-                <button class="btn btn-sm btn-success mx-2" ng-click="showTrialForm()">
+                @*<button class="btn btn-sm btn-success mx-2" ng-click="showTrialForm()">
                     Deneme Üretimi Oluştur
-                </button>
+                </button>*@
 
                 <a class="btn btn-sm btn-primary" href="@Url.Action("PrintTemplate", "Planning")">
                     Planlama Çizelgesi
@@ -79,9 +79,9 @@
                                              ng-dblclick="showProductInfo(plan.Id)"
                                              data-plan-id="{{plan.Id}}"
                                              ng-click="selectPlan(plan)"
-                                             ng-class="{'plan-box-cancelled': plan.WorkOrderStatus == 6,
-                                                'plan-box-completed': plan.WorkOrderStatus == 4,
-                                                'plan-box-progress': plan.WorkOrderStatus == 3,
+                                             ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6,
+                                                'plan-box-completed': plan.WorkOrder.WorkOrderStatus == 4,
+                                                'plan-box-progress': plan.WorkOrder.WorkOrderStatus == 3,
                                                 'plan-selected': plan.Id == selectedPlan.Id}"
                                              ng-repeat="plan in getMachinePlans(machine, true)">
                                             <button class="btn btn-primary btn-sm btn-plan-details px-1 py-1"
@@ -89,8 +89,41 @@
                                                 <i class="fas fa-edit"></i>
                                             </button>
 
+                                            <p ng-cloak ng-bind="plan.WorkOrder.WorkOrderDateStr">&nbsp;</p>
+                                            <p><span ng-cloak class="plan-firm-name fw-bolder" ng-bind="plan.WorkOrder.FirmName"></span>&nbsp;</p>
+                                            <p>
+                                                <span ng-cloak class="plan-firm-name bg-dark rounded-1 text-white p-2 fw-bolder" 
+                                                      style="max-width:none;"
+                                                      ng-bind="'Sipariş: ' + plan.WorkOrder.ItemOrderDocumentNo"></span>
+
+                                                <span ng-cloak class="plan-firm-name bg-primary rounded-1 text-white p-2 fw-bolder"
+                                                      style="max-width:none;"
+                                                      ng-bind="'Levha No: ' + plan.WorkOrder.ProductCode"></span>
+                                            
+                                            &nbsp;</p>
+                                            @*<p><b ng-cloak ng-bind="'Levha No: ' + plan.WorkOrder.ProductCode"></b>&nbsp;</p>*@
+                                            <p ng-cloak ng-bind="'Miktar: ' + plan.WorkOrder.Quantity"></p>
+                                            <p ng-cloak ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,
+                                               'label-wastage-count': plan.WorkOrder.WastageQuantity == 0}" ng-bind="'Fire: ' + plan.WorkOrder.WastageQuantity"></p>
+                                        </div>
+
+                                        @* GET COMPLETED PLANS OF MACHINE *@
+                                        @*<div class="plan-box" draggable="true"
+                                             data-plan-id="{{plan.Id}}"
+                                             ng-cloak
+                                             ng-click="selectPlan(plan)"
+                                             ng-class="{'plan-box-cancelled': plan.WorkOrderStatus == 6,
+                                                        'plan-box-completed': plan.WorkOrderStatus == 4,
+                                                        'plan-box-progress': plan.WorkOrderStatus == 3,
+                                                        'plan-selected': plan.Id == selectedPlan.Id}"
+                                             ng-repeat="plan in getMachinePlans(machine, false)">
+                                            <button class="btn btn-primary btn-sm btn-plan-details px-1 py-1"
+                                                    ng-click="showPlanDetails(plan, $event.currentTarget)">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+
                                             <p ng-cloak>{{plan.WorkOrderDateStr}}&nbsp;</p>
-                                            <p><span ng-cloak class="plan-firm-name">{{plan.FirmName}}</span>&nbsp;</p>
+                                            <p ng-cloak>{{plan.FirmName}}&nbsp;</p>
                                             <p><span ng-cloak class="plan-firm-name bg-dark rounded-1 text-white">Sipariş: {{plan.ItemOrderDocumentNo}}</span>&nbsp;</p>
                                             <p><b ng-cloak>{{showProperProductName(plan)}}</b>&nbsp;</p>
                                             <p ng-cloak>
@@ -98,42 +131,10 @@
                                                 {{plan.Quantity}}
                                             </p>
                                             <p ng-cloak ng-class="{'label-wastage-count-danger': plan.WastageQuantity > 0,
-                                               'label-wastage-count': plan.WastageQuantity == 0}">
+                                                   'label-wastage-count': plan.WastageQuantity == 0}">
                                                 Fire: {{ plan.WastageQuantity }}
                                             </p>
-                                            <p ng-cloak ng-if="plan.WorkOrderType == 2" class="bg-dark text-light py-1">
-                                                DENEME ÜRETİMİ
-                                            </p>
-                                        </div>
-
-                                        @* GET COMPLETED PLANS OF MACHINE *@
-                                    <div class="plan-box" draggable="true"
-                                         data-plan-id="{{plan.Id}}"
-                                         ng-cloak
-                                         ng-click="selectPlan(plan)"
-                                         ng-class="{'plan-box-cancelled': plan.WorkOrderStatus == 6,
-                                                    'plan-box-completed': plan.WorkOrderStatus == 4,
-                                                    'plan-box-progress': plan.WorkOrderStatus == 3,
-                                                    'plan-selected': plan.Id == selectedPlan.Id}"
-                                         ng-repeat="plan in getMachinePlans(machine, false)">
-                                        <button class="btn btn-primary btn-sm btn-plan-details px-1 py-1"
-                                                ng-click="showPlanDetails(plan, $event.currentTarget)">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-
-                                        <p ng-cloak>{{plan.WorkOrderDateStr}}&nbsp;</p>
-                                        <p ng-cloak>{{plan.FirmName}}&nbsp;</p>
-                                        <p><span ng-cloak class="plan-firm-name bg-dark rounded-1 text-white">Sipariş: {{plan.ItemOrderDocumentNo}}</span>&nbsp;</p>
-                                        <p><b ng-cloak>{{showProperProductName(plan)}}</b>&nbsp;</p>
-                                        <p ng-cloak>
-                                            {{plan.CompleteQuantity}} /
-                                            {{plan.Quantity}}
-                                        </p>
-                                        <p ng-cloak ng-class="{'label-wastage-count-danger': plan.WastageQuantity > 0,
-                                               'label-wastage-count': plan.WastageQuantity == 0}">
-                                            Fire: {{ plan.WastageQuantity }}
-                                        </p>
-                                    </div>
+                                        </div>*@
                                     </div>
                                 </div>
                             </div>

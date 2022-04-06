@@ -16,6 +16,7 @@ using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Business.Models.DataTransfer.Warehouse;
+using HekaMOLD.Business.Models.DataTransfer.Order;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -291,7 +292,8 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveProductEntry(int workOrderDetailId, int inPackageQuantity, string barcode, bool printLabel, int printerId)
+        public JsonResult SaveProductEntry(int workOrderDetailId, int itemOrderDetailId,
+            int inPackageQuantity, string barcode, bool printLabel, int printerId)
         {
             BusinessResult result = new BusinessResult();
 
@@ -304,7 +306,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (ProductionBO bObj = new ProductionBO())
             {
-                result = bObj.AddProductEntry(workOrderDetailId, userId, serialType, inPackageQuantity, barcode);
+                result = bObj.AddProductEntry(workOrderDetailId, itemOrderDetailId, userId, serialType, inPackageQuantity, barcode);
             }
 
             // UPDATE USER STATS
@@ -528,6 +530,21 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        [HttpGet]
+        public JsonResult GetPartVariants(int workOrderDetailId)
+        {
+            ItemOrderSheetUsageModel[] data = new ItemOrderSheetUsageModel[0];
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                data = bObj.GetPartVariants(workOrderDetailId);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         #endregion
 
         #region PRODUCT PICK UP TO CONFIRMATION
@@ -746,6 +763,19 @@ namespace HekaMOLD.Enterprise.Controllers
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult DeleteBox(int id)
+        {
+            BusinessResult result = null;
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.DeleteBox(id);
+            }
+
+            return Json(result);
         }
 
         [HttpGet]

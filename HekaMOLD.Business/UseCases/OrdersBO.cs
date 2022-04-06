@@ -191,6 +191,8 @@ namespace HekaMOLD.Business.UseCases
                 var repoRequestDetail = _unitOfWork.GetRepository<ItemRequestDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
                 var repoItem = _unitOfWork.GetRepository<Item>();
+                var repoSheet = _unitOfWork.GetRepository<ItemOrderSheet>();
+                var repoSheetUsage = _unitOfWork.GetRepository<ItemOrderSheetUsage>();
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -235,6 +237,50 @@ namespace HekaMOLD.Business.UseCases
 
                 dbObj.UpdatedDate = DateTime.Now;
 
+                #region SAVE SHEETS
+
+                // DELETED SHEETS
+                List<ItemOrderSheet> liveSheets = new List<ItemOrderSheet>();
+
+                var newSheetIdList = model.Sheets.Select(d => d.Id).ToArray();
+                var deletedSheets = dbObj.ItemOrderSheet.Where(d => !newSheetIdList.Contains(d.Id)).ToArray();
+                foreach (var item in deletedSheets)
+                {
+                    if (item.ItemOrderDetail.Any())
+                    {
+                        var detailsOfSheet = item.ItemOrderDetail.ToArray();
+                        foreach (var dsSheet in detailsOfSheet)
+                        {
+                            repoDetail.Delete(dsSheet);
+                        }
+                    }
+
+                    repoSheet.Delete(item);
+                }
+
+                // LOOP OF SHEETS
+                foreach (var item in model.Sheets)
+                {
+                    var dbSheet = repoSheet.Get(d => d.Id == item.Id);
+                    if (dbSheet == null)
+                    {
+                        dbSheet = new ItemOrderSheet
+                        {
+                            ItemOrder = dbObj,
+                        };
+
+                        repoSheet.Add(dbSheet);
+                    }
+
+                    item.MapTo(dbSheet);
+                    dbSheet.ItemOrder = dbObj;
+                    liveSheets.Add(dbSheet);
+
+                    if (dbObj.Id > 0)
+                        dbSheet.ItemOrderId = dbObj.Id;
+                }
+                #endregion
+
                 #region SAVE DETAILS
                 if (model.Details == null && detailCanBeNull == false)
                     throw new Exception("Detay bilgisi olmadan sipariş kaydedilemez.");
@@ -261,6 +307,15 @@ namespace HekaMOLD.Business.UseCases
 
                         if (item.WorkOrderDetail.Any())
                             continue;
+
+                        if (item.ItemOrderSheetUsage.Any())
+                        {
+                            var usageList = item.ItemOrderSheetUsage.ToArray();
+                            foreach (var usageItem in usageList)
+                            {
+                                repoSheetUsage.Delete(usageItem);
+                            }
+                        }
 
                         #region SET REQUEST & DETAIL TO APPROVED
                         if (item.ItemRequestDetail != null)
@@ -290,6 +345,31 @@ namespace HekaMOLD.Business.UseCases
 
                         item.MapTo(dbDetail);
                         dbDetail.ItemOrder = dbObj;
+
+                        // MAKE RELATION BETWEEN SHEET AND PART
+                        if (item.Usages != null)
+                        {
+                            foreach (var shUsage in item.Usages)
+                            {
+                                var dbUsage = repoSheetUsage.Get(d => d.Id == shUsage.Id);
+                                if (dbUsage == null)
+                                {
+                                    var dbSheet = liveSheets.FirstOrDefault(d =>
+                                        (d.SheetNo == shUsage.SheetNo)
+                                       );
+
+                                    dbUsage = new ItemOrderSheetUsage
+                                    {
+                                        ItemOrderDetail = dbDetail,
+                                        ItemOrderSheet = dbSheet,
+                                        Quantity = shUsage.Quantity,
+                                    };
+                                    repoSheetUsage.Add(dbUsage);
+                                }
+                                else
+                                    dbUsage.Quantity = shUsage.Quantity;
+                            }
+                        }
 
                         // ASSIGN ITEM'S MAIN UNIT TO THE DETAIL
                         if (dbDetail.UnitId == null)
@@ -374,6 +454,42 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public ItemOrderSheetUsageModel[] GetPartVariants(int workOrderDetailId)
+        {
+            ItemOrderSheetUsageModel[] data = new ItemOrderSheetUsageModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var dbObj = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbObj != null)
+                {
+                    data = dbObj.ItemOrderSheet.ItemOrderSheetUsage
+                        .Where(d => d.ItemOrderDetailId != null)
+                        .ToList()
+                        .Select(d => new ItemOrderSheetUsageModel
+                        {
+                            Id = d.Id,
+                            ItemOrderDetailId = d.ItemOrderDetailId,
+                            ItemOrderSheetId = d.ItemOrderSheetId,
+                            Quantity = d.Quantity,
+                            SheetNo =  d.ItemOrderSheet != null ? (d.ItemOrderSheet.SheetNo ?? 0) : 0,
+                            PartCode = d.ItemOrderDetail != null ? d.ItemOrderDetail.Item.ItemNo : "",
+                            PartName = d.ItemOrderDetail != null ? d.ItemOrderDetail.Item.ItemName : "",
+                            PartVisualStr = d.ItemOrderDetail != null 
+                                && d.ItemOrderDetail.ItemOfferDetail != null 
+                                && d.ItemOrderDetail.ItemOfferDetail.ItemVisual != null ? 
+                                    Convert.ToBase64String(d.ItemOrderDetail.ItemOfferDetail.ItemVisual) : "",
+                        }).ToArray();
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
         public BusinessResult AddOrderDetail(int orderId, ItemOrderDetailModel model)
         {
             BusinessResult result = new BusinessResult();

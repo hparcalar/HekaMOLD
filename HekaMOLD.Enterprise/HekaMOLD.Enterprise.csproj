@@ -3987,6 +3987,8 @@
     <Content Include="Components\Controllers\maintenance-plan.js" />
     <Content Include="Components\Controllers\offer-constant-prices.js" />
     <Content Include="Components\Controllers\offer-process-list.js" />
+    <Content Include="Components\Controllers\offer-sheet-usages.js" />
+    <Content Include="Components\Controllers\offer-sheets-list.js" />
     <Content Include="Components\Controllers\open-so-list.js" />
     <Content Include="Components\Controllers\pallet-view.js" />
     <Content Include="Components\Controllers\planning-work-copy.js" />
@@ -3997,6 +3999,7 @@
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
     <Content Include="Components\Controllers\attachment-list.js" />
     <Content Include="Components\Controllers\print-options.js" />
+    <Content Include="Components\Controllers\product-part-selection.js" />
     <Content Include="Components\Controllers\production-history-list.js" />
     <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
@@ -4014,6 +4017,8 @@
     <Content Include="Components\Views\MaintenancePlan.html" />
     <Content Include="Components\Views\OfferConstantPrices.html" />
     <Content Include="Components\Views\OfferProcessList.html" />
+    <Content Include="Components\Views\OfferSheetsList.html" />
+    <Content Include="Components\Views\OfferSheetUsages.html" />
     <Content Include="Components\Views\OpenSoList.html" />
     <Content Include="Components\Views\PalletView.html" />
     <Content Include="Components\Views\PlanningWorkCopy.html" />
@@ -4023,6 +4028,7 @@
     <Content Include="Components\Views\OpenPoList.html" />
     <Content Include="Components\Views\AttachmentList.html" />
     <Content Include="Components\Views\PrintOptions.html" />
+    <Content Include="Components\Views\ProductPartSelection.html" />
     <Content Include="Components\Views\RecipeRevisions.html" />
     <Content Include="Components\Views\RelatedOrderList.html" />
     <Content Include="Components\Views\RelatedRequestList.html" />
@@ -4778,7 +4784,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56183</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56184/</IISUrl>
+          <IISUrl>http://localhost:56174/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

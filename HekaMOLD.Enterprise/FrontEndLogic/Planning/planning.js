@@ -16,8 +16,8 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
     $scope.getMachinePlans = function (machine, isActive = true) {
         return $scope.boardPlanList.filter(d => d.MachineId == machine.Id
-            && ((isActive == true && d.WorkOrderStatus != 6 && d.WorkOrderStatus != 4)
-                || (isActive == false && (d.WorkOrderStatus == 6 || d.WorkOrderStatus == 4))));
+            && ((isActive == true && d.WorkOrder.WorkOrderStatus != 6 && d.WorkOrder.WorkOrderStatus != 4)
+                || (isActive == false && (d.WorkOrder.WorkOrderStatus == 6 || d.WorkOrder.WorkOrderStatus == 4))));
     }
 
     $scope.toggleWaitingPlans = function () {
@@ -331,16 +331,19 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
                         if (typeof machineId != 'undefined') {
                             var planObj = $scope.waitingPlanList.find(d => d.Id == parseInt(planId));
-                            var sameOrderDetails = planObj.Details; //$scope.waitingPlanList.filter(d => d.ItemOrderId == planObj.ItemOrderId);
-                            for (var i = 0; i < sameOrderDetails.length; i++) {
-                                var detailObj = sameOrderDetails[i];
-                                if (detailObj != null) {
-                                    if (typeof planObj != 'undefined') {
-                                        detailObj.MachineId = parseInt(machineId);
-                                        $scope.saveModel(detailObj);
-                                    }
-                                }
-                            }
+                            planObj.MachineId = parseInt(machineId);
+                            $scope.saveModel(planObj);
+
+                            //var sameOrderDetails = planObj.Details;
+                            //for (var i = 0; i < sameOrderDetails.length; i++) {
+                            //    var detailObj = sameOrderDetails[i];
+                            //    if (detailObj != null) {
+                            //        if (typeof planObj != 'undefined') {
+                            //            detailObj.MachineId = parseInt(machineId);
+                            //            $scope.saveModel(detailObj);
+                            //        }
+                            //    }
+                            //}
                         }
                     });
                 });
@@ -372,8 +375,8 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                         "<td>" + data.OrderNo + "</td>" +
                         "<td>" + data.DeadlineDateStr + "</td>" +
                         "<td>" + data.FirmName + "</td>" +
-                        "<td>" + data.ItemNo + "</td>" +
-                        "<td>" + data.ItemName + "</td>" +
+                    "<td>" + data.ItemNo + "</td>" +
+                    "<td><img src=\"data:image/png;base64,"+ data.SheetVisualStr +"\" />" + "</td>" +
                         "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
                         "</tr>";
 
@@ -390,8 +393,15 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     caption: 'Termin', dataType: 'date', format: 'dd.MM.yyyy'
                 },
                 { dataField: 'FirmName', caption: 'Firma' },
-                { dataField: 'ItemNo', caption: 'Ürün Kodu' },
-                { dataField: 'ItemName', caption: 'Ürün Adı' },
+                { dataField: 'ItemNo', caption: 'Levha No' },
+                {
+                    dataField: 'SheetVisualStr', caption: 'Resim', allowEditing: false,
+                    cellTemplate: function (element, info) {
+
+                        if (info.displayValue != null && info.displayValue.length > 0)
+                            element.append('<image src="data:image/png;base64,' + info.displayValue + '" />');
+                    }
+                },
                 {
                     dataField: 'Quantity', caption: 'Miktar',
                     dataType: 'number', format: { type: "fixedPoint", precision: 2 }
@@ -481,31 +491,19 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     },
                     callback: function (result) {
                         if (result) {
-                            var sameOrderDetails = $scope.selectedPlan.Details; // $scope.boardPlanList
-                                //.filter(d => d.ItemOrderId == $scope.selectedPlan.ItemOrderId);
-                            
-                            //if (sameOrderDetails.some(d => d.WorkOrderStatus == 3)) {
-                            //    toastr.error('Bu sipariş için başlatılan bir iş emri bulunmakta olduğundan silemezsiniz.');
-                            //    return;
-                            //}
+                            $http.post(HOST_URL + 'Planning/DeletePlan', { rid: $scope.selectedPlan.Id }, 'json')
+                                .then(function (resp) {
+                                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                                        if (resp.data.Result == true) {
+                                            toastr.success('Plan başarıyla silindi.', 'Bilgilendirme');
 
-                            for (var i = 0; i < sameOrderDetails.length; i++) {
-                                var planObj = sameOrderDetails[i];
-
-                                $http.post(HOST_URL + 'Planning/DeletePlan', { rid: planObj.Id }, 'json')
-                                    .then(function (resp) {
-                                        if (typeof resp.data != 'undefined' && resp.data != null) {
-                                            if (resp.data.Result == true) {
-                                                toastr.success('Plan başarıyla silindi.', 'Bilgilendirme');
-
-                                                $scope.loadMachineList();
-                                                $scope.loadWaitingPlanList();
-                                            }
-                                            else
-                                                toastr.error(resp.data.ErrorMessage, 'Hata');
+                                            $scope.loadMachineList();
+                                            $scope.loadWaitingPlanList();
                                         }
-                                    }).catch(function (err) { });
-                            }
+                                        else
+                                            toastr.error(resp.data.ErrorMessage, 'Hata');
+                                    }
+                                }).catch(function (err) { });
                         }
                     }
                 });

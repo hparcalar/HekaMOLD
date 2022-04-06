@@ -119,5 +119,9 @@
         public virtual DbSet<ItemOffer> ItemOffer { get; set; }
         public virtual DbSet<ItemOfferDetail> ItemOfferDetail { get; set; }
         public virtual DbSet<ItemOfferDetailRoutePricing> ItemOfferDetailRoutePricing { get; set; }
+        public virtual DbSet<ItemOfferSheet> ItemOfferSheet { get; set; }
+        public virtual DbSet<ItemOrderSheet> ItemOrderSheet { get; set; }
+        public virtual DbSet<ItemOfferSheetUsage> ItemOfferSheetUsage { get; set; }
+        public virtual DbSet<ItemOrderSheetUsage> ItemOrderSheetUsage { get; set; }
     }
 }

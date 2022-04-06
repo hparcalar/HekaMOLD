@@ -16,7 +16,7 @@
                             
                         });
                 },
-                key: ['WorkOrderDetailId','WorkDateStr', 'ShiftCode']
+                key: ['WorkOrderDetailId','ItemOrderDetailId','WorkDateStr', 'ShiftCode']
             },
             showColumnLines: false,
             showRowLines: true,

@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -146,10 +148,15 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemOfferModel model)
+        public JsonResult SaveModel()
         {
             try
             {
+                Stream req = Request.InputStream;
+                req.Seek(0, System.IO.SeekOrigin.Begin);
+                string json = new StreamReader(req).ReadToEnd();
+                ItemOfferModel model = JsonConvert.DeserializeObject<ItemOfferModel>(json);
+
                 BusinessResult result = null;
                 using (OffersBO bObj = new OffersBO())
                 {

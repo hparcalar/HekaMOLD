@@ -279,6 +279,7 @@ namespace HekaMOLD.Business.UseCases
                                         serialItem.MapTo(dbSerial);
                                         repoItemSerial.Add(dbSerial);
                                     }
+                                    dbSerial.ItemId = serialItem.ItemId;
                                 }
                             }
                             #endregion

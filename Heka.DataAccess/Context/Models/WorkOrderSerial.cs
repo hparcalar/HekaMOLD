@@ -13,6 +13,9 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("WorkOrder")]
         public Nullable<int> WorkOrderId { get; set; }
+
+        [ForeignKey("Item")]
+        public Nullable<int> ItemId { get; set; }
         public string SerialNo { get; set; }
         public Nullable<int> SerialType { get; set; }
         public Nullable<bool> IsGeneratedBySignal { get; set; }
@@ -42,6 +45,7 @@ namespace Heka.DataAccess.Context
 
         public Nullable<DateTime> ShiftBelongsToDate { get; set; }
 
+        public virtual Item Item { get; set; }
         public virtual ItemReceiptDetail ItemReceiptDetail { get; set; }
         public virtual Shift Shift { get; set; }
         public virtual Warehouse Warehouse { get; set; }

@@ -160,9 +160,13 @@
     <Compile Include="Models\DataTransfer\Offers\ItemOfferDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Offers\ItemOfferDetailRoutePricingModel.cs" />
     <Compile Include="Models\DataTransfer\Offers\ItemOfferModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferSheetModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferSheetUsageModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
+    <Compile Include="Models\DataTransfer\Order\ItemOrderSheetModel.cs" />
+    <Compile Include="Models\DataTransfer\Order\ItemOrderSheetUsageModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ActualRouteHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ContractWorkFlowModel.cs" />
     <Compile Include="Models\DataTransfer\Production\DeliveryPlanModel.cs" />

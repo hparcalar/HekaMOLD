@@ -203,7 +203,12 @@
                             <tbody>
                                 <tr ng-repeat="item in filteredSummaryList"
                                     ng-class="{'bg-warning': selectedSummary.ItemName == item.ItemName}">
-                                    <td class="w-50 px-2">{{item.ItemName}}</td>
+                                    <td class="w-50 px-2">
+                                        {{item.ItemName}}
+                                        <img ng-if="item.PartVisualStr != null && item.PartVisualStr.length > 0"
+                                             height="30"
+                                             src="{{ 'data:image/png;base64,' + item.PartVisualStr }}"/>
+                                    </td>
                                     <td class="w-20 px-1">{{ item.ShiftCode }}</td>
                                     <td class="w-25 px-2">{{item.SerialCount}}</td>
                                     <td class="w-25 px-2">{{item.SerialSum}}</td>

@@ -336,39 +336,39 @@ namespace HekaMOLD.Enterprise.Controllers
                 data = bObj.GetMachineQueue(machineId);
             }
 
-            if (data != null && data.Length > 0)
-            {
-                dataModel = data.GroupBy(d => new
-                {
-                    //WorkOrderId = d.WorkOrder.Id,
-                    ItemOrderId = d.WorkOrder.ItemOrderId,
-                    MachineId = d.MachineId,
-                }).Select(d => new WorkOrderModel
-                {
-                    Id = d.First().WorkOrder.WorkOrderId ?? 0,
-                    OrderNo = d.First().OrderNo ?? 0,
-                    WorkOrderStatus = d.First().WorkOrder.WorkOrderStatus,
-                    WorkOrderDateStr = d.First().WorkOrder.WorkOrderDateStr,
-                    ItemOrderId = d.Key.ItemOrderId ?? 0,
-                    FirmName = d.First().WorkOrder.FirmName,
-                    ItemOrderDocumentNo = d.First().WorkOrder.ItemOrderDocumentNo,
-                    ProductName = d.First().WorkOrder.ProductName,
-                    Quantity = d.First().WorkOrder.Quantity ?? 0,
-                    CompleteQuantity = d.First().WorkOrder.CompleteQuantity,
-                    WastageQuantity = d.First().WorkOrder.WastageQuantity ?? 0,
-                    Explanation = d.First().WorkOrder.Explanation,
-                    WorkOrderType = d.First().WorkOrder.WorkOrderType,
-                    MachineId = d.Key.MachineId ?? 0,
-                    Details = d.Select(m => new WorkOrderDetailModel
-                    {
-                        Id = m.WorkOrderDetailId ?? 0,
-                    }).ToArray(),
-                })
-                .OrderBy(d => d.OrderNo)
-                .ToArray();
-            }
+            //if (data != null && data.Length > 0)
+            //{
+            //    dataModel = data.GroupBy(d => new
+            //    {
+            //        //WorkOrderId = d.WorkOrder.Id,
+            //        ItemOrderId = d.WorkOrder.ItemOrderId,
+            //        MachineId = d.MachineId,
+            //    }).Select(d => new WorkOrderModel
+            //    {
+            //        Id = d.First().WorkOrder.WorkOrderId ?? 0,
+            //        OrderNo = d.First().OrderNo ?? 0,
+            //        WorkOrderStatus = d.First().WorkOrder.WorkOrderStatus,
+            //        WorkOrderDateStr = d.First().WorkOrder.WorkOrderDateStr,
+            //        ItemOrderId = d.Key.ItemOrderId ?? 0,
+            //        FirmName = d.First().WorkOrder.FirmName,
+            //        ItemOrderDocumentNo = d.First().WorkOrder.ItemOrderDocumentNo,
+            //        ProductName = d.First().WorkOrder.ProductName,
+            //        Quantity = d.First().WorkOrder.Quantity ?? 0,
+            //        CompleteQuantity = d.First().WorkOrder.CompleteQuantity,
+            //        WastageQuantity = d.First().WorkOrder.WastageQuantity ?? 0,
+            //        Explanation = d.First().WorkOrder.Explanation,
+            //        WorkOrderType = d.First().WorkOrder.WorkOrderType,
+            //        MachineId = d.Key.MachineId ?? 0,
+            //        Details = d.Select(m => new WorkOrderDetailModel
+            //        {
+            //            Id = m.WorkOrderDetailId ?? 0,
+            //        }).ToArray(),
+            //    })
+            //    .OrderBy(d => d.OrderNo)
+            //    .ToArray();
+            //}
 
-            var jsonResult = Json(dataModel, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -475,17 +475,34 @@ namespace HekaMOLD.Enterprise.Controllers
         [FreeAction]
         public JsonResult PrintSerial(int id)
         {
+            BusinessResult result = null;
+
             using (ProductionBO bObj = new ProductionBO())
             {
                 var printerId =
                         Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter",
                             Convert.ToInt32(Request.Cookies["PlantId"].Value)).PrmValue);
-                var dbPrinter = bObj.GetPrinter(printerId);
 
-                bObj.PrintProductLabel(id,printerId, dbPrinter.AccessPath);
+                result = bObj.AddToPrintQueue(new PrinterQueueModel
+                {
+                    PrinterId = printerId,
+                    RecordType = (int)RecordType.SerialItem,
+                    RecordId = id,
+                    CreatedDate = DateTime.Now,
+                });
             }
 
-            return Json(new { Status = 1 });
+            //using (ProductionBO bObj = new ProductionBO())
+            //{
+            //    var printerId =
+            //            Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter",
+            //                Convert.ToInt32(Request.Cookies["PlantId"].Value)).PrmValue);
+            //    var dbPrinter = bObj.GetPrinter(printerId);
+
+            //    bObj.PrintProductLabel(id,printerId, dbPrinter.AccessPath);
+            //}
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
 
         [HttpPost]

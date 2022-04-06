@@ -9,6 +9,9 @@ using HekaMOLD.Business.UseCases.Core;
 using HekaMOLD.Business.UseCases.Core.Base;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +52,8 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemOffer>();
                 var repoDetail = _unitOfWork.GetRepository<ItemOfferDetail>();
                 var repoDetailRoute = _unitOfWork.GetRepository<ItemOfferDetailRoutePricing>();
+                var repoSheet = _unitOfWork.GetRepository<ItemOfferSheet>();
+                var repoSheetUsage = _unitOfWork.GetRepository<ItemOfferSheetUsage>();
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -64,7 +69,7 @@ namespace HekaMOLD.Business.UseCases
 
                 if (!string.IsNullOrEmpty(model.OfferDateStr))
                 {
-                    model.OfferDate = DateTime.ParseExact(model.OfferDateStr, "dd.MM.yyyy",
+                    model.OfferDate = DateTime.ParseExact(model.OfferDateStr, "dd.MM.yyyy", 
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 }
 
@@ -79,6 +84,80 @@ namespace HekaMOLD.Business.UseCases
                     dbObj.CreatedUserId = crUserId;
 
                 dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE SHEETS
+
+                // DELETED SHEETS
+                List<ItemOfferSheet> liveSheets = new List<ItemOfferSheet>();
+
+                var newSheetIdList = model.Sheets.Select(d => d.Id).ToArray();
+                var deletedSheets = dbObj.ItemOfferSheet.Where(d => !newSheetIdList.Contains(d.Id)).ToArray();
+                foreach (var item in deletedSheets)
+                {
+                    if (item.ItemOfferDetail.Any())
+                    {
+                        var detailsOfSheet = item.ItemOfferDetail.ToArray();
+                        foreach (var dsSheet in detailsOfSheet)
+                        {
+                            repoDetail.Delete(dsSheet);
+                        }
+                    }
+
+                    repoSheet.Delete(item);
+                }
+
+                // LOOP OF SHEETS
+                foreach (var item in model.Sheets)
+                {
+                    var dbSheet = repoSheet.Get(d => d.Id == item.Id);
+                    if (dbSheet == null)
+                    {
+                        dbSheet = new ItemOfferSheet
+                        {
+                            ItemOffer = dbObj,
+                        };
+
+                        repoSheet.Add(dbSheet);
+                    }
+
+                    item.MapTo(dbSheet);
+                    dbSheet.ItemOffer = dbObj;
+                    liveSheets.Add(dbSheet);
+
+                    if (!string.IsNullOrEmpty(item.SheetVisualStr) && dbSheet.Id <= 0)
+                    {
+                        byte[] visualBytes = Convert.FromBase64String(item.SheetVisualStr);
+
+                        // convert wmf to png
+                        using (Metafile img = new Metafile(new MemoryStream(visualBytes)))
+                        {
+                            MetafileHeader header = img.GetMetafileHeader();
+                            float scale = 1;//header.DpiX / 96f;
+                            using (Bitmap bitmap = new Bitmap((int)(scale * img.Width / header.DpiX * 100), 
+                                (int)(scale * img.Height / header.DpiY * 100)))
+                            {
+                                using (Graphics g = Graphics.FromImage(bitmap))
+                                {
+                                    g.Clear(Color.White);
+                                    g.ScaleTransform(scale, scale);
+                                    g.DrawImage(img, 0, 0);
+                                }
+
+                                using (var stream = new MemoryStream())
+                                {
+                                    bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                                    dbSheet.SheetVisual = stream.ToArray();
+                                }
+                            }
+                        }
+
+                        //dbSheet.SheetVisual = Convert.FromBase64String(item.SheetVisualStr);
+                    }
+
+                    if (dbObj.Id > 0)
+                        dbSheet.ItemOfferId = dbObj.Id;
+                }
+                #endregion
 
                 #region SAVE DETAILS
                 if (model.Details == null && detailCanBeNull == false)
@@ -104,6 +183,15 @@ namespace HekaMOLD.Business.UseCases
                         }
                     }
 
+                    if (item.ItemOfferSheetUsage.Any())
+                    {
+                        var usageList = item.ItemOfferSheetUsage.ToArray();
+                        foreach (var usageItem in usageList)
+                        {
+                            repoSheetUsage.Delete(usageItem);
+                        }
+                    }
+
                     repoDetail.Delete(item);
                 }
 
@@ -123,6 +211,31 @@ namespace HekaMOLD.Business.UseCases
 
                     item.MapTo(dbDetail);
                     dbDetail.ItemOffer = dbObj;
+
+                    // MAKE RELATION BETWEEN SHEET AND PART
+                    if (item.Usages != null)
+                    {
+                        foreach (var shUsage in item.Usages)
+                        {
+                            var dbUsage = repoSheetUsage.Get(d => d.Id == shUsage.Id);
+                            if (dbUsage == null)
+                            {
+                                var dbSheet = liveSheets.FirstOrDefault(d =>
+                                    d.SheetNo == shUsage.SheetNo
+                                   );
+
+                                dbUsage = new ItemOfferSheetUsage
+                                {
+                                    ItemOfferDetail = dbDetail,
+                                    ItemOfferSheet = dbSheet,
+                                    Quantity = shUsage.Quantity,
+                                };
+                                repoSheetUsage.Add(dbUsage);
+                            }
+                            else
+                                dbUsage.Quantity = shUsage.Quantity;
+                        }
+                    }
 
                     #region FIND OR CREATE ITEM FROM ITEM-EXPLANATION
                     if (dbDetail.ItemId == null)
@@ -256,6 +369,8 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ItemOffer>();
                 var repoDetail = _unitOfWork.GetRepository<ItemOfferDetail>();
+                var repoSheets = _unitOfWork.GetRepository<ItemOfferSheet>();
+                var repoSheetUsages = _unitOfWork.GetRepository<ItemOfferSheetUsage>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
@@ -267,7 +382,26 @@ namespace HekaMOLD.Business.UseCases
                     var detailObjArr = dbObj.ItemOfferDetail.ToArray();
                     foreach (var item in detailObjArr)
                     {
+                        if (item.ItemOfferSheetUsage.Any())
+                        {
+                            var usages = item.ItemOfferSheetUsage.ToArray();
+                            foreach (var usg in usages)
+                            {
+                                repoSheetUsages.Delete(usg);
+                            }
+                        }
+
                         repoDetail.Delete(item);
+                    }
+                }
+
+                // CLEAR SHEETS
+                if (dbObj.ItemOfferSheet.Any())
+                {
+                    var sheets = dbObj.ItemOfferSheet.ToArray();
+                    foreach (var sh in sheets)
+                    {
+                        repoSheets.Delete(sh);
                     }
                 }
 
@@ -291,6 +425,8 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ItemOffer>();
             var repoDetails = _unitOfWork.GetRepository<ItemOfferDetail>();
+            var repoSheets = _unitOfWork.GetRepository<ItemOfferSheet>();
+            var repoSheetUsages = _unitOfWork.GetRepository<ItemOfferSheetUsage>();
 
             var dbObj = repo.Get(d => d.Id == id);
             if (dbObj != null)
@@ -307,6 +443,21 @@ namespace HekaMOLD.Business.UseCases
                             : dbObj.Firm.FirmName
                     ) 
                     : "";
+
+                model.Sheets = repoSheets.Filter(d => d.ItemOfferId == dbObj.Id)
+                    .ToList()
+                    .Select(d => new ItemOfferSheetModel
+                    {
+                        Id = d.Id,
+                        Eff = d.Eff,
+                        ItemOfferId = d.ItemOfferId,
+                        PerSheetTime = d.PerSheetTime,
+                        Quantity = d.Quantity,
+                        SheetNo = d.SheetNo,
+                        SheetVisualStr = d.SheetVisual != null ?
+                            (Convert.ToBase64String(d.SheetVisual)) : "",
+                        Thickness = d.Thickness,
+                    }).ToArray();
 
                 model.Details =
                     repoDetails.Filter(d => d.ItemOfferId == dbObj.Id)
@@ -333,11 +484,24 @@ namespace HekaMOLD.Business.UseCases
                         SheetWeight = d.SheetWeight,
                         TotalPrice = d.TotalPrice,
                         UnitPrice = d.UnitPrice,
+                        ItemOfferSheetId = d.ItemOfferSheetId,
+                        SheetNo = d.ItemOfferSheet != null ? (d.ItemOfferSheet.SheetNo ?? 0) : 0,
                         WastageWeight = d.WastageWeight,
                         RouteCode = d.Route != null ? d.Route.RouteCode : "",
                         RouteName = d.Route != null ? d.Route.RouteName : "",
                         ItemVisualStr = d.ItemVisual != null ?
                             (Convert.ToBase64String(d.ItemVisual)) : "",
+                        SheetVisualStr = d.ItemOfferSheet != null && d.ItemOfferSheet.SheetVisual != null ?
+                            (Convert.ToBase64String(d.ItemOfferSheet.SheetVisual)) : "",
+                        Usages = d.ItemOfferSheetUsage
+                            .Select(m => new ItemOfferSheetUsageModel
+                            {
+                                ItemOfferSheetId = m.ItemOfferSheetId,
+                                Id = m.Id,
+                                SheetNo = m.ItemOfferSheet != null ? (m.ItemOfferSheet.SheetNo ?? 0) : 0,
+                                ItemOfferDetailId = m.ItemOfferDetailId,
+                                Quantity = m.Quantity,
+                            }).ToArray(),
                         ProcessList = d.ItemOfferDetailRoutePricing
                             .Select(m => new ItemOfferDetailRoutePricingModel
                             {
@@ -379,12 +543,32 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Teklif bilgisi bulunamadı.");
 
                 List<ItemOrderDetailModel> newOrderDetails = new List<ItemOrderDetailModel>();
+                List<ItemOrderSheetModel> newSheets = new List<ItemOrderSheetModel>();
 
                 int lineNumber = 1;
                 var offerDetails = dbOffer.ItemOfferDetail.ToArray();
+                var sheetList = dbOffer.ItemOfferSheet.ToArray();
 
                 using (OrdersBO bObj = new OrdersBO())
                 {
+                    foreach (var item in sheetList)
+                    {
+                        var nSheet = new ItemOrderSheetModel
+                        {
+                            Id = 0,
+                            Eff = item.Eff,
+                            PerSheetTime = item.PerSheetTime,
+                            Quantity = item.Quantity,
+                            SheetName = item.SheetName,
+                            SheetNo = item.SheetNo,
+                            SheetStatus = 0,
+                            SheetVisual = item.SheetVisual,
+                            Thickness = item.Thickness,
+                        };
+
+                        newSheets.Add(nSheet);
+                    }
+
                     foreach (var item in offerDetails)
                     {
                         if (item.ItemId == null)
@@ -405,6 +589,12 @@ namespace HekaMOLD.Business.UseCases
                             TaxRate = 18,
                             SubTotal = item.TotalPrice,
                             Quantity = item.Quantity,
+                            Usages = item.ItemOfferSheetUsage.Select(m => new ItemOrderSheetUsageModel
+                            {
+                                Id = 0,
+                                SheetNo = m.ItemOfferSheet != null ? (m.ItemOfferSheet.SheetNo ?? 0) : 0,
+                                Quantity = m.Quantity,
+                            }).ToArray(),
                         };
 
                         newDetail = bObj.CalculateOrderDetail(newDetail);
@@ -427,6 +617,7 @@ namespace HekaMOLD.Business.UseCases
                         Explanation = dbOffer.Explanation,
                         FirmId = dbOffer.FirmId,
                         Details = newOrderDetails.ToArray(),
+                        Sheets = newSheets.ToArray(),
                     }, false);
                 }
 

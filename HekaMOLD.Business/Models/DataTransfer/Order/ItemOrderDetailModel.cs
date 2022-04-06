@@ -34,6 +34,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public DateTime? SyncDate { get; set; }
         public int? ItemRequestDetailId { get; set; }
         public int? ItemOfferDetailId { get; set; }
+        public int? ItemOrderSheetId { get; set; }
 
         #region HEADER DATA
         public int? FirmId { get; set; }
@@ -50,7 +51,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string ItemName { get; set; }
         public string UnitCode { get; set; }
         public string UnitName { get; set; }
+        public int SheetNo { get; set; }
         public bool NewDetail { get; set; }
+        public ItemOrderSheetUsageModel[] Usages { get; set; }
         #endregion
 
         #region PLANNING ELEMENTS

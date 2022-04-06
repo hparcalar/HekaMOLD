@@ -32,6 +32,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         #region VISUAL ELEMENTS
         public bool HasAnyOrder { get; set; } = false;
         public ItemOfferDetailModel[] Details { get; set; }
+        public ItemOfferSheetModel[] Sheets { get; set; }
         public string OfferDateStr { get; set; }
         public string FirmCode { get; set; }
         public string FirmName { get; set; }

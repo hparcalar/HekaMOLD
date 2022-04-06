@@ -24,7 +24,7 @@ namespace HekaMOLD.Business.UseCases
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public BusinessResult CreateMachinePlan(ItemOrderDetailModel model)
+        public BusinessResult CreateMachinePlan(ItemOrderSheetModel model)
         {
             BusinessResult result = new BusinessResult();
 
@@ -37,36 +37,41 @@ namespace HekaMOLD.Business.UseCases
                 var repoItem = _unitOfWork.GetRepository<Item>();
                 var repoMachinePlan = _unitOfWork.GetRepository<MachinePlan>();
                 var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+                var repoOrderSheet = _unitOfWork.GetRepository<ItemOrderSheet>();
 
-                var dbSaleOrderDetail = repoOrderDetail.Get(d => d.Id == model.Id);
-                if (dbSaleOrderDetail == null)
-                    throw new Exception("Planlanması istenen siparişin kaydına ulaşılamadı.");
+                //var dbSaleOrderDetail = repoOrderDetail.Get(d => d.Id == model.Id);
+                //if (dbSaleOrderDetail == null)
+                //    throw new Exception("Planlanması istenen siparişin kaydına ulaşılamadı.");
+                var dbSaleOrderSheet = repoOrderSheet.Get(d => d.Id == model.Id);
+                if (dbSaleOrderSheet == null)
+                    throw new Exception("Planlaması istenen siparişin kaydına ulaşılamadı.");
 
-                dbSaleOrderDetail.MapTo(model);
+                int machineId = model.MachineId;
+
+                dbSaleOrderSheet.MapTo(model);
 
                 var dbObjDetail = repoDetails.Get(d => d.Id == model.Id);
                 if (dbObjDetail == null)
                 {
                     dbObjDetail = new WorkOrderDetail();
                     dbObjDetail.CreatedDate = DateTime.Now;
-                    dbObjDetail.CreatedUserId = model.CreatedUserId;
+                    dbObjDetail.ItemOrderSheetId = model.Id;
+                    dbObjDetail.Quantity = model.Quantity;
+                    //dbObjDetail.CreatedUserId = model.CreatedUserId;
                     dbObjDetail.WorkOrderStatus = (int)WorkOrderStatusType.Planned;
                     repoDetails.Add(dbObjDetail);
-
-                    // SAVE RELATION
-                    dbSaleOrderDetail.WorkOrderDetail.Add(dbObjDetail);
 
                     dbObjDetail.WorkOrder = new WorkOrder
                     {
                         WorkOrderNo = GetNextWorkOrderNo(),
                         WorkOrderDate = DateTime.Now,
                         CreatedDate = DateTime.Now,
-                        CreatedUserId = model.CreatedUserId,
+                        //CreatedUserId = model.CreatedUserId,
                         DocumentNo = "",
                         Explanation = "",
                         WorkOrderStatus = (int)WorkOrderStatusType.Planned,
-                        FirmId = dbSaleOrderDetail.ItemOrder.FirmId,
-                        PlantId = dbSaleOrderDetail.ItemOrder.PlantId,
+                        FirmId = dbSaleOrderSheet.ItemOrder.FirmId,
+                        PlantId = dbSaleOrderSheet.ItemOrder.PlantId,
                     };
                     repo.Add(dbObjDetail.WorkOrder);
                 }
@@ -74,7 +79,7 @@ namespace HekaMOLD.Business.UseCases
                 var crDate = dbObjDetail.CreatedDate;
                 var crUser = dbObjDetail.CreatedUserId;
 
-                model.MapTo(dbObjDetail);
+                //model.MapTo(dbObjDetail);
 
                 if (dbObjDetail.CreatedDate == null)
                     dbObjDetail.CreatedDate = crDate;
@@ -82,41 +87,22 @@ namespace HekaMOLD.Business.UseCases
                     dbObjDetail.CreatedUserId = crUser;
 
                 dbObjDetail.UpdatedDate = DateTime.Now;
-                dbObjDetail.UpdatedUserId = model.CreatedUserId;
-                dbObjDetail.SaleOrderDetailId = dbSaleOrderDetail.Id;
+                //dbObjDetail.UpdatedUserId = model.CreatedUserId;
+                //dbObjDetail.SaleOrderDetailId = dbSaleOrderDetail.Id;
                 dbObjDetail.MachineId = model.MachineId;
 
-                #region ASSIGN PROPER MOLD TEST DATA TO WORK ORDER
-                var dbProduct = repoItem.Get(d => d.Id == (dbObjDetail.ItemId ?? 0));
-                if (dbProduct != null)
-                {
-                    var dbMoldTest = repoMoldTest.Filter(d => d.ProductCode == dbProduct.ItemNo)
-                        .OrderByDescending(d => d.Id).FirstOrDefault();
-                    if (dbMoldTest != null)
-                    {
-                        dbObjDetail.MoldTestId = dbMoldTest.Id;
-                        dbObjDetail.RawGr = dbMoldTest.RawMaterialGr;
-                        dbObjDetail.RawGrToleration = dbMoldTest.RawMaterialTolerationGr;
-                        dbObjDetail.InPackageQuantity = dbMoldTest.InPackageQuantity;
-                        dbObjDetail.InPalletPackageQuantity = dbMoldTest.InPalletPackageQuantity;
-                        dbObjDetail.InflationTimeSeconds = dbMoldTest.InflationTimeSeconds;
-                        dbObjDetail.MoldId = dbMoldTest.MoldId;
-                    }
-                }
-                #endregion
-
                 #region CHECK SALE ORDER REMAINING QUANTITY & STATUS
-                var saleOrderPlannedQuantity = dbSaleOrderDetail.WorkOrderDetail
+                var saleOrderPlannedQuantity = dbSaleOrderSheet.WorkOrderDetail
                     .Sum(d => d.Quantity);
-                if (dbSaleOrderDetail.Quantity <= saleOrderPlannedQuantity)
+                if (dbSaleOrderSheet.Quantity <= saleOrderPlannedQuantity)
                 {
-                    dbSaleOrderDetail.OrderStatus = (int)OrderStatusType.Planned;
-                    dbSaleOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Planned;
+                    dbSaleOrderSheet.SheetStatus = (int)OrderStatusType.Planned;
+                    dbSaleOrderSheet.ItemOrder.OrderStatus = (int)OrderStatusType.Planned;
                 }
                 else
                 {
-                    dbSaleOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
-                    dbSaleOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
+                    dbSaleOrderSheet.SheetStatus = (int)OrderStatusType.Approved;
+                    dbSaleOrderSheet.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
                 }
                 #endregion
 
@@ -124,7 +110,7 @@ namespace HekaMOLD.Business.UseCases
                 var dbMachinePlan = repoMachinePlan.Get(d => d.WorkOrderDetailId == dbObjDetail.Id);
                 if (dbMachinePlan == null)
                 {
-                    int? lastOrderNo = repoMachinePlan.Filter(d => d.MachineId == model.MachineId)
+                    int? lastOrderNo = repoMachinePlan.Filter(d => d.MachineId == machineId)
                         .Max(d => d.OrderNo);
                     if ((lastOrderNo ?? 0) == 0)
                         lastOrderNo = 0;
@@ -134,7 +120,7 @@ namespace HekaMOLD.Business.UseCases
                     dbMachinePlan = new MachinePlan
                     {
                         WorkOrderDetail = dbObjDetail,
-                        MachineId = model.MachineId,
+                        MachineId = machineId,
                         OrderNo = lastOrderNo
                     };
                     repoMachinePlan.Add(dbMachinePlan);
@@ -388,31 +374,37 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public ItemOrderDetailModel[] GetWaitingSaleOrders()
+        public ItemOrderSheetModel[] GetWaitingSaleOrders()
         {
-            ItemOrderDetailModel[] data = new ItemOrderDetailModel[0];
+            ItemOrderSheetModel[] data = new ItemOrderSheetModel[0];
 
-            var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+            var repo = _unitOfWork.GetRepository<ItemOrderSheet>();
             data = repo.Filter(d =>
                 d.ItemOrder.OrderType == (int)ItemOrderType.Sale &&
                 (
-                    d.OrderStatus == (int)OrderStatusType.Created
+                    d.SheetStatus == (int)OrderStatusType.Created
                     ||
-                    d.OrderStatus == (int)OrderStatusType.Approved
+                    d.SheetStatus == (int)OrderStatusType.Approved
                 )
-            ).ToList().Select(d => new ItemOrderDetailModel { 
+            ).ToList().Select(d => new ItemOrderSheetModel
+            { 
                 Id = d.Id,
                 ItemOrderId = d.ItemOrderId,
                 OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
                 OrderNo = d.ItemOrder.OrderNo,
-                ItemNo = d.Item != null ? d.Item.ItemNo : "",
-                ItemName = d.Item != null ? d.Item.ItemName : "",
+                ItemNo = (d.SheetNo ?? 0).ToString(),
+                ItemName = (d.SheetNo ?? 0).ToString(),
+                SheetVisualStr = d.SheetVisual != null ?
+                            (Convert.ToBase64String(d.SheetVisual)) : "",
                 FirmName = d.ItemOrder.Firm != null ? 
                     d.ItemOrder.Firm.FirmName : "",
                 Quantity = d.Quantity,
                 DeadlineDateStr = d.ItemOrder.DateOfNeed != null ?
                     string.Format("{0:dd.MM.yyyy}", d.ItemOrder.DateOfNeed) : "",
-            }).ToArray();
+            })
+            .OrderByDescending(d => d.OrderNo)
+            .ThenBy(d => d.ItemNo)
+            .ToArray();
 
             return data;
         }
@@ -433,17 +425,15 @@ namespace HekaMOLD.Business.UseCases
                     WorkOrder = new WorkOrderDetailModel
                     {
                         Id = d.WorkOrderDetail.WorkOrderId ?? 0,
-                        ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
-                        ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
+                        ProductCode = d.WorkOrderDetail.ItemOrderSheet != null ? (d.WorkOrderDetail.ItemOrderSheet.SheetNo.ToString()) : "",
+                        ProductName = d.WorkOrderDetail.ItemOrderSheet != null ? (d.WorkOrderDetail.ItemOrderSheet.SheetNo.ToString()) : "",
                         WorkOrderId = d.WorkOrderDetail.WorkOrderId,
+                        ItemOrderSheetId = d.WorkOrderDetail.ItemOrderSheetId,
                         SaleOrderDetailId = d.WorkOrderDetail.SaleOrderDetailId,
                         ItemOrderId = d.WorkOrderDetail.ItemOrderDetail != null ?
                             d.WorkOrderDetail.ItemOrderDetail.ItemOrderId : (int?)null,
-                        ItemOrderDocumentNo = d.WorkOrderDetail.ItemOrderDetail != null ?
-                            d.WorkOrderDetail.ItemOrderDetail.ItemOrder.OrderNo : "",
-                        MoldId = d.WorkOrderDetail.MoldId,
-                        MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
-                        MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
+                        ItemOrderDocumentNo = d.WorkOrderDetail.ItemOrderSheet != null ?
+                            d.WorkOrderDetail.ItemOrderSheet.ItemOrder.OrderNo : "",
                         CreatedDate = d.WorkOrderDetail.CreatedDate,
                         Quantity = d.WorkOrderDetail.Quantity,
                         WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
@@ -479,6 +469,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
                 var repoWorkOrder = _unitOfWork.GetRepository<WorkOrder>();
                 var repoItemOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+                var repoItemOrderSheet = _unitOfWork.GetRepository<ItemOrderSheet>();
 
                 var dbObj = repo.Get(d => d.Id == machinePlanId);
                 if (dbObj == null)
@@ -487,7 +478,7 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj.WorkOrderDetail.WorkOrderStatus <= (int)WorkOrderStatusType.Completed)
                 {
                     var dbWorkOrderDetail = dbObj.WorkOrderDetail;
-                    int saleOrderDetailId = dbWorkOrderDetail.SaleOrderDetailId ?? 0;
+                    int itemOrderSheetId = dbWorkOrderDetail.ItemOrderSheetId ?? 0;
 
                     repo.Delete(dbObj);
 
@@ -498,14 +489,14 @@ namespace HekaMOLD.Business.UseCases
                         repoWorkOrder.Delete(dbWorkOrder);
 
                     // UPDATE SALE ORDER STATUS FROM PLANNED TO APPROVED
-                    var dbItemOrderDetail = repoItemOrderDetail.Get(d => d.Id == saleOrderDetailId);
+                    var dbItemOrderDetail = repoItemOrderSheet.Get(d => d.Id == itemOrderSheetId);
                     if (dbItemOrderDetail != null)
                     {
-                        dbItemOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
+                        dbItemOrderDetail.SheetStatus = (int)OrderStatusType.Created;
 
                         var dbItemOrder = dbItemOrderDetail.ItemOrder;
-                        if (!dbItemOrder.ItemOrderDetail.Any(d => d.Id != dbItemOrderDetail.Id
-                            && d.OrderStatus > (int)OrderStatusType.Approved))
+                        if (!dbItemOrder.ItemOrderSheet.Any(d => d.Id != dbItemOrderDetail.Id
+                            && d.SheetStatus > (int)OrderStatusType.Approved))
                             dbItemOrder.OrderStatus = (int)OrderStatusType.Approved;
                     }
 
@@ -632,18 +623,20 @@ namespace HekaMOLD.Business.UseCases
                     WorkOrder = new WorkOrderDetailModel
                     {
                         Id= d.WorkOrderDetail.Id,
-                        ItemOrderId = d.WorkOrderDetail.ItemOrderDetail != null ?
-                            d.WorkOrderDetail.ItemOrderDetail.ItemOrderId : (int?)null,
-                        ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
-                        ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
+                        ItemOrderId = d.WorkOrderDetail.ItemOrderSheet != null ?
+                            d.WorkOrderDetail.ItemOrderSheet.ItemOrderId : (int?)null,
+                        ItemOrderSheetId = d.WorkOrderDetail.ItemOrderSheetId,
+                        ProductCode = d.WorkOrderDetail.ItemOrderSheet != null ? (d.WorkOrderDetail.ItemOrderSheet.SheetNo ?? 0).ToString() : "",
+                        ProductName = d.WorkOrderDetail.ItemOrderSheet != null ? (d.WorkOrderDetail.ItemOrderSheet.SheetNo ?? 0).ToString() : "",
                         Explanation = d.WorkOrderDetail.WorkOrder.Explanation,
                         WorkOrderId = d.WorkOrderDetail.WorkOrderId,
-                        MoldId = d.WorkOrderDetail.MoldId,
-                        MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
-                        MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
                         CreatedDate = d.WorkOrderDetail.CreatedDate,
+                        ItemOrderDocumentNo = d.WorkOrderDetail.ItemOrderSheet != null ?
+                            d.WorkOrderDetail.ItemOrderSheet.ItemOrder.OrderNo : "",
                         Quantity = d.WorkOrderDetail.Quantity,
                         WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
+                        SheetVisualStr = d.WorkOrderDetail.ItemOrderSheet != null && d.WorkOrderDetail.ItemOrderSheet.SheetVisual != null ?
+                            (Convert.ToBase64String(d.WorkOrderDetail.ItemOrderSheet.SheetVisual)) : "",
                         WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
                         FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
                             d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
@@ -936,10 +929,21 @@ namespace HekaMOLD.Business.UseCases
                     || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Created 
                     || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.OnHold)
                 {
-                    //if (repo.Any(d => d.MachineId == dbObj.MachineId
-                    //    && d.Id != dbObj.Id
-                    //    && d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress))
-                    //    throw new Exception("Bu makinede zaten bir aktif üretim mevcuttur. Önce aktif işi bitirip sonra yenisine başlayabilirsiniz.");
+                    if (repo.Any(d => d.MachineId == dbObj.MachineId
+                        && d.Id != dbObj.Id
+                        && d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress))
+                    {
+                        // set other active work orders to onhold
+                        var exActives = repo.Filter(d => d.MachineId == dbObj.MachineId
+                            && d.Id != dbObj.Id
+                            && d.WorkOrderStatus == (int)WorkOrderStatusType.InProgress).ToArray();
+                        foreach (var item in exActives)
+                        {
+                            item.WorkOrderStatus = (int)WorkOrderStatusType.OnHold;
+                        }
+
+                        //throw new Exception("Bu makinede zaten bir aktif üretim mevcuttur. Önce aktif işi bitirip sonra yenisine başlayabilirsiniz.");
+                    }
 
                     // CHECK IF THERE IS AN ONGOING POSTURE THEN STOP IT
                     if (repoPosture.Any(d => d.MachineId == dbObj.MachineId && d.PostureStatus != (int)PostureStatusType.Resolved))
@@ -968,14 +972,14 @@ namespace HekaMOLD.Business.UseCases
 
                 _unitOfWork.SaveChanges();
 
-                if (workOrderStarted)
-                {
-                    // CREATE PRODUCT RECIPE CONSUMPTION
-                    using (RecipeBO bObj = new RecipeBO())
-                    {
-                        bObj.CreateRecipeConsuption(workOrderDetailId);
-                    }
-                }
+                //if (workOrderStarted)
+                //{
+                //    // CREATE PRODUCT RECIPE CONSUMPTION
+                //    using (RecipeBO bObj = new RecipeBO())
+                //    {
+                //        bObj.CreateRecipeConsuption(workOrderDetailId);
+                //    }
+                //}
 
                 // MOVED TO USER LOGIN WITH MACHINE SELECTION
                 //using (ProductionBO bObj = new ProductionBO())

@@ -12,6 +12,7 @@ namespace Heka.DataAccess.Context
         public ItemOffer()
         {
             this.ItemOfferDetail = new HashSet<ItemOfferDetail>();
+            this.ItemOfferSheet = new HashSet<ItemOfferSheet>();
         }
 
         public int Id { get; set; }
@@ -47,5 +48,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ItemOffer")]
         public virtual ICollection<ItemOfferDetail> ItemOfferDetail { get; set; }
+
+        [InverseProperty("ItemOffer")]
+        public virtual ICollection<ItemOfferSheet> ItemOfferSheet { get; set; }
     }
 }

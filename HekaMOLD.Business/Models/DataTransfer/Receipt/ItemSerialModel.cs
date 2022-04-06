@@ -28,6 +28,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string ItemName { get; set; }
         public string CreatedDateStr { get; set; }
         public string ShiftBelongsToDateStr { get; set; }
+        public string PartVisualStr { get; set; }
         public string MachineCode { get; set; }
         public string MachineName { get; set; }
         public string FirmCode { get; set; }

@@ -28,13 +28,17 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         public Nullable<int> CreditRate { get; set; }
         public Nullable<int> RouteId { get; set; }
         public Nullable<int> SheetTickness { get; set; }
+        public Nullable<int> ItemOfferSheetId { get; set; }
 
         #region VISUAL ELEMENTS
         public ItemOfferDetailRoutePricingModel[] ProcessList { get; set; }
+        public ItemOfferSheetUsageModel[] Usages { get; set; }
+        public int SheetNo { get; set; }
         public bool NewDetail { get; set; } = false;
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
         public string ItemVisualStr { get; set; }
+        public string SheetVisualStr { get; set; }
         public string RouteCode { get; set; }
         public string RouteName { get; set; }
         #endregion

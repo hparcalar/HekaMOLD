@@ -12,5 +12,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Summary
         public string ItemName { get; set; }
         public int? SerialCount { get; set; }
         public decimal? SerialSum { get; set; }
+        public string PartVisualStr { get; set; }
     }
 }

@@ -33,6 +33,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
         public string CreatedDateStr { get; set; }
+        public string PartVisualStr { get; set; }
         public string ShiftCode { get; set; }
         public string ShiftName { get; set; }
         public string FirmCode { get; set; }

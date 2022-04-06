@@ -62,28 +62,22 @@
                     if (result) {
                         $scope.saveStatus = 1;
 
-                        var sameOrderDetails = $scope.selectedWorkOrder.Details;
-                            //$scope.machineQueue.filter(d => d.WorkOrder.ItemOrderId == $scope.selectedWorkOrder.WorkOrder.ItemOrderId);
-                        for (var i = 0; i < sameOrderDetails.length; i++) {
-                            var detailObj = sameOrderDetails[i];
+                        $http.post(HOST_URL + 'Mobile/HoldWorkOrder',
+                            { workOrderDetailId: $scope.selectedWorkOrder.WorkOrderDetailId }, 'json')
+                            .then(function (resp) {
+                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                    $scope.saveStatus = 0;
 
-                            $http.post(HOST_URL + 'Mobile/HoldWorkOrder',
-                                { workOrderDetailId: detailObj.Id }, 'json')
-                                .then(function (resp) {
-                                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                                        $scope.saveStatus = 0;
-
-                                        if (resp.data.Result == true) {
-                                            toastr.success('İşlem başarılı.', 'Bilgilendirme');
-                                        }
-                                        else
-                                            toastr.error(resp.data.ErrorMessage, 'Hata');
-
-                                        $scope.loadMachineQueue();
-                                        /*$scope.loadActiveWorkOrder();*/
+                                    if (resp.data.Result == true) {
+                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
                                     }
-                                }).catch(function (err) { });
-                        }
+                                    else
+                                        toastr.error(resp.data.ErrorMessage, 'Hata');
+
+                                    $scope.loadMachineQueue();
+                                    /*$scope.loadActiveWorkOrder();*/
+                                }
+                            }).catch(function (err) { });
                     }
                 }
             });
@@ -112,28 +106,22 @@
                     if (result) {
                         $scope.saveStatus = 1;
 
-                        var sameOrderDetails = $scope.selectedWorkOrder.Details;
-                            //$scope.machineQueue.filter(d => d.WorkOrder.ItemOrderId == $scope.selectedWorkOrder.WorkOrder.ItemOrderId);
-                        for (var i = 0; i < sameOrderDetails.length; i++) {
-                            var detailObj = sameOrderDetails[i];
+                        $http.post(HOST_URL + 'Mobile/ToggleWorkOrderStatus',
+                            { workOrderDetailId: $scope.selectedWorkOrder.WorkOrderDetailId }, 'json')
+                            .then(function (resp) {
+                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                    $scope.saveStatus = 0;
 
-                            $http.post(HOST_URL + 'Mobile/ToggleWorkOrderStatus',
-                                { workOrderDetailId: detailObj.Id }, 'json')
-                                .then(function (resp) {
-                                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                                        $scope.saveStatus = 0;
-
-                                        if (resp.data.Result == true) {
-                                            toastr.success('İşlem başarılı.', 'Bilgilendirme');
-                                        }
-                                        else
-                                            toastr.error(resp.data.ErrorMessage, 'Hata');
-
-                                        $scope.loadMachineQueue();
-                                        /*$scope.loadActiveWorkOrder();*/
+                                    if (resp.data.Result == true) {
+                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
                                     }
-                                }).catch(function (err) { });
-                        }
+                                    else
+                                        toastr.error(resp.data.ErrorMessage, 'Hata');
+
+                                    $scope.loadMachineQueue();
+                                    /*$scope.loadActiveWorkOrder();*/
+                                }
+                            }).catch(function (err) { });
                     }
                 }
             });

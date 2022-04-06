@@ -1,6 +1,6 @@
 ﻿app.controller('offerCtrl', ['$scope', '$http', 'Upload',
     function ($scope, $http, Upload) {
-        $scope.modelObject = { Id: 0, OfferDateStr: moment().format('DD.MM.YYYY'), Details: [] };
+        $scope.modelObject = { Id: 0, OfferDateStr: moment().format('DD.MM.YYYY'), Details: [], Sheets: [] };
         $scope.offerModel = {};
 
         $scope.itemList = [];
@@ -156,8 +156,35 @@
                         $scope.modelObject.CreditMonths = $scope.offerModel.vadeay;
                         $scope.modelObject.CreditRate = $scope.offerModel.vadeyuzde;
 
+                        // SAVE SHEETS
+                        for (var i = 1; i <= Object.keys(headerData.sheets).length; i++) {
+                            var sheetData = headerData.sheets[i.toString()];
+
+                            var sheetVisualData = '';
+                            if (sheetData)
+                                sheetVisualData = sheetData['image'].replace('<p><img src=\"data:image/x-wmf;base64,', '')
+                                    .replace('" ></p>', '');
+
+                            if (!$scope.modelObject.Sheets.some(d => d.SheetNo == i)) {
+                                $scope.modelObject.Sheets.push({
+                                    Eff: sheetData['eff'] && sheetData['eff'].length > 0 ? parseFloat(sheetData['eff']) : 0,
+                                    SheetVisualStr: sheetVisualData,
+                                    Thickness: parseInt(sheetData['tickness']),
+                                    Quantity: sheetData['quantity'],
+                                    PerSheetTiemStr: sheetData['per-sheet-time'],
+                                    SheetNo: i,
+                                });
+                            }
+                        }
+
                         for (var i = 0; i < headerData.data.length; i++) {
                             var dataRow = headerData.data[i];
+
+                            // OBTAIN SHEET DATA
+                            var detailedInfo = headerData.ANPartsPerSNOBJ[Object.keys(headerData.ANPartsPerSNOBJ)[i]];
+                            var sheetUsages = detailedInfo;
+                            detailedInfo = detailedInfo[0];
+                            var sheetData = headerData.sheets[(parseInt(detailedInfo['sheetid'])).toString()];
 
                             // PUSH AS NEW OFFER DETAIL
                             var newId = 1;
@@ -168,8 +195,12 @@
 
                             var visualData = dataRow['resim'].replace('<p><img src="data:image/png;base64,', '')
                                 .replace('" ></p>', '');
+                            var sheetVisualData = '';
+                            if (sheetData)
+                                sheetVisualData = sheetData['image'].replace('<p><img src=\"data:image/x-wmf;base64,', '')
+                                    .replace('" ></p>', '');
 
-                            $scope.modelObject.Details.push({
+                            var newDetail = {
                                 Id: newId,
                                 NewDetail: true,
                                 SheetWeight: dataRow.agirlik,
@@ -182,7 +213,23 @@
                                 OrgUnitPrice: parseFloat(dataRow["adet-fiyat"]),
                                 SheetTickness: parseInt(dataRow.tickness),
                                 ItemVisualStr: visualData,
-                            });
+                                Usages: [],
+                                /*SheetNo: detailedInfo['sheetid'],*/
+                            };
+
+                            // add usages of detail part
+                            if (sheetUsages) {
+                                for (var k = 0; k < sheetUsages.length; k++) {
+                                    var usg = sheetUsages[k];
+                                    newDetail.Usages.push({
+                                        Id: 0,
+                                        Quantity: parseInt(usg['total-q']),
+                                        SheetNo: parseInt(usg['sheetid']),
+                                    });
+                                }
+                            }
+
+                            $scope.modelObject.Details.push(newDetail);
                         }
 
                         $scope.bindDetails();
@@ -346,8 +393,11 @@
                 marj: $scope.modelObject.ProfitRate,
                 vadeay: $scope.modelObject.CreditMonths,
                 vadeyuzde: $scope.modelObject.CreditRate,
+                teklifno: $scope.modelObject.OfferNo,
                 vade: $scope.modelObject.Expiration,
                 total: $scope.modelObject.TotalPrice,
+                tveren: $scope.modelObject.CreatedUserName,
+                yetkili: $scope.modelObject.FirmResponsible,
                 "aciklama": $scope.modelObject.Explanation,
                 "to-company": $scope.selectedFirm.FirmName,
                 "from-company": 'London Metal',
@@ -485,6 +535,8 @@
                             $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
                         else
                             $scope.selectedFirm = {};
+
+                        refreshArray($scope.firmList);
 
                         $scope.offerModel.firmaismi = $scope.selectedFirm.FirmName;
                         $scope.offerModel.sackg = $scope.modelObject.SheetWeight;
@@ -728,6 +780,14 @@
                                 element.append('<image src="data:image/png;base64,' + info.displayValue + '" />');
                         }
                     },
+                    //{
+                    //    dataField: 'SheetVisualStr', caption: 'Şablon', allowEditing: false,
+                    //    cellTemplate: function (element, info) {
+
+                    //        if (info.displayValue != null && info.displayValue.length > 0)
+                    //            element.append('<image src="data:image/x-wmf;base64,' + info.displayValue + '" />');
+                    //    }
+                    //},
                     {
                         dataField: 'ItemId', caption: 'Stok Kodu',
                         lookup: {
@@ -794,6 +854,11 @@
                                     $scope.showOfferProcess(e.row.data);
                                 }
                             },
+                            {
+                                name: 'usages', cssClass: 'fas fa-window-maximize', text: '', onClick: function (e) {
+                                    $scope.showSheetUsages(e.row.data);
+                                }
+                            },
                         ]
                     }
                 ]
@@ -856,6 +921,49 @@
 
             $('#dial-offer-process').dialog('close');
         });
+
+        // SHEETS DIALOG
+        $scope.showOfferSheets = function () {
+            $scope.$broadcast('loadSheetsList', $scope.modelObject.Sheets);
+
+            $('#dial-offer-sheets').dialog({
+                width: 600,
+                height: 400,
+                //height: window.innerHeight * 0.6,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+
+        // RELATED SHEETS DIALOG
+        $scope.showSheetUsages = function (item) {
+            if (item && item.Usages) {
+                for (var i = 0; i < item.Usages.length; i++) {
+                    var el = item.Usages[i];
+                    var itemData = $scope.itemList.find(d => d.Id == item.ItemId);
+                    if (itemData)
+                        el.PartName = itemData.ItemName;
+                }
+
+                $scope.$broadcast('loadUsages', item.Usages);
+
+                $('#dial-sheet-usages').dialog({
+                    width: 600,
+                    height: 400,
+                    //height: window.innerHeight * 0.6,
+                    hide: true,
+                    modal: true,
+                    resizable: false,
+                    show: true,
+                    draggable: false,
+                    closeText: "KAPAT"
+                });
+            }
+        }
 
         // OFFER CONSTANT PRICES DIALOG
         $scope.showOfferConstants = function () {

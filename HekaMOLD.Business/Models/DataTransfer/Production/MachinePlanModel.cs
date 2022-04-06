@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HekaMOLD.Business.Models.DataTransfer.Order;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public WorkOrderDetailModel WorkOrder { get; set; }
         public WorkOrderSerialModel[] Serials { get; set; }
         public ProductWastageModel[] Wastages { get; set; }
+        public ItemOrderSheetUsageModel[] SheetUsages { get; set; }
     }
 }

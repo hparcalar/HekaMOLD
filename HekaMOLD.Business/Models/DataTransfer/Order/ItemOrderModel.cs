@@ -31,6 +31,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public int? SyncUserId { get; set; }
         public string SyncKey { get; set; }
         public ItemOrderDetailModel[] Details { get; set; }
+        public ItemOrderSheetModel[] Sheets { get; set; }
 
         #region VISUAL ELEMENTS
         public string FirmCode { get; set; }

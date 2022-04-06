@@ -56,8 +56,8 @@
                 <div class="col-sm-4 col-md-4 col-xs-4 col-xxl-4">
                     <div class="d-flex flex-row justify-content-between h-100">
                         <a ng-show="selectedWorkOrder.Id > 0" ng-cloak
-                           ng-class="{'btn-success': selectedWorkOrder.WorkOrderStatus == 1 || selectedWorkOrder.WorkOrderStatus == 2,
-                                    'btn-danger': selectedWorkOrder.WorkOrderStatus == 3, 'mx-2': selectedWorkOrder.WorkOrderStatus != 3 }"
+                           ng-class="{'btn-success': !selectedWorkOrder.WorkOrder.WorkOrderStatus || selectedWorkOrder.WorkOrder.WorkOrderStatus == 1 || selectedWorkOrder.WorkOrder.WorkOrderStatus == 2,
+                                    'btn-danger': selectedWorkOrder.WorkOrder.WorkOrderStatus == 3, 'mx-2': selectedWorkOrder.WorkOrder.WorkOrderStatus != 3 }"
                            class="btn btn-sm btn-block w-100 h-75 mt-2" ng-click="toggleWorkOrderStatus()">
                             <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                                 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -69,11 +69,11 @@
                             </span>
                             <br />
                             <span style="display:block;margin-top:10px;">
-                                {{ selectedWorkOrder.WorkOrderStatus == 3 ? 'Bitir' : 'Başlat' }}
+                                {{ selectedWorkOrder.WorkOrder.WorkOrderStatus == 3 ? 'Bitir' : 'Başlat' }}
                             </span>
                         </a>
 
-                        <a ng-show="selectedWorkOrder.Id > 0" ng-if="selectedWorkOrder.WorkOrderStatus == 3"
+                        <a ng-show="selectedWorkOrder.Id > 0" ng-if="selectedWorkOrder.WorkOrder.WorkOrderStatus == 3"
                            ng-cloak
                            class="btn btn-sm btn-warning btn-block w-100 h-75 mt-2 mx-2" ng-click="holdWorkOrder()">
                             <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
@@ -117,7 +117,8 @@
                         <thead>
                             <tr>
                                 <th class="w-10 px-2"><b>Sıra</b></th>
-                                <th class="w-30 px-2"><b>Ürün</b></th>
+                                <th class="w-20 px-2"><b>Sipariş No</b></th>
+                                <th class="w-10 px-2"><b>Levha No</b></th>
                                 <th class="w-10 px-2"><b>Miktar</b></th>
                                 <th class="w-30 px-2"><b>Müşteri</b></th>
                                 <th class="w-20 px-2"><b>Açıklama</b></th>
@@ -125,18 +126,18 @@
                         </thead>
                     </table>
                     <div class="table-scroller-md">
-                        <table ng-cloak class="table table-bordered">
+                        <table border="1" ng-cloak class="table table-bordered">
                             <tbody>
-                                <tr ng-repeat="item in machineQueue" ng-click="selectWorkOrder(item)"
-                                    ng-class="{'data-row-selected': item.Id == selectedWorkOrder.Id, 
+                                <tr style="font-weight:bold;" ng-repeat="item in machineQueue" ng-click="selectWorkOrder(item)"
+                                    ng-class="{'data-row-selected': item.Id == selectedWorkOrder.Id,
                                         'bg-warning': item.WorkOrderStatus == 3,
-                                        'bg-success': item.WorkOrderStatus == 4}"
-                                    >
+                                        'bg-success': item.WorkOrderStatus == 4}">
                                     <td class="w-10 px-2">{{item.OrderNo}}</td>
-                                    <td class="w-30 px-2">{{item.ProductName}}</td>
-                                    <td class="w-10 px-2">{{item.Quantity}}</td>
-                                    <td class="w-30 px-2">{{item.FirmName}}</td>
-                                    <td class="w-20 px-2"><b>{{ item.Explanation }}</b></td>
+                                    <td class="w-20 px-2">{{item.WorkOrder.ItemOrderDocumentNo}}</td>
+                                    <td class="w-10 px-2">{{item.WorkOrder.ProductCode}}</td>
+                                    <td class="w-10 px-2">{{item.WorkOrder.Quantity}}</td>
+                                    <td class="w-30 px-2">{{item.WorkOrder.FirmName}}</td>
+                                    <td class="w-20 px-2"><b>{{ item.WorkOrder.Explanation }}</b></td>
                                 </tr>
                             </tbody>
                         </table>
