@@ -610,7 +610,7 @@ namespace HekaMOLD.Business.UseCases
                     result = bObj.SaveOrUpdateItemOrder(new Models.DataTransfer.Order.ItemOrderModel { 
                         PlantId = 1,
                         OrderDate = DateTime.Now,
-                        OrderNo = bObj.GetNextOrderNo(1, Models.Constants.ItemOrderType.Sale),
+                        OrderNo =  dbOffer.OfferNo, //bObj.GetNextOrderNo(1, Models.Constants.ItemOrderType.Sale),
                         CreatedDate = DateTime.Now,
                         OrderType = (int)ItemOrderType.Sale,
                         OrderStatus = 1,

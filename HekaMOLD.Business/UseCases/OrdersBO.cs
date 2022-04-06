@@ -199,7 +199,10 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                 {
                     dbObj = new ItemOrder();
-                    dbObj.OrderNo = GetNextOrderNo(model.PlantId.Value, (ItemOrderType)model.OrderType.Value);
+                    if (!string.IsNullOrEmpty(model.OrderNo))
+                        dbObj.OrderNo = model.OrderNo;
+                    else
+                        dbObj.OrderNo = GetNextOrderNo(model.PlantId.Value, (ItemOrderType)model.OrderType.Value);
                     dbObj.CreatedDate = DateTime.Now;
                     dbObj.CreatedUserId = model.CreatedUserId;
                     dbObj.OrderStatus = (int)OrderStatusType.Created;
@@ -560,8 +563,10 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ItemOrder>();
                 var repoDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+                var repoSheets = _unitOfWork.GetRepository<ItemOrderSheet>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
                 var repoNeeds = _unitOfWork.GetRepository<ItemOrderItemNeeds>();
+                var repoSheetUsage = _unitOfWork.GetRepository<ItemOrderSheetUsage>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
@@ -570,12 +575,31 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj.ItemReceipt.Any())
                     throw new Exception("İrsaliyesi girilmiş olan bir sipariş silinemez.");
 
+                // CLEAR SHEETS
+                if (dbObj.ItemOrderSheet.Any())
+                {
+                    var sheets = dbObj.ItemOrderSheet.ToArray();
+                    foreach (var item in sheets)
+                    {
+                        repoSheets.Delete(item);
+                    }
+                }
+
                 // CLEAR DETAILS
                 if (dbObj.ItemOrderDetail.Any())
                 {
                     var detailObjArr = dbObj.ItemOrderDetail.ToArray();
                     foreach (var item in detailObjArr)
                     {
+                        if (item.ItemOrderSheetUsage.Any())
+                        {
+                            var usages = item.ItemOrderSheetUsage.ToArray();
+                            foreach (var usItem in usages)
+                            {
+                                repoSheetUsage.Delete(usItem);
+                            }
+                        }
+
                         #region SET REQUEST & DETAIL TO APPROVED
                         if (item.ItemRequestDetail != null)
                         {

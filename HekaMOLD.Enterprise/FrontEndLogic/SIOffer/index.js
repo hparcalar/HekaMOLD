@@ -162,7 +162,10 @@
 
                             var sheetVisualData = '';
                             if (sheetData)
-                                sheetVisualData = sheetData['image'].replace('<p><img src=\"data:image/x-wmf;base64,', '')
+                                sheetVisualData = sheetData['image'].replace('<p><img src=\"data:image/x-emf;base64,', '')
+                                    .replace('<p><img src=\"data:image/x-wmf;base64,', '')
+                                    .replace(/alt=".*"/, '')
+                                    .replace('"  ></p>', '')
                                     .replace('" ></p>', '');
 
                             if (!$scope.modelObject.Sheets.some(d => d.SheetNo == i)) {
@@ -198,6 +201,9 @@
                             var sheetVisualData = '';
                             if (sheetData)
                                 sheetVisualData = sheetData['image'].replace('<p><img src=\"data:image/x-wmf;base64,', '')
+                                    .replace('<p><img src=\"data:image/x-emf;base64,', '')
+                                    .replace(/alt=".*"/, '')
+                                    .replace('"  ></p>', '')
                                     .replace('" ></p>', '');
 
                             var newDetail = {
