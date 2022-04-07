@@ -28,8 +28,12 @@ namespace Heka.DataAccess.Context
         public string Reason { get; set; }
         public string Explanation { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
+
+        [ForeignKey("CreatedUser")]
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
+
+        [ForeignKey("UpdatedUser")]
         public Nullable<int> UpdatedUserId { get; set; }
 
         [ForeignKey("PostureCategory")]
@@ -38,7 +42,10 @@ namespace Heka.DataAccess.Context
         [ForeignKey("Shift")]
         public Nullable<int> ShiftId { get; set; }
         public Nullable<System.DateTime> ShiftBelongsToDate { get; set; }
-    
+
+        public virtual User CreatedUser { get; set; }
+        public virtual User UpdatedUser { get; set; }
+
         public virtual Shift Shift { get; set; }
         public virtual Machine Machine { get; set; }
         public virtual PostureCategory PostureCategory { get; set; }

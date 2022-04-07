@@ -8,13 +8,56 @@
     <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="machineOnlineCtrl">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
+            <div>
+                <div class="d-flex flex-row w-50">
+                    <input type="text" class="form-control datepicker me-1" ng-model="filterModel.startDate" placeholder="Tarih" />
+                    @*<input type="text" class="form-control datepicker mx-2" ng-model="filterModel.endDate" placeholder="Bitiş Tarihi" />*@
+
+                    <button type="button" class="btn btn-sm btn-flex btn-dark mx-2" ng-show="isModelBinding">
+                        Lütfen bekleyiniz...
+                    </button>
+
+                    <button ng-click="bindModel()"
+                            class="btn btn-sm btn-flex btn-primary fw-bolder">
+                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.25" d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" fill="#12131A" />
+                                <path d="M6 5C5.44772 5 5 5.44772 5 6C5 6.55228 5.44771 7 6 7H16C16.5523 7 17 6.55228 17 6C17 5.44772 16.5523 5 16 5H6Z" fill="#12131A" />
+                                <path d="M6 9C5.44772 9 5 9.44771 5 10C5 10.5523 5.44772 11 6 11H10C10.5523 11 11 10.5523 11 10C11 9.44771 10.5523 9 10 9H6Z" fill="#12131A" />
+                                <path d="M6 13C5.44772 13 5 13.4477 5 14C5 14.5523 5.44772 15 6 15H18C18.5523 15 19 14.5523 19 14C19 13.4477 18.5523 13 18 13H6Z" fill="#12131A" />
+                                <path d="M5 18C5 17.4477 5.44772 17 6 17H14C14.5523 17 15 17.4477 15 18C15 18.5523 14.5523 19 14 19H6C5.44772 19 5 18.5523 5 18Z" fill="#12131A" />
+                            </svg>
+                        </span>
+                        Getir
+                    </button>
+                </div>
+
+            </div>
             <!--begin::Row-->
             <div class="row gy-1 mt-0 gx-xl-8 bg-white">
                 <!--begin::Col-->
                 <div class="col-xxl-3 col-sm-3 col-md-3 px-2 py-0" ng-cloak ng-repeat="item in machineList">
-                    <div class="rounded-1 py-0 my-0" ng-cloak
-                         ng-class="{'bg-danger': item.MachineStatus == 0 || item.MachineStatus == null, 'bg-success': item.MachineStatus == 1}">
+                    <div class="rounded-1 py-0 my-0"
+                         ng-cloak
+                         ng-style="{'background-color': item.MachineStatus == 1 ? 'rgba(71,190,125, 0.6)' : 'rgba(241,65,108, 0.6)'}">
                         <div class="m-2 border-1 rounded-1">
+                            <div class="d-flex flex-row justify-content-between pt-2 my-1">
+                                <button type="button" class="btn btn-sm btn-secondary flex-fill">
+                                    Üretim
+                                </button>
+                                <button type="button" class="btn mx-2 btn-sm btn-warning flex-fill"
+                                        ng-click="showIncidents(item.Id)">
+                                    Arızalar
+                                    <span ng-if="item.MachineStats.IncidentCount > 0"
+                                          class="badge badge-light-warning">{{ item.MachineStats.IncidentCount }}</span>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger flex-fill"
+                                        ng-click="showPostures(item.Id)">
+                                    Duruşlar
+                                    <span ng-if="item.MachineStats.PostureCount > 0"
+                                          class="badge badge-light-danger">{{ item.MachineStats.PostureCount }}</span>
+                                </button>
+                            </div>
                             <div class="d-flex flex-row justify-content-between pt-2 my-1">
                                 <button type="button" ng-cloak
                                         ng-click="toggleMachineStart(item)"
@@ -38,47 +81,77 @@
                                 </svg>
                                 {{item.MachineName}}
                             </h4>
-                            <h5 ng-if="item.IsInPosture || item.IsInIncident"
-                                ng-class="{'bg-danger': item.IsInPosture, 'bg-warning': item.IsInIncident}"
+                            <h5 ng-if="item.MachineStats.IsLiveModel && (item.IsInPosture || item.IsInIncident)"
                                 class="text-center bg-danger text-light mt-1 rounded px-2 py-2 border-1 border-dark">
                                 {{item.IsInPosture ? 'DURUŞ: ' + item.ActivePostureText : 'BAKIM: ' + item.ActiveIncidentText}}
                             </h5>
-                            <h4 class="text-center bg-primary text-light mt-1 rounded px-2 py-2 border-1 border-dark">
+                            <h4 ng-if="item.MachineStats.IsLiveModel" class="text-center bg-primary text-light mt-1 rounded px-2 py-2 border-1 border-dark">
                                 {{item.WorkingUserName.length > 0 ? item.WorkingUserName : 'OPERATÖR YOK'}}
                             </h4>
-                            <div class="active-plan text-center py-0 min-h-55px">
-                                <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
-                                    <b>Firma:</b> {{item.ActivePlan.WorkOrder.FirmName}}
-                                </p>
-                                <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0"
-                                   data-toggle="tooltip" title="{{item.ActivePlan.WorkOrder.ProductName}}">
-                                    <b>Ürün:</b> {{item.ActivePlan.WorkOrder.ProductName}}
-                                </p>
-                                <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
-                                    Üretilen: <b>{{getFixed(item.ActivePlan.WorkOrder.CompleteQuantity,0)}}</b> / Sipariş:
-                                    {{item.ActivePlan.WorkOrder.Quantity}}
-                                </p>
-                            </div>
+                            @*<div class="active-plan text-center py-0 min-h-55px">
+                            <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
+                                <b>Firma:</b> {{item.ActivePlan.WorkOrder.FirmName}}
+                            </p>
+                            <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0"
+                               data-toggle="tooltip" title="{{item.ActivePlan.WorkOrder.ProductName}}">
+                                <b>Ürün:</b> {{item.ActivePlan.WorkOrder.ProductName}}
+                            </p>
+                            <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
+                                Üretilen: <b>{{getFixed(item.ActivePlan.WorkOrder.CompleteQuantity,0)}}</b> / Sipariş:
+                                {{item.ActivePlan.WorkOrder.Quantity}}
+                            </p>
+                        </div>*@
                             <div class="general-avg text-center py-0">
                                 <div class="d-flex flex-row">
-                                    <div class="py-0 my-1 flex-grow-1" ng-repeat="shift in item.MachineStats.ShiftStats">
+                                    <div class="py-0 my-1 flex-grow-1 mx-1" ng-repeat="shift in item.MachineStats.ShiftStats">
                                         <hr class="my-1" />
                                         <h6 class="text-decoration-underline my-0">{{ shift.ShiftCode }} Vardiyası</h6>
-                                        <p class="py-0 my-0">Ort Çevrim: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
-                                        <p class="py-0 my-0">Üretim: <b>{{ shift.AvgProductionCount }} adet</b></p>
-                                        <p class="py-0 my-0" ng-class="{'bg-danger': shift.WastageCount > 0}">Fire: <b>{{ shift.WastageCount }} adet</b></p>
+                                        <p class="py-0 my-1">Çevrim: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
+                                        <p class="py-0 my-0 bg-primary text-white rounded-1 fs-4" ng-if="shift.IsLiveModel"><span class="fs-6">Üretim:</span> <b>{{ shift.ActiveProductionCount }}</b></p>
+                                        <p class="py-0 my-1 fs-4 rounded-1" ng-class="{'bg-danger': shift.ActiveWastageCount > 0}" ng-if="shift.IsLiveModel"><span class="fs-6">Fire:</span> <b>{{ shift.ActiveWastageCount }}</b></p>
+                                        <p class="py-0 my-1 bg-secondary text-dark rounded-1 fs-4"><span class="fs-6">Vardiya Ürt:</span> <b>{{ shift.AvgProductionCount }}</b></p>
+                                        <p class="py-0 my-1 fs-4 rounded-1" ng-class="{'bg-danger': shift.WastageCount > 0}"><span class="fs-6">Vardiya Fire:</span> <b>{{ shift.WastageCount }}</b></p>
+                                        @*<p class="py-0 my-0 bg-white rounded-1 text-dark"
+                                    ><b>Hedef: {{ shift.TargetCount }} adet</b></p>*@
+
+                                        <div class="bg-secondary px-0">
+                                            @* PRODUCTION DETAIL TABLE *@
+                                            <table ng-if="shift.ProductionData != null && shift.ProductionData.length > 0"
+                                                   class="table table-bordered table-condensed table-responsive my-1">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="fs-8 fw-bolder w-50 bg-dark text-white text-center border-right-1">
+                                                            <i class="fas fa-long-arrow-alt-down"></i>
+                                                            Ürün
+                                                        </th>
+                                                        <th class="fs-8 fw-bolder w-25 bg-dark text-white text-center px-0 border-right-1">Adet</th>
+                                                        <th class="fs-8 fw-bolder w-25 bg-dark text-white text-center px-0">Fire</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="border-bottom-1" style="border-color:#666;" ng-repeat="itemDetail in shift.ProductionData">
+                                                        <td class="fs-9 px-0 py-0 w-50" ng-bind="itemDetail.ItemName"></td>
+                                                        <td class="fs-5 fw-bolder w-25 px-0" ng-bind="itemDetail.ProdCount"></td>
+                                                        <td class="fs-5 fw-bolder w-25 px-0" ng-bind="itemDetail.WastageCount"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                                <hr class="my-1" />
-                                <h6 class="text-dark text-decoration-underline my-0">
-                                    Genel Ortalama
-                                </h6>
-                                <p class="py-0 my-0">Ort Çevrim: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
-                                <p class="py-0 my-0">Üretim: <b>{{item.MachineStats.AvgProductionCount}}</b> adet</p>
-                                <p class="py-0 my-0" ng-class="{'bg-danger': item.MachineStats.WastageCount > 0}">Fire: <b>{{item.MachineStats.WastageCount}}</b> adet</p>
+                                @*<hr class="my-1" />
+                            <h6 ng-class="{'text-dark': item.ForeColor == null || item.ForeColor.length == 0}"
+                                ng-style="item.ForeColor != null && item.ForeColor.length > 0 && {'color': item.ForeColor}"
+                                class="text-decoration-underline my-0">
+                                Genel Ortalama
+                            </h6>
+                            <p class="py-0 my-0">Ort Çevrim: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
+                            <p class="py-0 my-0">Üretim: <b>{{item.MachineStats.AvgProductionCount}}</b> adet</p>
+                            <p class="py-0 my-0" ng-class="{'bg-danger': item.MachineStats.WastageCount > 0}">Fire: <b>{{item.MachineStats.WastageCount}}</b> adet</p>*@
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <!--end::Col-->
             </div>

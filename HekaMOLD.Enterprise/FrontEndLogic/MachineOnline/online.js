@@ -75,9 +75,9 @@
     }
 
     // ON LOAD EVENTS
-    $scope.bindModel(PRM_ID);
+    $scope.bindModel();
 
-    $interval($scope.bindModel, 120000);
+    //$interval($scope.bindModel, 120000);
 
-    setTimeout(function () { window.location.reload(); }, 1000 * 60 * 10);
+    //setTimeout(function () { window.location.reload(); }, 1000 * 60 * 10);
 });

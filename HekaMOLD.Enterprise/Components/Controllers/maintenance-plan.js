@@ -1,11 +1,41 @@
 ﻿app.controller('maintenancePlanCtrl', function ($scope, $http) {
     // #region COMPONENT VARIABLES
     $scope.mntData = [];
+    $scope.machineList = [];
+    $scope.userList = [];
+    // #endregion
+
+    // #region COMPONENT FUNCTIONS
+    $scope.bindScheduleModel = function () {
+        try {
+            $http.get(HOST_URL + 'Common/GetMachineList', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.machineList = resp.data;
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+
+        try {
+            $http.get(HOST_URL + 'User/SearchUserList?roleFilter=Bakım', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.userList = resp.data;
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
+    $scope.getPlanById = async function (planId) {
+        return null;
+    }
     // #endregion
 
     // #region MAINTENANCE CALENDAR
-    $scope.mntData = [];
-
     $scope.isWeekEnd = function (date) {
         var day = date.getDay();
         return day === 0 || day === 6;
@@ -36,66 +66,117 @@
             },
             onInitialized: function (objE) {
             },
-            onAppointmentFormOpening(data) {
+            onAppointmentFormOpening: async function(data) {
                 const { form } = data;
-                let movieInfo = {}; //getMovieById(data.appointmentData.movieId) || {};
-                let { startDate } = data.appointmentData;
+                let planInfo = (await $scope.getPlanById(data.appointmentData.Id))
+                    || {
+                        PlanStatus: 0,
+                        StartDate: moment().toDate(),
+                };
+                data.appointmentData = planInfo;
+                data.appointmentData.startDate = planInfo.StartDate;
+                data.appointmentData.endDate = planInfo.EndDate;
+                console.log(data);
+                //let { startDate, endDate } = data.appointmentData;
 
-                form.option('items', [{
-                    label: {
-                        text: 'Movie',
-                    },
-                    editorType: 'dxSelectBox',
-                    dataField: 'movieId',
-                    editorOptions: {
-                        items: [],
-                        displayExpr: 'text',
-                        valueExpr: 'id',
-                        onValueChanged(args) {
-                            //movieInfo = getMovieById(args.value);
+                form.option('items', [
+                    {
+                        label: {
+                            text: 'Makine',
+                        },
+                        editorType: 'dxSelectBox',
+                        dataField: 'MachineId',
+                        editorOptions: {
+                            items: $scope.machineList,
+                            displayExpr: 'MachineName',
+                            valueExpr: 'Id',
+                            onValueChanged(args) {
+                                //movieInfo = getMovieById(args.value);
 
-                            //form.updateData('director', movieInfo.director);
-                            //form.updateData('endDate', new Date(startDate.getTime() + 60 * 1000 * movieInfo.duration));
+                                //form.updateData('director', movieInfo.director);
+                                //form.updateData('endDate', new Date(startDate.getTime() + 60 * 1000 * movieInfo.duration));
+                            },
                         },
                     },
-                }, {
-                    label: {
-                        text: 'Director',
+                    {
+                        label: {
+                            text: 'Personel',
+                        },
+                        editorType: 'dxSelectBox',
+                        dataField: 'ResponsibleUserId',
+                        editorOptions: {
+                            items: $scope.userList,
+                            displayExpr: 'UserName',
+                            valueExpr: 'Id',
+                            onValueChanged(args) {
+                                //movieInfo = getMovieById(args.value);
+
+                                //form.updateData('director', movieInfo.director);
+                                //form.updateData('endDate', new Date(startDate.getTime() + 60 * 1000 * movieInfo.duration));
+                            },
+                        },
                     },
-                    name: 'director',
+                    {
+                    label: {
+                        text: 'Konu',
+                    },
+                    name: 'Subject',
                     editorType: 'dxTextBox',
                     editorOptions: {
-                        value: movieInfo.director,
-                        readOnly: true,
+                        value: planInfo.Subject,
                     },
-                }, {
-                    dataField: 'startDate',
+                    },
+                    {
+                        label: {
+                            text: 'Açıklama',
+                        },
+                        name: 'Explanation',
+                        editorType: 'dxTextBox',
+                        editorOptions: {
+                            width: '100%',
+                            value: planInfo.Explanation,
+                        },
+                    },
+                    {
+                        label: {
+                            text: 'Başlangıç'
+                        },
+                    dataField: 'StartDate',
                     editorType: 'dxDateBox',
                     editorOptions: {
                         width: '100%',
                         type: 'datetime',
                         onValueChanged(args) {
-                            startDate = args.value;
-
-                            form.updateData('endDate', new Date(startDate.getTime() + 60 * 1000 * movieInfo.duration));
+                            data.appointmentData.startDate = args.value;
                         },
                     },
-                }, {
-                    name: 'endDate',
-                    dataField: 'endDate',
+                    }, {
+                        label: {
+                            text: 'Bitiş'
+                        },
+                    dataField: 'EndDate',
                     editorType: 'dxDateBox',
                     editorOptions: {
                         width: '100%',
                         type: 'datetime',
-                        readOnly: true,
+                        onValueChanged(args) {
+                            data.appointmentData.endDate = args.value;
+                        },
                     },
-                }, {
-                    dataField: 'price',
+                    },
+                    
+                    {
+                        label: {
+                            text: 'Durum',
+                        },
+                    dataField: 'PlanStatus',
                     editorType: 'dxRadioGroup',
                     editorOptions: {
-                        dataSource: [5, 10, 15, 20],
+                        dataSource: [{Id:0, Text:'Bekleniyor'}, {Id:1, Text:'Başlandı'}, {Id:2, Text:'Tamamlandı'}],
+                        displayExpr: 'Text',
+                        valueExpr: 'Id',
                         itemTemplate(itemData) {
-                            return `$${itemData}`;
+                            return `${itemData.Text}`;
                         },
                     },
                 },
@@ -149,8 +230,8 @@
 
     $scope.saveWork = function (dataModel) {
         var foundData = null;
-
         $scope.mntData.push(dataModel);
+
         //if (typeof dataModel.Id == 'undefined' || dataModel.Id == 0) {
         //    foundData = {
         //        Id: 0,
@@ -178,8 +259,11 @@
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');
+    $scope.bindScheduleModel();
     $scope.loadScheduler();
+
     $scope.$on('loadMaintenancePlan', function (e, d) {
-        
+        $scope.bindScheduleModel();
+        $scope.loadScheduler();
     });
 });

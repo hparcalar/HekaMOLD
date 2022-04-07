@@ -27,14 +27,23 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
+
+        [ForeignKey("CreatedUser")]
         public Nullable<int> CreatedUserId { get; set; }
+
+        [ForeignKey("StartedUser")]
         public Nullable<int> StartedUserId { get; set; }
+
+        [ForeignKey("EndUser")]
         public Nullable<int> EndUserId { get; set; }
 
         [ForeignKey("Shift")]
         public Nullable<int> ShiftId { get; set; }
         public Nullable<System.DateTime> ShiftBelongsToDate { get; set; }
-    
+
+        public virtual User CreatedUser { get; set; }
+        public virtual User StartedUser { get; set; }
+        public virtual User EndUser { get; set; }
         public virtual IncidentCategory IncidentCategory { get; set; }
         public virtual Shift Shift { get; set; }
         public virtual Machine Machine { get; set; }

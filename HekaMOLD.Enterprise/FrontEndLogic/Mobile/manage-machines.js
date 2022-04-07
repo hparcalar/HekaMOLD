@@ -1,16 +1,25 @@
 ﻿app.controller('machineOnlineCtrl', function ($scope, $http) {
     $scope.machineList = [];
     $scope.filterModel = { startDate: moment().format('DD.MM.YYYY'), endDate: moment().format('DD.MM.YYYY') };
+    $scope.isModelBinding = false;
     $scope.selectedMachineId = 0;
 
     $scope.bindModel = function () {
+        if ($scope.isModelBinding)
+            return;
+
+        $scope.isModelBinding = true;
+
         $http.get(HOST_URL + 'Machine/GetMachineStats?t1=' + $scope.filterModel.startDate + '&t2='
             + $scope.filterModel.endDate, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.machineList = resp.data.Data;
+                    $scope.isModelBinding = false;
                 }
-            }).catch(function (err) { });
+            }).catch(function (err) {
+                $scope.isModelBinding = false;
+            });
     }
 
     $scope.toggleMachineStart = function (item) {

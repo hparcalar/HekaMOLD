@@ -247,6 +247,10 @@
     <Compile Include="Migrations\202203150439299_DeliveryPlan_ItemOrderDetail.designer.cs">
       <DependentUpon>202203150439299_DeliveryPlan_ItemOrderDetail.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204071138380_IncidentAndPosture_UserRelations.cs" />
+    <Compile Include="Migrations\202204071138380_IncidentAndPosture_UserRelations.designer.cs">
+      <DependentUpon>202204071138380_IncidentAndPosture_UserRelations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -326,6 +330,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202203150439299_DeliveryPlan_ItemOrderDetail.resx">
       <DependentUpon>202203150439299_DeliveryPlan_ItemOrderDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204071138380_IncidentAndPosture_UserRelations.resx">
+      <DependentUpon>202204071138380_IncidentAndPosture_UserRelations.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

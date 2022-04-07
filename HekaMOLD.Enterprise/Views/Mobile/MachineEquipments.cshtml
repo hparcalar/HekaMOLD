@@ -27,10 +27,10 @@
                 </div>
 
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    
+
                 </div>
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    
+
                 </div>
             </div>
 
@@ -49,9 +49,26 @@
                         <table ng-cloak class="table table-bordered table-striped">
                             <tbody>
                                 <tr ng-repeat="item in eqCategoryList">
-                                    <td class="w-20 px-2">{{item.EquipmentCategoryName}}</td>
+                                    <td class="w-20 px-2">
+                                        <div class="d-flex flex-row">
+                                            <button type="button"
+                                                    ng-click="editCategory(item)"
+                                                    class="py-0 px-1 flex-shrink-0 btn btn-sm btn-warning me-2" style="padding-left:10px !important;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <span ng-bind="item.EquipmentCategoryName" class="flex-grow-1"></span>
+                                        </div>
+                                    </td>
                                     <td class="w-10 px-2" ng-repeat="machine in machineList">
-                                        {{ getMachineData(item, machine) }}
+                                        <div class="d-flex flex-row">
+                                            <button type="button"
+                                                    ng-click="editEquipment(item, machine)"
+                                                    class="py-0 px-1 flex-shrink-0 btn btn-sm btn-warning me-2" style="padding-left:10px !important;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <span ng-bind="getMachineData(item, machine)" class="flex-grow-1"></span>
+                                        </div>
+                                        
                                     </td>
                                 </tr>
                             </tbody>
@@ -62,6 +79,14 @@
             <!--end::EQUIPMENT TABLE-->
         </div>
         <!--end::Container-->
+
+        <div id="dial-edit-category" title="Kategoriyi Düzenle" style="display:none;">
+            <ng-include src="'../Components/Views/EditEquipmentCategory.html'"></ng-include>
+        </div>
+
+        <div id="dial-edit-equipment" title="Ekipman Bilgisi" style="display:none;">
+            <ng-include src="'../Components/Views/EditEquipment.html?v=4'"></ng-include>
+        </div>
     </div>
     <!--end::Post-->
 </div>
@@ -75,6 +100,7 @@
     </style>
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-
     <script src="~/FrontEndLogic/Mobile/machine-equipments.js"></script>
+    <script src="~/Components/Controllers/edit-equipment-category.js"></script>
+    <script src="~/Components/Controllers/edit-equipment.js?v=2"></script>
 }

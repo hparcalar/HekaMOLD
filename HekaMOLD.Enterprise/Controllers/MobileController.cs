@@ -901,6 +901,7 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        #region EQUIPMENT CATEGORY
         [HttpPost]
         [FreeAction]
         public JsonResult SaveEquipmentCategory(string name)
@@ -923,6 +924,131 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(new { Status=result.Result ? 1 : 0, RecordId=result.RecordId, ErrorMessage=result.ErrorMessage });
         }
+
+        [HttpPost]
+        public JsonResult DeleteEquipmentCategory(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.DeleteEquipmentCategory(rid);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateEquipmentCategory(EquipmentCategoryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.SaveOrUpdateEquipmentCategory(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public JsonResult GetEquipmentCategory(int rid)
+        {
+            EquipmentCategoryModel data = new EquipmentCategoryModel();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetEquipmentCategory(rid);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
+
+        #region EQUIPMENTS
+        [HttpPost]
+        public JsonResult UpdateEquipment(EquipmentModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.SaveOrUpdateEquipment(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteEquipment(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.DeleteEquipment(rid);
+            }
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public JsonResult GetEquipment(int rid)
+        {
+            EquipmentModel data = new EquipmentModel();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetEquipment(rid);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetEquipmentHeader(int machineId, int equipmentCategoryId)
+        {
+            string machineName = "", equipmentCategoryName = "";
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                var dbMac = bObj.GetMachine(machineId);
+                var dbEqCat = bObj.GetEquipmentCategory(equipmentCategoryId);
+
+                if (dbMac != null && dbMac.Id > 0)
+                    machineName = dbMac.MachineName;
+                if (dbEqCat != null && dbEqCat.Id > 0)
+                    equipmentCategoryName = dbEqCat.EquipmentCategoryName;
+            }
+
+            var jsonResult = Json(new { 
+                MachineName = machineName,
+                EquipmentCategoryName = equipmentCategoryName,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetAllEquipments()
+        {
+            EquipmentModel[] data = new EquipmentModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetEquipmentList();
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
+
         #endregion
 
         #region ITEM DELIVERY TO PRODUCTION

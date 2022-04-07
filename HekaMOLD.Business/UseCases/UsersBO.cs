@@ -339,6 +339,31 @@ namespace HekaMOLD.Business.UseCases
             {
                 UserModel containerObj = new UserModel();
                 d.MapTo(containerObj);
+                containerObj.Password = "";
+                containerObj.ProfileImage = null;
+                containerObj.ProfileImageBase64 = "";
+                containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                containerObj.IsProdTerminal = d.UserRole.UserAuth
+                    .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);
+                containerObj.IsProdChief = d.UserRole.UserAuth
+                    .Any(m => m.UserAuthType.AuthTypeCode == "IsProductionChief" && m.IsGranted == true);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public UserModel[] GetUserList(string roleFilter)
+        {
+            List<UserModel> data = new List<UserModel>();
+
+            var repo = _unitOfWork.GetRepository<User>();
+
+            repo.Filter(d => d.UserRole != null && d.UserRole.RoleName.Contains(roleFilter)).ToList().ForEach(d =>
+            {
+                UserModel containerObj = new UserModel();
+                d.MapTo(containerObj);
+                containerObj.Password = "";
                 containerObj.ProfileImage = null;
                 containerObj.ProfileImageBase64 = "";
                 containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";

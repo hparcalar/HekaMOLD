@@ -42,6 +42,11 @@
                 { dataField: 'IncidentCategoryName', caption: 'Arıza Adı' },
                 { dataField: 'MachineCode', caption: 'Makine Kodu' },
                 { dataField: 'Description', caption: 'Açıklama' },
+                { dataField: 'CreatedUserName', caption: 'Bildiren' },
+                { dataField: 'StartedUserName', caption: 'Müdahele Eden' },
+                { dataField: 'StartDateStr', caption: 'Müdahale' },
+                { dataField: 'EndUserName', caption: 'Tamamlayan' },
+                { dataField: 'EndDateStr', caption: 'Bitiş' },
                 //{
                 //    type: "buttons",
                 //    buttons: [

@@ -20,11 +20,14 @@
             <!--begin::Wrapper-->
             <div>
                 <div class="d-flex flex-row">
-                    <input type="text" class="form-control datepicker" ng-model="filterModel.startDate" placeholder="Başlangıç Tarihi" />
-                    <input type="text" class="form-control datepicker mx-2" ng-model="filterModel.endDate" placeholder="Bitiş Tarihi" />
+                    <input type="text" class="form-control datepicker me-1" ng-model="filterModel.startDate" placeholder="Tarih" />
+                    @*<input type="text" class="form-control datepicker mx-2" ng-model="filterModel.endDate" placeholder="Bitiş Tarihi" />*@
 
-                    <button
-                            ng-click="bindModel()"
+                    <button type="button" class="btn btn-sm btn-flex btn-dark mx-2" ng-show="isModelBinding">
+                        Lütfen bekleyiniz...
+                    </button>
+
+                    <button ng-click="bindModel()"
                             class="btn btn-sm btn-flex btn-light-primary btn-active-primary fw-bolder">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -55,7 +58,8 @@
                 <div class="col-xxl-3 col-sm-3 col-md-3 px-2 py-0" ng-repeat="item in machineList">
                     <div class="rounded-1 py-0 my-0"
                          ng-cloak
-                         ng-class="{'bg-danger': item.MachineStatus == 0 || item.MachineStatus == null, 'bg-success': item.MachineStatus == 1}">
+                         ng-style="{'background-color': item.MachineStatus == 1 ? 'rgba(71,190,125, 0.6)' : 'rgba(241,65,108, 0.6)'}"
+                        >
                         <div class="m-2 border-1 rounded-1">
                             <div class="d-flex flex-row justify-content-between pt-2 my-1">
                                 <button type="button" class="btn btn-sm btn-secondary flex-fill">
@@ -88,14 +92,14 @@
                                 </svg>
                                 {{item.MachineName}}
                             </h4>
-                            <h5 ng-if="item.IsInPosture || item.IsInIncident" 
+                            <h5 ng-if="item.MachineStats.IsLiveModel && (item.IsInPosture || item.IsInIncident)" 
                                 class="text-center bg-danger text-light mt-1 rounded px-2 py-2 border-1 border-dark">
                                 {{item.IsInPosture ? 'DURUŞ: ' + item.ActivePostureText : 'BAKIM: ' + item.ActiveIncidentText}}
                             </h5>
-                            <h4 class="text-center bg-primary text-light mt-1 rounded px-2 py-2 border-1 border-dark">
+                            <h4 ng-if="item.MachineStats.IsLiveModel" class="text-center bg-primary text-light mt-1 rounded px-2 py-2 border-1 border-dark">
                                 {{item.WorkingUserName.length > 0 ? item.WorkingUserName : 'OPERATÖR YOK'}}
                             </h4>
-                            <div class="active-plan text-center py-0 min-h-55px">
+                            @*<div class="active-plan text-center py-0 min-h-55px">
                                 <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
                                     <b>Firma:</b> {{item.ActivePlan.WorkOrder.FirmName}}
                                 </p>
@@ -107,20 +111,46 @@
                                     Üretilen: <b>{{getFixed(item.ActivePlan.WorkOrder.CompleteQuantity,0)}}</b> / Sipariş:
                                     {{item.ActivePlan.WorkOrder.Quantity}}
                                 </p>
-                            </div>
+                            </div>*@
                             <div class="general-avg text-center py-0">
                                 <div class="d-flex flex-row">
-                                    <div class="py-0 my-1 flex-grow-1" ng-repeat="shift in item.MachineStats.ShiftStats">
+                                    <div class="py-0 my-1 flex-grow-1 mx-1" ng-repeat="shift in item.MachineStats.ShiftStats">
                                         <hr class="my-1" />
                                         <h6 class="text-decoration-underline my-0">{{ shift.ShiftCode }} Vardiyası</h6>
-                                        <p class="py-0 my-0">Ort Çevrim: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
-                                        <p class="py-0 my-0">Üretim: <b>{{ shift.AvgProductionCount }} adet</b></p>
-                                        <p class="py-0 my-0 bg-white rounded-1 text-dark" 
-                                           ng-if="currentShift.Id == shift.ShiftId"><b>Hedef: {{ shift.TargetCount }} adet</b></p>
-                                        <p class="py-0 my-0" ng-class="{'bg-danger': shift.WastageCount > 0}">Fire: <b>{{ shift.WastageCount }} adet</b></p>
+                                        <p class="py-0 my-1">Çevrim: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
+                                        <p class="py-0 my-0 bg-primary text-white rounded-1 fs-4" ng-if="shift.IsLiveModel"><span class="fs-6">Üretim:</span> <b>{{ shift.ActiveProductionCount }}</b></p>
+                                        <p class="py-0 my-1 fs-4 rounded-1" ng-class="{'bg-danger': shift.ActiveWastageCount > 0}" ng-if="shift.IsLiveModel"><span class="fs-6">Fire:</span> <b>{{ shift.ActiveWastageCount }}</b></p>
+                                        <p class="py-0 my-1 bg-secondary text-dark rounded-1 fs-4"><span class="fs-6">Vardiya Ürt:</span> <b>{{ shift.AvgProductionCount }}</b></p>
+                                        <p class="py-0 my-1 fs-4 rounded-1" ng-class="{'bg-danger': shift.WastageCount > 0}"><span class="fs-6">Vardiya Fire:</span> <b>{{ shift.WastageCount }}</b></p>
+                                        @*<p class="py-0 my-0 bg-white rounded-1 text-dark"
+                                            ><b>Hedef: {{ shift.TargetCount }} adet</b></p>*@
+
+                                        <div class="bg-secondary px-0">
+                                            @* PRODUCTION DETAIL TABLE *@
+                                            <table ng-if="shift.ProductionData != null && shift.ProductionData.length > 0"
+                                                   class="table table-bordered table-condensed table-responsive my-1">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="fs-8 fw-bolder w-50 bg-dark text-white text-center border-right-1">
+                                                            <i class="fas fa-long-arrow-alt-down"></i>
+                                                            Ürün
+                                                        </th>
+                                                        <th class="fs-8 fw-bolder w-25 bg-dark text-white text-center px-0 border-right-1">Adet</th>
+                                                        <th class="fs-8 fw-bolder w-25 bg-dark text-white text-center px-0">Fire</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="border-bottom-1" style="border-color:#666;" ng-repeat="itemDetail in shift.ProductionData">
+                                                        <td class="fs-9 px-0 py-0 w-50" ng-bind="itemDetail.ItemName"></td>
+                                                        <td class="fs-5 fw-bolder w-25 px-0" ng-bind="itemDetail.ProdCount"></td>
+                                                        <td class="fs-5 fw-bolder w-25 px-0" ng-bind="itemDetail.WastageCount"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                                <hr class="my-1" />
+                                @*<hr class="my-1" />
                                 <h6 ng-class="{'text-dark': item.ForeColor == null || item.ForeColor.length == 0}"
                                     ng-style="item.ForeColor != null && item.ForeColor.length > 0 && {'color': item.ForeColor}"
                                     class="text-decoration-underline my-0">
@@ -128,7 +158,7 @@
                                 </h6>
                                 <p class="py-0 my-0">Ort Çevrim: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
                                 <p class="py-0 my-0">Üretim: <b>{{item.MachineStats.AvgProductionCount}}</b> adet</p>
-                                <p class="py-0 my-0" ng-class="{'bg-danger': item.MachineStats.WastageCount > 0}">Fire: <b>{{item.MachineStats.WastageCount}}</b> adet</p>
+                                <p class="py-0 my-0" ng-class="{'bg-danger': item.MachineStats.WastageCount > 0}">Fire: <b>{{item.MachineStats.WastageCount}}</b> adet</p>*@
                             </div>
                         </div>
                     </div>

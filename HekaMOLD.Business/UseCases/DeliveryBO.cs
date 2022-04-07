@@ -236,7 +236,7 @@ namespace HekaMOLD.Business.UseCases
         {
             ItemOrderDetailModel[] data = new ItemOrderDetailModel[0];
 
-            DateTime dtYearStart = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd",
+            DateTime dtYearStart = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd", 
                 System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
             var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
@@ -247,6 +247,7 @@ namespace HekaMOLD.Business.UseCases
             ).ToList().Select(d => new ItemOrderDetailModel
             {
                 Id = d.Id,
+                OrderDate = d.ItemOrder.OrderDate,
                 OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
                 DocumentNo = d.ItemOrder != null ? d.ItemOrder.DocumentNo : "",
                 DeadlineDateStr = d.ItemOrder != null ?
@@ -256,7 +257,9 @@ namespace HekaMOLD.Business.UseCases
                 FirmName = d.ItemOrder.Firm != null ?
                     d.ItemOrder.Firm.FirmName : "",
                 Quantity = d.Quantity - (d.DeliveryPlan.Sum(m => m.Quantity ?? m.ItemOrderDetail.Quantity) ?? 0),
-            }).ToArray();
+            })
+            .OrderByDescending(d => d.OrderDate)
+            .ToArray();
 
             return data;
         }

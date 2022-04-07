@@ -3944,6 +3944,8 @@
     <Content Include="assets\plugins\global\plugins.bundle.js" />
     <Content Include="Components\Controllers\delivery-plan-list.js" />
     <Content Include="Components\Controllers\edit-delivery.js" />
+    <Content Include="Components\Controllers\edit-equipment-category.js" />
+    <Content Include="Components\Controllers\edit-equipment.js" />
     <Content Include="Components\Controllers\edit-plan.js" />
     <Content Include="Components\Controllers\item-list.js" />
     <Content Include="Components\Controllers\machine-incidents.js" />
@@ -3971,6 +3973,8 @@
     <Content Include="Components\Controllers\warehouse-manager.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditDelivery.html" />
+    <Content Include="Components\Views\EditEquipment.html" />
+    <Content Include="Components\Views\EditEquipmentCategory.html" />
     <Content Include="Components\Views\EditPlan.html" />
     <Content Include="Components\Views\ItemList.html" />
     <Content Include="Components\Views\MachineIncidents.html" />

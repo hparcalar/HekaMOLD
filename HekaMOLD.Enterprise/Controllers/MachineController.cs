@@ -80,11 +80,11 @@ namespace HekaMOLD.Enterprise.Controllers
 
             if (shiftData != null)
             {
-                DateTime dt1 = DateTime.ParseExact(t1, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));    
+                DateTime dt1 = DateTime.ParseExact(t1, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (shiftData.ShiftBelongsToDate < dt1.Date)
                 {
                     t1 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
-                    t2 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                    t2 = t1;//string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
                 }
             }
 
