@@ -730,6 +730,9 @@ namespace HekaMOLD.Enterprise.Controllers
                 {
                     Id = d.Key.Id ?? 0,
                     PalletNo = d.Key.PalletNo,
+                    FirmId = d.Select(m => m.FirmId).FirstOrDefault(),
+                    FirmName = d.Select(m => m.FirmName).FirstOrDefault(),
+                    ItemName = d.Select(m => m.ItemName).FirstOrDefault(),
                     BoxCount = d.Count(),
                     Quantity = d.Sum(m => m.FirstQuantity) ?? 0,
                 }).ToArray();
@@ -819,6 +822,9 @@ namespace HekaMOLD.Enterprise.Controllers
             try
             {
                 BusinessResult result = null;
+
+                if (model == null)
+                    throw new Exception("Sevkiyat için palet(ler) seçmelisiniz.");
 
                 receiptModel.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
                 if (receiptModel.Id == 0)

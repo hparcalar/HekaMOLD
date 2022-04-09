@@ -189,6 +189,7 @@
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
+    <Compile Include="Controllers\ItemQualityGroupController.cs" />
     <Compile Include="Controllers\LojisticOrderController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
@@ -4156,6 +4157,8 @@
     <Content Include="FrontEndLogic\ItemCategory\list.js" />
     <Content Include="FrontEndLogic\ItemGroup\index.js" />
     <Content Include="FrontEndLogic\ItemGroup\list.js" />
+    <Content Include="FrontEndLogic\ItemQualityGroup\index.js" />
+    <Content Include="FrontEndLogic\ItemQualityGroup\list.js" />
     <Content Include="FrontEndLogic\ItemReceipt\index.js" />
     <Content Include="FrontEndLogic\ItemReceipt\list.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
@@ -4726,6 +4729,8 @@
     <Content Include="Views\Route\Index.cshtml" />
     <Content Include="Views\Plant\List.cshtml" />
     <Content Include="Views\Plant\Index.cshtml" />
+    <Content Include="Views\ItemQualityGroup\List.cshtml" />
+    <Content Include="Views\ItemQualityGroup\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

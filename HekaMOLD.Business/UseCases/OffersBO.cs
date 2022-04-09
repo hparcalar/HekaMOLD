@@ -616,6 +616,7 @@ namespace HekaMOLD.Business.UseCases
                         OrderStatus = 1,
                         Explanation = dbOffer.Explanation,
                         FirmId = dbOffer.FirmId,
+                        SheetProgramName = dbOffer.SheetProgramName,
                         Details = newOrderDetails.ToArray(),
                         Sheets = newSheets.ToArray(),
                     }, false);

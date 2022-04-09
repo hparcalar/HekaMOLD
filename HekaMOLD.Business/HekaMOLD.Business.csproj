@@ -124,6 +124,7 @@
     <Compile Include="Models\DataTransfer\Core\ItemGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemLiveStatusModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\ItemQualityGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemUnitModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemWarehouseModel.cs" />
     <Compile Include="Models\DataTransfer\Core\NotificationModel.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Models\DataTransfer\Production\DyeModel.cs" />
     <Compile Include="Models\DataTransfer\Production\IncidentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\IncidentModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\ItemDemandModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ItemOrderItemNeedsModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />

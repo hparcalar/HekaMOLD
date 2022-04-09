@@ -357,33 +357,6 @@
 
                     $scope.modelObject.ReceiptDate = moment().format('DD.MM.YYYY');
 
-                    if (typeof $scope.selectedWarehouse != 'undefined'
-                        && $scope.selectedWarehouse != null)
-                        $scope.modelObject.InWarehouseId = $scope.selectedWarehouse.Id;
-                    else
-                        $scope.modelObject.InWarehouseId = null;
-
-                    if (typeof $scope.selectedFirm != 'undefined'
-                        && $scope.selectedFirm != null)
-                        $scope.modelObject.FirmId = $scope.selectedFirm.Id;
-                    else
-                        $scope.modelObject.FirmId = null;
-
-                    if ($scope.modelObject.InWarehouseId == null) {
-                        toastr.error('Depo seçmelisiniz.');
-                        return;
-                    }
-
-                    if ($scope.modelObject.FirmId == null) {
-                        toastr.error('Firma seçmelisiniz.');
-                        return;
-                    }
-
-                    if ($scope.selectedWarehouse.WarehouseType != 2) {
-                        toastr.error('Ürün deposu seçmelisiniz.');
-                        return;
-                    }
-
                     $http.post(HOST_URL + 'Mobile/SaveProductDelivery', {
                         receiptModel: $scope.modelObject,
                         model: $scope.selectedProducts,

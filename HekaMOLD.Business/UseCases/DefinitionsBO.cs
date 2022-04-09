@@ -3507,5 +3507,121 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
         #endregion
+
+        #region ITEM QUALITY GROUP BUSINESS
+        public ItemQualityGroupModel[] GetItemQualityGroupList()
+        {
+            List<ItemQualityGroupModel> data = new List<ItemQualityGroupModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ItemQualityGroupModel containerObj = new ItemQualityGroupModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateItemQualityGroup(ItemQualityGroupModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.ItemQualityGroupCode))
+                    throw new Exception("Kalite grup kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.ItemQualityGroupName))
+                    throw new Exception("Kalite grup adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+
+                if (repo.Any(d => (d.ItemQualityGroupCode == model.ItemQualityGroupCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir kalite grubu mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ItemQualityGroup();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteItemQualityGroup(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ItemQualityGroupModel GetItemQualityGroup(int id)
+        {
+            ItemQualityGroupModel model = new ItemQualityGroupModel { };
+
+            var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public ItemQualityGroupModel GetItemQualityGroup(string groupCode)
+        {
+            ItemQualityGroupModel model = new ItemQualityGroupModel { };
+
+            var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+            var dbObj = repo.Get(d => d.ItemQualityGroupCode == groupCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public bool HasAnyItemQualityGroup(string groupCode)
+        {
+            var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+            return repo.Any(d => d.ItemQualityGroupCode == groupCode);
+        }
+
+        #endregion
     }
 }

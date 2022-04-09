@@ -41,6 +41,25 @@ namespace HekaMOLD.Business.UseCases
 
                     foreach (var item in dbObj.ItemReceiptDetail)
                     {
+                        byte[] prodBytes = null;
+                        var sampleSerial = item.ItemSerial.Where(d => d.WorkOrderDetailId != null).FirstOrDefault();
+                        if (sampleSerial != null && sampleSerial.WorkOrderDetail.ItemOrderSheet != null)
+                        {
+                            try
+                            {
+                                var properUsage = sampleSerial.WorkOrderDetail.ItemOrderSheet.ItemOrderSheetUsage
+                                    .FirstOrDefault(d => d.ItemOrderDetail.ItemId == sampleSerial.ItemId);
+                                if (properUsage != null && properUsage.ItemOrderDetail.ItemOfferDetail != null)
+                                {
+                                    prodBytes = properUsage.ItemOrderDetail.ItemOfferDetail.ItemVisual;
+                                }
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                        }
+
                         data.Add(new DeliverySerialListModel
                         {
                             ProductCode = item.Item.ItemNo,
@@ -55,6 +74,7 @@ namespace HekaMOLD.Business.UseCases
                             ReceiptDate = string.Format("{0:dd.MM.yyyy}", dbObj.ReceiptDate),
                             ReceiverText = dbObj.Firm != null ? dbObj.Firm.FirmName + "\r\n" +
                                 dbObj.Firm.Address : "",
+                            ProductImage = prodBytes,
                         });
                     }
 

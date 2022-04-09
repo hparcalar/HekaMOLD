@@ -92,15 +92,27 @@
                                             <p ng-cloak ng-bind="plan.WorkOrder.WorkOrderDateStr">&nbsp;</p>
                                             <p><span ng-cloak class="plan-firm-name fw-bolder" ng-bind="plan.WorkOrder.FirmName"></span>&nbsp;</p>
                                             <p>
-                                                <span ng-cloak class="plan-firm-name bg-dark rounded-1 text-white p-2 fw-bolder" 
+                                                <span ng-cloak class="plan-firm-name bg-dark rounded-1 text-white p-2 fw-bolder"
+                                                      style="max-width:none;"
+                                                      ng-bind="'Program: ' + plan.WorkOrder.SheetProgramName"></span>
+
+                                                <span ng-cloak class="plan-firm-name bg-primary rounded-1 text-white p-2 fw-bolder"
+                                                      style="max-width:none;"
+                                                      ng-bind="'Kalınlık: ' + plan.WorkOrder.Thickness"></span>
+
+                                                &nbsp;
+                                            </p>
+                                            <p>
+                                                <span ng-cloak class="plan-firm-name bg-dark rounded-1 text-white p-2 fw-bolder"
                                                       style="max-width:none;"
                                                       ng-bind="'Sipariş: ' + plan.WorkOrder.ItemOrderDocumentNo"></span>
 
                                                 <span ng-cloak class="plan-firm-name bg-primary rounded-1 text-white p-2 fw-bolder"
                                                       style="max-width:none;"
                                                       ng-bind="'Levha No: ' + plan.WorkOrder.ProductCode"></span>
-                                            
-                                            &nbsp;</p>
+
+                                                &nbsp;
+                                            </p>
                                             @*<p><b ng-cloak ng-bind="'Levha No: ' + plan.WorkOrder.ProductCode"></b>&nbsp;</p>*@
                                             <p ng-cloak ng-bind="'Miktar: ' + plan.WorkOrder.Quantity"></p>
                                             <p ng-cloak ng-class="{'label-wastage-count-danger': plan.WorkOrder.WastageQuantity > 0,

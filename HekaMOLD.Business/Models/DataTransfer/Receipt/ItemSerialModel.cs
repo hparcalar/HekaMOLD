@@ -25,6 +25,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
 
         #region VISUAL ELEMENTS
         public string ItemNo { get; set; }
+        public int? FirmId { get; set; }
         public string ItemName { get; set; }
         public string CreatedDateStr { get; set; }
         public string ShiftBelongsToDateStr { get; set; }

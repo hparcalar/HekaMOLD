@@ -208,7 +208,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                     }
                                     #endregion
 
-                                    bObj.SaveOrUpdateItem(new ItemModel
+                                    var itemModel = new ItemModel
                                     {
                                         ItemNo = item.ur_kod.Value,
                                         ItemName = item.ur_adi.Value,
@@ -230,7 +230,37 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 NewDetail=true,
                                             }
                                         } : null,
-                                    });
+                                    };
+
+                                    #region RESOLVE DETAILS IF ITS SHEET PLATE ITEM
+                                    if (Regex.IsMatch(item.ur_adi.Value, "\\sSAC(\\s|$)"))
+                                    {
+                                        try
+                                        {
+                                            var sheetData = ((string)item.ur_adi.Value).Split(' ');
+
+                                            var sizeData = sheetData[0].Split('*');
+                                            var thickness = Convert.ToSingle(sheetData[1].Replace(",", "."));
+                                            var qualityStr = sheetData[2];
+
+                                            var dbQuality = bObj.GetItemQualityGroup(qualityStr);
+                                            if (dbQuality != null && dbQuality.Id > 0)
+                                            {
+                                                itemModel.ItemQualityGroupId = dbQuality.Id;
+                                            }
+
+                                            itemModel.SheetThickness = Convert.ToDecimal(thickness);
+                                            itemModel.SheetWidth = Convert.ToDecimal(Convert.ToSingle(sizeData[1]));
+                                            itemModel.SheetHeight = Convert.ToDecimal(Convert.ToSingle(sizeData[0]));
+                                        }
+                                        catch (Exception)
+                                        {
+
+                                        }
+                                    }
+                                    #endregion
+
+                                    bObj.SaveOrUpdateItem(itemModel);
                                 }
                             }
                         }

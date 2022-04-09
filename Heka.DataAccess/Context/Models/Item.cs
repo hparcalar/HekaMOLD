@@ -33,6 +33,11 @@ namespace Heka.DataAccess.Context
         public string ItemName { get; set; }
         public Nullable<int> ItemType { get; set; }
 
+        public Nullable<decimal> SheetWidth { get; set; }
+        public Nullable<decimal> SheetHeight { get; set; }
+        public Nullable<decimal> SheetThickness { get; set; }
+        public Nullable<decimal> SheetUnitWeight { get; set; }
+
         [ForeignKey("ItemCategory")]
         public Nullable<int> ItemCategoryId { get; set; }
 
@@ -44,6 +49,9 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("Plant")]
         public Nullable<int> PlantId { get; set; }
+
+        [ForeignKey("ItemQualityGroup")]
+        public Nullable<int> ItemQualityGroupId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
@@ -61,6 +69,7 @@ namespace Heka.DataAccess.Context
         public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }
         public virtual Firm Firm { get; set; }
         public virtual ItemCategory ItemCategory { get; set; }
+        public virtual ItemQualityGroup ItemQualityGroup { get; set; }
         public virtual ItemGroup ItemGroup { get; set; }
         public virtual Mold Mold { get; set; }
         public virtual Plant Plant { get; set; }

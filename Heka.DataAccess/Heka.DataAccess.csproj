@@ -111,6 +111,7 @@
     <Compile Include="Context\Models\Invoice.cs" />
     <Compile Include="Context\Models\Item.cs" />
     <Compile Include="Context\Models\ItemCategory.cs" />
+    <Compile Include="Context\Models\ItemDemand.cs" />
     <Compile Include="Context\Models\ItemGroup.cs" />
     <Compile Include="Context\Models\ItemLiveStatus.cs" />
     <Compile Include="Context\Models\ItemOffer.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Context\Models\ItemOrderSheet.cs" />
     <Compile Include="Context\Models\ItemOrderSheetUsage.cs" />
     <Compile Include="Context\Models\ItemPrice.cs" />
+    <Compile Include="Context\Models\ItemQualityGroup.cs" />
     <Compile Include="Context\Models\ItemReceipt.cs" />
     <Compile Include="Context\Models\ItemReceiptConsume.cs" />
     <Compile Include="Context\Models\ItemReceiptDetail.cs" />
@@ -315,6 +317,26 @@
     <Compile Include="Migrations\202204031333291_WorkOrderSheets.designer.cs">
       <DependentUpon>202204031333291_WorkOrderSheets.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204091009413_SheetProgramName.cs" />
+    <Compile Include="Migrations\202204091009413_SheetProgramName.designer.cs">
+      <DependentUpon>202204091009413_SheetProgramName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204091712085_ItemQualityGroupAndItemSheetData.cs" />
+    <Compile Include="Migrations\202204091712085_ItemQualityGroupAndItemSheetData.designer.cs">
+      <DependentUpon>202204091712085_ItemQualityGroupAndItemSheetData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204091714012_OfferAndOrderSheetItem.cs" />
+    <Compile Include="Migrations\202204091714012_OfferAndOrderSheetItem.designer.cs">
+      <DependentUpon>202204091714012_OfferAndOrderSheetItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204091722216_ItemDemands.cs" />
+    <Compile Include="Migrations\202204091722216_ItemDemands.designer.cs">
+      <DependentUpon>202204091722216_ItemDemands.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204091735112_ItemDemandStatus.cs" />
+    <Compile Include="Migrations\202204091735112_ItemDemandStatus.designer.cs">
+      <DependentUpon>202204091735112_ItemDemandStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -418,6 +440,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202204031333291_WorkOrderSheets.resx">
       <DependentUpon>202204031333291_WorkOrderSheets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204091009413_SheetProgramName.resx">
+      <DependentUpon>202204091009413_SheetProgramName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204091712085_ItemQualityGroupAndItemSheetData.resx">
+      <DependentUpon>202204091712085_ItemQualityGroupAndItemSheetData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204091714012_OfferAndOrderSheetItem.resx">
+      <DependentUpon>202204091714012_OfferAndOrderSheetItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204091722216_ItemDemands.resx">
+      <DependentUpon>202204091722216_ItemDemands.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204091735112_ItemDemandStatus.resx">
+      <DependentUpon>202204091735112_ItemDemandStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

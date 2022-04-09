@@ -244,43 +244,45 @@ namespace HekaMOLD.Business.UseCases
 
                 // DELETED SHEETS
                 List<ItemOrderSheet> liveSheets = new List<ItemOrderSheet>();
-
-                var newSheetIdList = model.Sheets.Select(d => d.Id).ToArray();
-                var deletedSheets = dbObj.ItemOrderSheet.Where(d => !newSheetIdList.Contains(d.Id)).ToArray();
-                foreach (var item in deletedSheets)
+                if (model.Sheets != null)
                 {
-                    if (item.ItemOrderDetail.Any())
+                    var newSheetIdList = model.Sheets.Select(d => d.Id).ToArray();
+                    var deletedSheets = dbObj.ItemOrderSheet.Where(d => !newSheetIdList.Contains(d.Id)).ToArray();
+                    foreach (var item in deletedSheets)
                     {
-                        var detailsOfSheet = item.ItemOrderDetail.ToArray();
-                        foreach (var dsSheet in detailsOfSheet)
+                        if (item.ItemOrderDetail.Any())
                         {
-                            repoDetail.Delete(dsSheet);
+                            var detailsOfSheet = item.ItemOrderDetail.ToArray();
+                            foreach (var dsSheet in detailsOfSheet)
+                            {
+                                repoDetail.Delete(dsSheet);
+                            }
                         }
+
+                        repoSheet.Delete(item);
                     }
 
-                    repoSheet.Delete(item);
-                }
-
-                // LOOP OF SHEETS
-                foreach (var item in model.Sheets)
-                {
-                    var dbSheet = repoSheet.Get(d => d.Id == item.Id);
-                    if (dbSheet == null)
+                    // LOOP OF SHEETS
+                    foreach (var item in model.Sheets)
                     {
-                        dbSheet = new ItemOrderSheet
+                        var dbSheet = repoSheet.Get(d => d.Id == item.Id);
+                        if (dbSheet == null)
                         {
-                            ItemOrder = dbObj,
-                        };
+                            dbSheet = new ItemOrderSheet
+                            {
+                                ItemOrder = dbObj,
+                            };
 
-                        repoSheet.Add(dbSheet);
+                            repoSheet.Add(dbSheet);
+                        }
+
+                        item.MapTo(dbSheet);
+                        dbSheet.ItemOrder = dbObj;
+                        liveSheets.Add(dbSheet);
+
+                        if (dbObj.Id > 0)
+                            dbSheet.ItemOrderId = dbObj.Id;
                     }
-
-                    item.MapTo(dbSheet);
-                    dbSheet.ItemOrder = dbObj;
-                    liveSheets.Add(dbSheet);
-
-                    if (dbObj.Id > 0)
-                        dbSheet.ItemOrderId = dbObj.Id;
                 }
                 #endregion
 
@@ -350,7 +352,7 @@ namespace HekaMOLD.Business.UseCases
                         dbDetail.ItemOrder = dbObj;
 
                         // MAKE RELATION BETWEEN SHEET AND PART
-                        if (item.Usages != null)
+                        if (item.Usages != null && model.Sheets != null)
                         {
                             foreach (var shUsage in item.Usages)
                             {

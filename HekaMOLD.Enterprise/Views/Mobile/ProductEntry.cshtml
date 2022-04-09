@@ -140,8 +140,9 @@
                         <thead>
                             <tr>
                                 <th class="w-50 px-2 text-center"><b>Ürün</b></th>
-                                <th class="w-25 px-2 text-center"><b>Görsel</b></th>
-                                <th class="w-25 px-2 text-center"><b>Top. Miktar</b></th>
+                                <th class="w-20 px-2 text-center"><b>Görsel</b></th>
+                                <th class="w-15 px-2 text-center"><b>Üretilen</b></th>
+                                <th class="w-15 px-2 text-center"><b>Hedef</b></th>
                             </tr>
                         </thead>
                     </table>
@@ -150,13 +151,14 @@
                             <tbody>
                                 <tr ng-repeat="item in activeWorkOrder.SheetUsages">
                                     <td class="w-50 px-2 text-center" ng-bind="item.PartName"></td>
-                                    <td class="w-25 px-2 text-center">
+                                    <td class="w-20 px-2 text-center">
                                         <img ng-if="item.PartVisualStr != null && item.PartVisualStr.length > 0"
                                              class="mx-auto"
                                              src="{{ 'data:image/png;base64,' + item.PartVisualStr }}"
-                                             height="50"/>
+                                             height="50" />
                                     </td>
-                                    <td class="w-25 px-2 text-center" ng-bind="item.TotalQuantity"></td>
+                                    <td class="w-15 px-2 text-center" ng-bind="item.TotalQuantity"></td>
+                                    <td class="w-15 px-2 text-center" ng-bind="item.Quantity"></td>
                                 </tr>
                             </tbody>
                         </table>

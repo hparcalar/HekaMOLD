@@ -394,6 +394,8 @@ namespace HekaMOLD.Business.UseCases
                 OrderNo = d.ItemOrder.OrderNo,
                 ItemNo = (d.SheetNo ?? 0).ToString(),
                 ItemName = (d.SheetNo ?? 0).ToString(),
+                Thickness = d.Thickness,
+                SheetProgramName = d.ItemOrder.SheetProgramName,
                 SheetVisualStr = d.SheetVisual != null ?
                             (Convert.ToBase64String(d.SheetVisual)) : "",
                 FirmName = d.ItemOrder.Firm != null ? 
@@ -430,6 +432,8 @@ namespace HekaMOLD.Business.UseCases
                         WorkOrderId = d.WorkOrderDetail.WorkOrderId,
                         ItemOrderSheetId = d.WorkOrderDetail.ItemOrderSheetId,
                         SaleOrderDetailId = d.WorkOrderDetail.SaleOrderDetailId,
+                        SheetProgramName = d.WorkOrderDetail.ItemOrderSheet != null ? d.WorkOrderDetail.ItemOrderSheet.ItemOrder.SheetProgramName : "",
+                        Thickness = d.WorkOrderDetail.ItemOrderSheet.Thickness,
                         ItemOrderId = d.WorkOrderDetail.ItemOrderDetail != null ?
                             d.WorkOrderDetail.ItemOrderDetail.ItemOrderId : (int?)null,
                         ItemOrderDocumentNo = d.WorkOrderDetail.ItemOrderSheet != null ?
@@ -631,6 +635,8 @@ namespace HekaMOLD.Business.UseCases
                         Explanation = d.WorkOrderDetail.WorkOrder.Explanation,
                         WorkOrderId = d.WorkOrderDetail.WorkOrderId,
                         CreatedDate = d.WorkOrderDetail.CreatedDate,
+                        SheetProgramName = d.WorkOrderDetail.ItemOrderSheet != null ?
+                            d.WorkOrderDetail.ItemOrderSheet.ItemOrder.SheetProgramName : "",
                         ItemOrderDocumentNo = d.WorkOrderDetail.ItemOrderSheet != null ?
                             d.WorkOrderDetail.ItemOrderSheet.ItemOrder.OrderNo : "",
                         Quantity = d.WorkOrderDetail.Quantity,

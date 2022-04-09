@@ -68,6 +68,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string UnitCode { get; set; }
         public string UnitName { get; set; }
         public string OrderDeadline { get; set; }
+        public string SheetProgramName { get; set; }
+        public int? Thickness { get; set; }
         public LabelConfigModel LabelConfigData
         {
             get

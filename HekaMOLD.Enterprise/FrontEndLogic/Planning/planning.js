@@ -372,12 +372,14 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     "<tr draggable=\"true\" "
                     + "class=\"dx-row dx-data-row dx-row-lines waiting-plan-row " + deadlineClass + "\" data-id=\"" + data.Id + "\">" +
                         "<td>" + data.OrderDateStr + "</td>" +
-                        "<td>" + data.OrderNo + "</td>" +
+                    "<td>" + data.OrderNo + "</td>" +
+                    "<td>" + data.SheetProgramName + "</td>" +
                         "<td>" + data.DeadlineDateStr + "</td>" +
                         "<td>" + data.FirmName + "</td>" +
                     "<td>" + data.ItemNo + "</td>" +
-                    "<td><img src=\"data:image/png;base64,"+ data.SheetVisualStr +"\" />" + "</td>" +
-                        "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
+                    "<td><img src=\"data:image/png;base64," + data.SheetVisualStr + "\" />" + "</td>" +
+                    "<td class=\"text-center\">" + (data.Thickness ? data.Thickness.toFixed(2) : '') + "</td>" +
+                        "<td class=\"text-center\">" + data.Quantity.toFixed(2) + "</td>" +
                         "</tr>";
 
                 container.append(markup);
@@ -388,6 +390,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy'
                 },
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
+                { dataField: 'SheetProgramName', caption: 'Program' },
                 {
                     dataField: 'DeadlineDateStr',
                     caption: 'Termin', dataType: 'date', format: 'dd.MM.yyyy'
@@ -401,6 +404,10 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                         if (info.displayValue != null && info.displayValue.length > 0)
                             element.append('<image src="data:image/png;base64,' + info.displayValue + '" />');
                     }
+                },
+                {
+                    dataField: 'Thickness', caption: 'Kalınlık',
+                    dataType: 'number', format: { type: "fixedPoint", precision: 2 }
                 },
                 {
                     dataField: 'Quantity', caption: 'Miktar',

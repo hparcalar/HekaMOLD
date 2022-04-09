@@ -684,6 +684,7 @@ namespace HekaMOLD.Business.UseCases
                             .Select(d => new ItemOrderSheetUsageModel
                             {
                                 Id = d.Id,
+                                Quantity = d.Quantity,
                                 ItemId = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemId : null,
                                 ItemOrderDetailId = d.ItemOrderDetailId,
                                 ItemOrderSheetId = d.ItemOrderSheetId,
@@ -793,6 +794,7 @@ namespace HekaMOLD.Business.UseCases
                             .Select(d => new ItemOrderSheetUsageModel
                             {
                                 Id = d.Id,
+                                Quantity = d.Quantity,
                                 ItemId = d.ItemOrderDetail != null ? d.ItemOrderDetail.ItemId : null,
                                 ItemOrderDetailId = d.ItemOrderDetailId,
                                 ItemOrderSheetId = d.ItemOrderSheetId,
@@ -851,6 +853,16 @@ namespace HekaMOLD.Business.UseCases
                 if (dbOrderDetail == null)
                     throw new Exception("Parça bilgisi seçilmemiş.");
 
+                var sheetUsage = dbObj.ItemOrderSheet.ItemOrderSheetUsage
+                    .FirstOrDefault(d => d.ItemOrderDetail.ItemId == dbOrderDetail.ItemId);
+                if (sheetUsage != null)
+                {
+                    var currentProduced = dbObj.WorkOrderSerial.Where(d => d.ItemId == dbOrderDetail.ItemId).Sum(d => d.FirstQuantity) ?? 0;
+                    if (sheetUsage.Quantity <= (currentProduced + inPackageQuantity))
+                        throw new Exception("Bu levha için seçtiğiniz üründen hedef üretim olan " + 
+                            sheetUsage.Quantity + " adetten fazla giriş yapamazsınız.");
+                }
+
                 // RESOLVE CURRENT SHIFT
                 var currentShift = GetCurrentShift();
 
@@ -859,7 +871,6 @@ namespace HekaMOLD.Business.UseCases
 
                 WorkOrderSerial product = null;
 
-                // BATUSAN
                 if (serialType == WorkOrderSerialType.ProductPackage) 
                 {
                     // CHECK TARGET QUANTITY FOR CHANGING STATUS TO COMPLETE
@@ -903,7 +914,7 @@ namespace HekaMOLD.Business.UseCases
 
                     repoSerial.Add(product);
                 }
-                else if (serialType == WorkOrderSerialType.SingleProduct) // MICROMAX
+                else if (serialType == WorkOrderSerialType.SingleProduct)
                 {
 
                 }
@@ -988,9 +999,14 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+                var repoItemSerial = _unitOfWork.GetRepository<ItemSerial>();
                 var dbSerial = repo.Get(d => d.Id == serialId);
                 if (dbSerial == null)
                     throw new Exception("Seri bilgisine ulaşılamadı.");
+
+                var dbItemSerial = repoItemSerial.Get(d => d.SerialNo == dbSerial.SerialNo);
+                if (dbItemSerial != null)
+                    throw new Exception("Bu koli teslim alındığı için silinemez.");
 
                 repo.Delete(dbSerial);
                 _unitOfWork.SaveChanges();
@@ -2610,16 +2626,16 @@ namespace HekaMOLD.Business.UseCases
                         relatedDetail.Quantity += dbSerial.FirstQuantity;
                         relatedDetail.ItemSerials.Add(new ItemSerialModel
                         {
-                            CreatedDate = item.CreatedDate,
-                            FirstQuantity = item.FirstQuantity,
-                            LiveQuantity = item.LiveQuantity,
-                            ItemId = item.ItemId,
+                            CreatedDate = dbSerial.CreatedDate,
+                            FirstQuantity = dbSerial.FirstQuantity,
+                            LiveQuantity = dbSerial.LiveQuantity,
+                            ItemId = dbSerial.ItemId,
                             ItemReceiptDetailId = relatedDetail.Id,
                             ReceiptType = receiptModel.ReceiptType,
-                            SerialNo = item.SerialNo,
+                            SerialNo = dbSerial.SerialNo,
                             SerialStatus = (int)SerialStatusType.Placed,
-                            WorkOrderDetailId = item.WorkOrderDetailId,
-                            ShiftBelongsToDate = item.ShiftBelongsToDate,
+                            WorkOrderDetailId = dbSerial.WorkOrderDetailId,
+                            ShiftBelongsToDate = dbSerial.ShiftBelongsToDate,
                         });
                         //relatedDetail.Serials.Add(item);
 
@@ -2701,6 +2717,7 @@ namespace HekaMOLD.Business.UseCases
                         LiveQuantity = d.LiveQuantity,
                         SerialNo = d.SerialNo,
                         PalletId = d.PalletId,
+                        FirmId = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.FirmId : (int?)null,
                         PalletNo = d.Pallet != null ? d.Pallet.PalletNo : "",
                         FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
                         FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : "",
@@ -3028,12 +3045,29 @@ namespace HekaMOLD.Business.UseCases
                 var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
                 var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoWr = _unitOfWork.GetRepository<Warehouse>();
+                var repoFirm = _unitOfWork.GetRepository<Firm>();
 
-                if (!repoWr.Any(d => d.Id == receiptModel.InWarehouseId))
-                    throw new Exception("Depo seçmelisiniz.");
+                if (model == null || model.Length == 0)
+                    throw new Exception("Lütfen sevkiyat için palet(ler) seçiniz.");
 
-                if (receiptModel.FirmId == null)
-                    throw new Exception("Firma seçmelisiniz.");
+                var justIdList = model.Select(d => d.Id).ToArray();
+                var dbSerials = repo.Filter(d => justIdList.Any(m => m == d.Id)).ToArray();
+
+                if (dbSerials.Where(d => d.WorkOrderDetail != null).GroupBy(d => d.WorkOrderDetail.WorkOrder.FirmId).Count() > 1)
+                    throw new Exception("Birden fazla farklı firmalara ait paletleri tek sevkiyatta seçemezsiniz. Lütfen aynı firmaya ait paletleri seçiniz.");
+
+                receiptModel.FirmId = dbSerials[0].WorkOrderDetail.WorkOrder.FirmId;
+                var dbProductWr = repoWr.Get(d => d.WarehouseType == (int)WarehouseType.ProductWarehouse);
+                if (dbProductWr == null)
+                    throw new Exception("Sistemde herhangi bir ürün deposu tanımı bulunamadı.");
+
+                receiptModel.InWarehouseId = dbProductWr.Id;
+
+                //if (!repoWr.Any(d => d.Id == receiptModel.InWarehouseId))
+                //    throw new Exception("Depo seçmelisiniz.");
+
+                //if (receiptModel.FirmId == null)
+                //    throw new Exception("Firma seçmelisiniz.");
 
                 receiptModel.CreatedDate = DateTime.Now;
                 receiptModel.ReceiptDate = DateTime.Now;
@@ -3151,7 +3185,9 @@ namespace HekaMOLD.Business.UseCases
                         {
                             CreatedDate = DateTime.Now,
                             FirstQuantity = dbSerial.FirstQuantity,
+                            WorkOrderDetailId = dbSerial.WorkOrderDetailId,
                             LiveQuantity = dbSerial.LiveQuantity,
+                            ItemId = dbSerial.ItemId,
                             InPackageQuantity = dbSerial.InPackageQuantity,
                             SerialNo = dbSerial.SerialNo,
                             SerialStatus = (int)SerialStatusType.Used,
@@ -3851,6 +3887,165 @@ namespace HekaMOLD.Business.UseCases
 
                 // CONT: NOT URGENT
 
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+        #endregion
+
+        #region ITEM DEMAND BUSINESS
+        public BusinessResult SaveItemDemand(ItemDemandModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if ((model.ItemId ?? 0) <= 0)
+                    throw new Exception("Malzeme bilgisi seçilmemiş.");
+
+                if ((model.DemandQuantity ?? 0) <= 0)
+                    throw new Exception("Uygun bir talep miktarı girilmemiş.");
+
+                if (model.SuppliedQuantity > model.DemandQuantity)
+                    throw new Exception("Teslim edilen miktar, talep edilen miktardan fazla olamaz.");
+
+                var repo = _unitOfWork.GetRepository<ItemDemand>();
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ItemDemand
+                    {
+                        DemandStatus = 0,
+                        DemandDate = DateTime.Now,
+                    };
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                // status: 0=waiting, 1=started, 2=finished, 3=cancelled
+                if (model.DemandQuantity == model.SuppliedQuantity && model.SuppliedQuantity > 0)
+                    dbObj.DemandStatus = 2;
+                else if (model.SuppliedQuantity > 0)
+                    dbObj.DemandStatus = 1;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ItemDemandModel[] GetOpenDemands()
+        {
+            ItemDemandModel[] data = new ItemDemandModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemDemand>();
+
+                data = repo.Filter(d => (d.DemandStatus ?? 0) <= 1)
+                    .Select(d => new ItemDemandModel
+                    {
+                        Id = d.Id,
+                        DemandedUserId = d.DemandedUserId,
+                        DemandDate = d.DemandDate,
+                        DemandedUserName = d.DemandedUser != null ? d.DemandedUser.UserName : "",
+                        DemandDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.DemandDate),
+                        DemandQuantity = d.DemandQuantity,
+                        DemandStatus = d.DemandStatus,
+                        Explanation = d.Explanation,
+                        ItemId = d.ItemId,
+                        ItemName = d.Item != null ? d.Item.ItemName : "",
+                        ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                        ItemOrderDocumentNo = d.WorkOrderDetail != null && d.WorkOrderDetail.ItemOrderSheet != null
+                            ? d.WorkOrderDetail.ItemOrderSheet.ItemOrder.DocumentNo : "",
+                        SuppliedQuantity = d.SuppliedQuantity,
+                        SupplierUserId = d.SupplierUserId,
+                        SupplierUserName = d.SupplierUser != null ? d.SupplierUser.UserName : "",
+                        SupplyDate = d.SupplyDate,
+                        SupplyDateStr = d.SupplyDate != null ? 
+                            string.Format("{0:dd.MM.yyyy HH:mm}", d.SupplyDate) : "",
+                        WorkOrderDetailId = d.WorkOrderDetailId,
+                        WorkOrderNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.WorkOrderNo : "",
+                    })
+                    .OrderBy(d => d.DemandDate)
+                    .ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult MakeSupplyForDemand(int demandId, decimal quantity, int? supplierUserId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemDemand>();
+                var dbDemand = repo.Get(d => d.Id == demandId);
+                if (dbDemand == null)
+                    throw new Exception("Talep bilgisine ulaşılamadı.");
+
+                if (dbDemand.DemandQuantity < (dbDemand.SuppliedQuantity + quantity))
+                    throw new Exception("Talep miktarından fazla teslimat yapılamaz.");
+
+                dbDemand.SuppliedQuantity = (dbDemand.SuppliedQuantity ?? 0) + quantity;
+                dbDemand.SupplyDate = DateTime.Now;
+                dbDemand.SupplierUserId = supplierUserId;
+
+                if (dbDemand.DemandQuantity == dbDemand.SuppliedQuantity && dbDemand.DemandQuantity > 0)
+                    dbDemand.DemandStatus = 2;
+                else
+                    dbDemand.DemandStatus = 1;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbDemand.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult CancelDemand(int demandId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemDemand>();
+                var dbDemand = repo.Get(d => d.Id == demandId);
+                if (dbDemand == null)
+                    throw new Exception("Talep bilgisine ulaşılamadı.");
+
+                dbDemand.DemandStatus = 3;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbDemand.Id;
                 result.Result = true;
             }
             catch (Exception ex)

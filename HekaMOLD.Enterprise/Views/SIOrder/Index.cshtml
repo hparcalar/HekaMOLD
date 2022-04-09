@@ -176,12 +176,20 @@
                 <!--begin::Col-->
                 <div class="col-xxl-6">
                     <div class="row">
-                        <div class="col-xxl-6">
+                        <div class="col-xxl-3">
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sipariş No</label>
-                            <span class="badge badge-light-primary" ng-cloak ng-show="modelObject.Id > 0">{{modelObject.OrderStatusStr}}</span>
+                            @*<span class="badge badge-light-primary" ng-cloak ng-show="modelObject.Id > 0">{{modelObject.OrderStatusStr}}</span>*@
                             <!--begin::Input group-->
                             <div class="mb-5">
                                 <input type="text" class="form-control form-control-solid" readonly="readonly" ng-model="modelObject.OrderNo" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-3">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Program</label>
+                            <!--begin::Input group-->
+                            <div class="mb-5">
+                                <input type="text" class="form-control form-control-solid"
+                                       ng-model="modelObject.SheetProgramName" placeholder="" />
                             </div>
                         </div>
                         <div class="col-xxl-6">

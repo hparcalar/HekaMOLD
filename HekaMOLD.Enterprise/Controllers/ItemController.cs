@@ -68,6 +68,7 @@ namespace HekaMOLD.Enterprise.Controllers
             ItemGroupModel[] groups = new ItemGroupModel[0];
             FirmModel[] firms = new FirmModel[0];
             UnitTypeModel[] units = new UnitTypeModel[0];
+            ItemQualityGroupModel[] qualityGroups = new ItemQualityGroupModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -75,10 +76,11 @@ namespace HekaMOLD.Enterprise.Controllers
                 groups = bObj.GetItemGroupList();
                 firms = bObj.GetFirmList();
                 units = bObj.GetUnitTypeList();
+                qualityGroups = bObj.GetItemQualityGroupList();
             }
 
             var jsonResult = Json(new { Categories=categories, 
-                Groups=groups, Firms=firms, Units=units }, JsonRequestBehavior.AllowGet);
+                Groups=groups, Firms=firms, Units=units, QualityGroups = qualityGroups }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

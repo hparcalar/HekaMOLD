@@ -53,7 +53,8 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public string SyncKey { get; set; }
-    
+        public string SheetProgramName { get; set; }
+
         public virtual Firm Firm { get; set; }
         public virtual ItemRequest ItemRequest { get; set; }
         public virtual Plant Plant { get; set; }

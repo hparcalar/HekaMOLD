@@ -123,5 +123,7 @@
         public virtual DbSet<ItemOrderSheet> ItemOrderSheet { get; set; }
         public virtual DbSet<ItemOfferSheetUsage> ItemOfferSheetUsage { get; set; }
         public virtual DbSet<ItemOrderSheetUsage> ItemOrderSheetUsage { get; set; }
+        public virtual DbSet<ItemQualityGroup> ItemQualityGroup { get; set; }
+        public virtual DbSet<ItemDemand> ItemDemand { get; set; }
     }
 }

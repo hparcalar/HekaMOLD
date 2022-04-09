@@ -30,6 +30,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public DateTime? SyncDate { get; set; }
         public int? SyncUserId { get; set; }
         public string SyncKey { get; set; }
+        public string SheetProgramName { get; set; }
         public ItemOrderDetailModel[] Details { get; set; }
         public ItemOrderSheetModel[] Sheets { get; set; }
 

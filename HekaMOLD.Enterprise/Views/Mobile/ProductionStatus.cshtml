@@ -116,6 +116,68 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th class="w-50 px-2">Sipariş</th>
+                                <th class="w-25 px-2">Program</th>
+                                <th class="w-25 px-2">Müşteri</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-lg">
+                        <table border="1" ng-cloak class="table table-bordered">
+                            <tr style="font-weight:bold;"
+                                ng-class="{'bg-secondary': group.ItemOrderId == selectedGroup.Id}"
+                                ng-repeat="group in groupedQueue">
+                                <td class="w-50 px-2 py-0">
+                                    <button type="button" class="btn btn-xs btn-primary py-1 px-3 mt-2 me-2" 
+                                            ng-click="toggleGroup(group)">
+                                        <span ng-bind="group.ItemOrderId == selectedGroup.Id ? '-' : '+'"></span>
+                                    </button>
+                                    <span ng-bind="group.OrderNo"></span>
+
+                                    @* GROUP DETAILS *@
+                                    <div 
+                                         class="bg-secondary my-1 rounded-1"
+                                         ng-cloak ng-if="group.ItemOrderId == selectedGroup.Id">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="w-10 px-2"><b>Sıra</b></th>
+                                                    <th class="w-20 px-2"><b>Sipariş No</b></th>
+                                                    <th class="w-10 px-2"><b>Levha No</b></th>
+                                                    <th class="w-10 px-2"><b>Miktar</b></th>
+                                                    <th class="w-30 px-2"><b>Müşteri</b></th>
+                                                    <th class="w-20 px-2"><b>Açıklama</b></th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                        <div class="table-scroller-md">
+                                            <table border="1" ng-cloak class="table table-bordered">
+                                                <tbody>
+                                                    <tr style="font-weight:bold;" ng-repeat="item in getGroupDetails()" ng-click="selectWorkOrder(item)"
+                                                        ng-class="{'data-row-selected': item.Id == selectedWorkOrder.Id,
+                                            'bg-warning': item.WorkOrderStatus == 3,
+                                            'bg-success': item.WorkOrderStatus == 4}">
+                                                        <td class="w-10 px-2" ng-bind="item.OrderNo"></td>
+                                                        <td class="w-20 px-2" ng-bind="item.WorkOrder.ItemOrderDocumentNo"></td>
+                                                        <td class="w-10 px-2" ng-bind="item.WorkOrder.SheetProgramName + getRepeatStr(item.WorkOrder.ProductCode, 3)"></td>
+                                                        <td class="w-10 px-2" ng-bind="item.WorkOrder.Quantity"></td>
+                                                        <td class="w-30 px-2" ng-bind="item.WorkOrder.FirmName"></td>
+                                                        <td class="w-20 px-2"><b ng-bind="item.WorkOrder.Explanation"></b></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="w-25 px-2" ng-bind="group.Program"></td>
+                                <td class="w-25 px-2" ng-bind="group.FirmName"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    @*<table class="table table-bordered">
+                        <thead>
+                            <tr>
                                 <th class="w-10 px-2"><b>Sıra</b></th>
                                 <th class="w-20 px-2"><b>Sipariş No</b></th>
                                 <th class="w-10 px-2"><b>Levha No</b></th>
@@ -141,7 +203,8 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div>*@
+
                 </div>
             </div>
             <!--end::QUEUE TABLE-->

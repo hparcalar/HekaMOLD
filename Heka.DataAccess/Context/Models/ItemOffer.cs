@@ -41,6 +41,7 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> ProfitRate { get; set; }
         public Nullable<int> CreditMonths { get; set; }
         public Nullable<int> CreditRate { get; set; }
+        public string SheetProgramName { get; set; }
 
         public virtual Firm Firm { get; set; }
         public virtual Plant Plant { get; set; }

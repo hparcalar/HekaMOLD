@@ -28,6 +28,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         public Nullable<decimal> ProfitRate { get; set; }
         public Nullable<int> CreditMonths { get; set; }
         public Nullable<int> CreditRate { get; set; }
+        public string SheetProgramName { get; set; }
 
         #region VISUAL ELEMENTS
         public bool HasAnyOrder { get; set; } = false;

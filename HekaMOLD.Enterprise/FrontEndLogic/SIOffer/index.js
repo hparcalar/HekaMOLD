@@ -155,6 +155,8 @@
                         $scope.modelObject.ProfitRate = $scope.offerModel.marj;
                         $scope.modelObject.CreditMonths = $scope.offerModel.vadeay;
                         $scope.modelObject.CreditRate = $scope.offerModel.vadeyuzde;
+                        $scope.modelObject.SheetProgramName = headerData.indexOf('.') > -1
+                            ? headerData.filename.split('.')[0] : headerData.filename;
 
                         // SAVE SHEETS
                         for (var i = 1; i <= Object.keys(headerData.sheets).length; i++) {

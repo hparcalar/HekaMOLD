@@ -137,6 +137,8 @@ namespace HekaMOLD.Business.UseCases
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
                 var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
                 var repoItemSerial = _unitOfWork.GetRepository<ItemSerial>();
+                var repoConsume = _unitOfWork.GetRepository<ItemReceiptConsume>();
+                var repoOrderConsume = _unitOfWork.GetRepository<ItemOrderConsume>();
 
                 if (model.FirmId == 0)
                     model.FirmId = null;
@@ -177,6 +179,8 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 List<int> itemsMustBeUpdated = new List<int>();
+                List<int> receiptDetailsMustBeUpdated = new List<int>();
+                List<int> orderDetailsMustBeUpdated = new List<int>();
                 ItemReceiptDetail firstNewDetail = null;
 
                 #region SAVE DETAILS
@@ -209,6 +213,41 @@ namespace HekaMOLD.Business.UseCases
                             {
                                 item.ItemOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
                                 item.ItemOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
+                            }
+                            #endregion
+
+                            #region CHECK FOR PICKED UP PRODUCTS TO ROLLBACK THEM
+                            var consumings = item.ItemReceiptConsumeByConsumer.ToArray();
+                            foreach (var cns in consumings)
+                            {
+                                var consumed = cns.ItemReceiptDetailConsumed;
+                                if (consumed != null)
+                                {
+                                    var serials = item.ItemSerial.ToArray();
+                                    foreach (var sr in serials)
+                                    {
+                                        sr.ItemReceiptDetail = consumed;
+                                        sr.SerialStatus = (int)SerialStatusType.Placed;
+                                    }
+                                    consumed.ReceiptStatus = (int)ReceiptStatusType.Created;
+
+                                    if (!receiptDetailsMustBeUpdated.Any(d => d == consumed.Id))
+                                        receiptDetailsMustBeUpdated.Add(consumed.Id);
+                                }
+
+                                repoConsume.Delete(cns);
+                            }
+                            #endregion
+
+                            #region CHECK FOR ITEM ORDER CONSUMINGS
+                            var orderConsumings = item.ItemOrderConsumeByConsumer.ToArray();
+                            foreach (var cns in orderConsumings)
+                            {
+                                var consumed = cns.ItemOrderDetail;
+                                if (consumed != null
+                                    && !orderDetailsMustBeUpdated.Any(d => d == consumed.Id))
+                                    orderDetailsMustBeUpdated.Add(consumed.Id);
+                                repoOrderConsume.Delete(cns);
                             }
                             #endregion
 
@@ -307,6 +346,28 @@ namespace HekaMOLD.Business.UseCases
                 // TRG-POINT-ITEM-STATUS
                 if (itemsMustBeUpdated.Count() > 0)
                     base.UpdateItemStats(itemsMustBeUpdated.ToArray());
+
+                if (receiptDetailsMustBeUpdated.Count() > 0)
+                {
+                    foreach (var item in receiptDetailsMustBeUpdated)
+                    {
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.CheckReceiptDetailStatus(item);
+                        }
+                    }
+                }
+
+                if (orderDetailsMustBeUpdated.Count() > 0)
+                {
+                    foreach (var item in orderDetailsMustBeUpdated)
+                    {
+                        using (OrdersBO bObj = new OrdersBO())
+                        {
+                            bObj.CheckOrderDetailStatus(item);
+                        }
+                    }
+                }
 
                 #region CREATE NOTIFICATION
                 //if (newRecord || !repoNotify.Any(d => d.RecordId == dbObj.Id && d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval))
@@ -458,6 +519,8 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemReceipt>();
                 var repoDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoConsume = _unitOfWork.GetRepository<ItemReceiptConsume>();
+                var repoOrderConsume = _unitOfWork.GetRepository<ItemOrderConsume>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
@@ -467,6 +530,8 @@ namespace HekaMOLD.Business.UseCases
                 //    throw new Exception("İrsaliyesi girilmiş olan bir sipariş silinemez.");
 
                 List<int> itemsMustBeUpdated = new List<int>();
+                List<int> receiptDetailsMustBeUpdated = new List<int>();
+                List<int> orderDetailsMustBeUpdated = new List<int>();
 
                 // CLEAR DETAILS
                 if (dbObj.ItemReceiptDetail.Any())
@@ -482,6 +547,41 @@ namespace HekaMOLD.Business.UseCases
                         {
                             item.ItemOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
                             item.ItemOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
+                        }
+                        #endregion
+
+                        #region CHECK FOR PICKED UP PRODUCTS TO ROLLBACK THEM
+                        var consumings = item.ItemReceiptConsumeByConsumer.ToArray();
+                        foreach (var cns in consumings)
+                        {
+                            var consumed = cns.ItemReceiptDetailConsumed;
+                            if (consumed != null)
+                            {
+                                var serials = item.ItemSerial.ToArray();
+                                foreach (var sr in serials)
+                                {
+                                    sr.ItemReceiptDetail = consumed;
+                                    sr.SerialStatus = (int)SerialStatusType.Placed;
+                                }
+                                consumed.ReceiptStatus = (int)ReceiptStatusType.Created;
+
+                                if (!receiptDetailsMustBeUpdated.Any(d => d == consumed.Id))
+                                    receiptDetailsMustBeUpdated.Add(consumed.Id);
+                            }
+
+                            repoConsume.Delete(cns);
+                        }
+                        #endregion
+
+                        #region CHECK FOR ITEM ORDER CONSUMINGS
+                        var orderConsumings = item.ItemOrderConsumeByConsumer.ToArray();
+                        foreach (var cns in orderConsumings)
+                        {
+                            var consumed = cns.ItemOrderDetail;
+                            if (consumed != null
+                                && !orderDetailsMustBeUpdated.Any(d => d == consumed.Id))
+                                orderDetailsMustBeUpdated.Add(consumed.Id);
+                            repoOrderConsume.Delete(cns);
                         }
                         #endregion
 
@@ -507,6 +607,28 @@ namespace HekaMOLD.Business.UseCases
                 // TRG-POINT-ITEM-STATUS
                 if (itemsMustBeUpdated.Count() > 0)
                     base.UpdateItemStats(itemsMustBeUpdated.ToArray());
+
+                if (receiptDetailsMustBeUpdated.Count() > 0)
+                {
+                    foreach (var item in receiptDetailsMustBeUpdated)
+                    {
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.CheckReceiptDetailStatus(item);
+                        }
+                    }
+                }
+
+                if (orderDetailsMustBeUpdated.Count() > 0)
+                {
+                    foreach (var item in orderDetailsMustBeUpdated)
+                    {
+                        using (OrdersBO bObj = new OrdersBO())
+                        {
+                            bObj.CheckOrderDetailStatus(item);
+                        }
+                    }
+                }
 
                 result.Result = true;
             }

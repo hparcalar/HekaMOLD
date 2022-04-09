@@ -827,8 +827,8 @@
                                                     <span class="menu-title">Firma</span>
                                                 </a>
                                             </div>
-                                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Item$|ItemGroup$|ItemCategory$|UnitType$") ? "show":"")">
-                                                <span class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Item$|ItemGroup$|ItemCategory$|UnitType$") ? "active" : "")">
+                                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Item$|ItemGroup$|ItemCategory$|UnitType$|ItemQualityGroup$") ? "show":"")">
+                                                <span class="menu-link @(Regex.IsMatch(actn, "List$|Index$") && Regex.IsMatch(ctrl, "Item$|ItemGroup$|ItemCategory$|UnitType$|ItemQualityGroup$") ? "active" : "")">
                                                     <span class="menu-icon">
                                                         <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
                                                         <span class="svg-icon svg-icon-dark svg-icon-2">
@@ -871,6 +871,15 @@
                                                                 <span class="bullet bullet-dot"></span>
                                                             </span>
                                                             <span class="menu-title">Stok Kategorileri</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="menu-item">
+                                                        <a class="menu-link @(Regex.IsMatch(ctrl, "ItemQualityGroup") ? "active" : "")" 
+                                                            href="@Url.Action("List","ItemQualityGroup")">
+                                                            <span class="menu-bullet">
+                                                                <span class="bullet bullet-dot"></span>
+                                                            </span>
+                                                            <span class="menu-title">Kalite Grupları</span>
                                                         </a>
                                                     </div>
                                                     <div class="menu-item">

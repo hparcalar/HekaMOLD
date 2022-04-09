@@ -15,6 +15,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Warehouse
         public Nullable<int> PlantId { get; set; }
 
         #region VISUAL ELEMENTS
+        public int? FirmId { get; set; }
+        public int? ItemId { get; set; }
         public string CreatedDateStr { get; set; }
         public string ItemName { get; set; }
         public string FirmName { get; set; }

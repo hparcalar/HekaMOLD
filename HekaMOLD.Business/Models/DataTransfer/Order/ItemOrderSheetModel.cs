@@ -18,6 +18,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public Nullable<int> Thickness { get; set; }
         public Nullable<decimal> Eff { get; set; }
         public Nullable<int> SheetStatus { get; set; }
+        public Nullable<int> SheetItemId { get; set; }
 
         #region VISUAL ELEMENTS
         public string SheetVisualStr { get; set; }
@@ -26,6 +27,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string OrderDateStr { get; set; }
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
+        public string SheetProgramName { get; set; }
         public string FirmName { get; set; }
         public string DeadlineDateStr { get; set; }
         #endregion

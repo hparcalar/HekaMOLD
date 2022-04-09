@@ -27,7 +27,11 @@ namespace Heka.DataAccess.Context
         public Nullable<int> Quantity { get; set; }
         public Nullable<int> Thickness { get; set; }
         public Nullable<decimal> Eff { get; set; }
+
+        [ForeignKey("SheetItem")]
+        public Nullable<int> SheetItemId { get; set; }
         public virtual ItemOffer ItemOffer { get; set; }
+        public virtual Item SheetItem { get; set; }
 
         [InverseProperty("ItemOfferSheet")]
         public virtual ICollection<ItemOfferDetail> ItemOfferDetail { get; set; }

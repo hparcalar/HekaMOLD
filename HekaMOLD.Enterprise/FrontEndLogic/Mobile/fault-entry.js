@@ -118,19 +118,35 @@
     $scope.selectedMachine = { Id: 0, MachineName: '' };
 
     $scope.showMachineList = function () {
-        // DO BROADCAST
-        $scope.$broadcast('loadMachineList');
+        try {
+            $http.get(HOST_URL + 'Common/GetMachineList', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        var macList = resp.data;
+                        if (macList.length == 1) {
+                            $scope.selectedMachine = macList[0];
+                            $scope.loadMachineQueue();
+                        }
+                        else {
+                            // DO BROADCAST
+                            $scope.$broadcast('loadMachineList');
 
-        $('#dial-machinelist').dialog({
-            width: window.innerWidth * 0.95,
-            height: window.innerHeight * 0.95,
-            hide: true,
-            modal: true,
-            resizable: false,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
-        });
+                            $('#dial-machinelist').dialog({
+                                width: window.innerWidth * 0.95,
+                                height: window.innerHeight * 0.95,
+                                hide: true,
+                                modal: true,
+                                resizable: false,
+                                show: true,
+                                draggable: false,
+                                closeText: "KAPAT"
+                            });
+                        }
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
     }
 
     // EMIT SELECTED MACHINE DATA

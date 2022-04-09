@@ -17,6 +17,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Offers
         public Nullable<int> Quantity { get; set; }
         public Nullable<int> Thickness { get; set; }
         public Nullable<decimal> Eff { get; set; }
+        public Nullable<int> SheetItemId { get; set; }
 
         #region VISUAL ELEMENTS
         public string SheetVisualStr { get; set; }
