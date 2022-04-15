@@ -545,6 +545,40 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        [HttpPost]
+        public JsonResult MakeItemDemand(int workOrderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                var isDemandable = bObj.IsDemandable(workOrderDetailId);
+                if (isDemandable.Result)
+                {
+                    var workOrder = bObj.GetWorkOrderDetail(workOrderDetailId);
+
+                    result = bObj.SaveItemDemand(new ItemDemandModel
+                    {
+                        DemandDate = DateTime.Now,
+                        DemandedUserId = userId,
+                        DemandQuantity = workOrder.Quantity,
+                        DemandStatus = 0,
+                        ItemId = workOrder.SheetItemId,
+                        WorkOrderDetailId = workOrderDetailId,
+                    });
+                }
+                else
+                {
+                    result.Result = false;
+                    result.ErrorMessage = isDemandable.ErrorMessage;
+                }
+            }
+
+            return Json(result);
+        }
         #endregion
 
         #region PRODUCT PICK UP TO CONFIRMATION
@@ -1030,13 +1064,28 @@ namespace HekaMOLD.Enterprise.Controllers
         #endregion
 
         #region ITEM DELIVERY TO PRODUCTION
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetOpenDemands()
+        {
+            ItemDemandModel[] data = new ItemDemandModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetOpenDemands();
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
         public ActionResult ItemDelivery()
         {
             return View();
         }
 
         [HttpPost]
-        public JsonResult SaveItemDelivery(int itemReceiptDetailId, decimal quantity)
+        public JsonResult SaveItemDelivery(int itemReceiptDetailId, decimal quantity, int demandId)
         {
             try
             {
@@ -1049,13 +1098,28 @@ namespace HekaMOLD.Enterprise.Controllers
                     defaultMachineId = bObj.GetMachineList()[0].Id;
                 }
 
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    var supResult = bObj.IsSuppliable(demandId, quantity);
+                    if (!supResult.Result)
+                        throw new Exception(supResult.ErrorMessage);
+                }
+
                 using (PlanningBO bObj = new PlanningBO())
                 {
                     result = bObj.CreateItemDeliveryToProduction(itemReceiptDetailId, defaultMachineId, quantity);
                 }
 
                 if (result.Result)
+                {
+                    using (ProductionBO bObj = new ProductionBO())
+                    {
+                        int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+                        bObj.MakeSupplyForDemand(demandId, quantity, userId);
+                    }
+
                     return Json(new { Status = 1, RecordId = result.RecordId });
+                }
                 else
                     throw new Exception(result.ErrorMessage);
             }
@@ -1066,13 +1130,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetItemsForDelivery()
+        public JsonResult GetItemsForDelivery(int itemId)
         {
             ItemReceiptDetailModel[] result = new ItemReceiptDetailModel[0];
 
             using (ReceiptBO bObj = new ReceiptBO())
             {
-                result = bObj.GetOpenItemEntries();
+                result = bObj.GetOpenItemEntries(itemId);
             }
 
             var jsonResult = Json(new

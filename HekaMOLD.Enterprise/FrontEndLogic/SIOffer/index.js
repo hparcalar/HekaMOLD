@@ -155,7 +155,7 @@
                         $scope.modelObject.ProfitRate = $scope.offerModel.marj;
                         $scope.modelObject.CreditMonths = $scope.offerModel.vadeay;
                         $scope.modelObject.CreditRate = $scope.offerModel.vadeyuzde;
-                        $scope.modelObject.SheetProgramName = headerData.indexOf('.') > -1
+                        $scope.modelObject.SheetProgramName = headerData.filename.indexOf('.') > -1
                             ? headerData.filename.split('.')[0] : headerData.filename;
 
                         // SAVE SHEETS
@@ -174,7 +174,9 @@
                                 $scope.modelObject.Sheets.push({
                                     Eff: sheetData['eff'] && sheetData['eff'].length > 0 ? parseFloat(sheetData['eff']) : 0,
                                     SheetVisualStr: sheetVisualData,
-                                    Thickness: parseInt(sheetData['tickness']),
+                                    Thickness: parseFloat(sheetData['tickness']),
+                                    SheetWidth: parseFloat(sheetData['x']),
+                                    SheetHeight: parseFloat(sheetData['y']),
                                     Quantity: sheetData['quantity'],
                                     PerSheetTiemStr: sheetData['per-sheet-time'],
                                     SheetNo: i,
@@ -212,14 +214,14 @@
                                 Id: newId,
                                 NewDetail: true,
                                 SheetWeight: dataRow.agirlik,
-                                WastageWeight: parseInt(dataRow.tickness),
+                                WastageWeight: parseFloat(dataRow.tickness),
                                 Quantity: dataRow.adet,
                                 ItemExplanation: dataRow.parca_adi,
                                 TotalPrice: dataRow.maliyet,
                                 QualityExplanation: dataRow.malzeme,
                                 UnitPrice: parseFloat(dataRow["adet-fiyat"]),
                                 OrgUnitPrice: parseFloat(dataRow["adet-fiyat"]),
-                                SheetTickness: parseInt(dataRow.tickness),
+                                SheetTickness: parseFloat(dataRow.tickness),
                                 ItemVisualStr: visualData,
                                 Usages: [],
                                 /*SheetNo: detailedInfo['sheetid'],*/
@@ -251,14 +253,15 @@
         }
 
         $scope.openNewRecord = function () {
-            $scope.modelObject = { Id: 0, OfferDate: moment().format('DD.MM.YYYY'), Details: [] };
-            $scope.selectedFirm = {};
+            window.location.href = HOST_URL + '/SIOffer';
+            //$scope.modelObject = { Id: 0, OfferDate: moment().format('DD.MM.YYYY'), Details: [] };
+            //$scope.selectedFirm = {};
 
-            $scope.getNextOrderNo().then(function (rNo) {
-                $scope.modelObject.OfferNo = rNo;
-                $scope.$apply();
-            });
-            $scope.bindDetails();
+            //$scope.getNextOrderNo().then(function (rNo) {
+            //    $scope.modelObject.OfferNo = rNo;
+            //    $scope.$apply();
+            //});
+            //$scope.bindDetails();
         }
 
         $scope.createSaleOrder = function () {
@@ -384,6 +387,7 @@
                     "parca_adi": dObj.ItemExplanation,
                     "adet": parseInt(dObj.Quantity),
                     "maliyet": dObj.TotalPrice,
+                    "iscilik": (dObj.RoutePrice ?? 0).toFixed(2),
                     "maliyet-cur": formatter.format(dObj.TotalPrice),
                     "malzeme": dObj.QualityExplanation,
                     "resim": '<p><img src=\"data:image/png;base64,' + dObj.ItemVisualStr + '" ></p>',
@@ -817,7 +821,7 @@
                     { dataField: 'ItemName', caption: 'Stok Adı', allowEditing: false },
                     { dataField: 'ItemExplanation', caption: 'Parça Adı', allowEditing: false },
                     { dataField: 'QualityExplanation', caption: 'Kalite', allowEditing: false },
-                    { dataField: 'Quantity', caption: 'Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
+                    { dataField: 'Quantity', caption: 'Miktar', allowEditing: true, dataType: 'number', format: { type: "fixedPoint", precision: 2 }, },
                     {
                         dataField: 'UnitPrice', caption: 'Birim Fiyat',
                         dataType: 'number',
@@ -935,8 +939,8 @@
             $scope.$broadcast('loadSheetsList', $scope.modelObject.Sheets);
 
             $('#dial-offer-sheets').dialog({
-                width: 600,
-                height: 400,
+                width: window.innerWidth * 0.8,
+                height: window.innerHeight * 0.8,
                 //height: window.innerHeight * 0.6,
                 hide: true,
                 modal: true,

@@ -2,6 +2,7 @@
 using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Warehouse;
 using HekaMOLD.Business.Models.Dictionaries;
@@ -898,17 +899,82 @@ namespace HekaMOLD.Business.UseCases
             return extract;
         }
 
-        public ItemReceiptDetailModel[] GetOpenItemEntries()
+        public ItemModel[] GetLiveSheetStock()
+        {
+            ItemModel[] data = new ItemModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Item>();
+                var repoReceipt = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var items = repo.Filter(d => d.ItemQualityGroupId != null)
+                    .Select(d => new ItemModel
+                    {
+                        Id = d.Id,
+                        ItemNo = d.ItemNo,
+                        ItemName = d.ItemName,
+                        ItemQualityGroupCode = d.ItemQualityGroup != null ? d.ItemQualityGroup.ItemQualityGroupCode : "",
+                        ItemQualityGroupName = d.ItemQualityGroup != null ? d.ItemQualityGroup.ItemQualityGroupName : "",
+                        ItemQualityGroupId = d.ItemQualityGroupId,
+                        SheetHeight = d.SheetHeight,
+                        SheetThickness = d.SheetThickness,
+                        SheetUnitWeight = d.SheetUnitWeight,
+                        SheetWidth = d.SheetWidth,
+                    })
+                    .ToArray();
+
+                foreach (var item in items)
+                {
+                    try
+                    {
+                        var inQty = repoReceipt.Filter(d => d.ItemId == item.Id && d.ItemReceipt.ReceiptType < 100)
+                       .Sum(d => d.Quantity) ?? 0;
+                        var outQty = repoReceipt.Filter(d => d.ItemId == item.Id && d.ItemReceipt.ReceiptType > 100)
+                            .Sum(d => d.Quantity) ?? 0;
+
+                        var avgWeightPrice = repoReceipt.Filter(d => d.ItemId == item.Id
+                            && d.WeightQuantity != null && d.ItemReceipt.ReceiptType < 100)
+                            .Average(d => d.UnitPrice) ?? 0;
+
+                        var avgUnitWeight = repoReceipt.Filter(d => d.ItemId == item.Id
+                            && d.WeightQuantity != null
+                            && d.ItemReceipt.ReceiptType < 100)
+                            .Average(d => d.WeightQuantity / d.Quantity) ?? 0;
+
+                        item.TotalOverallQuantity = inQty - outQty;
+                        if (item.TotalOverallQuantity < 0)
+                            item.TotalOverallQuantity = 0;
+                        item.TotalOverallWeight = item.TotalOverallQuantity * avgUnitWeight;
+                        item.AvgWeightPrice = avgWeightPrice;
+                        item.TotalPrice = item.TotalOverallWeight * item.AvgWeightPrice;
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                   
+                }
+
+                data = items;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        public ItemReceiptDetailModel[] GetOpenItemEntries(int itemId)
         {
             ItemReceiptDetailModel[] extract = new ItemReceiptDetailModel[0];
 
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
-                extract = repo.Filter(d => d.Item.ItemType != (int)ItemType.Product 
+                extract = repo.Filter(d => d.ItemId == itemId
                     && d.ReceiptStatus != (int)ReceiptStatusType.Closed
                     && d.ReceiptStatus != (int)ReceiptStatusType.Blocked
-                    && d.Item.ItemType != (int)ItemType.SemiProduct
                     && d.Quantity > 0
                     ).ToList()
                     .Select(d => new ItemReceiptDetailModel

@@ -29,6 +29,26 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult LiveSheetStock()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetLiveSheetStock()
+        {
+            ItemModel[] data = new ItemModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                data = bObj.GetLiveSheetStock();
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
         [HttpGet]
         public JsonResult GetNextReceiptNo(int receiptType)
         {

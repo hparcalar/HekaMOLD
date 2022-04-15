@@ -337,6 +337,14 @@
     <Compile Include="Migrations\202204091735112_ItemDemandStatus.designer.cs">
       <DependentUpon>202204091735112_ItemDemandStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204120737443_ThicknessToDecimal.cs" />
+    <Compile Include="Migrations\202204120737443_ThicknessToDecimal.designer.cs">
+      <DependentUpon>202204120737443_ThicknessToDecimal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204120753242_SheetPropertiesOnOfferAndOrder.cs" />
+    <Compile Include="Migrations\202204120753242_SheetPropertiesOnOfferAndOrder.designer.cs">
+      <DependentUpon>202204120753242_SheetPropertiesOnOfferAndOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -455,6 +463,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202204091735112_ItemDemandStatus.resx">
       <DependentUpon>202204091735112_ItemDemandStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204120737443_ThicknessToDecimal.resx">
+      <DependentUpon>202204120737443_ThicknessToDecimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204120753242_SheetPropertiesOnOfferAndOrder.resx">
+      <DependentUpon>202204120753242_SheetPropertiesOnOfferAndOrder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

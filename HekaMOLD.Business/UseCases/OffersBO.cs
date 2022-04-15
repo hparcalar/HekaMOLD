@@ -54,6 +54,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoDetailRoute = _unitOfWork.GetRepository<ItemOfferDetailRoutePricing>();
                 var repoSheet = _unitOfWork.GetRepository<ItemOfferSheet>();
                 var repoSheetUsage = _unitOfWork.GetRepository<ItemOfferSheetUsage>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -122,6 +123,15 @@ namespace HekaMOLD.Business.UseCases
 
                     item.MapTo(dbSheet);
                     dbSheet.ItemOffer = dbObj;
+                    if (dbSheet.SheetItemId == null)
+                    {
+                        var properSheetItem = repoItem.Get(d => (d.SheetWidth - dbSheet.SheetWidth) <= 1 && (d.SheetWidth - dbSheet.SheetWidth) >= 0
+                            && (d.SheetHeight - dbSheet.SheetHeight) <= 1 && (d.SheetHeight - dbSheet.SheetHeight) >= 0
+                            && d.SheetThickness == dbSheet.Thickness);
+                        if (properSheetItem != null)
+                            dbSheet.SheetItem = properSheetItem;
+                    }
+
                     liveSheets.Add(dbSheet);
 
                     if (!string.IsNullOrEmpty(item.SheetVisualStr) && dbSheet.Id <= 0)
@@ -332,6 +342,34 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult SaveSheetItem(ItemOfferSheetModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOfferSheet>();
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                    throw new Exception("Levha bilgisi bulunamadı.");
+
+                var imgBytes = dbObj.SheetVisual;
+                model.MapTo(dbObj);
+                dbObj.SheetVisual = imgBytes;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+            
+            return result;
+        }
         public ItemOfferDetailRoutePricingModel[] GetPricingsByRoute(int routeId)
         {
             ItemOfferDetailRoutePricingModel[] data = new ItemOfferDetailRoutePricingModel[0];
@@ -451,6 +489,12 @@ namespace HekaMOLD.Business.UseCases
                         Id = d.Id,
                         Eff = d.Eff,
                         ItemOfferId = d.ItemOfferId,
+                        SheetHeight = d.SheetHeight,
+                        SheetWidth = d.SheetWidth,
+                        SheetItemId = d.SheetItemId,
+                        SheetItemName = d.SheetItem != null ? d.SheetItem.ItemName : "",
+                        SheetItemNo = d.SheetItem != null ? d.SheetItem.ItemNo : "",
+                        SheetName = d.SheetName,
                         PerSheetTime = d.PerSheetTime,
                         Quantity = d.Quantity,
                         SheetNo = d.SheetNo,
@@ -542,6 +586,10 @@ namespace HekaMOLD.Business.UseCases
                 if (dbOffer == null)
                     throw new Exception("Teklif bilgisi bulunamadı.");
 
+                if (dbOffer.ItemOfferSheet.Count() > 0 &&
+                    dbOffer.ItemOfferSheet.Any(d => d.SheetItemId == null))
+                    throw new Exception("Levha stoğu seçilmemiş saclar mevcuttur. Lütfen stoklarını seçip bundan sonra siparişe dönüştürünüz.");
+
                 List<ItemOrderDetailModel> newOrderDetails = new List<ItemOrderDetailModel>();
                 List<ItemOrderSheetModel> newSheets = new List<ItemOrderSheetModel>();
 
@@ -563,6 +611,9 @@ namespace HekaMOLD.Business.UseCases
                             SheetNo = item.SheetNo,
                             SheetStatus = 0,
                             SheetVisual = item.SheetVisual,
+                            SheetItemId = item.SheetItemId,
+                            SheetHeight = item.SheetHeight,
+                            SheetWidth = item.SheetWidth,
                             Thickness = item.Thickness,
                         };
 

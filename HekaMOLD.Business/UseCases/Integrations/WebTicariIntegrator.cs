@@ -140,87 +140,94 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
                             using (DefinitionsBO bObj = new DefinitionsBO())
                             {
-                                if (item.ur_sube == loginConfig.BranchOfficeNo && !bObj.HasAnyItem(item.ur_kod.Value))
+                                if (item.ur_sube == loginConfig.BranchOfficeNo)
                                 {
-                                    int? unitTypeId = null;
-                                    #region RESOLVE SYSTEM UNIT TYPE
-                                    if (!string.IsNullOrEmpty(item.ur_kullbirim.Value))
+                                    if (!bObj.HasAnyItem(item.ur_kod.Value))
                                     {
-                                        using (DefinitionsBO subObj = new DefinitionsBO())
+                                        int? unitTypeId = null;
+                                        #region RESOLVE SYSTEM UNIT TYPE
+                                        if (!string.IsNullOrEmpty(item.ur_kullbirim.Value))
                                         {
-                                            if (!subObj.HasAnyUnitType(item.ur_kullbirim.Value))
+                                            using (DefinitionsBO subObj = new DefinitionsBO())
                                             {
-                                                var crResult = subObj.SaveOrUpdateUnitType(new UnitTypeModel
+                                                if (!subObj.HasAnyUnitType(item.ur_kullbirim.Value))
                                                 {
-                                                    PlantId = syncPoint.PlantId,
-                                                    UnitCode = item.ur_kullbirim.Value,
-                                                    UnitName = item.ur_kullbirim.Value,
-                                                });
-                                                if (crResult.Result)
-                                                    unitTypeId = crResult.RecordId;
-                                            }
-                                            else
-                                            {
-                                                var unitObj = subObj.GetUnitType(item.ur_kullbirim.Value);
-                                                if (unitObj != null)
-                                                    unitTypeId = unitObj.Id;
+                                                    var crResult = subObj.SaveOrUpdateUnitType(new UnitTypeModel
+                                                    {
+                                                        PlantId = syncPoint.PlantId,
+                                                        UnitCode = item.ur_kullbirim.Value,
+                                                        UnitName = item.ur_kullbirim.Value,
+                                                    });
+                                                    if (crResult.Result)
+                                                        unitTypeId = crResult.RecordId;
+                                                }
+                                                else
+                                                {
+                                                    var unitObj = subObj.GetUnitType(item.ur_kullbirim.Value);
+                                                    if (unitObj != null)
+                                                        unitTypeId = unitObj.Id;
+                                                }
                                             }
                                         }
-                                    }
-                                    #endregion
+                                        #endregion
 
-                                    int? itemTypeNo = (int)ItemType.Commercial;
-                                    #region RESOLVE ITEM TYPE
-                                    if (Regex.IsMatch(item.ur_tipi.Value, "^HA$"))
-                                        itemTypeNo = (int)ItemType.RawMaterials;
-                                    else if (Regex.IsMatch(item.ur_tipi.Value, "^GS$|^GD$|^TM$|^MA$"))
-                                        itemTypeNo = (int)ItemType.Product;
-                                    else if (item.ur_tipi.Value == null
-                                        || Regex.IsMatch(item.ur_tipi.Value, "^HZ$|^MH$|^YM$|^SM$|^MU$"))
-                                        itemTypeNo = (int)ItemType.Commercial;
-                                    #endregion
-
-                                    int? itemGroupId = null;
-                                    #region RESOLVE ITEM GROUP
-                                    if (!string.IsNullOrEmpty(item.gr_adi.Value))
-                                    {
-                                        using (DefinitionsBO subObj = new DefinitionsBO())
+                                        int? itemTypeNo = (int)ItemType.Product;
+                                        #region RESOLVE ITEM TYPE
+                                        if (item.ur_tipi != null && item.ur_tipi.Value != null)
                                         {
-                                            if (!subObj.HasAnyItemGroup(item.gr_adi.Value))
-                                            {
-                                                var crResult = subObj.SaveOrUpdateItemGroup(new ItemGroupModel
-                                                {
-                                                    PlantId = syncPoint.PlantId,
-                                                    ItemGroupCode = item.gr_adi.Value,
-                                                    ItemGroupName = item.gr_adi.Value,
-                                                });
-
-                                                if (crResult.Result)
-                                                    itemGroupId = crResult.RecordId;
-                                            }
+                                            if (Regex.IsMatch(item.ur_tipi.Value, "^HA$"))
+                                                itemTypeNo = (int)ItemType.RawMaterials;
+                                            else if (Regex.IsMatch(item.ur_tipi.Value, "^GS$|^GD$|^TM$|^MA$"))
+                                                itemTypeNo = (int)ItemType.Product;
+                                            else if (item.ur_tipi.Value == null
+                                                || Regex.IsMatch(item.ur_tipi.Value, "^HZ$|^MH$|^YM$|^SM$|^MU$"))
+                                                itemTypeNo = (int)ItemType.Commercial;
                                             else
+                                                itemTypeNo = (int)ItemType.Commercial;
+                                        }
+                                        #endregion
+
+                                        int? itemGroupId = null;
+                                        #region RESOLVE ITEM GROUP
+                                        if (!string.IsNullOrEmpty(item.gr_adi.Value))
+                                        {
+                                            using (DefinitionsBO subObj = new DefinitionsBO())
                                             {
-                                                var grObj = subObj.GetItemGroup(item.gr_adi.Value);
-                                                if (grObj != null)
-                                                    itemGroupId = grObj.Id;
+                                                if (!subObj.HasAnyItemGroup(item.gr_adi.Value))
+                                                {
+                                                    var crResult = subObj.SaveOrUpdateItemGroup(new ItemGroupModel
+                                                    {
+                                                        PlantId = syncPoint.PlantId,
+                                                        ItemGroupCode = item.gr_adi.Value,
+                                                        ItemGroupName = item.gr_adi.Value,
+                                                    });
+
+                                                    if (crResult.Result)
+                                                        itemGroupId = crResult.RecordId;
+                                                }
+                                                else
+                                                {
+                                                    var grObj = subObj.GetItemGroup(item.gr_adi.Value);
+                                                    if (grObj != null)
+                                                        itemGroupId = grObj.Id;
+                                                }
                                             }
                                         }
-                                    }
-                                    #endregion
+                                        #endregion
 
-                                    var itemModel = new ItemModel
-                                    {
-                                        ItemNo = item.ur_kod.Value,
-                                        ItemName = item.ur_adi.Value,
-                                        PlantId = syncPoint.PlantId,
-                                        ItemType = itemTypeNo,
-                                        ItemGroupId = itemGroupId,
-                                        SyncStatus = 1,
-                                        // bi_alisfiyat,
-                                        // bi_satisfiyat1, bi_satisfiyat5
-                                        // kd_kdv,
-                                        Units = unitTypeId > 0 ? new ItemUnitModel[]
+                                        var itemModel = new ItemModel
                                         {
+                                            ItemNo = item.ur_kod.Value,
+                                            ItemName = item.ur_adi.Value,
+                                            PlantId = syncPoint.PlantId,
+                                            ItemType = itemTypeNo,
+                                            ItemGroupId = itemGroupId,
+                                            SyncStatus = 1,
+                                            // bi_alisfiyat,
+                                            // bi_satisfiyat1, bi_satisfiyat5
+                                            // kd_kdv,
+                                            Units = unitTypeId > 0 ? new ItemUnitModel[]
+                                            {
                                             new ItemUnitModel
                                             {
                                                 IsMainUnit = true,
@@ -229,38 +236,78 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                                 UnitId = unitTypeId,
                                                 NewDetail=true,
                                             }
-                                        } : null,
-                                    };
+                                            } : null,
+                                        };
 
-                                    #region RESOLVE DETAILS IF ITS SHEET PLATE ITEM
-                                    if (Regex.IsMatch(item.ur_adi.Value, "\\sSAC(\\s|$)"))
-                                    {
-                                        try
+                                        #region RESOLVE DETAILS IF ITS SHEET PLATE ITEM
+                                        if (Regex.IsMatch(item.ur_adi.Value, "\\sSAC(\\s|$)"))
                                         {
-                                            var sheetData = ((string)item.ur_adi.Value).Split(' ');
-
-                                            var sizeData = sheetData[0].Split('*');
-                                            var thickness = Convert.ToSingle(sheetData[1].Replace(",", "."));
-                                            var qualityStr = sheetData[2];
-
-                                            var dbQuality = bObj.GetItemQualityGroup(qualityStr);
-                                            if (dbQuality != null && dbQuality.Id > 0)
+                                            try
                                             {
-                                                itemModel.ItemQualityGroupId = dbQuality.Id;
+                                                var sheetData = ((string)item.ur_adi.Value).Split(' ');
+
+                                                var sizeData = sheetData[0].Split('*');
+                                                var thickness = Convert.ToSingle(sheetData[1].Replace(",", "."));
+                                                var qualityStr = sheetData[2];
+
+                                                var dbQuality = bObj.GetItemQualityGroup(qualityStr);
+                                                if (dbQuality != null && dbQuality.Id > 0)
+                                                {
+                                                    itemModel.ItemQualityGroupId = dbQuality.Id;
+                                                }
+
+                                                itemModel.SheetThickness = Convert.ToDecimal(thickness);
+                                                itemModel.SheetWidth = Convert.ToDecimal(Convert.ToSingle(sizeData[1]));
+                                                itemModel.SheetHeight = Convert.ToDecimal(Convert.ToSingle(sizeData[0]));
                                             }
+                                            catch (Exception)
+                                            {
 
-                                            itemModel.SheetThickness = Convert.ToDecimal(thickness);
-                                            itemModel.SheetWidth = Convert.ToDecimal(Convert.ToSingle(sizeData[1]));
-                                            itemModel.SheetHeight = Convert.ToDecimal(Convert.ToSingle(sizeData[0]));
+                                            }
                                         }
-                                        catch (Exception)
-                                        {
+                                        #endregion
 
+                                        bObj.SaveOrUpdateItem(itemModel);
+                                    }
+                                    else // update only names
+                                    {
+                                        var itemData = bObj.GetItem((item.ur_kod.Value as string));
+                                        if (itemData != null && itemData.Id > 0)
+                                        {
+                                            #region RESOLVE DETAILS IF ITS SHEET PLATE ITEM
+                                            if (Regex.IsMatch(item.ur_adi.Value, "\\sSAC(\\s|$)"))
+                                            {
+                                                try
+                                                {
+                                                    var sheetData = ((string)item.ur_adi.Value).Split(' ');
+
+                                                    var sizeData = sheetData[0].Split('*');
+                                                    var thickness = Convert.ToSingle(sheetData[1].Replace(",", "."));
+                                                    var qualityStr = sheetData[2];
+
+                                                    var dbQuality = bObj.GetItemQualityGroup(qualityStr);
+                                                    if (dbQuality != null && dbQuality.Id > 0)
+                                                    {
+                                                        itemData.ItemQualityGroupId = dbQuality.Id;
+                                                    }
+
+                                                    itemData.SheetThickness = Convert.ToDecimal(Convert.ToSingle(thickness));
+                                                    itemData.SheetWidth = Convert.ToDecimal(Convert.ToSingle(sizeData[1]));
+                                                    itemData.SheetHeight = Convert.ToDecimal(Convert.ToSingle(sizeData[0]));
+                                                }
+                                                catch (Exception)
+                                                {
+
+                                                }
+
+                                                using (DefinitionsBO nBo = new DefinitionsBO())
+                                                {
+                                                    nBo.SaveOrUpdateItem(itemData);
+                                                }
+                                            }
+                                            #endregion
                                         }
                                     }
-                                    #endregion
-
-                                    bObj.SaveOrUpdateItem(itemModel);
                                 }
                             }
                         }

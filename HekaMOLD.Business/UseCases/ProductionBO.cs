@@ -93,6 +93,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.DyeCode = d.Dye != null ? d.Dye.DyeCode : "";
                 containerObj.RalCode = d.Dye != null ? d.Dye.RalCode : "";
                 containerObj.TrialProductName = d.TrialProductName;
+                containerObj.SheetItemId = d.ItemOrderSheet != null ? d.ItemOrderSheet.SheetItemId : (int?)null;
                 containerObj.WorkOrderType = d.WorkOrderType;
                 containerObj.DyeName = d.Dye != null ? d.Dye.DyeName : "";
                 containerObj.MachineCode = d.Machine != null ? d.Machine.MachineCode : "";
@@ -641,6 +642,9 @@ namespace HekaMOLD.Business.UseCases
                                 dbObj.WorkOrderDetail.ItemOrderDetail.ItemOrderId : (int?)null,
                             CreatedDate = dbObj.WorkOrderDetail.CreatedDate,
                             Quantity = dbObj.WorkOrderDetail.Quantity,
+                            SheetItemId = dbObj.WorkOrderDetail.ItemOrderSheet != null ? dbObj.WorkOrderDetail.ItemOrderSheet.SheetItemId : (int?)null,
+                            SheetItemName = dbObj.WorkOrderDetail.ItemOrderSheet != null &&
+                                dbObj.WorkOrderDetail.ItemOrderSheet.SheetItem != null ? dbObj.WorkOrderDetail.ItemOrderSheet.SheetItem.ItemName : "",
                             WorkOrderNo = dbObj.WorkOrderDetail.WorkOrder.WorkOrderNo,
                             ItemOrderDocumentNo = dbObj.WorkOrderDetail.ItemOrderSheet != null ?
                                 dbObj.WorkOrderDetail.ItemOrderSheet.ItemOrder.OrderNo : "",
@@ -755,6 +759,9 @@ namespace HekaMOLD.Business.UseCases
                             MoldCode = dbObj.Mold != null ? dbObj.Mold.MoldCode : "",
                             MoldName = dbObj.Mold != null ? dbObj.Mold.MoldName : "",
                             CreatedDate = dbObj.CreatedDate,
+                            SheetItemId = dbObj.ItemOrderSheet != null ? dbObj.ItemOrderSheet.SheetItemId : (int?)null,
+                            SheetItemName = dbObj.ItemOrderSheet != null &&
+                                dbObj.ItemOrderSheet.SheetItem != null ? dbObj.ItemOrderSheet.SheetItem.ItemName : "",
                             Quantity = dbObj.Quantity,
                             SheetVisualStr = dbObj.ItemOrderSheet != null &&
                                 dbObj.ItemOrderSheet.SheetVisual != null ?
@@ -3949,6 +3956,52 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult IsSuppliable(int demandId, decimal quantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemDemand>();
+                var dbDemand = repo.Get(d => d.Id == demandId);
+                if (dbDemand == null)
+                    throw new Exception("Talep bilgisine ulaşılamadı.");
+
+                if (dbDemand.DemandQuantity < (dbDemand.SuppliedQuantity + quantity))
+                    throw new Exception("Talep miktarından fazla teslimat yapılamaz.");
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult IsDemandable(int workOrderDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemDemand>();
+                var dbDemand = repo.Get(d => d.WorkOrderDetailId == workOrderDetailId);
+                if (dbDemand != null)
+                    throw new Exception("Bu iş emrine ait talep zaten yapılmış.");
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
         public ItemDemandModel[] GetOpenDemands()
         {
             ItemDemandModel[] data = new ItemDemandModel[0];
@@ -3956,8 +4009,10 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemDemand>();
+                var repoReceipt = _unitOfWork.GetRepository<ItemReceiptDetail>();
 
                 data = repo.Filter(d => (d.DemandStatus ?? 0) <= 1)
+                    .ToList()
                     .Select(d => new ItemDemandModel
                     {
                         Id = d.Id,
@@ -3984,8 +4039,34 @@ namespace HekaMOLD.Business.UseCases
                     })
                     .OrderBy(d => d.DemandDate)
                     .ToArray();
+
+                foreach (var item in data)
+                {
+                    var itemId = item.ItemId;
+                    if (itemId > 0)
+                    {
+                        try
+                        {
+                            var entriesQty = repoReceipt.Filter(d => d.ItemId == itemId && d.ItemReceipt.ReceiptType < 100)
+                            .Select(d => d.Quantity).Sum(d => d) ?? 0;
+                            var deliveriesQty = repoReceipt.Filter(d => d.ItemId == itemId && d.ItemReceipt.ReceiptType > 100)
+                                .Select(d => d.Quantity).Sum(d => d) ?? 0;
+
+                            var remainingQty = entriesQty - deliveriesQty;
+                            item.IsLackOfStock = item.DemandQuantity > remainingQty;
+                            if (item.IsLackOfStock)
+                                item.LackOfStockCount =
+                                    Convert.ToInt32(Math.Abs(Convert.ToDecimal(item.DemandQuantity - (remainingQty < 0 ? 0 : remainingQty))));
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        
+                    }
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
             }

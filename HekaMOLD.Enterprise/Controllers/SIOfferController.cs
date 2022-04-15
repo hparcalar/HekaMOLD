@@ -148,6 +148,19 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        public JsonResult SaveSheetItem(ItemOfferSheetModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (OffersBO bObj = new OffersBO())
+            {
+                result = bObj.SaveSheetItem(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
         public JsonResult SaveModel()
         {
             try

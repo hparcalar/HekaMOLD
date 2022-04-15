@@ -411,6 +411,57 @@
         });
     }
 
+    $scope.makeDemand = function () {
+        try {
+            if ($scope.activeWorkOrder != null && $scope.activeWorkOrder.WorkOrderDetailId > 0) {
+                if ($scope.activeWorkOrder.WorkOrder.SheetItemId == null) {
+                    toastr.error('Bu iş emri için levha stoğu seçilmemiş.');
+                    return;
+                }
+
+                bootbox.confirm({
+                    message: $scope.activeWorkOrder.WorkOrder.SheetItemName + ' stoğundan ' +
+                        $scope.activeWorkOrder.WorkOrder.Quantity + ' adet talep edilecektir. Onaylıyor musunuz?',
+                    closeButton: false,
+                    buttons: {
+                        confirm: {
+                            label: 'Evet',
+                            className: 'btn-primary'
+                        },
+                        cancel: {
+                            label: 'Hayır',
+                            className: 'btn-light'
+                        }
+                    },
+                    callback: async function (result) {
+                        if (result) {
+                            try {
+                                $http.post(HOST_URL + 'Mobile/MakeItemDemand', {
+                                    workOrderDetailId: $scope.activeWorkOrder.WorkOrderDetailId,
+                                }, 'json')
+                                    .then(function (resp) {
+                                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                                            if (resp.data.Result == true) {
+                                                toastr.success('Talep başarıyla gerçekleştirildi.', 'Bilgilendirme');
+                                                $scope.lastPackageQty = $scope.activeWorkOrder.WorkOrder.InPackageQuantity;
+                                                $scope.loadActiveWorkOrder();
+                                            }
+                                            else
+                                                toastr.error(resp.data.ErrorMessage, 'Hata');
+                                        }
+                                    }).catch(function (err) { });
+                            } catch (e) {
+
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (e) {
+
+        }
+    }
+
     // LOAD EVENTS
     $scope.getDefaultSerialPrinter();
 

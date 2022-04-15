@@ -15,10 +15,12 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public byte[] SheetVisual { get; set; }
         public Nullable<DateTime> PerSheetTime { get; set; }
         public Nullable<int> Quantity { get; set; }
-        public Nullable<int> Thickness { get; set; }
+        public Nullable<decimal> Thickness { get; set; }
         public Nullable<decimal> Eff { get; set; }
         public Nullable<int> SheetStatus { get; set; }
         public Nullable<int> SheetItemId { get; set; }
+        public Nullable<decimal> SheetWidth { get; set; }
+        public Nullable<decimal> SheetHeight { get; set; }
 
         #region VISUAL ELEMENTS
         public string SheetVisualStr { get; set; }

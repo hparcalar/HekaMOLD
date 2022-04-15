@@ -9,20 +9,25 @@
     $scope.lastRecordId = 0;
     $scope.reportTemplateId = 0;
 
+    $scope.demandList = [];
+
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
     $scope.summaryList = [];
     $scope.selectedProducts = [];
+    $scope.selectedDemand = { Id: 0 };
 
     $scope.bindModel = function () {
-        $http.get(HOST_URL + 'Mobile/GetItemsForDelivery', {}, 'json')
+        $http.get(HOST_URL + 'Mobile/GetOpenDemands', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data.Serials;
-                    $scope.filteredPickupList = $scope.pickupList;
-                    $scope.summaryList = resp.data.Summaries;
+                    $scope.demandList = resp.data;
                 }
             }).catch(function (err) { });
+
+        if ($scope.selectedDemand != null && $scope.selectedDemand.Id > 0) {
+            $scope.bindDeliveryList();
+        }
     }
 
     $scope.getListSum = function (list, key) {
@@ -43,6 +48,23 @@
             $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
             $scope.selectedProducts.push(item);
         }
+    }
+
+    $scope.selectDemand = function (item) {
+        $scope.selectedDemand = item;
+
+        $scope.bindDeliveryList();
+    }
+
+    $scope.bindDeliveryList = function () {
+        $http.get(HOST_URL + 'Mobile/GetItemsForDelivery?itemId=' + $scope.selectedDemand.ItemId, {}, 'json')
+            .then(function (resp) {
+                if (typeof resp.data != 'undefined' && resp.data != null) {
+                    $scope.pickupList = resp.data.Serials;
+                    $scope.filteredPickupList = $scope.pickupList;
+                    $scope.summaryList = resp.data.Summaries;
+                }
+            }).catch(function (err) { });
     }
 
     $scope.isSelectedProduct = function (item) {
@@ -188,6 +210,7 @@
                                 $http.post(HOST_URL + 'Mobile/SaveItemDelivery', {
                                     itemReceiptDetailId: $scope.selectedProducts[0].Id,
                                     quantity: parseFloat(resultQuantity),
+                                    demandId: $scope.selectedDemand.Id,
                                 }, 'json')
                                     .then(function (resp) {
                                         if (typeof resp.data != 'undefined' && resp.data != null) {

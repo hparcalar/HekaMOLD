@@ -3,6 +3,44 @@
 
     $scope.sheetsList = [];
 
+    $scope.selectedSheetRow = null;
+    $scope.showItemList = function (row) {
+        $scope.selectedSheetRow = row;
+
+        $scope.$broadcast('loadItemList', null);
+
+        $('#dial-items-list').dialog({
+            width: window.innerWidth * 0.8,
+            height: window.innerHeight * 0.8,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.$on('transferItems', function (e, d) {
+        if (d != null && d.length > 0 && $scope.selectedSheetRow != null && $scope.selectedSheetRow.Id > 0) {
+            $scope.selectedSheetRow.SheetItemId = d[0].Id;
+
+            $http.post(HOST_URL + 'SIOffer/SaveSheetItem', $scope.selectedSheetRow, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Result) {
+                            $scope.selectedSheetRow.SheetItemName = d[0].ItemName;
+                            $scope.loadSheetList();
+                        }
+                        else
+                            toastr.error(resp.data.ErrorMessage, 'Hata');
+                    }
+                }).catch(function (err) { });
+
+            $('#dial-items-list').dialog('close');
+        }
+    });
+
     $scope.loadSheetList = function () {
         $('#sheetList').dxDataGrid({
             dataSource: {
@@ -59,9 +97,22 @@
                             element.append('<image src="data:image/x-wmf;base64,' + info.displayValue + '" />');
                     }
                 },
+                { dataField: 'SheetItemName', caption: 'Stok', allowEditing: false },
+                { dataField: 'SheetHeight', caption: 'Boy', allowEditing: false },
+                { dataField: 'SheetWidth', caption: 'En', allowEditing: false },
                 { dataField: 'Thickness', caption: 'Kalınlık', allowEditing: false },
                 { dataField: 'Quantity', caption: 'Adet', allowEditing: false },
                 { dataField: 'Eff', caption: 'Verimlilik', allowEditing: false },
+                {
+                    type: "buttons",
+                    buttons: [
+                        {
+                            name: 'selectSheetItem', text: 'Stok Seç', onClick: function (e) {
+                                $scope.showItemList(e.row.data);
+                            }
+                        },
+                    ]
+                }
             ]
         });
     }

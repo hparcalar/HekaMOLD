@@ -20,7 +20,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public Nullable<DateTime> SupplyDate { get; set; }
         public Nullable<int> DemandedUserId { get; set; }
         public Nullable<int> SupplierUserId { get; set; }
-
         public Nullable<int> DemandStatus { get; set; }
 
         #region VISUAL ELEMENTS
@@ -32,6 +31,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string SupplierUserName { get; set; }
         public string DemandDateStr { get; set; }
         public string SupplyDateStr { get; set; }
+        public bool IsLackOfStock { get; set; }
+        public int LackOfStockCount { get; set; }
         #endregion
     }
 }

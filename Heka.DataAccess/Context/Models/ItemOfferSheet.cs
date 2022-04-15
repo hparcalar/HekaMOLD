@@ -25,7 +25,9 @@ namespace Heka.DataAccess.Context
         public byte[] SheetVisual { get; set; }
         public Nullable<DateTime> PerSheetTime { get; set; }
         public Nullable<int> Quantity { get; set; }
-        public Nullable<int> Thickness { get; set; }
+        public Nullable<decimal> Thickness { get; set; }
+        public Nullable<decimal> SheetWidth { get; set; }
+        public Nullable<decimal> SheetHeight { get; set; }
         public Nullable<decimal> Eff { get; set; }
 
         [ForeignKey("SheetItem")]

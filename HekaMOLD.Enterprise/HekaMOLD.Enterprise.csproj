@@ -4161,6 +4161,7 @@
     <Content Include="FrontEndLogic\ItemQualityGroup\list.js" />
     <Content Include="FrontEndLogic\ItemReceipt\index.js" />
     <Content Include="FrontEndLogic\ItemReceipt\list.js" />
+    <Content Include="FrontEndLogic\ItemReceipt\live-sheet-stock.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\extract.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
@@ -4731,6 +4732,7 @@
     <Content Include="Views\Plant\Index.cshtml" />
     <Content Include="Views\ItemQualityGroup\List.cshtml" />
     <Content Include="Views\ItemQualityGroup\Index.cshtml" />
+    <Content Include="Views\ItemReceipt\LiveSheetStock.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

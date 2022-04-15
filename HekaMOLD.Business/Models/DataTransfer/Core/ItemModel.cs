@@ -29,6 +29,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public decimal? TotalInQuantity { get; set; }
         public decimal? TotalOutQuantity { get; set; }
         public decimal? TotalOverallQuantity { get; set; }
+        public decimal? TotalOverallWeight { get; set; }
+        public decimal? AvgWeightPrice { get; set; }
+        public decimal? TotalPrice { get; set; }
         public int? SyncStatus { get; set; }
 
         #region VISUAL ELEMENTS

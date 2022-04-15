@@ -81,19 +81,35 @@
                                        ng-model="activeWorkOrder.WorkOrder.InPackageQuantity" placeholder="" />
                             </div>
                         </div>
-                        <a ng-hide="modelObject.Id > 0"
-                           class="btn btn-sm btn-block w-100 h-30 mt-0 mb-2 btn-success" style="padding-top:10px;" ng-click="readBarcode()">
-                            <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
-                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                    <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
-                                        <path d="M6.26193932,17.6476484 C5.90425297,18.0684559 5.27315905,18.1196257 4.85235158,17.7619393 C4.43154411,17.404253 4.38037434,16.773159 4.73806068,16.3523516 L13.2380607,6.35235158 C13.6013618,5.92493855 14.2451015,5.87991302 14.6643638,6.25259068 L19.1643638,10.2525907 C19.5771466,10.6195087 19.6143273,11.2515811 19.2474093,11.6643638 C18.8804913,12.0771466 18.2484189,12.1143273 17.8356362,11.7474093 L14.0997854,8.42665306 L6.26193932,17.6476484 Z" id="Path-94" fill="#000000" fill-rule="nonzero" transform="translate(11.999995, 12.000002) rotate(-180.000000) translate(-11.999995, -12.000002) "></path>
-                                    </g>
-                                </svg>
-                            </span>
-                            <br />
-                            <span style="display:block;margin-top:10px;">Giriş Yap</span>
-                        </a>
+                        <div class="d-flex flex-row">
+                            <a ng-hide="modelObject.Id > 0"
+                               class="btn btn-sm btn-block w-100 h-30 mt-0 mb-2 rounded-0 btn-success" style="padding-top:10px;" ng-click="readBarcode()">
+                                <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+                                            <path d="M6.26193932,17.6476484 C5.90425297,18.0684559 5.27315905,18.1196257 4.85235158,17.7619393 C4.43154411,17.404253 4.38037434,16.773159 4.73806068,16.3523516 L13.2380607,6.35235158 C13.6013618,5.92493855 14.2451015,5.87991302 14.6643638,6.25259068 L19.1643638,10.2525907 C19.5771466,10.6195087 19.6143273,11.2515811 19.2474093,11.6643638 C18.8804913,12.0771466 18.2484189,12.1143273 17.8356362,11.7474093 L14.0997854,8.42665306 L6.26193932,17.6476484 Z" id="Path-94" fill="#000000" fill-rule="nonzero" transform="translate(11.999995, 12.000002) rotate(-180.000000) translate(-11.999995, -12.000002) "></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <br />
+                                <span style="display:block;margin-top:10px;">Giriş Yap</span>
+                            </a>
+                            <a ng-hide="modelObject.Id > 0"
+                               class="btn btn-sm btn-block w-100 h-30 mt-0 mb-2 rounded-0 btn-primary" style="padding-top:10px;" ng-click="makeDemand()">
+                                <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Shopping-/-Box2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                            <path d="M4,9.67471899 L10.880262,13.6470401 C10.9543486,13.689814 11.0320333,13.7207107 11.1111111,13.740321 L11.1111111,21.4444444 L4.49070127,17.526473 C4.18655139,17.3464765 4,17.0193034 4,16.6658832 L4,9.67471899 Z M20,9.56911707 L20,16.6658832 C20,17.0193034 19.8134486,17.3464765 19.5092987,17.526473 L12.8888889,21.4444444 L12.8888889,13.6728275 C12.9050191,13.6647696 12.9210067,13.6561758 12.9368301,13.6470401 L20,9.56911707 Z" id="Combined-Shape" fill="#000000"></path>
+                                            <path d="M4.21611835,7.74669402 C4.30015839,7.64056877 4.40623188,7.55087574 4.5299008,7.48500698 L11.5299008,3.75665466 C11.8237589,3.60013944 12.1762411,3.60013944 12.4700992,3.75665466 L19.4700992,7.48500698 C19.5654307,7.53578262 19.6503066,7.60071528 19.7226939,7.67641889 L12.0479413,12.1074394 C11.9974761,12.1365754 11.9509488,12.1699127 11.9085461,12.2067543 C11.8661433,12.1699127 11.819616,12.1365754 11.7691509,12.1074394 L4.21611835,7.74669402 Z" id="Path" fill="#000000" opacity="0.3"></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <br />
+                                <span style="display:block;margin-top:10px;">Sac Talebi</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
