@@ -7,7 +7,6 @@ using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
@@ -20,18 +19,14 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
-
         public ActionResult List()
         {
             return View();
         }
-
         public ActionResult Online()
         {
-
             return View();
         }
-
         [HttpGet]
         [FreeAction]
         public JsonResult GetMachineList()
@@ -47,7 +42,6 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
-
         [HttpGet]
         public JsonResult GetSelectables()
         {
@@ -65,7 +59,6 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
-
         [HttpGet]
         [FreeAction]
         public JsonResult GetMachineStats(string t1, string t2)
@@ -81,7 +74,6 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
-
         [HttpGet]
         [FreeAction]
         public JsonResult GetMachineStatsForDashboard()
@@ -93,7 +85,6 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 shiftData = bObj.GetCurrentShift();
             }
-
             if (shiftData != null)
             {
                 string t1 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
@@ -104,12 +95,10 @@ namespace HekaMOLD.Enterprise.Controllers
                     result = bObj.GetMachineStats(t1, t2);
                 }
             }
-
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
-
         [HttpGet]
         [FreeAction]
         public JsonResult GetUserProfiles(string userIdPrm)
@@ -133,7 +122,6 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
-
         [HttpGet]
         [FreeAction]
         public JsonResult GetMachineStatsByMachineId(int machineId, string t1, string t2)
@@ -149,7 +137,6 @@ namespace HekaMOLD.Enterprise.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
-
         [HttpGet]
         [FreeAction]
         public JsonResult BindModel(int rid)
@@ -162,7 +149,6 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
-
         [HttpPost]
         public JsonResult DeleteModel(int rid)
         {
@@ -184,7 +170,6 @@ namespace HekaMOLD.Enterprise.Controllers
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
         }
-
         [HttpPost]
         public JsonResult SaveModel(MachineModel model)
         {

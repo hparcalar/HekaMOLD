@@ -19,6 +19,7 @@
             showBorders: true,
             allowColumnResizing: true,
             wordWrapEnabled: true,
+            columnAutoWidth: true,
 
             export: {
                 enabled: true,
@@ -39,23 +40,35 @@
                 });
                 e.cancel = true;
             },
+            columnFixing: {
+                enabled: true,
+            },
+            showColumnLines: false,
+            showRowLines: true,
+            rowAlternationEnabled: false,
+            focusedRowEnabled: true,
+            showBorders: true,
+            //allowColumnReordering = true,
             filterRow: {
-                visible: true
+                visible: true,
             },
             headerFilter: {
                 visible: true
             },
+            pager: {
+                allowedPageSizes: [5, 8, 15, 30],
+                showInfo: true,
+                showNavigationButtons: true,
+                showPageSizeSelector: true,
+                visible: true,
+            },
             paging: {
                 enabled: true,
-                pageSize: 13,
+                pageSize: 8,
                 pageIndex: 0
             },
             groupPanel: {
                 visible: true
-            },
-            editing: {
-                allowUpdating: false,
-                allowDeleting: false
             },
             columns: [
                 { dataField: 'Plate', caption: 'Plaka' },
@@ -65,8 +78,20 @@
                 { dataField: 'HasLoadPlannig', caption: 'Yük Planlanabilir' },
                 { dataField: 'VehicleAllocationTypeStr', caption: 'Araç Tahsis Tip' },
                 { dataField: 'VehicleTypeName', caption: 'Araç Tip' },
-                //{ dataField: 'ContractStartDateStr', caption: 'Söz. Baş. Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
-                //{ dataField: 'ContractEndDateStr', caption: 'Söz. Bit. Tarih', dataType: 'date',format :'dd.MM.yyyy' },
+                { dataField: 'OwnerFirmName', caption: 'İşlem Firma' },
+                { dataField: 'CareNotification', caption: 'Bakım Bildirim', dataType:'boolean' },
+                { dataField: 'TireNotification', caption: 'Lastik Bildirim', dataType: 'boolean' },
+                { dataField: 'KmHourControl', caption: 'Km Kontrol', dataType: 'boolean' },
+                { dataField: 'HasLoadPlannig', caption: 'Yüke Dönüştürülebilir', dataType: 'boolean' },
+                { dataField: 'CarePeriyot', caption: 'Bakım Periyot' },
+                { dataField: 'ChassisNumber', caption: 'Şasi Numarası' },
+                { dataField: 'Height', caption: 'Yükseklik' },
+                { dataField: 'Width', caption: 'Genişlik' },
+                { dataField: 'Length', caption: 'Uzunluk' },
+                { dataField: 'LoadCapacity', caption: 'Yükleme Kapasite' },
+                { dataField: 'ProportionalLimit', caption: 'Oransal Limit' },
+                { dataField: 'ContractStartDateStr', caption: 'Söz. Baş. Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'ContractEndDateStr', caption: 'Söz. Bit. Tarih', dataType: 'date',format :'dd.MM.yyyy' },
 
                {
                     type: "buttons",

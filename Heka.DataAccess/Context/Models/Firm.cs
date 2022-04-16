@@ -48,6 +48,7 @@ namespace Heka.DataAccess.Context
             this.ItemLoadByFirmManufacturer = new HashSet<ItemLoad>();
             this.ItemLoadByFirmReelOwner = new HashSet<ItemLoad>();
             this.ItemOrderByReelOwnerFirm = new HashSet<ItemOrder>();
+            this.LoadInvoice = new HashSet<LoadInvoice>();
 
         }
 
@@ -177,5 +178,8 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("ReelOwnerFirm")]
         public virtual ICollection<ItemOrder> ItemOrderByReelOwnerFirm { get; set; }
+
+        [InverseProperty("Firm")]
+        public virtual ICollection<LoadInvoice> LoadInvoice { get; set; }
     }
 }

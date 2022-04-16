@@ -71,6 +71,7 @@
                 { dataField: 'VoyageCode', caption: 'Sefer Kodu' },
                 { dataField: 'VoyageStatusStr', caption: 'Sefer Durumu' },
                 { dataField: 'VoyageDateStr', caption: 'Sefer Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
+                { dataField: 'VoyageWeek', caption: 'Sefer Hafta' },
                 { dataField: 'CarrierFirmName', caption: 'Taşıyıcı Firma' },
                 { dataField: 'CustomsDoorEntryDateStr', caption: 'Giriş Gümrük Kapısı Giriş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'CustomsDoorEntryName', caption: 'Giriş Gümrük Kapısı' },

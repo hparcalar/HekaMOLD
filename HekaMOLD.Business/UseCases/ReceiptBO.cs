@@ -2,6 +2,7 @@
 using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Logistics;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
@@ -27,7 +28,7 @@ namespace HekaMOLD.Business.UseCases
                 d.ReceiptType != null &&
                 (receiptCategory == ReceiptCategoryType.All
                 ||
-                (receiptCategory == ReceiptCategoryType.Purchasing 
+                (receiptCategory == ReceiptCategoryType.Purchasing
                     && DictItemReceiptType.PurchasingTypes.Contains(d.ReceiptType.Value))
                 ||
                 (receiptCategory == ReceiptCategoryType.ItemManagement
@@ -81,6 +82,10 @@ namespace HekaMOLD.Business.UseCases
 
                 if (model.FirmId == 0)
                     model.FirmId = null;
+
+
+                if (model.InWarehouseId == null && model.OutWarehouseId == null)
+                    throw new Exception("Depo seçimi yapmadan kayıt yapılamaz!");
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -430,6 +435,50 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        //public LoadInvoiceModel CalculateLoadInvoice(LoadInvoiceModel model)
+        //{
+            //var repoItem = _unitOfWork.GetRepository<Item>();
+
+            //decimal mFactor = 1, dFactor = 1;
+
+            //var dbItem = repoItem.Get(d => d.Id == model.ItemId);
+            //if (dbItem != null)
+            //{
+            //    var selUnit = dbItem.ItemUnit.FirstOrDefault(d => d.Id == model.UnitId);
+            //    if (selUnit != null)
+            //    {
+            //        mFactor = selUnit.MultiplierFactor ?? 1;
+            //        dFactor = selUnit.DividerFactor ?? 1;
+            //    }
+            //}
+
+            //model.NetQuantity = model.Quantity * mFactor / dFactor;
+
+            //if (model.ForexId > 0 && model.ForexRate > 0)
+            //{
+            //    model.ForexUnitPrice = model.UnitPrice / model.ForexRate;
+            //}
+
+        //    decimal? overallTotal = 0;
+        //    decimal? taxExtractedUnitPrice = 0;
+
+        //    if (model.TaxIncluded == true)
+        //    {
+        //        decimal? taxIncludedUnitPrice = (model.UnitPrice / (1 + (model.TaxRate / 100m)));
+        //        overallTotal = taxIncludedUnitPrice * model.Quantity;
+        //        taxExtractedUnitPrice = taxIncludedUnitPrice;
+        //    }
+        //    else
+        //    {
+        //        overallTotal = model.UnitPrice * model.Quantity;
+        //        taxExtractedUnitPrice = model.UnitPrice;
+        //    }
+
+        //    model.OverallTotal = overallTotal;
+        //    model.TaxAmount = overallTotal * model.TaxRate / 100.0m;
+
+        //    return model;
+        //}
 
         public ItemReceiptDetailModel[] GetItemExtract(int itemId)
         {

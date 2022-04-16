@@ -173,8 +173,10 @@
     <Compile Include="Models\DataTransfer\Logistics\ItemLoadModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\LoadCalendarModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\LoadCostCategory.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\LoadInvoiceModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\RotaModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\RoundCostCategoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Logistics\ServiceItemModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleCareModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleCareTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Logistics\VehicleInsuranceModel.cs" />

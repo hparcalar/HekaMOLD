@@ -38,6 +38,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? CmrBuyerFirmId { get; set; }
         public Nullable<int> VehicleTraillerId { get; set; }
         public int? TowinfVehicleId { get; set; }
+        public int? VoyageId { get; set; }
+        public bool? VoyageConverted { get; set; }
         //Hazır olma Tarihi
         public DateTime? ReadinessDate { get; set; }
         //Müşteriden teslim Alınış Tarihi
@@ -83,6 +85,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? ExitCustomsId { get; set; }
         public DateTime? DateOfNeed { get; set; }
         public int? OveralQuantity { get; set; }
+        public string LoadWeek { get; set; }
         public string VoyageCode { get; set; }
 
         public Nullable<int> DriverId { get; set; }
@@ -109,6 +112,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public Nullable<int> ForexTypeId { get; set; }
         public Nullable<int> VoyageCreatedUserId { get; set; }
         public ItemLoadDetailModel[] Details { get; set; }
+        public LoadInvoiceModel[] Invoices { get; set; }
 
 
         #region VISUAL ELEMENTS
@@ -192,6 +196,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string VoyageEndtCountryName { get; set; }
         public string VehicleTraillerPlate { get; set; }
         public string VehicleTraillerMarkAndModel { get; set; }
+        public string VoyageConvertedStr { get; set; }
         #endregion
     }
 }

@@ -55,7 +55,7 @@ namespace Heka.DataAccess.Context
         public Nullable<DateTime> EndDischargeDate { get; set; }
         public Nullable<DateTime> KapikulePassportEntryDate { get; set; }
         public Nullable<DateTime> KapikulePassportExitDate { get; set; }
-
+        public string VoyageWeek { get; set; }
         public string Explanation { get; set; }
 
         [ForeignKey("User")]

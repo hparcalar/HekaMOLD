@@ -11,7 +11,7 @@ namespace Heka.DataAccess.Context
             this.ItemLoadDetail = new HashSet<ItemLoadDetail>();
             this.ItemLoadCost = new HashSet<ItemLoadCost>();
             this.VoyageDetail = new HashSet<VoyageDetail>();
-
+            this.LoadInvoice = new HashSet<LoadInvoice>();
         }
         public int Id { get; set; }
         public string LoadCode { get; set; }
@@ -34,6 +34,7 @@ namespace Heka.DataAccess.Context
         public DateTime? ScheduledUploadDate { get; set; }
         public Nullable<System.DateTime> DateOfNeed { get; set; }
         public int? OveralQuantity { get; set; }
+        public string LoadWeek { get; set; }
 
         public int? InvoiceStatus { get; set; }
         //Navlun bedeli
@@ -64,6 +65,8 @@ namespace Heka.DataAccess.Context
         public bool? HasItemInsurance { get; set; }
         public string ItemInsuranceDraftNo { get; set; }
         public string VoyageCode { get; set; }
+        public int? VoyageId { get; set; }
+        public bool? VoyageConverted { get; set; }
         //Tehlikeli Madde var
         public bool? HasItemDangerous { get; set; }
         //Cmr Müşteri Teslim Tarihi
@@ -145,9 +148,6 @@ namespace Heka.DataAccess.Context
         [ForeignKey("Driver")]
         public Nullable<int> DriverId { get; set; }
 
-        [ForeignKey("User")]
-        public Nullable<int> CreatedUserId { get; set; }
-
         [ForeignKey("UserVoyage")]
         public Nullable<int> VoyageCreatedUserId { get; set; }
 
@@ -185,7 +185,8 @@ namespace Heka.DataAccess.Context
         [ForeignKey("VoyageEndCountry")]
         public int? VoyageEndCountryId { get; set; }
 
-        public Nullable<System.DateTime> CreatDate { get; set; }
+        public Nullable<int> CreatedUserId { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
 
@@ -232,5 +233,7 @@ namespace Heka.DataAccess.Context
         [InverseProperty("ItemLoad")]
         public virtual ICollection<VoyageDetail> VoyageDetail { get; set; }
 
+        [InverseProperty("ItemLoad")]
+        public virtual ICollection<LoadInvoice> LoadInvoice { get; set; }
     }
 }

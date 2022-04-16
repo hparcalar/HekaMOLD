@@ -58,7 +58,7 @@ namespace Heka.DataAccess.Context
         public bool? Invalidation { get; set; }
         public bool? KmHourControl { get; set; }
         public bool? HasLoadPlannig { get; set; }
-
+        public string Explanation { get; set; }
         public Nullable<int> PlantId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedUserId { get; set; }

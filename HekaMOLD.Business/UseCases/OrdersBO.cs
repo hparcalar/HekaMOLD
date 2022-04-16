@@ -28,7 +28,7 @@ namespace HekaMOLD.Business.UseCases
                     DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
                     LoadOutDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadOutDate),
                     ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
-                    OrderDateWeek = getYearAndWeekOfNumber(Convert.ToString( d.OrderDate )),
+                    OrderWeek = d.OrderWeek,
                     CustomerFirmCode = d.Firm != null ? d.Firm.FirmCode : "",
                     CustomerFirmName = d.Firm != null ? d.Firm.FirmName : "",
                     LoadCityName = d.LoadCity != null ? d.LoadCity.CityName : "",
@@ -182,6 +182,9 @@ namespace HekaMOLD.Business.UseCases
                     repo.Add(dbObj);
                     newRecord = true;
                 }
+                if (repo.Any(d => (d.OrderNo == model.OrderNo) && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir sipariş mevcuttur. Lütfen farklı bir kod giriniz."); 
+
                 if (!string.IsNullOrEmpty(model.OrderDateStr))
                 {
                     model.OrderDate = DateTime.ParseExact(model.OrderDateStr, "dd.MM.yyyy",

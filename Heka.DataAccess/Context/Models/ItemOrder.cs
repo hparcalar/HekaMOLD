@@ -44,7 +44,7 @@ namespace Heka.DataAccess.Context
         public decimal? CalculationTypePrice { get; set; }
         public int? OveralQuantity { get; set; }
         public bool? Closed { get; set; }
-
+        public string OrderWeek { get; set; }
         [ForeignKey("Firm")]
         public Nullable<int> CustomerFirmId { get; set; }
 

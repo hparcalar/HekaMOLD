@@ -342,7 +342,7 @@
                         { dataField: 'BuyerFirmName', caption: 'Alıcı Firma' },
                         { dataField: 'OveralQuantity', caption: 'Toplam Miktar' },
                         { dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)' },
-                        { dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası' },
+                        //{ dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası' },
                         { dataField: 'BuyerCityName', caption: 'Boş. Şehri' },
                         { dataField: 'BuyerCountryName', caption: 'Boş. Ülke' },
                     ],
@@ -584,7 +584,7 @@
 
                     var newObj = {
                         Id: newId,
-                        DischargeLineNo: newId,
+                        //DischargeLineNo: newId,
                         LoadingLineNo: loadObj.LoadingLineNo,
                         ItemLoadId: loadObj.Id,
                         LoadCode: loadObj.LoadCode,
@@ -745,8 +745,8 @@
                             var tVehicleObj = $scope.towingVehicleList.find(d => d.Id == values.TowinfVehicleId);
                             obj.TowinfVehicleId = tVehicleObj.Id;
                         }
-                        if (typeof values.StartDateStr != 'undefined') { obj.StartDateStr = values.StartDateStr; }
-                        if (typeof values.EndDateStr != 'undefined') { obj.EndDateStr = values.EndDateStr; }
+                        if (typeof values.StartDateStr != 'undefined') { obj.StartDateStr = values.StartDateStr; obj.StartDate = values.StartDateStr; }
+                        if (typeof values.EndDateStr != 'undefined') { obj.EndDateStr = values.EndDateStr; obj.EndDate = values.EndDateStr; }
                         if (typeof values.StartKmHour != 'undefined') { obj.StartKmHour = values.StartKmHour; }
                         if (typeof values.EndKmHour != 'undefined') { obj.EndKmHour = values.EndKmHour; }
                     }
@@ -825,7 +825,7 @@
                     }
                 },
                 { dataField: 'StartDateStr', caption: 'Başlama Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
-                { dataField: 'EndDate', caption: 'Bitiş Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
+                { dataField: 'EndDateStr', caption: 'Bitiş Tarih', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: true },
                 { dataField: 'StartKmHour', caption: 'Başlama KM', allowEditing: true },
                 { dataField: 'EndKmHour', caption: 'Bitiş KM', allowEditing: true },
                 {
@@ -851,16 +851,16 @@
 
     // INFORMATIONS & ATTACHMENTS
     $scope.showRecordInformation = function () {
-        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType: 'ItemOrder' });
+        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType: 'Voyage' });
     }
 
     $scope.showAttachmentList = function () {
         $scope.$broadcast('showAttachmentList',
-            { RecordId: $scope.modelObject.Id, RecordType: 1 });
+            { RecordId: $scope.modelObject.Id, RecordType: 8 });
 
         $('#dial-attachments').dialog({
-            width: 500,
-            height: 400,
+            width: 600,
+            height: 600,
             //height: window.innerHeight * 0.6,
             hide: true,
             modal: true,

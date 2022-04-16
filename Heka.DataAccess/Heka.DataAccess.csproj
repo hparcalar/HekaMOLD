@@ -113,6 +113,7 @@
     <Compile Include="Context\Models\LayoutObjectType.cs" />
     <Compile Include="Context\Models\LoadCalendarModel.cs" />
     <Compile Include="Context\Models\LoadCostCategory.cs" />
+    <Compile Include="Context\Models\LoadInvoice.cs" />
     <Compile Include="Context\Models\Machine.cs" />
     <Compile Include="Context\Models\MachineGroup.cs" />
     <Compile Include="Context\Models\MachineMaintenanceInstruction.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Context\Models\Route.cs" />
     <Compile Include="Context\Models\RouteItem.cs" />
     <Compile Include="Context\Models\SectionSetting.cs" />
+    <Compile Include="Context\Models\ServiceItem.cs" />
     <Compile Include="Context\Models\Shift.cs" />
     <Compile Include="Context\Models\ShiftTarget.cs" />
     <Compile Include="Context\Models\SyncPoint.cs" />
@@ -667,6 +669,62 @@
     <Compile Include="Migrations\202203241212123_ItemLoadDetailUpdate%28ExplanationAdd.designer.cs">
       <DependentUpon>202203241212123_ItemLoadDetailUpdate%28ExplanationAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204011316250_ItemOrderUpdate%28OrderWeekAdd%29.cs" />
+    <Compile Include="Migrations\202204011316250_ItemOrderUpdate%28OrderWeekAdd%29.designer.cs">
+      <DependentUpon>202204011316250_ItemOrderUpdate%28OrderWeekAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204011517391_VoyageAndItemLoadUpdate%28WeekAdd%29.cs" />
+    <Compile Include="Migrations\202204011517391_VoyageAndItemLoadUpdate%28WeekAdd%29.designer.cs">
+      <DependentUpon>202204011517391_VoyageAndItemLoadUpdate%28WeekAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204020350388_VoyageAndItemLoadUpdate%28WeekUpdate%29.cs" />
+    <Compile Include="Migrations\202204020350388_VoyageAndItemLoadUpdate%28WeekUpdate%29.designer.cs">
+      <DependentUpon>202204020350388_VoyageAndItemLoadUpdate%28WeekUpdate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204020611066_ItemReceiptUpdate%28OverallQuantity%29.cs" />
+    <Compile Include="Migrations\202204020611066_ItemReceiptUpdate%28OverallQuantity%29.designer.cs">
+      <DependentUpon>202204020611066_ItemReceiptUpdate%28OverallQuantity%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204040928458_ServiceItemAdd.cs" />
+    <Compile Include="Migrations\202204040928458_ServiceItemAdd.designer.cs">
+      <DependentUpon>202204040928458_ServiceItemAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204041320393_LoadInvoiceAdd.cs" />
+    <Compile Include="Migrations\202204041320393_LoadInvoiceAdd.designer.cs">
+      <DependentUpon>202204041320393_LoadInvoiceAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204051138445_asd.cs" />
+    <Compile Include="Migrations\202204051138445_asd.designer.cs">
+      <DependentUpon>202204051138445_asd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204061158054_LoadInvoiceUpdate%28bool-TaxIncluled%29.cs" />
+    <Compile Include="Migrations\202204061158054_LoadInvoiceUpdate%28bool-TaxIncluled%29.designer.cs">
+      <DependentUpon>202204061158054_LoadInvoiceUpdate%28bool-TaxIncluled%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204091312048_ItemLoadUpdate%28VoyageIdAdd%29.cs" />
+    <Compile Include="Migrations\202204091312048_ItemLoadUpdate%28VoyageIdAdd%29.designer.cs">
+      <DependentUpon>202204091312048_ItemLoadUpdate%28VoyageIdAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204091317441_ItemLoadUpdate%28VoyageConvertedAdd%29.cs" />
+    <Compile Include="Migrations\202204091317441_ItemLoadUpdate%28VoyageConvertedAdd%29.designer.cs">
+      <DependentUpon>202204091317441_ItemLoadUpdate%28VoyageConvertedAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204111526400_ItemLoadUpdate%28DeleteCreatedUserId%29.cs" />
+    <Compile Include="Migrations\202204111526400_ItemLoadUpdate%28DeleteCreatedUserId%29.designer.cs">
+      <DependentUpon>202204111526400_ItemLoadUpdate%28DeleteCreatedUserId%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204111534232_ItemLoadUpdate%28DeleteCreatDate%29.cs" />
+    <Compile Include="Migrations\202204111534232_ItemLoadUpdate%28DeleteCreatDate%29.designer.cs">
+      <DependentUpon>202204111534232_ItemLoadUpdate%28DeleteCreatDate%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204111542410_LoadInvoiveUpdate%28DocumentNoAdd%29.cs" />
+    <Compile Include="Migrations\202204111542410_LoadInvoiveUpdate%28DocumentNoAdd%29.designer.cs">
+      <DependentUpon>202204111542410_LoadInvoiveUpdate%28DocumentNoAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204152243228_VehicleUpdate%28ExplanationAdd%29.cs" />
+    <Compile Include="Migrations\202204152243228_VehicleUpdate%28ExplanationAdd%29.designer.cs">
+      <DependentUpon>202204152243228_VehicleUpdate%28ExplanationAdd%29.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1047,6 +1105,48 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202203241212123_ItemLoadDetailUpdate%28ExplanationAdd.resx">
       <DependentUpon>202203241212123_ItemLoadDetailUpdate%28ExplanationAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204011316250_ItemOrderUpdate%28OrderWeekAdd%29.resx">
+      <DependentUpon>202204011316250_ItemOrderUpdate%28OrderWeekAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204011517391_VoyageAndItemLoadUpdate%28WeekAdd%29.resx">
+      <DependentUpon>202204011517391_VoyageAndItemLoadUpdate%28WeekAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204020350388_VoyageAndItemLoadUpdate%28WeekUpdate%29.resx">
+      <DependentUpon>202204020350388_VoyageAndItemLoadUpdate%28WeekUpdate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204020611066_ItemReceiptUpdate%28OverallQuantity%29.resx">
+      <DependentUpon>202204020611066_ItemReceiptUpdate%28OverallQuantity%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204040928458_ServiceItemAdd.resx">
+      <DependentUpon>202204040928458_ServiceItemAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204041320393_LoadInvoiceAdd.resx">
+      <DependentUpon>202204041320393_LoadInvoiceAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204051138445_asd.resx">
+      <DependentUpon>202204051138445_asd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204061158054_LoadInvoiceUpdate%28bool-TaxIncluled%29.resx">
+      <DependentUpon>202204061158054_LoadInvoiceUpdate%28bool-TaxIncluled%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204091312048_ItemLoadUpdate%28VoyageIdAdd%29.resx">
+      <DependentUpon>202204091312048_ItemLoadUpdate%28VoyageIdAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204091317441_ItemLoadUpdate%28VoyageConvertedAdd%29.resx">
+      <DependentUpon>202204091317441_ItemLoadUpdate%28VoyageConvertedAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204111526400_ItemLoadUpdate%28DeleteCreatedUserId%29.resx">
+      <DependentUpon>202204111526400_ItemLoadUpdate%28DeleteCreatedUserId%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204111534232_ItemLoadUpdate%28DeleteCreatDate%29.resx">
+      <DependentUpon>202204111534232_ItemLoadUpdate%28DeleteCreatDate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204111542410_LoadInvoiveUpdate%28DocumentNoAdd%29.resx">
+      <DependentUpon>202204111542410_LoadInvoiveUpdate%28DocumentNoAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204152243228_VehicleUpdate%28ExplanationAdd%29.resx">
+      <DependentUpon>202204152243228_VehicleUpdate%28ExplanationAdd%29.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

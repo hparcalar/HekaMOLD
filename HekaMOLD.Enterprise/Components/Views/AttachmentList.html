@@ -1,8 +1,12 @@
 ﻿<div ng-controller="attachmentsCtrl" class="bg-secondary py-4 px-2" style="border-radius:5px;">
     <!--begin::Form-->
-    <div class="d-flex flex-row align-items-center">
-        <div class="button text-dark w-200px mx-2" ngf-select ng-model="selectedFile" name="file"
-             ngf-max-size="20MB">{{selectedFile != null ? selectedFile.name : 'Dosya Seçiniz'}}</div>
+    <div class="d-flex flex-row align-items-center h-65px">
+        <button type="button" class="btn btn-sm btn-primary w-190px h-50px"  style="font-size:12px" ngf-select ng-model="selectedFile" name="file" ngf-max-size="20MB">
+            Dosya Seç
+        </button>
+        <div class="button text-dark w-200px mx-2" style="font-size:12px">
+            {{selectedFile != null ? selectedFile.name : 'Dosya Seçilmedi'}}
+        </div>
         <input type="text" class="form-control form-control-sm"
                ng-model="selectedDescription" placeholder="Açıklama" />
         <button type="button" class="btn btn-sm btn-primary mx-2"

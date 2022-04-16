@@ -30,6 +30,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public Nullable<int> LoadCityId { get; set; }
         public Nullable<int> DischargeCityId { get; set; }
         public bool? Closed { get; set; }
+        public string OrderWeek { get; set; }
         public int? ExitCustomsId { get; set; }
         public int? EntryCustomsId { get; set; }
         public int? InWarehouseId { get; set; }

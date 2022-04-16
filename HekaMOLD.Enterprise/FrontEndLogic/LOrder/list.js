@@ -98,7 +98,7 @@
                 { dataField: 'OrderNo', caption: 'Sipariş No' },
                 { dataField: 'OrderStatusStr', caption: 'Durum' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
-                { dataField: 'OrderDateWeek', caption: 'Sipariş Hafta', },
+                { dataField: 'OrderWeek', caption: 'Sipariş Hafta', },
                 { dataField: 'OrderDateStr', caption: 'Sipariş Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'DateOfNeedStr', caption: 'Teslim Tarihi', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'ScheduledUploadDateStr', caption: 'Pl. Yükleme Tarihi ', dataType: 'date', format: 'dd.MM.yyyy' },

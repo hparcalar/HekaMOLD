@@ -80,7 +80,7 @@
                                     <!--begin::Input group-->
                                     <div class="mb-3">
                                         <select class="form-select form-select-solid" @*ng-change="getNextVoyageCode()"*@ ng-options="item.Plate +' / '+item.Mark+' / '+item.Versiyon + (item.VehicleAllocationType == 1 ? ' / OZ' :' / KR') for item in traillerVehicleList"
-                                                ng-model="selectedTraillerVehicle" data-allow-clear="true" data-control="select2">
+                                               ng-change="getNextVoyageCode()" ng-model="selectedTraillerVehicle" data-allow-clear="true" data-control="select2">
                                         </select>
                                     </div>
 

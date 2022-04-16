@@ -23,6 +23,7 @@
             showColumnLines: false,
             showRowLines: true,
             rowAlternationEnabled: true,
+            columnAutoWidth: true,
             focusedRowEnabled: true,
             showBorders: true,
             filterRow: {
@@ -51,6 +52,10 @@
                 { dataField: 'FirmCode', caption: 'Firma Kodu' },
                 { dataField: 'FirmName', caption: 'Firma Adı' },
                 { dataField: 'ReceiptStatusStr', caption: 'Durum' },
+                { dataField: 'OverallQuantity', caption: 'Toplam Miktar (Kap/Adet)' },
+                { dataField: 'OverallWeight', caption: 'Toplam Ağırlık' },
+                { dataField: 'OverallVolume', caption: 'Toplam Hacim' },
+                { dataField: 'OverallLadametre', caption: 'Toplam Ladametre' },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {
                     type: "buttons",

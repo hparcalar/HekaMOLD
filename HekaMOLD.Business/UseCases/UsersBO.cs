@@ -669,21 +669,20 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<Driver>();
 
-            repo.GetAll().ToList().ForEach(d =>
+           return repo.GetAll().ToList().Select(d => new DriverModel
             {
-                DriverModel containerObj = new DriverModel();
-                d.MapTo(containerObj);
-                containerObj.BirthDateStr = String.Format("{0:dd.MM.yyyy}", d.BirthDate);
-                containerObj.VisaStartDateStr = String.Format("{0:dd.MM.yyyy}", d.VisaStartDate);
-                containerObj.VisaEndDateStr = String.Format("{0:dd.MM.yyyy}", d.VisaEndDate);
-                containerObj.VisaTypeStr = d.VisaType != null ? d.VisaType == 1 ? "SCHENGEN" : "" :"";
-                containerObj.CountryName = d.Country != null ? d.Country.CountryName : "";
-                containerObj.ProfileImage = null;
-                containerObj.ProfileImageBase64 = "";
-                data.Add(containerObj);
-            });
+                Id = d.Id,
+                DriverName = d.DriverName,
+                PassportNo = d.PassportNo,
+                Tc = d.Tc,          
+                DriverSurName = d.DriverSurName,
+                BirthDateStr = String.Format("{0:dd.MM.yyyy}", d.BirthDate),
+                VisaStartDateStr = String.Format("{0:dd.MM.yyyy}", d.VisaStartDate),
+                VisaEndDateStr = String.Format("{0:dd.MM.yyyy}", d.VisaEndDate),
+                VisaTypeStr = d.VisaType != null ? d.VisaType == 1 ? "SCHENGEN" : "" :"",
+                CountryName = d.Country != null ? d.Country.CountryName : "",
 
-            return data.ToArray();
+            }).ToArray();
         }
 
         public BusinessResult SaveOrUpdateDriver(DriverModel model)
@@ -827,18 +826,13 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<Rota>();
 
-            repo.GetAll().ToList().ForEach(d =>
+           return repo.GetAll().ToList().Select(d => new RotaModel
             {
-                RotaModel containerObj = new RotaModel();
-                d.MapTo(containerObj);
-                containerObj.CityStartName = d.CityStart != null ? d.CityStart.CityName : "";
-                containerObj.CityEndName = d.CityEnd != null ? d.CityEnd.CityName : "";
-                containerObj.ProfileImage = null;
-                containerObj.ProfileImageBase64 = "";
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+                Id = d.Id,
+                KmHour = d.KmHour,
+                CityStartName = d.CityStart != null ? d.CityStart.CityName : "",
+                CityEndName = d.CityEnd != null ? d.CityEnd.CityName : "",
+            }).ToArray();
         }
 
         public BusinessResult SaveOrUpdateRota(RotaModel model)

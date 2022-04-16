@@ -35,6 +35,7 @@ namespace Heka.DataAccess.Context
             this.VoyageCostDetail = new HashSet<VoyageCostDetail>();
             this.DriverAccountDetail = new HashSet<DriverAccountDetail>();
             this.DriverAccount = new HashSet<DriverAccount>();
+            this.LoadInvoice = new HashSet<LoadInvoice>();
         }
 
         public int Id { get; set; }
@@ -91,6 +92,7 @@ namespace Heka.DataAccess.Context
         [InverseProperty("ForexType")]
         public virtual ICollection<DriverAccount> DriverAccount { get; set; }
 
-
+        [InverseProperty("ForexType")]
+        public virtual ICollection<LoadInvoice> LoadInvoice { get; set; }
     }
 }

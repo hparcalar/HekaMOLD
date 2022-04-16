@@ -38,6 +38,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public bool? Invalidation { get; set; }
         public bool? KmHourControl { get; set; }
         public bool? HasLoadPlannig { get; set; }
+        public string Explanation { get; set; }
 
 
         public VehicleCareModel[] VehicleCares { get; set; }

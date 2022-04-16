@@ -9,10 +9,10 @@ namespace HekaMOLD.Business.Models.Constants
     public enum ReceiptCategoryType
     {
         All=0,
-        Purchasing=1,
-        ItemManagement=2,
-        Sales=3,
-        AllInputs=4,
+        Purchasing = 1,
+        ItemManagement = 2,
+        Sales = 3,
+        AllInputs =4,
         AllOutputs=5
     }
 }

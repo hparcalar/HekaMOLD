@@ -1,6 +1,6 @@
 ﻿@using HekaMOLD.Enterprise.Helpers
 @{
-    ViewBag.Title = "Transit Kartı";
+    ViewBag.Title = "Transit Yük Tanımları";
 }
 
 <div ng-controller="loadCtrl">
@@ -100,6 +100,19 @@
                             </svg>
                         </span>
                     </a>
+                    @if (Html.IsGranted("LoadFinance"))
+                    {
+                        <a class="btn btn-sm btn-warning" ng-click="openFinance()">
+                            <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.25" d="M3 4C3 2.34315 4.34315 1 6 1H15.7574C16.553 1 17.3161 1.31607 17.8787 1.87868L20.1213 4.12132C20.6839 4.68393 21 5.44699 21 6.24264V20C21 21.6569 19.6569 23 18 23H6C4.34315 23 3 21.6569 3 20V4Z" fill="#12131A" />
+                                    <path d="M15 1.89181C15 1.39927 15.3993 1 15.8918 1V1C16.6014 1 17.2819 1.28187 17.7836 1.78361L20.2164 4.21639C20.7181 4.71813 21 5.39863 21 6.10819V6.10819C21 6.60073 20.6007 7 20.1082 7H16C15.4477 7 15 6.55228 15 6V1.89181Z" fill="#12131A" />
+                                    <path d="M13 11C13 10.4477 12.5523 10 12 10C11.4477 10 11 10.4477 11 11V13H9C8.44771 13 8 13.4477 8 14C8 14.5523 8.44771 15 9 15H11V17C11 17.5523 11.4477 18 12 18C12.5523 18 13 17.5523 13 17V15H15C15.5523 15 16 14.5523 16 14C16 13.4477 15.5523 13 15 13H13V11Z" fill="#12131A" />
+                                </svg>
+                            </span>
+                            Finans
+                        </a>
+                    }
                     <a class="btn btn-sm btn-flex btn-light btn-active-dark fw-bolder" ng-click="showPrintTemplates()">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -134,49 +147,13 @@
                     {
                         <a class="btn btn-sm btn-light-danger" ng-click="cancelledLOrder()" ng-show="(modelObject.OrderStatus == 2) && modelObject.Id > 0">
                             <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
-                                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                     viewBox="0 0 512.001 512.001" style="enable-background:new 0 0 512.001 512.001;" xml:space="preserve">
-<path style="fill:#FF6465;" d="M256.001,512c141.384,0,255.999-114.615,255.999-256.001C512.001,114.615,397.386,0,256.001,0
-	S0.001,114.615,0.001,256.001S114.616,512,256.001,512z" />
-<path style="opacity:0.1;enable-background:new    ;" d="M68.873,256.001c0-129.706,96.466-236.866,221.564-253.688
-	C279.172,0.798,267.681,0,256.001,0C114.616,0,0.001,114.615,0.001,256.001S114.616,512.001,256,512.001
-	c11.68,0,23.171-0.798,34.436-2.313C165.339,492.865,68.873,385.705,68.873,256.001z" />
-<path style="fill:#FFFFFF;" d="M313.391,256.001l67.398-67.398c4.899-4.899,4.899-12.842,0-17.74l-39.65-39.65
-	c-4.899-4.899-12.842-4.899-17.74,0l-67.398,67.398l-67.398-67.398c-4.899-4.899-12.842-4.899-17.74,0l-39.65,39.65
-	c-4.899,4.899-4.899,12.842,0,17.74l67.398,67.398l-67.398,67.398c-4.899,4.899-4.899,12.842,0,17.741l39.65,39.65
-	c4.899,4.899,12.842,4.899,17.74,0l67.398-67.398L323.4,380.79c4.899,4.899,12.842,4.899,17.74,0l39.65-39.65
-	c4.899-4.899,4.899-12.842,0-17.741L313.391,256.001z" />
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-</svg>
+                                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512.001 512.001" style="enable-background:new 0 0 512.001 512.001;" xml:space="preserve">
+                                <path style="fill:#FF6465;" d="M256.001,512c141.384,0,255.999-114.615,255.999-256.001C512.001,114.615,397.386,0,256.001,0S0.001,114.615,0.001,256.001S114.616,512,256.001,512z" />
+                                <path style="opacity:0.1;enable-background:new    ;" d="M68.873,256.001c0-129.706,96.466-236.866,221.564-253.688C279.172,0.798,267.681,0,256.001,0C114.616,0,0.001,114.615,0.001,256.001S114.616,512.001,256,512.001
+	                                c11.68,0,23.171-0.798,34.436-2.313C165.339,492.865,68.873,385.705,68.873,256.001z" /><path style="fill:#FFFFFF;" d="M313.391,256.001l67.398-67.398c4.899-4.899,4.899-12.842,0-17.74l-39.65-39.65
+	                                c-4.899-4.899-12.842-4.899-17.74,0l-67.398,67.398l-67.398-67.398c-4.899-4.899-12.842-4.899-17.74,0l-39.65,39.65c-4.899,4.899-4.899,12.842,0,17.74l67.398,67.398l-67.398,67.398c-4.899,4.899-4.899,12.842,0,17.741l39.65,39.65
+	                                c4.899,4.899,12.842,4.899,17.74,0l67.398-67.398L323.4,380.79c4.899,4.899,12.842,4.899,17.74,0l39.65-39.65c4.899-4.899,4.899-12.842,0-17.741L313.391,256.001z" /><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+                                </svg>
                             </span>
                             İptal Et
                         </a>
@@ -270,13 +247,13 @@
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
             <!--begin::Row-->
-            <div class="row  gx-xl-8">
+            <div class="row  gx-xl-8 dx-viewport">
                 <div class="tabs">
                     <div class="tab-button-outer">
                         <ul id="tab-button">
                             <li><a href="#tab01">Yük Bilgi</a></li>
                             <li><a href="#tab02">Yükleme/Boşaltma Yeri</a></li>
-                            <li><a href="#tab03">Sipariş Bilgi</a></li>
+                            <li><a href="#tab03">Kap/Kilo Bilgi</a></li>
                             <li><a href="#tab04">Sefer Bilgi</a></li>
                             <li><a href="#tab05">Gümrük Bilgi</a></li>
 
@@ -336,7 +313,7 @@
                                     <div class="col-xxl-6">
                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük Durumu</label>
                                         <select class="form-select form-select-solid mb-3" data-allow-clear="true"
-                                                ng-options="item.Text for item in loadStatusTypeList" ng-model="selectedLoadStatusType"
+                                                ng-options="item.Text for item in loadStatusTypeList" ng-readonly="(modelObject.LoadStatusType == 2 || modelObject.LoadStatusType == 3 || modelObject.LoadStatusType == 4)" ng-model="selectedLoadStatusType"
                                                 data-control="select2" data-placeholder="-- Seçiniz --">
                                         </select>
                                     </div>
@@ -344,24 +321,24 @@
                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Hafta</label>
                                         <!--begin::Input group-->
                                         <div class="mb-3">
-                                            <input type="text" class="form-control form-control-solid" readonly="readonly" ng-model="modelObject.LoadWeek" placeholder="" />
+                                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.LoadWeek" placeholder="" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xxl-6">
+                                    <div class="col-xxl-5">
                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşlem Yön Tipi</label>
                                         <select class="form-select form-select-solid mb-3" data-allow-clear="true"
                                                 ng-options="item.Text for item in orderTransactionDirectionTypeList" ng-change="getNextOrderNo()" ng-model="selectedOrderTransactionDirectionType"
                                                 data-control="select2" data-placeholder="-- Seçiniz --">
                                         </select>
                                     </div>
-                                    <div class="col-xxl-6">
+                                    <div class="col-xxl-7">
 
                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
                                         <!--begin::Input group-->
                                         <div class="mb-3 d-flex flex-fill flex-column">
-                                            <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.Explanation" placeholder=""></textarea>
+                                            <textarea class="form-control form-control-solid flex-fill" rows="4" ng-model="modelObject.Explanation" placeholder=""></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -373,11 +350,11 @@
                         <div class="row gy-2 gx-xl-8 bg-white mt-1">
                             <div class="card mt-2 gy-2">
                                 <div class="card-header min-h-10px px-1">
-                                    <bu type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
-                                        style="float:right;">
+                                    <button type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
+                                            style="float:right;">
 
                                         Müşteri / Gönderici / Alıcı Bilgileri
-                                    </bu>
+                                    </button>
                                 </div>
                                 <div class="card-body p-0" @*style="height:200px;*@>
                                     <div class="row">
@@ -407,8 +384,8 @@
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Beyanname Gönderici Firma</label>
                                                 <!--begin::Input group-->
                                                 <select class="form-select form-select-solid" data-allow-clear="true"
-                                                        ng-options="item.FirmName for item in firmList" ng-model="selectedBuyerFirm"
-                                                        data-control="select2" ng-change="findAddressShipperFirm()" data-placeholder="-- Seçiniz --">
+                                                        ng-options="item.FirmName for item in firmList" ng-model="selectedCmrShipperFirm"
+                                                        data-control="select2" ng-change="findAddressCmrShipperFirm()" data-placeholder="-- Seçiniz --">
                                                 </select>
                                             </div>
                                         </div>
@@ -428,8 +405,8 @@
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Beyanname Alıcı Firma</label>
                                                 <!--begin::Input group-->
                                                 <select class="form-select form-select-solid" data-allow-clear="true"
-                                                        ng-options="item.FirmName for item in firmList" ng-model="selectedBuyerFirm"
-                                                        data-control="select2" ng-change="findAddressBuyerFirm()" data-placeholder="-- Seçiniz --">
+                                                        ng-options="item.FirmName for item in firmList" ng-model="selectedCmrBuyerFirm"
+                                                        data-control="select2" ng-change="findAddressCmrBuyerFirm()" data-placeholder="-- Seçiniz --">
                                                 </select>
                                             </div>
                                         </div>
@@ -459,7 +436,7 @@
                                                 <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Boşaltma Deposu</label>
                                                 <!--begin::Input group-->
                                                 <select class="form-select form-select-solid" data-allow-clear="true"
-                                                        ng-options="item.FirmName for item in firmList" ng-model="selectedWareHouse"
+                                                        ng-options="item.WareHouseName for item in wareHouseList" ng-model="selectedWareHouse"
                                                         data-control="select2" data-placeholder="-- Seçiniz --">
                                                 </select>
                                             </div>
@@ -489,21 +466,35 @@
                         <div class="row gy-2 gx-xl-8 bg-white mt-1">
                             <div class="card mt-2 gy-2">
                                 <div class="card-header min-h-10px px-1">
-                                    <h4 type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
-                                        style="float:right;">
+                                    <button type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
+                                            style="float:right;">
 
                                         Yükleme / Boşaltma Bilgileri
-                                    </h4>
+                                    </button>
                                 </div>
                                 <div class="card-body p-0" @*style="height:200px;*@>
                                     <div class="row">
                                         <div class="col-xxl-6 gy-3">
-                                            <div class="mb-3">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük. Şehir</label>
-                                                <!--begin::Input group-->
-                                                <select aria-label="Gönderici Firma Şehir" data-allow-clear="true" ng-options="item.PostCode +' / '+item.CityName for item in cityList"
-                                                        ng-model="selectedShipperCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
-                                                </select>
+                                            <div class="row">
+                                                <div class="col-xxl-6 gy-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük. Şehir</label>
+                                                        <!--begin::Input group-->
+                                                        <select aria-label="Gönderici Firma Şehir" data-allow-clear="true" ng-options="item.PostCode +' / '+item.CityName for item in cityList"
+                                                                ng-model="selectedCmrShipperCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-xxl-6 gy-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük. Ülke</label>
+                                                        <!--begin::Input group-->
+                                                        <select data-allow-clear="true" ng-options="item.CountryName for item in countryList"
+                                                                ng-model="selectedCmrShipperCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                         </div>
@@ -520,11 +511,9 @@
                                     <div class="row">
                                         <div class="col-xxl-6">
                                             <div class="mb-3">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük. Ülke</label>
+                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük. Adres</label>
                                                 <!--begin::Input group-->
-                                                <select aria-label="Gönderici Firma Ülke" data-allow-clear="true" ng-options="item.CountryName for item in countryList"
-                                                        ng-model="selectedShipperCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
-                                                </select>
+                                                <input name="notes" class="form-control form-control-solid" ng-model="modelObject.CmrShipperFirmAddress" rows="3" placeholder=""></input>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6">
@@ -539,15 +528,29 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xxl-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Boş. Şehir</label>
-                                                <!--begin::Input group-->
-                                                <div class="Şehir">
-                                                    <select aria-label="Alıcı Firma Şehir" data-allow-clear="true" ng-options="item.PostCode +' / '+item.CityName for item in cityList"
-                                                            ng-model="selectedBuyerCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
-                                                    </select>
+                                            <div class="row">
+                                                <div class="col-xxl-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Boş. Şehir</label>
+                                                        <!--begin::Input group-->
+                                                        <div class="Şehir">
+                                                            <select aria-label="Alıcı Firma Şehir" data-allow-clear="true" ng-options="item.PostCode +' / '+item.CityName for item in cityList"
+                                                                    ng-model="selectedCmrBuyerCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Boş. Ülke</label>
+                                                        <!--begin::Input group-->
+                                                        <select aria-label="Alıcı Firma Ülke" data-allow-clear="true" ng-options="item.CountryName for item in countryList"
+                                                                ng-model="selectedCmrBuyerCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
+
                                         </div>
                                         <div class="col-xxl-6">
                                             <div class="mb-3">
@@ -562,11 +565,9 @@
                                     <div class="row">
                                         <div class="col-xxl-6">
                                             <div class="mb-3">
-                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Boş. Ülke</label>
+                                                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Boş. Adres</label>
                                                 <!--begin::Input group-->
-                                                <select aria-label="Alıcı Firma Ülke" data-allow-clear="true" ng-options="item.CountryName for item in countryList"
-                                                        ng-model="selectedBuyerCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
-                                                </select>
+                                                <input name="notes" class="form-control form-control-solid" ng-model="modelObject.CmrBuyerFirmAddress" rows="3" placeholder=""></input>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6">
@@ -657,11 +658,11 @@
                             <div class="col-xxl-6">
                                 <div class="card mt-2 gy-2">
                                     <div class="card-header min-h-10px px-1">
-                                        <h4 type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
-                                            style="float:right;">
+                                        <button type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
+                                                style="float:right;">
 
                                             Yükleme Bilgileri
-                                        </h4>
+                                        </button>
                                     </div>
                                     <div class="card-body p-0" @*style="height:200px;*@>
                                         <div class="row mt-1 gy-2">
@@ -711,11 +712,11 @@
                             <div class="col-xxl-6">
                                 <div class="card mt-2 gy-2">
                                     <div class="card-header min-h-10px px-1">
-                                        <h4 type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
-                                            style="float:right;">
+                                        <button type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
+                                                style="float:right;">
 
                                             Boşatma Bilgileri
-                                        </h4>
+                                        </button>
                                     </div>
                                     <div class="card-body p-0" @*style="height:200px;*@>
                                         <div class="row mt-1 gy-2">
@@ -778,7 +779,7 @@
                                     </button>
                                 </div>
                                 <div class="card-body p-0" @*style="height:200px;*@>
-                                    <div class="dx-viewport">
+                                    <div class="">
                                         <div id="dataList"></div>
                                     </div>
                                     <div class="row mt-1">
@@ -800,7 +801,7 @@
                                         <div class="col-xxl-2">
                                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Döviz Kodu</label>
                                             <!--begin::Input group-->
-                                            <select class="form-select form-select-solid" data-allow-clear="true"
+                                            <select class="form-select form-select-solid bg-white" data-allow-clear="true"
                                                     ng-options="item.ForexTypeCode  for item in forexList" ng-model="selectedForexType"
                                                     data-control="select2" data-placeholder="-- Seçiniz --">
                                             </select>
@@ -836,7 +837,7 @@
                                         <h4 style="border-style: groove; float: right;">Sipariş No: {{modelObject.OrderNo}}</h4>
                                     </div>
                                     <div class="card-body p-0" style="height:210px;">
-                                        <div class="dx-viewport" ng-show="orderDetailsVisible">
+                                        <div class="" ng-show="orderDetailsVisible">
                                             <div id="orderDetailList"></div>
                                         </div>
                                     </div>
@@ -846,7 +847,7 @@
                     </div>
                     <div id="tab04" class="tab-contents">
                         <div class="row gy-2 gx-xl-8 bg-white mt-1">
-                            <div class="row">
+                            <div class="row mt-1 gy-2">
                                 <div class="col-xxl-6">
                                     <div class="mb-3">
                                         <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Kodu</label>
@@ -900,7 +901,7 @@
                                 </div>
                                 <div class="col-xxl-6">
                                     <div class="mb-3">
-                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Biş. Şehir</label>
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Bit. Şehir</label>
                                         <!--begin::Input group-->
                                         <select aria-label="Gönderici Firma Şehir" data-allow-clear="true" ng-options="item.PostCode +' / '+item.CityName for item in cityList"
                                                 ng-model="selectedVoyageEndCity" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
@@ -920,7 +921,7 @@
                                 </div>
                                 <div class="col-xxl-6">
                                     <div class="mb-3">
-                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Biş. Ülke</label>
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sefer Bit. Ülke</label>
                                         <!--begin::Input group-->
                                         <select aria-label="Gönderici Firma Şehir" data-allow-clear="true" ng-options="item.CountryName for item in countryList"
                                                 ng-model="selectedVoyageEndCountry" data-control="select2" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">

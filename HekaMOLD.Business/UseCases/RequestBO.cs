@@ -616,7 +616,7 @@ namespace HekaMOLD.Business.UseCases
                 // CREATE LOAD
                 var dbLoad = new ItemLoad
                 {
-                    CreatDate = DateTime.Now,
+                    CreatedDate = DateTime.Now,
                     OrderDate = dbOrder.OrderDate,
                     DocumentNo = dbOrder.DocumentNo,
                     OrderNo = dbOrder.OrderNo,

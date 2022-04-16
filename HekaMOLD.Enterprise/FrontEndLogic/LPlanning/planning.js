@@ -1,12 +1,12 @@
 ﻿app.controller('lPlanningCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id: 0, VoyageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: [], };
+    $scope.modelObject = { Id: 0, VoyageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: [], VoyageWeek: moment().year() + '-' + moment().week()};
 
     $scope.driverList = [];
     $scope.plannedLoadList = [];
     $scope.rotaList = [];
     $scope.traillerVehicleList = [];
     $scope.forexTypeList = [];
-
+    $scope.VoyageWeek= moment().year() + '-' + moment().week();
     $scope.selectedDriver = {}
     $scope.selectedTraillerVehicle = {}
     $scope.selectedOrderTransactionDirectionType = {};
@@ -31,7 +31,9 @@
     // RECEIPT FUNCTIONS
     //GET NEXT VOYAGE CODE
     $scope.getNextVoyageCode = function () {
-        let directionId = 0;
+        if (typeof $scope.selectedOrderTransactionDirectionType.Id == 'undefined' ^ typeof $scope.selectedTraillerVehicle.Id == 'undefined') {
+            return "";
+        }
         if (typeof $scope.selectedOrderTransactionDirectionType.Id == 'undefined')
             directionId = 0;
         else

@@ -1,6 +1,5 @@
 ﻿app.controller('loadCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id: 0, Details: [], LoadStatus: 0 };
-
+    $scope.modelObject = { Id: 0, Details: [], Invoices: [], LoadStatus: 0 };
     $scope.itemList = [];
     $scope.unitList = [];
     $scope.firmList = [];
@@ -76,7 +75,11 @@
         , { Id: 9, Text: 'Kamyon Romörk' }, { Id: 10, Text: 'Standart' }, { Id: 10, Text: 'Minivan' }];
 
     $scope.saveStatus = 0;
-
+    //Click button Finance
+    $scope.openFinance = function () {
+        if (PRM_ID>0) 
+            window.open(HOST_URL + 'Load/Finance?rid=' + PRM_ID);
+    }
     // #region PRINTING BUSINESS
     $scope.showPrintTemplates = function () {
         if ($scope.modelObject.Id > 0) {
@@ -166,7 +169,7 @@
     // #endregion
     // INFORMATIONS & ATTACHMENTS
     $scope.showRecordInformation = function () {
-        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType: 'ItemOrder' });
+        $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType: 'ItemLoad' });
     }
     // FUNCTIONS
     $scope.getNextOrderNo = function () {
@@ -265,11 +268,14 @@
 
     // CRUD
     $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0, Details: [], LoadStatus: 0 };
+        $scope.modelObject = { Id: 0, Details: [], Invoices: [], LoadStatus: 0 };
+        $scope.modelObject.LoadWeek = moment().year() + '-' + moment().week();
         $scope.selectedFirm = {};
         $scope.selectedUser = {};
         $scope.selectedDriver = {};
-
+        $scope.selectedLoadStatusType = {};
+        $scope.selectedTrailerType = {};
+        $scope.selectedForexType = {};
         $scope.selectedOrderUploadType = {};
         $scope.selectedOrderTransactionDirectionType = {};
         $scope.selectedOrderCalculationType = { Id: 0 };
@@ -552,6 +558,8 @@
                 return $("<div>").dxDataGrid({
                     dataSource: $scope.itemList,
                     remoteOperations: true,
+                    with: 600,
+                    height : 400,
                     columns: [
                         { dataField: 'ItemNo', caption: 'Mal Kodu' },
                         { dataField: 'ItemName', caption: 'Mal Adı' },
@@ -562,7 +570,8 @@
                     hoverStateEnabled: true,
                     keyExpr: "Id",
                     scrolling: { mode: "virtual" },
-                    height: 250,
+                    height: 400,
+                    width: 600,
                     filterRow: { visible: true },
                     selection: { mode: "single" },
                     selectedRowKeys: [cellInfo.value],
@@ -587,7 +596,7 @@
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
-
+                    $scope.modelObject.LoadWeek = moment().year() + '-' + moment().week();
                     if (typeof $scope.modelObject.ShipperFirmId != 'undefined' && $scope.modelObject.ShipperFirmId != null)
                         $scope.selectedShipperFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.ShipperFirmId);
                     else
@@ -876,7 +885,7 @@
                         if (typeof values.UnitId != 'undefined') {
                             var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                             obj.UnitId = unitObj.Id;
-                            obj.UnitName = unitObj.UnitCode;
+                            obj.UnitName = unitObj.UnitName;
                             calculateRowAgain = true;
                         }
 
@@ -918,7 +927,7 @@
                         ItemNo: itemObj.ItemNo,
                         ItemName: itemObj.ItemName,
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
-                        UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
+                        UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitName : null,
                         Quantity: values.Quantity,
                         ShortWidth: values.ShortWidth,
                         LongWidth: values.LongWidth,
@@ -1010,7 +1019,7 @@
                     lookup: {
                         dataSource: $scope.unitList,
                         valueExpr: "Id",
-                        displayExpr: "UnitCode"
+                        displayExpr: "UnitName"
                     }, width: 60
                 },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
@@ -1270,11 +1279,11 @@
 
     $scope.showAttachmentList = function () {
         $scope.$broadcast('showAttachmentList',
-            { RecordId: $scope.modelObject.Id, RecordType: 1 });
+            { RecordId: $scope.modelObject.Id, RecordType: 7 });
 
         $('#dial-attachments').dialog({
-            width: 500,
-            height: 400,
+            width: 600,
+            height: 600,
             //height: window.innerHeight * 0.6,
             hide: true,
             modal: true,
@@ -1285,23 +1294,52 @@
         });
     }
 
+    $scope.cancelledLoad = function () {
+        let hasIntegration = false;
+        $scope.modelObject.Invoices.forEach(function (obj) {
+            if (obj.Integration == true) {
+                hasIntegration = true;
 
-    //$scope.showItemRequestList = function () {
-    //    // DO BROADCAST
-    //    $scope.$broadcast('loadApprovedRequestDetails');
+            }
+        })
+        if (hasIntegration) {
+            toastr.error("Bu yük iptal edilemez ! Bu yüke ait entegrasyonu yapılmış fatura mevcuttur.", 'Uyarı');
+            return;
+        }
+        bootbox.confirm({
+            message: "Bu yükü İptal etmek istediğinizden emin misiniz?",
+            closeButton: false,
+            buttons: {
+                confirm: {
+                    label: 'Evet',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'Hayır',
+                    className: 'btn-light'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $scope.saveStatus = 1;
+                        $http.post(HOST_URL + 'Load/CancelledLoad', { rid: $scope.modelObject.Id }, 'json')
+                            .then(function (resp) {
+                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                    $scope.saveStatus = 0;
 
-    //    $('#dial-requests').dialog({
-    //        width: window.innerWidth * 0.6,
-    //        height: window.innerHeight * 0.6,
-    //        hide: true,
-    //        modal: true,
-    //        resizable: false,
-    //        show: true,
-    //        draggable: false,
-    //        closeText: "KAPAT"
-    //    });
-    //}
-    // Loading Firm Address
+                                    if (resp.data.Result) {
+                                        toastr.success('İptal işlemi başarılı.', 'Bilgilendirme');
+                                        
+                                        $scope.bindModel($scope.modelObject.Id);
+                                    }
+                                    else
+                                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                                }
+                            }).catch(function (err) { });
+                }
+            }
+        });
+    }
     $scope.$on('loadShipperFirmAddressEnd', function (e, d) {
 
         d.forEach(x => {

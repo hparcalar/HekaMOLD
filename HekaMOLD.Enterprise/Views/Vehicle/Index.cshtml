@@ -101,66 +101,262 @@
         <div id="kt_content_container" class="container-fluid">
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8 bg-white">
+                <div class="tabs">
+                    <div class="tab-button-outer">
+                        <ul id="tab-button">
+                            <li><a href="#tab01">Araç Bilgi</a></li>
+                            <li><a href="#tab02">Kapasite Bilgi</a></li>
+                            <li><a href="#tab03">Bakım Bilgi</a></li>
+                            <li><a href="#tab04">Belge Bilgi</a></li>
+                            <li><a href="#tab05">Lastik Bilgi</a></li>
+
+                        </ul>
+                    </div>
+                    <div class="tab-select-outer">
+                        <select id="tab-select">
+                            <option value="#tab01">Tab 1</option>
+                            <option value="#tab02">Tab 2</option>
+                            <option value="#tab03">Tab 3</option>
+                            <option value="#tab04">Tab 4</option>
+                            <option value="#tab05">Tab 5</option>
+                        </select>
+                    </div>
+
+                    <div id="tab01" class="tab-contents">
+                        <div class="row gy-2 gx-xl-8 bg-white mt-1">
+                            <div class="col-xxl-6">
+                                <div class="row mb-5">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Plaka</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.Plate" placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Marka</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.Mark" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-5" style="margin-top:11px">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Model</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.Versiyon" placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Tipi</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <select data-allow-clear="true" data-control="select2" ng-options="item.VehicleTypeName for item in vehicleTypeList"
+                                                    ng-model="selectedVehicleType" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Tipi</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <select data-allow-clear="true" data-control="select2" ng-options="item.Text for item in trailerTypeList"
+                                                    ng-model="selectedTrailerType" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Tahsis Tipi</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <select data-allow-clear="true" data-control="select2" ng-options="item.Text for item in vehicleAllocationTypeList"
+                                                    ng-model="selectedVehicleAllocationType" class="form-select form-select-solid" data-placeholder="-- Seçiniz --">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
+
+                                    <div class="col-xxl-12">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Açıklama</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5 d-flex flex-fill flex-column">
+                                            <textarea class="form-control form-control-solid flex-fill" ng-model="modelObject.Explanation" placeholder=""></textarea>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-xxl-6">
+                                <div class="row mb-5">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sözleşme Başlangıç</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.ContractStartDateStr" placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sözleşme Bitiş</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.ContractEndDateStr" placeholder="" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">İşlem Firma</label>
+                                        <!--begin::Input group-->
+                                        <select class="form-select form-select-solid" data-allow-clear="true"
+                                                ng-options="item.FirmName for item in firmList" ng-model="selectedFirm"
+                                                data-control="select2" data-placeholder="-- Seçiniz --">
+                                        </select>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Değeri</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="number" class="form-control form-control-solid" ng-model="modelObject.Price" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Km/Saat</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="" class="form-control form-control-solid" ng-model="modelObject.KmHour" placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Bakım Periyot</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="number" class="form-control form-control-solid" ng-model="modelObject.CarePeriyot" placeholder="" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Oransal sınır  (%)</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="number" class="form-control form-control-solid" ng-model="modelObject.ProportionalLimit" placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="tab02" class="tab-contents">
+                        <div class="row gy-2 gx-xl-8 bg-white mt-1">
+                            <div class="col-xxl-6">
+                                <div class="row  mb-5">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Uzunluk (M)</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="number" class="form-control form-control-solid" ng-model="modelObject.Length" placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Genişlik (M)</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="number" class="form-control form-control-solid" ng-model="modelObject.Width" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row  mb-5" style="margin-top:11px">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yükseklik (M)</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="number" class="form-control form-control-solid" ng-model="modelObject.Height" placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Römork Kafa Ağırlık (KG)</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="number" class="form-control form-control-solid" ng-model="modelObject.TrailerHeadWeight" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-xxl-6">
+                                <div class="row  mb-5" style="margin-top:11px">
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük Kapasitesi (KG)</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="number" class="form-control form-control-solid" ng-model="modelObject.LoadCapacity" placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6">
+                                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şasi Numarası</label>
+                                        <!--begin::Input group-->
+                                        <div class="mb-5">
+                                            <input type="text" class="form-control form-control-solid" ng-model="modelObject.ChassisNumber" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="tab03" class="tab-contents">
+                        <div class="row gy-2 gx-xl-8 bg-white mt-1">
+                            <!--Care-->
+                            <div class="card">
+                                <div class="card-body py-0 mb-4">
+                                    <div class="dx-viewport">
+                                        <div id="careList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab04" class="tab-contents">
+                        <div class="row gy-2 gx-xl-8 bg-white mt-1">
+                            <div class="card">
+                                <div class="card-body py-0 mb-4">
+                                    <div class="dx-viewport">
+                                        <div id="insuranceList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab05" class="tab-contents">
+                        <div class="row gy-2 gx-xl-8 bg-white mt-1">
+                            <div class="card">
+                                <div class="card-body py-0 mb-4">
+                                    <div class="dx-viewport">
+                                        <div id="tireList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
                 <!--begin::Col-->
-                <div class="col-xxl-6">
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Plaka</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.Plate" placeholder="" />
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Marka</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.Mark" placeholder="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Model</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.Versiyon" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Tipi</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <select aria-label="Firma Türü" ng-options="item.VehicleTypeName for item in vehicleTypeList"
-                                        ng-model="selectedVehicleType" class="form-select form-select-solid">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Romörk Tipi</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <select data-allow-clear="true" data-control="select2" ng-options="item.Text for item in trailerTypeList"
-                                        ng-model="selectedTrailerType" class="form-select form-select-solid" >
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-6">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Tahsis Tipi</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <select data-allow-clear="true" data-control="select2" ng-options="item.Text for item in vehicleAllocationTypeList"
-                                        ng-model="selectedVehicleAllocationType" class="form-select form-select-solid">
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>
                     <div class="row">
                         <div class="col-xxl-3">
                             <label class="form-label fs-4 fw-bolder text-gray-700 mb-3">&nbsp;</label>
@@ -191,106 +387,8 @@
                             </label>
                         </div>
                     </div>
-
-                </div>
                 <!--end::Col-->
-                <div class="col-xxl-6">
 
-                    <div class="row">
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-4 fw-bolder text-gray-700 mb-3">Uzunluk</label>
-                            <!--begin::Input group-->
-                            <div class="mb-4">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Length" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-4 fw-bolder text-gray-700 mb-3">Genişlik</label>
-                            <!--begin::Input group-->
-                            <div class="mb-4">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Width" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-4 fw-bolder text-gray-700 mb-3">Yükseklik</label>
-                            <!--begin::Input group-->
-                            <div class="mb-4">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.Height" placeholder="" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Römork Kafa Ağırlık</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.TrailerHeadWeight" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Yük Kapasitesi</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.LoadCapacity" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Şasi Numarası</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control form-control-solid" ng-model="modelObject.ChassisNumber" placeholder="" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sözleşme Başlangıç</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.ContractStartDateStr" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sözleşme Bitiş</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="text" class="form-control form-control-solid datepicker" ng-model="modelObject.ContractEndDateStr" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Araç Değeri</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="" class="form-control form-control-solid" ng-model="modelObject.Price" placeholder="" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Km/Saat</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="" class="form-control form-control-solid" ng-model="modelObject.KmHour" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-4">
-
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Bakım Periyot</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.CarePeriyot" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Oransal sınır  (%)</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="number" class="form-control form-control-solid" ng-model="modelObject.ProportionalLimit" placeholder="" />
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
             </div>
             <!--end::Row-->
             <!--begin::Row-->
@@ -298,58 +396,7 @@
 
         </div>
 
-         <!--end::Container-->
-    </div>
-
-    <div class="container-fluid" style="margin-top:30px;">
-        <div class="row gy-5 gx-xl-8 bg-white">
-            <ul class="nav nav-pills mb-3 justify-content-center nav-justified" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active " id="pills-care-tab" data-bs-toggle="pill" data-bs-target="#pills-care" type="button" role="tab" aria-controls="pills-care" aria-selected="true">Bakım</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-insurance-tab" data-bs-toggle="pill" data-bs-target="#pills-insurance" type="button" role="tab" aria-controls="pills-insurance" aria-selected="false">Belge</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-tire-tab" data-bs-toggle="pill" data-bs-target="#pills-tire" type="button" role="tab" aria-controls="pills-tire" aria-selected="false">Lastik</button>
-                </li>
-            </ul>
-            <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-care" role="tabpanel" aria-labelledby="pills-care-tab">
-                    <!--Care-->
-                    <div class="card">
-                        <div class="card-body py-0 mb-4">
-                            <div class="dx-viewport">
-                                <div id="careList"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="pills-insurance" role="tabpanel" aria-labelledby="pills-insurance-tab">
-                    <!--insurance-->
-                    <div class="card">
-                        <div class="card-body py-0 mb-4">
-                            <div class="dx-viewport">
-                                <div id="insuranceList"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="pills-tire" role="tabpanel" aria-labelledby="pills-tire-tab">
-                    <!--Tire-->
-                    <div class="card">
-                        <div class="card-body py-0 mb-4">
-                            <div class="dx-viewport">
-                                <div id="tireList"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-
+        <!--end::Container-->
     </div>
     <!--end::Post-->
 </div>
@@ -359,4 +406,39 @@
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/FrontEndLogic/Vehicle/index.js"></script>
+    <link href="~/assets/css/HekaTab.css" rel="stylesheet" />
+    <script>
+        $(function () {
+            var $tabButtonItem = $('#tab-button li'),
+                $tabSelect = $('#tab-select'),
+                $tabContents = $('.tab-contents'),
+                activeClass = 'is-active';
+
+            $tabButtonItem.first().addClass(activeClass);
+            $tabContents.not(':first').hide();
+
+            $tabButtonItem.find('a').on('click', function (e) {
+                var target = $(this).attr('href');
+
+                $tabButtonItem.removeClass(activeClass);
+                $(this).parent().addClass(activeClass);
+                $tabSelect.val(target);
+                $tabContents.hide();
+                $(target).show();
+                e.preventDefault();
+            });
+
+            $tabSelect.on('change', function () {
+                var target = $(this).val(),
+                    targetSelectNum = $(this).prop('selectedIndex');
+
+                $tabButtonItem.removeClass(activeClass);
+                $tabButtonItem.eq(targetSelectNum).addClass(activeClass);
+                $tabContents.hide();
+                $(target).show();
+            });
+        });
+
+    </script>
+
 }

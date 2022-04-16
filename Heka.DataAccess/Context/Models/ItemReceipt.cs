@@ -26,6 +26,10 @@ namespace Heka.DataAccess.Context
         public string DocumentNo { get; set; }
         public Nullable<System.DateTime> ReceiptDate { get; set; }
         public Nullable<int> ReceiptType { get; set; }
+        public decimal? OverallVolume { get; set; }
+        public decimal? OverallWeight { get; set; }
+        public decimal? OverallLadametre { get; set; }
+        public int? OverallQuantity { get; set; }
 
         [ForeignKey("Firm")]
         public Nullable<int> FirmId { get; set; }

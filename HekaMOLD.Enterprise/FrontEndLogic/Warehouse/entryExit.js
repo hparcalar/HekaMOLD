@@ -122,7 +122,6 @@
                 { dataField: 'WarehouseName', caption: 'Depo' },
                 /*{ dataField: 'ItemNo', caption: 'Stok Kodu' },*/
                 { dataField: 'ItemName', caption: 'Stok Adı' },
-                { dataField: 'FirmCode', caption: 'Firma Kodu' },
                 { dataField: 'FirmName', caption: 'Firma Adı' },
                 { dataField: 'InQuantity', caption: 'Giriş Miktar' },
                 { dataField: 'OutQuantity', caption: 'Çıkış Miktar' },

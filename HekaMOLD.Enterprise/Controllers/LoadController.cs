@@ -22,6 +22,10 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
+        public ActionResult Finance()
+        {
+            return View();
+        }
         public ActionResult IndexExport()
         {
             return View();
@@ -88,7 +92,7 @@ namespace HekaMOLD.Enterprise.Controllers
             FirmModel[] firmCustoms = new FirmModel[0];
             VehicleModel[] vehicleTrailers = new VehicleModel[0];
             VehicleModel[] vehicleTowinfs = new VehicleModel[0];
-
+            ServiceItemModel[] serviceItems = new ServiceItemModel[0];
             DriverModel[] drivers = new DriverModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
@@ -103,13 +107,12 @@ namespace HekaMOLD.Enterprise.Controllers
                 firmCustoms = bObj.GetFirmCustomsList();
                 vehicleTrailers = bObj.GetVehicleCanBePlanedList();
                 vehicleTowinfs = bObj.GetVehicleTowingList();
-
+                serviceItems = bObj.GetServiceItemList();
             }
             using (UsersBO bObj = new UsersBO())
             {
                 users = bObj.GetUserList();
                 drivers = bObj.GetDriverList();
-
             }
 
             var jsonResult = Json(new
@@ -125,12 +128,36 @@ namespace HekaMOLD.Enterprise.Controllers
                 FirmCustoms = firmCustoms,
                 VehicleTrailers = vehicleTrailers,
                 VehicleTowinfs = vehicleTowinfs,
-                Drivers = drivers
+                Drivers = drivers,
+                ServiceItems = serviceItems
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
 
+        [HttpGet]
+        public JsonResult GetInvoiceSelectables()
+        {
+            FirmModel[] firms = new FirmModel[0];
+            ForexTypeModel[] forexes = new ForexTypeModel[0];
+            ServiceItemModel[] serviceItems = new ServiceItemModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                firms = bObj.GetFirmList();
+                forexes = bObj.GetForexTypeList();
+                serviceItems = bObj.GetServiceItemList();
+            }
+
+            var jsonResult = Json(new
+            {
+                Firms = firms,
+                Forexes = forexes,
+                ServiceItems = serviceItems
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         [HttpGet]
         public JsonResult GetLoadCalendarList()
         {
@@ -356,5 +383,30 @@ namespace HekaMOLD.Enterprise.Controllers
             return Json(new { Status = 1, Path = outputFile });
         }
 
+        public JsonResult CancelledLoad(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (LoadBO bObj = new LoadBO())
+            {
+                result = bObj.CancelledLoad(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+            }
+
+            return Json(result);
+        }
+        #region CALCULATIONS
+        [HttpPost]
+        public JsonResult CalculateRow(LoadInvoiceModel model)
+        {
+            LoadInvoiceModel result = new LoadInvoiceModel();
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                //result = bObj.CalculateLoadInvoice(model);
+            }
+
+            return Json(result);
+        }
+        #endregion
     }
 }

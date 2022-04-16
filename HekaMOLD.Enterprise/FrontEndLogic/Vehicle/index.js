@@ -5,6 +5,8 @@
 
     $scope.selectedVehicleType = {};
     $scope.vehicleTypeList = [];
+    $scope.firmList = [];
+    $scope.selectedFirm = {};
 
 
     $scope.selectedTrailerType = {};
@@ -26,6 +28,7 @@
         $scope.selectedVehicleType = {};
         $scope.selectedVehicleAllocationType = {};
         $scope.selectedForexType = {};
+        $scope.selectedFirm = {};
     }
     $scope.loadSelectables = function () {
         var prmReq = new Promise(function (resolve, reject) {
@@ -33,6 +36,7 @@
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.vehicleTypeList = resp.data.VehicleTypes;
+                        $scope.firmList = resp.data.Firms;
 
                         resolve(resp.data);
                     }
@@ -336,7 +340,9 @@
             KmHourControl: $scope.modelObject.KmHourControl,
             HasLoadPlannig: $scope.modelObject.HasLoadPlannig,
             CarePeriyot: $scope.modelObject.CarePeriyot,
-            ProportionalLimit: $scope.modelObject.ProportionalLimit
+            ProportionalLimit: $scope.modelObject.ProportionalLimit,
+            OwnerFirmId: $scope.selectedFirm.Id,
+            Explanation: $scope.modelObject.Explanation
         }, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -369,15 +375,15 @@
                     else
                         $scope.selectedVehicleType = {};
 
-                    if ($scope.modelObject.OperationFirmId > 0)
-                        $scope.selectedOperationFirm = $scope.operationFirmList.find(d => d.Id == $scope.modelObject.OperationFirmId);
+                    if ($scope.modelObject.OwnerFirmId > 0)
+                        $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.OwnerFirmId);
                     else
-                        $scope.selectedOperationFirm = {};
+                        $scope.selectedFirm = {};
 
                     if ($scope.modelObject.VehicleAllocationType > 0)
                         $scope.selectedVehicleAllocationType = $scope.vehicleAllocationTypeList.find(d => d.Id == $scope.modelObject.VehicleAllocationType);
                     else
-                        $scope.selectedOperationFirm = {};
+                        $scope.selectedOwnerFirm = {};
 
                     if ($scope.modelObject.TrailerType > 0)
                         $scope.selectedTrailerType = $scope.trailerTypeList.find(d => d.Id == $scope.modelObject.TrailerType);

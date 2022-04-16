@@ -1,5 +1,5 @@
 ﻿app.controller('lOrderCtrl', function ($scope, $http) {
-    $scope.modelObject = { Id: 0, OrderDateStr: moment().format('DD.MM.YYYY'), Details: [], OrderStatus: 0 };
+    $scope.modelObject = { Id: 0, OrderDateStr: moment().format('DD.MM.YYYY'), Details: [], OrderStatus: 0, OrderWeek: moment().year() +'-'+ moment().week() };
 
     $scope.itemList = [];
     $scope.unitList = [];
@@ -35,7 +35,9 @@
 
     $scope.saveStatus = 0;
 
-    // RECEIPT FUNCTIONS
+    $scope.getCurrentWeekNumber = function () {
+        return moment().week();
+    }
     $scope.getNextOrderNo = function () {
         var prms = new Promise(function (resolve, reject) {
             $http.get(HOST_URL + 'LOrder/GetNextOrderNo', {}, 'json')
@@ -174,7 +176,7 @@
     }
     // CRUD
     $scope.openNewRecord = function () {
-        $scope.modelObject = { Id: 0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus: 0 };
+        $scope.modelObject = { Id: 0, OrderDate: moment().format('DD.MM.YYYY'), Details: [], OrderStatus: 0, OrderWeek: moment().year() + '-' + moment().week()};
         $scope.selectedCustomerFirm = {};
         $scope.selectedReelOwnerFirm = {};
         $scope.selectedOrderCalculationType = { Id: 0 };
@@ -484,7 +486,7 @@
                         if (typeof values.UnitId != 'undefined') {
                             var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                             obj.UnitId = unitObj.Id;
-                            obj.UnitName = unitObj.UnitCode;
+                            obj.UnitName = unitObj.UnitName;
                             calculateRowAgain = true;
                         }
 
@@ -526,7 +528,7 @@
                         ItemNo: itemObj.ItemNo,
                         ItemName: itemObj.ItemName,
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
-                        UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
+                        UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitName : null,
                         Quantity: values.Quantity,
                         ShortWidth: values.ShortWidth,
                         LongWidth: values.LongWidth,
@@ -563,7 +565,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 280,
+            height: 400,
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
@@ -613,7 +615,7 @@
                     lookup: {
                         dataSource: $scope.unitList,
                         valueExpr: "Id",
-                        displayExpr: "UnitCode"
+                        displayExpr: "UnitName"
                     }, width: 60
                 },
                 { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
@@ -771,8 +773,8 @@
             { RecordId: $scope.modelObject.Id, RecordType: 1 });
 
         $('#dial-attachments').dialog({
-            width: 500,
-            height: 400,
+            width: 600,
+            height: 600,
             //height: window.innerHeight * 0.6,
             hide: true,
             modal: true,

@@ -158,13 +158,13 @@
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
             dropDownOptions: { width: 500 },
-            dataSource: $scope.itemReceiptSatatusList.filter(d => d.TotalQty > 0),
+            dataSource: $scope.itemList,
             value: cellInfo.value,
             valueExpr: "ItemId",
             displayExpr: "ItemNo",
             contentTemplate: function (e) {
                 return $("<div>").dxDataGrid({
-                    dataSource: $scope.itemReceiptSatatusList.filter(d => d.TotalQty > 0),
+                    dataSource: $scope.itemList,
                     remoteOperations: true,
                     columns: [
                         { dataField: 'ItemNo', caption: 'Stok Kodu' },
@@ -174,7 +174,7 @@
                         //{ dataField: 'CategoryName', caption: 'Kategori' }
                     ],
                     hoverStateEnabled: true,
-                    keyExpr: "ItemId",
+                    keyExpr: "Id",
                     scrolling: { mode: "virtual" },
                     height: 250,
                     filterRow: { visible: true },
@@ -236,8 +236,8 @@
                         let calculateRowAgain = false;
 
                         if (typeof values.ItemId != 'undefined') {
-                            var itemObj = $scope.itemReceiptSatatusList.find(d => d.ItemId == values.ItemId);
-                            obj.ItemId = itemObj.ItemId;
+                            var itemObj = $scope.itemList.find(d => d.Id == values.ItemId);
+                            obj.ItemId = itemObj.Id;
                             obj.ItemNo = itemObj.ItemNo;
                             obj.ItemName = itemObj.ItemName;
 
@@ -309,11 +309,11 @@
                         newId++;
                     }
 
-                    var itemObj = $scope.itemReceiptSatatusList.find(d => d.ItemId == values.ItemId);
+                    var itemObj = $scope.itemList.find(d => d.Id == values.ItemId);
                     var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                     var newObj = {
                         Id: newId,
-                        ItemId: itemObj.ItemId,
+                        ItemId: itemObj.Id,
                         ItemNo: itemObj.ItemNo,
                         ItemName: itemObj.ItemName,
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
@@ -382,7 +382,7 @@
                 {
                     dataField: 'ItemId', caption: 'Stok Kodu',
                     lookup: {
-                        dataSource: $scope.itemReceiptSatatusList,
+                        dataSource: $scope.itemList,
                         valueExpr: "Id",
                         displayExpr: "ItemNo"
                     },
@@ -511,10 +511,10 @@
             sumLadametre += parseFloat(element.Ladametre != null ? element.Ladametre : 0);
             sumQuantity += parseFloat(element.Quantity != null ? element.Quantity : 0);
         });
-        $scope.modelObject.OveralVolume = sumVolume;
-        $scope.modelObject.OveralWeight = sumWeight;
-        $scope.modelObject.OveralLadametre = sumLadametre;
-        $scope.modelObject.OveralQuantity = sumQuantity;
+        $scope.modelObject.OverallVolume = sumVolume;
+        $scope.modelObject.OverallWeight = sumWeight;
+        $scope.modelObject.OverallLadametre = sumLadametre;
+        $scope.modelObject.OverallQuantity = sumQuantity;
 
     }
 

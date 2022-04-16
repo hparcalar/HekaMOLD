@@ -96,6 +96,9 @@ namespace HekaMOLD.Business.UseCases
                 var repoCodeCounter = _unitOfWork.GetRepository<CodeCounter>();
                 var repoVehicle = _unitOfWork.GetRepository<Vehicle>();
 
+                if (repoVoyage.Any(d => (d.VoyageCode == model.VoyageCode) && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir sefer mevcuttur. Lütfen farklı bir kod giriniz.");
+
                 if (model.OrderTransactionDirectionType == null)
                     throw new Exception("İşlem yönü seçilmelidir !");
 
@@ -227,7 +230,13 @@ namespace HekaMOLD.Business.UseCases
                     else if (!toBeRemovedDrivers.Any(d=>d.Id == item.Id))
                     {
                         var dbVoyageDriver = repoVoyageDriver.GetById(item.Id);
+                        var driverStartDate = dbVoyageDriver.StartDate;
+                        var driverEndDate = dbVoyageDriver.EndDate;
                         item.MapTo(dbVoyageDriver);
+                        if (item.StartDate == null)
+                            dbVoyageDriver.StartDate = driverStartDate;
+                        if (item.EndDate == null)
+                            dbVoyageDriver.EndDate = driverEndDate;
                         dbVoyageDriver.Voyage = dbObj;
                     }
                 }
@@ -259,6 +268,8 @@ namespace HekaMOLD.Business.UseCases
                         dbItemLoad.VoyageExitDate = model.StartDate;
                         dbItemLoad.VoyageEndDate = model.EndDate;
                         dbItemLoad.DriverId = model.DriverId;
+                        dbItemLoad.VoyageId = model.Id;
+                        dbItemLoad.VoyageConverted = true;
                         //x.MapTo(dbItemLoad);
                     }
 
@@ -275,6 +286,8 @@ namespace HekaMOLD.Business.UseCases
                         dbItemLoad.VoyageCode = "";
                         dbItemLoad.VoyageCreatedUserId =null;
                         dbItemLoad.VehicleTraillerId = null;
+                        dbItemLoad.VoyageId = null;
+                        dbItemLoad.VoyageConverted = false;
                         //x.MapTo(dbItemLoad);
                     }
 
@@ -298,6 +311,8 @@ namespace HekaMOLD.Business.UseCases
                         dbItemLoad.VoyageExitDate = model.StartDate;
                         dbItemLoad.VoyageEndDate = model.EndDate;
                         dbItemLoad.DriverId = model.DriverId;
+                        dbItemLoad.VoyageId = model.Id;
+                        dbItemLoad.VoyageConverted = true;
                         //x.MapTo(dbItemLoad);
                     }
 
@@ -305,8 +320,8 @@ namespace HekaMOLD.Business.UseCases
 
                 if (dbObj.VoyageStatus != (int)LoadStatusType.Completed && dbObj.VoyageStatus != (int)LoadStatusType.Cancelled)
                 {
-                    var newDetailIdList = model.VoyageDetails.Select(d => d.Id).ToArray();
-                    var deletedDetails = dbObj.VoyageDetail.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
+                    var detailIdList = model.VoyageDetails.Select(d => d.Id).ToArray();
+                    var deletedDetails = dbObj.VoyageDetail.Where(d => !detailIdList.Contains(d.Id)).ToArray();
                     foreach (var item in deletedDetails)
                     {
                         //if (item.ItemReceiptDetail.Any())
@@ -320,6 +335,7 @@ namespace HekaMOLD.Business.UseCases
                         if (item.ItemLoad != null)
                         {
                             item.ItemLoad.LoadStatusType = (int)LoadStatusType.Ready;
+                            item.ItemLoad.VoyageConverted = null;
                             foreach (var itemTmp in item.ItemLoad.ItemLoadDetail)
                             {
                                 itemTmp.LoadStatus = (int)LoadStatusType.Ready;
@@ -334,6 +350,10 @@ namespace HekaMOLD.Business.UseCases
                     foreach (var item in model.VoyageDetails)
                     {
                         var dbVoyageDetail = repoVoyageDetail.Get(d => d.ItemLoadId == item.ItemLoadId);
+                        //Yuk daha once kullanıldı mı kontrol
+                        if (dbVoyageDetail != null && item.NewDetail)
+                            throw new Exception(dbVoyageDetail.LoadCode + " kodlu yük daha önce " + dbVoyageDetail.Voyage.VoyageCode + " kodlu seferde kullanılmıştır.");
+
                         if (dbVoyageDetail == null)
                         {
                             dbVoyageDetail = new VoyageDetail
@@ -356,23 +376,6 @@ namespace HekaMOLD.Business.UseCases
                             dbVoyageDetail.VoyageId = dbObj.Id;
 
                         dbVoyageDetail.LineNumber = lineNo;
-
-                        #region SET REQUEST & DETAIL STATUS TO COMPLETE
-                        //if (dbDetail.ItemOrderDetailId > 0)
-                        //{
-                        //    var dbOrderDetail = repoOrderDetail.Get(d => d.Id == dbDetail.ItemOrderDetailId);
-                        //    if (dbOrderDetail != null)
-                        //    {
-                        //        dbOrderDetail.OrderStatus = (int)OrderStatusType.Completed;
-
-                        //        if (!dbOrderDetail.ItemOrder
-                        //            .ItemOrderDetail.Any(d => d.OrderStatus != (int)OrderStatusType.Completed))
-                        //        {
-                        //            dbOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Completed;
-                        //        }
-                        //    }
-                        //}
-                        #endregion
 
                         lineNo++;
                     }
@@ -709,47 +712,12 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<Voyage>();
 
-            //repo.GetAll().ToList().ForEach(d =>
-            //{
-            //    VoyageModel containerObj = new VoyageModel();
-            //    d.MapTo(containerObj);
-            //        containerObj.Id = d.Id;
-            //        containerObj.VoyageCode = d.VoyageCode;
-            //        containerObj.VoyageDateStr = string.Format("{0:dd.MM.yyyy}", d.VoyageDate);
-            //        containerObj.VoyageStatusStr = d.VoyageStatus != null ? ((VoyageStatus)d.VoyageStatus).ToCaption() : "";
-            //        containerObj.CarrierFirmName = d.CarrierFirm != null ? d.CarrierFirm.FirmName : "";
-            //        containerObj.CustomsDoorEntryDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorEntryDate);
-            //        containerObj.CustomsDoorEntryName = d.CustomsDoorEntry != null ? d.CustomsDoorEntry.CustomsDoorName : "";
-            //        containerObj.CustomsDoorExitDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorExitDate);
-            //        containerObj.CustomsDoorExitName = d.CustomsDoorExit != null ? d.CustomsDoorExit.CustomsDoorName : "";
-            //        containerObj.DriverNameAndSurname = d.Driver != null ? d.Driver.DriverName + " " + d.Driver.DriverSurName : "";
-            //        containerObj.DriverSubsistence = d.DriverSubsistence;
-            //        containerObj.EmptyGo = d.EmptyGo;
-            //        containerObj.EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate);
-            //        containerObj.StartDateStr = string.Format("{0:dd.MM.yyyy}", d.StartDate);
-            //        containerObj.LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate);
-            //        containerObj.Explanation = d.Explanation;
-            //        containerObj.OrderTransactionDirectionTypeStr = d.OrderTransactionDirectionType != null ? ((OrderTransactionDirectionType)d.OrderTransactionDirectionType).ToCaption() : "";
-            //        containerObj.OverallQuantity = d.OverallQuantity;
-            //        containerObj.OverallVolume = d.OverallVolume;
-            //        containerObj.OverallWeight = d.OverallWeight;
-            //        containerObj.OverallGrossWeight = d.OverallGrossWeight;
-            //        containerObj.PositionKmHour = d.PositionKmHour;
-            //        containerObj.TowinfVehiclePlate = d.TowinfVehicle != null ? d.TowinfVehicle.Plate : "";
-            //        containerObj.TowinfVehicleMarkAndModel = d.TowinfVehicle != null ? d.TowinfVehicle.Mark + " " + d.TowinfVehicle.Versiyon : "";
-            //        containerObj.TraillerVehiclePlate = d.TraillerVehicle != null ? d.TraillerVehicle.Plate : "";
-            //        containerObj.TraillerVehicleMarkAndModel = d.TraillerVehicle != null ? d.TraillerVehicle.Mark + " " + d.TraillerVehicle.Versiyon : "";
-            //        containerObj.VehicleExitDateStr = string.Format("{0:dd.MM.yyyy}", d.VehicleExitDate);
-            //        containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
-            //        data.Add(containerObj);
-            //});
-
-            //return data.ToArray();
             return repo.GetAll().ToList().Select(d => new VoyageModel
             {
                 Id = d.Id,
                 VoyageCode = d.VoyageCode,
                 VoyageDateStr = string.Format("{0:dd.MM.yyyy}", d.VoyageDate),
+                VoyageWeek = d.VoyageWeek,
                 VoyageStatusStr = d.VoyageStatus != null ? ((VoyageStatus)d.VoyageStatus).ToCaption() : "",
                 CarrierFirmName = d.CarrierFirm != null ? d.CarrierFirm.FirmName : "",
                 CustomsDoorEntryDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorEntryDate),

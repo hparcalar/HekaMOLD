@@ -14,6 +14,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string DocumentNo { get; set; }
         public DateTime? ReceiptDate { get; set; }
         public int? ReceiptType { get; set; }
+        public decimal? OverallVolume { get; set; }
+        public decimal? OverallWeight { get; set; }
+        public decimal? OverallLadametre { get; set; }
+        public int? OverallQuantity { get; set; }
         public int? FirmId { get; set; }
         public int? InWarehouseId { get; set; }
         public int? OutWarehouseId { get; set; }

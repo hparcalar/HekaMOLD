@@ -24,17 +24,20 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             VehicleTypeModel[] vehicleTypes = new VehicleTypeModel[0];
             ForexTypeModel[] forexTypes = new ForexTypeModel[0];
+            FirmModel[] firms = new FirmModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 vehicleTypes = bObj.GetVehicleTypeList();
                 forexTypes = bObj.GetForexTypeList();
+                firms = bObj.GetFirmList();
             }
 
             var jsonResult = Json(new
             {
                 VehicleTypes = vehicleTypes,
-                ForexTypes = forexTypes
+                ForexTypes = forexTypes,
+                Firms = firms
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;

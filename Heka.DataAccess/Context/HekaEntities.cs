@@ -130,6 +130,8 @@
         public virtual DbSet<VoyageCostDetail> VoyageCostDetail { get; set; }
         public virtual DbSet<DriverAccount> DriverAccount { get; set; }
         public virtual DbSet<DriverAccountDetail> DriverAccountDetail { get; set; }
+        public virtual DbSet<ServiceItem> ServiceItem { get; set; }
+        public virtual DbSet<LoadInvoice> LoadInvoice { get; set; }
 
     }
 }

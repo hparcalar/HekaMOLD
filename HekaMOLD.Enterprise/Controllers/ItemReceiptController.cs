@@ -71,7 +71,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 DictItemReceiptType.GetReceiptTypes((ReceiptCategoryType)receiptCategory);
 
             var jsonResult = Json(new { 
-                Items = items, Units = units,
+                Items = items, 
+                Units = units,
                 ItemReceiptStatusList = itemReceiptStatusList,
                 Firms = firms, Forexes=forexes,
                 Warehouses = warehouses,

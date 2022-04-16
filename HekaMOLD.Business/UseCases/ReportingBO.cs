@@ -391,10 +391,10 @@ namespace HekaMOLD.Business.UseCases
                     {
                         Id = d.Id,
                         ItemReceiptId = d.ItemReceiptId,
+                        
                         ItemId = d.ItemId,
                         ItemName = d.Item != null ? d.Item.ItemName:"",
-                        FirmCode = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
-                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode +"/"+  d.ItemReceipt.Firm.FirmName : "",
                         WarehouseCode = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseCode : "",
                         WarehouseName = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseName : "",
                         Quantity = d.Quantity,
