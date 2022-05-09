@@ -3963,6 +3963,7 @@
     <Content Include="Components\Controllers\print-item-label.js" />
     <Content Include="Components\Controllers\print-options.js" />
     <Content Include="Components\Controllers\production-history-list.js" />
+    <Content Include="Components\Controllers\receipt-serials.js" />
     <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
@@ -3989,6 +3990,7 @@
     <Content Include="Components\Views\AttachmentList.html" />
     <Content Include="Components\Views\PrintItemLabel.html" />
     <Content Include="Components\Views\PrintOptions.html" />
+    <Content Include="Components\Views\ReceiptSerials.html" />
     <Content Include="Components\Views\RecipeRevisions.html" />
     <Content Include="Components\Views\RelatedOrderList.html" />
     <Content Include="Components\Views\RelatedRequestList.html" />

@@ -16,5 +16,6 @@ namespace HekaMOLD.Business.Models.Constants
         ItemReceiptDetail=6,
         PalletLabel=7,
         ItemLabel=8,
+        ItemSerial=9,
     }
 }

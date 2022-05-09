@@ -579,6 +579,20 @@
     }
     // #endregion
 
+    $scope.showSerials = function () {
+        $scope.$broadcast('loadReceiptSerials', $scope.selectedRow.Id);
+        $('#dial-serials').dialog({
+            width: window.innerWidth * 0.7,
+            height: window.innerHeight * 0.7,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
     // #region ROW MENU ACTIONS
     $scope.showRowMenu = function () {
         if ($scope.selectedRow && $scope.selectedRow.Id > 0) {

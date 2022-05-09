@@ -825,6 +825,18 @@ namespace HekaMOLD.Business.UseCases
                 containerPack.FirmName = dbPack.WorkOrderDetail != null &&
                     dbPack.WorkOrderDetail.WorkOrder.Firm != null ? dbPack.WorkOrderDetail.WorkOrder.Firm.FirmName : "";
 
+                if (string.IsNullOrEmpty(containerPack.ItemNo))
+                {
+                    containerPack.ItemNo = dbPack.ItemReceiptDetail != null ? dbPack.ItemReceiptDetail.Item.ItemNo : "";
+                    containerPack.ItemName = dbPack.ItemReceiptDetail != null ? dbPack.ItemReceiptDetail.Item.ItemName : "";
+                }
+
+                if (string.IsNullOrEmpty(containerPack.FirmName))
+                {
+                    if (dbPack.ItemReceiptDetail != null && dbPack.ItemReceiptDetail.ItemReceipt.Firm != null)
+                        containerPack.FirmName = dbPack.ItemReceiptDetail.ItemReceipt.Firm.FirmName;
+                }
+
                 data = containerPack;
             }
             catch (Exception)

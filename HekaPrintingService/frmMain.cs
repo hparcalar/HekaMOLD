@@ -165,6 +165,32 @@ namespace HekaPrintingService
 
                                     //AddLog(_printerNames[printerId] + " yazıcısına gönderildi.");
                                 }
+                                else if (queueModel.RecordType == (int)RecordType.ItemSerial)
+                                {
+                                    var serialModel = await _api.GetData<WorkOrderSerialModel>("Common/GetItemSerial?id=" + queueModel.RecordId.Value);
+
+                                    //var currentShift = await _api.GetData<ShiftModel>("Common/GetCurrentShift");
+                                    //serialModel.ShiftCode = currentShift != null ? currentShift.ShiftCode : "";
+                                    //serialModel.ShiftName = currentShift != null ? currentShift.ShiftCode : "";
+
+                                    using (ProductionBO prodBo = new ProductionBO())
+                                    {
+                                        prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
+                                        {
+                                            BarcodeContent = serialModel.SerialNo,
+                                            CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now),
+                                            FirmName = serialModel.FirmName,
+                                            ShiftName = "",
+                                            InPackageQuantity = string.Format("{0:N2}", serialModel.FirstQuantity ?? 0),
+                                            ProductCode = serialModel.ItemNo,
+                                            ProductName = serialModel.ItemName,
+                                            Weight = "",
+                                            Id = 0,
+                                        }, printerId, _printerNames[printerIndex]);
+
+                                        await _api.PostData<int>("Common/SetQueueAsPrinted?id=" + queueModel.Id, queueModel.Id);
+                                    }
+                                }
                                 else if (queueModel.RecordType == (int)RecordType.ItemLabel)
                                 {
                                     if (queueModel.RecordId != null)

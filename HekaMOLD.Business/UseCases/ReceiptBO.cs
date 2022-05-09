@@ -2,12 +2,14 @@
 using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -299,6 +301,146 @@ namespace HekaMOLD.Business.UseCases
             catch (Exception)
             {
 
+            }
+
+            return data;
+        }
+
+        public ItemSerialModel[] GetSerialsOfDetail(int rid)
+        {
+            ItemSerialModel[] data = new ItemSerialModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemSerial>();
+                data = repo.Filter(d => d.ItemReceiptDetailId == rid)
+                    .ToList()
+                    .Select(d => new ItemSerialModel
+                    {
+                        Id = d.Id,
+                        CreatedDate = d.CreatedDate,
+                        CreatedUserId = d.CreatedUserId,
+                        FirstQuantity = d.FirstQuantity,
+                        CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate ?? DateTime.Now),
+                        ItemId = d.ItemId,
+                        InPackageQuantity = d.InPackageQuantity,
+                        ItemReceiptDetailId = d.ItemReceiptDetailId,
+                        SerialNo = d.SerialNo,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public string GetNextSerialNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemSerial>();
+                string lastSerialNo = repo
+                    .Filter(d => d.SerialNo != null && d.SerialNo.Length > 0)
+                    .OrderByDescending(d => d.SerialNo)
+                    .ToList()
+                    .Where(d => Convert.ToInt64(d.SerialNo) > 60000000)
+                    .Select(d => d.SerialNo)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(lastSerialNo))
+                    lastSerialNo = "60000000";
+
+                return string.Format("{0:00000000}", Convert.ToInt64(lastSerialNo) + 1);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return default;
+        }
+
+        public BusinessResult AddItemEntry(int itemReceiptDetailId, int userId, WorkOrderSerialType serialType,
+           int inPackageQuantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoItemSerial = _unitOfWork.GetRepository<ItemSerial>();
+                var repoShift = _unitOfWork.GetRepository<Shift>();
+
+                var dbObj = repo.Get(d => d.Id == itemReceiptDetailId);
+                if (dbObj == null)
+                    throw new Exception("İrsaliye kaydına ulaşılamadı.");
+
+                ItemSerial product = null;
+
+                ShiftModel currentShift = null;
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    currentShift = bObj.GetCurrentShift();
+                }
+
+                // BATUSAN
+                if (serialType == WorkOrderSerialType.ProductPackage)
+                {
+                    product = new ItemSerial
+                    {
+                        CreatedDate = DateTime.Now,
+                        InPackageQuantity = inPackageQuantity,
+                        ItemReceiptDetailId = itemReceiptDetailId,
+                        FirstQuantity = inPackageQuantity,
+                        LiveQuantity = inPackageQuantity,
+                        SerialNo = GetNextSerialNo(),
+                        ShiftBelongsToDate = currentShift != null ? currentShift.ShiftBelongsToDate : DateTime.Now,
+                        SerialStatus = (int)SerialStatusType.Created,
+                        SerialType = (int)serialType,
+                        CreatedUserId = userId,
+                    };
+
+                    repoItemSerial.Add(product);
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = product.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ItemSerialModel GetItemSerial(int serialId)
+        {
+            ItemSerialModel data = new ItemSerialModel();
+
+            var repo = _unitOfWork.GetRepository<ItemSerial>();
+            var dbObj = repo.Get(d => d.Id == serialId);
+            if (dbObj != null)
+            {
+                dbObj.MapTo(data);
+                if (dbObj.ItemReceiptDetail.ItemReceipt.Firm != null)
+                {
+                    data.FirmCode = dbObj.ItemReceiptDetail.ItemReceipt.Firm.FirmCode;
+                    data.FirmName = dbObj.ItemReceiptDetail.ItemReceipt.Firm.FirmName;
+                }
+
+                if (dbObj.ItemReceiptDetail.Item != null)
+                {
+                    data.ItemId = dbObj.ItemReceiptDetail.ItemId;
+                    data.ItemNo = dbObj.ItemReceiptDetail.Item.ItemNo;
+                    data.ItemName = dbObj.ItemReceiptDetail.Item.ItemName;
+                }
             }
 
             return data;

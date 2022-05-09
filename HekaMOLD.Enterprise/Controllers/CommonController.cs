@@ -558,6 +558,40 @@ namespace HekaMOLD.Enterprise.Controllers
 
         [HttpGet]
         [FreeAction]
+        public JsonResult GetItemSerial(int id)
+        {
+            WorkOrderSerialModel data = new WorkOrderSerialModel();
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                var itemSerial = bObj.GetItemSerial(id);
+                if (itemSerial != null)
+                {
+                    data.CreatedDate = itemSerial.CreatedDate;
+                    data.CreatedDateStr = itemSerial.CreatedDateStr;
+                    data.CreatedUserId = itemSerial.CreatedUserId;
+                    data.FirmCode = itemSerial.FirmCode;
+                    data.FirmName = itemSerial.FirmName;
+                    data.FirstQuantity = itemSerial.FirstQuantity;
+                    data.Id = itemSerial.Id;
+                    data.InPackageQuantity = itemSerial.InPackageQuantity;
+                    data.ItemId = itemSerial.ItemId;
+                    data.ItemNo = itemSerial.ItemNo;
+                    data.ItemName = itemSerial.ItemName;
+                    data.ItemReceiptDetailId = itemSerial.ItemReceiptDetailId;
+                    data.LiveQuantity = itemSerial.LiveQuantity;
+                    data.SerialNo = itemSerial.SerialNo;
+                    data.ShiftCode = "";
+                    data.ShiftName = "";
+                }
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
         public JsonResult GetItem(int id)
         {
             ItemModel data = new ItemModel();

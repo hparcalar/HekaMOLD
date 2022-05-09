@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
@@ -184,6 +185,54 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetSerialsOfDetail(int rid)
+        {
+            ItemSerialModel[] model = new ItemSerialModel[0];
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                model = bObj.GetSerialsOfDetail(rid);
+            }
+
+            var jsonResponse = Json(model, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpPost]
+        public JsonResult SaveItemEntry(int itemReceiptDetailId, int inPackageQuantity, bool printLabel, int printerId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+            string serialTypeConfig = WebConfigurationManager.AppSettings["WorkOrderSerialType"];
+
+            WorkOrderSerialType serialType = WorkOrderSerialType.SingleProduct;
+            if (serialTypeConfig == "ProductPackage")
+                serialType = WorkOrderSerialType.ProductPackage;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.AddItemEntry(itemReceiptDetailId, userId, serialType, inPackageQuantity);
+            }
+
+            if (printLabel == true)
+            {
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    var pqResult = bObj.AddToPrintQueue(new PrinterQueueModel
+                    {
+                        PrinterId = printerId,
+                        RecordType = (int)RecordType.ItemSerial,
+                        RecordId = result.RecordId,
+                        CreatedDate = DateTime.Now,
+                    });
+                }
+            }
+
+            return Json(result);
         }
 
         [HttpPost]
