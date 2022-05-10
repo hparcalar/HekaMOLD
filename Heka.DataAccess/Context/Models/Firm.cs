@@ -49,7 +49,12 @@ namespace Heka.DataAccess.Context
             this.ItemLoadByFirmReelOwner = new HashSet<ItemLoad>();
             this.ItemOrderByReelOwnerFirm = new HashSet<ItemOrder>();
             this.LoadInvoice = new HashSet<LoadInvoice>();
-
+            this.VoyageDetailByCmrBuyerFirm = new HashSet<VoyageDetail>();
+            this.VoyageDetailByCmrShipperFirm = new HashSet<VoyageDetail>(); 
+            this.VoyageDetailByFirmManufacturer = new HashSet<VoyageDetail>();
+            this.VoyageDetailByFirmCustomsExit = new HashSet<VoyageDetail>();
+            this.VoyageDetailByFirmReelOwner = new HashSet<VoyageDetail>();
+            this.ItemLoadByFirmAgent = new HashSet<ItemLoad>();
         }
 
         public int Id { get; set; }
@@ -181,5 +186,23 @@ namespace Heka.DataAccess.Context
 
         [InverseProperty("Firm")]
         public virtual ICollection<LoadInvoice> LoadInvoice { get; set; }
+
+        [InverseProperty("CmrShipperFirm")]
+        public virtual ICollection<VoyageDetail> VoyageDetailByCmrShipperFirm { get; set; }
+
+        [InverseProperty("CmrBuyerFirm")]
+        public virtual ICollection<VoyageDetail> VoyageDetailByCmrBuyerFirm { get; set; }
+
+        [InverseProperty("FirmManufacturer")]
+        public virtual ICollection<VoyageDetail> VoyageDetailByFirmManufacturer { get; set; }
+
+        [InverseProperty("FirmCustomsExit")]
+        public virtual ICollection<VoyageDetail> VoyageDetailByFirmCustomsExit { get; set; }
+
+        [InverseProperty("FirmReelOwner")]
+        public virtual ICollection<VoyageDetail> VoyageDetailByFirmReelOwner { get; set; }
+
+        [InverseProperty("FirmAgent")]
+        public virtual ICollection<ItemLoad> ItemLoadByFirmAgent { get; set; }
     }
 }

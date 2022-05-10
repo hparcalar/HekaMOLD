@@ -2,7 +2,7 @@
     $scope.modelObject = { Id: 0, VoayageDateStr: moment().format('DD.MM.YYYY'), VoyageDetails: [], VoyageDrivers: [], VoyageTowingVehicles: [] };
 
     $scope.driverList = [];
-    $scope.plannedLoadList = [];
+    $scope.loadList = [];
     $scope.rotaList = [];
     $scope.towingVehicleList = [];
     $scope.trailerVehicleList = [];
@@ -72,7 +72,6 @@
         $scope.selectedEntryCustoms = {}
         $scope.selectedExitCustoms = {}
         $scope.bindVoyageDetails();
-
     }
     $scope.loadSelectables = function () {
         var prmReq = new Promise(function (resolve, reject) {
@@ -421,7 +420,9 @@
                     columns: [
                         { dataField: 'Plate', caption: 'Plaka' },
                         { dataField: 'Mark', caption: 'Marka' },
-                        { dataField: 'Versiyon', caption: 'Model' }
+                        { dataField: 'Versiyon', caption: 'Model' },
+                        { dataField: 'VehicleAllocationTypeStr', caption: 'Tip' },
+                        { dataField: 'OwnerFirmName', caption: 'İşlem Firma' }
                     ],
                     hoverStateEnabled: true,
                     keyExpr: "Id",
@@ -556,7 +557,7 @@
     }
 
     $scope.bindVoyageDetails = function () {
-        $('#plannedLoadList').dxDataGrid({
+        $('#loadList').dxDataGrid({
             dataSource:
             {
                 load: function () { return $scope.modelObject.VoyageDetails },
@@ -581,7 +582,7 @@
                     }
 
                     var loadObj = $scope.waitingLoadList.find(d => d.Id == values.LoadCode);
-
+                    alert(loadObj.LoadingDate);
                     var newObj = {
                         Id: newId,
                         //DischargeLineNo: newId,
@@ -589,6 +590,7 @@
                         ItemLoadId: loadObj.Id,
                         LoadCode: loadObj.LoadCode,
                         LoadingDateStr: loadObj.LoadingDateStr,
+                        LoadingDate: loadObj.LoadingDateStr,
                         LoadOutDate: loadObj.LoadOutDateStr,
                         CustomerFirmName: loadObj.CustomerFirmName,
                         ShipperFirmName: loadObj.ShipperFirmName,
@@ -650,6 +652,7 @@
                         EntryCustomsId: loadObj.EntryCustomsId,
                         ExitCustomsId: loadObj.ExitCustomsId,
                         PlantId: loadObj.PlantId,
+                        T1T2StartDate: loadObj.T1T2StartDate,
                         RotaId: null,
                         NewDetail: true,
                     };
@@ -662,7 +665,7 @@
             showRowLines: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: false,
-            columnAutoWidth: true,
+            //columnAutoWidth: true,
             showBorders: true,
             filterRow: {
                 visible: false
@@ -677,7 +680,7 @@
             scrolling: {
                 mode: "single"
             },
-            height: 400,
+            //height: 400,
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
@@ -707,21 +710,207 @@
                 },
                 //{ dataField: 'LoadCode', caption: 'Yük Kodu', allowEditing: false, width:150},
                 //{ dataField: 'VoyageStatusStr', caption: 'Yük Durum', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
-                { dataField: 'CustomerFirmName', caption: 'Müşteri', allowEditing: false },
-                { dataField: 'ShipperFirmName', caption: 'Gönderici Firma', allowEditing: false },
-                { dataField: 'BuyerFirmName', caption: 'Alıcı Firma', allowEditing: false },
+                //{ dataField: 'CustomerFirmName', caption: 'Müşteri', allowEditing: false },
+                //{ dataField: 'ShipperFirmName', caption: 'Gönderici Firma', allowEditing: false },
+                //{ dataField: 'BuyerFirmName', caption: 'Alıcı Firma', allowEditing: false },
                 //{ dataField: 'OrderTransactionDirectionTypeStr', caption: 'İşlem Yönü', allowEditing: false },
-                { dataField: 'OveralQuantity', caption: 'Toplam Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)', allowEditing: false },
-                { dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası', allowEditing: true },
-                { dataField: 'LoadingLineNo', caption: 'Yükleme Sırası', allowEditing: true },
-                { dataField: 'BuyerCityName', caption: 'Boş. Şehri', allowEditing: false },
-                { dataField: 'BuyerCountryName', caption: 'Boş. Ülke', allowEditing: false },
+                //{ dataField: 'OveralQuantity', caption: 'Toplam Kap/Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)', allowEditing: false },
+                //{ dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası', allowEditing: true },
+                //{ dataField: 'LoadingLineNo', caption: 'Yükleme Sırası', allowEditing: true },
+                //{ dataField: 'BuyerCityName', caption: 'Boş. Şehri', allowEditing: false },
+                //{ dataField: 'BuyerCountryName', caption: 'Boş. Ülke', allowEditing: false },
                 //{ dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 //{ dataField: 'OveralVolume', caption: 'Toplam Hacim(M3)', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
 
             ]
         });
+        $('#shipperLoadList').dxDataGrid({
+            dataSource:
+            {
+                load: function () { return $scope.modelObject.VoyageDetails },
+                remove: function (key) {
+                    var obj = $scope.modelObject.VoyageDetails.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.modelObject.VoyageDetails.splice($scope.modelObject.VoyageDetails.indexOf(obj), 1);
+                    }
+                },
+                update: function (key, values) {
+                    var obj = $scope.modelObject.VoyageDetails.find(d => d.Id == key);
+                    if (obj != null) {
+                        if (typeof values.DischargeLineNo != 'undefined') { obj.DischargeLineNo = values.DischargeLineNo; }
+                        if (typeof values.DeclarationX1No != 'undefined') { obj.DeclarationX1No = values.DeclarationX1No; }
+                        if (typeof values.DischargeDateStr != 'undefined') { obj.DischargeDateStr = values.DischargeDateStr; obj.DischargeDate = values.DischargeDateStr; }
+                        if (typeof values.T1T2StartDateStr != 'undefined') { obj.T1T2StartDateStr = values.T1T2StartDateStr; obj.T1T2StartDate = values.T1T2StartDateStr; }
+                        if (typeof values.LoadingLineNo != 'undefined') { obj.LoadingLineNo = values.LoadingLineNo; }
+                        if (typeof values.T1T2No != 'undefined') { obj.T1T2No = values.T1T2No; }
+                        if (typeof values.LoadingDateStr != 'undefined') { obj.LoadingDateStr = values.LoadingDateStr; obj.LoadingDate = values.LoadingDateStr; }
+                    }
+                },
+                key: 'Id'
+            },
+            showColumnLines: true,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: false,
+            showBorders: true,
+            filterRow: {
+                visible: false
+            },
+            headerFilter: {
+                visible: false
+            },
+            groupPanel: {
+                visible: false
+            },
+            scrolling: {
+                mode: "virtual"
+            },
+            //height: 200,
+            editing: {
+                allowUpdating: true,
+                mode: 'cell'
+            },
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            repaintChangesOnly: true,
+            columns: [
+                { dataField: 'OrderUploadPointTypeStr', caption: 'Yükleme Noktası', allowEditing: false },
+                {
+                    dataField: 'LoadCode', caption: 'Yük Kodu',
+                    lookup: {
+                        dataSource: $scope.waitingLoadList,
+                        valueExpr: "LoadCode",
+                        displayExpr: "Yük Kodu"
+                    },
+                    allowSorting: false,
+                    //width: 70,
+                    validationRules: [{ type: "required" }],
+                    editCellTemplate: $scope.dropDownBoxEditorWaitingLoadTemplate,
+                    cellTemplate: function (container, options) {
+                        if (typeof options.row.data.LoadCode != 'undefined'
+                            && options.row.data.LoadCode != null && options.row.data.LoadCode.length > 0)
+                            container.text(options.row.data.LoadCode);
+                        else
+                            container.text(options.displayValue);
+                    }
+                },
+                //{ dataField: 'LoadCode', caption: 'Yük Kodu', allowEditing: false, width:150},
+                //{ dataField: 'VoyageStatusStr', caption: 'Yük Durum', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
+                { dataField: 'CustomerFirmName', caption: 'Müşteri', allowEditing: false },
+                { dataField: 'ManufacturerFirmName', caption: 'İmalatçı Firma', allowEditing: false },
+                //{ dataField: 'BuyerFirmName', caption: 'Alıcı Firma', allowEditing: false },
+                { dataField: 'OveralQuantity', caption: 'Toplam Kap/Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)', allowEditing: false },
+                { dataField: 'ShipperFirmAddress', caption: 'Açık Adres', allowEditing: false },
+                { dataField: 'ShipperCityName', caption: 'Yük. Şehri', allowEditing: false },
+                { dataField: 'ShipperCountryName', caption: 'Yük. Ülke', allowEditing: false },
+                { dataField: 'ExitCustomsName', caption: 'Varış Gümrüğü', allowEditing: false },
+                { dataField: 'DeclarationX1No', caption: 'Beyan No', allowEditing: true },
+                { dataField: 'T1T2No', caption: 'T1/T2No', allowEditing: true },
+                { dataField: 'T1T2StartDate', caption: 'T1/T2 Başlangıç Tarih', dataType: 'date', allowEditing: true },
+                { dataField: 'CmrShipperFirmName', caption: 'Bey. Gönderici Firma', allowEditing: false },
+                { dataField: 'CmrBuyerFirmName', caption: 'Bey. Alıcı Firma', allowEditing: false },
+                { dataField: 'LoadingLineNo', caption: 'Yükleme Sırası', allowEditing: true },
+                { dataField: 'FirmCustomsExitName', caption: 'Çıkış Gümrükçüsü', allowEditing: false },
+                { dataField: 'LoadingDateStr', caption: 'Yükleme Tarih', dataType:'date', allowEditing: true },
+
+                //{ dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'OveralVolume', caption: 'Toplam Hacim(M3)', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+
+            ]
+        });
+        $('#buyerLoadList').dxDataGrid({
+            dataSource:
+            {
+                load: function () { return $scope.modelObject.VoyageDetails },
+                remove: function (key) {
+                    var obj = $scope.modelObject.VoyageDetails.find(d => d.Id == key);
+                    if (obj != null) {
+                        $scope.modelObject.VoyageDetails.splice($scope.modelObject.VoyageDetails.indexOf(obj), 1);
+                    }
+                },
+                update: function (key, values) {
+                    var obj = $scope.modelObject.VoyageDetails.find(d => d.Id == key);
+                    if (obj != null) {
+                        if (typeof values.DischargeLineNo != 'undefined') { obj.DischargeLineNo = values.DischargeLineNo; }
+                        if (typeof values.DeclarationX1No != 'undefined') { obj.DeclarationX1No = values.DeclarationX1No; }
+                        if (typeof values.DischargeDateStr != 'undefined') { obj.DischargeDateStr = values.DischargeDateStr; obj.DischargeDate = values.DischargeDateStr; }
+                        if (typeof values.LoadingLineNo != 'undefined') { obj.LoadingLineNo = values.LoadingLineNo; }
+                        if (typeof values.T1T2No != 'undefined') { obj.T1T2No = values.T1T2No; }
+                        if (typeof values.LoadingDateStr != 'undefined') { obj.LoadingDateStr = values.LoadingDateStr; obj.LoadingDate = values.LoadingDateStr; }                    }
+                },
+                key: 'Id'
+            },
+            showColumnLines: true,
+            showRowLines: true,
+            rowAlternationEnabled: true,
+            focusedRowEnabled: false,
+            showBorders: true,
+            filterRow: {
+                visible: false
+            },
+            headerFilter: {
+                visible: false
+            },
+            groupPanel: {
+                visible: false
+            },
+            scrolling: {
+                mode: "virtual"
+            },
+            //height: 200,
+            editing: {
+                allowUpdating: true,
+                mode: 'cell'
+            },
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            repaintChangesOnly: true,
+            columns: [
+                { dataField: 'OrderUploadPointTypeStr', caption: 'Boşaltma Noktası', allowEditing: false },
+                {
+                    dataField: 'LoadCode', caption: 'Yük Kodu',
+                    lookup: {
+                        dataSource: $scope.waitingLoadList,
+                        valueExpr: "LoadCode",
+                        displayExpr: "Yük Kodu"
+                    },
+                    allowSorting: false,
+                    //width: 70,
+                    validationRules: [{ type: "required" }],
+                    editCellTemplate: $scope.dropDownBoxEditorWaitingLoadTemplate,
+                    cellTemplate: function (container, options) {
+                        if (typeof options.row.data.LoadCode != 'undefined'
+                            && options.row.data.LoadCode != null && options.row.data.LoadCode.length > 0)
+                            container.text(options.row.data.LoadCode);
+                        else
+                            container.text(options.displayValue);
+                    }
+                },
+                //{ dataField: 'LoadCode', caption: 'Yük Kodu', allowEditing: false, width:150},
+                //{ dataField: 'VoyageStatusStr', caption: 'Yük Durum', dataType: 'date', format: 'dd.MM.yyyy', allowEditing: false },
+                { dataField: 'CustomerFirmName', caption: 'Müşteri', allowEditing: false },
+                { dataField: 'ReelOwnerFirmName', caption: 'Gerçek Alı. Firma', allowEditing: false },
+                //{ dataField: 'BuyerFirmName', caption: 'Alıcı Firma', allowEditing: false },
+                { dataField: 'OveralQuantity', caption: 'Toplam Kap/Miktar', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'OveralWeight', caption: 'Toplam Ağırlık(KG)', allowEditing: false },
+                { dataField: 'BuyerFirmAddress', caption: 'Açık Adres', allowEditing: false },
+                { dataField: 'BuyerCityName', caption: 'Boş. Şehri', allowEditing: false },
+                { dataField: 'BuyerCountryName', caption: 'Boş. Ülke', allowEditing: false },
+                { dataField: 'ExitCustomsName', caption: 'Varış Gümrüğü', allowEditing: false },
+                { dataField: 'FirmCustomsExitName', caption: 'Varış Gümrükçüsü', allowEditing: false },
+                { dataField: 'DeclarationX1No', caption: 'Beyan No', allowEditing: true },
+                { dataField: 'CmrShipperFirmName', caption: 'Bey. Gönderici Firma', allowEditing: false },
+                { dataField: 'CmrBuyerFirmName', caption: 'Bey. Alıcı Firma', allowEditing: false },
+                { dataField: 'DischargeLineNo', caption: 'Boşaltma Sırası', allowEditing: true },
+                { dataField: 'DischargeDateStr', caption: 'Boşaltma Tarih', dataType: 'date', allowEditing: true },
+                //{ dataField: 'OveralLadametre', caption: 'Toplam Ladametre', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                //{ dataField: 'OveralVolume', caption: 'Toplam Hacim(M3)', allowEditing: false, dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+
+            ]
+        });
+
     }
     $scope.bindVoyageDrivers = function () {
         $('#driverList').dxDataGrid({
@@ -741,9 +930,11 @@
                             var driverObj = $scope.driverList.find(d => d.Id == values.DriverId);
                             obj.DriverId = driverObj.Id;
                         }
-                        if (typeof values.TowinfVehicleId != 'undefined') {
-                            var tVehicleObj = $scope.towingVehicleList.find(d => d.Id == values.TowinfVehicleId);
-                            obj.TowinfVehicleId = tVehicleObj.Id;
+                        if (typeof values.TowingVehicleId != 'undefined') {
+                            var tVehicleObj = $scope.towingVehicleList.find(d => d.Id == values.TowingVehicleId);
+                            obj.TowingVehicleId = tVehicleObj.Id;
+                            obj.VehicleAllocationTypeStr = tVehicleObj.VehicleAllocationTypeStr;
+                            obj.OwnerFirmName = tVehicleObj.OwnerFirmName;
                         }
                         if (typeof values.StartDateStr != 'undefined') { obj.StartDateStr = values.StartDateStr; obj.StartDate = values.StartDateStr; }
                         if (typeof values.EndDateStr != 'undefined') { obj.EndDateStr = values.EndDateStr; obj.EndDate = values.EndDateStr; }
@@ -782,7 +973,7 @@
             showRowLines: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: false,
-            columnAutoWidth: true,
+            //columnAutoWidth: true,
             showBorders: true,
             filterRow: {
                 visible: false
@@ -845,7 +1036,10 @@
                         else
                             container.text(options.displayValue);
                     }
-                },            ]
+                },
+                { dataField: 'VehicleAllocationTypeStr', caption: 'Çekici Tip' },
+                { dataField: 'OwnerFirmName', caption: 'Çekici İşlem Firma' }
+            ]
         });
     }
 

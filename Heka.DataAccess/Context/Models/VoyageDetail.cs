@@ -24,6 +24,7 @@ namespace Heka.DataAccess.Context
         public string DocumentNo { get; set; }
         public int? OrderUploadType { get; set; }
         public int? OrderUploadPointType { get; set; }
+        public int? DischangePointType { get; set; }
         public int? OrderTransactionDirectionType { get; set; }
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
@@ -32,6 +33,7 @@ namespace Heka.DataAccess.Context
         public int? OveralQuantity { get; set; }
 
         public DateTime? LoadingDate { get; set; }
+        public Nullable<System.DateTime> T1T2StartDate { get; set; }
 
         [ForeignKey("Invoice")]
         public int? InvoiceId { get; set; }
@@ -78,7 +80,15 @@ namespace Heka.DataAccess.Context
         public string BringingToWarehousePlate { get; set; }
         public int? DischargeLineNo { get; set; }
         public int? LoadingLineNo { get; set; }
-
+        public string DeclarationX1No { get; set; }
+        public string BuyerFirmAddress { get; set; }
+        public string ShipperFirmAddress { get; set; }
+        public string CmrBuyerFirmAddress { get; set; }
+        public string CmrShipperFirmAddress { get; set; }
+        [ForeignKey("CmrShipperFirm")]
+        public int? CmrShipperFirmId { get; set; }
+        [ForeignKey("CmrBuyerFirm")]
+        public int? CmrBuyerFirmId { get; set; }
         [ForeignKey("CityShipper")]
         public Nullable<int> ShipperCityId { get; set; }
 
@@ -118,6 +128,15 @@ namespace Heka.DataAccess.Context
         [ForeignKey("Rota")]
         public Nullable<int> RotaId { get; set; }
 
+        [ForeignKey("FirmManufacturer")]
+        public int? ManufacturerFirmId { get; set; }
+
+        [ForeignKey("FirmCustomsExit")]
+        public int? FirmCustomsExitId { get; set; }
+
+        [ForeignKey("FirmReelOwner")]
+        public int? ReelOwnerFirmId { get; set; }
+
         [ForeignKey("User")]
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> CreatDate { get; set; }
@@ -142,6 +161,12 @@ namespace Heka.DataAccess.Context
         public virtual Vehicle Vehicle { get; set; }
         public virtual Voyage Voyage { get; set; }
         public virtual Rota Rota { get; set; }
+        public virtual Firm CmrShipperFirm { get; set; }
+        public virtual Firm CmrBuyerFirm { get; set; }
+        public virtual Firm FirmManufacturer { get; set; }
+        public virtual Firm FirmCustomsExit { get; set; }
+        public virtual Firm FirmReelOwner { get; set; }
+
         public int LineNumber { get; set; }
     }
 }

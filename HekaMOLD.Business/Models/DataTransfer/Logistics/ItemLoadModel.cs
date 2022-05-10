@@ -48,6 +48,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public DateTime? IntendedArrivalDate { get; set; }
         public int? FirmCustomsArrivalId { get; set; }
         public int? FirmCustomsExitId { get; set; }
+        public int? AgentFirmId { get; set; }
         public int? VoyageStartCityId { get; set; }
         public int? VoyageEndCityId { get; set; }
         public int? VoyageStartCountryId { get; set; }
@@ -81,6 +82,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public Nullable<System.DateTime> KapikuleEntryDate { get; set; }
 
         public Nullable<System.DateTime> KapikuleExitDate { get; set; }
+        //Faturalastirildi
+        public bool? Billed { get; set; }
+        public string InvoiceDocumentNo { get; set; }
+        public Nullable<System.DateTime> InvoiceDate { get; set; }
         public int? EntryCustomsId { get; set; }
         public int? ExitCustomsId { get; set; }
         public DateTime? DateOfNeed { get; set; }
@@ -91,6 +96,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public Nullable<int> DriverId { get; set; }
         public int? UserAuthorId { get; set; }
         public DateTime? LoadingDate { get; set; }
+        public Nullable<System.DateTime> T1T2StartDate { get; set; }
         public int? InvoiceId { get; set; }
         public int? InvoiceStatus { get; set; }
         //Navlun bedeli
@@ -130,6 +136,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string ExitCustomsName { get; set; }
         public string ShipperFirmCode { get; set; }
         public string ShipperFirmName { get; set; }
+        public string AgentFirmName { get; set; }
         public string BuyerFirmCode { get; set; }
         public string BuyerFirmName { get; set; }
         public string CmrShipperFirmCode { get; set; }
@@ -197,6 +204,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string VehicleTraillerPlate { get; set; }
         public string VehicleTraillerMarkAndModel { get; set; }
         public string VoyageConvertedStr { get; set; }
+        public string InvoiceDateStr { get; set; }
+        public string T1T2StartDateStr { get; set; }
         #endregion
     }
 }

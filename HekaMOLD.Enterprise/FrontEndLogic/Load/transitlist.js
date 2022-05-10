@@ -103,6 +103,7 @@
             columns: [
                 { dataField: 'Id', caption: 'Id', visible: false, sortOrder: "desc", },
                 { dataField: 'UserAuthorName', caption: 'Temsilci/Yükü Veren' },
+                { dataField: 'Billed', caption: 'Faturalaştırıldı', dataType: 'boolean' },
                 { dataField: 'LoadCode', caption: 'Yük Kodu' },
                 { dataField: 'VoyageConverted', caption: 'Sef. Dön.', dataType: 'boolean' },
                 { dataField: 'LoadStatusTypeStr', caption: 'Durum' },
@@ -115,6 +116,7 @@
                 { dataField: 'CustomerFirmName', caption: 'Müşteri' },
                 { dataField: 'ManufacturerFirmName', caption: 'İmalatçı Firma' },
                 { dataField: 'ReelOwnerFirmName', caption: 'Gerçek Mal Sahibi' },
+                { dataField: 'AgentFirmName', caption: 'Komisyoncu Firma' },
                 { dataField: 'OrderCalculationTypeStr', caption: 'Hesaplama Tipi' },
                 { dataField: 'OveralQuantity', caption: 'Toplam Miktar' },
                 { dataField: 'OveralWeight', caption: 'Toplam Ağırlık (KG)' },

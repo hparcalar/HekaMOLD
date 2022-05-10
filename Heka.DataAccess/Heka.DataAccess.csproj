@@ -725,6 +725,50 @@
     <Compile Include="Migrations\202204152243228_VehicleUpdate%28ExplanationAdd%29.designer.cs">
       <DependentUpon>202204152243228_VehicleUpdate%28ExplanationAdd%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204180841540_ItemLoadUpdate%28InvoiceDateAdd%29.cs" />
+    <Compile Include="Migrations\202204180841540_ItemLoadUpdate%28InvoiceDateAdd%29.designer.cs">
+      <DependentUpon>202204180841540_ItemLoadUpdate%28InvoiceDateAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204181548254_VoyageDetailUpdate%28X1Add%29.cs" />
+    <Compile Include="Migrations\202204181548254_VoyageDetailUpdate%28X1Add%29.designer.cs">
+      <DependentUpon>202204181548254_VoyageDetailUpdate%28X1Add%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204181603475_VoyageDetailUpdate%28CmrBuyerFirmIdAdd%29.cs" />
+    <Compile Include="Migrations\202204181603475_VoyageDetailUpdate%28CmrBuyerFirmIdAdd%29.designer.cs">
+      <DependentUpon>202204181603475_VoyageDetailUpdate%28CmrBuyerFirmIdAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204181612407_VoyageDetailUpdate%28CmrBuyerFirmIdAdd2%29.cs" />
+    <Compile Include="Migrations\202204181612407_VoyageDetailUpdate%28CmrBuyerFirmIdAdd2%29.designer.cs">
+      <DependentUpon>202204181612407_VoyageDetailUpdate%28CmrBuyerFirmIdAdd2%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204182057313_VoyageDetailUpdate%28ManufacturerFirmIdAdd2%29.cs" />
+    <Compile Include="Migrations\202204182057313_VoyageDetailUpdate%28ManufacturerFirmIdAdd2%29.designer.cs">
+      <DependentUpon>202204182057313_VoyageDetailUpdate%28ManufacturerFirmIdAdd2%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204182138320_VoyageDetailUpdate%28FirmCustomsExitAdd%29.cs" />
+    <Compile Include="Migrations\202204182138320_VoyageDetailUpdate%28FirmCustomsExitAdd%29.designer.cs">
+      <DependentUpon>202204182138320_VoyageDetailUpdate%28FirmCustomsExitAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204182247225_VoyageDetailUpdate%28FirmAddressAdd%29.cs" />
+    <Compile Include="Migrations\202204182247225_VoyageDetailUpdate%28FirmAddressAdd%29.designer.cs">
+      <DependentUpon>202204182247225_VoyageDetailUpdate%28FirmAddressAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204182309308_VoyageDetailUpdate%28ReelOwnerFirmAdd%29.cs" />
+    <Compile Include="Migrations\202204182309308_VoyageDetailUpdate%28ReelOwnerFirmAdd%29.designer.cs">
+      <DependentUpon>202204182309308_VoyageDetailUpdate%28ReelOwnerFirmAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204200801165_VoyageDetailUpdate%28DischargerPointTypeAdd%29.cs" />
+    <Compile Include="Migrations\202204200801165_VoyageDetailUpdate%28DischargerPointTypeAdd%29.designer.cs">
+      <DependentUpon>202204200801165_VoyageDetailUpdate%28DischargerPointTypeAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204220901036_ItemLoadUpdate%28FirmAgentAdd%29.cs" />
+    <Compile Include="Migrations\202204220901036_ItemLoadUpdate%28FirmAgentAdd%29.designer.cs">
+      <DependentUpon>202204220901036_ItemLoadUpdate%28FirmAgentAdd%29.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204251226340_ItemLoadUpdate%28T1T2StartDate%29.cs" />
+    <Compile Include="Migrations\202204251226340_ItemLoadUpdate%28T1T2StartDate%29.designer.cs">
+      <DependentUpon>202204251226340_ItemLoadUpdate%28T1T2StartDate%29.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1147,6 +1191,39 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202204152243228_VehicleUpdate%28ExplanationAdd%29.resx">
       <DependentUpon>202204152243228_VehicleUpdate%28ExplanationAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204180841540_ItemLoadUpdate%28InvoiceDateAdd%29.resx">
+      <DependentUpon>202204180841540_ItemLoadUpdate%28InvoiceDateAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204181548254_VoyageDetailUpdate%28X1Add%29.resx">
+      <DependentUpon>202204181548254_VoyageDetailUpdate%28X1Add%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204181603475_VoyageDetailUpdate%28CmrBuyerFirmIdAdd%29.resx">
+      <DependentUpon>202204181603475_VoyageDetailUpdate%28CmrBuyerFirmIdAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204181612407_VoyageDetailUpdate%28CmrBuyerFirmIdAdd2%29.resx">
+      <DependentUpon>202204181612407_VoyageDetailUpdate%28CmrBuyerFirmIdAdd2%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204182057313_VoyageDetailUpdate%28ManufacturerFirmIdAdd2%29.resx">
+      <DependentUpon>202204182057313_VoyageDetailUpdate%28ManufacturerFirmIdAdd2%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204182138320_VoyageDetailUpdate%28FirmCustomsExitAdd%29.resx">
+      <DependentUpon>202204182138320_VoyageDetailUpdate%28FirmCustomsExitAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204182247225_VoyageDetailUpdate%28FirmAddressAdd%29.resx">
+      <DependentUpon>202204182247225_VoyageDetailUpdate%28FirmAddressAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204182309308_VoyageDetailUpdate%28ReelOwnerFirmAdd%29.resx">
+      <DependentUpon>202204182309308_VoyageDetailUpdate%28ReelOwnerFirmAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204200801165_VoyageDetailUpdate%28DischargerPointTypeAdd%29.resx">
+      <DependentUpon>202204200801165_VoyageDetailUpdate%28DischargerPointTypeAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204220901036_ItemLoadUpdate%28FirmAgentAdd%29.resx">
+      <DependentUpon>202204220901036_ItemLoadUpdate%28FirmAgentAdd%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204251226340_ItemLoadUpdate%28T1T2StartDate%29.resx">
+      <DependentUpon>202204251226340_ItemLoadUpdate%28T1T2StartDate%29.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

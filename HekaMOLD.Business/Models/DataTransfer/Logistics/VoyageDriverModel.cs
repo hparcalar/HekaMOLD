@@ -19,6 +19,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string TowingVehiclePlate { get; set; }
         public string TowingVehicleMark { get; set; }
         public string TowingVehicleVersiyon { get; set; }
+        public string VehicleAllocationTypeStr { get; set; }
+        public string OwnerFirmName { get; set; }
         public bool NewDetail { get; set; }
 
     }

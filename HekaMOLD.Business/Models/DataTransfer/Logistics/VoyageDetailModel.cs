@@ -20,6 +20,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string DocumentNo { get; set; }
         public int? OrderUploadType { get; set; }
         public int? OrderUploadPointType { get; set; }
+        public int? DischangePointType { get; set; }
         public int? OrderTransactionDirectionType { get; set; }
         public int? OrderCalculationType { get; set; }
         public DateTime? LoadOutDate { get; set; }
@@ -28,6 +29,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public int? OveralQuantity { get; set; }
 
         public DateTime? LoadingDate { get; set; }
+        public Nullable<System.DateTime> T1T2StartDate { get; set; }
 
         public int? InvoiceId { get; set; }
 
@@ -70,25 +72,26 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string BringingToWarehousePlate { get; set; }
         public int? DischargeLineNo { get; set; }
         public int? LoadingLineNo { get; set; }
+        public string DeclarationX1No { get; set; }
         public Nullable<int> ShipperCityId { get; set; }
-
         public int? BuyerCityId { get; set; }
-
         public Nullable<int> ShipperCountryId { get; set; }
-
         public int? BuyerCountryId { get; set; }
-
         public Nullable<int> CustomerFirmId { get; set; }
-
         public int? ShipperFirmId { get; set; }
-
         public int? BuyerFirmId { get; set; }
-
         public int? EntryCustomsId { get; set; }
-
         public int? ExitCustomsId { get; set; }
-
+        public int? CmrShipperFirmId { get; set; }
+        public int? CmrBuyerFirmId { get; set; }
         public Nullable<int> ItemLoadId { get; set; }
+        public int? ManufacturerFirmId { get; set; }
+        public int? FirmCustomsExitId { get; set; }
+        public string BuyerFirmAddress { get; set; }
+        public string ShipperFirmAddress { get; set; }
+        public string CmrBuyerFirmAddress { get; set; }
+        public string CmrShipperFirmAddress { get; set; }
+        public int? ReelOwnerFirmId { get; set; }
 
         public Nullable<int> VoyageId { get; set; }
         public Nullable<int> RotaId { get; set; }
@@ -124,7 +127,11 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string ShipperCountryName { get; set; }
         public string BuyerCountryName { get; set; }
         public string CreatedUserName { get; set; }
-
+        public string CmrShipperFirmCode { get; set; }
+        public string CmrShipperFirmName { get; set; }
+        public string CmrBuyerFirmCode { get; set; }
+        public string CmrBuyerFirmName { get; set; }
+        public string ManufacturerFirmName { get; set; }
         public string ForexTypeCode { get; set; }
         public string ReadinessDateStr { get; set; }
         public string DeliveryFromCustomerDateStr { get; set; }
@@ -132,7 +139,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string TClosingDateStr { get; set; }
         public string CrmDeliveryDateStr { get; set; }
         public string CmrCustomerDeliveryDateStr { get; set; }
-        public string FirmArrivalCustomsName { get; set; }
+        public string FirmCustomsArrivalName { get; set; }
         public string ScheduledUploadDateStr { get; set; }
         public string ScheduledUploadWeek { get; set; }
         public string LoadAddress { get; set; }
@@ -145,7 +152,11 @@ namespace HekaMOLD.Business.Models.DataTransfer.Logistics
         public string RotaEndCityName { get; set; }
         public string RotaEndCityPostCode { get; set; }
         public string VoyageCode { get; set; }
+        public string FirmCustomsExitName { get; set; }
+        public string ReelOwnerFirmName { get; set; }
+        public string T1T2StartDateStr { get; set; }
         public bool NewDetail { get;  set; }
+        
 
         #endregion
     }

@@ -85,8 +85,12 @@ namespace Heka.DataAccess.Context
         public int? DischargeLineNo { get; set; }
         public Nullable<System.DateTime> OrderDate { get; set; }
         public Nullable<System.DateTime> KapikuleEntryDate { get; set; }
-
+        public Nullable<System.DateTime> T1T2StartDate { get; set; }
         public Nullable<System.DateTime> KapikuleExitDate { get; set; }
+        //Faturalastirildi
+        public bool? Billed { get; set; }
+        public string InvoiceDocumentNo { get; set; }
+        public Nullable<System.DateTime> InvoiceDate { get; set; }
 
         [ForeignKey("CityShipper")]
         public Nullable<int> ShipperCityId { get; set; }
@@ -129,6 +133,9 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("FirmManufacturer")]
         public int? ManufacturerFirmId { get; set; }
+
+        [ForeignKey("FirmAgent")]
+        public int? AgentFirmId { get; set; }
 
         [ForeignKey("FirmReelOwner")]
         public int? ReelOwnerFirmId { get; set; }
@@ -199,6 +206,7 @@ namespace Heka.DataAccess.Context
         public virtual Firm FirmCustomer { get; set; }
         public virtual Firm FirmCmrBuyer { get; set; }
         public virtual Firm FirmCmrShipper { get; set; }
+        public virtual Firm FirmAgent { get; set; }
         public virtual Customs CustomsEntry { get; set; }
         public virtual Customs CustomsExit { get; set; }
         public virtual Firm FirmCustomsArrival { get; set; }

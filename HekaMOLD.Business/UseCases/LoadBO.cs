@@ -48,6 +48,7 @@ namespace HekaMOLD.Business.UseCases
                 Id = d.Id,
                 LoadCode = d.LoadCode,
                 OrderNo = d.OrderNo,
+                Billed = d.Billed == true ? d.Billed : false,
                 VoyageCode = d.VoyageCode,
                 LoadWeek = d.LoadWeek,
                 VoyageConverted = d.VoyageConverted == true ? d.VoyageConverted :false,
@@ -92,6 +93,8 @@ namespace HekaMOLD.Business.UseCases
                 UserAuthorName = d.UserAuthor != null ? d.UserAuthor.UserName :"",
                 Explanation = d.Explanation,
                 ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
+                AgentFirmName = d.FirmAgent !=null ? d.FirmAgent.FirmName:"",
+
 
             }).ToArray();
 
@@ -127,6 +130,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 Id = d.Id,
                 LoadCode = d.LoadCode,
+                Billed = d.Billed == true ? d.Billed : false,
                 OrderNo = d.OrderNo,
                 VoyageCode = d.VoyageCode,
                 LoadWeek = d.LoadWeek,
@@ -172,6 +176,7 @@ namespace HekaMOLD.Business.UseCases
                 UserAuthorName = d.UserAuthor != null ? d.UserAuthor.UserName : "",
                 Explanation = d.Explanation,
                 ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
+                AgentFirmName = d.FirmAgent != null ? d.FirmAgent.FirmName : "",
 
             }).ToArray();
         }
@@ -185,6 +190,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 Id = d.Id,
                 LoadCode = d.LoadCode,
+                Billed = d.Billed == true ? d.Billed : false,
                 OrderNo = d.OrderNo,
                 LoadWeek = d.LoadWeek,
                 VoyageConverted = d.VoyageConverted == true ? d.VoyageConverted : false,
@@ -229,7 +235,7 @@ namespace HekaMOLD.Business.UseCases
                 UserAuthorName = d.UserAuthor != null ? d.UserAuthor.UserName : "",
                 Explanation = d.Explanation,
                 ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
-
+                AgentFirmName = d.FirmAgent != null ? d.FirmAgent.FirmName : "",
             }).ToArray();
 
         }
@@ -243,6 +249,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 Id = d.Id,
                 LoadCode = d.LoadCode,
+                Billed = d.Billed == true ? d.Billed : false,
                 OrderNo = d.OrderNo,
                 LoadWeek = d.LoadWeek,
                 VoyageCode = d.VoyageCode,
@@ -288,7 +295,7 @@ namespace HekaMOLD.Business.UseCases
                 Explanation = d.Explanation,
                 UserAuthorName = d.UserAuthor != null ? d.UserAuthor.UserName : "",
                 ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
-
+                AgentFirmName = d.FirmAgent != null ? d.FirmAgent.FirmName : "",
             }).ToArray();
 
         }
@@ -301,6 +308,7 @@ namespace HekaMOLD.Business.UseCases
             {
                 Id = d.Id,
                 LoadCode = d.LoadCode,
+                Billed = d.Billed == true ? d.Billed : false,
                 OrderNo = d.OrderNo,
                 LoadWeek = d.LoadWeek,
                 VoyageCode = d.VoyageCode,
@@ -346,7 +354,7 @@ namespace HekaMOLD.Business.UseCases
                 UserAuthorName = d.UserAuthor != null ? d.UserAuthor.UserName : "",
                 Explanation = d.Explanation,
                 ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "",
-
+                AgentFirmName = d.FirmAgent != null ? d.FirmAgent.FirmName : "",
             }).ToArray();
 
         }
@@ -383,6 +391,8 @@ namespace HekaMOLD.Business.UseCases
                 model.VoyageEndDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.VoyageEndDate);
                 model.KapikuleEntryDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.KapikuleEntryDate);
                 model.KapikuleExitDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.KapikuleExitDate);
+                model.InvoiceDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.InvoiceDate);
+                model.T1T2StartDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.T1T2StartDate);
                 model.OrderNo = dbObj.OrderNo;
                 model.VoyageConverted = dbObj.VoyageConverted;
                 model.CustomerFirmCode = dbObj.FirmCustomer != null ? dbObj.FirmCustomer.FirmCode : "";
@@ -558,100 +568,48 @@ namespace HekaMOLD.Business.UseCases
                     throw new Exception("Aynı koda sahip başka bir yük mevcuttur. Lütfen farklı bir kod giriniz.");
 
                 if (!string.IsNullOrEmpty(model.LoadDateStr))
-                {
                     model.LoadDate = DateTime.ParseExact(model.LoadDateStr, "dd.MM.yyyy",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
                 if (!string.IsNullOrEmpty(model.VoyageExitDateStr))
-                {
-                    model.VoyageExitDate = DateTime.ParseExact(model.VoyageExitDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.VoyageExitDate = DateTime.ParseExact(model.VoyageExitDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                if (!string.IsNullOrEmpty(model.InvoiceDateStr))
+                    model.InvoiceDate = DateTime.ParseExact(model.InvoiceDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.VoyageEndDateStr))
-                {
-                    model.VoyageEndDate = DateTime.ParseExact(model.VoyageEndDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.VoyageEndDate = DateTime.ParseExact(model.VoyageEndDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.KapikuleEntryDateStr))
-                {
-                    model.KapikuleEntryDate = DateTime.ParseExact(model.KapikuleEntryDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.KapikuleEntryDate = DateTime.ParseExact(model.KapikuleEntryDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.KapikuleExitDateStr))
-                {
-                    model.KapikuleExitDate = DateTime.ParseExact(model.KapikuleExitDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.KapikuleExitDate = DateTime.ParseExact(model.KapikuleExitDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.LoadDateStr))
-                {
-                    model.LoadDate = DateTime.ParseExact(model.LoadDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.LoadDate = DateTime.ParseExact(model.LoadDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.LoadExitDateStr))
-                {
-                    model.LoadExitDate = DateTime.ParseExact(model.LoadExitDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.LoadExitDate = DateTime.ParseExact(model.LoadExitDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.DeliveryDateStr))
-                {
-                    model.DeliveryDate = DateTime.ParseExact(model.DeliveryDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.DeliveryDate = DateTime.ParseExact(model.DeliveryDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.DischargeDateStr))
-                {
-                    model.DischargeDate = DateTime.ParseExact(model.DischargeDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.DischargeDate = DateTime.ParseExact(model.DischargeDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.DateOfNeedStr))
-                {
-                    model.DateOfNeed = DateTime.ParseExact(model.DateOfNeedStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.DateOfNeed = DateTime.ParseExact(model.DateOfNeedStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.LoadOutDateStr))
-                {
-                    model.LoadOutDate = DateTime.ParseExact(model.LoadOutDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.LoadOutDate = DateTime.ParseExact(model.LoadOutDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.LoadingDateStr))
-                {
-                    model.LoadingDate = DateTime.ParseExact(model.LoadingDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.LoadingDate = DateTime.ParseExact(model.LoadingDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.TClosingDateStr))
-                {
-                    model.TClosingDate = DateTime.ParseExact(model.TClosingDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.TClosingDate = DateTime.ParseExact(model.TClosingDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.ReadinessDateStr))
-                {
-                    model.ReadinessDate = DateTime.ParseExact(model.ReadinessDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.ReadinessDate = DateTime.ParseExact(model.ReadinessDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.DeliveryFromCustomerDateStr))
-                {
-                    model.DeliveryFromCustomerDate = DateTime.ParseExact(model.DeliveryFromCustomerDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.DeliveryFromCustomerDate = DateTime.ParseExact(model.DeliveryFromCustomerDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.IntendedArrivalDateStr))
-                {
-                    model.IntendedArrivalDate = DateTime.ParseExact(model.IntendedArrivalDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.IntendedArrivalDate = DateTime.ParseExact(model.IntendedArrivalDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.CmrCustomerDeliveryDateStr))
-                {
-                    model.CmrCustomerDeliveryDate = DateTime.ParseExact(model.CmrCustomerDeliveryDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.CmrCustomerDeliveryDate = DateTime.ParseExact(model.CmrCustomerDeliveryDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.BringingToWarehouseDateStr))
-                {
-                    model.BringingToWarehouseDate = DateTime.ParseExact(model.BringingToWarehouseDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.BringingToWarehouseDate = DateTime.ParseExact(model.BringingToWarehouseDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 if (!string.IsNullOrEmpty(model.ScheduledUploadDateStr))
-                {
-                    model.ScheduledUploadDate = DateTime.ParseExact(model.ScheduledUploadDateStr, "dd.MM.yyyy",
-                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                }
+                    model.ScheduledUploadDate = DateTime.ParseExact(model.ScheduledUploadDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                if (!string.IsNullOrEmpty(model.T1T2StartDateStr))
+                    model.T1T2StartDate = DateTime.ParseExact(model.T1T2StartDateStr, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
                 //else if (string.IsNullOrEmpty(model.ScheduledUploadDateStr))
                 //    throw new Exception("Planlanan yükleme tarihi bilgisini giriniz !");
 

@@ -183,12 +183,12 @@
             <!--begin::Row-->
             <div class="row gy-5 gx-xl-8 bg-white">
                 <!--begin::Col-->
-                <div id="kt_content_container" class="container-fluid">
+                <div id="kt_content_container" class="container-fluid dx-viewport">
                     <!--begin::Row-->
 
                     <div class="row  gx-xl-8">
 
-                        <div class="tabs dx-viewport">
+                        <div class="tabs">
                             <div class="tab-button-outer">
                                 <ul id="tab-button">
                                     <li><a href="#tab01">Sefer Bilgi</a></li>
@@ -444,19 +444,42 @@
                                 <div class="row gx-xl-8 mt-2">
                                     <div class="card mt-2 gy-2">
                                         <div class="card-header min-h-10px px-1">
-                                            <button type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
+                                            @*<button type="button" class="btn btn-sm btn-flex btn-primary fw-bolder"
                                                     style="float:right;">
                                                 Yük Bilgileri
-                                            </button>
+                                            </button>*@
                                         </div>
                                         <div class="card-body p-0" @*style="height:200px;*@>
-                                            <div id="plannedLoadList"></div>
-                                            <div class="separator border-dark separator-dashed my-4"></div>
-
+                                            <div id="loadList"></div>
                                         </div>
                                     </div>
-
-
+                                </div>
+                                <div class="row gx-xl-8 mt-2">
+                                    <div class="card mt-2 gy-2">
+                                        <div class="card-header min-h-10px px-1">
+                                            <h6 type="button" class="btn btn-sm btn-flex fw-bolder"
+                                                style="float:right;">
+                                            Yükleme Bilgileri
+                                            </h6>
+                                        </div>
+                                        <div class="card-body p-0" @*style="height:200px;*@>
+                                            <div id="shipperLoadList"></div>
+                                            <div class="separator border-dark separator-dashed my-4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row gx-xl-8 mt-2">
+                                    <div class="card mt-2 gy-2">
+                                        <div class="card-header min-h-10px px-1">
+                                            <h6 type="button" class="btn btn-sm btn-flex fw-bolder"
+                                                style="float:right;">
+                                            Boşaltma Bilgileri
+                                            </h6>
+                                        </div>
+                                        <div class="card-body p-0" @*style="height:200px;*@>
+                                            <div id="buyerLoadList"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div id="tab03" class="tab-contents">
@@ -634,12 +657,6 @@
                             <div id="tab05" class="tab-contents">
                                 <h2>Konum Bilgi</h2>
                             </div>
-
-                        </div>
-                    </div>
-                    <div class="row gx-xl-8 mt-2">
-                        <div class="col-xxl-12 px-0">
-
 
                         </div>
                     </div>

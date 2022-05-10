@@ -317,6 +317,20 @@ namespace HekaMOLD.Business.UseCases
                     }
 
                 }
+                if (dbObj.VoyageStatus == (int)VoyageStatus.Emptied)
+                {
+
+                    foreach (var item in model.VoyageDetails)
+                    {
+                        var dbItemLoad = repoLoad.Get(d => d.Id == item.ItemLoadId);
+
+                        dbItemLoad.DischargeDate = item.DischargeDate;
+                        dbItemLoad.T1T2No = item.T1T2No;
+                        dbItemLoad.DeclarationX1No = item.DeclarationX1No;
+                        //x.MapTo(dbItemLoad);
+                    }
+
+                }
 
                 if (dbObj.VoyageStatus != (int)LoadStatusType.Completed && dbObj.VoyageStatus != (int)LoadStatusType.Cancelled)
                 {
@@ -365,8 +379,15 @@ namespace HekaMOLD.Business.UseCases
 
                             repoVoyageDetail.Add(dbVoyageDetail);
                         }
+                        var dbVoyageDetailTmp = repoVoyageDetail.GetById(item.Id);
+                        var voyageLoadingDate = dbVoyageDetailTmp.LoadingDate;
+                        var voyageDischargeDate = dbVoyageDetailTmp.DischargeDate;
 
                         item.MapTo(dbVoyageDetail);
+                        if (item.LoadingDate == null)
+                            dbVoyageDetail.LoadingDate = voyageLoadingDate;
+                        if (item.DischargeDate == null)
+                            dbVoyageDetail.DischargeDate = voyageDischargeDate;
                         dbVoyageDetail.Voyage = dbObj;
 
                         //if (dbVoyageDetail.VoyageStatus == null || dbVoyageDetail.VoyageStatus == (int)LoadStatusType.Ready)
@@ -626,6 +647,7 @@ namespace HekaMOLD.Business.UseCases
                         Id = d.Id,
                         DischargeLineNo = d.DischargeLineNo,
                         ItemLoadId = d.ItemLoadId,
+                        //DischargeDate = d.DischargeDate,
                         LoadCode = d.LoadCode,
                         LoadingLineNo = d.LoadingLineNo,
                         //LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
@@ -639,11 +661,12 @@ namespace HekaMOLD.Business.UseCases
                         OrderNo = d.OrderNo,
                         //VoyageStatusStr = d.VoyageStatus !=null ? ((VoyageStatus)model.VoyageStatus).ToCaption():"",
                         //LoadDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadDate),
-                        //DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate),
+                        DischargeDateStr = string.Format("{0:dd.MM.yyyy}", d.DischargeDate),
                         CalculationTypePrice = d.CalculationTypePrice,
                         DocumentNo = d.DocumentNo,
                         OrderUploadType = d.OrderUploadType,
                         OrderUploadPointType = d.OrderUploadPointType,
+                        OrderUploadPointTypeStr = d.OrderUploadPointType == 1 ? "Müşteriden  Yükleme" : d.OrderUploadPointType ==2 ? "Depodan Yükleme":"",
                         //ScheduledUploadDateStr = string.Format("{0:dd.MM.yyyy}", d.ScheduledUploadDate),
                         //DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
                         InvoiceId = d.InvoiceId,
@@ -658,6 +681,7 @@ namespace HekaMOLD.Business.UseCases
                         //DeliveryFromCustomerDateStr = string.Format("{0:dd.MM.yyyy}", d.DeliveryFromCustomerDate),
                         //IntendedArrivalDateStr = string.Format("{0:dd.MM.yyyy}", d.IntendedArrivalDate),
                         FirmCustomsArrivalId = d.FirmCustomsArrivalId,
+                        FirmCustomsArrivalName = d.FirmCustomsArrival != null ? d.FirmCustomsArrival.FirmName :"",
                         CustomsExplanation = d.CustomsExplanation,
                         T1T2No = d.T1T2No,
                         //TClosingDateStr = string.Format("{0:dd.MM.yyyy}", d.TClosingDate),
@@ -683,7 +707,24 @@ namespace HekaMOLD.Business.UseCases
                         ShipperFirmName = d.FirmShipper != null ? d.FirmShipper.FirmName : "",
                         CustomerFirmName = d.FirmCustomer != null ? d.FirmCustomer.FirmName:"",
                         EntryCustomsId = d.EntryCustomsId,
+                        EntryCustomsName = d.CustomsEntry != null ? d.CustomsEntry.CustomsName : "",
                         ExitCustomsId = d.ExitCustomsId,
+                        ExitCustomsName = d.CustomsExit != null ? d.CustomsExit.CustomsName:"",
+                        DeclarationX1No = d.DeclarationX1No,
+                        CmrBuyerFirmId = d.CmrBuyerFirmId,
+                        CmrBuyerFirmName = d.CmrBuyerFirm != null ? d.CmrBuyerFirm.FirmName:"",
+                        CmrShipperFirmId = d.CmrShipperFirmId,
+                        CmrShipperFirmName = d.CmrShipperFirm != null ? d.CmrShipperFirm.FirmName : "",
+                        ManufacturerFirmId = d.ManufacturerFirmId,
+                        ManufacturerFirmName = d.FirmManufacturer != null ? d.FirmManufacturer.FirmName:"",
+                        FirmCustomsExitId = d.FirmCustomsExitId,
+                        FirmCustomsExitName = d.FirmCustomsExit != null ? d.FirmCustomsExit.FirmName:"",
+                        ShipperFirmAddress = d.ShipperFirmAddress,
+                        BuyerFirmAddress = d.BuyerFirmAddress,
+                        ReelOwnerFirmId = d.ReelOwnerFirmId,
+                        ReelOwnerFirmName = d.FirmReelOwner != null ? d.FirmReelOwner.FirmName :"",
+                        LoadingDateStr = string.Format("{0:dd.MM.yyyy}", d.LoadingDate),
+                        T1T2StartDateStr = string.Format("{0:dd.MM.yyyy}", d.T1T2StartDate),
                         PlantId = d.PlantId,
                         RotaId = d.RotaId,
                     }).ToArray();
@@ -698,7 +739,10 @@ namespace HekaMOLD.Business.UseCases
                         EndDateStr = string.Format("{0:dd.MM.yyyy}", d.EndDate),
                         StartKmHour = d.StartKmHour,
                         EndKmHour = d.EndKmHour,
-                        TowingVehicleId = d.TowingVehicleId
+                        TowingVehicleId = d.TowingVehicleId,
+                        TowingVehiclePlate = d.Vehicle != null ? d.Vehicle.Plate:"",
+                        VehicleAllocationTypeStr = d.Vehicle != null ? d.Vehicle.VehicleAllocationType == 1 ? "Öz Mal" : "Kiralık":"",
+                        OwnerFirmName = d.Vehicle.Firm != null ? d.Vehicle.Firm.FirmName:""
 
                     }).ToArray();
             }

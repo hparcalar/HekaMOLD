@@ -37,6 +37,7 @@
     $scope.selectedFirmCustomsArrival = {};
     $scope.selectedFirmCustomsExit = {};
     $scope.selectedFirmReelOwner = {};
+    $scope.selectedAgentFirm = {};
     $scope.selectedFirmManufacturer = {};
     $scope.selectedOrderUploadType = {};
     $scope.selectedBuyerFirm = {};
@@ -300,6 +301,7 @@
         $scope.selectedFirmCustomsExit = {};
         $scope.selectedVehicleTrailer = {};
         $scope.selectedFirmReelOwner = {};
+        $scope.selectedAgentFirm = {};
         $scope.selectedFirmManufacturer = {};
         $scope.selectedTowinfVehicle = {};
         $scope.selectedVoyageStartCity = {};
@@ -365,6 +367,11 @@
             $scope.modelObject.ShipperFirmId = $scope.selectedShipperFirm.Id;
         else
             $scope.modelObject.ShipperFirmId = null;
+
+        if (typeof $scope.selectedAgentFirm != 'undefined' && $scope.selectedAgentFirm != null)
+            $scope.modelObject.AgentFirmId = $scope.selectedAgentFirm.Id;
+        else
+            $scope.modelObject.AgentFirmId = null;
 
         if (typeof $scope.selectedBuyerFirm != 'undefined' && $scope.selectedBuyerFirm != null)
             $scope.modelObject.BuyerFirmId = $scope.selectedBuyerFirm.Id;
@@ -597,10 +604,16 @@
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.modelObject = resp.data;
                     $scope.modelObject.LoadWeek = moment().year() + '-' + moment().week();
+
                     if (typeof $scope.modelObject.ShipperFirmId != 'undefined' && $scope.modelObject.ShipperFirmId != null)
                         $scope.selectedShipperFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.ShipperFirmId);
                     else
                         $scope.selectedShipperFirm = {};
+
+                    if (typeof $scope.modelObject.AgentFirmId != 'undefined' && $scope.modelObject.AgentFirmId != null)
+                        $scope.selectedAgentFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.AgentFirmId);
+                    else
+                        $scope.selectedAgentFirm = {};
 
                     if (typeof $scope.modelObject.BuyerFirmId != 'undefined' && $scope.modelObject.BuyerFirmId != null)
                         $scope.selectedBuyerFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.BuyerFirmId);

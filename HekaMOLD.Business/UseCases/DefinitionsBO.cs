@@ -476,6 +476,7 @@ namespace HekaMOLD.Business.UseCases
                 Versiyon = d.Versiyon,
                 KmHour = d.KmHour,
                 HasLoadPlannig = d.HasLoadPlannig,
+                VehicleAllocationType = d.VehicleAllocationType,
                 VehicleAllocationTypeStr = d.VehicleAllocationType == 1 ? "Öz Mal" : "Kiralık",
                 VehicleTypeName = d.VehicleTypeId == 1 ? "OTOMOBİL" : d.VehicleTypeId == 4 ? "KAMYONET" : d.VehicleTypeId == 3 ? "KAMYON" :
                      d.VehicleTypeId == 2 ? "ÇEKİCİ" : d.VehicleTypeId == 5 ? "JİP" : d.VehicleTypeId == 6 ? "ROMÖRK" : "",
@@ -516,6 +517,7 @@ namespace HekaMOLD.Business.UseCases
                 VehicleAllocationTypeStr = d.VehicleAllocationType == 1 ? "Öz Mal" : "Kiralık",
                 VehicleTypeName = d.VehicleTypeId == 1 ? "OTOMOBİL" : d.VehicleTypeId == 4 ? "KAMYONET" : d.VehicleTypeId == 3 ? "KAMYON" :
               d.VehicleTypeId == 2 ? "ÇEKİCİ" : d.VehicleTypeId == 5 ? "JİP" : d.VehicleTypeId == 6 ? "ROMÖRK" : "",
+                OwnerFirmName = d.Firm != null ? d.Firm.FirmName:"",
                 //ContractStartDateStr = string.Format("{0:dd.MM.yyyy}", d.ContractStartDate),
                 //ContractEndDateStr = string.Format("{0:dd.MM.yyyy}", d.ContractEndDate),
             }).ToArray();
@@ -4332,12 +4334,11 @@ namespace HekaMOLD.Business.UseCases
                 .Select(d => new CityModel
                 {
                     Id = d.Id,
-                    CityName = d.CityName,
+                    CityName = d.PostCode +" / "+d.CityName,
                     //CountryId = d.CountryId,
                     PlateCode = d.PlateCode,
                     NumberCode = d.NumberCode,
                     // CountryName = d.Country != null ? d.Country.CountryName : "",
-                    PostCode = d.PostCode,
                 }).ToArray();
 
             return data;
@@ -4744,11 +4745,11 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<ServiceItem>();
 
-            repo.GetAll().ToList().Select(d => new ServiceItemModel
+            repo.GetAll().ToList().ForEach(d =>
             {
-                Id = d.Id,
-                ServiceItemCode = d.ServiceItemCode,
-                ServiceItemName = d.ServiceItemName
+                ServiceItemModel containerObj = new ServiceItemModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
             });
 
             return data.ToArray();
