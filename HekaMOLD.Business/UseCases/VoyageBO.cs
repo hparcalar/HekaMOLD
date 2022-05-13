@@ -269,7 +269,8 @@ namespace HekaMOLD.Business.UseCases
                         dbItemLoad.VoyageExitDate = model.StartDate;
                         dbItemLoad.VoyageEndDate = model.EndDate;
                         dbItemLoad.DriverId = model.DriverId;
-                        dbItemLoad.VoyageId = model.Id;
+                        dbItemLoad.Voyage = dbObj;
+                        //dbItemLoad.VoyageId = model.Id;
                         dbItemLoad.VoyageConverted = true;
                         //x.MapTo(dbItemLoad);
                     }
@@ -312,7 +313,8 @@ namespace HekaMOLD.Business.UseCases
                         dbItemLoad.VoyageExitDate = model.StartDate;
                         dbItemLoad.VoyageEndDate = model.EndDate;
                         dbItemLoad.DriverId = model.DriverId;
-                        dbItemLoad.VoyageId = model.Id;
+                        //dbItemLoad.VoyageId = model.Id;
+                        dbItemLoad.Voyage = dbObj;
                         dbItemLoad.VoyageConverted = true;
                         //x.MapTo(dbItemLoad);
                     }
@@ -365,30 +367,46 @@ namespace HekaMOLD.Business.UseCases
                     foreach (var item in model.VoyageDetails)
                     {
                         var dbVoyageDetail = repoVoyageDetail.Get(d => d.ItemLoadId == item.ItemLoadId);
+
                         //Yuk daha once kullanıldı mı kontrol
                         if (dbVoyageDetail != null && item.NewDetail)
                             throw new Exception(dbVoyageDetail.LoadCode + " kodlu yük daha önce " + dbVoyageDetail.Voyage.VoyageCode + " kodlu seferde kullanılmıştır.");
 
+                        bool newVoyageDetail = false;
                         if (dbVoyageDetail == null)
                         {
+                            newVoyageDetail = true;
                             dbVoyageDetail = new VoyageDetail
                             {
                                 Voyage = dbObj,
                                 VoyageStatus = dbObj.VoyageStatus,
-
                             };
 
                             repoVoyageDetail.Add(dbVoyageDetail);
                         }
-                        var dbVoyageDetailTmp = repoVoyageDetail.GetById(item.Id);
-                        var voyageLoadingDate = dbVoyageDetailTmp.LoadingDate;
-                        var voyageDischargeDate = dbVoyageDetailTmp.DischargeDate;
+
+                        //var dbVoyageDetailTmp = repoVoyageDetail.GetById(item.Id);
+                        //var voyageLoadingDate = dbVoyageDetailTmp.LoadingDate;
+                        //var voyageDischargeDate = dbVoyageDetailTmp.DischargeDate;
+
+                        var exLoadingDate = dbVoyageDetail.LoadingDate;
+                        var exDischargeDate = dbVoyageDetail.DischargeDate;
+
+                        if (newRecord && item.Id > 0)
+                            item.Id = 0;
 
                         item.MapTo(dbVoyageDetail);
+
+                        if (newVoyageDetail)
+                        {
+                            dbVoyageDetail.Id = 0;
+                            dbVoyageDetail.ItemLoadId = item.ItemLoadId; 
+                        }
+                        
                         if (item.LoadingDate == null)
-                            dbVoyageDetail.LoadingDate = voyageLoadingDate;
+                            dbVoyageDetail.LoadingDate = exLoadingDate;
                         if (item.DischargeDate == null)
-                            dbVoyageDetail.DischargeDate = voyageDischargeDate;
+                            dbVoyageDetail.DischargeDate = exDischargeDate;
                         dbVoyageDetail.Voyage = dbObj;
 
                         //if (dbVoyageDetail.VoyageStatus == null || dbVoyageDetail.VoyageStatus == (int)LoadStatusType.Ready)

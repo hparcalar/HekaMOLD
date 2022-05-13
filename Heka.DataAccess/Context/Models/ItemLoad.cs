@@ -65,6 +65,8 @@ namespace Heka.DataAccess.Context
         public bool? HasItemInsurance { get; set; }
         public string ItemInsuranceDraftNo { get; set; }
         public string VoyageCode { get; set; }
+
+        [ForeignKey("Voyage")]
         public int? VoyageId { get; set; }
         public bool? VoyageConverted { get; set; }
         //Tehlikeli Madde var
@@ -231,6 +233,7 @@ namespace Heka.DataAccess.Context
         public virtual City VoyageEndCity { get; set; }
         public virtual Country VoyageStartCountry { get; set; }
         public virtual Country VoyageEndCountry { get; set; }
+        public virtual Voyage Voyage { get; set; }
 
         [InverseProperty("ItemLoad")]
         public virtual ICollection<ItemLoadDetail> ItemLoadDetail { get; set; }

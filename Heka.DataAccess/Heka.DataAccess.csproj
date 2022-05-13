@@ -769,6 +769,14 @@
     <Compile Include="Migrations\202204251226340_ItemLoadUpdate%28T1T2StartDate%29.designer.cs">
       <DependentUpon>202204251226340_ItemLoadUpdate%28T1T2StartDate%29.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202205130437093_MergeFix.cs" />
+    <Compile Include="Migrations\202205130437093_MergeFix.designer.cs">
+      <DependentUpon>202205130437093_MergeFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205131844505_ItemLoad_Voyage_Relation.cs" />
+    <Compile Include="Migrations\202205131844505_ItemLoad_Voyage_Relation.designer.cs">
+      <DependentUpon>202205131844505_ItemLoad_Voyage_Relation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1224,6 +1232,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202204251226340_ItemLoadUpdate%28T1T2StartDate%29.resx">
       <DependentUpon>202204251226340_ItemLoadUpdate%28T1T2StartDate%29.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205130437093_MergeFix.resx">
+      <DependentUpon>202205130437093_MergeFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205131844505_ItemLoad_Voyage_Relation.resx">
+      <DependentUpon>202205131844505_ItemLoad_Voyage_Relation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

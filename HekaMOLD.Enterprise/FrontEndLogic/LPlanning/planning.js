@@ -345,7 +345,7 @@
             scrolling: {
                 mode: "single"
             },
-            height: 400,
+            height: '50vh',
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,

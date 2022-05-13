@@ -160,3 +160,23 @@
     background-repeat:no-repeat;
     background-position:-4px -4px;
 }
+
+.form-control.form-control-solid, .form-select.form-select-solid {
+    border-color: #dfdfdf;
+    padding: 0.5rem 0.5rem;
+}
+
+.form-control.form-control-solid:focus, .form-select.form-select-solid:focus {
+    border-color: rgb(30, 87, 153, 0.5);
+}
+
+.shadow-heka {
+    -webkit-box-shadow: 2px 4px 22px -16px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 4px 22px -16px rgba(0,0,0,0.75);
+    box-shadow: 2px 4px 22px -16px rgba(0,0,0,0.75);
+}
+
+.border-heka {
+    border: 1px solid rgba(0, 158, 247, 0.3) ;
+    border-radius: 5px;
+}
