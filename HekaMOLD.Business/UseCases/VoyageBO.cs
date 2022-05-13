@@ -6,6 +6,7 @@ using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace HekaMOLD.Business.UseCases
@@ -627,6 +628,9 @@ namespace HekaMOLD.Business.UseCases
             {
                 model = dbObj.MapTo(model);
                 model.VoyageDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.VoyageDate);
+                model.VoyageWeek = string.Format("{0:yyyy}-{1}", dbObj.VoyageDate ?? DateTime.Now,
+                    CultureInfo
+                    .InvariantCulture.Calendar.GetWeekOfYear(dbObj.VoyageDate ?? DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
                 model.CustomsDoorEntryDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.CustomsDoorEntryDate);
                 model.CustomsDoorExitDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.CustomsDoorExitDate);
                 model.EndDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.EndDate);
@@ -761,7 +765,9 @@ namespace HekaMOLD.Business.UseCases
                 Id = d.Id,
                 VoyageCode = d.VoyageCode,
                 VoyageDateStr = string.Format("{0:dd.MM.yyyy}", d.VoyageDate),
-                VoyageWeek = d.VoyageWeek,
+                VoyageWeek = string.Format("{0:yyyy}-{1}", d.VoyageDate ?? DateTime.Now,
+                    CultureInfo
+                    .InvariantCulture.Calendar.GetWeekOfYear(d.VoyageDate ?? DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday)),
                 VoyageStatusStr = d.VoyageStatus != null ? ((VoyageStatus)d.VoyageStatus).ToCaption() : "",
                 CarrierFirmName = d.CarrierFirm != null ? d.CarrierFirm.FirmName : "",
                 CustomsDoorEntryDateStr = string.Format("{0:dd.MM.yyyy}", d.CustomsDoorEntryDate),

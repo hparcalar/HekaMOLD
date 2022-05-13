@@ -50,7 +50,9 @@ namespace HekaMOLD.Business.UseCases
                 OrderNo = d.OrderNo,
                 Billed = d.Billed == true ? d.Billed : false,
                 VoyageCode = d.VoyageCode,
-                LoadWeek = d.LoadWeek,
+                LoadWeek = string.Format("{0:yyyy}-{1}", d.LoadDate ?? DateTime.Now,
+                    CultureInfo
+                    .InvariantCulture.Calendar.GetWeekOfYear(d.LoadDate ?? DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday)),
                 VoyageConverted = d.VoyageConverted == true ? d.VoyageConverted :false,
                 LoadStatusType = d.LoadStatusType,
                 LoadStatusTypeStr = ((LoadStatusType)d.LoadStatusType).ToCaption(),
@@ -406,6 +408,9 @@ namespace HekaMOLD.Business.UseCases
                 model.OrderUploadTypeStr = dbObj.OrderUploadType == 1 ? LSabit.GET_GRUPAJ : dbObj.OrderUploadType == 2 ? LSabit.GET_COMPLATE : "";
                 model.OrderUploadPointTypeStr = dbObj.OrderUploadPointType == 1 ? LSabit.GET_FROMCUSTOMER : dbObj.OrderUploadPointType == 2 ? LSabit.GET_FROMWAREHOUSE : "";
                 model.OrderCalculationTypeStr = dbObj.OrderCalculationType == 1 ? LSabit.GET_WEIGHTTED : dbObj.OrderCalculationType == 2 ? LSabit.GET_VOLUMETRIC : dbObj.OrderCalculationType == 3 ? LSabit.GET_LADAMETRE : "";
+                model.LoadWeek = string.Format("{0:yyyy}-{1}", dbObj.LoadDate ?? DateTime.Now,
+                   CultureInfo
+                   .InvariantCulture.Calendar.GetWeekOfYear(dbObj.LoadDate ?? DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
                 model.Details =
                     repoDetails.Filter(d => d.ItemLoadId == dbObj.Id)
                     .Select(d => new ItemLoadDetailModel
