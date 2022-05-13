@@ -150,24 +150,99 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             BusinessResult result = new BusinessResult();
 
-            for (int i = 0; i < labelCount; i++)
+            int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+            int workOrderDetailId = 0;
+            int printerId = 0;
+
+            using (ProductionBO bObj = new ProductionBO())
             {
-                using (PlanningBO bObj = new PlanningBO())
-                {
-                    int printerId = Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter",
+                printerId = Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter",
                         Convert.ToInt32(Request.Cookies["PlantId"].Value)).PrmValue);
 
-                    var model = new PrinterQueueModel();
-                    model.AllocatedPrintData = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                var bRes = bObj.SaveOrUpdateWorkOrder(new WorkOrderModel
+                {
+                    WorkOrderType = (int)WorkOrderType.Casual,
+                    PlantId = plantId,
+                    CreatedDate = DateTime.Now,
+                    DocumentNo = bObj.GetNextWorkOrderNo(),
+                    FirmId = null,
+                    WorkOrderDate = DateTime.Now,
+                    WorkOrderStatus = (int)WorkOrderStatusType.Completed,
+                    Details = new WorkOrderDetailModel[]
                     {
-                        ItemId = itemId,
-                        Code = "",
-                        Quantity = quantity,
-                    });
-                    model.PrinterId = printerId;
-                    model.RecordType = 8;
-                    model.RecordId = itemId;
-                    result = bObj.AddToPrintQueue(model);
+                        new WorkOrderDetailModel
+                        {
+                            CompleteQuantity = 0,
+                            CreatedDate = DateTime.Now,
+                            ItemId = itemId,
+                            Quantity = quantity * labelCount,
+                            QualityStatus = (int)QualityStatusType.Waiting,
+                            InPackageQuantity = Convert.ToInt32(quantity ?? 0),
+                            NewDetail = true,
+                            WorkOrderStatus = (int)WorkOrderStatusType.Completed,
+                        }
+                    }
+                });
+
+                if (!bRes.Result)
+                    result.Result = false;
+                else
+                {
+                    workOrderDetailId = bRes.DetailRecordId;
+                }
+            }
+
+            if (workOrderDetailId > 0)
+            {
+                int wrId = 0;
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    wrId = bObj.GetWarehouseList()
+                        .Where(d => d.WarehouseType == (int)WarehouseType.ProductWarehouse)
+                        .Select(d => d.Id)
+                        .FirstOrDefault();
+                }
+
+                for (int i = 0; i < labelCount; i++)
+                {
+                    int serialId = 0;
+                    using (ProductionBO bObj = new ProductionBO())
+                    {
+                        var sRes = bObj.AddProductEntry(workOrderDetailId, userId, WorkOrderSerialType.ProductPackage,
+                            Convert.ToInt32(quantity ?? 0), "", true, wrId);
+                        if (sRes.Result)
+                            serialId = sRes.RecordId;
+                    }
+
+                    using (ProductionBO bObj = new ProductionBO())
+                    {
+                        result = bObj.AddToPrintQueue(new PrinterQueueModel
+                        {
+                            PrinterId = printerId,
+                            RecordType = (int)RecordType.SerialItem,
+                            RecordId = serialId,
+                            CreatedDate = DateTime.Now,
+                        });
+                    }
+
+                    //using (PlanningBO bObj = new PlanningBO())
+                    //{
+                    //    int printerId = Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter",
+                    //        Convert.ToInt32(Request.Cookies["PlantId"].Value)).PrmValue);
+
+                    //    var model = new PrinterQueueModel();
+                    //    model.AllocatedPrintData = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    //    {
+                    //        ItemId = itemId,
+                    //        Code = "",
+                    //        Quantity = quantity,
+                    //    });
+                    //    model.PrinterId = printerId;
+                    //    model.RecordType = 8;
+                    //    model.RecordId = itemId;
+                    //    result = bObj.AddToPrintQueue(model);
+                    //}
                 }
             }
 

@@ -887,7 +887,7 @@ namespace HekaMOLD.Business.UseCases
             return model;
         }
         public BusinessResult AddProductEntry(int workOrderDetailId, int userId, WorkOrderSerialType serialType, 
-            int inPackageQuantity, string barcode)
+            int inPackageQuantity, string barcode, bool isApproved = false, int? targetWarehouseId = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -945,6 +945,11 @@ namespace HekaMOLD.Business.UseCases
                         ShiftId = currentShift != null ? currentShift.Id : (int?)null,
                         CreatedUserId = userId,
                     };
+
+                    if (isApproved)
+                        product.SerialStatus = (int)SerialStatusType.Approved;
+                    if (targetWarehouseId != null)
+                        product.TargetWarehouseId = targetWarehouseId;
 
                     var dbAllocated = repoAllocCode.Get(d => d.ObjectType == (int)RecordType.SerialItem
                         && d.AllocatedCode1 == product.SerialNo);
