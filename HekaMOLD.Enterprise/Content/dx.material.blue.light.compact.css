@@ -12279,6 +12279,7 @@
 .dx-datagrid-rowsview .dx-row > tr > td {
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 2px !important;
 }
 .dx-datagrid-rowsview .dx-row.dx-row-lines:first-child,
 .dx-datagrid-rowsview .dx-row.dx-row-lines:first-child>td,
@@ -12636,7 +12637,13 @@
 }
 .dx-datagrid .dx-datagrid-headers .dx-header-filter,
 .dx-datagrid .dx-datagrid-headers .dx-header-row > td {
-  outline: 0;
+    outline: 0;
+    background: #cfe7fa; /* Old browsers */
+    background: -moz-linear-gradient(top, #cfe7fa 0%, #6393c1 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #cfe7fa 0%,#6393c1 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #cfe7fa 0%,#6393c1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cfe7fa', endColorstr='#6393c1',GradientType=0 ); /* IE6-9 */
+    font-weight:bold !important;
 }
 .dx-datagrid .dx-datagrid-headers.dx-state-focused .dx-header-row td .dx-header-filter:focus,
 .dx-datagrid .dx-datagrid-headers.dx-state-focused .dx-header-row td:focus {
@@ -13087,7 +13094,7 @@
 }
 .dx-datagrid .dx-column-lines > td {
   border-left: 1px solid #e0e0e0;
-  border-right: 1px solid #e0e0e0;
+  border-right: 1px solid #afafaf;
 }
 .dx-datagrid .dx-error-row .dx-closebutton {
   float: right;
@@ -13516,13 +13523,16 @@
   color: rgba(0,0,0,.87);
 }
 .dx-datagrid-addrow-button .dx-icon-edit-button-addrow {
-  font: 18px/18px DXIcons;
-  width: 18px;
-  height: 18px;
-  background-position: 0 0;
-  background-size: 18px 18px;
-  padding: 0;
-  text-align: center;
+    font: 18px/18px DXIcons;
+    width: 18px;
+    height: 18px;
+    background-position: 0 0;
+    background-size: 18px 18px;
+    padding: 2px !important;
+    color:#fff !important;
+    text-align: center;
+    background-color: #4990e0;
+    border-radius:20px;
 }
 .dx-datagrid-addrow-button .dx-icon-edit-button-addrow::before {
   content: "";

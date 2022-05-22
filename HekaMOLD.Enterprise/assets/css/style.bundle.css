@@ -36911,7 +36911,7 @@ a:hover {
   outline: none !important;
 }
 .btn:not(.btn-shadow):not(.shadow):not(.shadow-sm):not(.shadow-lg) {
-  box-shadow: none !important;
+  /*box-shadow: none !important;*/
 }
 .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
   border: 0;
