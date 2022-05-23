@@ -62,6 +62,7 @@
     <Compile Include="Context\Models\CountingReceipt.cs" />
     <Compile Include="Context\Models\CountingReceiptDetail.cs" />
     <Compile Include="Context\Models\CountingReceiptSerial.cs" />
+    <Compile Include="Context\Models\CustomerComplaint.cs" />
     <Compile Include="Context\Models\DeliveryPlan.cs" />
     <Compile Include="Context\Models\Dye.cs" />
     <Compile Include="Context\Models\EntryQualityData.cs" />
@@ -121,6 +122,8 @@
     <Compile Include="Context\Models\Plant.cs" />
     <Compile Include="Context\Models\PostureCategory.cs" />
     <Compile Include="Context\Models\PreProcessType.cs" />
+    <Compile Include="Context\Models\PreventiveAction.cs" />
+    <Compile Include="Context\Models\PreventiveActionDetail.cs" />
     <Compile Include="Context\Models\PrinterQueue.cs" />
     <Compile Include="Context\Models\Process.cs" />
     <Compile Include="Context\Models\ProcessGroup.cs" />
@@ -251,6 +254,14 @@
     <Compile Include="Migrations\202204071138380_IncidentAndPosture_UserRelations.designer.cs">
       <DependentUpon>202204071138380_IncidentAndPosture_UserRelations.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202205230642186_PreventiveActions.cs" />
+    <Compile Include="Migrations\202205230642186_PreventiveActions.designer.cs">
+      <DependentUpon>202205230642186_PreventiveActions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205231005221_CustomerComplaints.cs" />
+    <Compile Include="Migrations\202205231005221_CustomerComplaints.designer.cs">
+      <DependentUpon>202205231005221_CustomerComplaints.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -333,6 +344,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202204071138380_IncidentAndPosture_UserRelations.resx">
       <DependentUpon>202204071138380_IncidentAndPosture_UserRelations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205230642186_PreventiveActions.resx">
+      <DependentUpon>202205230642186_PreventiveActions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205231005221_CustomerComplaints.resx">
+      <DependentUpon>202205231005221_CustomerComplaints.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

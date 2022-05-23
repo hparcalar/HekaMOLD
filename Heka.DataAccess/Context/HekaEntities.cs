@@ -128,5 +128,8 @@
         public virtual DbSet<PaymentPlan> PaymentPlan { get; set; }
         public virtual DbSet<MachinePlanView> MachinePlanView { get; set; }
         public virtual DbSet<MachinePlanViewDetail> MachinePlanViewDetail { get; set; }
+        public virtual DbSet<PreventiveAction> PreventiveAction { get; set; }
+        public virtual DbSet<PreventiveActionDetail> PreventiveActionDetail { get; set; }
+        public virtual DbSet<CustomerComplaint> CustomerComplaint { get; set; }
     }
 }

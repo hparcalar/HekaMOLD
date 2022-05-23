@@ -140,6 +140,7 @@
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserRoleSubscriptionModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
+    <Compile Include="Models\DataTransfer\Crm\CustomerComplaintModel.cs" />
     <Compile Include="Models\DataTransfer\Customization\UserShortcutModel.cs" />
     <Compile Include="Models\DataTransfer\EmployeeStats\UserWorkOrderHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
@@ -161,6 +162,8 @@
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Order\PaymentPlanModel.cs" />
+    <Compile Include="Models\DataTransfer\PreventiveActions\PreventiveActionDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\PreventiveActions\PreventiveActionModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ActualRouteHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ContractWorkFlowModel.cs" />
     <Compile Include="Models\DataTransfer\Production\DeliveryPlanModel.cs" />
@@ -266,11 +269,13 @@
     <Compile Include="UseCases\Core\CoreProductionBO.cs" />
     <Compile Include="UseCases\Core\CoreReceiptsBO.cs" />
     <Compile Include="UseCases\Core\CoreRecordTracingBO.cs" />
+    <Compile Include="UseCases\CrmBO.cs" />
     <Compile Include="UseCases\DefinitionsBO.cs" />
     <Compile Include="UseCases\DeliveryBO.cs" />
     <Compile Include="UseCases\DocumentBO.cs" />
     <Compile Include="UseCases\FilesBO.cs" />
     <Compile Include="UseCases\HekaBO.cs" />
+    <Compile Include="UseCases\InformationSheetsBO.cs" />
     <Compile Include="UseCases\Integrations\IntegratorBase.cs" />
     <Compile Include="UseCases\Integrations\MikroIntegrator.cs" />
     <Compile Include="UseCases\Integrations\Params\WebTicari\WebTicariLoginConfiguration.cs" />
@@ -346,6 +351,7 @@
       <CachedSettingsPropName>HekaMOLD_Business_IntSvc_WebTicari_WebticariService</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

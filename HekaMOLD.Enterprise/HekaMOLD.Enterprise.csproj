@@ -153,6 +153,7 @@
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ContractWorksController.cs" />
     <Compile Include="Controllers\CountingController.cs" />
+    <Compile Include="Controllers\CrmComplaintController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Controllers\MachineGroupController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
+    <Compile Include="Controllers\PreventiveActionController.cs" />
     <Compile Include="Controllers\PrintingController.cs" />
     <Compile Include="Controllers\ProcessGroupController.cs" />
     <Compile Include="Controllers\ProductionNeedsController.cs" />
@@ -4179,6 +4181,8 @@
     <Content Include="FrontEndLogic\PostureCategory\list.js" />
     <Content Include="FrontEndLogic\Posture\index.js" />
     <Content Include="FrontEndLogic\Posture\list.js" />
+    <Content Include="FrontEndLogic\PreventiveAction\index.js" />
+    <Content Include="FrontEndLogic\PreventiveAction\list.js" />
     <Content Include="FrontEndLogic\ProcessGroup\index.js" />
     <Content Include="FrontEndLogic\ProcessGroup\list.js" />
     <Content Include="FrontEndLogic\ProductionNeeds\list.js" />
@@ -4755,10 +4759,13 @@
     <Content Include="Views\Boss\Warehouse.cshtml" />
     <Content Include="Views\Warehouse\MachineProductState.cshtml" />
     <Content Include="Views\Boss\RedirectSaleReceipts.cshtml" />
+    <Content Include="Views\PreventiveAction\List.cshtml" />
+    <Content Include="Views\PreventiveAction\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Common\" />
+    <Folder Include="Views\CrmComplaint\" />
     <Folder Include="Views\Printing\" />
   </ItemGroup>
   <ItemGroup>

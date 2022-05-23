@@ -658,16 +658,16 @@
 
                                 @if (Html.IsGranted("ModuleItems"))
                                 {
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @((Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "2") 
-                                        || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "States") 
-                                        || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "ManageItems") 
-                                        || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState" || actn == "MachineProductState")) 
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion @((Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "2")
+                                        || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "States")
+                                        || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "ManageItems")
+                                        || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState" || actn == "MachineProductState"))
                                         || (Regex.IsMatch(ctrl, "Item$") && actn == "Extract")
                                         ? "show":"")">
-                                        <span class="menu-link @((Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "2") 
-                                            || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "States") 
-                                            || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "ManageItems") 
-                                            || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState" || actn == "MachineProductState")) 
+                                        <span class="menu-link @((Regex.IsMatch(ctrl, "ItemReceipt$") && receiptCtg == "2")
+                                            || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "States")
+                                            || (Regex.IsMatch(ctrl, "Warehouse$") && actn == "ManageItems")
+                                            || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState" || actn == "MachineProductState"))
                                             || (Regex.IsMatch(ctrl, "Item$") && actn == "Extract")
                                             ? "active" : "")">
                                             <span class="menu-icon">
@@ -743,7 +743,7 @@
                                                     <span class="menu-title">Stok Yönetimi</span>
                                                 </a>
                                             </div>
-                                            
+
                                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion @((Regex.IsMatch(ctrl, "Warehouse$") && actn == "States")
                                             || (Regex.IsMatch(ctrl, "Warehouse$") && (actn == "FinishedProducts" || actn == "FinishedProductState" || actn == "MachineProductState"))
                                             || (Regex.IsMatch(ctrl, "Item$") && actn == "Extract") ? "show":"")">
@@ -821,7 +821,7 @@
                                                                         </g>
                                                                     </svg>
                                                                 </span>
-                 
+
                                                             </span>
                                                             <span class="menu-title">Bitmiş Ürün Girişleri</span>
                                                         </a>
@@ -887,7 +887,7 @@
                                                 </a>
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                 }
 
                                 @if (Html.IsGranted("ModuleProduction"))
@@ -956,6 +956,31 @@
                                         </div>
                                     </div>
                                 }
+
+                                <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "PreventiveAction$") ? "show":"")">
+                                    <span class="menu-link @(Regex.IsMatch(ctrl, "PreventiveAction$") ? "active" : "")">
+                                        <span class="menu-icon">
+                                            <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
+                                            <span class="svg-icon svg-icon-dark svg-icon-2">
+                                                <svg style="enable-background:new 0 0 50 50;" version="1.1" viewBox="0 0 50 50" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Layer_1"><polygon points="36.942,29.648 30.051,2.081 20.09,37.941 14.175,12.312 10.279,24 1,24 1,26 11.721,26 13.825,19.688    19.91,46.059 29.949,9.919 37.058,38.352 39.802,26 49,26 49,24 38.198,24  " /></g><g /></svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-title">FAALİYET YÖNETİMİ</span>
+                                        <span class="menu-arrow"></span>
+                                    </span>
+                                    <div class="menu-sub menu-sub-accordion">
+                                        <div class="menu-item">
+                                            <a class="menu-link @(Regex.IsMatch(ctrl, "PreventiveAction$") ? "active" : "")"
+                                               href="@Url.Action("List", "PreventiveAction")">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Düzeltici &amp; Önleyici Faaliyetler</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 @if (Html.IsGranted("ModuleDefinitions"))
                                 {
