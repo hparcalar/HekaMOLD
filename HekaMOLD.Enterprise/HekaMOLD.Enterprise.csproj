@@ -4106,6 +4106,8 @@
     <Content Include="FrontEndLogic\Core\record-manager.js" />
     <Content Include="FrontEndLogic\Counting\index.js" />
     <Content Include="FrontEndLogic\Counting\list.js" />
+    <Content Include="FrontEndLogic\CrmComplaint\index.js" />
+    <Content Include="FrontEndLogic\CrmComplaint\list.js" />
     <Content Include="FrontEndLogic\Delivery\planning.js" />
     <Content Include="FrontEndLogic\Document\index.js" />
     <Content Include="FrontEndLogic\Document\list.js" />
@@ -4761,11 +4763,12 @@
     <Content Include="Views\Boss\RedirectSaleReceipts.cshtml" />
     <Content Include="Views\PreventiveAction\List.cshtml" />
     <Content Include="Views\PreventiveAction\Index.cshtml" />
+    <Content Include="Views\CrmComplaint\List.cshtml" />
+    <Content Include="Views\CrmComplaint\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Common\" />
-    <Folder Include="Views\CrmComplaint\" />
     <Folder Include="Views\Printing\" />
   </ItemGroup>
   <ItemGroup>

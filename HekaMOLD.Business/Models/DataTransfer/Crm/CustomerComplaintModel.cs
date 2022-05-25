@@ -30,6 +30,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Crm
         public string FormStatusText { get; set; }
         public string PreventiveActionFormNo { get; set; }
         public string IncomingTypeText { get; set; }
+        public string FirmCode { get; set; }
+        public string FirmName { get; set; }
         #endregion
     }
 }

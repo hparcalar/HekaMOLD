@@ -957,8 +957,8 @@
                                     </div>
                                 }
 
-                                <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "PreventiveAction$") ? "show":"")">
-                                    <span class="menu-link @(Regex.IsMatch(ctrl, "PreventiveAction$") ? "active" : "")">
+                                <div data-kt-menu-trigger="click" class="menu-item menu-accordion @(Regex.IsMatch(ctrl, "PreventiveAction$|CrmComplaint$") ? "show":"")">
+                                    <span class="menu-link @(Regex.IsMatch(ctrl, "PreventiveAction$|CrmComplaint$") ? "active" : "")">
                                         <span class="menu-icon">
                                             <!--begin::Svg Icon | path: icons/stockholm/Shopping/Cart4.svg-->
                                             <span class="svg-icon svg-icon-dark svg-icon-2">
@@ -970,6 +970,15 @@
                                         <span class="menu-arrow"></span>
                                     </span>
                                     <div class="menu-sub menu-sub-accordion">
+                                        <div class="menu-item">
+                                            <a class="menu-link @(Regex.IsMatch(ctrl, "CrmComplaint") ? "active" : "")"
+                                               href="@Url.Action("List", "CrmComplaint")">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Müşteri Şikayetleri</span>
+                                            </a>
+                                        </div>
                                         <div class="menu-item">
                                             <a class="menu-link @(Regex.IsMatch(ctrl, "PreventiveAction$") ? "active" : "")"
                                                href="@Url.Action("List", "PreventiveAction")">

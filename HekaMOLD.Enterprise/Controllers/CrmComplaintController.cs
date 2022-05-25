@@ -133,5 +133,30 @@ namespace HekaMOLD.Enterprise.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult CreateAction(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (CrmBO bObj = new CrmBO())
+            {
+                result = bObj.ToggleCreateActionByComplaint(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
+        public JsonResult CloseForm(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (CrmBO bObj = new CrmBO())
+            {
+                result = bObj.ToggleCloseComplaint(rid, Convert.ToInt32(Request.Cookies["UserId"].Value));
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
     }
 }
