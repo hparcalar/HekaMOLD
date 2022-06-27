@@ -82,29 +82,33 @@ namespace HekaMOLD.Enterprise.Controllers
                         if (model.MachineId <= 0)
                             throw new Exception("Makine seçmelisiniz.");
 
-                        BusinessResult machineAvailableResult = null;
+                        //BusinessResult machineAvailableResult = null;
+                        //using (UsersBO bObj = new UsersBO())
+                        //{
+                        //    machineAvailableResult =
+                        //        bObj.IsMachineAvailableForLoggedIn(authResult.UserData.Id, model.MachineId);
+                        //}
+
+                        //if (!machineAvailableResult.Result)
+                        //    throw new Exception(machineAvailableResult.ErrorMessage);
+                        //else
+                        //{
+                              // ex content below
+                        //}
+
+                        // begin else
+                        BusinessResult logIntoMachineResult = null;
                         using (UsersBO bObj = new UsersBO())
                         {
-                            machineAvailableResult =
-                                bObj.IsMachineAvailableForLoggedIn(authResult.UserData.Id, model.MachineId);
+                            logIntoMachineResult = bObj.LogUserIntoMachine(authResult.UserData.Id, model.MachineId);
                         }
 
-                        if (!machineAvailableResult.Result)
-                            throw new Exception(machineAvailableResult.ErrorMessage);
-                        else
-                        {
-                            BusinessResult logIntoMachineResult = null;
-                            using (UsersBO bObj = new UsersBO())
-                            {
-                                logIntoMachineResult = bObj.LogUserIntoMachine(authResult.UserData.Id, model.MachineId);
-                            }
+                        if (!logIntoMachineResult.Result)
+                            throw new Exception(logIntoMachineResult.ErrorMessage);
 
-                            if (!logIntoMachineResult.Result)
-                                throw new Exception(logIntoMachineResult.ErrorMessage);
-
-                            Response.Cookies.Set(new HttpCookie("MachineName", Server.UrlEncode(logIntoMachineResult.Code)));
-                            Response.Cookies["MachineName"].Expires = DateTime.Now.AddDays(1);
-                        }
+                        Response.Cookies.Set(new HttpCookie("MachineName", Server.UrlEncode(logIntoMachineResult.Code)));
+                        Response.Cookies["MachineName"].Expires = DateTime.Now.AddDays(1);
+                        // end of else
 
                         Response.Cookies.Set(new HttpCookie("MachineId", model.MachineId.ToString()));
                         Response.Cookies["MachineId"].Expires = DateTime.Now.AddDays(1);

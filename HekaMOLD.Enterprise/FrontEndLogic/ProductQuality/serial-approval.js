@@ -7,6 +7,7 @@
         Details: []
     };
 
+    $scope.firstLoad = false;
     $scope.barcodeBox = '';
 
     $scope.onBarcodeKeyUp = function (e) {
@@ -41,6 +42,11 @@
                     $scope.filteredSummaryList = $scope.summaryList;
 
                     $scope.updateFilteredList();
+
+                    if ($scope.firstLoad == false) {
+                        $scope.toggleQualityFilter(3); // first display only waiting products
+                        $scope.firstLoad = true;
+                    }
                 }
             }).catch(function (err) { });
     }

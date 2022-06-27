@@ -489,5 +489,10 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
             return result;
         }
+
+        public BusinessResult CheckClosedSaleOrders(SyncPointModel syncPoint)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -113,6 +113,13 @@ namespace HekaMOLD.IntegrationService
 
                             if (entObj is MikroIntegrator)
                             {
+                                result = entObj.CheckClosedSaleOrders(sync);
+                                AddLog(result.Result ? "Kapalı sipariş kontrolü tamamlandı." : "Kapalı sipariş kontrolü hata: "
+                                    + result.ErrorMessage);
+                            }
+
+                            if (entObj is MikroIntegrator)
+                            {
                                 var pResult = ((MikroIntegrator)entObj).PushPurchasedItems(sync);
                                 AddLog(pResult.Result ? "Satınalma irsaliyeleri transfer edildi." : "Satınalma İrsaliye Transferi Hata: " + pResult.ErrorMessage);
                             }
@@ -162,12 +169,12 @@ namespace HekaMOLD.IntegrationService
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
                 }
 
-                await Task.Delay(1000 * 60 * 3);
+                await Task.Delay(1000 * 60 * 2);
             }
         }
 

@@ -17,11 +17,15 @@
     $scope.summaryList = [];
     $scope.selectedProducts = [];
 
+    $scope.palletInfo = []; // per element is : {ItemName: '', PalletCount: 0}
+
     $scope.sumTotalCount = 0;
     $scope.sumTotalQty = 0;
+    $scope.sumPalletQty = 0;
 
     $scope.bindModel = function () {
         $scope.pickupList.splice(0, $scope.pickupList.length);
+        $scope.palletInfo.splice(0, $scope.palletInfo.length);
         $scope.filteredPickupList = [];
         $scope.summaryList = [];
         $scope.selectedDeliveryPlans = [];
@@ -35,6 +39,14 @@
                         $scope.pickupList.push(tmpItem);
                     }
                     $scope.filteredPickupList = $scope.pickupList;
+                }
+
+                if (localStorage.getItem('pallets') != null && localStorage.getItem('pallets').length > 0) {
+                    var tmpList = JSON.parse(localStorage.getItem('pallets'));
+                    for (var i = 0; i < tmpList.length; i++) {
+                        var tmpItem = tmpList[i];
+                        $scope.palletInfo.push(tmpItem);
+                    }
                 }
             });
 
@@ -135,11 +147,46 @@
         }
     }
 
+    $scope.changePalletCount = function (item) {
+        bootbox.prompt({
+            title: "Palet adedi giriniz",
+            centerVertical: true,
+            callback: function (result) {
+                if (result != null && result.length > 0) {
+                    var newQty = parseInt(result);
+                    if (newQty <= 0) {
+                        toastr.error('Miktar 0 dan büyük olmalıdır.');
+                        return;
+                    }
+
+                    var palletElement = $scope.palletInfo.find(d => d.ItemName == item.ItemName);
+                    if (palletElement) {
+                        palletElement.PalletCount = newQty;
+                    }
+                    else {
+                        $scope.palletInfo.push({
+                            ItemName: item.ItemName,
+                            PalletCount: newQty,
+                        });
+                    }
+
+                    try {
+                        localStorage.setItem('pallets', JSON.stringify($scope.palletInfo));
+                    } catch (e) {
+
+                    }
+                    $scope.updateSummaryList();
+                }
+            }
+        });
+    }
+
     $scope.updateSummaryList = function () {
         $timeout(function () {
             $scope.summaryList.splice(0, $scope.summaryList.length);
             $scope.sumTotalCount = 0;
             $scope.sumTotalQty = 0;
+            $scope.sumPalletQty = 0;
 
             $scope.summaryList = [...$scope.pickupList.map((d) => {
                 return {
@@ -165,7 +212,18 @@
                     return map
                 },
                 new Map())
-                ];
+            ];
+
+            // assign pallet counts to summaries
+            $scope.summaryList.forEach(d => {
+                var palletElement = $scope.palletInfo.find(m => m.ItemName == d[1].ItemName);
+                if (palletElement) {
+                    d[1].PalletCount = palletElement.PalletCount;
+                    $scope.sumPalletQty += palletElement.PalletCount;
+                }
+                else
+                    d[1].PalletCount = 0;
+            });
         });
 
         try {
@@ -565,6 +623,7 @@
                         model: $scope.pickupList,
                         orderDetails: $scope.modelObject.OrderDetails.map(m => m.ItemOrderDetailId),
                         deliveryPlans: $scope.selectedDeliveryPlans,
+                        palletCounts: $scope.palletInfo,
                     }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -584,6 +643,7 @@
 
                                     try {
                                         localStorage.removeItem('readings');
+                                        localStorage.removeItem('pallets');
                                     } catch (e) {
 
                                     }

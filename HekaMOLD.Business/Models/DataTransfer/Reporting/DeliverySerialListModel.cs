@@ -20,6 +20,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Reporting
         #region VISUAL ELEMENTS
         public int PackageCount { get; set; }
         public string PackageSize { get; set; }
+        public int PalletCount { get; set; }
         #endregion
     }
 }

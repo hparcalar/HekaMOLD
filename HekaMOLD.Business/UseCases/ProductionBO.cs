@@ -1069,6 +1069,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoMachine = _unitOfWork.GetRepository<Machine>();
                 var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
                 var repoShift = _unitOfWork.GetRepository<Shift>();
+                var repoPost = _unitOfWork.GetRepository<ProductionPosture>();
 
                 var dbMachine = repoMachine.Get(d => d.Id == machineId);
                 if (dbMachine == null)
@@ -1076,6 +1077,11 @@ namespace HekaMOLD.Business.UseCases
 
                 // RESOLVE CURRENT SHIFT
                 var currentShift = GetCurrentShift();
+
+                var ongoingPostures = repoPost.Filter(d => d.MachineId == dbMachine.Id
+                    && d.PostureStatus < 2);
+                if (ongoingPostures.Any())
+                    throw new Exception("Devam eden bir duruş olduğu için sayaç başlatılmadı.");
 
                 MachineSignal newSignal = new MachineSignal
                 {
@@ -2867,7 +2873,7 @@ namespace HekaMOLD.Business.UseCases
             ItemReceiptModel receiptModel,
             ItemSerialModel[] model, 
             int[] orderDetails = null,
-            DeliveryPlanModel[] deliveryPlans = null)
+            DeliveryPlanModel[] deliveryPlans = null, PalletCountInfo[] palletCounts = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -2958,6 +2964,15 @@ namespace HekaMOLD.Business.UseCases
                         }
                         else
                             relatedDetail.UpdateSerials = true;
+
+                        if (palletCounts != null)
+                        {
+                            var relatedPalletCount = palletCounts.FirstOrDefault(d => d.ItemName == dbSerial.ItemReceiptDetail.Item.ItemName);
+                            if (relatedPalletCount != null)
+                            {
+                                relatedDetail.PalletCount = relatedPalletCount.PalletCount;
+                            }
+                        }
 
                         // ADD TO CHECK LIST
                         if (dbSerial.ItemReceiptDetailId > 0

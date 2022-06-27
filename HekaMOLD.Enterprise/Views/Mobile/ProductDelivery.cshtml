@@ -144,9 +144,10 @@
                     <table class="table table-bordered table-hk-md">
                         <thead>
                             <tr>
-                                <th class="w-50 px-2">Ürün</th>
-                                <th class="w-25 px-2">Koli Adedi</th>
-                                <th class="w-25 px-2">Ürün Adedi</th>
+                                <th class="w-40 px-2">Ürün</th>
+                                <th class="w-20 px-2">Koli</th>
+                                <th class="w-20 px-2">Ürün</th>
+                                <th class="w-20 px-2">Palet</th>
                             </tr>
                         </thead>
                     </table>
@@ -154,9 +155,14 @@
                         <table ng-cloak class="table table-bordered table-striped table-hk-md">
                             <tbody>
                                 <tr ng-repeat="item in summaryList">
-                                    <td class="w-50 px-2 ">{{item[1].ItemName}}</td>
-                                    <td class="w-25 px-2 fw-bolder fs-6">{{item[1].SerialCount}}</td>
-                                    <td class="w-25 px-2 fw-bolder fs-6">{{item[1].SerialSum}}</td>
+                                    <td class="w-40 px-2 ">{{item[1].ItemName}}</td>
+                                    <td class="w-20 px-2 fw-bolder fs-6" ng-bind="item[1].SerialCount"></td>
+                                    <td class="w-20 px-2 fw-bolder fs-6" ng-bind="item[1].SerialSum"></td>
+                                    <td class="w-20 px-2 fw-bolder fs-6">
+                                        <button type="button" class="btn btn-sm btn-primary"
+                                                ng-click="changePalletCount(item[1])" ng-bind="item[1].PalletCount">
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -164,9 +170,10 @@
                     <table class="table table-bordered">
                         <tfoot>
                             <tr class="bg-primary text-white">
-                                <th class="w-50 px-2"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2"><b>{{ sumTotalCount }} KOLİ</b></th>
-                                <th class="w-25 px-2"><b>{{ sumTotalQty }} ADET</b></th>
+                                <th class="w-40 px-2"><b>TOPLAM: </b></th>
+                                <th class="w-20 px-2"><b>{{ sumTotalCount }} KOLİ</b></th>
+                                <th class="w-20 px-2"><b>{{ sumTotalQty }} ADET</b></th>
+                                <th class="w-20 px-2"><b>{{ sumPalletQty }} PALET</b></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -209,5 +216,5 @@
     <script src="~/Components/Controllers/report-template-list.js"></script>
     <script src="~/Components/Controllers/warehouse-manager.js"></script>
     <script src="~/Scripts/html5-qrcode.min.js"></script>
-    <script src="~/FrontEndLogic/Mobile/product-delivery.js?v=6"></script>
+    <script src="~/FrontEndLogic/Mobile/product-delivery.js?v=8"></script>
 }

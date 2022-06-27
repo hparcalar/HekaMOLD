@@ -391,6 +391,10 @@
                 if ($scope.modelObject.Details.length > 0) {
                     var lastRow = $scope.modelObject.Details[$scope.modelObject.Details.length - 1];
                     e.data.ForexId = lastRow.ForexId;
+                    e.data.TaxIncluded = lastRow.TaxIncluded;
+                    e.data.TaxRate = lastRow.TaxRate;
+                    e.data.Quantity = lastRow.Quantity;
+                    e.data.UnitId = lastRow.UnitId;
                 }
             },
             repaintChangesOnly: true,

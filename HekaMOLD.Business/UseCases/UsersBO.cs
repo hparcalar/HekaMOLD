@@ -163,10 +163,17 @@ namespace HekaMOLD.Business.UseCases
                 var dbMachine = repoMachine.Get(d => d.Id == machineId);
                 var exActiveMachines = repoMachine.Filter(d => d.Id != machineId && d.WorkingUserId == userId).ToArray();
 
-                var exActives = repo.Filter(d => d.MachineId == machineId && d.EndDate == null).ToArray();
-                foreach (var item in exActives.Where(m => lastActive == null || m.Id != lastActive.Id))
+                try
                 {
-                    item.EndDate = DateTime.Now;
+                    var exActives = repo.Filter(d => d.MachineId == machineId && d.EndDate == null).ToArray();
+                    foreach (var item in exActives.Where(m => lastActive == null || m.Id != lastActive.Id))
+                    {
+                        item.EndDate = DateTime.Now;
+                    }
+                }
+                catch (Exception)
+                {
+
                 }
 
                 foreach (var item in exActiveMachines)

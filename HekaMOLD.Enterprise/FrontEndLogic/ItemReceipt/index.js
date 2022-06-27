@@ -312,6 +312,10 @@
                         if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation; }
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
                         if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
+                        if (typeof values.PalletCount != 'undefined') { obj.PalletCount = values.PalletCount; }
+                        if (typeof values.PackageDimension != 'undefined') { obj.PackageDimension = values.PackageDimension; }
+                        if (typeof values.NetWeight != 'undefined') { obj.NetWeight = values.NetWeight; }
+                        if (typeof values.GrossWeight != 'undefined') { obj.GrossWeight = values.GrossWeight; }
                         if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
                         if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
                         if (typeof values.ForexRate != 'undefined') { obj.ForexRate = values.ForexRate; calculateRowAgain = true; }
@@ -365,11 +369,15 @@
                         ItemName: itemObj.ItemName,
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
                         UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
+                        PalletCount: values.PalletCount,
                         Quantity: values.Quantity,
                         TaxRate: values.TaxRate,
                         TaxIncluded: values.TaxIncluded,
                         UnitPrice: values.UnitPrice,
                         ForexRate: values.ForexRate,
+                        NetWeight: values.NetWeight,
+                        GrossWeight: values.GrossWeight,
+                        PackageDimension: values.PackageDimension,
                         ForexUnitPrice: values.ForexUnitPrice,
                         ForexId: values.ForexId,
                         ItemOrderDetailId: null,
@@ -447,6 +455,22 @@
                     editorOptions: { format: { type: "fixedPoint", precision: 2 } },
                     validationRules: [{ type: "required" }]
                 },
+                {
+                    dataField: 'PalletCount', caption: 'Palet', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 0 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 0 } },
+                },
+                {
+                    dataField: 'NetWeight', caption: 'Net Kg', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                },
+                {
+                    dataField: 'GrossWeight', caption: 'Brüt Kg', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                },
+                { dataField: 'PackageDimension', caption: 'Koli Ölçüleri' },
                 { dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
                     dataField: 'TaxIncluded', caption: 'Kdv D/H',

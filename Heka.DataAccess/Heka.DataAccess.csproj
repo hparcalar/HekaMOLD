@@ -262,6 +262,18 @@
     <Compile Include="Migrations\202205231005221_CustomerComplaints.designer.cs">
       <DependentUpon>202205231005221_CustomerComplaints.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202206271000528_ItemReceiptDetail_PalletCount.cs" />
+    <Compile Include="Migrations\202206271000528_ItemReceiptDetail_PalletCount.designer.cs">
+      <DependentUpon>202206271000528_ItemReceiptDetail_PalletCount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206271218243_EntryQualityDetail_TextResult.cs" />
+    <Compile Include="Migrations\202206271218243_EntryQualityDetail_TextResult.designer.cs">
+      <DependentUpon>202206271218243_EntryQualityDetail_TextResult.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206271236456_ItemReceiptDetail_Weights_And_Dimensions.cs" />
+    <Compile Include="Migrations\202206271236456_ItemReceiptDetail_Weights_And_Dimensions.designer.cs">
+      <DependentUpon>202206271236456_ItemReceiptDetail_Weights_And_Dimensions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -350,6 +362,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202205231005221_CustomerComplaints.resx">
       <DependentUpon>202205231005221_CustomerComplaints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206271000528_ItemReceiptDetail_PalletCount.resx">
+      <DependentUpon>202206271000528_ItemReceiptDetail_PalletCount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206271218243_EntryQualityDetail_TextResult.resx">
+      <DependentUpon>202206271218243_EntryQualityDetail_TextResult.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206271236456_ItemReceiptDetail_Weights_And_Dimensions.resx">
+      <DependentUpon>202206271236456_ItemReceiptDetail_Weights_And_Dimensions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

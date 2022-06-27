@@ -15,6 +15,7 @@ using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Enterprise.Controllers.Attributes;
+using HekaMOLD.Business.Models.Virtual;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -823,7 +824,7 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpPost]
         public JsonResult SaveProductDelivery(ItemReceiptModel receiptModel, 
             ItemSerialModel[] model, 
-            int[] orderDetails = null, DeliveryPlanModel[] deliveryPlans = null)
+            int[] orderDetails = null, DeliveryPlanModel[] deliveryPlans = null, PalletCountInfo[] palletCounts = null)
         {
             try
             {
@@ -848,7 +849,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 using (ProductionBO bObj = new ProductionBO())
                 {
-                    result = bObj.CreateSerialDelivery(receiptModel, model, orderDetails, deliveryPlans);
+                    result = bObj.CreateSerialDelivery(receiptModel, model, orderDetails, deliveryPlans, palletCounts);
                 }
 
                 if (result.Result)

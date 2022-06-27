@@ -209,6 +209,14 @@
                                                data-plan-id="{{detail.Id}}"
                                                type="number"
                                                value="{{getQualityValue(detail.Id, itemData.HourNo, 2)}}" />
+
+                                        <input ng-if="detail.CheckType == 3" class="plan-text"
+                                               style="width:35px !important; font-size:xx-small !important;"
+                                               data-active="{{detail.CheckType == 3 ? 'true' : 'false'}}"
+                                               data-hour="{{itemData.HourNo}}"
+                                               data-plan-id="{{detail.Id}}"
+                                               type="text"
+                                               value="{{getQualityValue(detail.Id, itemData.HourNo, 3)}}" />
                                     </p>
                                 </td>
                                 <td>
@@ -258,5 +266,5 @@
     </style>
 
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
-    <script src="~/FrontEndLogic/EntryQuality/index-data.js"></script>
+    <script src="~/FrontEndLogic/EntryQuality/index-data.js?v=3"></script>
 }

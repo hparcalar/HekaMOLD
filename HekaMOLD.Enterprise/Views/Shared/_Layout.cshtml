@@ -170,7 +170,7 @@
                                         </span>
                                         <div class="menu-sub menu-sub-accordion">
                                             <div class="menu-item">
-                                                <a class="menu-link @(Regex.IsMatch(ctrl, "SIOrder$") ? "active" : "")" href="@Url.Action("List", "SIOrder")">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "SIOrder$") && !Regex.IsMatch(actn, "OpenDetails$") ? "active" : "")" href="@Url.Action("List", "SIOrder")">
                                                     <span class="menu-bullet">
                                                         <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                             <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -183,7 +183,7 @@
                                                 </a>
                                             </div>
                                             <div class="menu-item">
-                                                <a class="menu-link @(Regex.IsMatch(ctrl, "SIOrder$") ? "active" : "")" href="@Url.Action("OpenDetails", "SIOrder")">
+                                                <a class="menu-link @(Regex.IsMatch(ctrl, "SIOrder$") && Regex.IsMatch(actn, "OpenDetails$") ? "active" : "")" href="@Url.Action("OpenDetails", "SIOrder")">
                                                     <span class="menu-bullet">
                                                         <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                             <g id="Stockholm-icons-/-Design-/-Rectangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

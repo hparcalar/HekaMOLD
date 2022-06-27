@@ -671,7 +671,6 @@ namespace HekaMOLD.Business.UseCases.Integrations
 
                                         if (!isLockedOrder)
                                         {
-                                            // MEVCUT SİPARİŞ İSE GÜNCELLE VE TÜM DETAYLARINI SİL, AŞAĞIDA YENİDEN EKLENECEK
                                             try
                                             {
                                                 dbItemOrder.DateOfNeed = (DateTime)row["sip_teslim_tarih"];
@@ -683,7 +682,7 @@ namespace HekaMOLD.Business.UseCases.Integrations
                                             
                                             dbItemOrder.OrderDate = (DateTime)row["sip_tarih"];
                                             dbItemOrder.Details = new ItemOrderDetailModel[0];
-                                            subObj.SaveOrUpdateItemOrder(dbItemOrder, detailCanBeNull: true);
+                                            subObj.SaveOrUpdateItemOrder(dbItemOrder, detailCanBeNull: false);
                                         }
                                     }
                                 }
@@ -1546,6 +1545,112 @@ namespace HekaMOLD.Business.UseCases.Integrations
         public BusinessResult PullEntryReceipts(SyncPointModel syncPoint)
         {
             throw new NotImplementedException();
+        }
+
+        public BusinessResult CheckClosedSaleOrders(SyncPointModel syncPoint)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                //DateTime dtMinDelivery = DateTime.MinValue;
+                //using (ReceiptBO bObj = new ReceiptBO())
+                //{
+                //    var minDeliveryDate = bObj.GetParameter("MinimumSaleOrderDate", syncPoint.PlantId.Value);
+                //    if (minDeliveryDate != null && !string.IsNullOrEmpty(minDeliveryDate.PrmValue))
+                //    {
+                //        dtMinDelivery = DateTime.ParseExact(minDeliveryDate.PrmValue, "dd.MM.yyyy",
+                //            System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                //    }
+                //}
+
+                //if (dtMinDelivery == DateTime.MinValue)
+                //    throw new Exception("Ürün çıkış irsaliyeleri için minimum başlangıç tarihi sistem parametreleri içerisinde belirtilmemiş.");
+
+                DataTable dTable = new DataTable();
+                using (SqlConnection con = new SqlConnection(syncPoint.ConnectionString))
+                {
+                    con.Open();
+
+                    SqlDataAdapter dAdapter = new SqlDataAdapter("SELECT * FROM SIPARISLER WHERE sip_iptal=0 AND " +
+                        "sip_tip = 0 AND (sip_kapat_fl = 1 OR sip_miktar <= sip_teslim_miktar) "
+                        + " ORDER BY sip_evrakno_seri, sip_evrakno_sira, sip_satirno", con);
+                    dAdapter.Fill(dTable);
+                    dAdapter.Dispose();
+
+                    string lastOrderNo = "";
+                    int lastOrderId = 0;
+                    int lineNumber = 1;
+
+                    foreach (DataRow row in dTable.Rows)
+                    {
+                        string intOrderNo = row["sip_evrakno_seri"].ToString() + row["sip_evrakno_sira"].ToString();
+
+                        // YENİ SİPARİŞ BAŞLIĞI EKLENDİ VEYA GÜNCELLENDİ
+                        if (lastOrderNo != intOrderNo)
+                        {
+                            lastOrderId = 0;
+                            lineNumber = 1;
+
+                            using (OrdersBO subObj = new OrdersBO())
+                            {
+                                if (subObj.HasAnySaleOrder(intOrderNo))
+                                {
+                                    var dbItemOrder = subObj.GetItemOrder(intOrderNo, ItemOrderType.Sale);
+                                    if (dbItemOrder != null)
+                                    {
+                                        lastOrderId = dbItemOrder.Id;
+                                    }
+                                }
+                            }
+
+                            lastOrderNo = intOrderNo;
+                        }
+
+                        // SİPARİŞ DETAYLARINI GÜNCELLE
+                        if (lastOrderId > 0)
+                        {
+                            using (OrdersBO orderBO = new OrdersBO())
+                            {
+                                int? itemId = null;
+                                using (DefinitionsBO defObj = new DefinitionsBO())
+                                {
+                                    var dbItem = defObj.GetItem(row["sip_stok_kod"].ToString());
+                                    if (dbItem != null)
+                                    {
+                                        itemId = dbItem.Id;
+                                    }
+                                }
+
+                                if (itemId != null)
+                                {
+                                    var dbNewOrder = orderBO.GetItemOrder(lastOrderId);
+                                    if (dbNewOrder.Details.Any(m => m.ItemId == itemId))
+                                    {
+                                        var existingDetail = dbNewOrder.Details.FirstOrDefault(m => m.ItemId == itemId);
+                                        if (existingDetail != null && existingDetail.OrderStatus != ((int)OrderStatusType.Completed))
+                                        {
+                                            existingDetail.OrderStatus = (int)OrderStatusType.Completed;
+                                            orderBO.SetOrderDetailStatus(existingDetail);
+                                        }
+                                    }
+
+                                    lineNumber++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
     }
 }

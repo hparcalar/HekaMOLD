@@ -29,6 +29,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<bool> CheckResult { get; set; }
         public Nullable<decimal> NumericResult { get; set; }
+        public string TextResult { get; set; }
         public Nullable<bool> IsOk { get; set; }
 
         public virtual EntryQualityData EntryQualityData { get; set; }

@@ -256,6 +256,7 @@
     <Compile Include="Models\Virtual\ContractDeliveryModel.cs" />
     <Compile Include="Models\Virtual\ContractReceivingModel.cs" />
     <Compile Include="Models\Virtual\LabelConfigModel.cs" />
+    <Compile Include="Models\Virtual\PalletCountInfo.cs" />
     <Compile Include="Models\Virtual\SubscriptionCategoryModel.cs" />
     <Compile Include="Models\Virtual\TrialPlanModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

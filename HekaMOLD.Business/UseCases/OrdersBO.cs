@@ -222,6 +222,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoRequestDetail = _unitOfWork.GetRepository<ItemRequestDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoOrderNeeds = _unitOfWork.GetRepository<ItemOrderItemNeeds>();
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -295,6 +296,15 @@ namespace HekaMOLD.Business.UseCases
 
                         if (item.OrderStatus == (int)OrderStatusType.Completed)
                             continue;
+
+                        if (item.ItemOrderItemNeeds.Any())
+                        {
+                            var exNeeds = item.ItemOrderItemNeeds.ToArray();
+                            foreach (var needs in exNeeds)
+                            {
+                                repoOrderNeeds.Delete(needs);
+                            }
+                        }
 
                         #region SET REQUEST & DETAIL TO APPROVED
                         if (item.ItemRequestDetail != null)
@@ -444,6 +454,33 @@ namespace HekaMOLD.Business.UseCases
                 dbOrder.TaxAmount = model.TaxAmount;
                 dbOrder.ForexRate = model.ForexRate;
                 dbOrder.ForexId = model.ForexId;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult SetOrderDetailStatus(ItemOrderDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+                var dbOrder = repoOrderDetail.Get(d => d.Id == model.Id);
+                if (dbOrder == null)
+                    throw new Exception("Sipariş kalem bilgisi HEKA yazılımında bulunamadı.");
+
+                dbOrder.OrderStatus = model.OrderStatus;
 
                 _unitOfWork.SaveChanges();
 

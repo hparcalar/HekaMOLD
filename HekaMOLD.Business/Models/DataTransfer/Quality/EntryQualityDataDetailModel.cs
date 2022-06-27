@@ -19,6 +19,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Quality
         public Nullable<bool> CheckResult { get; set; }
         public Nullable<decimal> NumericResult { get; set; }
         public Nullable<bool> IsOk { get; set; }
+        public string TextResult { get; set; }
         public bool NewDetail { get; set; }
     }
 }

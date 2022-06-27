@@ -56,6 +56,11 @@ namespace HekaMOLD.Business.UseCases
                             }
                         }
 
+                        if (string.IsNullOrEmpty(packSize))
+                        {
+                            packSize = item.PackageDimension;
+                        }
+
                         data.Add(new DeliverySerialListModel
                         {
                             ProductCode = item.Item.ItemNo,
@@ -66,6 +71,9 @@ namespace HekaMOLD.Business.UseCases
                                 dbObj.Firm.Address : "",
                             PackageCount = item.ItemSerial.Count(),
                             PackageSize = packSize,
+                            NetWeight = item.NetWeight,
+                            GrossWeight = item.GrossWeight,
+                            PalletCount = item.PalletCount ?? 0,
                         });
                     }
 

@@ -12,19 +12,22 @@
               <Width>2.246cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>6.37306cm</Width>
+              <Width>5.20889cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.68234cm</Width>
+              <Width>2.04738cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.90738cm</Width>
+              <Width>1.77095cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.79444cm</Width>
+              <Width>1.78033cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.08011cm</Width>
+              <Width>2.18594cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.84383cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -276,6 +279,41 @@
                     </Textbox>
                   </CellContents>
                 </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox33">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Palet Adedi</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox33</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
               </TablixCells>
             </TablixRow>
             <TablixRow>
@@ -381,7 +419,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!Quantity.Value</Value>
-                              <Style />
+                              <Style>
+                                <Format>0;(0)</Format>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -399,6 +439,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -491,12 +532,43 @@
                     </Textbox>
                   </CellContents>
                 </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox35">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!PalletCount.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox35</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
               </TablixCells>
             </TablixRow>
           </TablixRows>
         </TablixBody>
         <TablixColumnHierarchy>
           <TablixMembers>
+            <TablixMember />
             <TablixMember />
             <TablixMember />
             <TablixMember />
@@ -520,7 +592,7 @@
         <Top>0.69572cm</Top>
         <Left>1.09277cm</Left>
         <Height>1.2cm</Height>
-        <Width>18.62528cm</Width>
+        <Width>18.62527cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1513,6 +1585,10 @@
         </Field>
         <Field Name="PackageCount">
           <DataField>PackageCount</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="PalletCount">
+          <DataField>PalletCount</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="PackageSize">

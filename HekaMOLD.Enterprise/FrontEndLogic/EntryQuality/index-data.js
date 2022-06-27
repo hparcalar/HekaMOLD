@@ -127,8 +127,10 @@
                     return qData.NumericResult == null ? 0 :
                         qData.NumericResult;
                 }
-                else
+                else if (checkType == 2)
                     return qData.NumericResult;
+                else if (checkType == 3)
+                    return qData.TextResult;
             }
         } catch (e) {
 
@@ -174,6 +176,35 @@
                     var newData = {
                         EntryQualityPlanDetailId: planId,
                         NumericResult: parseFloat($(elm).val()),
+                        FaultExplanation: faultExp,
+                        OrderNo: hourData,
+                        IsOk: true,
+                        NewDetail: true,
+                    };
+                    $scope.modelObject.Details.push(newData);
+                }
+            }
+        });
+
+        // APPEND TEXT CONTENT DATA
+        $.each($('.plan-text'), function (ix, elm) {
+            var planId = parseInt($(elm).attr('data-plan-id'));
+            var hourData = parseInt($(elm).attr('data-hour'));
+
+            var faultExp = $('input.fault-exp[data-plan-id="' + planId + '"]').val();
+
+            if (hourData > 0) {
+                var existingData = $scope.modelObject.Details.find(d => d.EntryQualityPlanDetailId == planId &&
+                    d.OrderNo == hourData);
+                if (typeof existingData != 'undefined' && existingData != null) {
+                    existingData.TextResult = $(elm).val();
+                    existingData.FaultExplanation = faultExp;
+                    existingData.IsOk = true;
+                }
+                else {
+                    var newData = {
+                        EntryQualityPlanDetailId: planId,
+                        TextResult: $(elm).val(),
                         FaultExplanation: faultExp,
                         OrderNo: hourData,
                         IsOk: true,
