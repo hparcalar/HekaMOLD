@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Fason İş Emri Yönetimi";
+}
+
+<div ng-controller="contractWorksCtrl">
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar">
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+            <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+                 class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
+                <!--begin::Title-->
+                <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                    @ViewBag.Title
+                </h1>
+
+                <!-- Progress enabled state -->
+                <button type="button" class="btn btn-sm btn-dark mx-2" ng-show="saveStatus==1" data-kt-indicator="on">
+                    <span class="indicator-label">
+                        Submit
+                    </span>
+                    <span class="indicator-progress">
+                        Lütfen bekleyiniz... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
+                <!--end::Title-->
+            </div>
+            <!--end::Page title-->
+            <!--begin::Actions-->
+            <div class="d-flex align-items-center py-1">
+                <label class="form-label fs-6 fw-bolder text-gray-700 mb-0 me-3">Kategori</label>
+                <!--begin::Input group-->
+                <div class="mb-0">
+                    <select aria-label="Stok Türü" ng-options="item.WorkOrderCategoryName for item in workCategoryList"
+                            ng-model="selectedWorkCategory" ng-change="onCategoryChanged()" class="form-select form-select-solid">
+                    </select>
+                </div>
+            </div>
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid dx-viewport" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+
+            <div class="row gy-5 gx-xl-8 bg-white">
+                <div class="col-xxl-4">
+                    <div class="card card-px-0">
+                        <div class="card-header">
+                            <h6 class="card-title">
+                                İş Emirleri
+
+                                <button class="btn btn-primary px-2 py-1 mx-2">Yeni</button>
+                                <button ng-if="selectedWorkOrder.Id > 0" 
+                                        ng-click="showToContract()"
+                                        class="btn btn-danger px-2 py-1 mx-2">Fasona Çıkış</button>
+                                <button ng-if="selectedWorkOrder.Id > 0" class="btn btn-success px-2 py-1 mx-2">Fasondan Giriş</button>
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="workOrderList"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Hareketler</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xxl-6 col-sm-6 col-md-6">
+                                    <div id="deliveryList"></div>
+                                </div>
+                                <div class="col-xxl-6 col-sm-6 col-md-6">
+                                    <div id="entryList"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+
+    <div id="dial-entrylist" title="Fasona Çıkış İşlemi" style="display:none;">
+        <ng-include src="'Components/Views/ToContract.html'"></ng-include>
+    </div>
+</div>
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/Components/Controllers/to-contract.js"></script>
+    <script src="~/FrontEndLogic/ContractWorks/index.js"></script>
+}

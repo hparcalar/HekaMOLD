@@ -36,7 +36,8 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.Details = d.EntryQualityPlanDetail.Select(m => new EntryQualityPlanDetailModel
                 {
                     Id = m.Id,
-                    CheckProperty = m.CheckProperty
+                    CheckProperty = m.CheckProperty,
+                    CheckType = m.CheckType,
                 }).ToArray();
 
                 string checkList = "";
@@ -70,7 +71,8 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.Details = d.EntryQualityPlanDetail.Select(m => new EntryQualityPlanDetailModel
                 {
                     Id = m.Id,
-                    CheckProperty = m.CheckProperty
+                    CheckProperty = m.CheckProperty,
+                    CheckType = m.CheckType,
                 }).ToArray();
 
                 string checkList = "";
@@ -602,6 +604,8 @@ namespace HekaMOLD.Business.UseCases
                 {
                     ProductQualityDataDetailModel detailModel = new ProductQualityDataDetailModel();
                     d.MapTo(detailModel);
+                    if (d.ProductQualityPlan != null)
+                        detailModel.MoldTestFieldName = d.ProductQualityPlan.MoldTestFieldName;
                     detailList.Add(detailModel);
                 });
                 model.Details = detailList.ToArray();
@@ -753,7 +757,7 @@ namespace HekaMOLD.Business.UseCases
         }
 
         // SERIAL APPROVALS & DENIALS
-        public BusinessResult ApproveSerials(WorkOrderSerialModel[] model, int plantId)
+        public BusinessResult ApproveSerials(WorkOrderSerialModel[] model, int plantId, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
             
@@ -769,6 +773,10 @@ namespace HekaMOLD.Business.UseCases
                     {
                         dbSerial.QualityStatus = (int)QualityStatusType.Ok;
                         dbSerial.SerialStatus = (int)SerialStatusType.Approved;
+
+                        dbSerial.QualityUserId = userId;
+                        dbSerial.QualityChangedDate = DateTime.Now;
+                        
                         item.QualityStatus = dbSerial.QualityStatus;
 
                         if (warehouseId == 0 && (dbSerial.TargetWarehouseId) > 0)
@@ -800,7 +808,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult DenySerials(WorkOrderSerialModel[] model)
+        public BusinessResult DenySerials(WorkOrderSerialModel[] model, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -815,6 +823,9 @@ namespace HekaMOLD.Business.UseCases
                         dbSerial.QualityStatus = (int)QualityStatusType.Nok;
                         dbSerial.QualityExplanation = item.QualityExplanation;
                         dbSerial.SerialStatus = (int)SerialStatusType.Created;
+
+                        dbSerial.QualityChangedDate = DateTime.Now;
+                        dbSerial.QualityUserId = userId;
                     }
                 }
 
@@ -830,7 +841,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult WaitSerials(WorkOrderSerialModel[] model)
+        public BusinessResult WaitSerials(WorkOrderSerialModel[] model, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -844,6 +855,9 @@ namespace HekaMOLD.Business.UseCases
                     {
                         dbSerial.QualityStatus = (int)QualityStatusType.QualityWaiting;
                         dbSerial.SerialStatus = (int)SerialStatusType.Created;
+
+                        dbSerial.QualityChangedDate = DateTime.Now;
+                        dbSerial.QualityUserId = userId;
                     }
                 }
 
@@ -915,7 +929,7 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
-        public BusinessResult SendToWastage(WorkOrderSerialModel[] model)
+        public BusinessResult SendToWastage(WorkOrderSerialModel[] model, int? userId=null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -949,6 +963,7 @@ namespace HekaMOLD.Business.UseCases
                                     MachineId = dbSerial.WorkOrderDetail.MachineId,
                                     ProductId = dbSerial.WorkOrderDetail.ItemId,
                                     WorkOrderDetailId = dbSerial.WorkOrderDetailId,
+                                    CreatedUserId = userId,
                                     Quantity = dbSerial.FirstQuantity,
                                     WastageStatus = 0,
                                     ShiftId = currentShift.Id,
@@ -973,7 +988,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult ConditionalApproveSerials(WorkOrderSerialModel[] model, int plantId)
+        public BusinessResult ConditionalApproveSerials(WorkOrderSerialModel[] model, int plantId, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -990,6 +1005,10 @@ namespace HekaMOLD.Business.UseCases
                         dbSerial.QualityStatus = (int)QualityStatusType.ConditionalApproved;
                         dbSerial.QualityExplanation = item.QualityExplanation;
                         dbSerial.SerialStatus = (int)SerialStatusType.Approved;
+
+                        dbSerial.QualityChangedDate = DateTime.Now;
+                        dbSerial.QualityUserId = userId;
+
                         item.QualityStatus = dbSerial.QualityStatus;
 
                         if (warehouseId == 0 && (dbSerial.TargetWarehouseId) > 0)

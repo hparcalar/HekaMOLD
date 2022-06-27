@@ -67,7 +67,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -87,8 +89,12 @@
     <Compile Include="Models\Constants\ItemOrderType.cs" />
     <Compile Include="Models\Constants\ItemType.cs" />
     <Compile Include="Models\Constants\MachineStatusType.cs" />
+    <Compile Include="Models\Constants\MaintenancePlanStatusType.cs" />
+    <Compile Include="Models\Constants\MoldRevisionResultType.cs" />
+    <Compile Include="Models\Constants\MoldRevisionStatusType.cs" />
     <Compile Include="Models\Constants\MoldStatus.cs" />
     <Compile Include="Models\Constants\NotifyType.cs" />
+    <Compile Include="Models\Constants\PalletStatusType.cs" />
     <Compile Include="Models\Constants\PostureStatusType.cs" />
     <Compile Include="Models\Constants\ProcessStatusType.cs" />
     <Compile Include="Models\Constants\QualityStatusType.cs" />
@@ -101,6 +107,7 @@
     <Compile Include="Models\Constants\SerialStatusType.cs" />
     <Compile Include="Models\Constants\SubscriptionCategory.cs" />
     <Compile Include="Models\Constants\SyncPointType.cs" />
+    <Compile Include="Models\Constants\UploadType.cs" />
     <Compile Include="Models\Constants\WarehouseType.cs" />
     <Compile Include="Models\Constants\WorkOrderSerialType.cs" />
     <Compile Include="Models\Constants\WorkOrderStatusType.cs" />
@@ -117,6 +124,7 @@
     <Compile Include="Models\DataTransfer\Core\ItemGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemLiveStatusModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemModel.cs" />
+    <Compile Include="Models\DataTransfer\Core\ItemQualityGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemUnitModel.cs" />
     <Compile Include="Models\DataTransfer\Core\ItemWarehouseModel.cs" />
     <Compile Include="Models\DataTransfer\Core\NotificationModel.cs" />
@@ -133,36 +141,52 @@
     <Compile Include="Models\DataTransfer\Core\UserModel.cs" />
     <Compile Include="Models\DataTransfer\Core\UserRoleSubscriptionModel.cs" />
     <Compile Include="Models\DataTransfer\Core\WarehouseModel.cs" />
+    <Compile Include="Models\DataTransfer\Customization\UserShortcutModel.cs" />
     <Compile Include="Models\DataTransfer\EmployeeStats\UserWorkOrderHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Files\AttachmentModel.cs" />
     <Compile Include="Models\DataTransfer\Finance\InvoiceModel.cs" />
     <Compile Include="Models\DataTransfer\Labels\ProductLabel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutItemModel.cs" />
     <Compile Include="Models\DataTransfer\Layout\LayoutObjectTypeModel.cs" />
+    <Compile Include="Models\DataTransfer\Lojistics\LogisticsOrderModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EquipmentModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\IncidentStatusParam.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\EndPostureParam.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionEntryModel.cs" />
     <Compile Include="Models\DataTransfer\Maintenance\MachineMaintenanceInstructionModel.cs" />
+    <Compile Include="Models\DataTransfer\Maintenance\MaintenancePlanModel.cs" />
     <Compile Include="Models\DataTransfer\MoldTrace\MoldMoveHistory.cs" />
+    <Compile Include="Models\DataTransfer\MoldTrace\MoldRevisionOperationModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferDetailRoutePricingModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferSheetModel.cs" />
+    <Compile Include="Models\DataTransfer\Offers\ItemOfferSheetUsageModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderConsumeModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Order\ItemOrderModel.cs" />
+    <Compile Include="Models\DataTransfer\Order\ItemOrderSheetModel.cs" />
+    <Compile Include="Models\DataTransfer\Order\ItemOrderSheetUsageModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ActualRouteHistoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\ContractWorkFlowModel.cs" />
     <Compile Include="Models\DataTransfer\Production\DeliveryPlanModel.cs" />
     <Compile Include="Models\DataTransfer\Production\DyeModel.cs" />
     <Compile Include="Models\DataTransfer\Production\IncidentCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\IncidentModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\ItemDemandModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ItemOrderItemNeedsModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachinePlanModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachinePreProcessHistoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\MachinePreProcessModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MachineSignalModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldProductModel.cs" />
     <Compile Include="Models\DataTransfer\Production\MoldTestModel.cs" />
     <Compile Include="Models\DataTransfer\Production\PostureCategoryModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\PreProcessTypeModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProcessGroupModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProcessModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductionPostureModel.cs" />
@@ -202,9 +226,13 @@
     <Compile Include="Models\DataTransfer\Summary\ProductionHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\ReceiptConsumeSummary.cs" />
     <Compile Include="Models\DataTransfer\Summary\WorkOrderSerialSummary.cs" />
+    <Compile Include="Models\DataTransfer\Warehouse\PalletModel.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />
     <Compile Include="Models\Dictionaries\DictItemOrderType.cs" />
     <Compile Include="Models\Dictionaries\DictMachineStatusType.cs" />
+    <Compile Include="Models\Dictionaries\DictMaintenancePlanStatusType.cs" />
+    <Compile Include="Models\Dictionaries\DictMoldRevisionResultType.cs" />
+    <Compile Include="Models\Dictionaries\DictMoldRevisionStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictMoldStatus.cs" />
     <Compile Include="Models\Dictionaries\DictPostureStatusType.cs" />
     <Compile Include="Models\Dictionaries\DictProcessStatusType.cs" />
@@ -225,10 +253,18 @@
     <Compile Include="Models\Operational\AuthenticationResult.cs" />
     <Compile Include="Models\Operational\BusinessResult.cs" />
     <Compile Include="Models\Virtual\AllocatedPrintDataModel.cs" />
+    <Compile Include="Models\Virtual\ContractDeliveryModel.cs" />
+    <Compile Include="Models\Virtual\ContractReceivingModel.cs" />
     <Compile Include="Models\Virtual\LabelConfigModel.cs" />
     <Compile Include="Models\Virtual\SubscriptionCategoryModel.cs" />
     <Compile Include="Models\Virtual\TrialPlanModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="UseCases\ContractWorksBO.cs" />
     <Compile Include="UseCases\Core\Base\CoreSystemBO.cs" />
     <Compile Include="UseCases\Core\CoreProductionBO.cs" />
     <Compile Include="UseCases\Core\CoreReceiptsBO.cs" />
@@ -240,8 +276,12 @@
     <Compile Include="UseCases\HekaBO.cs" />
     <Compile Include="UseCases\Integrations\IntegratorBase.cs" />
     <Compile Include="UseCases\Integrations\MikroIntegrator.cs" />
+    <Compile Include="UseCases\Integrations\Params\WebTicari\WebTicariLoginConfiguration.cs" />
+    <Compile Include="UseCases\Integrations\WebTicariIntegrator.cs" />
     <Compile Include="UseCases\LayoutBO.cs" />
+    <Compile Include="UseCases\MaintenanceBO.cs" />
     <Compile Include="UseCases\MoldBO.cs" />
+    <Compile Include="UseCases\OffersBO.cs" />
     <Compile Include="UseCases\OrdersBO.cs" />
     <Compile Include="UseCases\PlanningBO.cs" />
     <Compile Include="UseCases\ProductionBO.cs" />
@@ -251,6 +291,11 @@
     <Compile Include="UseCases\ReportingBO.cs" />
     <Compile Include="UseCases\RequestBO.cs" />
     <Compile Include="UseCases\UsersBO.cs" />
+    <Compile Include="Web References\IntSvc_WebTicari\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Heka.DataAccess\Heka.DataAccess.csproj">
@@ -261,6 +306,18 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\IntSvc_WebTicari\grupResimBilgi.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\IntSvc_WebTicari\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\IntSvc_WebTicari\service.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Notes\TriggerPoints.txt" />
@@ -268,8 +325,31 @@
   <ItemGroup>
     <EmbeddedResource Include="ReportDesign\DeliverySerialList.rdlc" />
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\DeliveryPalletLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\PalletLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\RawMaterialLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\ProductLabelWithoutFirm.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel_Backup.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://www.webticari.net/webservis/server/importservice/rpc/service.php%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\IntSvc_WebTicari\</RelPath>
+      <UpdateFromURL>http://www.webticari.net/webservis/server/importservice/rpc/service.php%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>HekaMOLD_Business_IntSvc_WebTicari_WebticariService</CachedSettingsPropName>
+    </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,15 +1,27 @@
 ﻿app.controller('receiptCtrl', function ($scope, $http) {
     $scope.modelObject = {
         Id: 0, ReceiptDate: moment().format('DD.MM.YYYY'),
-        Details: [], ReceiptStatus: 0, ReceiptType:0
+        Details: [], ReceiptStatus: 0, ReceiptType:0, PriceCalcType: 0,
     };
 
+    // #region PAGE VARIABLES
     $scope.itemList = [];
     $scope.unitList = [];
     $scope.forexList = [];
+    
+    $scope.reportTemplateId = 0;
+    $scope.reportTemplateType = 0;
+
+    $scope.selectedRow = { Id: 0 };
+
+    $scope.selectedCalcType = { Id:0, Code:'Miktar' };
+    $scope.calcTypeList = [{ Id: 0, Code: 'Miktar' }, { Id: 1, Code: 'Kg' }];
 
     $scope.selectedFirm = {Id:0, FirmCode:''};
     $scope.firmList = [];
+
+    $scope.selectedPlant = { Id: 0, PlantCode:'', PlantName: '' };
+    $scope.plantList = [];
 
     $scope.selectedWarehouse = {Id:0, WarehouseName:''};
     $scope.warehouseList = [];
@@ -19,8 +31,9 @@
 
     $scope.receiptCategory = null;
     $scope.saveStatus = 0;
+    // #endregion
 
-    // RECEIPT FUNCTIONS
+    // #region CRUD AND RECEIPT LOGIC INTERACTIONS
     $scope.getNextReceiptNo = function () {
         var prms = new Promise(function (resolve, reject) {
             $http.get(HOST_URL + 'ItemReceipt/GetNextReceiptNo?receiptType='
@@ -41,35 +54,15 @@
         return prms;
     }
 
-    // SELECTABLES
-    $scope.showFirmDialog = function () {
-        $('#dial-firm').dialog({
-            position: { my: 'left top', at: 'right top', of: $('#btnSelectFirm') },
-            hide: true,
-            modal: false,
-            resizable: false,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
-        });
-    }
-    $scope.selectFirm = function (item) {
-        $scope.modelObject.FirmId = item.Id;
-        $scope.modelObject.FirmCode = item.FirmCode;
-        $scope.modelObject.FirmName = item.FirmName;
-
-        $('#dial-firm').dialog("close");
-    }
-
-    // CRUD
     $scope.openNewRecord = function () {
         $scope.modelObject = {
             Id: 0, ReceiptDate: moment().format('DD.MM.YYYY'),
-            Details: [], ReceiptStatus: 0, ReceiptType:0
+            Details: [], ReceiptStatus: 0, ReceiptType:0, PriceCalcType: 0,
         };
 
         $scope.selectedFirm = $scope.firmList[0];
         $scope.selectedWarehouse = $scope.warehouseList[0];
+        $scope.selectedPlant = $scope.plantList[0];
 
         $scope.getNextReceiptNo().then(function (rNo) {
             $scope.modelObject.ReceiptNo = rNo;
@@ -131,6 +124,16 @@
         else
             $scope.modelObject.FirmId = null;
 
+        if (typeof $scope.selectedPlant != 'undefined' && $scope.selectedPlant != null)
+            $scope.modelObject.ReceiverPlantId = $scope.selectedPlant.Id;
+        else
+            $scope.modelObject.ReceiverPlantId = null;
+
+        if (typeof $scope.selectedCalcType != 'undefined' && $scope.selectedCalcType != null)
+            $scope.modelObject.PriceCalcType = $scope.selectedCalcType.Id;
+        else
+            $scope.modelObject.PriceCalcType = null;
+
         if (typeof $scope.selectedWarehouse != 'undefined' && $scope.selectedWarehouse != null)
             $scope.modelObject.InWarehouseId = $scope.selectedWarehouse.Id;
         else
@@ -156,7 +159,7 @@
 
     $scope.dropDownBoxEditorTemplate = function (cellElement, cellInfo) {
         return $("<div>").dxDropDownBox({
-            dropDownOptions: { width: 500 },
+            dropDownOptions: { width: 600 },
             dataSource: $scope.itemList,
             value: cellInfo.value,
             valueExpr: "Id",
@@ -215,17 +218,35 @@
                     else
                         $scope.selectedReceiptType = $scope.receiptTypeList[0];
 
+                    if (typeof $scope.modelObject.ReceiverPlantId != 'undefined' && $scope.modelObject.ReceiverPlantId != null)
+                        $scope.selectedPlant = $scope.plantList.find(d => d.Id == $scope.modelObject.ReceiverPlantId);
+                    else
+                        $scope.selectedPlant = $scope.plantList[0];
+
+                    if (typeof $scope.modelObject.PriceCalcType != 'undefined' && $scope.modelObject.PriceCalcType != null)
+                        $scope.selectedCalcType = $scope.calcTypeList.find(d => d.Id == $scope.modelObject.PriceCalcType);
+                    else
+                        $scope.selectedCalcType = $scope.calcTypeList[0];
+
                     refreshArray($scope.firmList);
                     refreshArray($scope.warehouseList);
+                    refreshArray($scope.plantList);
 
                     $scope.bindDetails();
+                    $scope.calculateHeader();
                 }
             }).catch(function (err) { });
+    }
+
+    $scope.refreshDetailChanges = function () {
+        var dataGrid = $("#dataList").dxDataGrid("instance");
+        dataGrid.refresh(true);
     }
 
     $scope.calculateRow = function (row) {
         if (typeof row != 'undefined' && row != null) {
             try {
+                row.PriceCalcType = $scope.selectedCalcType.Id;
                 $http.post(HOST_URL + 'ItemReceipt/CalculateRow', row, 'json')
                     .then(function (resp) {
                         if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -234,7 +255,9 @@
                             row.TaxAmount = resp.data.TaxAmount;
                             row.ForexUnitPrice = resp.data.ForexUnitPrice;
                             row.NetQuantity = resp.data.NetQuantity;
+                            row.SubTotal = resp.data.SubTotal;
 
+                            $scope.refreshDetailChanges();
                             $scope.calculateHeader();
                         }
                     }).catch(function (err) { });
@@ -245,7 +268,7 @@
     }
 
     $scope.calculateHeader = function () {
-        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
+        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.SubTotal).reduce((n, x) => n + x);
         $scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
         $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
     }
@@ -279,12 +302,13 @@
                         if (typeof values.UnitId != 'undefined') {
                             var unitObj = $scope.unitList.find(d => d.Id == values.UnitId);
                             obj.UnitId = unitObj.Id;
-                            obj.UnitName = itemObj.UnitCode;
+                            obj.UnitName = unitObj.UnitCode;
                             calculateRowAgain = true;
                         }
 
                         if (typeof values.Explanation != 'undefined') { obj.Explanation = values.Explanation; }
                         if (typeof values.Quantity != 'undefined') { obj.Quantity = values.Quantity; calculateRowAgain = true; }
+                        if (typeof values.WeightQuantity != 'undefined') { obj.WeightQuantity = values.WeightQuantity; calculateRowAgain = true; }
                         if (typeof values.TaxRate != 'undefined') { obj.TaxRate = values.TaxRate; calculateRowAgain = true; }
                         if (typeof values.TaxIncluded != 'undefined') { obj.TaxIncluded = values.TaxIncluded; calculateRowAgain = true; }
                         if (typeof values.UnitPrice != 'undefined') { obj.UnitPrice = values.UnitPrice; calculateRowAgain = true; }
@@ -301,7 +325,7 @@
                             var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
 
                             $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
-                                + '&forexDate=' + $scope.modelObject.OrderDate, {}, 'json')
+                                + '&forexDate=' + $scope.modelObject.ReceiptDate, {}, 'json')
                                 .then(function (resp) {
                                     if (typeof resp.data != 'undefined' && resp.data != null) {
                                         if (typeof resp.data.SalesForexRate != 'undefined') {
@@ -340,6 +364,7 @@
                         UnitId: typeof unitObj != 'undefined' && unitObj != null ? unitObj.Id : null,
                         UnitName: typeof unitObj != 'undefined' && unitObj != null ? unitObj.UnitCode : null,
                         Quantity: values.Quantity,
+                        WeightQuantity: values.WeightQuantity,
                         TaxRate: values.TaxRate,
                         TaxIncluded: values.TaxIncluded,
                         UnitPrice: values.UnitPrice,
@@ -359,6 +384,8 @@
             showColumnLines: true,
             showRowLines: true,
             rowAlternationEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             focusedRowEnabled: false,
             showBorders: true,
             filterRow: {
@@ -373,7 +400,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 400,
+            height: 250,
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
@@ -413,7 +440,23 @@
                         displayExpr: "UnitCode"
                     }
                 },
-                { dataField: 'Quantity', caption: 'Miktar', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                {
+                    dataField: 'Quantity', caption: 'Miktar', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 }, allowEditing:true,
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                    validationRules: [{ type: "required" }]
+                },
+                {
+                    dataField: 'WeightQuantity', caption: 'Kg', dataType: 'number',
+                    cssClass:'bg-light-primary',
+                    format: { type: "fixedPoint", precision: 2 }, allowEditing: true,
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                },
+                //{
+                //    cssClass:'bg-secondary',
+                //    dataField: 'NetQuantity', allowEditing: false, caption: 'Net Miktar', dataType: 'number',
+                //    format: { type: "fixedPoint", precision: 2 },
+                //},
                 { dataField: 'TaxRate', caption: 'Kdv %', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 {
                     dataField: 'TaxIncluded', caption: 'Kdv D/H',
@@ -425,7 +468,12 @@
                     },
                     validationRules: [{ type: "required" }]
                 },
-                { dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                {
+                    dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                    validationRules: [{ type: "required" }]
+                },
                 {
                     dataField: 'ForexId', caption: 'Döviz Cinsi',
                     allowSorting: false,
@@ -435,11 +483,36 @@
                         displayExpr: "ForexTypeCode"
                     }
                 },
-                { dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                {
+                    dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } }
+                },
+                {
+                    dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number',
+                    format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } }
+                },
                 { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'Explanation', caption: 'Açıklama' }
+                { dataField: 'SubTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                { dataField: 'Explanation', caption: 'Açıklama' },
+                {
+                    type: "buttons",
+                    buttons: [
+                        {
+                            name: 'delete', cssClass: '', text: '', onClick: function (e) {
+                                $('#dataList').dxDataGrid('instance').deleteRow(e.row.rowIndex);
+                            }
+                        },
+                        {
+                            name: 'preview', cssClass: 'btn btn-sm btn-light-primary py-0 px-1', text: '...', onClick: function (e) {
+                                var dataGrid = $("#dataList").dxDataGrid("instance");
+                                $scope.selectedRow = e.row.data;
+                                $scope.showRowMenu();
+                            }
+                        }
+                    ]
+                }
             ]
         });
     }
@@ -454,6 +527,12 @@
     $scope.onReceiptTypeChanged = function (e) {
         $scope.setReceiptTypeFromSelected();
         $scope.getNextReceiptNo();
+    }
+
+    $scope.onCalcTypeChanged = function (e) {
+        $scope.modelObject.Details.forEach(d => {
+            $scope.calculateRow(d);
+        });
     }
 
     $scope.setReceiptTypeFromSelected = function () {
@@ -485,6 +564,11 @@
                         $scope.warehouseList.splice(0, 0, emptyWrObj);
                         $scope.selectedWarehouse = emptyWrObj;
 
+                        $scope.plantList = resp.data.Plants;
+                        var emptyPlantObj = { Id: 0, PlantCode: '', PlantName: '-- Seçiniz --' };
+                        $scope.plantList.splice(0, 0, emptyPlantObj);
+                        $scope.selectedPlant = emptyPlantObj;
+
                         $scope.receiptTypeList = resp.data.ReceiptTypes;
                         $scope.selectedReceiptType = $scope.receiptTypeList[0];
 
@@ -495,8 +579,123 @@
 
         return prms;
     }
+    // #endregion
 
-    // INFORMATIONS
+    // #region ROW MENU ACTIONS
+    $scope.showRowMenu = function () {
+        if ($scope.selectedRow && $scope.selectedRow.Id > 0) {
+            $('#dial-row-menu').dialog({
+                width: 300,
+                //height: window.innerHeight * 0.6,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+    }
+
+    $scope.onRowMenuItemClicked = function () {
+        $('#dial-row-menu').dialog("close");
+    }
+    // #endregion
+
+    // #region PRINTING LOGIC
+    $scope.showPrintTemplates = function () {
+        if ($scope.selectedRow.Id > 0) {
+            // DO BROADCAST
+            $scope.$broadcast('loadTemplateList', [6]);
+            $scope.reportTemplateType = 6;
+
+            $('#dial-reports').dialog({
+                width: window.innerWidth * 0.65,
+                height: window.innerHeight * 0.65,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+    }
+
+    $scope.showPrintOptions = function () {
+        $scope.$broadcast('showPrintOptions');
+
+        $('#dial-print-options').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: 300,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    // RECEIVE EMIT REPORT PRINT DATA
+    $scope.$on('printTemplate', function (e, d) {
+        if (d.templateId > 0) {
+            $scope.reportTemplateId = d.templateId;
+
+            if (d.exportType == 'PDF') {
+                try {
+                    $http.post(HOST_URL + 'Printing/ExportAsPdf', {
+                        objectId: $scope.reportTemplateType == 6 ? $scope.selectedRow.Id : $scope.modelObject.Id,
+                        reportId: $scope.reportTemplateId,
+                        reportType: $scope.reportTemplateType,
+                    }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                window.open(HOST_URL + 'Outputs/' + resp.data.Path);
+                            }
+                        }).catch(function (err) { });
+                } catch (e) {
+
+                }
+            }
+            else {
+                $scope.showPrintOptions();
+            }
+        }
+
+        $('#dial-reports').dialog('close');
+    });
+
+    // RECEIVE EMIT PRINTING OPTIONS DATA
+    $scope.$on('printOptionsApproved', function (e, d) {
+        $('#dial-print-options').dialog('close');
+
+        try {
+            $http.post(HOST_URL + 'Printing/AddToPrintQueue', {
+                objectId: $scope.reportTemplateType == 6 ? $scope.selectedRow.Id : $scope.modelObject.Id,
+                reportId: $scope.reportTemplateId,
+                printerId: d.PrinterId,
+                recordType: $scope.reportTemplateType,
+            }, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        if (resp.data.Status == 1)
+                            toastr.success('İstek yazıcıya iletildi.', 'Bilgilendirme');
+                        else
+                            toastr.error('Hata: ' + resp.data.ErrorMessage, 'Uyarı');
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    });
+
+    $scope.printMaterialLabel = function () {
+        $scope.onRowMenuItemClicked();
+        $scope.showPrintTemplates();
+    }
+    // #endregion
+
+    // #region INFORMATIONS
     $scope.showRecordInformation = function () {
         $scope.$broadcast('showRecordInformation', { Id: $scope.modelObject.Id, DataType:'ItemReceipt' });
     }
@@ -515,22 +714,40 @@
             closeText: "KAPAT"
         });
     }
+    // #endregion
 
-    // APPROVALS
+    // #region TRANSFER ORDERS TO RECEIPT
     $scope.showItemOrderList = function () {
-        // DO BROADCAST
-        $scope.$broadcast('loadOpenPoList');
+        if ($scope.modelObject.ReceiptType > 100) {
+            // DO BROADCAST
+            $scope.$broadcast('loadOpenSoList');
 
-        $('#dial-orderlist').dialog({
-            width: window.innerWidth * 0.6,
-            height: window.innerHeight * 0.6,
-            hide: true,
-            modal: true,
-            resizable: false,
-            show: true,
-            draggable: false,
-            closeText: "KAPAT"
-        });
+            $('#dial-orderlist-so').dialog({
+                width: window.innerWidth * 0.6,
+                height: window.innerHeight * 0.6,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+        else {
+            // DO BROADCAST
+            $scope.$broadcast('loadOpenPoList');
+
+            $('#dial-orderlist').dialog({
+                width: window.innerWidth * 0.6,
+                height: window.innerHeight * 0.6,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
     }
 
     $scope.$on('transferOrderDetails', function (e, d) {
@@ -563,11 +780,41 @@
 
                 var detailsGrid = $("#dataList").dxDataGrid("instance");
                 detailsGrid.refresh();
+
+                if (x.FirmId != null) {
+                    $scope.selectedFirm = $scope.firmList.find(d => d.Id == x.FirmId);
+                    refreshArray($scope.firmList);
+                }
             }
         });
 
-        $('#dial-orderlist').dialog('close');
+        if ($scope.modelObject.ReceiptType > 100)
+            $('#dial-orderlist-so').dialog('close');
+        else
+            $('#dial-orderlist').dialog('close');
     });
+    // #endregion
+
+    // #region PRINTING DELIVERY RECEIPT TEMPLATE
+    $scope.showPrintTemplateList = function () {
+        if ($scope.modelObject.Id > 0) {
+            // DO BROADCAST
+            $scope.$broadcast('loadTemplateList', [2]);
+            $scope.reportTemplateType = 2;
+
+            $('#dial-reports').dialog({
+                width: window.innerWidth * 0.65,
+                height: window.innerHeight * 0.65,
+                hide: true,
+                modal: true,
+                resizable: false,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+    }
+    // #endregion
 
     // ON LOAD EVENTS
     DevExpress.localization.locale('tr');

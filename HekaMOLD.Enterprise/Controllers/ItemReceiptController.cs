@@ -29,6 +29,26 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult LiveSheetStock()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetLiveSheetStock()
+        {
+            ItemModel[] data = new ItemModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                data = bObj.GetLiveSheetStock();
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
         [HttpGet]
         public JsonResult GetNextReceiptNo(int receiptType)
         {
@@ -52,6 +72,7 @@ namespace HekaMOLD.Enterprise.Controllers
             FirmModel[] firms = new FirmModel[0];
             ForexTypeModel[] forexes = new ForexTypeModel[0];
             WarehouseModel[] warehouses = new WarehouseModel[0];
+            PlantModel[] plants = new PlantModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -60,6 +81,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
                 warehouses = bObj.GetWarehouseList();
+                plants = bObj.GetPlantList();
             }
 
             Dictionary<int, string> receiptTypes =
@@ -69,6 +91,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 Items = items, Units = units, 
                 Firms = firms, Forexes=forexes,
                 Warehouses = warehouses,
+                Plants = plants,
                 ReceiptTypes = receiptTypes.Select(d => new { 
                     Id=d.Key,
                     Text=d.Value
@@ -150,6 +173,28 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        public JsonResult PrintMaterialLabel(int receiptDetailId)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                var printerId = bObj.GetParameter("DefaultProductPrinter", Convert.ToInt32(Request.Cookies["PlantId"].Value));
+
+                result = bObj.AddToPrintQueue(new PrinterQueueModel
+                {
+                    PrinterId = Convert.ToInt32(printerId),
+                    RecordType = (int)RecordType.ItemReceiptDetail,
+                    RecordId = receiptDetailId,
+                    CreatedDate = DateTime.Now,
+                    
+                });
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+
+        [HttpPost]
         public JsonResult SaveModel(ItemReceiptModel model)
         {
             try
@@ -158,6 +203,8 @@ namespace HekaMOLD.Enterprise.Controllers
                 using (ReceiptBO bObj = new ReceiptBO())
                 {
                     model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                    if (model.ReceiverPlantId == 0)
+                        model.ReceiverPlantId = null;
 
                     result = bObj.SaveOrUpdateItemReceipt(model);
                 }

@@ -14,6 +14,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity;
+using System.Text.RegularExpressions;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -231,6 +234,29 @@ namespace HekaMOLD.Business.UseCases
             }).ToArray();
         }
 
+        public ItemModel[] GetNonSyncItemList()
+        {
+            var repo = _unitOfWork.GetRepository<Item>();
+
+            return repo.Filter(d => (d.SyncStatus ?? 0) == 0)
+                .ToList()
+                .Select(d => new ItemModel
+            {
+                Id = d.Id,
+                ItemNo = d.ItemNo,
+                ItemName = d.ItemName,
+                ItemTypeStr = d.ItemType == 1 ? "Hammadde" : d.ItemType == 2 ? "Ticari Mal" :
+                        d.ItemType == 3 ? "Yarı Mamul" : d.ItemType == 4 ? "Mamul" : "",
+                ItemType = d.ItemType,
+                CategoryName = d.ItemCategory != null ? d.ItemCategory.ItemCategoryName : "",
+                GroupName = d.ItemGroup != null ? d.ItemGroup.ItemGroupName : "",
+                MainUnitCode = d.ItemUnit.Where(m => m.IsMainUnit == true).Select(m => m.UnitType.UnitCode).FirstOrDefault(),
+                //TotalInQuantity = d.ItemLiveStatus.Sum(m => m.InQuantity) ?? 0,
+                //TotalOutQuantity = d.ItemLiveStatus.Sum(m => m.OutQuantity) ?? 0,
+                //TotalOverallQuantity = d.ItemLiveStatus.Sum(m => m.LiveQuantity) ?? 0,
+            }).ToArray();
+        }
+
         public ItemModel[] GetItemListWithStates()
         {
             var repo = _unitOfWork.GetRepository<Item>();
@@ -424,6 +450,33 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
+        public BusinessResult SignItemAsSynced(int itemId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Item>();
+                var dbObj = repo.Get(d => d.Id == itemId);
+                if (dbObj == null)
+                    throw new Exception("Stok tanımı bulunamadı.");
+
+                dbObj.SyncStatus = 1;
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public ItemModel GetItem(int id)
         {
             ItemModel model = new ItemModel { };
@@ -570,6 +623,50 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return model;
+        }
+
+        public ItemModel FindItem(string itemName)
+        {
+            var repo = _unitOfWork.GetRepository<Item>();
+            var dbItem = repo.Get(d => d.ItemName == itemName);
+            if (dbItem != null)
+                return GetItem(dbItem.Id);
+
+            return new ItemModel();
+        }
+
+        public string GenerateProductNoFromName(string itemName)
+        {
+            var generatedNo = string.Empty;
+
+            try
+            {
+                var nameHeaderCriteria = itemName.Contains("-") || itemName.Contains(" ") ?
+                    ((itemName.IndexOf('-') < 0 ? 9999 : itemName.IndexOf('-')) > (itemName.IndexOf(' ') < 0 ? 9999 : itemName.IndexOf(' ')) ?
+                    itemName.Split(' ')[0] : itemName.Split('-')[0]) : itemName;
+
+                nameHeaderCriteria = nameHeaderCriteria.ToUpper();
+
+                var repo = _unitOfWork.GetRepository<Item>();
+                var lastItemNo = repo.Filter(d => DbFunctions.Like(d.ItemNo, nameHeaderCriteria + "-%"))
+                    .OrderByDescending(d => d.ItemNo)
+                    .Select(d => d.ItemNo)
+                    .FirstOrDefault();
+
+                if (lastItemNo != null && lastItemNo.Length > 0)
+                {
+                    var numericPart = Regex.Match(lastItemNo.Split('-')[1], "[0-9]+").Value;
+                    generatedNo = nameHeaderCriteria + "-" + string.Format("{0:00000}", Convert.ToInt32(numericPart) + 1);
+                }
+                else
+                    generatedNo = nameHeaderCriteria + "-" + string.Format("{0:00000}", 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return generatedNo;
         }
 
         public ItemWarehouseModel[] GetProperWarehouses(ItemType itemType, int? itemId)
@@ -997,6 +1094,21 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        public WarehouseModel GetItemWarehouse()
+        {
+            WarehouseModel data = null;
+
+            var repo = _unitOfWork.GetRepository<Warehouse>();
+            var dbObj = repo.Get(d => d.WarehouseType == (int)WarehouseType.ItemWarehouse);
+            if (dbObj != null)
+            {
+                data = new WarehouseModel();
+                dbObj.MapTo(data);
+            }
+
+            return data;
+        }
+
         #endregion
 
         #region ITEM UNIT BUSINESS
@@ -1383,6 +1495,7 @@ namespace HekaMOLD.Business.UseCases
             var repoShift = _unitOfWork.GetRepository<Shift>();
             var repoUser = _unitOfWork.GetRepository<User>();
             var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+            var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
 
             var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
             var repoIncident = _unitOfWork.GetRepository<Incident>();
@@ -1392,6 +1505,7 @@ namespace HekaMOLD.Business.UseCases
 
             // PRODUCTION BO FOR ACTIVE WORK ORDERS ON MACHINES
             ProductionBO prodBO = new ProductionBO();
+            var currentShift = prodBO.GetCurrentShift();
 
             repo.GetAll().ToList().ForEach(d =>
             {
@@ -1441,11 +1555,15 @@ namespace HekaMOLD.Business.UseCases
                     PostureCount = postureData.Count(),
                 };
 
+                if (containerObj.MachineStats.AvgProductionCount < 0)
+                    containerObj.MachineStats.AvgProductionCount = 0;
+
                 // RESOLVE SHIFT STATS OF THAT MACHINE
                 List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
                 shiftList = shiftList.OrderBy(m => m.StartTime).ToArray();
                 foreach (var shift in shiftList)
                 {
+                    #region CALCULATION OF TARGETS
                     // CALCULATE TARGET COUNT
                     DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
                     DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
@@ -1453,55 +1571,116 @@ namespace HekaMOLD.Business.UseCases
                     if (shift.StartTime > shift.EndTime)
                         endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
 
-                    var totalBreakTimeSeconds = 75 * 60;
+                    var totalBreakTimeSeconds = 60 * 60;
                     var totalShiftTime = (endTime - startTime).TotalSeconds;
                     var netShiftTime = totalShiftTime - totalBreakTimeSeconds;
 
                     // GET ACTIVE PLANS CYCLE TIME
                     string lastProductName = "";
-                    decimal avgCycleTime = 0;
                     int targetCount = 0;
 
-                    var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
-                        && m.WorkOrderDetailId != null
-                        && m.ShiftId == shift.Id)
-                        .OrderByDescending(m => m.Id).FirstOrDefault();
-                    if (lastSignal != null)
+                    var shiftSignals = signalData.Where(m => m.MachineId == d.Id &&
+                        m.WorkOrderDetailId != null && m.ShiftId == shift.Id);
+                    //var workList = shiftSignals
+                    //    .GroupBy(m => m.WorkOrderDetailId).ToArray();
+                    var workList = d.MachinePlan.OrderBy(m => m.OrderNo).Select(m => m.WorkOrderDetailId).ToArray();
+                    var remainingShiftTime = netShiftTime;
+                    foreach (var item in workList)
                     {
-                        lastProductName = lastSignal.WorkOrderDetail.Item != null ?
-                            lastSignal.WorkOrderDetail.Item.ItemName : lastSignal.WorkOrderDetail.TrialProductName;
-                        if (lastSignal.WorkOrderDetail.Item != null)
+                        var workDetail = d.WorkOrderDetail.FirstOrDefault(m => m.Id == item);
+                        var completeCount = workDetail.MachineSignal.Where(m => m.ShiftBelongsToDate < dt1).Count();
+                        var remainingCount = workDetail.Quantity - completeCount;
+
+                        if (workDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
+                            lastProductName = workDetail.Item != null ? workDetail.Item.ItemName : workDetail.TrialProductName;
+
+                        if (remainingCount <= 0)
+                            continue;
+
+                        // CHECK WORK ORDER
+                        bool targetTimeFound = false;
+                        int cycleTime = 0;
+
+                        if (workDetail.Item != null)
                         {
-                            var dbMoldTest = repoMoldTest.Get(m => m.ProductCode == lastSignal.WorkOrderDetail.Item.ItemNo);
-                            if (dbMoldTest != null)
-                                avgCycleTime = dbMoldTest.TotalTimeSeconds ?? 0;
+                            var moldTest = repoMoldTest.Get(m => m.ProductCode == workDetail.Item.ItemNo);
+                            if (moldTest != null && moldTest.TotalTimeSeconds > 0)
+                            {
+                                cycleTime = moldTest.TotalTimeSeconds.Value;
+                                targetTimeFound = true;
+                            }
                         }
+
+                        // FIND THE CYCLE OVER HISTORY
+                        if (!targetTimeFound)
+                        {
+                            cycleTime = repoSignal.Filter(m => m.WorkOrderDetailId == workDetail.Id && m.SignalStatus == 1)
+                                .OrderByDescending(m => m.Id)
+                                .Select(m => m.Duration)
+                                .FirstOrDefault() ?? 0;
+                        }
+
+                        // CALCULATE TARGET AND FILL REMAINING SHIFT TIME
+                        if (cycleTime > 0 && remainingShiftTime > 0)
+                        {
+                            var producableCount = remainingShiftTime / cycleTime;
+                            if (producableCount > Convert.ToDouble(remainingCount ?? 0))
+                                producableCount = Convert.ToDouble(remainingCount);
+
+                            targetCount += Convert.ToInt32(producableCount);
+                            remainingShiftTime -= cycleTime * producableCount;
+                        }
+                        
                     }
 
-                    // IF NO CYCLE TIME FOUND THEN CALCULATE OVER HISTORY
-                    if (avgCycleTime <= 0)
-                    {
-                        avgCycleTime = Convert.ToDecimal(repoSignal.Filter(m => m.MachineId == d.Id && m.ShiftId == shift.Id)
-                            .Average(m => m.Duration) ?? 0);
-                    }
+                    // OLD AVERAGE CALCULATION -- CHANGED SINCE 20.12.2021
+                    //var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
+                    //    && m.WorkOrderDetailId != null
+                    //    && m.ShiftId == shift.Id)
+                    //    .OrderByDescending(m => m.Id).FirstOrDefault();
+                    //if (lastSignal != null)
+                    //{
+                    //    lastProductName = lastSignal.WorkOrderDetail.Item != null ?
+                    //        lastSignal.WorkOrderDetail.Item.ItemName : lastSignal.WorkOrderDetail.TrialProductName;
+                    //    if (lastSignal.WorkOrderDetail.Item != null)
+                    //    {
+                    //        var dbMoldTest = repoMoldTest.Get(m => m.ProductCode == lastSignal.WorkOrderDetail.Item.ItemNo);
+                    //        if (dbMoldTest != null)
+                    //            avgCycleTime = dbMoldTest.TotalTimeSeconds ?? 0;
+                    //    }
+                    //}
 
-                    if (avgCycleTime > 0)
-                    {
-                        try
-                        {
-                            targetCount = Convert.ToInt32(Convert.ToDecimal(netShiftTime) / avgCycleTime);
-                        }
-                        catch (Exception)
-                        {
+                    //// IF NO CYCLE TIME FOUND THEN CALCULATE OVER HISTORY
+                    //if (avgCycleTime <= 0)
+                    //{
+                    //    //avgCycleTime = Convert.ToDecimal(repoSignal.Filter(m => m.MachineId == d.Id && m.ShiftId == shift.Id)
+                    //    //    .Average(m => m.Duration) ?? 0);
+                    //    targetCount = 0;
+                    //}
 
-                        }
-                    }
+                    //if (avgCycleTime > 0)
+                    //{
+                    //    try
+                    //    {
+                    //        targetCount = Convert.ToInt32(Convert.ToDecimal(netShiftTime) / avgCycleTime);
+                    //    }
+                    //    catch (Exception)
+                    //    {
+
+                    //    }
+                    //}
+                    #endregion
 
                     var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
 
-                    shiftStats.Add(new ShiftStatsModel
+                    bool isCurrentShift = false;
+                    if (currentShift != null && currentShift.Id == shift.Id)
+                        isCurrentShift = true;
+
+                    var newShiftStat = new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
+                        IsCurrentShift = isCurrentShift,
                         ChiefUserName = shift.User != null ? shift.User.UserName : "",
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
@@ -1510,7 +1689,12 @@ namespace HekaMOLD.Business.UseCases
                         WastageCount = shiftWastageCount,
                         LastProductName = lastProductName,
                         TargetCount = targetCount - Convert.ToInt32(shiftWastageCount),
-                    });
+                    };
+
+                    shiftStats.Add(newShiftStat);
+
+                    if (newShiftStat.AvgProductionCount < 0)
+                        newShiftStat.AvgProductionCount = 0;
                 }
 
                 containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
@@ -1597,20 +1781,26 @@ namespace HekaMOLD.Business.UseCases
                     PostureCount = postureData.Count(),
                 };
 
+                if (containerObj.MachineStats.AvgProductionCount < 0)
+                    containerObj.MachineStats.AvgProductionCount = 0;
+
                 // RESOLVE SHIFT STATS OF THAT MACHINE
                 List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
                 foreach (var shift in shiftList)
                 {
                     var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
-                    shiftStats.Add(new ShiftStatsModel
+                    var newShiftStat = new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
-                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count() 
+                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count()
                             - Convert.ToInt32(shiftWastageCount),
                         WastageCount = shiftWastageCount,
-                    });
+                    };
+                    if (newShiftStat.AvgProductionCount < 0)
+                        newShiftStat.AvgProductionCount = 0;
+                    shiftStats.Add(newShiftStat);
                 }
 
                 containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
@@ -2057,7 +2247,7 @@ namespace HekaMOLD.Business.UseCases
                 dbMoldItem.ItemNo = dbObj.MoldCode;
                 dbMoldItem.ItemName = dbObj.MoldName;
                 dbMoldItem.SupplierFirmId = dbObj.FirmId;
-                dbObj.Item1 = dbMoldItem;
+                dbObj.ItemMold = dbMoldItem;
                 #endregion
 
                 _unitOfWork.SaveChanges();
@@ -2116,6 +2306,9 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                if (model.MoldStatus == null)
+                    model.MoldStatus = (int)MoldStatus.Active;
+
                 model.MoldStatusText = ((MoldStatus)(model.MoldStatus ?? 1)).ToCaption();
                 model.CreatedDateStr = model.CreatedDate != null ?
                     string.Format("{0:dd.MM.yyyy}", model.CreatedDate) : "";
@@ -2959,6 +3152,476 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        #endregion
+
+        #region PRE PROCESS TYPE BUSINESS
+        public PreProcessTypeModel[] GetPreProcessTypeList()
+        {
+            List<PreProcessTypeModel> data = new List<PreProcessTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                PreProcessTypeModel containerObj = new PreProcessTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdatePreProcessType(PreProcessTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.PreProcessCode))
+                    throw new Exception("Ön işlem kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.PreProcessName))
+                    throw new Exception("Ön işlem adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+                if (repo.Any(d => (d.PreProcessCode == model.PreProcessCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir ön işlem tanımı mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new PreProcessType();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePreProcessType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public PreProcessTypeModel GetPreProcessType(int id)
+        {
+            PreProcessTypeModel model = new PreProcessTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<PreProcessType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region PROCESS BUSINESS
+        public ProcessModel[] GetProcessList()
+        {
+            List<ProcessModel> data = new List<ProcessModel>();
+
+            var repo = _unitOfWork.GetRepository<Process>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ProcessModel containerObj = new ProcessModel();
+                d.MapTo(containerObj);
+                containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateProcess(ProcessModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.ProcessCode))
+                    throw new Exception("Proses kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.ProcessName))
+                    throw new Exception("Proses adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Process>();
+
+                if (repo.Any(d => (d.ProcessCode == model.ProcessCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir proses mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Process();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteProcess(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Process>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ProcessModel GetProcess(int id)
+        {
+            ProcessModel model = new ProcessModel { };
+
+            var repo = _unitOfWork.GetRepository<Process>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region ROUTE BUSINESS
+        public RouteModel[] GetRouteList()
+        {
+            List<RouteModel> data = new List<RouteModel>();
+
+            var repo = _unitOfWork.GetRepository<Route>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                RouteModel containerObj = new RouteModel();
+                d.MapTo(containerObj);
+                containerObj.ForexTypeCode = d.ForexType != null ? d.ForexType.ForexTypeCode : "";
+                containerObj.UnitPrice = d.RouteItem.Sum(m => m.Process.UnitPrice ?? 0);// (d.UnitPrice ?? 0) > 0 ? d.UnitPrice : d.RouteItem.Sum(m => m.Process.UnitPrice ?? 0);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateRoute(RouteModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.RouteCode))
+                    throw new Exception("Rota kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.RouteName))
+                    throw new Exception("Rota adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Route>();
+                var repoRouteItems = _unitOfWork.GetRepository<RouteItem>();
+
+                if (repo.Any(d => (d.RouteCode == model.RouteCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir rota mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Route();
+                    dbObj.CreatedDate = DateTime.Now;
+                    dbObj.CreatedUserId = model.CreatedUserId;
+                    repo.Add(dbObj);
+                }
+
+                var crDate = dbObj.CreatedDate;
+
+                model.MapTo(dbObj);
+
+                if (dbObj.CreatedDate == null)
+                    dbObj.CreatedDate = crDate;
+
+                dbObj.UpdatedDate = DateTime.Now;
+
+                #region SAVE ROUTE ITEMS
+                if (model.RouteItems == null)
+                    model.RouteItems = new RouteItemModel[0];
+
+                var toBeRemovedItems = dbObj.RouteItem
+                    .Where(d => !model.RouteItems.Where(m => m.NewDetail == false)
+                        .Select(m => m.Id).ToArray().Contains(d.Id)
+                    ).ToArray();
+                foreach (var item in toBeRemovedItems)
+                {
+                    repoRouteItems.Delete(item);
+                }
+
+                foreach (var item in model.RouteItems)
+                {
+                    if (item.NewDetail == true)
+                    {
+                        var dbItemAu = new RouteItem();
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Route = dbObj;
+                        repoRouteItems.Add(dbItemAu);
+                    }
+                    else if (!toBeRemovedItems.Any(d => d.Id == item.Id))
+                    {
+                        var dbItemAu = repoRouteItems.GetById(item.Id);
+                        item.MapTo(dbItemAu);
+                        dbItemAu.Route = dbObj;
+                    }
+                }
+                #endregion
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteRoute(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Route>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public RouteModel GetRoute(int id)
+        {
+            RouteModel model = new RouteModel { };
+
+            var repo = _unitOfWork.GetRepository<Route>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+
+                #region GET ROUTE ITEMS
+                List<RouteItemModel> itemList = new List<RouteItemModel>();
+                dbObj.RouteItem.ToList().ForEach(d =>
+                {
+                    RouteItemModel itemModel = new RouteItemModel();
+                    d.MapTo(itemModel);
+                    itemModel.ProcessCode = d.Process != null ? d.Process.ProcessCode : "";
+                    itemModel.ProcessName = d.Process != null ? d.Process.ProcessName : "";
+                    itemModel.ProcessUnitPrice = d.Process != null ? d.Process.UnitPrice : null;
+                    itemModel.ProcessForexType = d.Process != null && d.Process.ForexType != null ?
+                        d.Process.ForexType.ForexTypeCode : "";
+                    itemList.Add(itemModel);
+                });
+                model.RouteItems = itemList.ToArray();
+                #endregion
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region ITEM QUALITY GROUP BUSINESS
+        public ItemQualityGroupModel[] GetItemQualityGroupList()
+        {
+            List<ItemQualityGroupModel> data = new List<ItemQualityGroupModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ItemQualityGroupModel containerObj = new ItemQualityGroupModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateItemQualityGroup(ItemQualityGroupModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.ItemQualityGroupCode))
+                    throw new Exception("Kalite grup kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.ItemQualityGroupName))
+                    throw new Exception("Kalite grup adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+
+                if (repo.Any(d => (d.ItemQualityGroupCode == model.ItemQualityGroupCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir kalite grubu mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ItemQualityGroup();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteItemQualityGroup(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ItemQualityGroupModel GetItemQualityGroup(int id)
+        {
+            ItemQualityGroupModel model = new ItemQualityGroupModel { };
+
+            var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public ItemQualityGroupModel GetItemQualityGroup(string groupCode)
+        {
+            ItemQualityGroupModel model = new ItemQualityGroupModel { };
+
+            var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+            var dbObj = repo.Get(d => d.ItemQualityGroupCode == groupCode);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
+        public bool HasAnyItemQualityGroup(string groupCode)
+        {
+            var repo = _unitOfWork.GetRepository<ItemQualityGroup>();
+            return repo.Any(d => d.ItemQualityGroupCode == groupCode);
+        }
+
         #endregion
     }
 }

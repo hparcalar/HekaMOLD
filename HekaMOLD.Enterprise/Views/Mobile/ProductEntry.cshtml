@@ -25,8 +25,9 @@
                         </div>
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
                             <div class="d-flex flex-row pb-1">
-                                <button type="button" ng-cloak ng-click="showProductionHistory()" class="btn py-2 btn-block flex-fill btn-sm btn-warning mx-1">
-                                    {{ historyWorkOrderDetailId > 0 ? 'Aktif Üretime Geç' : 'Biten Üretimler' }}
+                                <button type="button" ng-cloak ng-click="showProductionHistory()"
+                                        ng-bind="historyWorkOrderDetailId > 0 ? 'Aktif Üretime Geç' : 'Biten Üretimler'"
+                                        class="btn py-2 btn-block flex-fill btn-sm btn-warning mx-1">
                                 </button>
                                 <button type="button" ng-cloak ng-if="activeDetails.length > 1" ng-click="showMultipleDetails()"
                                         class="btn py-2 btn-block flex-1 btn-sm btn-primary mx-1">
@@ -37,36 +38,20 @@
                             <!--begin::Input group-->
                             <input type="text" ng-cloak class="form-control form-control-solid"
                                    ng-class="{'bg-light-danger': historyWorkOrderDetailId > 0}"
-                                   ng-model="activeWorkOrder.WorkOrder.ProductName" readonly="readonly" placeholder="" />
-                        </div>
-                        <div class="col-sm-4 col-xs-4 col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Koli İçi Adet</label>
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <input type="number" ng-cloak class="form-control form-control-solid"
-                                       ng-model="activeWorkOrder.WorkOrder.InPackageQuantity" placeholder="" />
+                                   value="{{ 'Sipariş: ' + activeWorkOrder.WorkOrder.ItemOrderDocumentNo + ', Levha: ' + activeWorkOrder.WorkOrder.ProductName }}" readonly="readonly" placeholder="" />
+
+                            <div class="text-center py-2">
+                                <img ng-if="activeWorkOrder.WorkOrder.SheetVisualStr != null && activeWorkOrder.WorkOrder.SheetVisualStr.length > 0"
+                                     class="mx-auto"
+                                     src="{{ 'data:image/png;base64,' + activeWorkOrder.WorkOrder.SheetVisualStr }}"
+                                     height="100" />
                             </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Sipariş</label>
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Levha Adedi</label>
                             <!--begin::Input group-->
                             <input type="text" ng-cloak class="form-control bg-light-primary"
                                    ng-model="activeWorkOrder.WorkOrder.Quantity" readonly="readonly" placeholder="" />
-                        </div>
-                        <div class="col-sm-4 col-xs-4 col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Gerçekleşen</label>
-                            <!--begin::Input group-->
-                            <input type="text" ng-cloak class="form-control bg-light-success"
-                                   ng-model="activeWorkOrder.WorkOrder.CompleteQuantity" readonly="readonly" placeholder="" />
-                        </div>
-
-                        <div class="col-sm-4 col-xs-4 col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Barkod</label>
-                            <!--begin::Input group-->
-                            <input type="text" ng-cloak class="form-control"
-                                   ng-model="modelObject.Barcode" placeholder="" />
                         </div>
                     </div>
                 </div>
@@ -87,38 +72,51 @@
                     </a>
                 </div>
                 <div class="col-sm-2 col-xs-2 col-xxl-2">
-                    <div style="text-align:center; border:1px solid #888; border-radius:3px;" class="bg-secondary py-0">
-                        <label class="form-label fs-6 fw-bolder text-gray-700 mb-1">Etiket Adedi</label>
-                        <!--begin::Input group-->
-                        <div class="mb-0">
-                            <input type="number" ng-cloak class="form-control"
-                                   ng-model="labelCount" placeholder="" />
+                    <div class="d-flex flex-column">
+                        <div>
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Koli İçi Adet</label>
+                            <!--begin::Input group-->
+                            <div class="mb-2">
+                                <input type="number" ng-cloak class="form-control"
+                                       ng-model="activeWorkOrder.WorkOrder.InPackageQuantity" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row">
+                            <a ng-hide="modelObject.Id > 0"
+                               class="btn btn-sm btn-block w-100 h-30 mt-0 mb-2 rounded-0 btn-success" style="padding-top:10px;" ng-click="readBarcode()">
+                                <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+                                            <path d="M6.26193932,17.6476484 C5.90425297,18.0684559 5.27315905,18.1196257 4.85235158,17.7619393 C4.43154411,17.404253 4.38037434,16.773159 4.73806068,16.3523516 L13.2380607,6.35235158 C13.6013618,5.92493855 14.2451015,5.87991302 14.6643638,6.25259068 L19.1643638,10.2525907 C19.5771466,10.6195087 19.6143273,11.2515811 19.2474093,11.6643638 C18.8804913,12.0771466 18.2484189,12.1143273 17.8356362,11.7474093 L14.0997854,8.42665306 L6.26193932,17.6476484 Z" id="Path-94" fill="#000000" fill-rule="nonzero" transform="translate(11.999995, 12.000002) rotate(-180.000000) translate(-11.999995, -12.000002) "></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <br />
+                                <span style="display:block;margin-top:10px;">Giriş Yap</span>
+                            </a>
+                            <a ng-hide="modelObject.Id > 0"
+                               class="btn btn-sm btn-block w-100 h-30 mt-0 mb-2 rounded-0 btn-primary" style="padding-top:10px;" ng-click="makeDemand()">
+                                <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Shopping-/-Box2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                            <path d="M4,9.67471899 L10.880262,13.6470401 C10.9543486,13.689814 11.0320333,13.7207107 11.1111111,13.740321 L11.1111111,21.4444444 L4.49070127,17.526473 C4.18655139,17.3464765 4,17.0193034 4,16.6658832 L4,9.67471899 Z M20,9.56911707 L20,16.6658832 C20,17.0193034 19.8134486,17.3464765 19.5092987,17.526473 L12.8888889,21.4444444 L12.8888889,13.6728275 C12.9050191,13.6647696 12.9210067,13.6561758 12.9368301,13.6470401 L20,9.56911707 Z" id="Combined-Shape" fill="#000000"></path>
+                                            <path d="M4.21611835,7.74669402 C4.30015839,7.64056877 4.40623188,7.55087574 4.5299008,7.48500698 L11.5299008,3.75665466 C11.8237589,3.60013944 12.1762411,3.60013944 12.4700992,3.75665466 L19.4700992,7.48500698 C19.5654307,7.53578262 19.6503066,7.60071528 19.7226939,7.67641889 L12.0479413,12.1074394 C11.9974761,12.1365754 11.9509488,12.1699127 11.9085461,12.2067543 C11.8661433,12.1699127 11.819616,12.1365754 11.7691509,12.1074394 L4.21611835,7.74669402 Z" id="Path" fill="#000000" opacity="0.3"></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <br />
+                                <span style="display:block;margin-top:10px;">Sac Talebi</span>
+                            </a>
                         </div>
                     </div>
-                    <div style="text-align:center; border:1px solid #ffd800; border-radius:3px;" class="bg-light-warning py-2"
-                         ng-click="modelObject.PrintLabel = !modelObject.PrintLabel">
-                        <input type="checkbox" style="margin-top:7px !important;" ng-model="modelObject.PrintLabel" />
-                        <span style="cursor:default !important;">Etiket Yazdır</span>
-                    </div>
-                    <a ng-hide="modelObject.Id > 0"
-                       class="btn btn-sm btn-block w-100 h-30 mt-0 btn-success" style="padding-top:10px;" ng-click="readBarcode()">
-                        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
-                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Stockholm-icons-/-Navigation-/-Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
-                                    <path d="M6.26193932,17.6476484 C5.90425297,18.0684559 5.27315905,18.1196257 4.85235158,17.7619393 C4.43154411,17.404253 4.38037434,16.773159 4.73806068,16.3523516 L13.2380607,6.35235158 C13.6013618,5.92493855 14.2451015,5.87991302 14.6643638,6.25259068 L19.1643638,10.2525907 C19.5771466,10.6195087 19.6143273,11.2515811 19.2474093,11.6643638 C18.8804913,12.0771466 18.2484189,12.1143273 17.8356362,11.7474093 L14.0997854,8.42665306 L6.26193932,17.6476484 Z" id="Path-94" fill="#000000" fill-rule="nonzero" transform="translate(11.999995, 12.000002) rotate(-180.000000) translate(-11.999995, -12.000002) "></path>
-                                </g>
-                            </svg>
-                        </span>
-                        <br />
-                        <span style="display:block;margin-top:10px;">Giriş Yap</span>
-                    </a>
                 </div>
             </div>
             <!--end::TOP FORM -->
             <!--begin::HISTORY TABLE-->
-            <div class="row gy-5 mt-4 gx-xl-8 bg-white">
-                <div class="col-xxl-12 col-sm-12">
+            <div class="row gy-5 mt-4 gx-xl-8 bg-transparent">
+                <div class="col-xxl-8 col-sm-8 bg-white">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -126,7 +124,7 @@
                                 <th class="w-20 px-2 text-center"><b>Tarih</b></th>
                                 <th class="w-20 px-2 text-center"><b>Saat</b></th>
                                 <th class="w-20 px-2 text-center"><b>Ürün</b></th>
-                                <th class="w-20 px-2 text-center"><b>Miktar</b></th>
+                                <th class="w-20 px-2 text-center"><b>Adet</b></th>
                             </tr>
                         </thead>
                     </table>
@@ -134,19 +132,49 @@
                         <table ng-cloak class="table table-bordered table-striped">
                             <tbody>
                                 <tr ng-repeat="item in activeWorkOrder.Serials">
-                                    <td class="w-20 px-2 text-center">{{item.SerialNo}}</td>
-                                    <td class="w-20 px-2 text-center">{{getDatePart(item.CreatedDateStr)}}</td>
-                                    <td class="w-20 px-2 text-center">{{getHourPart(item.CreatedDateStr)}}</td>
-                                    <td class="w-20 px-2 text-center">{{item.ItemName}}</td>
+                                    <td class="w-20 px-2 text-center" ng-bind="item.SerialNo"></td>
+                                    <td class="w-20 px-2 text-center" ng-bind="getDatePart(item.CreatedDateStr)"></td>
+                                    <td class="w-20 px-2 text-center" ng-bind="getHourPart(item.CreatedDateStr)"></td>
+                                    <td class="w-20 px-2 text-center" ng-bind="item.ItemName"></td>
                                     <td class="w-20 px-2 text-center">
-                                        {{item.FirstQuantity}}
-                                        @*<button class="btn btn-danger btn-sm" style="float:right;" ng-click="deleteSerial(item)">
-                                            Geri Al
-                                        </button>*@
-                                        @*<button class="btn btn-danger btn-sm" style="float:right;" ng-click="printSerial(item)">
-                                                Yazdır
-                                            </button>*@
+                                        <span ng-bind="item.FirstQuantity"></span>
+                                        <button class="btn btn-danger btn-sm py-1 px-2 fs-8" style="float:right;margin-left:5px;" ng-click="deleteSerial(item)">
+                                            <i class="fas fa-trash mx-auto px-0"></i>
+                                        </button>
+                                        <button class="btn btn-warning btn-sm py-1 px-2 fs-8" style="float:right;" ng-click="printSerial(item)">
+                                            <i class="fas fa-print mx-auto px-0"></i>
+                                        </button>
                                     </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-sm-4 bg-light-primary">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="w-50 px-2 text-center"><b>Ürün</b></th>
+                                <th class="w-20 px-2 text-center"><b>Görsel</b></th>
+                                <th class="w-15 px-2 text-center"><b>Üretilen</b></th>
+                                <th class="w-15 px-2 text-center"><b>Hedef</b></th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-md">
+                        <table ng-cloak class="table table-bordered table-striped">
+                            <tbody>
+                                <tr ng-repeat="item in activeWorkOrder.SheetUsages">
+                                    <td class="w-50 px-2 text-center" ng-bind="item.PartName"></td>
+                                    <td class="w-20 px-2 text-center">
+                                        <img ng-if="item.PartVisualStr != null && item.PartVisualStr.length > 0"
+                                             class="mx-auto"
+                                             src="{{ 'data:image/png;base64,' + item.PartVisualStr }}"
+                                             height="50" />
+                                    </td>
+                                    <td class="w-15 px-2 text-center" ng-bind="item.TotalQuantity"></td>
+                                    <td class="w-15 px-2 text-center" ng-bind="item.Quantity"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -164,6 +192,10 @@
         <div id="dial-prodlist" title="Biten Üretimlerden Seç" style="display:none;">
             <ng-include src="'../Components/Views/ProductionHistoryList.html'"></ng-include>
         </div>
+
+        <div id="dial-part-variants" title="Ürün Seç" style="display:none;">
+            <ng-include src="'../Components/Views/ProductPartSelection.html?v=2'"></ng-include>
+        </div>
     </div>
     <!--end::Post-->
 </div>
@@ -179,6 +211,7 @@
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/Scripts/html5-qrcode.min.js"></script>
     <script src="~/FrontEndLogic/Mobile/product-entry.js"></script>
-    <script src="~/Components/Controllers/production-history-list.js"></script>
+    <script src="~/Components/Controllers/production-history-list.js?v=2"></script>
     <script src="~/Components/Controllers/machine-selection.js"></script>
+    <script src="~/Components/Controllers/product-part-selection.js"></script>
 }

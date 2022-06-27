@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Bakım Planı";
+}
+
+<div>
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar">
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+            <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+                 class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
+                <!--begin::Title-->
+                <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
+                    @ViewBag.Title
+                </h1>
+                <!--end::Title-->
+            </div>
+            <!--end::Page title-->
+            <!--begin::Actions-->
+            <div class="d-flex align-items-center py-1">
+                <!--begin::Wrapper-->
+                <div class="me-4">
+
+                </div>
+                <!--end::Wrapper-->
+            </div>
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Row-->
+            <div class="d-flex flex-column h-100 bg-white">
+                <ng-include src="'../Components/Views/MaintenancePlan.html'"></ng-include>
+            </div>
+            <!--end::Row-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+
+    <script src="~/Components/Controllers/maintenance-plan.js"></script>
+}

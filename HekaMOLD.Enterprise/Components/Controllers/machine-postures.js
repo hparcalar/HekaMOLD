@@ -69,15 +69,15 @@
             columns: [
                 {
                     dataField: 'CreatedDateStr',
-                    caption: 'Bildirim Tar.', dataType: 'date', format: 'dd.MM.yyyy HH:mm'
+                    caption: 'Bildirim Tar.',
                 },
                 {
                     dataField: 'StartDateStr',
-                    caption: 'Başlama Tar.', dataType: 'date', format: 'dd.MM.yyyy HH:mm'
+                    caption: 'Başlama Tar.',
                 },
                 {
                     dataField: 'EndDateStr',
-                    caption: 'Bitiş Tar.', dataType: 'date', format: 'dd.MM.yyyy HH:mm'
+                    caption: 'Bitiş Tar.',
                 },
                 { dataField: 'PostureCategoryName', caption: 'Duruş Kategorisi' },
                 { dataField: 'Description', caption: 'Açıklama' },

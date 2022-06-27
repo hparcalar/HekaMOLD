@@ -3,10 +3,9 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th class="w-20 px-2 text-center"><b>Ürün</b></th>
-                <th class="w-20 px-2 text-center"><b>Miktar</b></th>
-                <th class="w-20 px-2 text-center"><b>Üretilen</b></th>
-                <th class="w-20 px-2 text-center"><b>Fire</b></th>
+                <th class="w-20 px-2 text-center"><b>Sipariş</b></th>
+                <th class="w-20 px-2 text-center"><b>Levha</b></th>
+                <th class="w-20 px-2 text-center"><b>Adet</b></th>
                 <th class="w-20 px-2 text-center"><b>Seç</b></th>
             </tr>
         </thead>
@@ -15,10 +14,13 @@
         <table ng-cloak class="table table-bordered table-striped">
             <tbody>
                 <tr ng-repeat="item in prodList">
-                    <td class="w-20 px-2 text-center">{{item.ProductName}}</td>
+                    <td class="w-20 px-2 text-center">{{item.ItemOrderDocumentNo}}</td>
+                    <td class="w-20 px-2 text-center">
+                        <img ng-if="item.SheetVisualStr != null && item.SheetVisualStr.length > 0"
+                             src="{{ 'data:image/png;base64,' + item.SheetVisualStr }}"/>
+                        {{item.ProductName}}
+                    </td>
                     <td class="w-20 px-2 text-center">{{item.Quantity}}</td>
-                    <td class="w-20 px-2 text-center">{{item.CompleteQuantity}}</td>
-                    <td class="w-20 px-2 text-center">{{item.WastageQuantity}}</td>
                     <td class="w-20 px-2 text-center">
                         <button class="btn btn-primary btn-sm" style="float:right;" ng-click="selectHistory(item.Id)">
                             Seç

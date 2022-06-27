@@ -29,7 +29,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetNextOrderNo()
+        public JsonResult GetNextOfferNo()
         {
             string receiptNo = "";
 

@@ -17,6 +17,9 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { ReportType.WorkOrder, "İş Emri" },
             { ReportType.WorkOrderDetail, "İş Emri Satır Formu" },
             { ReportType.WorkOrderSerial, "Ürün Etiketi" },
+            { ReportType.RawMaterialLabel, "Hammadde Etiketi" },
+            { ReportType.PalletLabel, "Palet Etiketi" },
+            { ReportType.ItemReceiptDelivery, "Sevk İrsaliyesi" },
         };
     }
 }

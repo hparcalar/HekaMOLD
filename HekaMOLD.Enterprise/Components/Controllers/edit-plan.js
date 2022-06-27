@@ -4,6 +4,9 @@
         Quantity: 0,
         CompleteQuantity: 0,
         WastageQuantity: 0,
+        LabelConfigData: {
+            ShowFirm:true,
+        }
     };
 
     $scope.save = function () {
@@ -123,6 +126,20 @@
             modal: true,
             resizable: false,
             width: 300,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.showDeliveryForm = function () {
+        $scope.$broadcast('loadItemDeliveries', $scope.modelObject.Id);
+        $('#dial-deliveries').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: window.innerWidth * 0.95,
+            height: window.innerHeight * 0.95,
             show: true,
             draggable: false,
             closeText: "KAPAT"

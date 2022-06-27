@@ -1,0 +1,13 @@
+﻿<div ng-controller="productPartSelection">
+    <div class="d-flex flex-column">
+        <button type="button" class="btn my-2 btn-sm btn-block btn-warning"
+                ng-repeat="(key, item) in partVariants track by item.Id"
+                ng-click="selectPart(item)">
+            <div ng-cloak ng-if="item.PartVisualStr && item.PartVisualStr.length > 0" class="mb-3">
+                <img src="{{ 'data:image/png;base64,' + item.PartVisualStr }}" />
+            </div>
+            
+            <span class="fw-bolder fs-3 text-dark" ng-bind="item.PartName"></span>
+        </button>
+    </div>
+</div>

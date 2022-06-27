@@ -20,7 +20,10 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { ItemReceiptType.Consumption, "Sarf Fişi" },
             { ItemReceiptType.Wastage, "Fire Fişi" },
             { ItemReceiptType.WarehouseInput, "Depo Giriş Fişi" },
-            { ItemReceiptType.WarehouseOutput, "Depo Çıkış Fişi" }
+            { ItemReceiptType.WarehouseOutput, "Depo Çıkış Fişi" },
+            { ItemReceiptType.ToContractor, "Fasona Çıkış" },
+            { ItemReceiptType.FromContractor, "Fasondan Giriş" },
+            { ItemReceiptType.DeliveryToProduction, "Üretime Çıkış Fişi" },
         };
 
         public static Dictionary<int, string> 
@@ -45,6 +48,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
 
             data = Values.Where(d => properTypes.Contains((int)d.Key))
                 .Select(d => new { Id = (int)d.Key, Text = d.Value })
+                .Distinct()
                 .ToDictionary(k => k.Id, v => v.Text);
 
             return data;
@@ -60,7 +64,10 @@ namespace HekaMOLD.Business.Models.Dictionaries
             (int)ItemReceiptType.Wastage,
             (int)ItemReceiptType.WarehouseInput,
             (int)ItemReceiptType.WarehouseOutput,
-            (int)ItemReceiptType.EntryFromProduction
+            (int)ItemReceiptType.DeliveryToProduction,
+            (int)ItemReceiptType.EntryFromProduction,
+            (int)ItemReceiptType.ToContractor,
+            (int)ItemReceiptType.FromContractor,
         };
 
         public static int[] SalesTypes = new int[] { 
@@ -73,7 +80,8 @@ namespace HekaMOLD.Business.Models.Dictionaries
             (int)ItemReceiptType.ItemBuying,
             (int)ItemReceiptType.ItemSellingReturn,
             (int)ItemReceiptType.WarehouseInput,
-            (int)ItemReceiptType.EntryFromProduction
+            (int)ItemReceiptType.EntryFromProduction,
+            (int)ItemReceiptType.FromContractor,
         };
 
         public static int[] OutputTypes = new int[]
@@ -81,7 +89,9 @@ namespace HekaMOLD.Business.Models.Dictionaries
             (int)ItemReceiptType.ItemBuyingReturn,
             (int)ItemReceiptType.WarehouseOutput,
             (int)ItemReceiptType.Consumption,
-            (int)ItemReceiptType.Wastage
+            (int)ItemReceiptType.Wastage,
+            (int)ItemReceiptType.ToContractor,
+            (int)ItemReceiptType.DeliveryToProduction,
         };
     }
 }

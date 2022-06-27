@@ -1,5 +1,6 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Production;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
@@ -57,6 +58,65 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetItemDeliveryList(int workOrderDetailId)
+        {
+            ItemReceiptDetailModel[] result = new ItemReceiptDetailModel[0];
+
+            using (PlanningBO bObj = new PlanningBO())
+            {
+                result = bObj.GetDeliveredItems(workOrderDetailId);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult DeleteItemDelivery(int receiptDetailId)
+        {
+            try
+            {
+                BusinessResult result = null;
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    result = bObj.DeleteReceiptDetail(receiptDetailId);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1 });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateItemDelivery(ItemReceiptDetailModel model)
+        {
+            try
+            {
+                BusinessResult result = null;
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    result = bObj.UpdateReceiptDetail(model);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1 });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpGet]
         public JsonResult GetSelectables()
         {
             ItemModel[] items = new ItemModel[0];
@@ -65,6 +125,7 @@ namespace HekaMOLD.Enterprise.Controllers
             ForexTypeModel[] forexes = new ForexTypeModel[0];
             MoldModel[] molds = new MoldModel[0];
             MoldTestModel[] moldTests = new MoldTestModel[0];
+            WorkOrderCategoryModel[] workCategories = new WorkOrderCategoryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -73,6 +134,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
                 molds = bObj.GetMoldList();
+                workCategories = bObj.GetWorkOrderCategoryList();
             }
 
             using (MoldBO bObj = new MoldBO())
@@ -83,6 +145,7 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(new { Items = items, Units = units, 
                 Firms = firms, Forexes = forexes,
                 Molds = molds, MoldTests = moldTests,
+                WorkCategories = workCategories,
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
@@ -145,6 +208,9 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (ProductionBO bObj = new ProductionBO())
                 {
+                    int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                    model.PlantId = plantId;
+
                     result = bObj.SaveOrUpdateWorkOrder(model);
                 }
 

@@ -38,7 +38,7 @@
                                         class="btn btn-sm btn-success btn-block h-75 flex-fill mt-2 mx-1">
                                     Onaylılar
                                 </button>*@
-                                <button type="button"
+                                @*<button type="button"
                                         ng-class="{'btn-dark': isQualityFilterSelected(2)}"
                                         ng-click="toggleQualityFilter(2)"
                                         class="btn btn-sm btn-danger btn-block h-75 flex-fill mt-2 mx-1">
@@ -49,7 +49,7 @@
                                         ng-click="toggleQualityFilter(3)"
                                         class="btn btn-sm btn-warning btn-block h-75 flex-fill mt-2 mx-1">
                                     Bekleyenler
-                                </button>
+                                </button>*@
                             </div>
                         </div>
 
@@ -134,7 +134,7 @@
                                 <tr ng-repeat="item in filteredPickupList"
                                     ng-show="modelObject.ShowOnlyOk == false || modelObject.ShowOnlyOk == true && (item.QualityStatus == 1)"
                                     ng-class="{'bg-warning': isSelectedProduct(item)}">
-                                    <td class="w-10 px-2">{{item.CreatedDateStr}}</td>
+                                    <td class="w-10 px-2">{{item.ShiftBelongsToDateStr}}</td>
                                     <td class="w-10 px-2">{{item.MachineCode}}</td>
                                     @*<td class="w-10 px-2">{{item.SerialNo}}</td>*@
                                     @*<td class="w-10 px-2">{{item.ItemNo}}</td>*@
@@ -203,7 +203,12 @@
                             <tbody>
                                 <tr ng-repeat="item in filteredSummaryList"
                                     ng-class="{'bg-warning': selectedSummary.ItemName == item.ItemName}">
-                                    <td class="w-50 px-2">{{item.ItemName}}</td>
+                                    <td class="w-50 px-2">
+                                        {{item.ItemName}}
+                                        <img ng-if="item.PartVisualStr != null && item.PartVisualStr.length > 0"
+                                             height="30"
+                                             src="{{ 'data:image/png;base64,' + item.PartVisualStr }}"/>
+                                    </td>
                                     <td class="w-20 px-1">{{ item.ShiftCode }}</td>
                                     <td class="w-25 px-2">{{item.SerialCount}}</td>
                                     <td class="w-25 px-2">{{item.SerialSum}}</td>

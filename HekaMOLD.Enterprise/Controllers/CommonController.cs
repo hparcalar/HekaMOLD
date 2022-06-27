@@ -329,11 +329,44 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult GetMachineQueue(int machineId)
         {
             MachinePlanModel[] data = new MachinePlanModel[0];
+            WorkOrderModel[] dataModel = new WorkOrderModel[0];
 
             using (PlanningBO bObj = new PlanningBO())
             {
                 data = bObj.GetMachineQueue(machineId);
             }
+
+            //if (data != null && data.Length > 0)
+            //{
+            //    dataModel = data.GroupBy(d => new
+            //    {
+            //        //WorkOrderId = d.WorkOrder.Id,
+            //        ItemOrderId = d.WorkOrder.ItemOrderId,
+            //        MachineId = d.MachineId,
+            //    }).Select(d => new WorkOrderModel
+            //    {
+            //        Id = d.First().WorkOrder.WorkOrderId ?? 0,
+            //        OrderNo = d.First().OrderNo ?? 0,
+            //        WorkOrderStatus = d.First().WorkOrder.WorkOrderStatus,
+            //        WorkOrderDateStr = d.First().WorkOrder.WorkOrderDateStr,
+            //        ItemOrderId = d.Key.ItemOrderId ?? 0,
+            //        FirmName = d.First().WorkOrder.FirmName,
+            //        ItemOrderDocumentNo = d.First().WorkOrder.ItemOrderDocumentNo,
+            //        ProductName = d.First().WorkOrder.ProductName,
+            //        Quantity = d.First().WorkOrder.Quantity ?? 0,
+            //        CompleteQuantity = d.First().WorkOrder.CompleteQuantity,
+            //        WastageQuantity = d.First().WorkOrder.WastageQuantity ?? 0,
+            //        Explanation = d.First().WorkOrder.Explanation,
+            //        WorkOrderType = d.First().WorkOrder.WorkOrderType,
+            //        MachineId = d.Key.MachineId ?? 0,
+            //        Details = d.Select(m => new WorkOrderDetailModel
+            //        {
+            //            Id = m.WorkOrderDetailId ?? 0,
+            //        }).ToArray(),
+            //    })
+            //    .OrderBy(d => d.OrderNo)
+            //    .ToArray();
+            //}
 
             var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
@@ -442,17 +475,34 @@ namespace HekaMOLD.Enterprise.Controllers
         [FreeAction]
         public JsonResult PrintSerial(int id)
         {
+            BusinessResult result = null;
+
             using (ProductionBO bObj = new ProductionBO())
             {
                 var printerId =
                         Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter",
                             Convert.ToInt32(Request.Cookies["PlantId"].Value)).PrmValue);
-                var dbPrinter = bObj.GetPrinter(printerId);
 
-                bObj.PrintProductLabel(id,printerId, dbPrinter.AccessPath);
+                result = bObj.AddToPrintQueue(new PrinterQueueModel
+                {
+                    PrinterId = printerId,
+                    RecordType = (int)RecordType.SerialItem,
+                    RecordId = id,
+                    CreatedDate = DateTime.Now,
+                });
             }
 
-            return Json(new { Status = 1 });
+            //using (ProductionBO bObj = new ProductionBO())
+            //{
+            //    var printerId =
+            //            Convert.ToInt32(bObj.GetParameter("DefaultProductPrinter",
+            //                Convert.ToInt32(Request.Cookies["PlantId"].Value)).PrmValue);
+            //    var dbPrinter = bObj.GetPrinter(printerId);
+
+            //    bObj.PrintProductLabel(id,printerId, dbPrinter.AccessPath);
+            //}
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
 
         [HttpPost]
@@ -511,6 +561,78 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
+        }
+        #endregion
+
+        #region OFFER CONSTANTS
+        [HttpGet]
+        public JsonResult GetOfferConstants()
+        {
+            string rawSheetPrice = "0";
+            string wastagePrice = "0";
+            string manPrice = "0";
+            string profitRate = "0";
+            string expirationVal = "";
+
+            int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                var prmRawSheet = bObj.GetParameter("RawSheetPrice", plantId);
+                var prmWastagePrice = bObj.GetParameter("WastagePrice", plantId);
+                var prmManPrice = bObj.GetParameter("ManPrice", plantId);
+                var prmProfitRate = bObj.GetParameter("ProfitRate", plantId);
+                var prmExpirationVal = bObj.GetParameter("ExpirationVal", plantId);
+
+                if (prmRawSheet != null && !string.IsNullOrEmpty(prmRawSheet.PrmValue))
+                    rawSheetPrice = prmRawSheet.PrmValue;
+                if (prmWastagePrice != null && !string.IsNullOrEmpty(prmWastagePrice.PrmValue))
+                    wastagePrice = prmWastagePrice.PrmValue;
+                if (prmManPrice != null && !string.IsNullOrEmpty(prmManPrice.PrmValue))
+                    manPrice = prmManPrice.PrmValue;
+                if (prmProfitRate != null && !string.IsNullOrEmpty(prmProfitRate.PrmValue))
+                    profitRate = prmProfitRate.PrmValue;
+                if (prmExpirationVal != null && !string.IsNullOrEmpty(prmExpirationVal.PrmValue))
+                    expirationVal = prmExpirationVal.PrmValue;
+            }
+
+            return Json(new { 
+                RawSheetPrice = rawSheetPrice,
+                WastagePrice = wastagePrice,
+                ManPrice = manPrice,
+                ProfitRate = profitRate,
+                ExpirationVal = expirationVal,
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult SaveOfferConstants(string rawSheetPrice, string wastagePrice, string manPrice, string profitRate, string expirationVal)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    result = bObj.SetParameters(new SystemParameterModel[] {
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "RawSheetPrice", PrmValue = rawSheetPrice },
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "WastagePrice", PrmValue = wastagePrice },
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "ManPrice", PrmValue = manPrice },
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "ProfitRate", PrmValue = profitRate },
+                        new SystemParameterModel{ PlantId = plantId, PrmCode = "ExpirationVal", PrmValue = expirationVal }
+                    });
+                }
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = false, ErrorMessage = ex.Message });
+            }
+
+
         }
         #endregion
     }

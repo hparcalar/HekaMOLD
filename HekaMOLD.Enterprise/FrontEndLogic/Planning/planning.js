@@ -126,7 +126,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
             var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
             if (planObj != null) {
-                if (planObj.WorkOrder.WorkOrderStatus > 3) {
+                if (planObj.WorkOrderStatus > 3) {
                     toastr.error('Tamamlanmış bir planı değiştiremezsiniz.', 'Uyarı');
                     return false;
                 }
@@ -146,7 +146,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 return false;
             else {
                 var planObj = $scope.boardPlanList.find(d => d.Id == parseInt(planId));
-                if (planObj.WorkOrder.WorkOrderStatus > 3) {
+                if (planObj.WorkOrderStatus > 3) {
                     toastr.error('Tamamlanmış bir planın önüne üretim alamazsınız.', 'Uyarı');
                     return false;
                 }
@@ -302,7 +302,14 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 mode: "virtual"
             },
             height: 450,
-            width:450,
+            onEditorPreparing: function (e) {
+                if (e.parentType === "filterRow") {
+                    let onValueChanged = e.editorOptions.onValueChanged
+                    e.editorOptions.onValueChanged = function (args) {
+                        e.component.columnOption(e.dataField, "filterValue", args.value.toUpperCase())
+                    }
+                }
+            },
             editing: {
                 allowUpdating: false,
                 allowDeleting: false
@@ -324,10 +331,19 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
                         if (typeof machineId != 'undefined') {
                             var planObj = $scope.waitingPlanList.find(d => d.Id == parseInt(planId));
-                            if (typeof planObj != 'undefined') {
-                                planObj.MachineId = parseInt(machineId);
-                                $scope.saveModel(planObj);
-                            }
+                            planObj.MachineId = parseInt(machineId);
+                            $scope.saveModel(planObj);
+
+                            //var sameOrderDetails = planObj.Details;
+                            //for (var i = 0; i < sameOrderDetails.length; i++) {
+                            //    var detailObj = sameOrderDetails[i];
+                            //    if (detailObj != null) {
+                            //        if (typeof planObj != 'undefined') {
+                            //            detailObj.MachineId = parseInt(machineId);
+                            //            $scope.saveModel(detailObj);
+                            //        }
+                            //    }
+                            //}
                         }
                     });
                 });
@@ -356,11 +372,14 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     "<tr draggable=\"true\" "
                     + "class=\"dx-row dx-data-row dx-row-lines waiting-plan-row " + deadlineClass + "\" data-id=\"" + data.Id + "\">" +
                         "<td>" + data.OrderDateStr + "</td>" +
+                    "<td>" + data.OrderNo + "</td>" +
+                    "<td>" + data.SheetProgramName + "</td>" +
                         "<td>" + data.DeadlineDateStr + "</td>" +
                         "<td>" + data.FirmName + "</td>" +
-                        "<td>" + data.ItemNo + "</td>" +
-                        "<td>" + data.ItemName + "</td>" +
-                        "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
+                    "<td>" + data.ItemNo + "</td>" +
+                    "<td><img src=\"data:image/png;base64," + data.SheetVisualStr + "\" />" + "</td>" +
+                    "<td class=\"text-center\">" + (data.Thickness ? data.Thickness.toFixed(2) : '') + "</td>" +
+                        "<td class=\"text-center\">" + data.Quantity.toFixed(2) + "</td>" +
                         "</tr>";
 
                 container.append(markup);
@@ -370,13 +389,26 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                     dataField: 'OrderDateStr',
                     caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy'
                 },
+                { dataField: 'OrderNo', caption: 'Sipariş No' },
+                { dataField: 'SheetProgramName', caption: 'Program' },
                 {
                     dataField: 'DeadlineDateStr',
                     caption: 'Termin', dataType: 'date', format: 'dd.MM.yyyy'
                 },
                 { dataField: 'FirmName', caption: 'Firma' },
-                { dataField: 'ItemNo', caption: 'Ürün Kodu' },
-                { dataField: 'ItemName', caption: 'Ürün Adı' },
+                { dataField: 'ItemNo', caption: 'Levha No' },
+                {
+                    dataField: 'SheetVisualStr', caption: 'Resim', allowEditing: false,
+                    cellTemplate: function (element, info) {
+
+                        if (info.displayValue != null && info.displayValue.length > 0)
+                            element.append('<image src="data:image/png;base64,' + info.displayValue + '" />');
+                    }
+                },
+                {
+                    dataField: 'Thickness', caption: 'Kalınlık',
+                    dataType: 'number', format: { type: "fixedPoint", precision: 2 }
+                },
                 {
                     dataField: 'Quantity', caption: 'Miktar',
                     dataType: 'number', format: { type: "fixedPoint", precision: 2 }

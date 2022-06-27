@@ -1,0 +1,17 @@
+﻿<div ng-controller="offerSheetUsages">
+    <h5 ng-bind="partName"></h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Levha No</th>
+                <th>Miktar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in usageList">
+                <td ng-bind="item.SheetNo"></td>
+                <td ng-bind="item.Quantity"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

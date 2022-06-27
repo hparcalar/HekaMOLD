@@ -15,151 +15,174 @@
                     @if (Html.IsGranted("IsProductionChief"))
                     {
                         <div class="col-sm-6 col-xxl-6">
-                            <div class="col bg-light-primary border border-primary text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
-                                 ng-click="redirect('ProductionStatus')">
-                                <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
-                                <span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#12131A" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10.53 7.95634C9.86395 7.54005 9 8.0189 9 8.80433V15.1958C9 15.9813 9.86395 16.4601 10.53 16.0438L15.6432 12.8481C16.2699 12.4564 16.2699 11.5438 15.6432 11.1521L10.53 7.95634Z" fill="#12131A" />
-                                    </svg>
-                                </span>
-                                <!--end::Svg Icon-->
-                                <span href="#" class="text-dark fw-boldest fs-3">İş Başlat / Bitir</span>
+                            <div class="row">
+
+                                <div class="col-sm-6 col-xxl-6">
+                                    <div class="col bg-light-success border border-success text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                                         ng-click="redirect('ItemEntry')">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                        <span class="svg-icon svg-icon-3x svg-icon-success d-block my-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M13 15C13 13.8954 13.8954 13 15 13H21C22.1046 13 23 13.8954 23 15V21C23 22.1046 22.1046 23 21 23H15C13.8954 23 13 22.1046 13 21V15Z" fill="#12131A" />
+                                                <path d="M17 13.1429C17 13.064 17.064 13 17.1429 13H18.8571C18.936 13 19 13.064 19 13.1429V15C19 15.5523 18.5523 16 18 16V16C17.4477 16 17 15.5523 17 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M1 15C1 13.8954 1.89543 13 3 13H9C10.1046 13 11 13.8954 11 15V21C11 22.1046 10.1046 23 9 23H3C1.89543 23 1 22.1046 1 21V15Z" fill="#12131A" />
+                                                <path d="M5 13.1429C5 13.064 5.06396 13 5.14286 13H6.85714C6.93604 13 7 13.064 7 13.1429V15C7 15.5523 6.55228 16 6 16V16C5.44772 16 5 15.5523 5 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M7 3C7 1.89543 7.89543 1 9 1H15C16.1046 1 17 1.89543 17 3V9C17 10.1046 16.1046 11 15 11H9C7.89543 11 7 10.1046 7 9V3Z" fill="#12131A" />
+                                                <path d="M11 1.14286C11 1.06396 11.064 1 11.1429 1H12.8571C12.936 1 13 1.06396 13 1.14286V3C13 3.55228 12.5523 4 12 4V4C11.4477 4 11 3.55228 11 3V1.14286Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <span href="#" class="text-dark fw-boldest fs-3">Malzeme Girişi</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-xxl-6">
+                                    <div class="col bg-light-success border border-success text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                                         ng-click="redirect('ItemDelivery')">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                        <span class="svg-icon svg-icon-3x svg-icon-success d-block my-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M13 15C13 13.8954 13.8954 13 15 13H21C22.1046 13 23 13.8954 23 15V21C23 22.1046 22.1046 23 21 23H15C13.8954 23 13 22.1046 13 21V15Z" fill="#12131A" />
+                                                <path d="M17 13.1429C17 13.064 17.064 13 17.1429 13H18.8571C18.936 13 19 13.064 19 13.1429V15C19 15.5523 18.5523 16 18 16V16C17.4477 16 17 15.5523 17 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M1 15C1 13.8954 1.89543 13 3 13H9C10.1046 13 11 13.8954 11 15V21C11 22.1046 10.1046 23 9 23H3C1.89543 23 1 22.1046 1 21V15Z" fill="#12131A" />
+                                                <path d="M5 13.1429C5 13.064 5.06396 13 5.14286 13H6.85714C6.93604 13 7 13.064 7 13.1429V15C7 15.5523 6.55228 16 6 16V16C5.44772 16 5 15.5523 5 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M7 3C7 1.89543 7.89543 1 9 1H15C16.1046 1 17 1.89543 17 3V9C17 10.1046 16.1046 11 15 11H9C7.89543 11 7 10.1046 7 9V3Z" fill="#12131A" />
+                                                <path d="M11 1.14286C11 1.06396 11.064 1 11.1429 1H12.8571C12.936 1 13 1.06396 13 1.14286V3C13 3.55228 12.5523 4 12 4V4C11.4477 4 11 3.55228 11 3V1.14286Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <span href="#" class="text-dark fw-boldest fs-3">Malzeme Talepleri</span>
+                                    </div>
+                                </div>
                             </div>
+                           
                         </div>
 
                         <div class="col-sm-6 col-xxl-6">
-                            <div class="col bg-light-primary border border-primary border-active text-center active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
-                                 ng-click="redirect('ProductEntry')">
-                                <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
-                                <span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
+                            <div class="row">
+                                <!--<div class="col-sm-6 col-xxl-6">
+                                    <div class="col bg-light-primary border border-primary border-active text-center active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                                         ng-click="redirect('ProductPlanList')">-->
+                                                            <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                                            <!--<span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path opacity="0.25" d="M13 15C13 13.8954 13.8954 13 15 13H21C22.1046 13 23 13.8954 23 15V21C23 22.1046 22.1046 23 21 23H15C13.8954 23 13 22.1046 13 21V15Z" fill="#12131A" />
-                                        <path d="M17 13.1429C17 13.064 17.064 13 17.1429 13H18.8571C18.936 13 19 13.064 19 13.1429V15C19 15.5523 18.5523 16 18 16V16C17.4477 16 17 15.5523 17 15V13.1429Z" fill="#12131A" />
-                                        <path opacity="0.25" d="M1 15C1 13.8954 1.89543 13 3 13H9C10.1046 13 11 13.8954 11 15V21C11 22.1046 10.1046 23 9 23H3C1.89543 23 1 22.1046 1 21V15Z" fill="#12131A" />
-                                        <path d="M5 13.1429C5 13.064 5.06396 13 5.14286 13H6.85714C6.93604 13 7 13.064 7 13.1429V15C7 15.5523 6.55228 16 6 16V16C5.44772 16 5 15.5523 5 15V13.1429Z" fill="#12131A" />
-                                        <path opacity="0.25" d="M7 3C7 1.89543 7.89543 1 9 1H15C16.1046 1 17 1.89543 17 3V9C17 10.1046 16.1046 11 15 11H9C7.89543 11 7 10.1046 7 9V3Z" fill="#12131A" />
-                                        <path d="M11 1.14286C11 1.06396 11.064 1 11.1429 1H12.8571C12.936 1 13 1.06396 13 1.14286V3C13 3.55228 12.5523 4 12 4V4C11.4477 4 11 3.55228 11 3V1.14286Z" fill="#12131A" />
+                                        <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M6 3C6 2.44772 6.44772 2 7 2C7.55228 2 8 2.44772 8 3V4H16V3C16 2.44772 16.4477 2 17 2C17.5523 2 18 2.44772 18 3V4H19C20.6569 4 22 5.34315 22 7V19C22 20.6569 20.6569 22 19 22H5C3.34315 22 2 20.6569 2 19V7C2 5.34315 3.34315 4 5 4H6V3Z" fill="#191213" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 12C9.44772 12 9 12.4477 9 13C9 13.5523 9.44772 14 10 14H17C17.5523 14 18 13.5523 18 13C18 12.4477 17.5523 12 17 12H10ZM7 16C6.44772 16 6 16.4477 6 17C6 17.5523 6.44772 18 7 18H13C13.5523 18 14 17.5523 14 17C14 16.4477 13.5523 16 13 16H7Z" fill="#121319" />
                                     </svg>
-                                </span>
-                                <!--end::Svg Icon-->
-                                <span href="#" class="text-dark fw-boldest fs-3">Ürün Girişi</span>
+                                </span>-->
+                                                            <!--end::Svg Icon-->
+                                                            <!--<span href="#" class="text-dark fw-boldest fs-3">Üretim Planı</span>
+                                    </div>
+                                </div>-->
+                                <div class="col-sm-6 col-xxl-6">
+                                    <div class="col bg-light-primary border border-primary text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                                         ng-click="redirect('ProductionStatus')">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                        <span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#12131A" />
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.53 7.95634C9.86395 7.54005 9 8.0189 9 8.80433V15.1958C9 15.9813 9.86395 16.4601 10.53 16.0438L15.6432 12.8481C16.2699 12.4564 16.2699 11.5438 15.6432 11.1521L10.53 7.95634Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <span href="#" class="text-dark fw-boldest fs-3">İş Başlat / Bitir</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xxl-6">
+                                    <div class="col bg-light-primary border border-primary border-active text-center active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                                         ng-click="redirect('ProductEntry')">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                        <span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M13 15C13 13.8954 13.8954 13 15 13H21C22.1046 13 23 13.8954 23 15V21C23 22.1046 22.1046 23 21 23H15C13.8954 23 13 22.1046 13 21V15Z" fill="#12131A" />
+                                                <path d="M17 13.1429C17 13.064 17.064 13 17.1429 13H18.8571C18.936 13 19 13.064 19 13.1429V15C19 15.5523 18.5523 16 18 16V16C17.4477 16 17 15.5523 17 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M1 15C1 13.8954 1.89543 13 3 13H9C10.1046 13 11 13.8954 11 15V21C11 22.1046 10.1046 23 9 23H3C1.89543 23 1 22.1046 1 21V15Z" fill="#12131A" />
+                                                <path d="M5 13.1429C5 13.064 5.06396 13 5.14286 13H6.85714C6.93604 13 7 13.064 7 13.1429V15C7 15.5523 6.55228 16 6 16V16C5.44772 16 5 15.5523 5 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M7 3C7 1.89543 7.89543 1 9 1H15C16.1046 1 17 1.89543 17 3V9C17 10.1046 16.1046 11 15 11H9C7.89543 11 7 10.1046 7 9V3Z" fill="#12131A" />
+                                                <path d="M11 1.14286C11 1.06396 11.064 1 11.1429 1H12.8571C12.936 1 13 1.06396 13 1.14286V3C13 3.55228 12.5523 4 12 4V4C11.4477 4 11 3.55228 11 3V1.14286Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <span href="#" class="text-dark fw-boldest fs-3">Ürün Girişi</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="col-sm-6 col-xxl-6">
                             <div class="row">
                                 <div class="col-sm-6 col-xxl-6">
-                                    <div class="col bg-light-danger border border-danger text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
-                                         ng-click="redirect('OngoingPostures')">
-                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
-                                        <span class="svg-icon svg-icon-3x svg-icon-danger d-block my-2">
-                                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M10.9630156,7.5 L11.0475062,7.5 C11.3043819,7.5 11.5194647,7.69464724 11.5450248,7.95024814 L12,12.5 L15.2480695,14.3560397 C15.403857,14.4450611 15.5,14.6107328 15.5,14.7901613 L15.5,15 C15.5,15.2109164 15.3290185,15.3818979 15.1181021,15.3818979 C15.0841582,15.3818979 15.0503659,15.3773725 15.0176181,15.3684413 L10.3986612,14.1087258 C10.1672824,14.0456225 10.0132986,13.8271186 10.0316926,13.5879956 L10.4644883,7.96165175 C10.4845267,7.70115317 10.7017474,7.5 10.9630156,7.5 Z" id="Path-107" fill="#000000"></path>
-                                                <path d="M7.38979581,2.8349582 C8.65216735,2.29743306 10.0413491,2 11.5,2 C17.2989899,2 22,6.70101013 22,12.5 C22,18.2989899 17.2989899,23 11.5,23 C5.70101013,23 1,18.2989899 1,12.5 C1,11.5151324 1.13559454,10.5619345 1.38913364,9.65805651 L3.31481075,10.1982117 C3.10672013,10.940064 3,11.7119264 3,12.5 C3,17.1944204 6.80557963,21 11.5,21 C16.1944204,21 20,17.1944204 20,12.5 C20,7.80557963 16.1944204,4 11.5,4 C10.54876,4 9.62236069,4.15592757 8.74872191,4.45446326 L9.93948308,5.87355717 C10.0088058,5.95617272 10.0495583,6.05898805 10.05566,6.16666224 C10.0712834,6.4423623 9.86044965,6.67852665 9.5847496,6.69415008 L4.71777931,6.96995273 C4.66931162,6.97269931 4.62070229,6.96837279 4.57348157,6.95710938 C4.30487471,6.89303938 4.13906482,6.62335149 4.20313482,6.35474463 L5.33163823,1.62361064 C5.35654118,1.51920756 5.41437908,1.4255891 5.49660017,1.35659741 C5.7081375,1.17909652 6.0235153,1.2066885 6.2010162,1.41822583 L7.38979581,2.8349582 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
-                                            </svg>
-                                        </span>
-                                        <!--end::Svg Icon-->
-                                        <span href="#" class="text-dark fw-boldest fs-3">Devam Eden Duruşlar</span>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xxl-6">
+                                            <div class="col bg-light-danger border border-danger text-center border-active active px-6 py-9 rounded-2 mb-7 heka-mobile-link"
+                                                 ng-click="redirect('PostureEntry')">
+                                                <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                                <span class="svg-icon svg-icon-3x svg-icon-danger d-block my-2">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M12 23C16.9706 23 21 18.9706 21 14C21 9.02944 16.9706 5 12 5C7.02944 5 3 9.02944 3 14C3 18.9706 7.02944 23 12 23Z" fill="#12131A" />
+                                                        <path d="M11 10C11 9.44772 11.4477 9 12 9V9C12.5523 9 13 9.44772 13 10V14C13 14.5523 12.5523 15 12 15V15C11.4477 15 11 14.5523 11 14V10Z" fill="#12131A" />
+                                                        <path d="M10 1C9.44772 1 9 1.44772 9 2C9 2.55228 9.44772 3 10 3H14C14.5523 3 15 2.55228 15 2C15 1.44772 14.5523 1 14 1H10Z" fill="#12131A" />
+                                                        <path d="M20.7071 4.29289C20.3166 3.90237 19.6834 3.90237 19.2929 4.29289C18.9024 4.68342 18.9024 5.31658 19.2929 5.70711L20.2929 6.70711C20.6834 7.09763 21.3166 7.09763 21.7071 6.70711C22.0976 6.31658 22.0976 5.68342 21.7071 5.29289L20.7071 4.29289Z" fill="#12131A" />
+                                                    </svg>
+                                                </span>
+                                                <!--end::Svg Icon-->
+                                                <span href="#" class="text-dark fw-boldest fs-7">Duruş</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xxl-6">
+                                            <div class="col bg-light-danger border border-danger text-center border-active active px-6 py-9 rounded-2 mb-7 heka-mobile-link"
+                                                 ng-click="redirect('OngoingPostures')">
+                                                <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                                <span class="svg-icon svg-icon-3x svg-icon-danger d-block my-2">
+                                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M10.9630156,7.5 L11.0475062,7.5 C11.3043819,7.5 11.5194647,7.69464724 11.5450248,7.95024814 L12,12.5 L15.2480695,14.3560397 C15.403857,14.4450611 15.5,14.6107328 15.5,14.7901613 L15.5,15 C15.5,15.2109164 15.3290185,15.3818979 15.1181021,15.3818979 C15.0841582,15.3818979 15.0503659,15.3773725 15.0176181,15.3684413 L10.3986612,14.1087258 C10.1672824,14.0456225 10.0132986,13.8271186 10.0316926,13.5879956 L10.4644883,7.96165175 C10.4845267,7.70115317 10.7017474,7.5 10.9630156,7.5 Z" id="Path-107" fill="#000000"></path>
+                                                        <path d="M7.38979581,2.8349582 C8.65216735,2.29743306 10.0413491,2 11.5,2 C17.2989899,2 22,6.70101013 22,12.5 C22,18.2989899 17.2989899,23 11.5,23 C5.70101013,23 1,18.2989899 1,12.5 C1,11.5151324 1.13559454,10.5619345 1.38913364,9.65805651 L3.31481075,10.1982117 C3.10672013,10.940064 3,11.7119264 3,12.5 C3,17.1944204 6.80557963,21 11.5,21 C16.1944204,21 20,17.1944204 20,12.5 C20,7.80557963 16.1944204,4 11.5,4 C10.54876,4 9.62236069,4.15592757 8.74872191,4.45446326 L9.93948308,5.87355717 C10.0088058,5.95617272 10.0495583,6.05898805 10.05566,6.16666224 C10.0712834,6.4423623 9.86044965,6.67852665 9.5847496,6.69415008 L4.71777931,6.96995273 C4.66931162,6.97269931 4.62070229,6.96837279 4.57348157,6.95710938 C4.30487471,6.89303938 4.13906482,6.62335149 4.20313482,6.35474463 L5.33163823,1.62361064 C5.35654118,1.51920756 5.41437908,1.4255891 5.49660017,1.35659741 C5.7081375,1.17909652 6.0235153,1.2066885 6.2010162,1.41822583 L7.38979581,2.8349582 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
+                                                    </svg>
+                                                </span>
+                                                <!--end::Svg Icon-->
+                                                <span href="#" class="text-dark fw-boldest fs-7">Devam Eden Duruşlar</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-xxl-6">
-                                    <div class="col bg-light-warning border border-warning text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
-                                         ng-click="redirect('OngoingFaults')">
-                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
-                                        <span class="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
-                                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M10.9630156,7.5 L11.0475062,7.5 C11.3043819,7.5 11.5194647,7.69464724 11.5450248,7.95024814 L12,12.5 L15.2480695,14.3560397 C15.403857,14.4450611 15.5,14.6107328 15.5,14.7901613 L15.5,15 C15.5,15.2109164 15.3290185,15.3818979 15.1181021,15.3818979 C15.0841582,15.3818979 15.0503659,15.3773725 15.0176181,15.3684413 L10.3986612,14.1087258 C10.1672824,14.0456225 10.0132986,13.8271186 10.0316926,13.5879956 L10.4644883,7.96165175 C10.4845267,7.70115317 10.7017474,7.5 10.9630156,7.5 Z" id="Path-107" fill="#000000"></path>
-                                                <path d="M7.38979581,2.8349582 C8.65216735,2.29743306 10.0413491,2 11.5,2 C17.2989899,2 22,6.70101013 22,12.5 C22,18.2989899 17.2989899,23 11.5,23 C5.70101013,23 1,18.2989899 1,12.5 C1,11.5151324 1.13559454,10.5619345 1.38913364,9.65805651 L3.31481075,10.1982117 C3.10672013,10.940064 3,11.7119264 3,12.5 C3,17.1944204 6.80557963,21 11.5,21 C16.1944204,21 20,17.1944204 20,12.5 C20,7.80557963 16.1944204,4 11.5,4 C10.54876,4 9.62236069,4.15592757 8.74872191,4.45446326 L9.93948308,5.87355717 C10.0088058,5.95617272 10.0495583,6.05898805 10.05566,6.16666224 C10.0712834,6.4423623 9.86044965,6.67852665 9.5847496,6.69415008 L4.71777931,6.96995273 C4.66931162,6.97269931 4.62070229,6.96837279 4.57348157,6.95710938 C4.30487471,6.89303938 4.13906482,6.62335149 4.20313482,6.35474463 L5.33163823,1.62361064 C5.35654118,1.51920756 5.41437908,1.4255891 5.49660017,1.35659741 C5.7081375,1.17909652 6.0235153,1.2066885 6.2010162,1.41822583 L7.38979581,2.8349582 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
-                                            </svg>
-                                        </span>
-                                        <!--end::Svg Icon-->
-                                        <span href="#" class="text-dark fw-boldest fs-3">Devam Eden Arızalar</span>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xxl-6">
+                                            <div class="col bg-light-warning border border-warning text-center border-active active px-6 py-9 rounded-2 mb-7 heka-mobile-link"
+                                                 ng-click="redirect('FaultEntry')">
+                                                <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                                <span class="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
+                                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle id="Oval-5" fill="#000000" opacity="0.3" cx="12" cy="12" r="10"></circle>
+                                                        <rect id="Rectangle-9" fill="#000000" x="11" y="7" width="2" height="8" rx="1"></rect>
+                                                        <rect id="Rectangle-9-Copy" fill="#000000" x="11" y="16" width="2" height="2" rx="1"></rect>
+                                                    </svg>
+                                                </span>
+                                                <!--end::Svg Icon-->
+                                                <span href="#" class="text-dark fw-boldest fs-7">Arıza Bildirimi</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-xxl-6">
+                                            <div class="col bg-light-warning border border-warning text-center border-active active px-6 py-9 rounded-2 mb-7 heka-mobile-link"
+                                                 ng-click="redirect('OngoingFaults')">
+
+                                                <span class="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
+                                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M10.9630156,7.5 L11.0475062,7.5 C11.3043819,7.5 11.5194647,7.69464724 11.5450248,7.95024814 L12,12.5 L15.2480695,14.3560397 C15.403857,14.4450611 15.5,14.6107328 15.5,14.7901613 L15.5,15 C15.5,15.2109164 15.3290185,15.3818979 15.1181021,15.3818979 C15.0841582,15.3818979 15.0503659,15.3773725 15.0176181,15.3684413 L10.3986612,14.1087258 C10.1672824,14.0456225 10.0132986,13.8271186 10.0316926,13.5879956 L10.4644883,7.96165175 C10.4845267,7.70115317 10.7017474,7.5 10.9630156,7.5 Z" id="Path-107" fill="#000000"></path>
+                                                        <path d="M7.38979581,2.8349582 C8.65216735,2.29743306 10.0413491,2 11.5,2 C17.2989899,2 22,6.70101013 22,12.5 C22,18.2989899 17.2989899,23 11.5,23 C5.70101013,23 1,18.2989899 1,12.5 C1,11.5151324 1.13559454,10.5619345 1.38913364,9.65805651 L3.31481075,10.1982117 C3.10672013,10.940064 3,11.7119264 3,12.5 C3,17.1944204 6.80557963,21 11.5,21 C16.1944204,21 20,17.1944204 20,12.5 C20,7.80557963 16.1944204,4 11.5,4 C10.54876,4 9.62236069,4.15592757 8.74872191,4.45446326 L9.93948308,5.87355717 C10.0088058,5.95617272 10.0495583,6.05898805 10.05566,6.16666224 C10.0712834,6.4423623 9.86044965,6.67852665 9.5847496,6.69415008 L4.71777931,6.96995273 C4.66931162,6.97269931 4.62070229,6.96837279 4.57348157,6.95710938 C4.30487471,6.89303938 4.13906482,6.62335149 4.20313482,6.35474463 L5.33163823,1.62361064 C5.35654118,1.51920756 5.41437908,1.4255891 5.49660017,1.35659741 C5.7081375,1.17909652 6.0235153,1.2066885 6.2010162,1.41822583 L7.38979581,2.8349582 Z" id="Combined-Shape" fill="#000000" opacity="0.3"></path>
+                                                    </svg>
+                                                </span>
+
+                                                <span href="#" class="text-dark fw-boldest fs-7">Devam Eden Arızalar</span>
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
-                        </div>
-                    }
 
-                    @if (Html.IsGranted("IsProductionChief"))
-                    {
-                        <div class="col-sm-6 col-xxl-6">
-                            <div class="row">
-                                <div class="col-sm-6 col-xxl-6">
-                                    <div class="col bg-light-success border border-success text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
-                                         ng-click="redirect('ManageMachines')">
-                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
-                                        <span class="svg-icon svg-icon-3x svg-icon-success d-block my-2">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path opacity="0.25" d="M2 6.72243C2 5.73244 2.72428 4.89142 3.70332 4.74456L19.7033 2.34456C20.9125 2.16318 22 3.0997 22 4.32243V19.6777C22 20.9004 20.9125 21.8369 19.7033 21.6556L3.70332 19.2556C2.72428 19.1087 2 18.2677 2 17.2777V6.72243Z" fill="#12131A" />
-                                                <path d="M2.5 11C2.22386 11 2 11.2239 2 11.5V12.5C2 12.7762 2.22386 13 2.5 13H10V19.7692C10 20.0167 10.1811 20.227 10.4258 20.2637L11.4258 20.4137C11.7281 20.4591 12 20.2249 12 19.9192V13H21.5C21.7761 13 22 12.7762 22 12.5V11.5C22 11.2239 21.7761 11 21.5 11H12V4.08042C12 3.77474 11.7281 3.54061 11.4258 3.58596L10.4258 3.73596C10.1811 3.77267 10 3.98293 10 4.23042V11H2.5Z" fill="#12131A" />
-                                            </svg>
-                                        </span>
-                                        <!--end::Svg Icon-->
-                                        <span href="#" class="text-dark fw-boldest fs-3">Makine Yönetimi</span>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6 col-xxl-6">
-                                    <div class="col bg-light-success border border-success text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
-                                         ng-click="redirect('ManageShifts')">
-                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
-                                        <span class="svg-icon svg-icon-3x svg-icon-success d-block my-2">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M12 23C16.9706 23 21 18.9706 21 14C21 9.02944 16.9706 5 12 5C7.02944 5 3 9.02944 3 14C3 18.9706 7.02944 23 12 23Z" fill="#12131A" />
-                                                <path d="M11 10C11 9.44772 11.4477 9 12 9V9C12.5523 9 13 9.44772 13 10V14C13 14.5523 12.5523 15 12 15V15C11.4477 15 11 14.5523 11 14V10Z" fill="#12131A" />
-                                                <path d="M10 1C9.44772 1 9 1.44772 9 2C9 2.55228 9.44772 3 10 3H14C14.5523 3 15 2.55228 15 2C15 1.44772 14.5523 1 14 1H10Z" fill="#12131A" />
-                                                <path d="M20.7071 4.29289C20.3166 3.90237 19.6834 3.90237 19.2929 4.29289C18.9024 4.68342 18.9024 5.31658 19.2929 5.70711L20.2929 6.70711C20.6834 7.09763 21.3166 7.09763 21.7071 6.70711C22.0976 6.31658 22.0976 5.68342 21.7071 5.29289L20.7071 4.29289Z" fill="#12131A" />
-                                            </svg>
-                                        </span>
-                                        <!--end::Svg Icon-->
-                                        <span href="#" class="text-dark fw-boldest fs-3">Vardiya Yönetimi</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    <div class="col-sm-6 col-xxl-6">
-                        <div class="row">
-                            <div class="col-sm-6 col-xxl-6">
-                                <div class="col bg-light-danger border border-danger text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
-                                     ng-click="redirect('PostureEntry')">
-                                    <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
-                                    <span class="svg-icon svg-icon-3x svg-icon-danger d-block my-2">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M12 23C16.9706 23 21 18.9706 21 14C21 9.02944 16.9706 5 12 5C7.02944 5 3 9.02944 3 14C3 18.9706 7.02944 23 12 23Z" fill="#12131A" />
-                                            <path d="M11 10C11 9.44772 11.4477 9 12 9V9C12.5523 9 13 9.44772 13 10V14C13 14.5523 12.5523 15 12 15V15C11.4477 15 11 14.5523 11 14V10Z" fill="#12131A" />
-                                            <path d="M10 1C9.44772 1 9 1.44772 9 2C9 2.55228 9.44772 3 10 3H14C14.5523 3 15 2.55228 15 2C15 1.44772 14.5523 1 14 1H10Z" fill="#12131A" />
-                                            <path d="M20.7071 4.29289C20.3166 3.90237 19.6834 3.90237 19.2929 4.29289C18.9024 4.68342 18.9024 5.31658 19.2929 5.70711L20.2929 6.70711C20.6834 7.09763 21.3166 7.09763 21.7071 6.70711C22.0976 6.31658 22.0976 5.68342 21.7071 5.29289L20.7071 4.29289Z" fill="#12131A" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->
-                                    <span href="#" class="text-dark fw-boldest fs-3">Duruş</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-xxl-6">
-                                <div class="col bg-light-warning border border-warning text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
-                                     ng-click="redirect('FaultEntry')">
-                                    <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
-                                    <span class="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
-                                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                            <circle id="Oval-5" fill="#000000" opacity="0.3" cx="12" cy="12" r="10"></circle>
-                                            <rect id="Rectangle-9" fill="#000000" x="11" y="7" width="2" height="8" rx="1"></rect>
-                                            <rect id="Rectangle-9-Copy" fill="#000000" x="11" y="16" width="2" height="2" rx="1"></rect>
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->
-                                    <span href="#" class="text-dark fw-boldest fs-3">Arıza Bildirimi</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-sm-6 col-xxl-6">
-                        <div class="row">
-                            <div class="col-sm-6 col-xxl-6">
+                            <!--<div class="col-sm-12 col-xxl-12">
                                 <div class="col bg-light-danger border border-danger text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
                                      ng-click="redirect('WastageEntry')">
                                     <span class="svg-icon svg-icon-3x svg-icon-danger d-block my-2">
@@ -170,86 +193,81 @@
                                                 <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" id="Shape" fill="#000000" opacity="0.3"></path>
                                             </g>
                                         </svg>
-                                    </span>
+                                    </span>-->
                                     <!--end::Svg Icon-->
-                                    <span href="#" class="text-dark fw-boldest fs-3">Fire Girişi</span>
+                                    <!--<span href="#" class="text-dark fw-boldest fs-3">Fire Girişi</span>
                                 </div>
-                            </div>
-                            <div class="col-sm-6 col-xxl-6">
-                                <div class="col bg-light-primary border border-primary text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
-                                     ng-click="redirect('ProductInformation')">
-                                    <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
-                                    <span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <circle opacity="0.25" cx="12" cy="12" r="10" fill="#191213" />
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C11.4477 7 11 7.44772 11 8C11 8.55229 11.4477 9 12 9C12.5523 9 13 8.55229 13 8C13 7.44772 12.5523 7 12 7ZM12 11C11.4477 11 11 11.4477 11 12V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V12C13 11.4477 12.5523 11 12 11Z" fill="#121319" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->
-                                    <span href="#" class="text-dark fw-boldest fs-3">Ürün Bilgisi</span>
-                                </div>
-                            </div>
+                            </div>-->
                         </div>
-                    </div>
-                </div>
+                    }
 
-                @* PRODUCTION SUMMARY PANEL *@
-            <div class="flex-fill mx-2 p-0" ng-cloak ng-if="modelObject.IsProdChief == false && modelObject.MachineId > 0">
-                <div class="rounded-1 py-0 my-0 bg-light-dark" ng-cloak>
-                    <div class="m-2 my-0 py-0 border-1 rounded-1">
-                        <div class="d-flex flex-row justify-content-between pt-2 my-1">
-                            <button type="button" class="btn mx-2 btn-sm btn-warning flex-fill fs-4">
-                                Arızalar
-                                <span ng-if="modelObject.Stats.MachineStats.IncidentCount > 0"
-                                      class="badge badge-light-warning">{{ modelObject.Stats.MachineStats.IncidentCount }}</span>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-danger flex-fill fs-4">
-                                Duruşlar
-                                <span ng-if="modelObject.Stats.MachineStats.PostureCount > 0"
-                                      class="badge badge-light-danger">{{ modelObject.Stats.MachineStats.PostureCount }}</span>
-                            </button>
-                        </div>
-                        <h5 ng-if="modelObject.Stats.IsInPosture || modelObject.Stats.IsInIncident"
-                            class="text-center bg-danger text-light mt-1 rounded px-2 py-2 border-1 border-dark">
-                            {{modelObject.Stats.IsInPosture ? 'DURUŞ: ' + modelObject.Stats.ActivePostureText : 'BAKIM: ' + modelObject.Stats.ActiveIncidentText}}
-                        </h5>
-                        <div class="active-plan text-center py-0 min-h-55px">
-                            <p class="py-0 my-0 ellipsis-text fs-4" ng-show="modelObject.Stats.ActivePlan.Id > 0">
-                                <b>Firma:</b> {{modelObject.Stats.ActivePlan.WorkOrder.FirmName}}
-                            </p>
-                            <p class="py-0 my-0 ellipsis-text fs-4" ng-show="modelObject.Stats.ActivePlan.Id > 0"
-                               data-toggle="tooltip" title="{{modelObject.Stats.ActivePlan.WorkOrder.ProductName}}">
-                                <b>Ürün:</b> {{modelObject.Stats.ActivePlan.WorkOrder.ProductName}}
-                            </p>
-                            <p class="py-0 my-0 ellipsis-text fs-4" ng-show="modelObject.Stats.ActivePlan.Id > 0">
-                                <span class="badge badge-primary fs-4">Üretilen:</span> <b>{{getFixed(modelObject.Stats.ActivePlan.WorkOrder.CompleteQuantity,0)}}</b>
-                                <span class="badge badge-success fs-4">Sipariş:</span>
-                                <b>{{modelObject.Stats.ActivePlan.WorkOrder.Quantity}}</b>
-                            </p>
-                        </div>
-                        <div class="general-avg text-center py-0">
-                            <div class="d-flex flex-row">
-                                <div class="py-0 my-1 flex-grow-1" ng-repeat="shift in modelObject.Stats.MachineStats.ShiftStats">
-                                    <hr class="my-1" />
-                                    <h6 class="text-decoration-underline my-1 fs-5">{{ shift.ShiftCode }} Vardiyası</h6>
-                                    <p class="py-0 my-1 fs-5">Ort Şişirme: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
-                                    <p class="py-0 my-1 fs-5"><span class="badge badge-primary fs-5">Üretim:</span> <b>{{ shift.AvgProductionCount }} adet</b></p>
-                                    <p class="py-0 my-1 fs-5" ng-class="{'bg-danger': shift.WastageCount > 0}"><span class="badge badge-danger fs-5">Fire:</span> <b>{{ shift.WastageCount }} adet</b></p>
+                    @if (Html.IsGranted("IsProductionChief"))
+                    {
+                        <div class="col-sm-6 col-xxl-6">
+                            <div class="row">
+                                <div class="col-sm-6 col-xxl-6">
+                                    <div class="col bg-light-danger border border-danger text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                                         ng-click="redirect('ManagePallets')">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                        <span class="svg-icon svg-icon-3x svg-icon-danger d-block my-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M13 15C13 13.8954 13.8954 13 15 13H21C22.1046 13 23 13.8954 23 15V21C23 22.1046 22.1046 23 21 23H15C13.8954 23 13 22.1046 13 21V15Z" fill="#12131A" />
+                                                <path d="M17 13.1429C17 13.064 17.064 13 17.1429 13H18.8571C18.936 13 19 13.064 19 13.1429V15C19 15.5523 18.5523 16 18 16V16C17.4477 16 17 15.5523 17 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M1 15C1 13.8954 1.89543 13 3 13H9C10.1046 13 11 13.8954 11 15V21C11 22.1046 10.1046 23 9 23H3C1.89543 23 1 22.1046 1 21V15Z" fill="#12131A" />
+                                                <path d="M5 13.1429C5 13.064 5.06396 13 5.14286 13H6.85714C6.93604 13 7 13.064 7 13.1429V15C7 15.5523 6.55228 16 6 16V16C5.44772 16 5 15.5523 5 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M7 3C7 1.89543 7.89543 1 9 1H15C16.1046 1 17 1.89543 17 3V9C17 10.1046 16.1046 11 15 11H9C7.89543 11 7 10.1046 7 9V3Z" fill="#12131A" />
+                                                <path d="M11 1.14286C11 1.06396 11.064 1 11.1429 1H12.8571C12.936 1 13 1.06396 13 1.14286V3C13 3.55228 12.5523 4 12 4V4C11.4477 4 11 3.55228 11 3V1.14286Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <span href="#" class="text-dark fw-boldest fs-3">Paletler</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-xxl-6">
+                                    <div class="col bg-light-success border border-success text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                                         ng-click="redirect('ProductPickup')">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                        <span class="svg-icon svg-icon-3x svg-icon-success d-block my-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M13 15C13 13.8954 13.8954 13 15 13H21C22.1046 13 23 13.8954 23 15V21C23 22.1046 22.1046 23 21 23H15C13.8954 23 13 22.1046 13 21V15Z" fill="#12131A" />
+                                                <path d="M17 13.1429C17 13.064 17.064 13 17.1429 13H18.8571C18.936 13 19 13.064 19 13.1429V15C19 15.5523 18.5523 16 18 16V16C17.4477 16 17 15.5523 17 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M1 15C1 13.8954 1.89543 13 3 13H9C10.1046 13 11 13.8954 11 15V21C11 22.1046 10.1046 23 9 23H3C1.89543 23 1 22.1046 1 21V15Z" fill="#12131A" />
+                                                <path d="M5 13.1429C5 13.064 5.06396 13 5.14286 13H6.85714C6.93604 13 7 13.064 7 13.1429V15C7 15.5523 6.55228 16 6 16V16C5.44772 16 5 15.5523 5 15V13.1429Z" fill="#12131A" />
+                                                <path opacity="0.25" d="M7 3C7 1.89543 7.89543 1 9 1H15C16.1046 1 17 1.89543 17 3V9C17 10.1046 16.1046 11 15 11H9C7.89543 11 7 10.1046 7 9V3Z" fill="#12131A" />
+                                                <path d="M11 1.14286C11 1.06396 11.064 1 11.1429 1H12.8571C12.936 1 13 1.06396 13 1.14286V3C13 3.55228 12.5523 4 12 4V4C11.4477 4 11 3.55228 11 3V1.14286Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <span href="#" class="text-dark fw-boldest fs-3">Ürün Teslim Alma</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-xxl-12">
+                                    <div class="col bg-light-danger border border-danger text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                                         ng-click="redirect('ProductDelivery')">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Communication/Add-user.svg-->
+                                        <span class="svg-icon svg-icon-3x svg-icon-danger d-block my-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.25" d="M13 5H2C0.895431 5 0 5.89543 0 7V15C0 16.1046 0.895431 17 2 17H3H7H14.5C14.7761 17 15 16.7761 15 16.5V7.00057C15 5.896 14.1046 5 13 5Z" fill="#12131A" />
+                                                <path d="M15.5 8C15.2239 8 15 8.22386 15 8.5V16.5C15 16.7761 15.2239 17 15.5 17H18H21H23C23.5523 17 24 16.5523 24 16V12.6637C24 12.0249 23.6948 11.4244 23.1786 11.0479L19.5267 8.38417C19.1844 8.13452 18.7717 8 18.3481 8H15.5Z" fill="#12131A" />
+                                                <path d="M5 19C6.10457 19 7 18.1046 7 17C7 15.8954 6.10457 15 5 15C3.89543 15 3 15.8954 3 17C3 18.1046 3.89543 19 5 19Z" fill="#12131A" />
+                                                <path d="M19 19C20.1046 19 21 18.1046 21 17C21 15.8954 20.1046 15 19 15C17.8954 15 17 15.8954 17 17C17 18.1046 17.8954 19 19 19Z" fill="#12131A" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <span href="#" class="text-dark fw-boldest fs-3">Sevkiyat</span>
+                                    </div>
                                 </div>
                             </div>
-                            <hr class="my-1" />
-                            <h6 class="text-decoration-underline my-1 fs-5">
-                                Genel Ortalama
-                            </h6>
-                            <p class="py-0 my-1 fs-5">Ort Şişirme: <b>{{getFixed(modelObject.Stats.MachineStats.AvgInflationTime,2)}}</b> sn</p>
-                            <p class="py-0 my-1 fs-5"><span class="badge badge-primary fs-5">Üretim:</span> <b>{{modelObject.Stats.MachineStats.AvgProductionCount}}</b> adet</p>
-                            <p class="py-0 my-1 fs-5" ng-class="{'bg-danger': modelObject.Stats.MachineStats.WastageCount > 0}">
-                                <span class="badge badge-danger fs-5">Fire:</span> <b>{{modelObject.Stats.MachineStats.WastageCount}}</b> adet
-                            </p>
                         </div>
+                    }
+
+                    <div class="col-sm-6 col-xxl-6">
+                        
                     </div>
                 </div>
-            </div>
+            
             </div>
 
         </div>
@@ -357,7 +375,7 @@
             }
 
             // ON LOAD EVENTS
-            $scope.loadStats();
+            /*$scope.loadStats();*/
         });
     </script>
 }

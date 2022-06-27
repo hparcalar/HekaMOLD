@@ -45,11 +45,18 @@ namespace HekaMOLD.Business.Base
         public PlantModel[] GetPlantList()
         {
             var repo = _unitOfWork.GetRepository<Plant>();
-            List<PlantModel> list = new List<PlantModel>();
-            var dataList = repo.GetAll();
-            dataList.ToList().ForEach(d => { list.Add(d.MapTo(new PlantModel())); });
+            return repo.GetAll().Select(d => new PlantModel
+            {
+                Id = d.Id,
+                PlantCode = d.PlantCode,
+                PlantName = d.PlantName,
+            }).ToArray();
 
-            return list.ToArray();
+            //List<PlantModel> list = new List<PlantModel>();
+            //var dataList = repo.GetAll();
+            //dataList.ToList().ForEach(d => { list.Add(d.MapTo(new PlantModel())); });
+
+            //return list.ToArray();
         }
 
         public BusinessResult CreateNotification(NotificationModel model)
@@ -204,7 +211,7 @@ namespace HekaMOLD.Business.Base
                 var uof = new EFUnitOfWork();
                 var repo = uof.GetRepository<SystemParameter>();
 
-                string[] defParams = new string[] { "DefaultProductPrinter" };
+                string[] defParams = new string[] { "DefaultProductPrinter", "SaleOfferPriceToleranceMIN", "SaleOfferPriceToleranceMAX" };
 
                 foreach (var prm in defParams)
                 {

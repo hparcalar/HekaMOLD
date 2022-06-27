@@ -13,5 +13,6 @@ namespace HekaMOLD.Business.Models.Constants
         Placed=1,
         Used=2,
         Scrap = 4,
+        Cancelled=6,
     }
 }

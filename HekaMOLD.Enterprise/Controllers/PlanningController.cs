@@ -5,6 +5,7 @@ using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetMachineList()
         {
             MachineModel[] result = new MachineModel[0];
@@ -49,14 +51,47 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetProductionPlans()
         {
             MachinePlanModel[] result = new MachinePlanModel[0];
+            WorkOrderModel[] dataModel = new WorkOrderModel[0];
 
             using (PlanningBO bObj = new PlanningBO())
             {
                 result = bObj.GetProductionPlans();
             }
+
+            //if (result != null && result.Length > 0)
+            //{
+            //    dataModel = result.GroupBy(d => new
+            //    {
+            //        //WorkOrderId = d.WorkOrder.Id,
+            //        ItemOrderId = d.WorkOrder.ItemOrderId,
+            //        MachineId = d.MachineId,
+            //    }).Select(d => new WorkOrderModel
+            //    {
+            //        Id = d.First().WorkOrder.WorkOrderId ?? 0,
+            //        OrderNo = d.First().OrderNo ?? 0,
+            //        WorkOrderStatus = d.First().WorkOrder.WorkOrderStatus,
+            //        WorkOrderDateStr = d.First().WorkOrder.WorkOrderDateStr,
+            //        ItemOrderId = d.Key.ItemOrderId ?? 0,
+            //        FirmName = d.First().WorkOrder.FirmName,
+            //        ItemOrderDocumentNo = d.First().WorkOrder.ItemOrderDocumentNo,
+            //        ProductName = d.First().WorkOrder.ProductName,
+            //        Quantity = d.First().WorkOrder.Quantity ?? 0,
+            //        CompleteQuantity = d.First().WorkOrder.CompleteQuantity,
+            //        WastageQuantity = d.First().WorkOrder.WastageQuantity ?? 0,
+            //        WorkOrderType = d.First().WorkOrder.WorkOrderType,
+            //        MachineId = d.Key.MachineId ?? 0,
+            //        Details = d.Select(m => new WorkOrderDetailModel
+            //        {
+            //            Id = m.WorkOrderDetailId ?? 0,
+            //        }).ToArray(),
+            //    })
+            //    .OrderBy(d => d.OrderNo)
+            //    .ToArray();
+            //}
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
@@ -66,12 +101,39 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpGet]
         public JsonResult GetWaitingPlans()
         {
-            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
+            ItemOrderSheetModel[] result = new ItemOrderSheetModel[0];
+            ItemOrderModel[] dataModel = new ItemOrderModel[0];
 
             using (PlanningBO bObj = new PlanningBO())
             {
                 result = bObj.GetWaitingSaleOrders();
             }
+
+            //if (result != null && result.Length > 0)
+            //{
+            //    dataModel = result.GroupBy(d => new
+            //    {
+            //        Id = d.ItemOrderId,
+            //        FirmName = d.FirmName,
+            //        DeadlineDateStr = d.DeadlineDateStr,
+            //        OrderNo = d.OrderNo,
+            //        OrderDateStr = d.OrderDateStr,
+            //    }).Select(d => new ItemOrderModel
+            //    {
+            //        Id = d.Key.Id ?? 0,
+            //        FirmName = d.Key.FirmName,
+            //        DeadlineDateStr = d.Key.DeadlineDateStr,
+            //        OrderNo = d.Key.OrderNo,
+            //        OrderDateStr = d.Key.OrderDateStr,
+            //        ItemNo = d.First().ItemNo,
+            //        ItemName = d.First().ItemName,
+            //        Quantity = d.First().Quantity ?? 0,
+            //        Details = d.Select(m => new ItemOrderDetailModel
+            //        {
+            //            Id = m.Id,
+            //        }).ToArray()
+            //    }).ToArray();
+            //}
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
@@ -217,7 +279,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(ItemOrderDetailModel model)
+        public JsonResult SaveModel(ItemOrderSheetModel model)
         {
             BusinessResult result = new BusinessResult();
 

@@ -37,6 +37,29 @@ namespace HekaMOLD.Business.UseCases.Core
             return default;
         }
 
+        public string GetNextOfferNo()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemOffer>();
+                string lastReceiptNo = repo.GetAll()
+                    .OrderByDescending(d => d.OfferNo)
+                    .Select(d => d.OfferNo)
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(lastReceiptNo))
+                    lastReceiptNo = "0";
+
+                return string.Format("{0:000000}", Convert.ToInt32(lastReceiptNo) + 1);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return default;
+        }
+
         public string GetNextRequestNo(int plantId)
         {
             try
@@ -148,13 +171,13 @@ namespace HekaMOLD.Business.UseCases.Core
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemReceiptConsume>();
-                var existingConsume = repo.Get(d => d.ItemReceiptDetail == consumed && d.ItemReceiptDetail1 == consumer);
+                var existingConsume = repo.Get(d => d.ItemReceiptDetailConsumed == consumed && d.ItemReceiptDetailConsumer == consumer);
                 if (existingConsume == null)
                 {
                     existingConsume = new ItemReceiptConsume
                     {
-                        ItemReceiptDetail = consumed,
-                        ItemReceiptDetail1 = consumer,
+                        ItemReceiptDetailConsumed = consumed,
+                        ItemReceiptDetailConsumer = consumer,
                         UsedQuantity = usedQuantity,
                     };
                     repo.Add(existingConsume);

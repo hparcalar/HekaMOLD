@@ -2,7 +2,9 @@
 using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
+using HekaMOLD.Business.Models.DataTransfer.Warehouse;
 using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core;
@@ -19,15 +21,15 @@ namespace HekaMOLD.Business.UseCases
         public ItemReceiptModel[] GetItemReceiptList(ReceiptCategoryType receiptCategory,
             ItemReceiptType? receiptType)
         {
-            List<ItemReceiptModel> data = new List<ItemReceiptModel>();
+            ItemReceiptModel[] data = new ItemReceiptModel[0];
 
             var repo = _unitOfWork.GetRepository<ItemReceipt>();
 
-            repo.Filter(d =>
+            data = repo.Filter(d =>
                 d.ReceiptType != null &&
                 (receiptCategory == ReceiptCategoryType.All
                 ||
-                (receiptCategory == ReceiptCategoryType.Purchasing 
+                (receiptCategory == ReceiptCategoryType.Purchasing
                     && DictItemReceiptType.PurchasingTypes.Contains(d.ReceiptType.Value))
                 ||
                 (receiptCategory == ReceiptCategoryType.ItemManagement
@@ -46,27 +48,85 @@ namespace HekaMOLD.Business.UseCases
                     receiptType == null || d.ReceiptType == (int?)receiptType
                 )
             )
-                .ToList().ForEach(d =>
-            {
-                ItemReceiptModel containerObj = new ItemReceiptModel();
-                d.MapTo(containerObj);
-                containerObj.TotalQuantity = d.ItemReceiptDetail.Sum(m => m.Quantity);
-                containerObj.ReceiptStatusStr = ((ReceiptStatusType)d.ReceiptStatus.Value).ToCaption();
-                containerObj.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate);
-                containerObj.ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ReceiptDate);
-                containerObj.FirmCode = d.Firm != null ? d.Firm.FirmCode : "";
-                containerObj.FirmName = d.Firm != null ? d.Firm.FirmName : "";
-                containerObj.WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "";
-                containerObj.WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "";
-                containerObj.ReceiptTypeStr = ((ItemReceiptType)d.ReceiptType.Value).ToCaption();
+                .ToList()
+                .Select(d => new ItemReceiptModel
+                {
+                    Id = d.Id,
+                    CreatedDate = d.CreatedDate,
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                    CreatedUserId = d.CreatedUserId,
+                    DocumentNo = d.DocumentNo,
+                    Explanation = d.Explanation,
+                    FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                    FirmId = d.FirmId,
+                    FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    InWarehouseId = d.InWarehouseId,
+                    ItemOrderId = d.ItemOrderId,
+                    OutWarehouseId = d.OutWarehouseId,
+                    PlantId = d.PlantId,
+                    ReceiptDate = d.ReceiptDate,
+                    ReceiptNo = d.ReceiptNo,
+                    ReceiptStatus = d.ReceiptStatus,
+                    ReceiptType = d.ReceiptType,
+                    ReceiverPlantCode = d.ReceiverPlant != null ? d.ReceiverPlant.PlantCode : "",
+                    ReceiverPlantName = d.ReceiverPlant != null ? d.ReceiverPlant.PlantName : "",
+                    ReceiptStatusStr = ((ReceiptStatusType)d.ReceiptStatus.Value).ToCaption(),
+                    ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ReceiptDate),
+                    WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "",
+                    WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "",
+                    ReceiptTypeStr = ((ItemReceiptType)d.ReceiptType.Value).ToCaption()
+                })
+                .OrderByDescending(d => d.Id)
+                .ToArray();
 
-                data.Add(containerObj);
-            });
-
-            return data.ToArray();
+            return data;
         }
 
-        public BusinessResult SaveOrUpdateItemReceipt(ItemReceiptModel model)
+        public ItemReceiptDetailModel[] GetOpenWarehouseEntries()
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                data = repo.Filter(d => d.ReceiptStatus != (int)ReceiptStatusType.Closed
+                    && d.ItemReceipt.ReceiptType < 100)
+                    .ToList()
+                    .Select(d => new ItemReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate),
+                        WarehouseName = d.ItemReceipt.Warehouse.WarehouseName,
+                        ItemName = d.Item != null ? d.Item.ItemName : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        ReceiptNo = d.ItemReceipt.ReceiptNo,
+                        Quantity = d.Quantity,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public bool HasAnySaleReceipt(string documentNo)
+        {
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceipt>();
+                return repo.Any(d => d.DocumentNo == documentNo && d.ReceiptType > 100);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return false;
+        }
+
+        public BusinessResult SaveOrUpdateItemReceipt(ItemReceiptModel model, bool detailCanBeNull = false, bool dontChangeDetails=false)
         {
             BusinessResult result = new BusinessResult();
 
@@ -78,6 +138,8 @@ namespace HekaMOLD.Business.UseCases
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
                 var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
                 var repoItemSerial = _unitOfWork.GetRepository<ItemSerial>();
+                var repoConsume = _unitOfWork.GetRepository<ItemReceiptConsume>();
+                var repoOrderConsume = _unitOfWork.GetRepository<ItemOrderConsume>();
 
                 if (model.FirmId == 0)
                     model.FirmId = null;
@@ -118,9 +180,12 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 List<int> itemsMustBeUpdated = new List<int>();
+                List<int> receiptDetailsMustBeUpdated = new List<int>();
+                List<int> orderDetailsMustBeUpdated = new List<int>();
+                ItemReceiptDetail firstNewDetail = null;
 
                 #region SAVE DETAILS
-                if (model.Details == null)
+                if (model.Details == null && detailCanBeNull == false)
                     throw new Exception("Detay bilgisi olmadan irsaliye kaydedilemez.");
 
                 foreach (var item in model.Details)
@@ -129,109 +194,150 @@ namespace HekaMOLD.Business.UseCases
                         item.Id = 0;
                 }
 
+                ItemReceiptDetail newDbDetail = null;
                 if (dbObj.ReceiptStatus != (int)ReceiptStatusType.Closed)
                 {
-                    var newDetailIdList = model.Details.Select(d => d.Id).ToArray();
-                    var deletedDetails = dbObj.ItemReceiptDetail.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
-                    foreach (var item in deletedDetails)
+                    if (!dontChangeDetails)
                     {
-                        if (!itemsMustBeUpdated.Any(d => d == item.ItemId))
-                            itemsMustBeUpdated.Add(item.ItemId.Value);
-
-                        //if (item.ItemReceiptDetail.Any())
-                        //    throw new Exception("İrsaliyesi girilmiş olan bir sipariş detayı silinemez.");
-
-                        #region SET ORDER & DETAIL TO APPROVED
-                        if (item.ItemOrderDetail != null)
+                        var newDetailIdList = model.Details.Select(d => d.Id).ToArray();
+                        var deletedDetails = dbObj.ItemReceiptDetail.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
+                        foreach (var item in deletedDetails)
                         {
-                            item.ItemOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
-                            item.ItemOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
-                        }
-                        #endregion
+                            if (!itemsMustBeUpdated.Any(d => d == item.ItemId))
+                                itemsMustBeUpdated.Add(item.ItemId.Value);
 
-                        repoDetail.Delete(item);
-                    }
+                            //if (item.ItemReceiptDetail.Any())
+                            //    throw new Exception("İrsaliyesi girilmiş olan bir sipariş detayı silinemez.");
 
-                    int lineNo = 1;
-                    foreach (var item in model.Details)
-                    {
-                        if (!itemsMustBeUpdated.Any(d => d == item.ItemId))
-                            itemsMustBeUpdated.Add(item.ItemId.Value);
-
-                        var dbDetail = repoDetail.Get(d => d.Id == item.Id);
-                        if (dbDetail == null)
-                        {
-                            dbDetail = new ItemReceiptDetail
+                            #region SET ORDER & DETAIL TO APPROVED
+                            if (item.ItemOrderDetail != null)
                             {
-                                ItemReceipt = dbObj
-                            };
+                                item.ItemOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
+                                item.ItemOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
+                            }
+                            #endregion
 
-                            repoDetail.Add(dbDetail);
-                        }
-
-                        item.MapTo(dbDetail);
-                        dbDetail.ItemReceipt = dbObj;
-                        if (dbObj.Id > 0)
-                            dbDetail.ItemReceiptId = dbObj.Id;
-
-                        dbDetail.LineNumber = lineNo;
-
-                        #region UPDATE SERIALS
-                        if (item.UpdateSerials)
-                        {
-                            var newSerialIdList = item.ItemSerials.Select(d => d.Id).ToArray();
-                            var deletedSerials = dbDetail.ItemSerial.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
-                            foreach (var serialItem in deletedSerials)
+                            #region CHECK FOR PICKED UP PRODUCTS TO ROLLBACK THEM
+                            var consumings = item.ItemReceiptConsumeByConsumer.ToArray();
+                            foreach (var cns in consumings)
                             {
-                                // IF THERE IS A WORK ORDER, THEN CHANGE STATUS TO APPROVED
-                                if (serialItem.WorkOrderDetail != null && dbObj.ReceiptType == (int)ItemReceiptType.WarehouseInput)
+                                var consumed = cns.ItemReceiptDetailConsumed;
+                                if (consumed != null)
                                 {
-                                    var dbWorkOrderSerial = repoSerial.Get(m => m.WorkOrderDetailId == serialItem.WorkOrderDetailId
-                                        && m.SerialNo == serialItem.SerialNo);
-                                    if (dbWorkOrderSerial != null)
+                                    var serials = item.ItemSerial.ToArray();
+                                    foreach (var sr in serials)
                                     {
-                                        dbWorkOrderSerial.SerialStatus = (int)SerialStatusType.Approved;
-                                        dbWorkOrderSerial.QualityStatus = (int)QualityStatusType.Waiting;
-                                        dbWorkOrderSerial.ItemReceiptDetailId = null;
+                                        sr.ItemReceiptDetail = consumed;
+                                        sr.SerialStatus = (int)SerialStatusType.Placed;
+                                    }
+                                    consumed.ReceiptStatus = (int)ReceiptStatusType.Created;
+
+                                    if (!receiptDetailsMustBeUpdated.Any(d => d == consumed.Id))
+                                        receiptDetailsMustBeUpdated.Add(consumed.Id);
+                                }
+
+                                repoConsume.Delete(cns);
+                            }
+                            #endregion
+
+                            #region CHECK FOR ITEM ORDER CONSUMINGS
+                            var orderConsumings = item.ItemOrderConsumeByConsumer.ToArray();
+                            foreach (var cns in orderConsumings)
+                            {
+                                var consumed = cns.ItemOrderDetail;
+                                if (consumed != null
+                                    && !orderDetailsMustBeUpdated.Any(d => d == consumed.Id))
+                                    orderDetailsMustBeUpdated.Add(consumed.Id);
+                                repoOrderConsume.Delete(cns);
+                            }
+                            #endregion
+
+                            repoDetail.Delete(item);
+                        }
+
+                        int lineNo = 1;
+                        foreach (var item in model.Details)
+                        {
+                            if (!itemsMustBeUpdated.Any(d => d == item.ItemId))
+                                itemsMustBeUpdated.Add(item.ItemId.Value);
+
+                            var dbDetail = repoDetail.Get(d => d.Id == item.Id);
+                            if (dbDetail == null)
+                            {
+                                dbDetail = new ItemReceiptDetail
+                                {
+                                    ItemReceipt = dbObj
+                                };
+                                newDbDetail = dbDetail;
+
+                                repoDetail.Add(dbDetail);
+                            }
+
+                            item.MapTo(dbDetail);
+                            dbDetail.ItemReceipt = dbObj;
+                            if (dbObj.Id > 0)
+                                dbDetail.ItemReceiptId = dbObj.Id;
+
+                            dbDetail.LineNumber = lineNo;
+
+                            #region UPDATE SERIALS
+                            if (item.UpdateSerials)
+                            {
+                                var newSerialIdList = item.ItemSerials.Select(d => d.Id).ToArray();
+                                var deletedSerials = dbDetail.ItemSerial.Where(d => !newDetailIdList.Contains(d.Id)).ToArray();
+                                foreach (var serialItem in deletedSerials)
+                                {
+                                    // IF THERE IS A WORK ORDER, THEN CHANGE STATUS TO APPROVED
+                                    if (serialItem.WorkOrderDetail != null && dbObj.ReceiptType == (int)ItemReceiptType.WarehouseInput)
+                                    {
+                                        var dbWorkOrderSerial = repoSerial.Get(m => m.WorkOrderDetailId == serialItem.WorkOrderDetailId
+                                            && m.SerialNo == serialItem.SerialNo);
+                                        if (dbWorkOrderSerial != null)
+                                        {
+                                            dbWorkOrderSerial.SerialStatus = (int)SerialStatusType.Approved;
+                                            dbWorkOrderSerial.QualityStatus = (int)QualityStatusType.Waiting;
+                                            dbWorkOrderSerial.ItemReceiptDetailId = null;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        repoItemSerial.Delete(serialItem);
                                     }
                                 }
-                                else
+
+                                foreach (var serialItem in item.ItemSerials)
                                 {
-                                    repoItemSerial.Delete(serialItem);
+                                    var dbSerial = repoItemSerial.Get(d => d.Id == serialItem.Id);
+                                    if (dbSerial != null)
+                                    {
+                                        serialItem.MapTo(dbSerial);
+                                    }
+                                    else
+                                    {
+                                        dbSerial = new ItemSerial();
+                                        dbSerial.ItemReceiptDetail = dbDetail;
+                                        serialItem.MapTo(dbSerial);
+                                        repoItemSerial.Add(dbSerial);
+                                    }
+                                    dbSerial.ItemId = serialItem.ItemId;
                                 }
                             }
+                            #endregion
 
-                            foreach (var serialItem in item.ItemSerials)
+                            #region CALCULATE IF THERE IS NO NET QUANTITY
+                            if (dbDetail.NetQuantity == null)
                             {
-                                var dbSerial = repoItemSerial.Get(d => d.Id == serialItem.Id);
-                                if (dbSerial != null)
-                                {
-                                    serialItem.MapTo(dbSerial);
-                                }
-                                else
-                                {
-                                    dbSerial = new ItemSerial();
-                                    dbSerial.ItemReceiptDetail = dbDetail;
-                                    serialItem.MapTo(dbSerial);
-                                    repoItemSerial.Add(dbSerial);
-                                }
+                                ItemReceiptDetailModel detailModel = new ItemReceiptDetailModel();
+                                dbDetail.MapTo(detailModel);
+                                this.CalculateReceiptDetail(detailModel);
+                                dbDetail.NetQuantity = detailModel.NetQuantity;
                             }
+                            #endregion
+
+                            // WILL BE TRIGGER POINT TO CHECK ITEM ORDER STATUS
+
+                            lineNo++;
                         }
-                        #endregion
-
-                        #region CALCULATE IF THERE IS NO NET QUANTITY
-                        if (dbDetail.NetQuantity == null)
-                        {
-                            ItemReceiptDetailModel detailModel = new ItemReceiptDetailModel();
-                            dbDetail.MapTo(detailModel);
-                            this.CalculateReceiptDetail(detailModel);
-                            dbDetail.NetQuantity = detailModel.NetQuantity;
-                        }
-                        #endregion
-
-                        // WILL BE TRIGGER POINT TO CHECK ITEM ORDER STATUS
-
-                        lineNo++;
                     }
                 }
                 #endregion
@@ -241,6 +347,28 @@ namespace HekaMOLD.Business.UseCases
                 // TRG-POINT-ITEM-STATUS
                 if (itemsMustBeUpdated.Count() > 0)
                     base.UpdateItemStats(itemsMustBeUpdated.ToArray());
+
+                if (receiptDetailsMustBeUpdated.Count() > 0)
+                {
+                    foreach (var item in receiptDetailsMustBeUpdated)
+                    {
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.CheckReceiptDetailStatus(item);
+                        }
+                    }
+                }
+
+                if (orderDetailsMustBeUpdated.Count() > 0)
+                {
+                    foreach (var item in orderDetailsMustBeUpdated)
+                    {
+                        using (OrdersBO bObj = new OrdersBO())
+                        {
+                            bObj.CheckOrderDetailStatus(item);
+                        }
+                    }
+                }
 
                 #region CREATE NOTIFICATION
                 //if (newRecord || !repoNotify.Any(d => d.RecordId == dbObj.Id && d.NotifyType == (int)NotifyType.ItemOrderWaitForApproval))
@@ -268,6 +396,111 @@ namespace HekaMOLD.Business.UseCases
 
                 result.Result = true;
                 result.RecordId = dbObj.Id;
+
+                if (newDbDetail != null)
+                    result.DetailRecordId = newDbDetail.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult UpdateReceiptDetail(ItemReceiptDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var dbDetail = repoReceiptDetail.Get(d => d.Id == model.Id);
+                if (dbDetail == null)
+                    throw new Exception("İrsaliye kalem bilgisi bulunamadı.");
+
+                dbDetail.Quantity = model.Quantity;
+                dbDetail.UnitPrice = model.UnitPrice;
+                dbDetail.SubTotal = model.SubTotal;
+                dbDetail.TaxAmount = model.TaxAmount;
+                dbDetail.ForexRate = model.ForexRate;
+                dbDetail.ForexId = model.ForexId;
+
+                // GET CONSUMED LIST
+                List<int> consumedDetails = new List<int>();
+                if (dbDetail.ItemReceiptConsumeByConsumer.Any())
+                {
+                    var consumeList = dbDetail.ItemReceiptConsumeByConsumer.ToArray();
+                    foreach (var consuming in consumeList)
+                    {
+                        if (!consumedDetails.Contains(consuming.ConsumedReceiptDetailId ?? 0))
+                            consumedDetails.Add(consuming.ConsumedReceiptDetailId ?? 0);
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
+
+                // TRIGGER POINT: UPDATE ITEM TOTALS
+                base.UpdateItemStats(new int[] { dbDetail.ItemId.Value });
+
+                // TRIGGER POINT: UPDATE CONSUMINGS
+                foreach (var item in consumedDetails)
+                {
+                    if (item > 0)
+                    {
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.UpdateConsume(item, dbDetail.Id, model.Quantity ?? 0);
+                        }
+
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.CheckReceiptDetailStatus(item);
+                        }
+                    }
+                }
+
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    bObj.CheckReceiptDetailStatus(dbDetail.Id);
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult AddReceiptDetail(int receiptId, ItemReceiptDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoReceipt = _unitOfWork.GetRepository<ItemReceipt>();
+                var repoReceiptDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var dbReceipt = repoReceipt.Get(d => d.Id == receiptId);
+                if (dbReceipt == null)
+                    throw new Exception("İrsaliye bilgisi HEKA yazılımında bulunamadı.");
+
+                var dbNewDetail = new ItemReceiptDetail();
+                model.MapTo(dbNewDetail);
+                dbNewDetail.ItemReceipt = dbReceipt;
+                repoReceiptDetail.Add(dbNewDetail);
+
+                _unitOfWork.SaveChanges();
+
+                base.UpdateItemStats(new int[] { model.ItemId.Value });
+
+                result.Result = true;
             }
             catch (Exception ex)
             {
@@ -287,6 +520,8 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<ItemReceipt>();
                 var repoDetail = _unitOfWork.GetRepository<ItemReceiptDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoConsume = _unitOfWork.GetRepository<ItemReceiptConsume>();
+                var repoOrderConsume = _unitOfWork.GetRepository<ItemOrderConsume>();
 
                 var dbObj = repo.Get(d => d.Id == id);
                 if (dbObj == null)
@@ -296,6 +531,8 @@ namespace HekaMOLD.Business.UseCases
                 //    throw new Exception("İrsaliyesi girilmiş olan bir sipariş silinemez.");
 
                 List<int> itemsMustBeUpdated = new List<int>();
+                List<int> receiptDetailsMustBeUpdated = new List<int>();
+                List<int> orderDetailsMustBeUpdated = new List<int>();
 
                 // CLEAR DETAILS
                 if (dbObj.ItemReceiptDetail.Any())
@@ -311,6 +548,41 @@ namespace HekaMOLD.Business.UseCases
                         {
                             item.ItemOrderDetail.OrderStatus = (int)OrderStatusType.Approved;
                             item.ItemOrderDetail.ItemOrder.OrderStatus = (int)OrderStatusType.Approved;
+                        }
+                        #endregion
+
+                        #region CHECK FOR PICKED UP PRODUCTS TO ROLLBACK THEM
+                        var consumings = item.ItemReceiptConsumeByConsumer.ToArray();
+                        foreach (var cns in consumings)
+                        {
+                            var consumed = cns.ItemReceiptDetailConsumed;
+                            if (consumed != null)
+                            {
+                                var serials = item.ItemSerial.ToArray();
+                                foreach (var sr in serials)
+                                {
+                                    sr.ItemReceiptDetail = consumed;
+                                    sr.SerialStatus = (int)SerialStatusType.Placed;
+                                }
+                                consumed.ReceiptStatus = (int)ReceiptStatusType.Created;
+
+                                if (!receiptDetailsMustBeUpdated.Any(d => d == consumed.Id))
+                                    receiptDetailsMustBeUpdated.Add(consumed.Id);
+                            }
+
+                            repoConsume.Delete(cns);
+                        }
+                        #endregion
+
+                        #region CHECK FOR ITEM ORDER CONSUMINGS
+                        var orderConsumings = item.ItemOrderConsumeByConsumer.ToArray();
+                        foreach (var cns in orderConsumings)
+                        {
+                            var consumed = cns.ItemOrderDetail;
+                            if (consumed != null
+                                && !orderDetailsMustBeUpdated.Any(d => d == consumed.Id))
+                                orderDetailsMustBeUpdated.Add(consumed.Id);
+                            repoOrderConsume.Delete(cns);
                         }
                         #endregion
 
@@ -336,6 +608,96 @@ namespace HekaMOLD.Business.UseCases
                 // TRG-POINT-ITEM-STATUS
                 if (itemsMustBeUpdated.Count() > 0)
                     base.UpdateItemStats(itemsMustBeUpdated.ToArray());
+
+                if (receiptDetailsMustBeUpdated.Count() > 0)
+                {
+                    foreach (var item in receiptDetailsMustBeUpdated)
+                    {
+                        using (ReceiptBO bObj = new ReceiptBO())
+                        {
+                            bObj.CheckReceiptDetailStatus(item);
+                        }
+                    }
+                }
+
+                if (orderDetailsMustBeUpdated.Count() > 0)
+                {
+                    foreach (var item in orderDetailsMustBeUpdated)
+                    {
+                        using (OrdersBO bObj = new OrdersBO())
+                        {
+                            bObj.CheckOrderDetailStatus(item);
+                        }
+                    }
+                }
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteReceiptDetail(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoReceipt = _unitOfWork.GetRepository<ItemReceipt>();
+                var repoConsume = _unitOfWork.GetRepository<ItemReceiptConsume>();
+
+                var dbDetail = repo.Get(d => d.Id == id);
+                if (dbDetail == null)
+                    throw new Exception("İrsaliye detay bilgisi bulunamadı.");
+
+                var itemId = dbDetail.ItemId ?? 0;
+
+                var dbReceipt = dbDetail.ItemReceipt;
+
+                // DELETE CONSUMINGS
+                List<int> consumedDetails = new List<int>();
+                if (dbDetail.ItemReceiptConsumeByConsumer.Any())
+                {
+                    var consumeList = dbDetail.ItemReceiptConsumeByConsumer.ToArray();
+                    foreach (var consuming in consumeList)
+                    {
+                        if (!consumedDetails.Contains(consuming.ConsumedReceiptDetailId ?? 0))
+                            consumedDetails.Add(consuming.ConsumedReceiptDetailId ?? 0);
+
+                        repoConsume.Delete(consuming);
+                    }
+                }
+
+                // DELETE HEADER IF NOT ANY OTHER DETAIL EXISTS
+                if (!dbReceipt.ItemReceiptDetail.Any(d => d.Id != dbDetail.Id))
+                {
+                    repoReceipt.Delete(dbReceipt);
+                }
+
+                // DELETE DETAIL
+                repo.Delete(dbDetail);
+
+                _unitOfWork.SaveChanges();
+
+                // TRIGGER POINT: CHECK NEW STATUS FOR DETAILS
+                foreach (var item in consumedDetails)
+                {
+                    using (ReceiptBO bObj = new ReceiptBO())
+                    {
+                        if (item > 0)
+                            bObj.CheckReceiptDetailStatus(item);
+                    }
+                }
+
+                // TRIGGER POINT: UPDATE ITEM TOTALS
+                if (itemId > 0)
+                    base.UpdateItemStats(new int[] { itemId });
 
                 result.Result = true;
             }
@@ -375,6 +737,9 @@ namespace HekaMOLD.Business.UseCases
                     detailContainerObj.ItemName = d.Item != null ? d.Item.ItemName : "";
                     detailContainerObj.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
                     detailContainerObj.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
+                    detailContainerObj.MainUnitStr = d.Item.ItemUnit.Any(m => m.IsMainUnit == true) ?
+                        d.Item.ItemUnit.Where(m => m.IsMainUnit == true)
+                        .Select(m => m.UnitType.UnitCode).FirstOrDefault() : "";
                     detailContainerObj.NewDetail = false;
                     detailContainers.Add(detailContainerObj);
                 });
@@ -383,6 +748,72 @@ namespace HekaMOLD.Business.UseCases
             }
 
             return model;
+        }
+
+        public ItemReceiptModel GetItemReceipt(string documentNo, ItemReceiptType receiptType)
+        {
+            ItemReceiptModel model = new ItemReceiptModel { Details = new ItemReceiptDetailModel[0] };
+
+            var repo = _unitOfWork.GetRepository<ItemReceipt>();
+            var dbObj = repo.Get(d => d.DocumentNo == documentNo && d.ReceiptType == (int)receiptType);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+                model.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.CreatedDate);
+                model.ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ReceiptDate);
+                model.ReceiptStatusStr = ((ReceiptStatusType)model.ReceiptStatus).ToCaption();
+                model.FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
+                model.FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
+                model.WarehouseCode = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseCode : "";
+                model.WarehouseName = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseName : "";
+                model.ReceiptTypeStr = ((ItemReceiptType)dbObj.ReceiptType.Value).ToCaption();
+
+                List<ItemReceiptDetailModel> detailContainers = new List<ItemReceiptDetailModel>();
+                dbObj.ItemReceiptDetail.ToList().ForEach(d =>
+                {
+                    ItemReceiptDetailModel detailContainerObj = new ItemReceiptDetailModel();
+                    d.MapTo(detailContainerObj);
+                    detailContainerObj.ItemNo = d.Item != null ? d.Item.ItemNo : "";
+                    detailContainerObj.ItemName = d.Item != null ? d.Item.ItemName : "";
+                    detailContainerObj.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
+                    detailContainerObj.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
+                    detailContainerObj.NewDetail = false;
+                    detailContainers.Add(detailContainerObj);
+                });
+
+                model.Details = detailContainers.ToArray();
+            }
+
+            return model;
+        }
+
+        public ItemReceiptModel FindItemEntryReceipt(string documentNo)
+        {
+            ItemReceiptModel data = new ItemReceiptModel();
+
+            var repo = _unitOfWork.GetRepository<ItemReceipt>();
+            var dbReceipt = repo.Get(d => d.DocumentNo == documentNo && d.ReceiptType == (int)ItemReceiptType.ItemBuying);
+            if (dbReceipt != null)
+                data = GetItemReceipt(dbReceipt.Id);
+            else
+                data = null;
+
+            return data;
+        }
+
+        public ItemReceiptModel GetConsumptionReceipt(int workOrderDetailId)
+        {
+            ItemReceiptModel data = new ItemReceiptModel();
+
+            var repo = _unitOfWork.GetRepository<ItemReceipt>();
+            var dbReceipt = repo.Filter(d => d.WorkOrderDetailId == workOrderDetailId && d.ReceiptType == (int)ItemReceiptType.Consumption)
+                .FirstOrDefault();
+            if (dbReceipt != null)
+                data = GetItemReceipt(dbReceipt.Id);
+            else
+                data = null;
+
+            return data;
         }
 
         public ItemReceiptDetailModel CalculateReceiptDetail(ItemReceiptDetailModel model)
@@ -395,7 +826,7 @@ namespace HekaMOLD.Business.UseCases
             var dbItem = repoItem.Get(d => d.Id == model.ItemId);
             if (dbItem != null)
             {
-                var selUnit = dbItem.ItemUnit.FirstOrDefault(d => d.Id == model.UnitId);
+                var selUnit = dbItem.ItemUnit.FirstOrDefault(d => d.UnitId == model.UnitId);
                 if (selUnit != null)
                 {
                     mFactor = selUnit.MultiplierFactor ?? 1;
@@ -403,30 +834,35 @@ namespace HekaMOLD.Business.UseCases
                 }
             }
 
-            model.NetQuantity = model.Quantity * mFactor / dFactor;
+            model.NetQuantity = model.Quantity; //* mFactor / dFactor;
+
+            // BEGIN PRICE CALCULATION
+            decimal? priceQuantity = (model.PriceCalcType ?? 0) == 0 ?
+                model.Quantity : model.WeightQuantity;
 
             if (model.ForexId > 0 && model.ForexRate > 0)
             {
                 model.ForexUnitPrice = model.UnitPrice / model.ForexRate;
             }
 
-            decimal? overallTotal = 0;
             decimal? taxExtractedUnitPrice = 0;
+            decimal? subTotal = 0;
 
             if (model.TaxIncluded == true)
             {
                 decimal? taxIncludedUnitPrice = (model.UnitPrice / (1 + (model.TaxRate / 100m)));
-                overallTotal = taxIncludedUnitPrice * model.Quantity;
                 taxExtractedUnitPrice = taxIncludedUnitPrice;
+                subTotal = taxExtractedUnitPrice * priceQuantity;
             }
             else
             {
-                overallTotal = model.UnitPrice * model.Quantity;
+                subTotal = model.UnitPrice * priceQuantity;
                 taxExtractedUnitPrice = model.UnitPrice;
             }
 
-            model.OverallTotal = overallTotal;
-            model.TaxAmount = overallTotal * model.TaxRate / 100.0m;
+            model.SubTotal = subTotal;
+            model.TaxAmount = subTotal * model.TaxRate / 100.0m;
+            model.OverallTotal = subTotal + model.TaxAmount;
 
             return model;
         }
@@ -450,6 +886,108 @@ namespace HekaMOLD.Business.UseCases
                         Quantity = d.Quantity,
                         InQuantity = d.ItemReceipt.ReceiptType < 100 ? d.Quantity : (decimal?)null,
                         OutQuantity = d.ItemReceipt.ReceiptType > 100 ? d.Quantity : (decimal?)null,
+                        ReceiptDateStr = d.ItemReceipt.ReceiptDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
+                        ReceiptTypeStr = ((ItemReceiptType)d.ItemReceipt.ReceiptType).ToCaption(),
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return extract;
+        }
+
+        public ItemModel[] GetLiveSheetStock()
+        {
+            ItemModel[] data = new ItemModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Item>();
+                var repoReceipt = _unitOfWork.GetRepository<ItemReceiptDetail>();
+
+                var items = repo.Filter(d => d.ItemQualityGroupId != null)
+                    .Select(d => new ItemModel
+                    {
+                        Id = d.Id,
+                        ItemNo = d.ItemNo,
+                        ItemName = d.ItemName,
+                        ItemQualityGroupCode = d.ItemQualityGroup != null ? d.ItemQualityGroup.ItemQualityGroupCode : "",
+                        ItemQualityGroupName = d.ItemQualityGroup != null ? d.ItemQualityGroup.ItemQualityGroupName : "",
+                        ItemQualityGroupId = d.ItemQualityGroupId,
+                        SheetHeight = d.SheetHeight,
+                        SheetThickness = d.SheetThickness,
+                        SheetUnitWeight = d.SheetUnitWeight,
+                        SheetWidth = d.SheetWidth,
+                    })
+                    .ToArray();
+
+                foreach (var item in items)
+                {
+                    try
+                    {
+                        var inQty = repoReceipt.Filter(d => d.ItemId == item.Id && d.ItemReceipt.ReceiptType < 100)
+                       .Sum(d => d.Quantity) ?? 0;
+                        var outQty = repoReceipt.Filter(d => d.ItemId == item.Id && d.ItemReceipt.ReceiptType > 100)
+                            .Sum(d => d.Quantity) ?? 0;
+
+                        var avgWeightPrice = repoReceipt.Filter(d => d.ItemId == item.Id
+                            && d.WeightQuantity != null && d.ItemReceipt.ReceiptType < 100)
+                            .Average(d => d.UnitPrice) ?? 0;
+
+                        var avgUnitWeight = repoReceipt.Filter(d => d.ItemId == item.Id
+                            && d.WeightQuantity != null
+                            && d.ItemReceipt.ReceiptType < 100)
+                            .Average(d => d.WeightQuantity / d.Quantity) ?? 0;
+
+                        item.TotalOverallQuantity = inQty - outQty;
+                        if (item.TotalOverallQuantity < 0)
+                            item.TotalOverallQuantity = 0;
+                        item.TotalOverallWeight = item.TotalOverallQuantity * avgUnitWeight;
+                        item.AvgWeightPrice = avgWeightPrice;
+                        item.TotalPrice = item.TotalOverallWeight * item.AvgWeightPrice;
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                   
+                }
+
+                data = items;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        public ItemReceiptDetailModel[] GetOpenItemEntries(int itemId)
+        {
+            ItemReceiptDetailModel[] extract = new ItemReceiptDetailModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                extract = repo.Filter(d => d.ItemId == itemId
+                    && d.ReceiptStatus != (int)ReceiptStatusType.Closed
+                    && d.ReceiptStatus != (int)ReceiptStatusType.Blocked
+                    && d.Quantity > 0
+                    ).ToList()
+                    .Select(d => new ItemReceiptDetailModel
+                    {
+                        Id = d.Id,
+                        ItemReceiptId = d.ItemReceiptId,
+                        ItemNo = d.Item.ItemNo,
+                        ItemName = d.Item.ItemName,
+                        FirmCode = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmCode : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        WarehouseCode = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseCode : "",
+                        WarehouseName = d.ItemReceipt.Warehouse != null ? d.ItemReceipt.Warehouse.WarehouseName : "",
+                        Quantity = d.Quantity - (d.ItemReceiptConsumeByConsumed.Sum(m => m.UsedQuantity) ?? 0),
                         ReceiptDateStr = d.ItemReceipt.ReceiptDate != null ?
                             string.Format("{0:dd.MM.yyyy}", d.ItemReceipt.ReceiptDate) : "",
                         ReceiptTypeStr = ((ItemReceiptType)d.ItemReceipt.ReceiptType).ToCaption(),

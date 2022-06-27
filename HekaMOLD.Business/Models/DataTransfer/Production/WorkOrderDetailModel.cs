@@ -33,11 +33,13 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? WorkOrderType { get; set; }
         public string TrialProductName { get; set; }
         public string LabelConfig { get; set; }
+        public int? ItemOrderSheetId { get; set; }
 
         #region VISUAL ELEMENTS
         public bool NewDetail { get; set; }
         public string Explanation { get; set; }
         public string ItemOrderDocumentNo { get; set; }
+        public int? ItemOrderId { get; set; }
         public int? MachinePlanOrderNo { get; set; }
         public string WorkOrderStatusStr { get; set; }
         public string WorkOrderDateStr { get; set; }
@@ -45,6 +47,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
         public string QualityStatusText { get; set; }
+        public string SheetVisualStr { get; set; }
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
         public string DyeCode { get; set; }
@@ -65,6 +68,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string UnitCode { get; set; }
         public string UnitName { get; set; }
         public string OrderDeadline { get; set; }
+        public string SheetProgramName { get; set; }
+        public decimal? Thickness { get; set; }
+        public int? SheetItemId { get; set; }
+        public string SheetItemName { get; set; }
         public LabelConfigModel LabelConfigData
         {
             get

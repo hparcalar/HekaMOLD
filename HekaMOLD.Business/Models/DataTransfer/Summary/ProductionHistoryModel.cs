@@ -8,6 +8,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Summary
 {
     public class ProductionHistoryModel
     {
+        public int ItemOrderDetailId { get; set; }
         public int WorkOrderDetailId { get; set; }
         public DateTime? WorkDate { get; set; }
         public string WorkDateStr { get; set; }

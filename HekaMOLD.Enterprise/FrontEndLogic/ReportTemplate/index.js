@@ -9,6 +9,8 @@
         { Id: 3, Text: 'İş Emri' },
         { Id: 4, Text: 'İş Emri Satır Formu' },
         { Id: 5, Text: 'Ürün Etiketi' },
+        { Id: 6, Text: 'Hammadde Etiketi' },
+        { Id: 7, Text: 'Palet Etiketi' },
     ];
     $scope.selectedReportType = { Id: 0 };
 

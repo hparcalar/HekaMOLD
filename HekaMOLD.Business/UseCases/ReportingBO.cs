@@ -1,7 +1,10 @@
 ﻿using Heka.DataAccess.Context;
+using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using HekaMOLD.Business.Models.DataTransfer.Warehouse;
 using HekaMOLD.Business.Models.Filters;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases.Core.Base;
@@ -38,16 +41,117 @@ namespace HekaMOLD.Business.UseCases
 
                     foreach (var item in dbObj.ItemReceiptDetail)
                     {
+                        byte[] prodBytes = null;
+                        var sampleSerial = item.ItemSerial.Where(d => d.WorkOrderDetailId != null).FirstOrDefault();
+                        if (sampleSerial != null && sampleSerial.WorkOrderDetail.ItemOrderSheet != null)
+                        {
+                            try
+                            {
+                                var properUsage = sampleSerial.WorkOrderDetail.ItemOrderSheet.ItemOrderSheetUsage
+                                    .FirstOrDefault(d => d.ItemOrderDetail.ItemId == sampleSerial.ItemId);
+                                if (properUsage != null && properUsage.ItemOrderDetail.ItemOfferDetail != null)
+                                {
+                                    prodBytes = properUsage.ItemOrderDetail.ItemOfferDetail.ItemVisual;
+                                }
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                        }
+
                         data.Add(new DeliverySerialListModel
                         {
                             ProductCode = item.Item.ItemNo,
                             ProductName = item.Item.ItemName,
                             Quantity = item.Quantity ?? 0,
+                            NetWeight = item.WeightQuantity ?? 0,
+                            LineExplanation = item.Explanation,
+                            FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "",
+                            FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "",
+                            DocumentNo = dbObj.ReceiptNo,
+                            ReceiptExplanation = dbObj.Explanation,
                             ReceiptDate = string.Format("{0:dd.MM.yyyy}", dbObj.ReceiptDate),
                             ReceiverText = dbObj.Firm != null ? dbObj.Firm.FirmName + "\r\n" +
                                 dbObj.Firm.Address : "",
+                            ProductImage = prodBytes,
                         });
                     }
+
+                    return data;
+                }
+                else if (reportType == ReportType.RawMaterialLabel)
+                {
+                    var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                    var dbObj = repo.Get(d => d.Id == objectId);
+                    if (dbObj == null)
+                        throw new Exception("İrsaliye kaydı bulunamadi.");
+
+                    List<ItemReceiptDetailModel> data = new List<ItemReceiptDetailModel>();
+                    var modelDetail = new ItemReceiptDetailModel();
+                    dbObj.MapTo(modelDetail);
+
+                    modelDetail.ItemNo = dbObj.Item != null ? dbObj.Item.ItemNo : "";
+                    modelDetail.ItemName = dbObj.Item != null ? dbObj.Item.ItemName : "";
+                    modelDetail.FirmCode = dbObj.ItemReceipt.Firm != null ? dbObj.ItemReceipt.Firm.FirmCode : "";
+                    modelDetail.FirmName = dbObj.ItemReceipt.Firm != null ? dbObj.ItemReceipt.Firm.FirmName : "";
+                    modelDetail.QuantityStr = string.Format("{0:N2}", dbObj.Quantity ?? 0);
+                    modelDetail.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now);
+
+                    // GENERATE BARCODE IMAGE
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(dbObj.Id.ToString(), QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    System.Drawing.Bitmap qrCodeImage = qrCode.GetGraphic(100);
+
+                    System.Drawing.ImageConverter converter = new System.Drawing.ImageConverter();
+                    var imgBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                    modelDetail.BarcodeImage = imgBytes;
+
+                    data.Add(modelDetail);
+
+                    return data;
+                }
+                else if (reportType == ReportType.PalletLabel)
+                {
+                    var repo = _unitOfWork.GetRepository<Pallet>();
+                    var dbObj = repo.Get(d => d.Id == objectId);
+                    if (dbObj == null)
+                        throw new Exception("Palet kaydı bulunamadi.");
+
+                    List<PalletModel> data = new List<PalletModel>();
+                    var modelDetail = new PalletModel();
+                    dbObj.MapTo(modelDetail);
+
+                    modelDetail.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now);
+                    var firstSerial = dbObj.ItemSerial.FirstOrDefault();
+                    if (firstSerial != null)
+                    {
+                        modelDetail.ItemName = firstSerial.ItemReceiptDetail.Item.ItemName;
+                        try
+                        {
+                            modelDetail.FirmName = firstSerial.ItemReceiptDetail.ItemReceipt.Firm.FirmName;
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    modelDetail.QuantityStr = string.Format("{0:N2}", dbObj.ItemSerial.Sum(d => d.FirstQuantity) ?? 0);
+
+                    // GENERATE BARCODE IMAGE
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(dbObj.PalletNo, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    System.Drawing.Bitmap qrCodeImage = qrCode.GetGraphic(100);
+
+                    System.Drawing.ImageConverter converter = new System.Drawing.ImageConverter();
+                    var imgBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                    modelDetail.BarcodeImage = imgBytes;
+
+                    data.Add(modelDetail);
 
                     return data;
                 }
@@ -60,7 +164,7 @@ namespace HekaMOLD.Business.UseCases
             return null;
         }
         #endregion
-
+        
         public BusinessResult PrintReport<T>(int reportId, int printerId, T dataModel)
         {
             BusinessResult result = new BusinessResult();
@@ -75,10 +179,10 @@ namespace HekaMOLD.Business.UseCases
                 if (dbTemplate == null)
                     throw new Exception("Rapor şablonu bulunamadı.");
 
-                PrintReportTemplate<T>(dataModel, dbTemplate.FileName, dbPrinter.PageWidth ?? 0, 
+                result = PrintReportTemplate<T>(dataModel, dbTemplate.FileName, dbPrinter.PageWidth ?? 0, 
                     dbPrinter.PageHeight ?? 0, dbPrinter.AccessPath);
 
-                result.Result = true;
+                //result.Result = true;
             }
             catch (Exception ex)
             {
@@ -133,6 +237,7 @@ namespace HekaMOLD.Business.UseCases
                 report.ReportPath = System.AppDomain.CurrentDomain.BaseDirectory + "ReportDesign\\" + fileName;
 
                 report.DataSources.Add(new ReportDataSource("DS1", dataList));
+                
                 Export(report, pageWidth, pageHeight);
                 Print(printerName);
 
@@ -179,144 +284,6 @@ namespace HekaMOLD.Business.UseCases
         }
         #endregion
 
-        #region REQUIRED RDLC NATIVE FUNCTIONS
-        private int m_currentPageIndex;
-        private IList<Stream> m_streams;
-
-        private Stream CreateStream(string name,
-            string fileNameExtension, Encoding encoding,
-            string mimeType, bool willSeek)
-        {
-            Stream stream = new MemoryStream();
-            m_streams.Add(stream);
-            return stream;
-        }
-
-        // Export the given report as an EMF (Enhanced Metafile) file.
-        private void Export(LocalReport report, decimal pageWidth, decimal pageHeight)
-        {
-            string deviceInfo =
-          @"<DeviceInfo>
-                <OutputFormat>EMF</OutputFormat>
-                <PageWidth>{PageWidth}</PageWidth>
-                <PageHeight>{PageHeight}</PageHeight>
-                <MarginTop>{MarginTop}</MarginTop>
-                <MarginLeft>{MarginLeft}</MarginLeft>
-                <MarginRight>{MarginRight}</MarginRight>
-                <MarginBottom>{MarginBottom}</MarginBottom>
-             </DeviceInfo>"
-            .Replace("{PageWidth}", string.Format("{0:N2}", pageWidth).Replace(",", ".") + "cm")
-            .Replace("{PageHeight}", string.Format("{0:N2}", pageHeight).Replace(",", ".") + "cm")
-            .Replace("{MarginTop}", "0.0cm")
-            .Replace("{MarginLeft}", "0.0cm")
-            .Replace("{MarginRight}", "0.0cm")
-            .Replace("{MarginBottom}", "0.0cm");
-
-            Warning[] warnings;
-            m_streams = new List<Stream>();
-            report.Render("Image", deviceInfo, CreateStream,
-               out warnings);
-            foreach (Stream stream in m_streams)
-                stream.Position = 0;
-        }
-
-        private void ExportPdf(LocalReport report, decimal pageWidth, decimal pageHeight,
-            string outputPath, string outputFileName)
-        {
-            string deviceInfo =
-          @"<DeviceInfo>
-                <OutputFormat>EMF</OutputFormat>
-                <PageWidth>{PageWidth}</PageWidth>
-                <PageHeight>{PageHeight}</PageHeight>
-                <MarginTop>{MarginTop}</MarginTop>
-                <MarginLeft>{MarginLeft}</MarginLeft>
-                <MarginRight>{MarginRight}</MarginRight>
-                <MarginBottom>{MarginBottom}</MarginBottom>
-             </DeviceInfo>"
-            .Replace("{PageWidth}", string.Format("{0:N2}", pageWidth).Replace(",", ".") + "cm")
-            .Replace("{PageHeight}", string.Format("{0:N2}", pageHeight).Replace(",", ".") + "cm")
-            .Replace("{MarginTop}", "0.2cm")
-            .Replace("{MarginLeft}", "0.0cm")
-            .Replace("{MarginRight}", "0.0cm")
-            .Replace("{MarginBottom}", "0.0cm");
-
-            Warning[] warnings;
-
-            string[] streamids;
-            string mimeType;
-            string encoding;
-            string filenameExtension;
-
-            byte[] bytes = report.Render(
-                "PDF", null, out mimeType, out encoding, out filenameExtension,
-                out streamids, out warnings);
-
-            using (FileStream fs = new FileStream(outputPath + outputFileName, FileMode.Create))
-            {
-                fs.Write(bytes, 0, bytes.Length);
-            }
-        }
-
-        // Handler for PrintPageEvents
-        private void PrintPage(object sender, PrintPageEventArgs ev)
-        {
-            try
-            {
-                Metafile pageImage = new
-               Metafile(m_streams[m_currentPageIndex]);
-
-                // Adjust rectangular area with printer margins.
-                System.Drawing.Rectangle adjustedRect = new System.Drawing.Rectangle(
-                    ev.PageBounds.Left - (int)ev.PageSettings.HardMarginX,
-                    ev.PageBounds.Top - (int)ev.PageSettings.HardMarginY,
-                    ev.PageBounds.Width,
-                    ev.PageBounds.Height);
-
-                // Draw a white background for the report
-                ev.Graphics.FillRectangle(System.Drawing.Brushes.White, adjustedRect);
-
-                // Draw the report content
-                ev.Graphics.DrawImage(pageImage, adjustedRect);
-
-                // Prepare for the next page. Make sure we haven't hit the end.
-                m_currentPageIndex++;
-                ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        private void Print(string printerName)
-        {
-            if (m_streams == null || m_streams.Count == 0)
-                throw new Exception("Error: no stream to print.");
-            PrintDocument printDoc = new PrintDocument();
-            // YAZICI ADI PARAMETRİK BELİRTİLEBİLİR
-            //printDoc.PrinterSettings.PrinterName = "Microsoft Print to PDF";
-            if (!printDoc.PrinterSettings.IsValid)
-            {
-                throw new Exception("Error: cannot find the default printer.");
-            }
-            else
-            {
-                printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
-                printDoc.PrinterSettings.PrinterName = printerName;
-                m_currentPageIndex = 0;
-                try
-                {
-                    printDoc.Print();
-                }
-                catch (Exception ex)
-                {
-
-                }
-
-            }
-        }
-        #endregion
-
         #region SYSTEM REPORTS
         public ItemStateModel[] GetItemStates(int[] warehouseList)
         {
@@ -337,13 +304,25 @@ namespace HekaMOLD.Business.UseCases
                         WarehouseId = d.Key.Warehouse.Id,
                         WarehouseCode = d.Key.Warehouse.WarehouseCode,
                         WarehouseName = d.Key.Warehouse.WarehouseName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
                         InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0,
                         OutQty = d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0,
                         TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100).Sum(m => m.Quantity) ?? 0)
                             - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
-                    }).ToArray();
+                    })
+                    .OrderBy(d => d.ItemGroupId)
+                    .ToArray();
+
+                data = data.Where(d => d.InQty - d.OutQty > 0).ToArray();
+
+                foreach (var item in data)
+                {
+                    item.TotalQty = item.InQty - item.OutQty;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
             }
@@ -384,6 +363,9 @@ namespace HekaMOLD.Business.UseCases
                         WarehouseId = d.Key.Warehouse.Id,
                         WarehouseCode = d.Key.Warehouse.WarehouseCode,
                         WarehouseName = d.Key.Warehouse.WarehouseName,
+                        ItemGroupId = d.Key.Item.ItemGroupId,
+                        ItemGroupCode = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupCode : "",
+                        ItemGroupName = d.Key.Item.ItemGroup != null ? d.Key.Item.ItemGroup.ItemGroupName : "",
                         InQty = d.Where(m => m.ItemReceipt.ReceiptType < 100
                             && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd
                             ).Sum(m => m.Quantity) ?? 0,
@@ -392,7 +374,16 @@ namespace HekaMOLD.Business.UseCases
                         TotalQty = (d.Where(m => m.ItemReceipt.ReceiptType < 100
                             && m.ItemReceipt.ReceiptDate >= dtStart && m.ItemReceipt.ReceiptDate <= dtEnd).Sum(m => m.Quantity) ?? 0)
                             - (d.Where(m => m.ItemReceipt.ReceiptType > 100).Sum(m => m.Quantity) ?? 0)
-                    }).ToArray();
+                    })
+                    .OrderBy(d => d.ItemGroupId)
+                    .ToArray();
+
+                data = data.Where(d => d.InQty - d.OutQty > 0).ToArray();
+
+                foreach (var item in data)
+                {
+                    item.TotalQty = item.InQty - item.OutQty;
+                }
             }
             catch (Exception)
             {
@@ -420,98 +411,50 @@ namespace HekaMOLD.Business.UseCases
                 dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
-                var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
                 var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
                 var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
 
-                if (repoSignal.Any(d => d.ShiftBelongsToDate >= dtStart && d.ShiftBelongsToDate <= dtEnd
-                    && d.SignalStatus == 1))
-                {
-                    var dataList = repoSignal.Filter(d => d.ShiftBelongsToDate >= dtStart && d.ShiftBelongsToDate <= dtEnd
-                    && d.WorkOrderDetail != null
-                    && d.SignalStatus == 1)
+                var dataList = repoSerial.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd
+                    && 
+                        (d.SerialStatus == (int)SerialStatusType.Approved || d.SerialStatus == (int)SerialStatusType.Placed))
                     .GroupBy(d => new
                     {
+                        Item = d.Item,
                         WorkOrderDetail = d.WorkOrderDetail,
-                        WorkDate = DbFunctions.TruncateTime(d.ShiftBelongsToDate),
-                        Machine = d.Machine,
+                        WorkDate = DbFunctions.TruncateTime(d.CreatedDate),
                         Shift = d.Shift,
                     })
                     .Select(d => new ProductionHistoryModel
                     {
+                        ItemOrderDetailId = d.Key.WorkOrderDetail.ItemOrderSheet.ItemOrder.ItemOrderDetail.Where(m => m.ItemId == d.Key.Item.Id).
+                            Select(m => (int?)m.Id).FirstOrDefault() ?? 0,
                         WorkDate = d.Key.WorkDate,
                         //WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.Key.WorkDate),
-                        WorkOrderDetailId = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.Id : 0,
-                        MachineId =  d.Key.Machine.Id,
-                        MachineCode = d.Key.Machine.MachineCode,
-                        MachineName = d.Key.Machine.MachineName,
-                        OrderQuantity = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ItemOrderDetail.Quantity ?? 0 : 0,
-                        CompleteQuantity = d.Count() -
-                            (d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ProductWastage
-                            .Where(m => m.ShiftBelongsToDate >= dtStart && m.ShiftBelongsToDate <= dtEnd && m.ShiftId == d.Key.Shift.Id)
-                            .Sum(m => m.Quantity) ?? 0 : 0),
-                        ProductId = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ItemId : 0,
-                        ProductCode = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.Item.ItemNo : "",
-                        ProductName = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.Item.ItemName : "",
-                        SaleOrderNo = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ItemOrderDetail.ItemOrder.DocumentNo : "",
+                        WorkOrderDetailId = d.Key.WorkOrderDetail.Id,
+                        MachineId = d.Key.WorkOrderDetail.MachineId,
+                        MachineCode = d.Key.WorkOrderDetail.Machine.MachineCode,
+                        MachineName = d.Key.WorkOrderDetail.Machine.MachineName,
+                        OrderQuantity = d.Key.WorkOrderDetail.ItemOrderSheet.ItemOrder.ItemOrderDetail.Where(m => m.ItemId == d.Key.Item.Id).
+                            Select(m => m.Quantity).FirstOrDefault() ?? 0,
+                        CompleteQuantity = d.Where(m => m.ItemId == d.Key.Item.Id).Sum(m => m.FirstQuantity) ?? 0,
+                        ProductId = d.Key.Item.Id,
+                        ProductCode = d.Key.Item.ItemNo,
+                        ProductName = d.Key.Item.ItemName,
+                        SaleOrderNo = d.Key.WorkOrderDetail.ItemOrderSheet.ItemOrder.OrderNo,
                         SerialCount = d.Count(),
                         ShiftId = d.Key.Shift.Id,
                         ShiftCode = d.Key.Shift.ShiftCode,
                         ShiftName = d.Key.Shift.ShiftName,
-                        WastageQuantity = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.ProductWastage
-                            .Where(m => m.ShiftBelongsToDate >= dtStart && m.ShiftBelongsToDate <= dtEnd && m.ShiftId == d.Key.Shift.Id)
-                            .Sum(m => m.Quantity) ?? 0 : 0,
-                        WorkQuantity = d.Key.WorkOrderDetail != null ? d.Key.WorkOrderDetail.Quantity : 0,
+                        WastageQuantity = d.Key.WorkOrderDetail.ProductWastage
+                            .Where(m => DbFunctions.TruncateTime(m.EntryDate) == d.Key.WorkDate)
+                            .Sum(m => m.Quantity) ?? 0,
                     }).ToList();
-                    dataList.ForEach(d =>
-                    {
-                        if (d.CompleteQuantity < 0)
-                            d.CompleteQuantity = 0;
-                        d.WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkDate);
-                    });
-
-                    data = dataList.ToArray();
-                }
-                else
+                dataList.ForEach(d =>
                 {
-                    var dataList = repoSerial.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd
-                   && d.SerialStatus == (int)SerialStatusType.Approved)
-                   .GroupBy(d => new
-                   {
-                       WorkOrderDetail = d.WorkOrderDetail,
-                       WorkDate = DbFunctions.TruncateTime(d.CreatedDate),
-                       Shift = d.Shift,
-                   })
-                   .Select(d => new ProductionHistoryModel
-                   {
-                       WorkDate = d.Key.WorkDate,
-                        //WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.Key.WorkDate),
-                        WorkOrderDetailId = d.Key.WorkOrderDetail.Id,
-                       MachineId = d.Key.WorkOrderDetail.MachineId,
-                       MachineCode = d.Key.WorkOrderDetail.Machine.MachineCode,
-                       MachineName = d.Key.WorkOrderDetail.Machine.MachineName,
-                       OrderQuantity = d.Key.WorkOrderDetail.ItemOrderDetail.Quantity ?? 0,
-                       CompleteQuantity = d.Sum(m => m.FirstQuantity) ?? 0,
-                       ProductId = d.Key.WorkOrderDetail.ItemId,
-                       ProductCode = d.Key.WorkOrderDetail.Item.ItemNo,
-                       ProductName = d.Key.WorkOrderDetail.Item.ItemName,
-                       SaleOrderNo = d.Key.WorkOrderDetail.ItemOrderDetail.ItemOrder.DocumentNo,
-                       SerialCount = d.Count(),
-                       ShiftId = d.Key.Shift.Id,
-                       ShiftCode = d.Key.Shift.ShiftCode,
-                       ShiftName = d.Key.Shift.ShiftName,
-                       WastageQuantity = d.Key.WorkOrderDetail.ProductWastage
-                           .Where(m => DbFunctions.TruncateTime(m.EntryDate) == d.Key.WorkDate)
-                           .Sum(m => m.Quantity) ?? 0,
-                       WorkQuantity = d.Key.WorkOrderDetail.Quantity,
-                   }).ToList();
-                    dataList.ForEach(d =>
-                    {
-                        d.WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkDate);
-                    });
+                    d.WorkDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkDate);
+                });
 
-                    data = dataList.ToArray();
-                }
+                data = dataList.ToArray();
             }
             catch (Exception ex)
             {

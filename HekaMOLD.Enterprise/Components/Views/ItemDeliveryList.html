@@ -1,0 +1,43 @@
+﻿<div ng-controller="itemDeliveryListCtrl" class="bg-light">
+    <!--begin::DETAIL TABLE-->
+    <div class="row gy-5 mt-4 gx-xl-8 bg-white">
+        <div class="col-xxl-12 col-sm-12">
+            <table class="table table-bordered">
+                <thead class="fw-bolder text-center fs-4">
+                    <tr>
+                        <th class="w-20 px-2">Tarih</th>
+                        <th class="w-20 px-2">Stok</th>
+                        <th class="w-20 px-2">Firma</th>
+                        <th class="w-20 px-2">Miktar</th>
+                        <th class="w-20 px-2">#</th>
+                    </tr>
+                </thead>
+            </table>
+            <div class="table-scroller-md">
+                <table ng-cloak class="table table-bordered table-striped">
+                    <tbody>
+                        <tr ng-repeat="item in itemDeliveryList">
+                            <td class="w-20 px-2" ng-bind="item.ReceiptDateStr"></td>
+                            <td class="w-20 px-2" ng-bind="item.ItemName"></td>
+                            <td class="w-20 px-2" ng-bind="item.FirmName"></td>
+                            <td class="w-20 px-2 py-1">
+                                <input type="number"
+                                       class="form-control form-control-sm"
+                                       ng-model="item.Quantity" />
+                            </td>
+                            <td class="w-10 px-2 py-0">
+                                <button type="button" class="btn btn-sm btn-primary my-0" ng-click="saveDetail(item.Id)">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger ml-1 my-0" ng-click="deleteDetail(item.Id)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--end::DETAIL TABLE-->
+</div>

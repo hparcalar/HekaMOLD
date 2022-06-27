@@ -4,8 +4,12 @@ using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.Operational;
+using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -240,6 +244,306 @@ namespace HekaMOLD.Business.UseCases.Core.Base
 
             return result;
         }
+        #endregion
+
+        #region NATIVE PRINTING FUNCTIONS
+        protected int m_currentPageIndex;
+        protected IList<Stream> m_streams;
+
+        protected Stream CreateStream(string name,
+            string fileNameExtension, Encoding encoding,
+            string mimeType, bool willSeek)
+        {
+            Stream stream = new MemoryStream();
+            m_streams.Add(stream);
+            return stream;
+        }
+
+        // Export the given report as an EMF (Enhanced Metafile) file.
+        protected void Export(LocalReport report, decimal pageWidth, decimal pageHeight)
+        {
+            string deviceInfo =
+          @"<DeviceInfo>
+                <OutputFormat>EMF</OutputFormat>
+                <PageWidth>{PageWidth}</PageWidth>
+                <PageHeight>{PageHeight}</PageHeight>
+                <MarginTop>{MarginTop}</MarginTop>
+                <MarginLeft>{MarginLeft}</MarginLeft>
+                <MarginRight>{MarginRight}</MarginRight>
+                <MarginBottom>{MarginBottom}</MarginBottom>
+             </DeviceInfo>"
+            .Replace("{PageWidth}", string.Format("{0:N2}", pageWidth).Replace(",", ".") + "cm")
+            .Replace("{PageHeight}", string.Format("{0:N2}", pageHeight).Replace(",", ".") + "cm")
+            .Replace("{MarginTop}", "0.0cm")
+            .Replace("{MarginLeft}", "0.0cm")
+            .Replace("{MarginRight}", "0.0cm")
+            .Replace("{MarginBottom}", "0.0cm");
+
+            Warning[] warnings;
+            m_streams = new List<Stream>();
+            report.Render("Image", deviceInfo, CreateStream,
+               out warnings);
+            foreach (Stream stream in m_streams)
+                stream.Position = 0;
+        }
+
+        protected void ExportPdf(LocalReport report, string outputPath, string outputFileName)
+        {
+            string deviceInfo =
+          @"<DeviceInfo>
+                <OutputFormat>EMF</OutputFormat>
+                <PageWidth>{PageWidth}</PageWidth>
+                <PageHeight>{PageHeight}</PageHeight>
+                <MarginTop>{MarginTop}</MarginTop>
+                <MarginLeft>{MarginLeft}</MarginLeft>
+                <MarginRight>{MarginRight}</MarginRight>
+                <MarginBottom>{MarginBottom}</MarginBottom>
+             </DeviceInfo>"
+            .Replace("{PageWidth}", "21cm")
+            .Replace("{PageHeight}", "29.7cm")
+            .Replace("{MarginTop}", "0.2cm")
+            .Replace("{MarginLeft}", "0.0cm")
+            .Replace("{MarginRight}", "0.0cm")
+            .Replace("{MarginBottom}", "0.0cm");
+
+            Warning[] warnings;
+            //m_streams = new List<Stream>();
+            //report.Render("PDF", deviceInfo, CreateStream,
+            //   out warnings);
+            //foreach (Stream stream in m_streams)
+            //    stream.Position = 0;
+
+            string[] streamids;
+            string mimeType;
+            string encoding;
+            string filenameExtension;
+
+            byte[] bytes = report.Render(
+                "PDF", null, out mimeType, out encoding, out filenameExtension,
+                out streamids, out warnings);
+
+            using (FileStream fs = new FileStream(outputPath + outputFileName, FileMode.Create))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
+        }
+
+        protected void ExportPdf(LocalReport report, string pageWidth, string pageHeight, string outputPath, string outputFileName)
+        {
+            string deviceInfo =
+          @"<DeviceInfo>
+                <OutputFormat>EMF</OutputFormat>
+                <PageWidth>{PageWidth}</PageWidth>
+                <PageHeight>{PageHeight}</PageHeight>
+                <MarginTop>{MarginTop}</MarginTop>
+                <MarginLeft>{MarginLeft}</MarginLeft>
+                <MarginRight>{MarginRight}</MarginRight>
+                <MarginBottom>{MarginBottom}</MarginBottom>
+             </DeviceInfo>"
+            .Replace("{PageWidth}", pageWidth)
+            .Replace("{PageHeight}", pageHeight)
+            .Replace("{MarginTop}", "0.2cm")
+            .Replace("{MarginLeft}", "0.0cm")
+            .Replace("{MarginRight}", "0.0cm")
+            .Replace("{MarginBottom}", "0.0cm");
+
+            Warning[] warnings;
+            //m_streams = new List<Stream>();
+            //report.Render("PDF", deviceInfo, CreateStream,
+            //   out warnings);
+            //foreach (Stream stream in m_streams)
+            //    stream.Position = 0;
+
+            string[] streamids;
+            string mimeType;
+            string encoding;
+            string filenameExtension;
+
+            byte[] bytes = report.Render(
+                "PDF", null, out mimeType, out encoding, out filenameExtension,
+                out streamids, out warnings);
+
+            using (FileStream fs = new FileStream(outputPath + outputFileName, FileMode.Create))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
+        }
+
+        protected void ExportPdf(LocalReport report, decimal pageWidth, decimal pageHeight,
+            string outputPath, string outputFileName)
+        {
+            string deviceInfo =
+          @"<DeviceInfo>
+                <OutputFormat>EMF</OutputFormat>
+                <PageWidth>{PageWidth}</PageWidth>
+                <PageHeight>{PageHeight}</PageHeight>
+                <MarginTop>{MarginTop}</MarginTop>
+                <MarginLeft>{MarginLeft}</MarginLeft>
+                <MarginRight>{MarginRight}</MarginRight>
+                <MarginBottom>{MarginBottom}</MarginBottom>
+             </DeviceInfo>"
+            .Replace("{PageWidth}", string.Format("{0:N2}", pageWidth).Replace(",", ".") + "cm")
+            .Replace("{PageHeight}", string.Format("{0:N2}", pageHeight).Replace(",", ".") + "cm")
+            .Replace("{MarginTop}", "0.2cm")
+            .Replace("{MarginLeft}", "0.0cm")
+            .Replace("{MarginRight}", "0.0cm")
+            .Replace("{MarginBottom}", "0.0cm");
+
+            Warning[] warnings;
+
+            string[] streamids;
+            string mimeType;
+            string encoding;
+            string filenameExtension;
+
+            byte[] bytes = report.Render(
+                "PDF", null, out mimeType, out encoding, out filenameExtension,
+                out streamids, out warnings);
+
+            using (FileStream fs = new FileStream(outputPath + outputFileName, FileMode.Create))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
+        }
+
+        // Handler for PrintPageEvents
+        protected void PrintPage(object sender, PrintPageEventArgs ev)
+        {
+            try
+            {
+                Metafile pageImage = new
+               Metafile(m_streams[m_currentPageIndex]);
+
+                // Adjust rectangular area with printer margins.
+                System.Drawing.Rectangle adjustedRect = new System.Drawing.Rectangle(
+                    ev.PageBounds.Left - (int)ev.PageSettings.HardMarginX,
+                    ev.PageBounds.Top - (int)ev.PageSettings.HardMarginY,
+                    ev.PageBounds.Width,
+                    ev.PageBounds.Height);
+
+                // Draw a white background for the report
+                ev.Graphics.FillRectangle(System.Drawing.Brushes.White, adjustedRect);
+
+                // Draw the report content
+                ev.Graphics.DrawImage(pageImage, adjustedRect);
+
+                // Prepare for the next page. Make sure we haven't hit the end.
+                m_currentPageIndex++;
+                ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        protected void Print(string printerName)
+        {
+            if (m_streams == null || m_streams.Count == 0)
+                throw new Exception("Error: no stream to print.");
+            PrintDocument printDoc = new PrintDocument();
+            // YAZICI ADI PARAMETRİK BELİRTİLEBİLİR
+            //printDoc.PrinterSettings.PrinterName = "Microsoft Print to PDF";
+            if (!printDoc.PrinterSettings.IsValid)
+            {
+                throw new Exception("Error: cannot find the default printer.");
+            }
+            else
+            {
+                printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
+                printDoc.PrinterSettings.PrinterName = printerName;
+                m_currentPageIndex = 0;
+                try
+                {
+                    printDoc.Print();
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            }
+        }
+        #endregion
+
+        #region PLANT DEFINITION BUSINESS
+        public BusinessResult SaveOrUpdatePlant(PlantModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.PlantCode))
+                    throw new Exception("İşletme kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.PlantName))
+                    throw new Exception("İşletme adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<Plant>();
+
+                if (repo.Any(d => (d.PlantCode == model.PlantCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir işletme mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new Plant();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePlant(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<Plant>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public PlantModel GetPlant(int id)
+        {
+            PlantModel model = new PlantModel { };
+
+            var repo = _unitOfWork.GetRepository<Plant>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
         #endregion
     }
 }

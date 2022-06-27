@@ -30,6 +30,25 @@
 
         return prms;
     }
+    $scope.getToFixed = function(data, points) {
+        try {
+            var formatter = new Intl.NumberFormat('tr', {
+                style: 'decimal',
+            });
+
+            return formatter.format(data);
+
+            //if (typeof data != 'undefined')
+            //    return data.toFixed(points);
+        } catch (e) {
+            
+        }
+
+        return '';
+    }
+    $scope.redirectToOffer = function () {
+        window.location.href = HOST_URL + 'SIOffer?rid=' + $scope.modelObject.ItemOfferId;
+    }
 
     // SELECTABLES
     $scope.showFirmDialog = function () {
@@ -193,6 +212,7 @@
                             row.UnitPrice = resp.data.UnitPrice;
                             row.TaxAmount = resp.data.TaxAmount;
                             row.ForexUnitPrice = resp.data.ForexUnitPrice;
+                            row.SubTotal = resp.data.SubTotal;
 
                             $scope.calculateHeader();
                         }
@@ -204,7 +224,7 @@
     }
 
     $scope.calculateHeader = function () {
-        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
+        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.SubTotal).reduce((n, x) => n + x);
         $scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
         $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
     }

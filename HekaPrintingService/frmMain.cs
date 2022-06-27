@@ -14,6 +14,8 @@ using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
+using HekaMOLD.Business.Models.DataTransfer.Warehouse;
 
 namespace HekaPrintingService
 {
@@ -86,77 +88,120 @@ namespace HekaPrintingService
         {
             while (_runTask)
             {
-                int[] printerList = Printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
-
-                int printerIndex = 0;
-                foreach (var printerId in printerList)
+                try
                 {
-                    using (CoreSystemBO bObj = new CoreSystemBO())
-                    {
-                        var queueModel = bObj.GetNextFromPrinterQueue(printerId);
-                        if (queueModel != null && queueModel.Id > 0)
-                        {
-                            if (queueModel.RecordType == (int)RecordType.SerialItem)
-                            {
-                                BusinessResult printResult = null;
-                                using (ProductionBO prodBo = new ProductionBO())
-                                {
-                                    if (queueModel.RecordId == null)
-                                    {
-                                        if (!string.IsNullOrEmpty(queueModel.AllocatedPrintData))
-                                        {
-                                            var dataModel = Newtonsoft.Json
-                                                .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
-                                            var dbWorkOrder = prodBo.GetWorkOrderDetail(dataModel.WorkOrderDetailId ?? 0);
-                                            if (dbWorkOrder != null && dbWorkOrder.Id > 0)
-                                            {
-                                                var currentShift = prodBo.GetCurrentShift();
+                    int[] printerList = Printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
 
-                                                prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
+                    int printerIndex = 0;
+                    foreach (var printerId in printerList)
+                    {
+                        using (CoreSystemBO bObj = new CoreSystemBO())
+                        {
+                            var queueModel = bObj.GetNextFromPrinterQueue(printerId);
+                            if (queueModel != null && queueModel.Id > 0)
+                            {
+                                if (queueModel.RecordType == (int)RecordType.SerialItem)
+                                {
+                                    BusinessResult printResult = null;
+                                    using (ProductionBO prodBo = new ProductionBO())
+                                    {
+                                        if (queueModel.RecordId == null)
+                                        {
+                                            if (!string.IsNullOrEmpty(queueModel.AllocatedPrintData))
+                                            {
+                                                var dataModel = Newtonsoft.Json
+                                                    .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
+                                                var dbWorkOrder = prodBo.GetWorkOrderDetail(dataModel.WorkOrderDetailId ?? 0);
+                                                if (dbWorkOrder != null && dbWorkOrder.Id > 0)
                                                 {
-                                                    BarcodeContent = dataModel.Code,
-                                                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now),
-                                                    FirmName = dbWorkOrder.FirmName,
-                                                    ShiftName = currentShift != null ? currentShift.ShiftCode : "",
-                                                    InPackageQuantity = string.Format("{0:N2}", dbWorkOrder.InPackageQuantity ?? 0),
-                                                    ProductCode = dbWorkOrder.ProductCode,
-                                                    ProductName = dbWorkOrder.ProductName,
-                                                    Weight = "",
-                                                    Id = 0,
-                                                }, printerId, _printerNames[printerIndex]);
+                                                    var currentShift = prodBo.GetCurrentShift();
+
+                                                    prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
+                                                    {
+                                                        BarcodeContent = dataModel.Code,
+                                                        CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now),
+                                                        FirmName = dbWorkOrder.FirmName,
+                                                        ShiftName = currentShift != null ? currentShift.ShiftCode : "",
+                                                        InPackageQuantity = string.Format("{0:N2}", dbWorkOrder.InPackageQuantity ?? 0),
+                                                        ProductCode = dbWorkOrder.ProductCode,
+                                                        ProductName = dbWorkOrder.ProductName,
+                                                        Weight = "",
+                                                        Id = 0,
+                                                    }, printerId, _printerNames[printerIndex]);
+                                                }
                                             }
                                         }
+                                        else
+                                            printResult = prodBo.PrintProductLabel(queueModel.RecordId.Value, printerId,
+                                                _printerNames[printerIndex]);
                                     }
-                                    else
-                                        printResult = prodBo.PrintProductLabel(queueModel.RecordId.Value, printerId,
-                                            _printerNames[printerIndex]);
+
+                                    //if (printResult.Result)
+                                    bObj.SetElementAsPrinted(queueModel.Id);
+
+                                    //AddLog(_printerNames[printerId] + " yazıcısına gönderildi.");
                                 }
-
-                                //if (printResult.Result)
-                                bObj.SetElementAsPrinted(queueModel.Id);
-
-                                //AddLog(_printerNames[printerId] + " yazıcısına gönderildi.");
-                            }
-                            else if (queueModel.RecordType == (int)RecordType.DeliveryList)
-                            {
-                                using (ReportingBO rObj = new ReportingBO())
+                                else if (queueModel.RecordType == (int)RecordType.DeliveryList)
                                 {
-                                    var allocData = Newtonsoft.Json
-                                        .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
+                                    using (ReportingBO rObj = new ReportingBO())
+                                    {
+                                        var allocData = Newtonsoft.Json
+                                            .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
 
-                                    var reportData = (List<DeliverySerialListModel>)rObj
-                                        .PrepareReportData(queueModel.RecordId.Value, ReportType.DeliverySerialList);
-                                    rObj.PrintReport<List<DeliverySerialListModel>>(allocData.ReportTemplateId.Value, 
-                                        printerId, reportData);
+                                        var reportData = (List<DeliverySerialListModel>)rObj
+                                            .PrepareReportData(queueModel.RecordId.Value, ReportType.DeliverySerialList);
+                                        rObj.PrintReport<List<DeliverySerialListModel>>(allocData.ReportTemplateId.Value,
+                                            printerId, reportData);
+                                    }
+
+                                    bObj.SetElementAsPrinted(queueModel.Id);
                                 }
+                                else if (queueModel.RecordType == (int)RecordType.ItemReceiptDetail)
+                                {
+                                    using (ReportingBO rObj = new ReportingBO())
+                                    {
+                                        var allocData = Newtonsoft.Json
+                                           .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
 
-                                bObj.SetElementAsPrinted(queueModel.Id);
+                                        var reportData = (List<ItemReceiptDetailModel>)rObj
+                                            .PrepareReportData(queueModel.RecordId.Value, ReportType.RawMaterialLabel);
+                                        rObj.PrintReport<List<ItemReceiptDetailModel>>(allocData.ReportTemplateId.Value,
+                                            printerId, reportData);
+                                    }
+
+                                    bObj.SetElementAsPrinted(queueModel.Id);
+                                }
+                                else if (queueModel.RecordType == (int)RecordType.Pallet)
+                                {
+                                    
+                                    using (ReportingBO rObj = new ReportingBO())
+                                    {
+                                        var allocData = Newtonsoft.Json
+                                           .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
+
+                                        var reportData = (List<PalletModel>)rObj
+                                            .PrepareReportData(queueModel.RecordId.Value, ReportType.PalletLabel);
+                                        
+                                        var prResult = rObj.PrintReport<List<PalletModel>>(allocData.ReportTemplateId.Value,
+                                            printerId, reportData);
+
+                                        if (!prResult.Result)
+                                            MessageBox.Show(prResult.ErrorMessage);
+                                    }
+
+                                    bObj.SetElementAsPrinted(queueModel.Id);
+                                }
                             }
                         }
-                    }
 
-                    printerIndex++;
+                        printerIndex++;
+                    }
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                
 
                 await Task.Delay(100);
             }

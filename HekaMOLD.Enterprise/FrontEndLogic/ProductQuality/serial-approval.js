@@ -22,7 +22,7 @@
         $http.get(HOST_URL + 'Mobile/GetApprovedSerials', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data.Serials.sort((a, b) => a.WorkOrderDetailId - b.WorkOrderDetailId);
+                    $scope.pickupList = resp.data.Serials;
                     $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
                     $scope.filteredSummaryList = $scope.summaryList;
@@ -71,6 +71,8 @@
     // -- END -- QUALITY STATUS FILTER FUNCTIONS
 
     $scope.updateFilteredList = function () {
+        $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
         // FILTER QUALITY STATUS
         if ($scope.selectedQualities.length > 0) {
             $scope.filteredPickupList = $scope.pickupList.filter(d => $scope.selectedQualities.some(q => q == d.QualityStatus));

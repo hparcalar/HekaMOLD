@@ -91,18 +91,18 @@
   color: rgba(0,0,0,.87);
   font-weight: 400;
   font-size: 13px;
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-theme-material-typography input,
 .dx-theme-material-typography textarea {
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-theme-material-typography h1 {
   font-weight: 300;
   font-size: 64px;
-  letter-spacing: -1.5px;
+  /*letter-spacing: -1.5px;*/
 }
 .dx-theme-material-typography h2 {
   font-weight: 300;
@@ -1553,7 +1553,7 @@
   background-repeat: no-repeat;
 }
 .dx-color-scheme {
-  font-family: "#";
+  /*font-family: "#";*/
 }
 .dx-widget {
   display: block;
@@ -1568,7 +1568,7 @@
   color: rgba(0,0,0,.87);
   font-weight: 400;
   font-size: 13px;
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-widget,
@@ -1592,7 +1592,7 @@
 }
 .dx-widget input,
 .dx-widget textarea {
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-state-disabled .dx-widget,
@@ -1633,7 +1633,7 @@
   color: rgba(0,0,0,.87);
   font-weight: 400;
   font-size: 13px;
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
   padding: 0;
   display: -webkit-box;
@@ -1685,7 +1685,7 @@
 }
 .dx-field input,
 .dx-field textarea {
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-field-label i {
@@ -4546,7 +4546,7 @@
   color: rgba(0,0,0,.87);
   font-weight: 400;
   font-size: 13px;
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-overlay-wrapper,
@@ -4587,7 +4587,7 @@
 }
 .dx-overlay-wrapper input,
 .dx-overlay-wrapper textarea {
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-validationsummary-item {
@@ -5238,7 +5238,7 @@
   line-height: 17px;
   font-size: 19px;
   font-weight: 700;
-  font-family: DXIcons,sans-serif;
+  /*font-family: DXIcons,sans-serif;*/
   color: #8bc34a;
   content: "";
   opacity: 0;
@@ -8263,12 +8263,12 @@
   color: rgba(0,0,0,.87);
   font-weight: 400;
   font-size: 13px;
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-menu-base input,
 .dx-menu-base textarea {
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-menu-base.dx-state-focused {
@@ -10497,7 +10497,7 @@
   line-height: 17px;
   font-size: 19px;
   font-weight: 700;
-  font-family: DXIcons,sans-serif;
+  /*font-family: DXIcons,sans-serif;*/
   color: #8bc34a;
   content: "";
   opacity: 0;
@@ -11094,7 +11094,7 @@
   font-weight: 400;
   color: rgba(0,0,0,.38);
   content: "";
-  font-family: DXIcons;
+  /*font-family: DXIcons;*/
   font-size: 18px;
   height: 18px;
   width: 18px;
@@ -12620,7 +12620,7 @@
 }
 .dx-datagrid .dx-sort-down::before,
 .dx-datagrid .dx-sort-up::before {
-  font-family: DXIcons,sans-serif;
+  /*font-family: DXIcons,sans-serif;*/
 }
 .dx-datagrid .dx-datagrid-header-panel .dx-group-panel-item,
 .dx-datagrid .dx-datagrid-header-panel .dx-header-filter {
@@ -13289,12 +13289,12 @@
   color: rgba(0,0,0,.87);
   font-weight: 400;
   font-size: 13px;
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-datagrid-column-chooser input,
 .dx-datagrid-column-chooser textarea {
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-datagrid-column-chooser.dx-datagrid-column-chooser-mode-drag .dx-popup-content {
@@ -15723,12 +15723,12 @@ input.dx-hidden {
   color: rgba(0,0,0,.87);
   font-weight: 400;
   font-size: 13px;
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-treelist-column-chooser input,
 .dx-treelist-column-chooser textarea {
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-treelist-column-chooser.dx-treelist-column-chooser-mode-drag .dx-popup-content {
@@ -17520,12 +17520,12 @@ input.dx-hidden {
   color: rgba(0,0,0,.87);
   font-weight: 400;
   font-size: 13px;
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-pivotgrid .dx-ie .dx-pivotgrid-fields-area input,
 .dx-pivotgrid .dx-ie .dx-pivotgrid-fields-area textarea {
-  font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;
+  /*font-family: Roboto,RobotoFallback,"Noto Kufi Arabic",Helvetica,Arial,sans-serif;*/
   line-height: 1.2857;
 }
 .dx-pivotgridfieldchooser .dx-area .dx-area-icon-filter {

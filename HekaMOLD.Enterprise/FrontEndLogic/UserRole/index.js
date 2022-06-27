@@ -86,16 +86,21 @@
 
         // UPDATE MODELS SUBSCRIPTION LIST
         $scope.subscriptionList.forEach(d => {
-            if (d.IsChecked == true) {
-                if (!$scope.modelObject.Subscriptions.some(m => m.SubscriptionCategory == d.Id))
-                    $scope.modelObject.Subscriptions.push({ SubscriptionCategory: d.Id });
-            }
-            else {
-                if ($scope.modelObject.Subscriptions.some(m => m.SubscriptionCategory == d.Id)) {
-                    var existingObj = $scope.modelObject.Subscriptions.find(m => m.SubscriptionCategory == d.Id);
-                    $scope.modelObject.Subscriptions.splice($scope.modelObject.Subscriptions.indexOf(existingObj), 1);
+            try {
+                if (d.IsChecked == true) {
+                    if (!$scope.modelObject.Subscriptions.some(m => m.SubscriptionCategory == d.Id))
+                        $scope.modelObject.Subscriptions.push({ SubscriptionCategory: d.Id });
                 }
+                else {
+                    if ($scope.modelObject.Subscriptions.some(m => m.SubscriptionCategory == d.Id)) {
+                        var existingObj = $scope.modelObject.Subscriptions.find(m => m.SubscriptionCategory == d.Id);
+                        $scope.modelObject.Subscriptions.splice($scope.modelObject.Subscriptions.indexOf(existingObj), 1);
+                    }
+                }
+            } catch (e) {
+
             }
+            
         });
 
         $http.post(HOST_URL + 'UserRole/SaveModel', $scope.modelObject, 'json')

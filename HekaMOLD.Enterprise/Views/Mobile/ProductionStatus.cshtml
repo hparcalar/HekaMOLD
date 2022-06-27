@@ -25,14 +25,14 @@
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Ürün</label>
                             <!--begin::Input group-->
                             <input type="text" class="form-control form-control-solid"
-                                   ng-model="activeWorkOrder.WorkOrder.ProductName" readonly="readonly" placeholder="" />
+                                   ng-model="activeWorkOrder.ProductName" readonly="readonly" placeholder="" />
                         </div>
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Koli İçi Adet</label>
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Paket İçi Adet</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
                                 <input type="text" class="form-control form-control-solid"
-                                       ng-model="activeWorkOrder.WorkOrder.InPackageQuantity" readonly="readonly" placeholder="" />
+                                       ng-model="activeWorkOrder.InPackageQuantity" readonly="readonly" placeholder="" />
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                 <div class="col-sm-4 col-md-4 col-xs-4 col-xxl-4">
                     <div class="d-flex flex-row justify-content-between h-100">
                         <a ng-show="selectedWorkOrder.Id > 0" ng-cloak
-                           ng-class="{'btn-success': selectedWorkOrder.WorkOrder.WorkOrderStatus == 1 || selectedWorkOrder.WorkOrder.WorkOrderStatus == 2,
+                           ng-class="{'btn-success': !selectedWorkOrder.WorkOrder.WorkOrderStatus || selectedWorkOrder.WorkOrder.WorkOrderStatus == 1 || selectedWorkOrder.WorkOrder.WorkOrderStatus == 2,
                                     'btn-danger': selectedWorkOrder.WorkOrder.WorkOrderStatus == 3, 'mx-2': selectedWorkOrder.WorkOrder.WorkOrderStatus != 3 }"
                            class="btn btn-sm btn-block w-100 h-75 mt-2" ng-click="toggleWorkOrderStatus()">
                             <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
@@ -116,8 +116,71 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th class="w-50 px-2">Sipariş</th>
+                                <th class="w-25 px-2">Program</th>
+                                <th class="w-25 px-2">Müşteri</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-lg">
+                        <table border="1" ng-cloak class="table table-bordered">
+                            <tr style="font-weight:bold;"
+                                ng-class="{'bg-secondary': group.ItemOrderId == selectedGroup.Id}"
+                                ng-repeat="group in groupedQueue">
+                                <td class="w-50 px-2 py-0">
+                                    <button type="button" class="btn btn-xs btn-primary py-1 px-3 mt-2 me-2" 
+                                            ng-click="toggleGroup(group)">
+                                        <span ng-bind="group.ItemOrderId == selectedGroup.Id ? '-' : '+'"></span>
+                                    </button>
+                                    <span ng-bind="group.OrderNo"></span>
+
+                                    @* GROUP DETAILS *@
+                                    <div 
+                                         class="bg-secondary my-1 rounded-1"
+                                         ng-cloak ng-if="group.ItemOrderId == selectedGroup.Id">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="w-10 px-2"><b>Sıra</b></th>
+                                                    <th class="w-20 px-2"><b>Sipariş No</b></th>
+                                                    <th class="w-10 px-2"><b>Levha No</b></th>
+                                                    <th class="w-10 px-2"><b>Miktar</b></th>
+                                                    <th class="w-30 px-2"><b>Müşteri</b></th>
+                                                    <th class="w-20 px-2"><b>Açıklama</b></th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                        <div class="table-scroller-md">
+                                            <table border="1" ng-cloak class="table table-bordered">
+                                                <tbody>
+                                                    <tr style="font-weight:bold;" ng-repeat="item in getGroupDetails()" ng-click="selectWorkOrder(item)"
+                                                        ng-class="{'data-row-selected': item.Id == selectedWorkOrder.Id,
+                                            'bg-warning': item.WorkOrderStatus == 3,
+                                            'bg-success': item.WorkOrderStatus == 4}">
+                                                        <td class="w-10 px-2" ng-bind="item.OrderNo"></td>
+                                                        <td class="w-20 px-2" ng-bind="item.WorkOrder.ItemOrderDocumentNo"></td>
+                                                        <td class="w-10 px-2" ng-bind="item.WorkOrder.SheetProgramName + getRepeatStr(item.WorkOrder.ProductCode, 3)"></td>
+                                                        <td class="w-10 px-2" ng-bind="item.WorkOrder.Quantity"></td>
+                                                        <td class="w-30 px-2" ng-bind="item.WorkOrder.FirmName"></td>
+                                                        <td class="w-20 px-2"><b ng-bind="item.WorkOrder.Explanation"></b></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="w-25 px-2" ng-bind="group.Program"></td>
+                                <td class="w-25 px-2" ng-bind="group.FirmName"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    @*<table class="table table-bordered">
+                        <thead>
+                            <tr>
                                 <th class="w-10 px-2"><b>Sıra</b></th>
-                                <th class="w-30 px-2"><b>Ürün</b></th>
+                                <th class="w-20 px-2"><b>Sipariş No</b></th>
+                                <th class="w-10 px-2"><b>Levha No</b></th>
                                 <th class="w-10 px-2"><b>Miktar</b></th>
                                 <th class="w-30 px-2"><b>Müşteri</b></th>
                                 <th class="w-20 px-2"><b>Açıklama</b></th>
@@ -125,22 +188,23 @@
                         </thead>
                     </table>
                     <div class="table-scroller-md">
-                        <table ng-cloak class="table table-bordered">
+                        <table border="1" ng-cloak class="table table-bordered">
                             <tbody>
-                                <tr ng-repeat="item in machineQueue" ng-click="selectWorkOrder(item)"
-                                    ng-class="{'data-row-selected': item.Id == selectedWorkOrder.Id, 
-                                        'bg-warning': item.WorkOrder.WorkOrderStatus == 3,
-                                        'bg-success': item.WorkOrder.WorkOrderStatus == 4}"
-                                    >
+                                <tr style="font-weight:bold;" ng-repeat="item in machineQueue" ng-click="selectWorkOrder(item)"
+                                    ng-class="{'data-row-selected': item.Id == selectedWorkOrder.Id,
+                                        'bg-warning': item.WorkOrderStatus == 3,
+                                        'bg-success': item.WorkOrderStatus == 4}">
                                     <td class="w-10 px-2">{{item.OrderNo}}</td>
-                                    <td class="w-30 px-2">{{item.WorkOrder.ProductName}}</td>
+                                    <td class="w-20 px-2">{{item.WorkOrder.ItemOrderDocumentNo}}</td>
+                                    <td class="w-10 px-2">{{item.WorkOrder.ProductCode}}</td>
                                     <td class="w-10 px-2">{{item.WorkOrder.Quantity}}</td>
                                     <td class="w-30 px-2">{{item.WorkOrder.FirmName}}</td>
                                     <td class="w-20 px-2"><b>{{ item.WorkOrder.Explanation }}</b></td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div>*@
+
                 </div>
             </div>
             <!--end::QUEUE TABLE-->

@@ -17,7 +17,7 @@
     <AssemblyName>HekaMOLD.Enterprise</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -55,6 +55,12 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework6.Npgsql, Version=6.4.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework6.Npgsql.6.4.3\lib\net461\EntityFramework6.Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.Common.dll</HintPath>
@@ -71,14 +77,43 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Npgsql, Version=4.1.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.4.1.3\lib\net461\Npgsql.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="QRCoder, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QRCoder.1.4.1\lib\net40\QRCoder.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.6.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.4.6.0\lib\netstandard2.0\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.4.6.0\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.3\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -150,20 +185,27 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Attributes\FreeAction.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\ContractWorksController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\EntryQualityController.cs" />
+    <Compile Include="Controllers\ItemQualityGroupController.cs" />
+    <Compile Include="Controllers\LojisticOrderController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LayoutObjectTypeController.cs" />
     <Compile Include="Controllers\MachineGroupController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\MoldController.cs" />
+    <Compile Include="Controllers\PlantController.cs" />
     <Compile Include="Controllers\PrintingController.cs" />
+    <Compile Include="Controllers\ProcessController.cs" />
     <Compile Include="Controllers\ProcessGroupController.cs" />
     <Compile Include="Controllers\ProductionNeedsController.cs" />
     <Compile Include="Controllers\ProductQualityController.cs" />
     <Compile Include="Controllers\ReportTemplateController.cs" />
+    <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
+    <Compile Include="Controllers\SIOfferController.cs" />
     <Compile Include="Controllers\SystemPrinterController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
     <Compile Include="Controllers\WorkOrderCategoryController.cs" />
@@ -3939,9 +3981,17 @@
     <Content Include="assets\plugins\global\plugins.bundle.js" />
     <Content Include="Components\Controllers\delivery-plan-list.js" />
     <Content Include="Components\Controllers\edit-plan.js" />
+    <Content Include="Components\Controllers\item-delivery-list.js" />
+    <Content Include="Components\Controllers\item-list.js" />
     <Content Include="Components\Controllers\machine-incidents.js" />
     <Content Include="Components\Controllers\machine-postures.js" />
+    <Content Include="Components\Controllers\maintenance-plan.js" />
+    <Content Include="Components\Controllers\offer-constant-prices.js" />
+    <Content Include="Components\Controllers\offer-process-list.js" />
+    <Content Include="Components\Controllers\offer-sheet-usages.js" />
+    <Content Include="Components\Controllers\offer-sheets-list.js" />
     <Content Include="Components\Controllers\open-so-list.js" />
+    <Content Include="Components\Controllers\pallet-view.js" />
     <Content Include="Components\Controllers\planning-work-copy.js" />
     <Content Include="Components\Controllers\posture-category-selection.js" />
     <Content Include="Components\Controllers\incident-category-selection.js" />
@@ -3950,18 +4000,28 @@
     <Content Include="Components\Controllers\approved-itemrequest-details.js" />
     <Content Include="Components\Controllers\attachment-list.js" />
     <Content Include="Components\Controllers\print-options.js" />
+    <Content Include="Components\Controllers\product-part-selection.js" />
     <Content Include="Components\Controllers\production-history-list.js" />
     <Content Include="Components\Controllers\recipe-revisions.js" />
     <Content Include="Components\Controllers\related-order-list.js" />
     <Content Include="Components\Controllers\related-request-list.js" />
     <Content Include="Components\Controllers\report-template-list.js" />
     <Content Include="Components\Controllers\shift-targets.js" />
+    <Content Include="Components\Controllers\to-contract.js" />
     <Content Include="Components\Controllers\trial-work-form.js" />
     <Content Include="Components\Views\DeliveryPlanList.html" />
     <Content Include="Components\Views\EditPlan.html" />
+    <Content Include="Components\Views\ItemDeliveryList.html" />
+    <Content Include="Components\Views\ItemList.html" />
     <Content Include="Components\Views\MachineIncidents.html" />
     <Content Include="Components\Views\MachinePostures.html" />
+    <Content Include="Components\Views\MaintenancePlan.html" />
+    <Content Include="Components\Views\OfferConstantPrices.html" />
+    <Content Include="Components\Views\OfferProcessList.html" />
+    <Content Include="Components\Views\OfferSheetsList.html" />
+    <Content Include="Components\Views\OfferSheetUsages.html" />
     <Content Include="Components\Views\OpenSoList.html" />
+    <Content Include="Components\Views\PalletView.html" />
     <Content Include="Components\Views\PlanningWorkCopy.html" />
     <Content Include="Components\Views\PostureCategorySelection.html" />
     <Content Include="Components\Views\IncidentCategorySelection.html" />
@@ -3969,6 +4029,7 @@
     <Content Include="Components\Views\OpenPoList.html" />
     <Content Include="Components\Views\AttachmentList.html" />
     <Content Include="Components\Views\PrintOptions.html" />
+    <Content Include="Components\Views\ProductPartSelection.html" />
     <Content Include="Components\Views\RecipeRevisions.html" />
     <Content Include="Components\Views\RelatedOrderList.html" />
     <Content Include="Components\Views\RelatedRequestList.html" />
@@ -3976,6 +4037,7 @@
     <Content Include="Components\Views\ProductionHistoryList.html" />
     <Content Include="Components\Views\ReportTemplateList.html" />
     <Content Include="Components\Views\ShiftTargets.html" />
+    <Content Include="Components\Views\ToContract.html" />
     <Content Include="Components\Views\TrialWorkForm.html" />
     <Content Include="Components\VisualMechanics\camera-manager.js" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -4025,6 +4087,8 @@
     <Content Include="Content\dx.softblue.compact.css" />
     <Content Include="Content\dx.softblue.css" />
     <Content Include="Content\fontawesome5.min.css" />
+    <Content Include="Content\heka-clock.css" />
+    <Content Include="Content\heka-styles-red.css" />
     <Content Include="Content\heka-styles.css" />
     <Content Include="Content\images\close.png" />
     <Content Include="Content\images\loading.gif" />
@@ -4066,6 +4130,7 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="FrontEndLogic\ContractWorks\index.js" />
     <Content Include="FrontEndLogic\Core\record-manager.js" />
     <Content Include="FrontEndLogic\Delivery\planning.js" />
     <Content Include="FrontEndLogic\Document\index.js" />
@@ -4082,6 +4147,7 @@
     <Content Include="FrontEndLogic\Firm\approved-suppliers.js" />
     <Content Include="FrontEndLogic\Firm\list.js" />
     <Content Include="FrontEndLogic\Home\dashboard.js" />
+    <Content Include="FrontEndLogic\Home\heka-clock.js" />
     <Content Include="FrontEndLogic\Home\login.js" />
     <Content Include="FrontEndLogic\IncidentCategory\index.js" />
     <Content Include="FrontEndLogic\IncidentCategory\list.js" />
@@ -4091,8 +4157,11 @@
     <Content Include="FrontEndLogic\ItemCategory\list.js" />
     <Content Include="FrontEndLogic\ItemGroup\index.js" />
     <Content Include="FrontEndLogic\ItemGroup\list.js" />
+    <Content Include="FrontEndLogic\ItemQualityGroup\index.js" />
+    <Content Include="FrontEndLogic\ItemQualityGroup\list.js" />
     <Content Include="FrontEndLogic\ItemReceipt\index.js" />
     <Content Include="FrontEndLogic\ItemReceipt\list.js" />
+    <Content Include="FrontEndLogic\ItemReceipt\live-sheet-stock.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\extract.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
@@ -4109,12 +4178,15 @@
     <Content Include="FrontEndLogic\Mobile\fault-entry.js" />
     <Content Include="FrontEndLogic\Mobile\incident-history.js" />
     <Content Include="FrontEndLogic\Mobile\incident-list.js" />
+    <Content Include="FrontEndLogic\Mobile\item-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\machine-equipments.js" />
     <Content Include="FrontEndLogic\Mobile\manage-machines.js" />
+    <Content Include="FrontEndLogic\Mobile\manage-pallets.js" />
     <Content Include="FrontEndLogic\Mobile\manage-shifts.js" />
     <Content Include="FrontEndLogic\Mobile\posture-history.js" />
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\product-information.js" />
+    <Content Include="FrontEndLogic\Mobile\product-plan-list.js" />
     <Content Include="FrontEndLogic\Mobile\wastage-entry.js" />
     <Content Include="FrontEndLogic\Mobile\product-pickup.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
@@ -4133,12 +4205,16 @@
     <Content Include="FrontEndLogic\PIRequest\list.js" />
     <Content Include="FrontEndLogic\Planning\print-template.js" />
     <Content Include="FrontEndLogic\Planning\planning.js" />
+    <Content Include="FrontEndLogic\Plant\index.js" />
+    <Content Include="FrontEndLogic\Plant\list.js" />
     <Content Include="FrontEndLogic\PostureCategory\index.js" />
     <Content Include="FrontEndLogic\PostureCategory\list.js" />
     <Content Include="FrontEndLogic\Posture\index.js" />
     <Content Include="FrontEndLogic\Posture\list.js" />
     <Content Include="FrontEndLogic\ProcessGroup\index.js" />
     <Content Include="FrontEndLogic\ProcessGroup\list.js" />
+    <Content Include="FrontEndLogic\Process\index.js" />
+    <Content Include="FrontEndLogic\Process\list.js" />
     <Content Include="FrontEndLogic\ProductionNeeds\list.js" />
     <Content Include="FrontEndLogic\ProductQuality\conditional-approvals.js" />
     <Content Include="FrontEndLogic\ProductQuality\index-data.js" />
@@ -4152,8 +4228,12 @@
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\ReportTemplate\index.js" />
     <Content Include="FrontEndLogic\ReportTemplate\list.js" />
+    <Content Include="FrontEndLogic\Route\index.js" />
+    <Content Include="FrontEndLogic\Route\list.js" />
     <Content Include="FrontEndLogic\Shift\index.js" />
     <Content Include="FrontEndLogic\Shift\list.js" />
+    <Content Include="FrontEndLogic\SIOffer\index.js" />
+    <Content Include="FrontEndLogic\SIOffer\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
     <Content Include="FrontEndLogic\SIOrder\list.js" />
     <Content Include="FrontEndLogic\SystemPrinter\index.js" />
@@ -4172,6 +4252,8 @@
     <Content Include="FrontEndLogic\Warehouse\index.js" />
     <Content Include="FrontEndLogic\Warehouse\states.js" />
     <Content Include="FrontEndLogic\Warehouse\list.js" />
+    <Content Include="FrontEndLogic\WorkOrderCategory\index.js" />
+    <Content Include="FrontEndLogic\WorkOrderCategory\list.js" />
     <Content Include="FrontEndLogic\WorkOrder\index.js" />
     <Content Include="FrontEndLogic\WorkOrder\list.js" />
     <Content Include="FrontEndLogic\WorkOrder\production-history.js" />
@@ -4438,9 +4520,11 @@
     <Content Include="Scripts\dx.viz.js" />
     <Content Include="Scripts\dx.web.debug.js" />
     <Content Include="Scripts\dx.web.js" />
+    <Content Include="Scripts\exceljs.min.js" />
     <Content Include="Scripts\FileAPI.flash.swf" />
     <Content Include="Scripts\FileAPI.js" />
     <Content Include="Scripts\FileAPI.min.js" />
+    <Content Include="Scripts\FileSaver.min.js" />
     <Content Include="Scripts\globalize.js" />
     <Content Include="Scripts\globalize\currency.js" />
     <Content Include="Scripts\globalize\date.js" />
@@ -4479,6 +4563,7 @@
     <Content Include="Scripts\ng-file-upload-shim.min.js" />
     <Content Include="Scripts\ng-file-upload.js" />
     <Content Include="Scripts\ng-file-upload.min.js" />
+    <Content Include="Scripts\pollyfill.min.js" />
     <Content Include="Scripts\printElement.js" />
     <Content Include="Scripts\push.min.js" />
     <Content Include="Scripts\serviceWorker.min.js" />
@@ -4628,12 +4713,31 @@
     <Content Include="Views\ProductQuality\ScrapList.cshtml" />
     <Content Include="Views\ProductQuality\ConditionalApproveList.cshtml" />
     <Content Include="Views\Warehouse\FinishedProductState.cshtml" />
+    <Content Include="Views\WorkOrderCategory\List.cshtml" />
+    <Content Include="Views\WorkOrderCategory\Index.cshtml" />
+    <Content Include="Views\ContractWorks\Index.cshtml" />
+    <Content Include="Views\LojisticOrder\Index.cshtml" />
+    <Content Include="Views\LojisticOrder\List.cshtml" />
+    <Content Include="Views\Mobile\ItemDelivery.cshtml" />
+    <Content Include="Views\Mobile\ProductPlanList.cshtml" />
+    <Content Include="Views\Maintenance\Planning.cshtml" />
+    <Content Include="Views\Mobile\ManagePallets.cshtml" />
+    <Content Include="Views\SIOffer\List.cshtml" />
+    <Content Include="Views\SIOffer\Index.cshtml" />
+    <Content Include="Views\Process\List.cshtml" />
+    <Content Include="Views\Process\Index.cshtml" />
+    <Content Include="Views\Route\List.cshtml" />
+    <Content Include="Views\Route\Index.cshtml" />
+    <Content Include="Views\Plant\List.cshtml" />
+    <Content Include="Views\Plant\Index.cshtml" />
+    <Content Include="Views\ItemQualityGroup\List.cshtml" />
+    <Content Include="Views\ItemQualityGroup\Index.cshtml" />
+    <Content Include="Views\ItemReceipt\LiveSheetStock.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Printing\" />
-    <Folder Include="Views\WorkOrderCategory\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -4656,8 +4760,18 @@
     <Content Include="ReportDesign\DeliverySerialList.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="ReportDesign\DeliveryPalletLabel.rdlc" />
+    <Content Include="ReportDesign\ItemReceipt.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="ReportDesign\MoldLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\PalletLabel.rdlc" />
     <EmbeddedResource Include="ReportDesign\ProductLabel.rdlc" />
+    <EmbeddedResource Include="ReportDesign\ProductLabelWithoutFirm.rdlc" />
+    <EmbeddedResource Include="ReportDesign\ProductLabel_Backup.rdlc" />
+    <Content Include="ReportDesign\RawMaterialLabel.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -4677,7 +4791,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56183</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/hmold</IISUrl>
+          <IISUrl>http://localhost:56174/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

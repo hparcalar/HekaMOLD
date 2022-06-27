@@ -14,8 +14,14 @@
             },
             showColumnLines: false,
             showRowLines: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             showBorders: true,
             wordWrapEnabled: true,
             filterRow: {
@@ -37,7 +43,7 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'ControlDateStr', caption: 'Kontrol Tarihi' },
+                { dataField: 'CreatedDateStr', caption: 'Kontrol Tarihi' },
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'ItemNo', caption: 'Malzeme Kodu' },
                 { dataField: 'ItemName', caption: 'Malzeme Adı' },

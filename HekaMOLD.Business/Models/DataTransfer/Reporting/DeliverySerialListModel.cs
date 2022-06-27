@@ -16,5 +16,14 @@ namespace HekaMOLD.Business.Models.DataTransfer.Reporting
         public decimal? GrossWeight { get; set; }
         public string ReceiptDate { get; set; }
         public string ReceiverText { get; set; }
+        public string LineExplanation { get; set; }
+        public string ReceiptExplanation { get; set; }
+        public byte[] ProductImage { get; set; }
+
+        #region HEADER (RECEIPT) INFORMATION
+        public string FirmCode { get; set; }
+        public string FirmName { get; set; }
+        public string DocumentNo { get; set; }
+        #endregion
     }
 }

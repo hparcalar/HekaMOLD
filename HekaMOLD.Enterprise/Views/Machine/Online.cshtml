@@ -55,8 +55,7 @@
                 <div class="col-xxl-3 col-sm-3 col-md-3 px-2 py-0" ng-repeat="item in machineList">
                     <div class="rounded-1 py-0 my-0"
                          ng-cloak
-                         ng-class="{'bg-light-dark': item.BackColor == null || item.BackColor.length == 0}"
-                         ng-style="item.BackColor != null && item.BackColor.length > 0 && {'background-color': item.BackColor}">
+                         ng-class="{'bg-danger': item.MachineStatus == 0 || item.MachineStatus == null, 'bg-success': item.MachineStatus == 1}">
                         <div class="m-2 border-1 rounded-1">
                             <div class="d-flex flex-row justify-content-between pt-2 my-1">
                                 <button type="button" class="btn btn-sm btn-secondary flex-fill">
@@ -114,18 +113,18 @@
                                     <div class="py-0 my-1 flex-grow-1" ng-repeat="shift in item.MachineStats.ShiftStats">
                                         <hr class="my-1" />
                                         <h6 class="text-decoration-underline my-0">{{ shift.ShiftCode }} Vardiyası</h6>
-                                        <p class="py-0 my-0">Ort Şişirme: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
+                                        <p class="py-0 my-0">Ort Çevrim: <b>{{ getFixed(shift.AvgInflationTime,2) }} sn</b></p>
                                         <p class="py-0 my-0">Üretim: <b>{{ shift.AvgProductionCount }} adet</b></p>
                                         <p class="py-0 my-0" ng-class="{'bg-danger': shift.WastageCount > 0}">Fire: <b>{{ shift.WastageCount }} adet</b></p>
                                     </div>
                                 </div>
                                 <hr class="my-1" />
-                                <h6 ng-class="{'text-primary': item.ForeColor == null || item.ForeColor.length == 0}"
+                                <h6 ng-class="{'text-dark': item.ForeColor == null || item.ForeColor.length == 0}"
                                     ng-style="item.ForeColor != null && item.ForeColor.length > 0 && {'color': item.ForeColor}"
                                     class="text-decoration-underline my-0">
                                     Genel Ortalama
                                 </h6>
-                                <p class="py-0 my-0">Ort Şişirme: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
+                                <p class="py-0 my-0">Ort Çevrim: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
                                 <p class="py-0 my-0">Üretim: <b>{{item.MachineStats.AvgProductionCount}}</b> adet</p>
                                 <p class="py-0 my-0" ng-class="{'bg-danger': item.MachineStats.WastageCount > 0}">Fire: <b>{{item.MachineStats.WastageCount}}</b> adet</p>
                             </div>

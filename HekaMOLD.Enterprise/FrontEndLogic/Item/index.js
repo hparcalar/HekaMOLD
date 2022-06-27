@@ -10,9 +10,11 @@
     $scope.selectedCategory = {};
     $scope.categoryList = [];
     $scope.firmList = [];
+    $scope.qualityGroupList = [];
 
     $scope.selectedFirm = {};
     $scope.selectedGroup = {};
+    $scope.selectedQualityGroup = {};
     $scope.groupList = [];
 
     $scope.unitList = [];
@@ -27,6 +29,7 @@
                         $scope.groupList = resp.data.Groups;
                         $scope.firmList = resp.data.Firms;
                         $scope.unitList = resp.data.Units;
+                        $scope.qualityGroupList = resp.data.QualityGroups;
 
                         resolve(resp.data);
                     }
@@ -40,6 +43,20 @@
     $scope.openNewRecord = function () {
         $scope.modelObject = { Id: 0 };
         $scope.selectedFirmType = {};
+        $scope.selectedGroup = {};
+        $scope.selectedQualityGroup = {};
+        $scope.selectedFirm = {};
+    }
+
+    $scope.isRawSheet = function () {
+        try {
+            var res = $scope.modelObject.ItemName.match(/\sSAC(\s|$)/g);
+            return res != null && res.length > 0;
+        } catch (e) {
+
+        }
+
+        return false;
     }
 
     $scope.performDelete = function () {
@@ -96,6 +113,11 @@
         else
             $scope.modelObject.ItemGroupId = null;
 
+        if (typeof $scope.selectedQualityGroup != 'undefined' && $scope.selectedQualityGroup != null)
+            $scope.modelObject.ItemQualityGroupId = $scope.selectedQualityGroup.Id;
+        else
+            $scope.modelObject.ItemQualityGroupId = null;
+
         if (typeof $scope.selectedFirm != 'undefined' && $scope.selectedFirm != null)
             $scope.modelObject.SupplierFirmId = $scope.selectedFirm.Id;
         else
@@ -138,6 +160,11 @@
                         $scope.selectedGroup = $scope.groupList.find(d => d.Id == $scope.modelObject.ItemGroupId);
                     else
                         $scope.selectedGroup = {};
+
+                    if ($scope.modelObject.ItemQualityGroupId > 0)
+                        $scope.selectedQualityGroup = $scope.qualityGroupList.find(d => d.Id == $scope.modelObject.ItemQualityGroupId);
+                    else
+                        $scope.selectedQualityGroup = {};
 
                     if (typeof $scope.modelObject.SupplierFirmId != 'undefined' && $scope.modelObject.SupplierFirmId != null)
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.SupplierFirmId);

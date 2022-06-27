@@ -16,5 +16,14 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string Explanation { get; set; }
         public int? MachineId { get; set; }
         public int? MachineGroupId { get; set; }
+
+        public bool NewDetail { get; set; } = false;
+
+        #region VISUAL ELEMENTS
+        public string ProcessCode { get; set; }
+        public string ProcessName { get; set; }
+        public decimal? ProcessUnitPrice { get; set; }
+        public string ProcessForexType { get; set; }
+        #endregion
     }
 }

@@ -30,7 +30,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public DateTime? SyncDate { get; set; }
         public int? SyncUserId { get; set; }
         public string SyncKey { get; set; }
+        public string SheetProgramName { get; set; }
         public ItemOrderDetailModel[] Details { get; set; }
+        public ItemOrderSheetModel[] Sheets { get; set; }
 
         #region VISUAL ELEMENTS
         public string FirmCode { get; set; }
@@ -42,6 +44,12 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string DateOfNeedStr { get; set; }
         public string OrderDateStr { get; set; }
         public string CreatedUserName { get; set; }
+        public int ItemOfferId { get; set; }
+        public string ItemOfferNo { get; set; }
+        public string DeadlineDateStr { get; set; }
+        public string ItemNo { get; set; }
+        public string ItemName { get; set; }
+        public decimal? Quantity { get; set; }
         #endregion
     }
 }
