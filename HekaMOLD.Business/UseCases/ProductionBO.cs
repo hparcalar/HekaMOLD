@@ -641,6 +641,56 @@ namespace HekaMOLD.Business.UseCases
             return containerList.ToArray();
         }
 
+        public UserWorkOrderHistoryModel[] GetMachineActions(int machineId, DateTime filterDate)
+        {
+            UserWorkOrderHistoryModel[] data = new UserWorkOrderHistoryModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<UserWorkOrderHistory>();
+                var repoUser = _unitOfWork.GetRepository<User>();
+
+                var dtStart = DateTime.ParseExact(
+                        string.Format("{0:yyyy-MM-dd}", filterDate) + " 00:00", "yyyy-MM-dd HH:mm",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr")
+                        );
+                var dtEnd = DateTime.ParseExact(
+                        string.Format("{0:yyyy-MM-dd}", filterDate) + " 23:59", "yyyy-MM-dd HH:mm",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr")
+                        );
+
+                data = repo.Filter(d => d.MachineId == machineId && 
+                    d.StartDate >= dtStart && d.StartDate <= dtEnd)
+                    .OrderBy(d => d.StartDate).ToList()
+                    .Select(d => new UserWorkOrderHistoryModel
+                    { 
+                        Id = d.Id,
+                        UserId = d.UserId,
+                        StartDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.StartDate),
+                        EndDateStr = d.EndDate != null ? string.Format("{0:dd.MM.yyyy HH:mm}", d.EndDate) : "",
+                    }).ToArray();
+
+                foreach (var item in data)
+                {
+                    if (item.UserId != null)
+                    {
+                        var dbUser = repoUser.Get(d => d.Id == item.UserId.Value);
+                        if (dbUser != null)
+                        {
+                            item.UserName = dbUser.UserName;
+                        }
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
         public MachinePlanModel GetActiveWorkOrderOnMachine(int machineId)
         {
             MachinePlanModel model = new MachinePlanModel();
@@ -1749,25 +1799,31 @@ namespace HekaMOLD.Business.UseCases
                 var repoRecipe = _unitOfWork.GetRepository<ProductRecipe>();
                 var repoNeeds = _unitOfWork.GetRepository<ItemOrderItemNeeds>();
 
-                var openItemOrders = repoItemOrderDetail
-                    .Filter(d => 
-                        d.ItemOrder.OrderType == (int)ItemOrderType.Sale &&
-                        d.OrderStatus != (int)OrderStatusType.Completed &&
-                        d.OrderStatus != (int)OrderStatusType.Cancelled &&
-                        d.OrderStatus != (int)OrderStatusType.Delivered &&
-                        (d.OrderStatus == (int)OrderStatusType.Created
-                        || d.OrderStatus == (int)OrderStatusType.Approved
-                        || d.OrderStatus == (int)OrderStatusType.Planned))
-                    .OrderBy(d => new { d.ItemOrder.OrderDate, d.Id })
-                    .ToArray();
+                ItemOrderDetailModel[] openItemOrders = null;
+                using (OrdersBO bObj = new OrdersBO())
+                {
+                    openItemOrders = bObj.GetOpenOrderDetailListForView(ItemOrderType.Sale);
+                }
+
+                //var openItemOrders = repoItemOrderDetail
+                //    .Filter(d => 
+                //        d.ItemOrder.OrderType == (int)ItemOrderType.Sale &&
+                //        d.OrderStatus != (int)OrderStatusType.Completed &&
+                //        d.OrderStatus != (int)OrderStatusType.Cancelled &&
+                //        d.OrderStatus != (int)OrderStatusType.Delivered &&
+                //        (d.OrderStatus == (int)OrderStatusType.Created
+                //        || d.OrderStatus == (int)OrderStatusType.Approved
+                //        || d.OrderStatus == (int)OrderStatusType.Planned))
+                //    .OrderBy(d => new { d.ItemOrder.OrderDate, d.Id })
+                //    .ToArray();
+
+                // CLEAR CURRENT NEEDS
+                var currentNeeds = repoNeeds.GetAll().ToArray();
+                foreach (var needsItem in currentNeeds)
+                    repoNeeds.Delete(needsItem);
 
                 foreach (var item in openItemOrders)
                 {
-                    // CLEAR CURRENT NEEDS
-                    var currentNeeds = repoNeeds.Filter(d => d.ItemOrderDetailId == item.Id).ToArray();
-                    foreach (var needsItem in currentNeeds)
-                        repoNeeds.Delete(needsItem);
-
                     // WRITE NEW NEEDS
                     Hashtable itemStatusList = new Hashtable();
 
@@ -1804,8 +1860,8 @@ namespace HekaMOLD.Business.UseCases
                                     ItemId = recipeItem.ItemId,
                                     Quantity = finalNeedsQty,
                                     RemainingNeedsQuantity = finalNeedsQty,
-                                    ItemOrderDetail = item,
-                                    ItemOrder = item.ItemOrder,
+                                    ItemOrderDetailId = item.Id,
+                                    ItemOrderId = item.ItemOrderId,
                                 };
                                 repoNeeds.Add(newItemNeeds);
                             }
@@ -3798,6 +3854,91 @@ namespace HekaMOLD.Business.UseCases
 
             return result;
         }
+        #endregion
+
+        #region RETURNAL PRODUCTS
+        public ReturnalProductModel[] GetReturnalProductList()
+        {
+            List<ReturnalProductModel> data = new List<ReturnalProductModel>();
+
+            var repo = _unitOfWork.GetRepository<ReturnalProduct>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ReturnalProductModel containerObj = new ReturnalProductModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdateProductReturnal(ReturnalProductModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ReturnalProduct>();
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new ReturnalProduct();
+                    repo.Add(dbObj);
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeleteProductReturnal(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ReturnalProduct>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ReturnalProductModel GetReturnalProduct(int id)
+        {
+            ReturnalProductModel model = new ReturnalProductModel { };
+
+            var repo = _unitOfWork.GetRepository<ReturnalProduct>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
         #endregion
     }
 }

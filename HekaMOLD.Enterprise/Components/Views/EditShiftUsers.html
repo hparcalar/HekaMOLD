@@ -1,0 +1,23 @@
+﻿<div ng-controller="editShiftUsersCtrl">
+    <div class="row mb-2">
+        <div class="col-xxl-4 px-1 py-1 scroll-y">
+            <h5 class="text-center">Kullanıcılar</h5>
+            <div style="height:400px;max-height:400px; !important;overflow:auto;">
+                <div ng-repeat="user in userList" ng-click="selectUser(user)" class="p-1 border-1 rounded bg-secondary m-1 cursor-pointer"
+                     ng-bind="user.UserName">
+                </div>
+            </div>
+            
+        </div>
+
+        <div ng-repeat="item in shiftList" class="col-xxl-4 px-1 py-1">
+            <h5 ng-bind="item.ShiftCode" ng-click="selectShift(item)" class="text-center" ng-class="{'bg-primary': selectedShift.Id == item.Id}"></h5>
+            <div style="height:400px;max-height:400px; !important;overflow:auto;">
+                <div ng-repeat="user in item.Users" ng-click="unSelectUser(user)"
+                     ng-bind="user.UserName">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

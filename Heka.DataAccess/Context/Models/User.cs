@@ -36,6 +36,9 @@ namespace Heka.DataAccess.Context
         [ForeignKey("Plant")]
         public Nullable<int> PlantId { get; set; }
 
+        [ForeignKey("BelongToShift")]
+        public Nullable<int> ShiftId { get; set; }
+
         [ForeignKey("UserRole")]
         public Nullable<int> UserRoleId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
@@ -43,6 +46,8 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public byte[] ProfileImage { get; set; }
+
+        public virtual Shift BelongToShift { get; set; }
 
 
         [InverseProperty("User")]

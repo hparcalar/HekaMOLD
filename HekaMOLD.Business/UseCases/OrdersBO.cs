@@ -46,6 +46,37 @@ namespace HekaMOLD.Business.UseCases
                 .ToArray();
         }
 
+        public ItemOrderDetailModel[] GetOpenOrderDetailListForView(ItemOrderType orderType)
+        {
+            List<ItemOrderDetailModel> data = new List<ItemOrderDetailModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+            return repo.Filter(d => d.ItemOrder.OrderType == (int)orderType
+                && d.OrderStatus != (int)OrderStatusType.Completed
+                && d.OrderStatus != (int)OrderStatusType.Cancelled).ToList()
+                .Select(d => new ItemOrderDetailModel
+                {
+                    Id = d.Id,
+                    ItemOrderId = d.ItemOrderId,
+                    OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.CreatedDate),
+                    DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.DateOfNeed),
+                    FirmCode = d.ItemOrder.Firm != null ? d.ItemOrder.Firm.FirmCode : "",
+                    FirmName = d.ItemOrder.Firm != null ? d.ItemOrder.Firm.FirmName : "",
+                    OrderNo = d.ItemOrder.OrderNo,
+                    OrderDate = d.ItemOrder.OrderDate,
+                    DocumentNo = d.ItemOrder.DocumentNo,
+                    Explanation = d.Explanation,
+                    OrderStatus = d.OrderStatus,
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    Quantity = d.Quantity,
+                })
+                .OrderByDescending(d => d.OrderNo)
+                .ToArray();
+        }
+
         public ItemOrderDetailModel[] GetOpenOrderDetailList(ItemOrderType orderType)
         {
             List<ItemOrderDetailModel> data = new List<ItemOrderDetailModel>();

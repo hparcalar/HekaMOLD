@@ -190,10 +190,13 @@
     <Compile Include="Models\DataTransfer\Production\ProductRecipeDetailModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductRecipeModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ProductWastageModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\ReturnalProductDetailModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\ReturnalProductModel.cs" />
     <Compile Include="Models\DataTransfer\Production\RouteItemModel.cs" />
     <Compile Include="Models\DataTransfer\Production\RouteModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ShiftModel.cs" />
     <Compile Include="Models\DataTransfer\Production\ShiftTargetModel.cs" />
+    <Compile Include="Models\DataTransfer\Production\UserWorkOrderHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderAllocationModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderCategoryModel.cs" />
     <Compile Include="Models\DataTransfer\Production\WorkOrderDetailModel.cs" />

@@ -246,6 +246,19 @@ namespace HekaMOLD.Enterprise.Controllers
                 }
             }
 
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                bObj.CreateNotification(new NotificationModel
+                {
+                    UserId = null,
+                    NotifyType = (int)NotifyType.ManuelProductLabelPrinted,
+                    CreatedDate = DateTime.Now,
+                    IsProcessed = false,
+                    Title = "Manuel ürün etiketi yazdırıldı",
+                    Message = string.Format("{0:HH:mm}", DateTime.Now) + ": Ürün etiketi yazdırma işlemi yapıldı.",
+                });
+            }
+
             return Json(result);
         }
 

@@ -3949,7 +3949,9 @@
     <Content Include="Components\Controllers\edit-equipment-category.js" />
     <Content Include="Components\Controllers\edit-equipment.js" />
     <Content Include="Components\Controllers\edit-plan.js" />
+    <Content Include="Components\Controllers\edit-shift-users.js" />
     <Content Include="Components\Controllers\item-list.js" />
+    <Content Include="Components\Controllers\machine-actions.js" />
     <Content Include="Components\Controllers\machine-incidents.js" />
     <Content Include="Components\Controllers\machine-postures.js" />
     <Content Include="Components\Controllers\maintenance-plan.js" />
@@ -3979,7 +3981,9 @@
     <Content Include="Components\Views\EditEquipment.html" />
     <Content Include="Components\Views\EditEquipmentCategory.html" />
     <Content Include="Components\Views\EditPlan.html" />
+    <Content Include="Components\Views\EditShiftUsers.html" />
     <Content Include="Components\Views\ItemList.html" />
+    <Content Include="Components\Views\MachineActions.html" />
     <Content Include="Components\Views\MachineIncidents.html" />
     <Content Include="Components\Views\MachinePostures.html" />
     <Content Include="Components\Views\MaintenancePlan.html" />
@@ -4200,6 +4204,7 @@
     <Content Include="FrontEndLogic\ProductRecipe\list.js" />
     <Content Include="FrontEndLogic\ReportTemplate\index.js" />
     <Content Include="FrontEndLogic\ReportTemplate\list.js" />
+    <Content Include="FrontEndLogic\Shift\edit-users.js" />
     <Content Include="FrontEndLogic\Shift\index.js" />
     <Content Include="FrontEndLogic\Shift\list.js" />
     <Content Include="FrontEndLogic\SIOrder\index.js" />
@@ -4765,6 +4770,7 @@
     <Content Include="Views\PreventiveAction\Index.cshtml" />
     <Content Include="Views\CrmComplaint\List.cshtml" />
     <Content Include="Views\CrmComplaint\Index.cshtml" />
+    <Content Include="Views\Shift\EditUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

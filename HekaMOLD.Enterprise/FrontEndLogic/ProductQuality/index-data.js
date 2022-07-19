@@ -182,36 +182,6 @@
     $scope.saveModel = function () {
         $scope.saveStatus = 1;
 
-        // VALIDATE CHECK TYPE = 1 DATA
-        //$.each($('.plan-check'), function (ix, elm) {
-        //    if ($(elm).attr('data-active') == 'true') {
-        //        var planId = parseInt($(elm).attr('data-plan-id'));
-        //        var hourData = parseInt($(elm).attr('data-hour'));
-
-        //        var existingData = $scope.modelObject.Details.find(d => d.ProductQualityPlanId == planId &&
-        //            d.OrderNo == hourData);
-        //        if (typeof existingData != 'undefined' && existingData != null) {
-        //            existingData.NumericResult = $scope.getQualityValue(planId, hourData, 1);
-        //            if (existingData.NumericResult == 0)
-        //                existingData.NumericResult == null;
-
-        //            existingData.IsOk = existingData.NumericResult == 1;
-        //        }
-        //        else {
-        //            var nmResult = $scope.getQualityValue(planId, hourData, 1);
-
-        //            var newData = {
-        //                ProductQualityPlanId: planId,
-        //                NumericResult: $scope.getQualityValue(planId, hourData, 1),
-        //                IsOk: nmResult == 1,
-        //                OrderNo: hourData,
-        //                NewDetail: true,
-        //            };
-        //            $scope.modelObject.Details.push(newData);
-        //        }
-        //    }
-        //});
-
         // VALIDATE CHECK TYPE = 2 DATA
         $.each($('.plan-numeric'), function (ix, elm) {
             if ($(elm).attr('data-active') == 'true') {
@@ -291,6 +261,12 @@
                         refreshArray($scope.productList);
 
                         $scope.findMoldTest();
+                    }
+
+                    // set default printable flag to true
+                    for (var i = 0; i < resp.data.Plans.length; i++) {
+                        const elm = resp.data.Plans[i];
+                        elm.CanPrint = true;
                     }
 
                     $scope.planList = resp.data.Plans;

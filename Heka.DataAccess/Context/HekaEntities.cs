@@ -131,5 +131,7 @@
         public virtual DbSet<PreventiveAction> PreventiveAction { get; set; }
         public virtual DbSet<PreventiveActionDetail> PreventiveActionDetail { get; set; }
         public virtual DbSet<CustomerComplaint> CustomerComplaint { get; set; }
+        public virtual DbSet<ReturnalProduct> ReturnalProduct { get; set; }
+        public virtual DbSet<ReturnalProductDetail> ReturnalProductDetail { get; set; }
     }
 }

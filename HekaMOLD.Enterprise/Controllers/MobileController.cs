@@ -613,7 +613,20 @@ namespace HekaMOLD.Enterprise.Controllers
                 }
 
                 if (result.Result)
+                {
+                    using (ProductionBO bObj = new ProductionBO())
+                    {
+                        bObj.CreateNotification(new NotificationModel
+                        {
+                            UserId = null,
+                            NotifyType = (int)NotifyType.ProductPickupComplete,
+                            CreatedDate = DateTime.Now,
+                            IsProcessed = false,
+                            Message = string.Format("{0:HH:mm}", DateTime.Now) + ": Ürün teslim alma işlemi yapıldı.",
+                        });
+                    }
                     return Json(new { Status = 1, RecordId = result.RecordId });
+                }
                 else
                     throw new Exception(result.ErrorMessage);
             }

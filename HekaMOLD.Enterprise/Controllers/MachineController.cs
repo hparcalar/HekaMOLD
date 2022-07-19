@@ -68,6 +68,22 @@ namespace HekaMOLD.Enterprise.Controllers
 
         [HttpGet]
         [FreeAction]
+        public JsonResult GetMachineActions(int machineId, string filterDate)
+        {
+            UserWorkOrderHistoryModel[] data = new UserWorkOrderHistoryModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetMachineActions(machineId, DateTime.ParseExact(filterDate, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr")));
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
         public JsonResult GetMachineStats(string t1, string t2)
         {
             MachineModel[] result = new MachineModel[0];

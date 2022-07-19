@@ -24,6 +24,27 @@
             });
     }
 
+    $scope.showMachineActions = function (item) {
+        if (item && item.Id > 0) {
+            $scope.$broadcast('loadActionList',
+                {
+                    machineId: item.Id,
+                    actionDate: $scope.filterModel.startDate,
+                });
+
+            $('#dial-machine-actions').dialog({
+                hide: true,
+                modal: true,
+                resizable: false,
+                width: window.innerWidth * 0.8,
+                height: window.innerHeight * 0.8,
+                show: true,
+                draggable: false,
+                closeText: "KAPAT"
+            });
+        }
+    }
+
     $scope.getFixed = function (arg, point) {
         try {
             return arg.toFixed(point);

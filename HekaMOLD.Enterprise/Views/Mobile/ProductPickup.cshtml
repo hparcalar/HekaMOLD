@@ -32,17 +32,22 @@
 
                         <div class="col-sm-10 col-xxl-10 col-xs-10 h-100">
                             <div class="d-flex flex-row h-100">
+                                <div ng-if="lastReadProduct.Id > 0" class="bg-light-primary border-1 rounded-1 p-1">
+                                    <p class="my-1 p-0" ng-bind="'Vardiya: '+lastReadProduct.ShiftCode +', Barkod: ' + lastReadProduct.SerialNo"></p>
+                                    <p class="my-1 p-0" ng-bind="'Tarih: ' + lastReadProduct.CreatedDateStr"></p>
+                                    <p class="my-1 p-0" ng-bind="'Ürün: ' + lastReadProduct.ItemName.substring(0, 25)"></p>
+                                </div>
                                 <button type="button"
                                         ng-class="{'btn-dark': isQualityFilterSelected(2)}"
                                         ng-click="toggleQualityFilter(2)"
                                         class="btn btn-sm btn-danger btn-block h-75 flex-fill mt-2 mx-1">
-                                    Red Olanlar
+                                    Red
                                 </button>
                                 <button type="button"
                                         ng-class="{'btn-dark': isQualityFilterSelected(3)}"
                                         ng-click="toggleQualityFilter(3)"
                                         class="btn btn-sm btn-warning btn-block h-75 flex-fill mt-2 mx-1">
-                                    Bekleyenler
+                                    Bekleyen
                                 </button>
                                 <div class="flex-fill mt-2 mx-1">
                                     <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Barkod</label>
@@ -254,5 +259,5 @@
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/Scripts/html5-qrcode.min.js"></script>
-    <script src="~/FrontEndLogic/Mobile/product-pickup.js?v=2"></script>
+    <script src="~/FrontEndLogic/Mobile/product-pickup.js?v=3"></script>
 }

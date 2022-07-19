@@ -30,6 +30,7 @@
     $scope.selectedProducts = [];
     $scope.selectedSummary = { ItemName: '' };
     $scope.selectedShift = { Id: 0 };
+    $scope.lastReadProduct = { Id:0 };
 
     $scope.bindModel = function () {
         $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
@@ -201,6 +202,8 @@
             $scope.selectedProducts.splice($scope.selectedProducts.indexOf(item), 1);
         else
             $scope.selectedProducts.push(item);
+
+        $scope.lastReadProduct = item;
     }
 
     $scope.isSelectedProduct = function (item) {

@@ -102,7 +102,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (OrdersBO bObj = new OrdersBO())
             {
-                result = bObj.GetOpenOrderDetailList(ItemOrderType.Sale);
+                result = bObj.GetOpenOrderDetailListForView(ItemOrderType.Sale);
 
                 foreach (var item in result)
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public DateTime? ShiftBelongsToDate { get; set; }
         public string ChiefCode { get; set; }
         public string ChiefName { get; set; }
+
+        public UserModel[] Users { get; set; }
         #endregion
     }
 }

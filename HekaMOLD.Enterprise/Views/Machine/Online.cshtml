@@ -63,11 +63,10 @@
                 <div class="col-xxl-3 col-sm-3 col-md-3 px-2 py-0" ng-repeat="item in machineList">
                     <div class="rounded-1 py-0 my-0"
                          ng-cloak
-                         ng-class="{'machine-box-active': item.MachineStatus == 1, 'machine-box-stopped': item.MachineStatus != 1}"
-                        >
+                         ng-class="{'machine-box-active': item.MachineStatus == 1, 'machine-box-stopped': item.MachineStatus != 1}">
                         <div class="m-2 border-1 rounded-1">
                             <div class="d-flex flex-row justify-content-between pt-2 my-1">
-                                
+
                                 <button type="button" class="btn me-2 btn-sm btn-warning flex-fill p-1 fs-7 text-dark fw-bolder"
                                         ng-click="showIncidents(item.Id)">
                                     Arızalar
@@ -93,29 +92,29 @@
                                                       dur="10s"
                                                       repeatCount="indefinite" />
                                 </svg>
-                                <span ng-bind="item.MachineName"></span>
+                                <span ng-bind="item.MachineName" ng-click="showMachineActions(item)"></span>
                             </h4>
-                            <h5 ng-if="item.MachineStats.IsLiveModel && (item.IsInPosture || item.IsInIncident)" 
+                            <h5 ng-if="item.MachineStats.IsLiveModel && (item.IsInPosture || item.IsInIncident)"
                                 class="text-center bg-danger text-light mt-1 rounded px-2 py-2 border-1 border-dark"
                                 ng-bind="item.IsInPosture ? 'DURUŞ: ' + item.ActivePostureText : 'BAKIM: ' + item.ActiveIncidentText">
                             </h5>
-                            <h4 ng-if="item.MachineStats.IsLiveModel" 
-                                ng-bind="item.WorkingUserName.length > 0 ? item.WorkingUserName : 'OPERATÖR YOK'" 
+                            <h4 ng-if="item.MachineStats.IsLiveModel"
+                                ng-bind="item.WorkingUserName.length > 0 ? item.WorkingUserName : 'OPERATÖR YOK'"
                                 class="text-center bg-primary text-light mt-1 rounded px-2 py-2 border-1 border-dark">
                             </h4>
                             @*<div class="active-plan text-center py-0 min-h-55px">
-                                <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
-                                    <b>Firma:</b> {{item.ActivePlan.WorkOrder.FirmName}}
-                                </p>
-                                <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0"
-                                   data-toggle="tooltip" title="{{item.ActivePlan.WorkOrder.ProductName}}">
-                                    <b>Ürün:</b> {{item.ActivePlan.WorkOrder.ProductName}}
-                                </p>
-                                <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
-                                    Üretilen: <b>{{getFixed(item.ActivePlan.WorkOrder.CompleteQuantity,0)}}</b> / Sipariş:
-                                    {{item.ActivePlan.WorkOrder.Quantity}}
-                                </p>
-                            </div>*@
+                                    <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
+                                        <b>Firma:</b> {{item.ActivePlan.WorkOrder.FirmName}}
+                                    </p>
+                                    <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0"
+                                       data-toggle="tooltip" title="{{item.ActivePlan.WorkOrder.ProductName}}">
+                                        <b>Ürün:</b> {{item.ActivePlan.WorkOrder.ProductName}}
+                                    </p>
+                                    <p class="py-0 my-0 ellipsis-text" ng-show="item.ActivePlan.Id > 0">
+                                        Üretilen: <b>{{getFixed(item.ActivePlan.WorkOrder.CompleteQuantity,0)}}</b> / Sipariş:
+                                        {{item.ActivePlan.WorkOrder.Quantity}}
+                                    </p>
+                                </div>*@
                             <div class="general-avg text-center py-0">
                                 <div class="d-flex flex-row">
                                     <div class="py-0 my-1 flex-grow-1 mx-1" ng-repeat="shift in item.MachineStats.ShiftStats">
@@ -155,14 +154,14 @@
                                     </div>
                                 </div>
                                 @*<hr class="my-1" />
-                                <h6 ng-class="{'text-dark': item.ForeColor == null || item.ForeColor.length == 0}"
-                                    ng-style="item.ForeColor != null && item.ForeColor.length > 0 && {'color': item.ForeColor}"
-                                    class="text-decoration-underline my-0">
-                                    Genel Ortalama
-                                </h6>
-                                <p class="py-0 my-0">Ort Çevrim: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
-                                <p class="py-0 my-0">Üretim: <b>{{item.MachineStats.AvgProductionCount}}</b> adet</p>
-                                <p class="py-0 my-0" ng-class="{'bg-danger': item.MachineStats.WastageCount > 0}">Fire: <b>{{item.MachineStats.WastageCount}}</b> adet</p>*@
+                                    <h6 ng-class="{'text-dark': item.ForeColor == null || item.ForeColor.length == 0}"
+                                        ng-style="item.ForeColor != null && item.ForeColor.length > 0 && {'color': item.ForeColor}"
+                                        class="text-decoration-underline my-0">
+                                        Genel Ortalama
+                                    </h6>
+                                    <p class="py-0 my-0">Ort Çevrim: <b>{{getFixed(item.MachineStats.AvgInflationTime,2)}}</b> sn</p>
+                                    <p class="py-0 my-0">Üretim: <b>{{item.MachineStats.AvgProductionCount}}</b> adet</p>
+                                    <p class="py-0 my-0" ng-class="{'bg-danger': item.MachineStats.WastageCount > 0}">Fire: <b>{{item.MachineStats.WastageCount}}</b> adet</p>*@
                             </div>
                         </div>
                     </div>
@@ -182,6 +181,10 @@
     <div id="dial-postures" title="Makine Duruşları" style="display:none;">
         <ng-include src="'../Components/Views/MachinePostures.html'"></ng-include>
     </div>
+
+    <div id="dial-machine-actions" title="Operatör Hareketleri" style="display:none;">
+        <ng-include src="'../Components/Views/MachineActions.html'"></ng-include>
+    </div>
 </div>
 @section scripts{
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
@@ -192,4 +195,5 @@
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/Components/Controllers/machine-incidents.js"></script>
     <script src="~/Components/Controllers/machine-postures.js"></script>
+    <script src="~/Components/Controllers/machine-actions.js"></script>
 }

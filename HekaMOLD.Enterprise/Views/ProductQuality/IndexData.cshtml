@@ -163,8 +163,14 @@
                         </thead>
                         <tbody>
                             @* MAKİNE VE ÜRÜN BİLGİLERİ *@
-                            <tr ng-repeat="item in planList">
-                                <td><b>{{item.OrderNo}}</b></td>
+                            <tr ng-repeat="item in planList" ng-class="{'no-print': item.CanPrint == false}">
+                                <td>
+                                    <button class="no-print btn btn-xs"
+                                            ng-class="{'btn-success': item.CanPrint, 'btn-warning': item.CanPrint == false}"
+                                            ng-click="item.CanPrint = !item.CanPrint">
+                                    </button>
+                                    <b>{{item.OrderNo}}</b>
+                                </td>
                                 <td><b>{{item.ProductQualityCode}}</b></td>
                                 <td style="font-size:x-small !important;">
                                     {{item.CheckProperties}}
@@ -247,5 +253,5 @@
     </style>
 
     <script>var PRM_ID = @(!string.IsNullOrEmpty(Request.QueryString["rid"]) ? Request.QueryString["rid"] : "0");</script>
-    <script src="~/FrontEndLogic/ProductQuality/index-data.js"></script>
+    <script src="~/FrontEndLogic/ProductQuality/index-data.js?v=2"></script>
 }

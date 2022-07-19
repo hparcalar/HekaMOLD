@@ -13,5 +13,6 @@ namespace HekaMOLD.Business.Models.Constants
         Incident=3,
         Posture=4,
         ItemCriticals=5,
+        ProductPickup=6,
     }
 }

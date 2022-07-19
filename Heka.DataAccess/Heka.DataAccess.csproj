@@ -135,6 +135,8 @@
     <Compile Include="Context\Models\ProductRecipeDetail.cs" />
     <Compile Include="Context\Models\ProductWastage.cs" />
     <Compile Include="Context\Models\ReportTemplate.cs" />
+    <Compile Include="Context\Models\ReturnalProduct.cs" />
+    <Compile Include="Context\Models\ReturnalProductDetail.cs" />
     <Compile Include="Context\Models\Route.cs" />
     <Compile Include="Context\Models\RouteItem.cs" />
     <Compile Include="Context\Models\SectionSetting.cs" />
@@ -274,6 +276,18 @@
     <Compile Include="Migrations\202206271236456_ItemReceiptDetail_Weights_And_Dimensions.designer.cs">
       <DependentUpon>202206271236456_ItemReceiptDetail_Weights_And_Dimensions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202206301049472_ReturnalProduct.cs" />
+    <Compile Include="Migrations\202206301049472_ReturnalProduct.designer.cs">
+      <DependentUpon>202206301049472_ReturnalProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206301257402_ItemReceipt_Driver.cs" />
+    <Compile Include="Migrations\202206301257402_ItemReceipt_Driver.designer.cs">
+      <DependentUpon>202206301257402_ItemReceipt_Driver.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202207020402518_UserBelongToShift.cs" />
+    <Compile Include="Migrations\202207020402518_UserBelongToShift.designer.cs">
+      <DependentUpon>202207020402518_UserBelongToShift.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -371,6 +385,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202206271236456_ItemReceiptDetail_Weights_And_Dimensions.resx">
       <DependentUpon>202206271236456_ItemReceiptDetail_Weights_And_Dimensions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206301049472_ReturnalProduct.resx">
+      <DependentUpon>202206301049472_ReturnalProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206301257402_ItemReceipt_Driver.resx">
+      <DependentUpon>202206301257402_ItemReceipt_Driver.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202207020402518_UserBelongToShift.resx">
+      <DependentUpon>202207020402518_UserBelongToShift.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

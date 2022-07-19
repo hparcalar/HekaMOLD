@@ -2252,6 +2252,42 @@ namespace HekaMOLD.Business.UseCases
             return data.ToArray();
         }
 
+        public ShiftModel[] GetShiftListWithUsers()
+        {
+            List<ShiftModel> data = new List<ShiftModel>();
+
+            var repo = _unitOfWork.GetRepository<Shift>();
+            var repoUser = _unitOfWork.GetRepository<User>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ShiftModel containerObj = new ShiftModel();
+                d.MapTo(containerObj);
+                containerObj.StartTimeStr = d.StartTime != null ?
+                    string.Format("{0:hh\\:mm}", d.StartTime) : "";
+                containerObj.EndTimeStr = d.EndTime != null ?
+                    string.Format("{0:hh\\:mm}", d.EndTime) : "";
+                data.Add(containerObj);
+            });
+
+            foreach (var item in data)
+            {
+                List<UserModel> shUsers = new List<UserModel>();
+
+                var dataUsers = repoUser.Filter(d => d.ShiftId == item.Id).ToArray();
+                foreach (var shUser in dataUsers)
+                {
+                    UserModel nModel = new UserModel();
+                    shUser.MapTo(nModel);
+                    shUsers.Add(nModel);
+                }
+
+                item.Users = shUsers.ToArray();
+            }
+
+            return data.ToArray();
+        }
+
         public BusinessResult SaveOrUpdateShift(ShiftModel model)
         {
             BusinessResult result = new BusinessResult();

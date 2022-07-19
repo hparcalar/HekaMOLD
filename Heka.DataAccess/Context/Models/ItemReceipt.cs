@@ -62,6 +62,7 @@ namespace Heka.DataAccess.Context
 
         [ForeignKey("ConsumptionReceipt")]
         public Nullable<int> ConsumptionReceiptId { get; set; }
+        public string Driver { get; set; }
 
         public virtual Firm Firm { get; set; }
         public virtual Invoice Invoice { get; set; }

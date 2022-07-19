@@ -74,6 +74,7 @@ namespace HekaMOLD.Business.UseCases
                             NetWeight = item.NetWeight,
                             GrossWeight = item.GrossWeight,
                             PalletCount = item.PalletCount ?? 0,
+                            Driver = dbObj.Driver,
                         });
                     }
 

@@ -439,7 +439,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -921,7 +920,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value />
+                  <Value>=First(Fields!Driver.Value, "DS1")</Value>
                   <Style>
                     <FontSize>9pt</FontSize>
                   </Style>
@@ -1593,6 +1592,10 @@
         </Field>
         <Field Name="PackageSize">
           <DataField>PackageSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Driver">
+          <DataField>Driver</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

@@ -172,6 +172,10 @@ namespace HekaMOLD.Business.Base
                     return SubscriptionCategory.ItemCriticals;
                 case NotifyType.ItemAtMaximumInWarehouse:
                     return SubscriptionCategory.ItemCriticals;
+                case NotifyType.ProductPickupComplete:
+                    return SubscriptionCategory.ProductPickup;
+                case NotifyType.ManuelProductLabelPrinted:
+                    return SubscriptionCategory.ProductPickup;
                 default:
                     return default;
             }
