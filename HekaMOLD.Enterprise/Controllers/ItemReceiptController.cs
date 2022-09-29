@@ -3,6 +3,7 @@ using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
@@ -95,6 +96,27 @@ namespace HekaMOLD.Enterprise.Controllers
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult SearchPurchaseReceipt(string receiptNo)
+        {
+            ItemReceiptModel data = new ItemReceiptModel();
+            try
+            {
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    data = bObj.SearchPurchaseReceipt(receiptNo);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResp = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResp.MaxJsonLength = int.MaxValue;
+            return jsonResp;
         }
 
         [HttpGet]
@@ -361,6 +383,39 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(result);
+        }
+        #endregion
+
+        #region REPORTS
+        public ActionResult SalesReport()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetSalesReport(string dt1, string dt2)
+        {
+            SalesReportModel[] data = new SalesReportModel[0];
+
+            try
+            {
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetSalesReport(new Business.Models.Filters.BasicRangeFilter
+                    {
+                        StartDate = dt1,
+                        EndDate = dt2,
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
         }
         #endregion
     }

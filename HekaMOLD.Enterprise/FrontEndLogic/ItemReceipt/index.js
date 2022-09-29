@@ -692,6 +692,7 @@
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 window.open(HOST_URL + 'Outputs/' + resp.data.Path);
+                                window.location.reload();
                             }
                         }).catch(function (err) { });
                 } catch (e) {
@@ -708,6 +709,7 @@
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 window.open(HOST_URL + 'Outputs/' + resp.data.Path);
+                                window.location.reload();
                             }
                         }).catch(function (err) { });
                 } catch (e) {

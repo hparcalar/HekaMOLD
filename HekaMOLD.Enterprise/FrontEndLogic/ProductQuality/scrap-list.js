@@ -48,6 +48,7 @@
                 { dataField: 'ProductName', caption: 'Ürün Adı' },
                 { dataField: 'MachineCode', caption: 'Makine' },
                 { dataField: 'Quantity', caption: 'Miktar' },
+                { dataField: 'Explanation', caption: 'Açıklama' },
                 //{
                 //    type: "buttons",
                 //    buttons: [

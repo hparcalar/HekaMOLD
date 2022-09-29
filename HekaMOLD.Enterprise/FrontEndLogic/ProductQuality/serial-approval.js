@@ -425,25 +425,25 @@
     }
 
     $scope.sendToWastage = function () {
-        bootbox.confirm({
-            message: "Seçilen ürünleri HURDA ETMEK istediğinizden emin misiniz?",
+        bootbox.prompt({
+            title: "Seçilen ürünleri HURDA ETMEK istediğinizden emin misiniz?",
             closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
+            //buttons: {
+            //    confirm: {
+            //        label: 'Evet',
+            //        className: 'btn-primary'
+            //    },
+            //    cancel: {
+            //        label: 'Hayır',
+            //        className: 'btn-light'
+            //    }
+            //},
             callback: function (result) {
-                if (result) {
+                if (result != null && result.length > 0) {
                     $scope.saveStatus = 1;
 
                     $http.post(HOST_URL + 'ProductQuality/SendToWastage',
-                        { model: $scope.selectedProducts }, 'json')
+                        { model: $scope.selectedProducts, explanation: result }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;

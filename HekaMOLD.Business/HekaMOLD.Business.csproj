@@ -228,6 +228,7 @@
     <Compile Include="Models\DataTransfer\Summary\MachineStatsModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\ProductionHistoryModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\ReceiptConsumeSummary.cs" />
+    <Compile Include="Models\DataTransfer\Summary\SalesReportModel.cs" />
     <Compile Include="Models\DataTransfer\Summary\WorkOrderSerialSummary.cs" />
     <Compile Include="Models\DataTransfer\Warehouse\PalletModel.cs" />
     <Compile Include="Models\Dictionaries\DictItemReceiptType.cs" />

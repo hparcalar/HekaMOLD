@@ -362,6 +362,50 @@ namespace HekaMOLD.Business.UseCases
             return default;
         }
 
+        public ItemReceiptModel SearchPurchaseReceipt(string receiptNo)
+        {
+            ItemReceiptModel model = new ItemReceiptModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceipt>();
+                var dbObj = repo.Get(d => d.ReceiptNo == receiptNo && d.ReceiptType == (int)ItemReceiptType.ItemBuying);
+                if (dbObj != null)
+                {
+                    model = dbObj.MapTo(model);
+                    model.CreatedDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.CreatedDate);
+                    model.ReceiptDateStr = string.Format("{0:dd.MM.yyyy}", dbObj.ReceiptDate);
+                    model.ReceiptStatusStr = ((ReceiptStatusType)model.ReceiptStatus).ToCaption();
+                    model.FirmCode = dbObj.Firm != null ? dbObj.Firm.FirmCode : "";
+                    model.FirmName = dbObj.Firm != null ? dbObj.Firm.FirmName : "";
+                    model.WarehouseCode = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseCode : "";
+                    model.WarehouseName = dbObj.Warehouse != null ? dbObj.Warehouse.WarehouseName : "";
+                    model.ReceiptTypeStr = ((ItemReceiptType)dbObj.ReceiptType.Value).ToCaption();
+                    model.ConsumptionReceiptNo = dbObj.ConsumptionReceipt != null ? dbObj.ConsumptionReceipt.ReceiptNo : "";
+
+                    List<ItemReceiptDetailModel> detailContainers = new List<ItemReceiptDetailModel>();
+                    dbObj.ItemReceiptDetail.ToList().ForEach(d =>
+                    {
+                        ItemReceiptDetailModel detailContainerObj = new ItemReceiptDetailModel();
+                        d.MapTo(detailContainerObj);
+                        detailContainerObj.ItemNo = d.Item != null ? d.Item.ItemNo : "";
+                        detailContainerObj.ItemName = d.Item != null ? d.Item.ItemName : "";
+                        detailContainerObj.UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "";
+                        detailContainerObj.UnitName = d.UnitType != null ? d.UnitType.UnitName : "";
+                        detailContainerObj.NewDetail = false;
+                        detailContainers.Add(detailContainerObj);
+                    });
+
+                    model.Details = detailContainers.ToArray();
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return model;
+        }
         public BusinessResult AddItemEntry(int itemReceiptDetailId, int userId, WorkOrderSerialType serialType,
            int inPackageQuantity)
         {

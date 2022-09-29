@@ -24,6 +24,35 @@
         $scope.bindModel(0);
     }
 
+    $scope.searchWaybill = function () {
+        if ($scope.modelObject.WaybillNo != null && $scope.modelObject.WaybillNo.length > 0) {
+            $http.get(HOST_URL + 'ItemReceipt/SearchPurchaseReceipt?receiptNo=' + $scope.modelObject.WaybillNo, {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        var rcp = resp.data;
+
+                        // select item
+                        if (rcp.Details.length > 0) {
+                            $scope.selectedProduct = $scope.productList.find(m => m.Id == rcp.Details[0].ItemId);
+                            refreshArray($scope.productList);
+                        }
+
+                        // select firm
+                        if (rcp.FirmId != null) {
+                            $scope.selectedFirm = $scope.firmList.find(m => m.Id == rcp.FirmId);
+                            refreshArray($scope.firmList);
+                        }
+
+                        // fill entry quantity
+                        if (rcp.Details.length > 0)
+                            $scope.modelObject.EntryQuantity = rcp.Details[0].Quantity;
+                    }
+                }).catch(function (err) { console.log(err); });
+        }
+        else
+            alert('Aramak için bir irsaliye numarası girmelisiniz.');
+    }
+
     $scope.loadSelectables = function () {
         var prms = new Promise(function (resolve, reject) {
             $http.get(HOST_URL + 'EntryQuality/GetSelectablesOfData', {}, 'json')

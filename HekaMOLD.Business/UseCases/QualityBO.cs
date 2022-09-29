@@ -777,8 +777,8 @@ namespace HekaMOLD.Business.UseCases
 
                         dbSerial.QualityUserId = userId;
                         dbSerial.QualityChangedDate = DateTime.Now;
-                        
-                        item.QualityStatus = dbSerial.QualityStatus;
+
+                        item.QualityStatus = (int)QualityStatusType.Ok;// dbSerial.QualityStatus;
 
                         if (warehouseId == 0 && (dbSerial.TargetWarehouseId) > 0)
                             warehouseId = dbSerial.TargetWarehouseId.Value;
@@ -939,7 +939,7 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
-        public BusinessResult SendToWastage(WorkOrderSerialModel[] model, int? userId=null)
+        public BusinessResult SendToWastage(WorkOrderSerialModel[] model, int? userId=null, string explanation = "")
         {
             BusinessResult result = new BusinessResult();
 
@@ -975,6 +975,7 @@ namespace HekaMOLD.Business.UseCases
                                     WorkOrderDetailId = dbSerial.WorkOrderDetailId,
                                     CreatedUserId = userId,
                                     Quantity = dbSerial.FirstQuantity,
+                                    Explanation = explanation,
                                     WastageStatus = 0,
                                     ShiftId = currentShift.Id,
                                     ShiftBelongsToDate = currentShift.ShiftBelongsToDate,
@@ -1083,6 +1084,7 @@ namespace HekaMOLD.Business.UseCases
                         CreatedUserId = d.CreatedUserId,
                         MachineId = d.MachineId,
                         WastageStatus = d.WastageStatus,
+                        Explanation = d.Explanation,
                         MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
                         MachineName = d.Machine != null ? d.Machine.MachineName : "",
                         Quantity = d.Quantity,

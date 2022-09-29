@@ -458,13 +458,15 @@
     // LOAD EVENTS
     $scope.getDefaultSerialPrinter();
 
-    if (IS_PRODCHIEF)
-        setTimeout($scope.showMachineList, 500);
-    else {
-        $scope.selectedMachine.Id = MACHINE_ID;
-        $scope.selectedMachine.MachineName = MACHINE_NAME;
-        $scope.modelObject.IsProdChief = IS_PRODCHIEF;
+    setTimeout($scope.showMachineList, 500);
 
-        $scope.loadActiveWorkOrder();
-    }
+    //if (IS_PRODCHIEF)
+    //    setTimeout($scope.showMachineList, 500);
+    //else {
+    //    $scope.selectedMachine.Id = MACHINE_ID;
+    //    $scope.selectedMachine.MachineName = MACHINE_NAME;
+    //    $scope.modelObject.IsProdChief = IS_PRODCHIEF;
+
+    //    $scope.loadActiveWorkOrder();
+    //}
 });

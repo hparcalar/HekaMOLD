@@ -4139,6 +4139,7 @@
     <Content Include="FrontEndLogic\ItemGroup\list.js" />
     <Content Include="FrontEndLogic\ItemReceipt\index.js" />
     <Content Include="FrontEndLogic\ItemReceipt\list.js" />
+    <Content Include="FrontEndLogic\ItemReceipt\sales-report.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\extract.js" />
     <Content Include="FrontEndLogic\Item\list.js" />
@@ -4771,6 +4772,9 @@
     <Content Include="Views\CrmComplaint\List.cshtml" />
     <Content Include="Views\CrmComplaint\Index.cshtml" />
     <Content Include="Views\Shift\EditUsers.cshtml" />
+    <Content Include="Views\ItemReceipt\SalesReport.cshtml" />
+    <Content Include="Views\Mobile\WarehouseManagement.cshtml" />
+    <Content Include="Views\Mobile\ProductQualityApprovement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

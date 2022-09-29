@@ -156,8 +156,11 @@ namespace HekaPrintingService
 
                                         using (ProductionBO prodBo = new ProductionBO())
                                         {
-                                            prodBo.PrintProductLabel(serialModel, workModel, printerId,
+                                            var bRes = prodBo.PrintProductLabel(serialModel, workModel, printerId,
                                                 _printerNames[printerIndex]);
+
+                                            if (bRes.Result == false)
+                                                MessageBox.Show(bRes.ErrorMessage);
                                         }
                                     }
 
@@ -175,7 +178,7 @@ namespace HekaPrintingService
 
                                     using (ProductionBO prodBo = new ProductionBO())
                                     {
-                                        prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
+                                        var bRes = prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
                                         {
                                             BarcodeContent = serialModel.SerialNo,
                                             CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now),
@@ -187,6 +190,7 @@ namespace HekaPrintingService
                                             Weight = "",
                                             Id = 0,
                                         }, printerId, _printerNames[printerIndex]);
+
 
                                         await _api.PostData<int>("Common/SetQueueAsPrinted?id=" + queueModel.Id, queueModel.Id);
                                     }

@@ -286,14 +286,14 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SendToWastage(WorkOrderSerialModel[] model)
+        public JsonResult SendToWastage(WorkOrderSerialModel[] model, string explanation)
         {
             BusinessResult result = null;
             int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.SendToWastage(model, userId);
+                result = bObj.SendToWastage(model, userId, explanation);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });

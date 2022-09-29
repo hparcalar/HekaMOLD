@@ -45,6 +45,7 @@ namespace HekaMOLD.Business.UseCases
                     foreach (var item in dbObj.ItemReceiptDetail)
                     {
                         string packSize = "";
+                        decimal? rawMaterialGr = null;
                         var dbItem = repoItem.Get(d => d.Id == item.ItemId);
                         if (dbItem != null)
                         {
@@ -53,6 +54,7 @@ namespace HekaMOLD.Business.UseCases
                             if (dbMoldTest != null)
                             {
                                 packSize = dbMoldTest.PackageDimension;
+                                rawMaterialGr = dbMoldTest.RawMaterialGr;
                             }
                         }
 
@@ -60,6 +62,8 @@ namespace HekaMOLD.Business.UseCases
                         {
                             packSize = item.PackageDimension;
                         }
+
+                        item.NetWeight = item.Quantity * (rawMaterialGr / 1000.0m);
 
                         data.Add(new DeliverySerialListModel
                         {
@@ -77,6 +81,8 @@ namespace HekaMOLD.Business.UseCases
                             Driver = dbObj.Driver,
                         });
                     }
+
+                    _unitOfWork.SaveChanges();
 
                     return data;
                 }
@@ -722,6 +728,62 @@ namespace HekaMOLD.Business.UseCases
 
                     data = dataList.ToArray();
                 }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return data;
+        }
+
+        public SalesReportModel[] GetSalesReport(BasicRangeFilter filter)
+        {
+            SalesReportModel[] data = new SalesReportModel[0];
+
+            try
+            {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(filter.StartDate))
+                    filter.StartDate = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(filter.EndDate))
+                    filter.EndDate = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+
+                data = repo.Filter(d => d.ItemReceipt.ReceiptType == (int)ItemReceiptType.ItemSelling
+                    && d.ItemReceipt.ReceiptDate >= dtStart && d.ItemReceipt.ReceiptDate <= dtEnd).ToList()
+                    .GroupBy(d => new
+                    {
+                        ItemId = d.ItemId,
+                        FirmId = d.ItemReceipt.FirmId,
+                        ItemGroupName = d.Item != null && d.Item.ItemGroup != null ? d.Item.ItemGroup.ItemGroupName : "",
+                        ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                        ItemName = d.Item != null ? d.Item.ItemName : "",
+                        FirmName = d.ItemReceipt.Firm != null ? d.ItemReceipt.Firm.FirmName : "",
+                        ConsumptionItemName = d.Item != null && repoMoldTest.Filter(m => m.ProductCode == d.Item.ItemNo).Count() > 0 ?
+                            repoMoldTest.Filter(m => m.ProductCode == d.Item.ItemNo).Select(m => m.RawMaterialName).FirstOrDefault() : "",
+                        RecipeWeight = d.Item != null && repoMoldTest.Filter(m => m.ProductCode == d.Item.ItemNo).Count() > 0 ?
+                            (repoMoldTest.Filter(m => m.ProductCode == d.Item.ItemNo).Select(m => m.RawMaterialGr).FirstOrDefault() ?? 0) : 0,
+                    }).Select(d => new SalesReportModel
+                    {
+                        ItemId = d.Key.ItemId ?? 0,
+                        FirmId = d.Key.FirmId,
+                        ItemNo = d.Key.ItemNo,
+                        ItemGroupName = d.Key.ItemGroupName,
+                        FirmName = d.Key.FirmName,
+                        ItemName = d.Key.ItemName,
+                        Quantity = d.Sum(m => m.Quantity),
+                        ConsumptionItemName = d.Key.ConsumptionItemName,
+                        ConsumptionWeight = d.Sum(m => m.Quantity) * d.Key.RecipeWeight / 1000.0m,
+                    }).ToArray();
             }
             catch (Exception ex)
             {

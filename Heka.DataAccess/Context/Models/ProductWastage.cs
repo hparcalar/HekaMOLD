@@ -32,6 +32,7 @@ namespace Heka.DataAccess.Context
         public Nullable<int> CreatedUserId { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
+        public string Explanation { get; set; }
 
         [ForeignKey("Shift")]
         public Nullable<int> ShiftId { get; set; }
