@@ -44,6 +44,7 @@
             columns: [
                 { dataField: 'MachineCode', caption: 'Makine Kodu' },
                 { dataField: 'MachineName', caption: 'Makine Adı' },
+                { dataField: 'MachineTypeName', caption: 'Makine Türü' },
                 {
                     type: "buttons",
                     buttons: [

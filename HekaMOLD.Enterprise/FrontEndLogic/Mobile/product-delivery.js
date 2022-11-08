@@ -116,7 +116,10 @@
                             }
                         }
                         else {
-                            toastr.error('Okutulan barkoda ait bir koli bulunamadı.');
+                            if (resp.data.ErrorMessage != null && resp.data.ErrorMessage.length > 0)
+                                toastr.error(resp.data.ErrorMessage);
+                            else
+                                toastr.error('Okutulan barkoda ait bir koli bulunamadı.');
                         }
 
                         $scope.runningBarcodeRead = false;

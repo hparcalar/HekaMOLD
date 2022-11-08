@@ -1377,6 +1377,7 @@ namespace HekaMOLD.Business.UseCases
                 WatchCycleStartCondition = d.WatchCycleStartCondition,
                 WorkingUserId = d.WorkingUserId,
                 SignalEndDelay = d.SignalEndDelay,
+                MachineTypeName = (d.MachineType ?? 0) == 0 ? "Planlanabilir" : "Diğer",
             }).ToArray();
 
             return data;

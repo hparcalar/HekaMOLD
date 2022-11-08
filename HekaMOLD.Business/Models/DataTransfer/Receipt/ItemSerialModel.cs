@@ -33,6 +33,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string FirmCode { get; set; }
         public string FirmName { get; set; }
         public string PalletNo { get; set; }
+        public string ErrorMessage { get; set; }
         #endregion
     }
 }

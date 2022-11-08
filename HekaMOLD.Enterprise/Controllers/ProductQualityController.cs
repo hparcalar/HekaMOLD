@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+﻿using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Quality;
 using HekaMOLD.Business.Models.Operational;
@@ -252,6 +253,22 @@ namespace HekaMOLD.Enterprise.Controllers
             using (QualityBO bObj = new QualityBO())
             {
                 result = bObj.ApproveSerials(model, plantId, userId);
+            }
+
+            if (result.Result == true)
+            {
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    bObj.CreateNotification(new NotificationModel
+                    {
+                        UserId = null,
+                        NotifyType = (int)NotifyType.ProductPickupComplete,
+                        CreatedDate = DateTime.Now,
+                        Title = "Ürün Teslim Alma Bildirimi",
+                        IsProcessed = false,
+                        Message = string.Format("{0:HH:mm}", DateTime.Now) + ": Ürün teslim alma işlemi yapıldı.",
+                    });
+                }
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });

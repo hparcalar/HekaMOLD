@@ -232,6 +232,20 @@ namespace HekaMOLD.Enterprise.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetPlannableMachineList()
+        {
+            MachineModel[] data = new MachineModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetPlannableMachineList();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
         [FreeAction]
         public JsonResult GetShiftList()
         {

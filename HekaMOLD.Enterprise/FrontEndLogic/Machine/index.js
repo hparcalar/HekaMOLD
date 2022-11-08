@@ -2,7 +2,12 @@
     $scope.modelObject = {};
 
     $scope.selectedMachineGroup = {};
+    $scope.selectedMachineType = {};
     $scope.machineGroupList = [];
+    $scope.machineTypes = [
+        { Id: 0, Text: 'Planlanabilir' },
+        { Id: 1, Text: 'Diğer'},
+    ];
 
     $scope.saveStatus = 0;
 
@@ -76,6 +81,11 @@
         else
             $scope.modelObject.MachineGroupId = null;
 
+        if (typeof $scope.selectedMachineType != 'undefined' && $scope.selectedMachineType != null)
+            $scope.modelObject.MachineType = $scope.selectedMachineType.Id;
+        else
+            $scope.modelObject.MachineType = null;
+
         $http.post(HOST_URL + 'Machine/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -104,6 +114,13 @@
                             .find(d => d.Id == $scope.modelObject.MachineGroupId);
                     else
                         $scope.selectedMachineGroup = {};
+
+                    // BIND EXTERNAL TYPES
+                    if (($scope.modelObject.MachineType ?? 0) >= 0)
+                        $scope.selectedMachineType = $scope.machineTypes
+                            .find(d => d.Id == ($scope.modelObject.MachineType ?? 0));
+                    else
+                        $scope.selectedMachineType = {};
 
                     $("#back-color").spectrum("set", $scope.modelObject.BackColor);
                     $("#fore-color").spectrum("set", $scope.modelObject.ForeColor);

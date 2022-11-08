@@ -864,7 +864,10 @@ namespace HekaMOLD.Business.UseCases
                        .FirstOrDefault();
 
                 if (dbPack != null && dbPack.SerialStatus == (int)SerialStatusType.Used)
+                {
+                    data.ErrorMessage = "Bu barkod daha önce okutulup sevk edilmiş";
                     return data;
+                }
 
                 //if (dbPack == null)
                 //{
@@ -885,28 +888,44 @@ namespace HekaMOLD.Business.UseCases
                 {
 
                 }
-               
-                containerPack.MachineCode = dbPack.WorkOrderDetail != null &&
-                    dbPack.WorkOrderDetail.Machine != null ? dbPack.WorkOrderDetail.Machine.MachineCode : "";
-                containerPack.ItemId = dbPack.ItemReceiptDetail.ItemId;
-                containerPack.ItemNo = dbPack.WorkOrderDetail != null &&
-                    dbPack.WorkOrderDetail.Item != null ? dbPack.WorkOrderDetail.Item.ItemNo : "";
-                containerPack.ItemName = dbPack.WorkOrderDetail != null &&
-                    dbPack.WorkOrderDetail.Item != null ? dbPack.WorkOrderDetail.Item.ItemName : "";
-                containerPack.FirmName = dbPack.WorkOrderDetail != null &&
-                    dbPack.WorkOrderDetail.WorkOrder.Firm != null ? dbPack.WorkOrderDetail.WorkOrder.Firm.FirmName : "";
 
-                if (string.IsNullOrEmpty(containerPack.ItemNo))
+                try
                 {
-                    containerPack.ItemNo = dbPack.ItemReceiptDetail != null ? dbPack.ItemReceiptDetail.Item.ItemNo : "";
-                    containerPack.ItemName = dbPack.ItemReceiptDetail != null ? dbPack.ItemReceiptDetail.Item.ItemName : "";
+                    containerPack.MachineCode = dbPack.WorkOrderDetail != null &&
+                   dbPack.WorkOrderDetail.Machine != null ? dbPack.WorkOrderDetail.Machine.MachineCode : "";
+                    containerPack.ItemId = dbPack.ItemReceiptDetail.ItemId;
+                    containerPack.ItemNo = dbPack.WorkOrderDetail != null &&
+                        dbPack.WorkOrderDetail.Item != null ? dbPack.WorkOrderDetail.Item.ItemNo : "";
+                    containerPack.ItemName = dbPack.WorkOrderDetail != null &&
+                        dbPack.WorkOrderDetail.Item != null ? dbPack.WorkOrderDetail.Item.ItemName : "";
+                    containerPack.FirmName = dbPack.WorkOrderDetail != null &&
+                        dbPack.WorkOrderDetail.WorkOrder.Firm != null ? dbPack.WorkOrderDetail.WorkOrder.Firm.FirmName : "";
+                }
+                catch (Exception)
+                {
+
                 }
 
-                if (string.IsNullOrEmpty(containerPack.FirmName))
+                try
                 {
-                    if (dbPack.ItemReceiptDetail != null && dbPack.ItemReceiptDetail.ItemReceipt.Firm != null)
-                        containerPack.FirmName = dbPack.ItemReceiptDetail.ItemReceipt.Firm.FirmName;
+                    if (string.IsNullOrEmpty(containerPack.ItemNo))
+                    {
+                        containerPack.ItemNo = dbPack.ItemReceiptDetail != null ? dbPack.ItemReceiptDetail.Item.ItemNo : "";
+                        containerPack.ItemName = dbPack.ItemReceiptDetail != null ? dbPack.ItemReceiptDetail.Item.ItemName : "";
+                    }
+
+                    if (string.IsNullOrEmpty(containerPack.FirmName))
+                    {
+                        if (dbPack.ItemReceiptDetail != null && dbPack.ItemReceiptDetail.ItemReceipt.Firm != null)
+                            containerPack.FirmName = dbPack.ItemReceiptDetail.ItemReceipt.Firm.FirmName;
+                    }
                 }
+                catch (Exception)
+                {
+
+                }
+
+                
 
                 data = containerPack;
             }

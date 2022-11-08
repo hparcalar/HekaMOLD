@@ -292,6 +292,10 @@
     <Compile Include="Migrations\202209290748034_WastageExplanation.designer.cs">
       <DependentUpon>202209290748034_WastageExplanation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202211081831210_UserEmailAddr.cs" />
+    <Compile Include="Migrations\202211081831210_UserEmailAddr.designer.cs">
+      <DependentUpon>202211081831210_UserEmailAddr.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -401,6 +405,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202209290748034_WastageExplanation.resx">
       <DependentUpon>202209290748034_WastageExplanation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202211081831210_UserEmailAddr.resx">
+      <DependentUpon>202211081831210_UserEmailAddr.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

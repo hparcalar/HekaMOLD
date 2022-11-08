@@ -19,6 +19,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? UserRoleId { get; set; }
         public byte[] ProfileImage { get; set; }
         public int? ShiftId { get; set; }
+        public string EmailAddr { get; set; }
         public UserAuthModel[] Auths { get; set; }
 
         #region VISUAL ELEMENTS

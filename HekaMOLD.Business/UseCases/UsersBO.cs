@@ -350,6 +350,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.ProfileImage = null;
                 containerObj.ProfileImageBase64 = "";
                 containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                containerObj.EmailAddr = d.EmailAddr;
                 containerObj.IsProdTerminal = d.UserRole.UserAuth
                     .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);
                 containerObj.IsProdChief = d.UserRole.UserAuth
@@ -374,6 +375,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.ProfileImage = null;
                 containerObj.ProfileImageBase64 = "";
                 containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                containerObj.EmailAddr = d.EmailAddr;
                 containerObj.IsProdTerminal = d.UserRole.UserAuth
                     .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);
                 containerObj.IsProdChief = d.UserRole.UserAuth
@@ -405,6 +407,7 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.ProfileImage = null;
                 containerObj.ProfileImageBase64 = "";
                 containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                containerObj.EmailAddr = d.EmailAddr;
                 containerObj.IsProdTerminal = d.UserRole.UserAuth
                     .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);
                 containerObj.IsProdChief = d.UserRole.UserAuth

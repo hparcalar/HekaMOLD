@@ -641,6 +641,29 @@ namespace HekaMOLD.Business.UseCases
             return containerList.ToArray();
         }
 
+        public MachineModel[] GetPlannableMachineList()
+        {
+            var repo = _unitOfWork.GetRepository<Machine>();
+            var repoIncident = _unitOfWork.GetRepository<Incident>();
+
+            List<MachineModel> containerList = new List<MachineModel>();
+            repo.Filter(d => (d.MachineType ?? 0) == 0).ToList().ForEach(d =>
+            {
+                MachineModel containerObj = new MachineModel();
+                d.MapTo(containerObj);
+
+                containerObj.IsInIncident = repoIncident.Any(m => m.MachineId == d.Id
+                    && m.IncidentStatus != (int)PostureStatusType.Resolved);
+                containerObj.ActiveIncidentText = repoIncident.Filter(m => m.MachineId == d.Id
+                    && m.IncidentStatus != (int)PostureStatusType.Resolved)
+                    .Select(m => m.IncidentCategory.IncidentCategoryName).FirstOrDefault();
+
+                containerList.Add(containerObj);
+            });
+
+            return containerList.ToArray();
+        }
+
         public UserWorkOrderHistoryModel[] GetMachineActions(int machineId, DateTime filterDate)
         {
             UserWorkOrderHistoryModel[] data = new UserWorkOrderHistoryModel[0];
@@ -2387,7 +2410,9 @@ namespace HekaMOLD.Business.UseCases
                         LiveQuantity = d.LiveQuantity,
                         SerialNo = d.SerialNo,
                         FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "" : "",
-                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName : "",
+                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : 
+                            d.WorkOrderDetail != null ?
+                            d.WorkOrderDetail.WorkOrder.TrialFirmName : "" : "",
                     })
                     .OrderByDescending(d => d.CreatedDate)
                     .ToArray();
@@ -2582,6 +2607,7 @@ namespace HekaMOLD.Business.UseCases
                     if (dbSerial != null)
                     {
                         dbSerial.SerialStatus = (int)SerialStatusType.Approved;
+                        dbSerial.QualityStatus = (int)QualityStatusType.Waiting;
                         dbSerial.TargetWarehouseId = targetWarehouseId;
                     }
                 }

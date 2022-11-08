@@ -42,7 +42,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
             using (ProductionBO bObj = new ProductionBO())
             {
-                result = bObj.GetMachineList();
+                result = bObj.GetPlannableMachineList();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

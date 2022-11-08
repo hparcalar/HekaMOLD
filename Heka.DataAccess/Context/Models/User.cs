@@ -46,6 +46,7 @@ namespace Heka.DataAccess.Context
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedUserId { get; set; }
         public byte[] ProfileImage { get; set; }
+        public string EmailAddr { get; set; }
 
         public virtual Shift BelongToShift { get; set; }
 
