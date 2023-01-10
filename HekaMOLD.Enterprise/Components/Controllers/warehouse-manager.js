@@ -126,7 +126,7 @@
     }
 
     $scope.bindList = function () {
-        $http.get(HOST_URL + 'Warehouse/GetStatesData?warehouseList=' + $scope.selectedWarehouse.Id, {}, 'json')
+        $http.get(HOST_URL + 'Warehouse/GetStatesData?warehouseList=' + $scope.selectedWarehouse.Id + '&all=1', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.itemList = resp.data;

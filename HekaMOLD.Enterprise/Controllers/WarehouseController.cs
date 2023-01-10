@@ -127,7 +127,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetStatesData(string warehouseList)
+        public JsonResult GetStatesData(string warehouseList, int? all)
         {
             ItemStateModel[] data = new ItemStateModel[0];
 
@@ -137,7 +137,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 using (ReportingBO bObj = new ReportingBO())
                 {
-                    data = bObj.GetItemStates(warehouseIds);
+                    data = bObj.GetItemStates(warehouseIds, all);
                 }
             }
             catch (Exception)

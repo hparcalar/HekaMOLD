@@ -342,7 +342,7 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<User>();
 
-            repo.GetAll().ToList().ForEach(d =>
+            repo.Filter(d => d.Password != "-1").ToList().ForEach(d =>
             {
                 UserModel containerObj = new UserModel();
                 d.MapTo(containerObj);
@@ -367,7 +367,7 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<User>();
 
-            repo.Filter(d => d.UserRole != null && d.UserRole.RoleName.Contains(roleFilter)).ToList().ForEach(d =>
+            repo.Filter(d => d.Password != "-1" && d.UserRole != null && d.UserRole.RoleName.Contains(roleFilter)).ToList().ForEach(d =>
             {
                 UserModel containerObj = new UserModel();
                 d.MapTo(containerObj);
@@ -400,7 +400,7 @@ namespace HekaMOLD.Business.UseCases
             if (chiefRole == null)
                 return default;
 
-            repo.Filter(d => d.UserRoleId == chiefRole.Id).ToList().ForEach(d =>
+            repo.Filter(d => d.Password != "-1" && d.UserRoleId == chiefRole.Id).ToList().ForEach(d =>
             {
                 UserModel containerObj = new UserModel();
                 d.MapTo(containerObj);
@@ -476,7 +476,9 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<User>();
 
                 var dbObj = repo.Get(d => d.Id == id);
-                repo.Delete(dbObj);
+
+                dbObj.Password = "-1";
+                //repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
 
                 result.Result = true;

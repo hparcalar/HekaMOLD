@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -294,15 +295,21 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region SYSTEM REPORTS
-        public ItemStateModel[] GetItemStates(int[] warehouseList)
+        public ItemStateModel[] GetItemStates(int[] warehouseList, int? all = null)
         {
             ItemStateModel[] data = new ItemStateModel[0];
+
+            var periodicYear = WebConfigurationManager.AppSettings["Period"];
+
+            var startDate = DateTime.ParseExact("01.01." + periodicYear, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+            var endDate = DateTime.ParseExact("31.12." + periodicYear, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
 
                 var movements = repo.Filter(d => warehouseList.Contains(d.ItemReceipt.InWarehouseId ?? 0)
+                    && ((all ?? 0) == 1 || (d.ItemReceipt.ReceiptDate >= startDate && d.ItemReceipt.ReceiptDate <= endDate))
                     && d.ItemReceipt.ReceiptType < 200);
                 data = movements.GroupBy(d => new { d.Item, d.ItemReceipt.Warehouse })
                     .Select(d => new ItemStateModel

@@ -30,7 +30,7 @@ namespace HekaPrintingService
 
         ApiHelper _api = null;
 
-        private string[] _printerNames = new string[] { "ArgoxUretim" };
+        private string[] _printerNames = new string[] { "ArgoxUretim", "UretimYedek" };
         private string _printers = string.Empty;
         protected string Printers
         {
@@ -40,32 +40,46 @@ namespace HekaPrintingService
                 {
                     _printers = ConfigurationManager.AppSettings["Printers"];
 
-                    try
-                    {
-                        int[] printerList = _printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
-                        List<string> pNames = new List<string>();
+                    //try
+                    //{
+                    //    int[] printerList = _printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
+                    //    List<string> pNames = new List<string>();
 
-                        using (CoreSystemBO bObj = new CoreSystemBO())
-                        {
-                            foreach (var item in printerList)
-                            {
-                                var dbPrinter = bObj.GetPrinter(item);
-                                pNames.Add(dbPrinter != null ? dbPrinter.AccessPath : "");
-                            }
+                    //    using (CoreSystemBO bObj = new CoreSystemBO())
+                    //    {
+                    //        foreach (var item in printerList)
+                    //        {
+                    //            var dbPrinter = bObj.GetPrinter(item);
+                    //            pNames.Add(dbPrinter != null ? dbPrinter.AccessPath : "");
+                    //        }
 
-                            _printerNames = pNames.ToArray();
-                        }
-                    }
-                    catch (Exception)
-                    {
+                    //        _printerNames = pNames.ToArray();
+                    //    }
+                    //}
+                    //catch (Exception)
+                    //{
 
-                    }
+                    //}
                     
                 }
 
                 return _printers;
             }
         }
+
+        //private int _PrinterIndex = -1;
+        //protected int PrinterIndex
+        //{
+        //    get
+        //    {
+        //        if (_PrinterIndex == -1)
+        //        {
+        //            _PrinterIndex = Convert.ToInt32(ConfigurationManager.AppSettings["PrinterIndex"]);
+        //        }
+
+        //        return _PrinterIndex;
+        //    }
+        //}
 
         bool _runTask = false;
         Task _taskQueue = null;
@@ -243,104 +257,7 @@ namespace HekaPrintingService
                             }
                         }
 
-                        #region OLD MODEL
-                        //using (CoreSystemBO bObj = new CoreSystemBO())
-                        //{
-                        //    var queueModel = bObj.GetNextFromPrinterQueue(printerId);
-                        //    if (queueModel != null && queueModel.Id > 0)
-                        //    {
-                        //        if (queueModel.RecordType == (int)RecordType.SerialItem)
-                        //        {
-                        //            BusinessResult printResult = null;
-                        //            using (ProductionBO prodBo = new ProductionBO())
-                        //            {
-                        //                if (queueModel.RecordId == null)
-                        //                {
-                        //                    if (!string.IsNullOrEmpty(queueModel.AllocatedPrintData))
-                        //                    {
-                        //                        var dataModel = Newtonsoft.Json
-                        //                            .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
-                        //                        var dbWorkOrder = prodBo.GetWorkOrderDetail(dataModel.WorkOrderDetailId ?? 0);
-                        //                        if (dbWorkOrder != null && dbWorkOrder.Id > 0)
-                        //                        {
-                        //                            var currentShift = prodBo.GetCurrentShift();
-
-                        //                            prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
-                        //                            {
-                        //                                BarcodeContent = dataModel.Code,
-                        //                                CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now),
-                        //                                FirmName = dbWorkOrder.FirmName,
-                        //                                ShiftName = currentShift != null ? currentShift.ShiftCode : "",
-                        //                                InPackageQuantity = string.Format("{0:N2}", dbWorkOrder.InPackageQuantity ?? 0),
-                        //                                ProductCode = dbWorkOrder.ProductCode,
-                        //                                ProductName = dbWorkOrder.ProductName,
-                        //                                Weight = "",
-                        //                                Id = 0,
-                        //                            }, printerId, _printerNames[printerIndex]);
-                        //                        }
-                        //                    }
-                        //                }
-                        //                else
-                        //                    printResult = prodBo.PrintProductLabel(queueModel.RecordId.Value, printerId,
-                        //                        _printerNames[printerIndex]);
-                        //            }
-
-                        //            //if (printResult.Result)
-                        //            bObj.SetElementAsPrinted(queueModel.Id);
-
-                        //            //AddLog(_printerNames[printerId] + " yazıcısına gönderildi.");
-                        //        }
-                        //        else if (queueModel.RecordType == (int)RecordType.ItemLabel)
-                        //        {
-                        //            if (queueModel.RecordId != null)
-                        //            {
-                        //                ProductLabel labelData = new ProductLabel();
-
-                        //                using (DefinitionsBO dObj = new DefinitionsBO())
-                        //                {
-                        //                    var dbItem = dObj.GetItem(queueModel.RecordId.Value);
-                        //                    if (dbItem != null && dbItem.Id > 0)
-                        //                    {
-                        //                        labelData.ProductCode = dbItem.ItemNo;
-                        //                        labelData.ProductName = dbItem.ItemName;
-                        //                        labelData.Id = dbItem.Id;
-                        //                    }
-                        //                }
-
-                        //                using (ReportingBO rObj = new ReportingBO())
-                        //                {
-                        //                    var allocData = Newtonsoft.Json
-                        //                        .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
-
-                        //                    labelData.InPackageQuantity = string.Format("{0:N2}", allocData.Quantity ?? 0);
-                        //                    labelData.BarcodeContent = labelData.Id + "XX" + labelData.InPackageQuantity;
-                        //                    labelData.BarcodeImage = rObj.GenerateQRCode(labelData.BarcodeContent);
-
-                        //                    rObj.PrintReport<List<ProductLabel>>(-1, printerId, new List<ProductLabel>() { labelData });
-                        //                }
-                        //            }
-
-                        //            bObj.SetElementAsPrinted(queueModel.Id);
-                        //        }
-                        //        else if (queueModel.RecordType == (int)RecordType.DeliveryList)
-                        //        {
-                        //            using (ReportingBO rObj = new ReportingBO())
-                        //            {
-                        //                var allocData = Newtonsoft.Json
-                        //                    .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
-
-                        //                var reportData = (List<DeliverySerialListModel>)rObj
-                        //                    .PrepareReportData(queueModel.RecordId.Value, ReportType.DeliverySerialList);
-                        //                rObj.PrintReport<List<DeliverySerialListModel>>(allocData.ReportTemplateId.Value,
-                        //                    printerId, reportData);
-                        //            }
-
-                        //            bObj.SetElementAsPrinted(queueModel.Id);
-                        //        }
-                        //    }
-                        //}
-                        #endregion
-
+                    
                         printerIndex++;
                     }
                 }

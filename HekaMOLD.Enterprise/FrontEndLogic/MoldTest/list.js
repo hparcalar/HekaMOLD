@@ -51,6 +51,15 @@
                 { dataField: 'RawMaterialName', caption: 'Hammadde' },
                 { dataField: 'DyeCode', caption: 'Renk Kodu' },
                 { dataField: 'RalCode', caption: 'Ral Kodu' },
+                { dataField: 'InflationTimeSeconds', caption: 'Şişirme Zamanı' },
+                { dataField: 'InPackageQuantity', caption: 'Kutu İçi' },
+                { dataField: 'PackageDimension', caption: 'Koli Boyutu' },
+                { dataField: 'RawMaterialGr', caption: 'Hammadde Gr' },
+                { dataField: 'DyeCode', caption: 'Boya Kodu' },
+                { dataField: 'HeadSize', caption: 'Kafa Ölçüsü' },
+                { dataField: 'NutCaliber', caption: 'Somun Tipi' },
+                { dataField: 'NutQuantity', caption: 'Somun Adedi' },
+                { dataField: 'InPalletPackageQuantity', caption: 'Palet içi koli' },
                 {
                     type: "buttons",
                     buttons: [

@@ -705,6 +705,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
                 var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
                 var repoShift = _unitOfWork.GetRepository<Shift>();
+                var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
 
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
@@ -718,8 +719,15 @@ namespace HekaMOLD.Business.UseCases
                 // SET DESCRIPTION
                 dbObj.WorkOrder.Explanation = model.Explanation;
 
-                // SET TARGET COUNT
+                // SET TARGET QUANTITY
                 dbObj.Quantity = model.Quantity;
+
+                // UPDATE ITEM ORDER DETAIL QUANTITY
+                var dbOrderDetail = repoOrderDetail.Get(d => d.Id == dbObj.SaleOrderDetailId);
+                if (dbOrderDetail != null)
+                {
+                    dbOrderDetail.Quantity = model.Quantity;
+                }
 
                 // UPDATE PRODUCED SERIALS
                 //int exComplete = dbObj.WorkOrderSerial.Sum(d => Convert.ToInt32(d.FirstQuantity ?? 0));

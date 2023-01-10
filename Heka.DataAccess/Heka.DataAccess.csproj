@@ -296,6 +296,10 @@
     <Compile Include="Migrations\202211081831210_UserEmailAddr.designer.cs">
       <DependentUpon>202211081831210_UserEmailAddr.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202211241152236_ItemOrderNeedsSummary.cs" />
+    <Compile Include="Migrations\202211241152236_ItemOrderNeedsSummary.designer.cs">
+      <DependentUpon>202211241152236_ItemOrderNeedsSummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -408,6 +412,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202211081831210_UserEmailAddr.resx">
       <DependentUpon>202211081831210_UserEmailAddr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202211241152236_ItemOrderNeedsSummary.resx">
+      <DependentUpon>202211241152236_ItemOrderNeedsSummary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />

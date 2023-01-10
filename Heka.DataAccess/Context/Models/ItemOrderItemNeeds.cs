@@ -28,7 +28,9 @@ namespace Heka.DataAccess.Context
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<decimal> RemainingNeedsQuantity { get; set; }
         public Nullable<System.DateTime> CalculatedDate { get; set; }
-    
+        public Nullable<decimal> RecipeQuantityInKg { get; set; }
+        public string ItemText { get; set; }
+
         public virtual Item Item { get; set; }
         public virtual ItemOrder ItemOrder { get; set; }
         public virtual ItemOrderDetail ItemOrderDetail { get; set; }

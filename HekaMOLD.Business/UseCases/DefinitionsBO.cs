@@ -323,65 +323,65 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 #region SAVE WAREHOUSE PRM
-                if (model.Warehouses == null)
-                    model.Warehouses = new ItemWarehouseModel[0];
+                //if (model.Warehouses == null)
+                //    model.Warehouses = new ItemWarehouseModel[0];
 
-                var toBeRemovedWarehouses = dbObj.ItemWarehouse
-                    .Where(d => !model.Warehouses.Select(m => m.Id).ToArray().Contains(d.Id))
-                    .ToArray();
-                foreach (var item in toBeRemovedWarehouses)
-                {
-                    repoWarehouses.Delete(item);
-                }
+                //var toBeRemovedWarehouses = dbObj.ItemWarehouse
+                //    .Where(d => !model.Warehouses.Select(m => m.Id).ToArray().Contains(d.Id))
+                //    .ToArray();
+                //foreach (var item in toBeRemovedWarehouses)
+                //{
+                //    repoWarehouses.Delete(item);
+                //}
 
-                foreach (var item in model.Warehouses
-                    .Where(d => !toBeRemovedWarehouses.Any(m => m.WarehouseId == d.WarehouseId)))
-                {
-                    var dbItemWr = repoWarehouses.GetById(item.Id);
-                    if (dbItemWr == null || item.Id == 0)
-                    {
-                        dbItemWr = new ItemWarehouse();
-                        item.MapTo(dbItemWr);
-                        dbItemWr.Item = dbObj;
-                        repoWarehouses.Add(dbItemWr);
-                    }
-                    else
-                    {
-                        item.MapTo(dbItemWr);
-                        dbItemWr.Item = dbObj;
-                    }
-                }
+                //foreach (var item in model.Warehouses
+                //    .Where(d => !toBeRemovedWarehouses.Any(m => m.WarehouseId == d.WarehouseId)))
+                //{
+                //    var dbItemWr = repoWarehouses.GetById(item.Id);
+                //    if (dbItemWr == null || item.Id == 0)
+                //    {
+                //        dbItemWr = new ItemWarehouse();
+                //        item.MapTo(dbItemWr);
+                //        dbItemWr.Item = dbObj;
+                //        repoWarehouses.Add(dbItemWr);
+                //    }
+                //    else
+                //    {
+                //        item.MapTo(dbItemWr);
+                //        dbItemWr.Item = dbObj;
+                //    }
+                //}
                 #endregion
 
                 #region SAVE ITEM UNITS PRM
-                if (model.Units == null)
-                    model.Units = new ItemUnitModel[0];
+                //if (model.Units == null)
+                //    model.Units = new ItemUnitModel[0];
 
-                var toBeRemovedUnits = dbObj.ItemUnit
-                    .Where(d => !model.Units.Where(m => m.NewDetail == false)
-                        .Select(m => m.Id).ToArray().Contains(d.Id)
-                    ).ToArray();
-                foreach (var item in toBeRemovedUnits)
-                {
-                    repoUnits.Delete(item);
-                }
+                //var toBeRemovedUnits = dbObj.ItemUnit
+                //    .Where(d => !model.Units.Where(m => m.NewDetail == false)
+                //        .Select(m => m.Id).ToArray().Contains(d.Id)
+                //    ).ToArray();
+                //foreach (var item in toBeRemovedUnits)
+                //{
+                //    repoUnits.Delete(item);
+                //}
 
-                foreach (var item in model.Units)
-                {
-                    if (item.NewDetail == true)
-                    {
-                        var dbItemUn = new ItemUnit();
-                        item.MapTo(dbItemUn);
-                        dbItemUn.Item = dbObj;
-                        repoUnits.Add(dbItemUn);
-                    }
-                    else if (!toBeRemovedUnits.Any(d => d.Id == item.Id))
-                    {
-                        var dbItemUn = repoUnits.GetById(item.Id);
-                        item.MapTo(dbItemUn);
-                        dbItemUn.Item = dbObj;
-                    }
-                }
+                //foreach (var item in model.Units)
+                //{
+                //    if (item.NewDetail == true)
+                //    {
+                //        var dbItemUn = new ItemUnit();
+                //        item.MapTo(dbItemUn);
+                //        dbItemUn.Item = dbObj;
+                //        repoUnits.Add(dbItemUn);
+                //    }
+                //    else if (!toBeRemovedUnits.Any(d => d.Id == item.Id))
+                //    {
+                //        var dbItemUn = repoUnits.GetById(item.Id);
+                //        item.MapTo(dbItemUn);
+                //        dbItemUn.Item = dbObj;
+                //    }
+                //}
                 #endregion
 
                 _unitOfWork.SaveChanges();

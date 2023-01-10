@@ -1713,10 +1713,9 @@ namespace HekaMOLD.Business.UseCases
                         string.Format("{0:dd.MM.yyyy HH:mm}", d.CalculatedDate) : "",
                     Id = d.Id,
                     ItemId = d.ItemId,
-                    ItemName = d.Item != null ? d.Item.ItemName : "",
-                    RecipeQuantity = (d.Item != null ? d.Item.ProductRecipeDetail
-                        .Where(m => m.ProductRecipe.ProductId == d.ItemOrderDetail.ItemId).Select(m => m.Quantity).FirstOrDefault() : (decimal?)null) ?? 0,
-                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ItemName = d.Item != null ? d.Item.ItemName : d.ItemText,
+                    RecipeQuantity = d.RecipeQuantityInKg ?? 0,
+                    ItemNo = d.Item != null ? d.Item.ItemNo : d.ItemText,
                     ProductCode = d.ItemOrderDetail.Item != null ? d.ItemOrderDetail.Item.ItemNo : "",
                     ProductName = d.ItemOrderDetail.Item != null ? d.ItemOrderDetail.Item.ItemName : "",
                     NeedsDateStr = d.ItemOrderDetail.ItemOrder.DateOfNeed != null ?
@@ -1724,7 +1723,7 @@ namespace HekaMOLD.Business.UseCases
                     ItemOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrderDetail.ItemOrder.OrderDate),
                     Quantity = d.Quantity,
                     TargetQuantity = d.ItemOrderDetail.Quantity,
-                    WarehouseQuantity = d.Item.ItemLiveStatus.Sum(m => m.LiveQuantity),
+                    WarehouseQuantity = d.Item != null ? d.Item.ItemLiveStatus.Sum(m => m.LiveQuantity) : 0,
                     ItemOrderNo = d.ItemOrderDetail != null ?
                         d.ItemOrderDetail.ItemOrder.DocumentNo : "",
                     RemainingQuantity = d.RemainingNeedsQuantity,
@@ -1771,7 +1770,8 @@ namespace HekaMOLD.Business.UseCases
                         string.Format("{0:dd.MM.yyyy HH:mm}", d.CalculatedDate) : "",
                     Id = d.Id,
                     ItemId = d.ItemId,
-                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    ItemName = d.Item != null ? d.Item.ItemName : d.ItemText,
+                    RecipeQuantity = d.RecipeQuantityInKg ?? 0,
                     ItemNo = d.Item != null ? d.Item.ItemNo : "",
                     ProductCode = d.ItemOrderDetail.Item != null ? d.ItemOrderDetail.Item.ItemNo : "",
                     ProductName = d.ItemOrderDetail.Item != null ? d.ItemOrderDetail.Item.ItemName : "",
@@ -1780,7 +1780,7 @@ namespace HekaMOLD.Business.UseCases
                     ItemOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrderDetail.ItemOrder.OrderDate),
                     Quantity = d.Quantity,
                     TargetQuantity = d.ItemOrderDetail.Quantity,
-                    WarehouseQuantity = d.Item.ItemLiveStatus.Sum(m => m.LiveQuantity),
+                    WarehouseQuantity = d.Item != null ? d.Item.ItemLiveStatus.Sum(m => m.LiveQuantity) : 0,
                     ItemOrderNo = d.ItemOrderDetail != null ?
                         d.ItemOrderDetail.ItemOrder.DocumentNo : "",
                     RemainingQuantity = d.RemainingNeedsQuantity,
@@ -1821,6 +1821,8 @@ namespace HekaMOLD.Business.UseCases
                 var repoItemOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoRecipe = _unitOfWork.GetRepository<ProductRecipe>();
                 var repoNeeds = _unitOfWork.GetRepository<ItemOrderItemNeeds>();
+                var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
 
                 ItemOrderDetailModel[] openItemOrders = null;
                 using (OrdersBO bObj = new OrdersBO())
@@ -1850,45 +1852,122 @@ namespace HekaMOLD.Business.UseCases
                     // WRITE NEW NEEDS
                     Hashtable itemStatusList = new Hashtable();
 
-                    var dbRecipe = repoRecipe.Get(d => d.IsActive == true && d.ProductId == item.ItemId);
+                    var dbRecipe = repoMoldTest.Filter(d => d.ProductCode == item.ItemNo).OrderByDescending(d => d.Id).FirstOrDefault();
+                        //repoRecipe.Get(d => d.IsActive == true && d.ProductId == item.ItemId);
                     if (dbRecipe != null)
                     {
-                        foreach (var recipeItem in dbRecipe.ProductRecipeDetail)
+                        var dbRecipeItem = repoItem.Get(d => d.ItemNo == dbRecipe.RawMaterialName || d.ItemName == dbRecipe.RawMaterialName);
+
+                        // CALCULATE NEEDS QTY
+                        var pureNeedsQty = Convert.ToDecimal(dbRecipe.RawMaterialGr / 1000.0m) * (item.Quantity);
+                        var finalNeedsQty = pureNeedsQty;
+
+                        // RAW MATERIAL
+                        if (finalNeedsQty > 0)
                         {
-                            // GET ITEM USABLE QUANTITY FROM WAREHOUSES
-                            decimal? itemStatus = null;
-                            if (itemStatusList.ContainsKey(recipeItem.ItemId.Value))
-                                itemStatus = (decimal?)itemStatusList[recipeItem.ItemId.Value];
-                            else
+                            var newItemNeeds = new ItemOrderItemNeeds
                             {
-                                itemStatus = recipeItem.Item.ItemLiveStatus.Sum(d => d.LiveQuantity ?? 0);
-                                itemStatusList[recipeItem.ItemId.Value] = itemStatus;
-                            }
+                                CalculatedDate = DateTime.Now,
+                                ItemId = dbRecipeItem != null ? dbRecipeItem.Id : (int?)null,
+                                ItemText = dbRecipe.RawMaterialName,
+                                RecipeQuantityInKg = dbRecipe.RawMaterialGr / 1000.0m,
+                                Quantity = finalNeedsQty,
+                                RemainingNeedsQuantity = finalNeedsQty,
+                                ItemOrderDetailId = item.Id,
+                                ItemOrderId = item.ItemOrderId,
+                            };
+                            repoNeeds.Add(newItemNeeds);
 
-                            // CALCULATE NEEDS QTY
-                            var pureNeedsQty = recipeItem.Quantity * (item.Quantity);
-                            var usableQty = itemStatus >= pureNeedsQty ? pureNeedsQty : itemStatus;
-                            if (usableQty < 0)
-                                usableQty = 0;
-                            var finalNeedsQty = pureNeedsQty - usableQty;
+                            // dye needs
+                            var dbRecipeDye = repoItem.Get(d => d.ItemNo == dbRecipe.DyeCode || d.ItemName == dbRecipe.DyeCode 
+                                || d.ItemNo == dbRecipe.RalCode || d.ItemName == dbRecipe.RalCode);
 
-                            // UPDATE TOTAL ITEM STATUS HASHTABLE
-                            itemStatusList[recipeItem.ItemId.Value] = itemStatus - usableQty;
-
-                            if (finalNeedsQty > 0)
+                            var newDyeNeeds = new ItemOrderItemNeeds
                             {
-                                var newItemNeeds = new ItemOrderItemNeeds
+                                CalculatedDate = DateTime.Now,
+                                ItemId = dbRecipeDye != null ? dbRecipeDye.Id : (int?)null,
+                                ItemText = dbRecipe.DyeCode,
+                                RecipeQuantityInKg = 0.02m,
+                                Quantity = item.Quantity * 0.02m,
+                                RemainingNeedsQuantity = item.Quantity * 0.02m,
+                                ItemOrderDetailId = item.Id,
+                                ItemOrderId = item.ItemOrderId,
+                            };
+                            repoNeeds.Add(newDyeNeeds);
+
+                            // package needs
+                            var dbRecipePackage = repoItem.Get(d => d.ItemNo == dbRecipe.PackageDimension || d.ItemName == dbRecipe.PackageDimension);
+
+                            var newPackageNeeds = new ItemOrderItemNeeds
+                            {
+                                CalculatedDate = DateTime.Now,
+                                ItemId = dbRecipePackage != null ? dbRecipePackage.Id : (int?)null,
+                                ItemText = dbRecipe.PackageDimension,
+                                RecipeQuantityInKg = 0.02m,
+                                Quantity = item.Quantity / (dbRecipe.InPackageQuantity ?? 1),
+                                RemainingNeedsQuantity = item.Quantity / (dbRecipe.InPackageQuantity ?? 1),
+                                ItemOrderDetailId = item.Id,
+                                ItemOrderId = item.ItemOrderId,
+                            };
+                            repoNeeds.Add(newPackageNeeds);
+
+                            // nut needs
+                            if (dbRecipe.NutQuantity > 0)
+                            {
+                                var newNutNeeds = new ItemOrderItemNeeds
                                 {
                                     CalculatedDate = DateTime.Now,
-                                    ItemId = recipeItem.ItemId,
-                                    Quantity = finalNeedsQty,
-                                    RemainingNeedsQuantity = finalNeedsQty,
+                                    ItemId = (int?)null,
+                                    ItemText = dbRecipe.NutCaliber,
+                                    RecipeQuantityInKg = dbRecipe.NutQuantity ?? 0,
+                                    Quantity = item.Quantity * (dbRecipe.NutQuantity ?? 0),
+                                    RemainingNeedsQuantity = item.Quantity * (dbRecipe.NutQuantity ?? 0),
                                     ItemOrderDetailId = item.Id,
                                     ItemOrderId = item.ItemOrderId,
                                 };
-                                repoNeeds.Add(newItemNeeds);
+                                repoNeeds.Add(newNutNeeds);
                             }
+                           
                         }
+
+                        #region OLD RECIPE CALC
+                        //foreach (var recipeItem in dbRecipe.ProductRecipeDetail)
+                        //{
+                        //    // GET ITEM USABLE QUANTITY FROM WAREHOUSES
+                        //    decimal? itemStatus = null;
+                        //    if (itemStatusList.ContainsKey(recipeItem.ItemId.Value))
+                        //        itemStatus = (decimal?)itemStatusList[recipeItem.ItemId.Value];
+                        //    else
+                        //    {
+                        //        itemStatus = recipeItem.Item.ItemLiveStatus.Sum(d => d.LiveQuantity ?? 0);
+                        //        itemStatusList[recipeItem.ItemId.Value] = itemStatus;
+                        //    }
+
+                        //    // CALCULATE NEEDS QTY
+                        //    var pureNeedsQty = recipeItem.Quantity * (item.Quantity);
+                        //    var usableQty = itemStatus >= pureNeedsQty ? pureNeedsQty : itemStatus;
+                        //    if (usableQty < 0)
+                        //        usableQty = 0;
+                        //    var finalNeedsQty = pureNeedsQty - usableQty;
+
+                        //    // UPDATE TOTAL ITEM STATUS HASHTABLE
+                        //    itemStatusList[recipeItem.ItemId.Value] = itemStatus - usableQty;
+
+                        //    if (finalNeedsQty > 0)
+                        //    {
+                        //        var newItemNeeds = new ItemOrderItemNeeds
+                        //        {
+                        //            CalculatedDate = DateTime.Now,
+                        //            ItemId = recipeItem.ItemId,
+                        //            Quantity = finalNeedsQty,
+                        //            RemainingNeedsQuantity = finalNeedsQty,
+                        //            ItemOrderDetailId = item.Id,
+                        //            ItemOrderId = item.ItemOrderId,
+                        //        };
+                        //        repoNeeds.Add(newItemNeeds);
+                        //    }
+                        //}
+                        #endregion
                     }
                 }
 
