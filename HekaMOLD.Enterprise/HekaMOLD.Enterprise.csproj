@@ -4141,6 +4141,7 @@
     <Content Include="FrontEndLogic\ItemGroup\list.js" />
     <Content Include="FrontEndLogic\ItemReceipt\index.js" />
     <Content Include="FrontEndLogic\ItemReceipt\list.js" />
+    <Content Include="FrontEndLogic\ItemReceipt\prodcons-report.js" />
     <Content Include="FrontEndLogic\ItemReceipt\sales-report.js" />
     <Content Include="FrontEndLogic\Item\index.js" />
     <Content Include="FrontEndLogic\Item\extract.js" />
@@ -4777,6 +4778,7 @@
     <Content Include="Views\ItemReceipt\SalesReport.cshtml" />
     <Content Include="Views\Mobile\WarehouseManagement.cshtml" />
     <Content Include="Views\Mobile\ProductQualityApprovement.cshtml" />
+    <Content Include="Views\ItemReceipt\ProdConsReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

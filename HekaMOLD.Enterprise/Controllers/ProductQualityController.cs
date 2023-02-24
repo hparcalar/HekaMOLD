@@ -255,21 +255,21 @@ namespace HekaMOLD.Enterprise.Controllers
                 result = bObj.ApproveSerials(model, plantId, userId);
             }
 
-            if (result.Result == true)
-            {
-                using (ProductionBO bObj = new ProductionBO())
-                {
-                    bObj.CreateNotification(new NotificationModel
-                    {
-                        UserId = null,
-                        NotifyType = (int)NotifyType.ProductPickupComplete,
-                        CreatedDate = DateTime.Now,
-                        Title = "Ürün Teslim Alma Bildirimi",
-                        IsProcessed = false,
-                        Message = string.Format("{0:HH:mm}", DateTime.Now) + ": Ürün teslim alma işlemi yapıldı.",
-                    });
-                }
-            }
+            //if (result.Result == true)
+            //{
+            //    using (ProductionBO bObj = new ProductionBO())
+            //    {
+            //        bObj.CreateNotification(new NotificationModel
+            //        {
+            //            UserId = null,
+            //            NotifyType = (int)NotifyType.ProductPickupComplete,
+            //            CreatedDate = DateTime.Now,
+            //            Title = "Ürün Teslim Alma Bildirimi",
+            //            IsProcessed = false,
+            //            Message = string.Format("{0:HH:mm}", DateTime.Now) + ": Ürün teslim alma işlemi yapıldı.",
+            //        });
+            //    }
+            //}
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }

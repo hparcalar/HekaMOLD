@@ -14,21 +14,21 @@
             }).catch(function (err) { });
     }
 
-    $scope.confirmPrinting = function () {
-        $http.post(HOST_URL + 'Planning/PrintItemLabel', $scope.printingModel, 'json')
-            .then(function (resp) {
-                if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.saveStatus = 0;
+    $scope.confirmPrinting = async function () {
+        const resp = await $http.post(HOST_URL + 'Planning/PrintItemLabel', $scope.printingModel, 'json');
+        if (typeof resp.data != 'undefined' && resp.data != null) {
+            $scope.saveStatus = 0;
 
-                    if (resp.data.Result) {
-                        toastr.success('Etiket yazıcıya gönderildi.', 'Bilgilendirme');
+            if (resp.data.Result) {
+                toastr.success('Etiket yazıcıya gönderildi.', 'Bilgilendirme');
 
-                        $scope.bindModel(resp.data.RecordId);
-                    }
-                    else
-                        toastr.error(resp.data.ErrorMessage, 'Hata');
-                }
-            }).catch(function (err) { });
+                $scope.bindModel(resp.data.RecordId);
+
+                $scope.$emit('onItemLabelPrinted');
+            }
+            else
+                toastr.error(resp.data.ErrorMessage, 'Hata');
+        }
     }
 
     // ON LOAD EVENTS

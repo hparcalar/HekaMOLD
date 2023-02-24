@@ -173,8 +173,8 @@ namespace HekaPrintingService
                                             var bRes = prodBo.PrintProductLabel(serialModel, workModel, printerId,
                                                 _printerNames[printerIndex]);
 
-                                            if (bRes.Result == false)
-                                                MessageBox.Show(bRes.ErrorMessage);
+                                            //if (bRes.Result == false)
+                                            //    MessageBox.Show(bRes.ErrorMessage);
                                         }
                                     }
 

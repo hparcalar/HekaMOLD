@@ -424,6 +424,8 @@ namespace HekaMOLD.Business.UseCases
                 var repoReceipt = _unitOfWork.GetRepository<ItemReceipt>();
                 var repoRecipeDetail = _unitOfWork.GetRepository<ProductRecipeDetail>();
                 var repoWr = _unitOfWork.GetRepository<Warehouse>();
+                var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+                var repoItem = _unitOfWork.GetRepository<Item>();
 
                 var dbProdReceipt = repoReceipt.Get(d => d.Id == productionReceiptId);
                 if (dbProdReceipt == null)
@@ -431,30 +433,102 @@ namespace HekaMOLD.Business.UseCases
 
                 List<ItemReceiptDetailModel> consDetails = new List<ItemReceiptDetailModel>();
                 int lineNumber = 1;
+
                 var prodReceiptDetails = dbProdReceipt.ItemReceiptDetail.ToArray();
 
                 foreach (var prodItem in prodReceiptDetails)
                 {
-                    var recipeDetails = repoRecipeDetail.Filter(d => d.ProductRecipe.ProductId == prodItem.ItemId);
-
-                    foreach (var item in recipeDetails)
+                    var productionForm = repoMoldTest.Get(d => d.ProductCode == prodItem.Item.ItemNo);
+                    if (productionForm != null)
                     {
-                        consDetails.Add(new ItemReceiptDetailModel
+                        // raw material consumption
+                        var dbRawItem = repoItem.Get(d => d.ItemNo == productionForm.RawMaterialName || d.ItemName == productionForm.RawMaterialName);
+                        if (dbRawItem != null)
                         {
-                            ItemId = item.ItemId,
-                            Quantity = item.Quantity * prodItem.Quantity,
-                            UnitId = item.UnitId,
-                            LineNumber = lineNumber,
-                            CreatedDate = DateTime.Now,
-                            NewDetail = true,
-                            ReceiptStatus = (int)ReceiptStatusType.Created,
-                            SyncStatus = 1,
-                            TaxIncluded = false,
-                            TaxRate = 0,
-                            TaxAmount = 0,
-                        });
+                            consDetails.Add(new ItemReceiptDetailModel
+                            {
+                                ItemId = dbRawItem.Id,
+                                Quantity = productionForm.RawMaterialGr / 1000.0m * prodItem.Quantity,
+                                UnitId = prodItem.UnitId,
+                                LineNumber = lineNumber,
+                                CreatedDate = DateTime.Now,
+                                NewDetail = true,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                                SyncStatus = 1,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                            });
 
-                        lineNumber++;
+                            lineNumber++;
+                        }
+
+                        // dye consumption
+                        var dbDye = repoItem.Get(d => d.ItemNo == productionForm.DyeCode || d.ItemName == productionForm.DyeCode
+                                || d.ItemNo == productionForm.RalCode || d.ItemName == productionForm.RalCode);
+                        if (dbDye != null)
+                        {
+                            consDetails.Add(new ItemReceiptDetailModel
+                            {
+                                ItemId = dbDye.Id,
+                                Quantity = 0.02m * prodItem.Quantity,
+                                UnitId = prodItem.UnitId,
+                                LineNumber = lineNumber,
+                                CreatedDate = DateTime.Now,
+                                NewDetail = true,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                                SyncStatus = 1,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                            });
+
+                            lineNumber++;
+                        }
+
+                        // package consumption
+                        var dbPackage = repoItem.Get(d => d.ItemNo == productionForm.PackageDimension || d.ItemName == productionForm.PackageDimension);
+                        if (dbPackage != null)
+                        {
+                            consDetails.Add(new ItemReceiptDetailModel
+                            {
+                                ItemId = dbPackage.Id,
+                                Quantity = prodItem.Quantity / (productionForm.InPackageQuantity ?? 1),
+                                UnitId = prodItem.UnitId,
+                                LineNumber = lineNumber,
+                                CreatedDate = DateTime.Now,
+                                NewDetail = true,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                                SyncStatus = 1,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                            });
+
+                            lineNumber++;
+                        }
+
+                        // nut consumption
+                        var dbNut = repoItem.Get(d => d.ItemNo == productionForm.NutCaliber || d.ItemName == productionForm.NutCaliber);
+                        if (dbNut != null)
+                        {
+                            consDetails.Add(new ItemReceiptDetailModel
+                            {
+                                ItemId = dbNut.Id,
+                                Quantity = prodItem.Quantity * (productionForm.NutQuantity ?? 0),
+                                UnitId = prodItem.UnitId,
+                                LineNumber = lineNumber,
+                                CreatedDate = DateTime.Now,
+                                NewDetail = true,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                                SyncStatus = 1,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                            });
+
+                            lineNumber++;
+                        }
                     }
                 }
 

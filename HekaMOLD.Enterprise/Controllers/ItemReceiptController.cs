@@ -120,7 +120,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetReceiptList(int receiptCategory, int receiptType)
+        public JsonResult GetReceiptList(int receiptCategory, int receiptType, string dt1, string dt2)
         {
             ItemReceiptModel[] result = new ItemReceiptModel[0];
 
@@ -130,7 +130,9 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 result = bObj.GetItemReceiptList(
                         (ReceiptCategoryType)receiptCategory,
-                        (ItemReceiptType?)rType
+                        (ItemReceiptType?)rType,
+                        dt1,
+                        dt2
                     );
             }
 
@@ -392,6 +394,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult ProdConsReport()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetSalesReport(string dt1, string dt2)
         {
@@ -402,6 +409,32 @@ namespace HekaMOLD.Enterprise.Controllers
                 using (ReportingBO bObj = new ReportingBO())
                 {
                     data = bObj.GetSalesReport(new Business.Models.Filters.BasicRangeFilter
+                    {
+                        StartDate = dt1,
+                        EndDate = dt2,
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpGet]
+        public JsonResult GetProdConsReport(string dt1, string dt2)
+        {
+            SalesReportModel[] data = new SalesReportModel[0];
+
+            try
+            {
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetProdConsReport(new Business.Models.Filters.BasicRangeFilter
                     {
                         StartDate = dt1,
                         EndDate = dt2,

@@ -76,7 +76,7 @@
                                     <div class="d-flex flex-column overflow-auto" style="max-height:400px;">
                                         @* GET ACTIVE PLANS OF MACHINE *@
                                         <div class="plan-box" draggable="true"
-                                             ng-dblclick="showProductInfo(plan.Id)"
+                                             ng-dblclick="showProductInfo(plan.WorkOrderDetailId)"
                                              data-plan-id="{{plan.Id}}"
                                              ng-click="selectPlan(plan)"
                                              ng-class="{'plan-box-cancelled': plan.WorkOrder.WorkOrderStatus == 6,

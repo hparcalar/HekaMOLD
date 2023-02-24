@@ -123,8 +123,8 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'WarehouseName', caption: 'Depo' },
-                /*{ dataField: 'ItemNo', caption: 'Stok Kodu' },*/
+                /*{ dataField: 'WarehouseName', caption: 'Depo' },*/
+                { dataField: 'ItemNo', caption: 'Stok Kodu' },
                 { dataField: 'ItemName', caption: 'Stok Adı' },
                 { dataField: 'InQty', caption: 'Giriş Miktar' },
                 { dataField: 'OutQty', caption: 'Çıkış Miktar' },

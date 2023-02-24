@@ -240,7 +240,7 @@
         $scope.updateFilteredList();
     }
 
-    $scope.processBarcodeResult = function (barcode) {
+    $scope.processBarcodeResult = async function (barcode) {
         var product = $scope.pickupList.find(d => d.SerialNo == barcode);
         if (product != null && typeof product != 'undefined') {
             if (!$scope.selectedProducts.some(d => d.SerialNo == barcode))
@@ -264,7 +264,16 @@
         }
         else {
             $scope.isBarcodeRead = true;
-            toastr.error('Okutulan barkoda ait bir kayıt bulunamadı.');
+
+            const resp = await $http.get(HOST_URL + 'Mobile/SearchBarcodeForPickup?barcode=' + barcode, {}, 'json');
+            if (resp != null && resp.data != null && resp.data.Id > 0) {
+                const pr = resp.data;
+                $scope.pickupList.splice(0,0, pr);
+                $scope.selectProduct(pr);
+            }
+            else
+                toastr.error('Okutulan barkoda ait bir kayıt bulunamadı.');
+
             $scope.barcodeBox = '';
         }
     }

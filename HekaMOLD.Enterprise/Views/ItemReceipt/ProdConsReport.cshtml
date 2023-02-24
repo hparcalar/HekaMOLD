@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Depo Durumları";
+    ViewBag.Title = "Üretim / Hammadde Raporu";
 }
 
-<div ng-controller="warehouseStatesCtrl" class="dx-viewport">
+<div ng-controller="prodconsReportCtrl" class="dx-viewport">
     <!--begin::Toolbar-->
     <div class="toolbar" id="kt_toolbar">
         <!--begin::Container-->
@@ -19,11 +19,8 @@
             <!--end::Page title-->
             <!--begin::Actions-->
             <div class="d-flex align-items-center py-1" style="width:400px !important;">
-                <!--begin::Wrapper-->
-                @*<div class="me-4">
-                    <div id="warehouseSelection" style="width:400px !important;"></div>
-                </div>*@
-                <!--end::Wrapper-->
+                <input type="text" class="form-control datepicker" ng-model="filterModel.startDate" ng-change="loadReport()" placeholder="Başlangıç Tarihi" />
+                <input type="text" class="form-control datepicker mx-2" ng-model="filterModel.endDate" ng-change="loadReport()" placeholder="Bitiş Tarihi" />
             </div>
             <!--end::Actions-->
         </div>
@@ -57,5 +54,5 @@
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-    <script src="~/FrontEndLogic/Warehouse/states.js?v=4"></script>
+    <script src="~/FrontEndLogic/ItemReceipt/prodcons-report.js"></script>
 }

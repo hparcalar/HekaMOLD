@@ -542,6 +542,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult SearchBarcodeForApproveSerial(string barcode)
+        {
+            WorkOrderSerialModel result = new WorkOrderSerialModel();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.SearchBarcodeForApproveSerial(barcode);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult GetApprovedSerials()
         {
             WorkOrderSerialModel[] result = new WorkOrderSerialModel[0];
@@ -579,6 +594,21 @@ namespace HekaMOLD.Enterprise.Controllers
                 Serials = result,
                 Summaries = resultSum,
             }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult SearchBarcodeForPickup(string barcode)
+        {
+            WorkOrderSerialModel result = new WorkOrderSerialModel();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.SearchBarcodeForPickup(barcode);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }

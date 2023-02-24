@@ -19,14 +19,27 @@ namespace HekaMOLD.Business.UseCases
     public class ReceiptBO : CoreReceiptsBO
     {
         public ItemReceiptModel[] GetItemReceiptList(ReceiptCategoryType receiptCategory,
-            ItemReceiptType? receiptType)
+            ItemReceiptType? receiptType, string dt1 = "", string dt2 = "")
         {
             ItemReceiptModel[] data = new ItemReceiptModel[0];
+
+            DateTime dtStart, dtEnd;
+
+            if (string.IsNullOrEmpty(dt1))
+                dt1 = "01.01." + DateTime.Now.Year;
+            if (string.IsNullOrEmpty(dt2))
+                dt2 = "31.12." + DateTime.Now.Year;
+
+            dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+            dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
             var repo = _unitOfWork.GetRepository<ItemReceipt>();
 
             data = repo.Filter(d =>
                 d.ReceiptType != null &&
+                (d.ReceiptDate >= dtStart && d.ReceiptDate <= dtEnd) &&
                 (receiptCategory == ReceiptCategoryType.All
                 ||
                 (receiptCategory == ReceiptCategoryType.Purchasing

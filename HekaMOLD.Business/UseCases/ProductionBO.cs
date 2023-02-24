@@ -1903,7 +1903,7 @@ namespace HekaMOLD.Business.UseCases
                                 CalculatedDate = DateTime.Now,
                                 ItemId = dbRecipePackage != null ? dbRecipePackage.Id : (int?)null,
                                 ItemText = dbRecipe.PackageDimension,
-                                RecipeQuantityInKg = 0.02m,
+                                RecipeQuantityInKg = 1 / (dbRecipe.InPackageQuantity ?? 1),
                                 Quantity = item.Quantity / (dbRecipe.InPackageQuantity ?? 1),
                                 RemainingNeedsQuantity = item.Quantity / (dbRecipe.InPackageQuantity ?? 1),
                                 ItemOrderDetailId = item.Id,
@@ -2443,6 +2443,60 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region WAREHOUSE PRODUCT ENTRY & CONFIRMATION
+        public WorkOrderSerialModel SearchBarcodeForApproveSerial(string barcode)
+        {
+            WorkOrderSerialModel model = new WorkOrderSerialModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                model = repo.Filter(d => (
+                        d.SerialStatus == (int)SerialStatusType.Approved
+                        ||
+                        (d.SerialStatus == (int)SerialStatusType.Created
+                            && (d.QualityStatus == (int)QualityStatusType.Nok || d.QualityStatus == (int)QualityStatusType.QualityWaiting)
+                            )
+                    )
+                    && d.SerialNo != null && d.SerialNo == barcode).ToArray()
+                    .Select(d => new WorkOrderSerialModel
+                    {
+                        Id = d.Id,
+                        WorkOrderDetailId = d.WorkOrderDetailId,
+                        ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "" : "",
+                        ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName : "",
+                        CreatedDate = d.CreatedDate,
+                        CreatedDateStr = d.CreatedDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "",
+                        MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineCode : "",
+                        MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineName : "",
+                        QualityStatus = d.QualityStatus ?? 0,
+                        QualityStatusText = ((QualityStatusType)(d.QualityStatus ?? 0)).ToCaption(),
+                        FirstQuantity = d.FirstQuantity,
+                        InPackageQuantity = d.InPackageQuantity,
+                        ShiftId = d.ShiftId,
+                        ShiftCode = d.Shift != null ? d.Shift.ShiftCode : "",
+                        ShiftBelongsToDate = d.ShiftBelongsToDate,
+                        ShiftBelongsToDateStr = d.ShiftBelongsToDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ShiftBelongsToDate) : "",
+                        QualityExplanation = d.QualityExplanation,
+                        ShiftName = d.Shift != null ? d.Shift.ShiftName : "",
+                        IsGeneratedBySignal = d.IsGeneratedBySignal,
+                        LiveQuantity = d.LiveQuantity,
+                        SerialNo = d.SerialNo,
+                        FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "" : "",
+                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName : "",
+                    }).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return model;
+        }
         public WorkOrderSerialModel[] GetApprovedSerials()
         {
             WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];
@@ -2564,6 +2618,54 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        public WorkOrderSerialModel SearchBarcodeForPickup(string barcode)
+        {
+            WorkOrderSerialModel model = new WorkOrderSerialModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                model = repo.Filter(d => d.SerialStatus == (int)SerialStatusType.Created
+                    && d.SerialNo != null && d.SerialNo == barcode).ToArray()
+                    .Select(d => new WorkOrderSerialModel
+                    {
+                        Id = d.Id,
+                        WorkOrderDetailId = d.WorkOrderDetailId,
+                        ItemNo = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "" : "",
+                        ItemName = d.WorkOrderDetail != null ? d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName : "",
+                        CreatedDate = d.CreatedDate,
+                        CreatedDateStr = d.CreatedDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.CreatedDate) : "",
+                        MachineCode = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineCode : "",
+                        MachineName = d.WorkOrderDetail != null && d.WorkOrderDetail.Machine != null ?
+                            d.WorkOrderDetail.Machine.MachineName : "",
+                        QualityStatus = d.QualityStatus ?? 0,
+                        QualityStatusText = ((QualityStatusType)(d.QualityStatus ?? 0)).ToCaption(),
+                        FirstQuantity = d.FirstQuantity,
+                        InPackageQuantity = d.InPackageQuantity,
+                        ShiftId = d.ShiftId,
+                        ShiftCode = d.Shift != null ? d.Shift.ShiftCode : "",
+                        ShiftBelongsToDate = d.ShiftBelongsToDate,
+                        ShiftBelongsToDateStr = d.ShiftBelongsToDate != null ?
+                            string.Format("{0:dd.MM.yyyy}", d.ShiftBelongsToDate) : "",
+                        QualityExplanation = d.QualityExplanation,
+                        ShiftName = d.Shift != null ? d.Shift.ShiftName : "",
+                        IsGeneratedBySignal = d.IsGeneratedBySignal,
+                        LiveQuantity = d.LiveQuantity,
+                        SerialNo = d.SerialNo,
+                        FirmCode = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "" : "",
+                        FirmName = d.WorkOrderDetail != null ? d.WorkOrderDetail.WorkOrder.Firm != null ? d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName : "",
+                    }).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return model;
+        }
         public WorkOrderSerialModel[] GetSerialsWaitingForPickup()
         {
             WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];

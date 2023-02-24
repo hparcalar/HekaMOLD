@@ -320,7 +320,7 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<MoldTest>();
-                var dbObj = repo.Get(d => d.ProductCode == productCode);
+                var dbObj = repo.Filter(d => d.ProductCode == productCode).OrderByDescending(d => d.Id).FirstOrDefault();
                 if (dbObj != null)
                 {
                     dbObj.MapTo(model);
