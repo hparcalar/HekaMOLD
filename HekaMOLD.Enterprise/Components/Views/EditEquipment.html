@@ -1,0 +1,86 @@
+﻿<div ng-controller="editEquipmentCtrl">
+    <div class="row mb-2">
+        <div class="col-xxl-12 px-1 py-1">
+            <div class="row">
+                <div class="col-xxl-12 col-sm-12 col-md-12">
+                    <h5 class="text-center fw-bolder fs-3 bg-dark rounded-1 p-2 text-white my-1" 
+                        ng-bind="machineName + ' / ' + categoryName"></h5>
+                </div>
+                <div class="col-xxl-6 col-sm-6 col-md-6">
+                    <div class="d-flex flex-row flex-wrap">
+                        <p class="plan-label" style="padding-top:10px !important;">Ekipman Adı:</p>
+                        <p>
+                            <input type="text" class="form-control"
+                                   ng-model="modelObject.EquipmentName" placeholder="" />
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-sm-6 col-md-6">
+                    <div class="d-flex flex-row flex-wrap">
+                        <p class="plan-label" style="padding-top:10px !important;">Üretici:</p>
+                        <p>
+                            <input type="text" class="form-control"
+                                   ng-model="modelObject.Manufacturer" placeholder="" />
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-sm-6 col-md-6">
+                    <div class="d-flex flex-row flex-wrap">
+                        <p class="plan-label" style="padding-top:10px !important;">Model:</p>
+                        <p>
+                            <input type="text" class="form-control"
+                                   ng-model="modelObject.ModelNo" placeholder="" />
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-sm-6 col-md-6">
+                    <div class="d-flex flex-row flex-wrap">
+                        <p class="plan-label" style="padding-top:10px !important;">Seri No:</p>
+                        <p>
+                            <input type="text" class="form-control"
+                                   ng-model="modelObject.SerialNo" placeholder="" />
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-sm-6 col-md-6">
+                    <div class="d-flex flex-row flex-wrap">
+                        <p class="plan-label" style="padding-top:10px !important;">Lokasyon:</p>
+                        <p>
+                            <input type="text" class="form-control"
+                                   ng-model="modelObject.Location" placeholder="" />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xxl-6 col-sm-6 col-md-6 px-1 py-1">
+            <div class="d-flex flex-row">
+                <button type="button" class="btn btn-danger btn-block w-100 py-2"
+                        ng-click="deleteEquipment()">
+                    <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3,13.5 L19,12 L3,10.5 L3,3.7732928 C3,3.70255344 3.01501031,3.63261921 3.04403925,3.56811047 C3.15735832,3.3162903 3.45336217,3.20401298 3.70518234,3.31733205 L21.9867539,11.5440392 C22.098181,11.5941815 22.1873901,11.6833905 22.2375323,11.7948177 C22.3508514,12.0466378 22.2385741,12.3426417 21.9867539,12.4559608 L3.70518234,20.6826679 C3.64067359,20.7116969 3.57073936,20.7267072 3.5,20.7267072 C3.22385763,20.7267072 3,20.5028496 3,20.2267072 L3,13.5 Z" id="Combined-Shape" fill="#000000"></path>
+                        </svg>
+                    </span>
+                    Ekipmanı Sil
+                </button>
+
+                <button type="button" class="btn btn-primary btn-block w-100 py-2" style="margin-left:10px;"
+                        ng-click="saveEquipment()">
+                    <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3,13.5 L19,12 L3,10.5 L3,3.7732928 C3,3.70255344 3.01501031,3.63261921 3.04403925,3.56811047 C3.15735832,3.3162903 3.45336217,3.20401298 3.70518234,3.31733205 L21.9867539,11.5440392 C22.098181,11.5941815 22.1873901,11.6833905 22.2375323,11.7948177 C22.3508514,12.0466378 22.2385741,12.3426417 21.9867539,12.4559608 L3.70518234,20.6826679 C3.64067359,20.7116969 3.57073936,20.7267072 3.5,20.7267072 C3.22385763,20.7267072 3,20.5028496 3,20.2267072 L3,13.5 Z" id="Combined-Shape" fill="#000000"></path>
+                        </svg>
+                    </span>
+                    Kaydet
+                </button>
+            </div>
+
+        </div>
+
+        <div class="col-xxl-6 col-sm-6 col-md-6 px-1 py-1">
+
+        </div>
+    </div>
+</div>

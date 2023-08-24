@@ -17,5 +17,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? Duration { get; set; }
         public int? SignalStatus { get; set; }
         public DateTime? ShiftBelongsToDate { get; set; }
+        public int? OperatorId { get; set; }
     }
 }

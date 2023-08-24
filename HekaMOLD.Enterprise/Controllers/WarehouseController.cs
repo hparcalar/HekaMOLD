@@ -1,7 +1,9 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,11 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         public ActionResult List()
+        {
+            return View();
+        }
+
+        public ActionResult ManageItems()
         {
             return View();
         }
@@ -114,8 +121,13 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult MachineProductState()
+        {
+            return View();
+        }
+
         [HttpGet]
-        public JsonResult GetStatesData(string warehouseList)
+        public JsonResult GetStatesData(string warehouseList, int? all)
         {
             ItemStateModel[] data = new ItemStateModel[0];
 
@@ -125,7 +137,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 using (ReportingBO bObj = new ReportingBO())
                 {
-                    data = bObj.GetItemStates(warehouseIds);
+                    data = bObj.GetItemStates(warehouseIds, all);
                 }
             }
             catch (Exception)
@@ -139,6 +151,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetFinishedProducts()
         {
             ItemStateModel[] data = new ItemStateModel[0];
@@ -170,6 +183,120 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
+        public JsonResult GetOnlySaleOrderProducts()
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                int pWrId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var wrModel = bObj.GetProductWarehouse();
+                    if (wrModel != null && wrModel.Id > 0)
+                        pWrId = wrModel.Id;
+                }
+
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetOnlySaleOrderProducts(new int[] { pWrId });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetSelfReadyProducts()
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                int pWrId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var wrModel = bObj.GetProductWarehouse();
+                    if (wrModel != null && wrModel.Id > 0)
+                        pWrId = wrModel.Id;
+                }
+
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetSelfReadyProducts(new int[] { pWrId });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpGet]
+        public JsonResult GetCurrentSerials(int warehouseId, int itemId)
+        {
+            ItemSerialModel[] data = new ItemSerialModel[0];
+
+            try
+            {
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetCurrentSerials(warehouseId, itemId);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult UpdateItemSerial(int serialId, decimal newQuantity)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.UpdateItemSerialQuantity(serialId, newQuantity);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult DeleteItemSerial(int serialId)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.RemoveItemSerial(serialId);
+            }
+
+            return Json(result);
+        }
+
+        [HttpGet]
         public JsonResult GetFinishedProductState(string dt1, string dt2)
         {
             ItemStateModel[] data = new ItemStateModel[0];
@@ -187,7 +314,7 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 using (ReportingBO bObj = new ReportingBO())
                 {
-                    data = bObj.GetItemStates(new int[] { pWrId }, new Business.Models.Filters.BasicRangeFilter { 
+                    data = bObj.GetItemStatesOnlyEntries(new int[] { pWrId }, new Business.Models.Filters.BasicRangeFilter { 
                         StartDate = dt1,
                         EndDate = dt2,
                     });
@@ -201,6 +328,54 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
             jsonResponse.MaxJsonLength = int.MaxValue;
             return jsonResponse;
+        }
+
+        [HttpGet]
+        public JsonResult GetMachineProductState(string dt1, string dt2)
+        {
+            ItemStateModel[] data = new ItemStateModel[0];
+
+            try
+            {
+                int pWrId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    var wrModel = bObj.GetProductWarehouse();
+                    if (wrModel != null && wrModel.Id > 0)
+                        pWrId = wrModel.Id;
+                }
+
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetMachineStatesOnlyEntries(new int[] { pWrId }, new Business.Models.Filters.BasicRangeFilter
+                    {
+                        StartDate = dt1,
+                        EndDate = dt2,
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpPost]
+        public JsonResult GetConsumedRecipeData(ItemStateModel[] model)
+        {
+            ItemStateModel[] result = new ItemStateModel[0];
+
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                result = bObj.GetConsumedRecipeData(model);
+            }
+
+            return Json(result);
         }
         #endregion
     }

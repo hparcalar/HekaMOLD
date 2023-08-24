@@ -46,6 +46,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public bool IsInPosture { get; set; }
         public string ActivePostureText { get; set; }
         public string ActiveIncidentText { get; set; }
+        public string MachineTypeName { get; set; }
 
         #endregion
     }

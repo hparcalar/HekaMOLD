@@ -15,7 +15,12 @@
                             <h1 class="d-flex align-items-center text-dark fw-bolder mt-3 fs-3">
                                 @ViewBag.Title
                             </h1>
-                            <label class="mt-2"><b>Seçilen <u>Koli:</u> {{ selectedProducts.length }} / <u>Adet:</u> {{ getListSum(selectedProducts, 'FirstQuantity') }}</b></label>
+                            <label class="mt-2"><b>Seçilen <u>Koli:</u> <span ng-bind="selectedProducts.length"></span> / <u>Adet:</u> <span ng-bind="getListSum(selectedProducts, 'FirstQuantity')"></span></b></label>
+                            <div ng-if="lastReadProduct.Id > 0" class="bg-light-primary border-1 rounded-1 p-1">
+                                <p class="my-1 p-0" ng-bind="'Vardiya: '+lastReadProduct.ShiftCode +', Barkod: ' + lastReadProduct.SerialNo"></p>
+                                <p class="my-1 p-0" ng-bind="'Tarih: ' + lastReadProduct.CreatedDateStr"></p>
+                                <p class="my-1 p-0" ng-bind="'Ürün: ' + lastReadProduct.ItemName.substring(0, 25)"></p>
+                            </div>
                             <!--end::Title-->
                         </div>
                         <div class="col-sm-4 col-xxl-4 col-xs-4">
@@ -47,21 +52,31 @@
                                     </a>
                                 </div>
                             </div>
+                            <div>
+                                
+                                <!--begin::Input group-->
+                                <div class="mb-5">
+                                    <input type="text" class="form-control bg-light-warning"
+                                           ng-model="barcodeBox"
+                                           ng-keyup="onBarcodeKeyUp($event)"
+                                           placeholder="Barkod" />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-4 col-xxl-4 col-xs-4">
                             <label class="mt-0 text-center w-100 bg-light-dark rounded-1"><b>Durum Filtreleri</b></label>
                             <div class="d-flex flex-row h-75">
                                 @*<button type="button"
-                                        ng-class="{'btn-dark': isQualityFilterSelected(1)}"
-                                        ng-click="toggleQualityFilter(1)"
-                                        class="btn btn-sm btn-success btn-block h-75 flex-fill mt-2 mx-1">
-                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                        <g id="Stockholm-icons-/-Text-/-Filter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                                            <path d="M5,4 L19,4 C19.2761424,4 19.5,4.22385763 19.5,4.5 C19.5,4.60818511 19.4649111,4.71345191 19.4,4.8 L14,12 L14,20.190983 C14,20.4671254 13.7761424,20.690983 13.5,20.690983 C13.4223775,20.690983 13.3458209,20.6729105 13.2763932,20.6381966 L10,19 L10,12 L4.6,4.8 C4.43431458,4.5790861 4.4790861,4.26568542 4.7,4.1 C4.78654809,4.03508894 4.89181489,4 5,4 Z" id="Path-33" fill="#000000"></path>
-                                        </g>
-                                    </svg>Ok
-                                </button>*@
+                ng-class="{'btn-dark': isQualityFilterSelected(1)}"
+                ng-click="toggleQualityFilter(1)"
+                class="btn btn-sm btn-success btn-block h-75 flex-fill mt-2 mx-1">
+            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g id="Stockholm-icons-/-Text-/-Filter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                    <path d="M5,4 L19,4 C19.2761424,4 19.5,4.22385763 19.5,4.5 C19.5,4.60818511 19.4649111,4.71345191 19.4,4.8 L14,12 L14,20.190983 C14,20.4671254 13.7761424,20.690983 13.5,20.690983 C13.4223775,20.690983 13.3458209,20.6729105 13.2763932,20.6381966 L10,19 L10,12 L4.6,4.8 C4.43431458,4.5790861 4.4790861,4.26568542 4.7,4.1 C4.78654809,4.03508894 4.89181489,4 5,4 Z" id="Path-33" fill="#000000"></path>
+                </g>
+            </svg>Ok
+        </button>*@
                                 <button type="button"
                                         ng-class="{'btn-dark': isQualityFilterSelected(2)}"
                                         ng-click="toggleQualityFilter(2)"
@@ -92,7 +107,7 @@
 
                 <div class="col-sm-4 col-xs-4 col-xxl-4">
                     <div class="row">
-                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                        <div class="col-sm-3 col-xs-3 col-xxl-3">
                             <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-success" ng-click="approveProduct()">
                                 <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                                     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -106,7 +121,22 @@
                                 <span style="display:block;margin-top:5px;margin-bottom:10px;">OK</span>
                             </a>
                         </div>
-                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                        <div class="col-sm-3 col-xs-3 col-xxl-3">
+                            <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-danger" ng-click="deleteEntries()">
+                                <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Stockholm-icons-/-Home-/-Trash" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                            <path d="M6,8 L18,8 L17.106535,19.6150447 C17.04642,20.3965405 16.3947578,21 15.6109533,21 L8.38904671,21 C7.60524225,21 6.95358004,20.3965405 6.89346498,19.6150447 L6,8 Z M8,10 L8.45438229,14.0894406 L15.5517885,14.0339036 L16,10 L8,10 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+                                            <path d="M14,4.5 L14,3.5 C14,3.22385763 13.7761424,3 13.5,3 L10.5,3 C10.2238576,3 10,3.22385763 10,3.5 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" id="Shape" fill="#000000" opacity="0.3"></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <br />
+                                <span style="display:block;margin-top:0px;">Sil</span>
+                            </a>
+                        </div>
+                        <div class="col-sm-3 col-xs-3 col-xxl-3">
                             <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-danger" ng-click="denyProduct()">
                                 <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +148,7 @@
                                 <span style="display: block; margin-top: 5px; margin-bottom: 10px;">NOK</span>
                             </a>
                         </div>
-                        <div class="col-sm-4 col-xs-4 col-xxl-4">
+                        <div class="col-sm-3 col-xs-3 col-xxl-3">
                             <a class="btn btn-sm btn-block w-100 h-75 mt-2 btn-warning" ng-click="waitProduct()">
                                 <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1" style="margin:0 auto;">
                                     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -133,7 +163,7 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                    </div>
             </div>
 
             <!--begin::DETAIL TABLE-->
@@ -143,11 +173,11 @@
                     <h5 class="hk-title-mobile">Koli Listesi</h5>
                     <div class="d-flex flex-row justify-content-end">
                         <button type="button" class="btn btn-primary mx-1" ng-cloak
-                                ng-click="selectAll(item)">
-                            {{ selectedProducts.length == filteredPickupList.length && selectedProducts.length > 0 ? 'Seçimi Kaldır' : 'Tümünü Seç' }}
+                                ng-click="selectAll(item)" 
+                                ng-bind="selectedProducts.length == filteredPickupList.length && selectedProducts.length > 0 ? 'Seçimi Kaldır' : 'Tümünü Seç'">
                         </button>
                     </div>
-                    <table class="table table-bordered table-hk-md">
+                    <table class="table table-bordered table-hk-md-lh">
                         <thead>
                             <tr>
                                 <th class="w-10 px-2">Tarih</th>
@@ -164,18 +194,18 @@
                         </thead>
                     </table>
                     <div class="table-scroller-md">
-                        <table ng-cloak class="table table-bordered table-hk-md">
+                        <table ng-cloak class="table table-bordered table-hk-md-lg">
                             <tbody>
                                 <tr ng-repeat="item in filteredPickupList"
                                     ng-show="modelObject.ShowOnlyWaitings == false || modelObject.ShowOnlyWaitings == true && (item.QualityStatus == 0 || item.QualityStatus == 3)"
                                     ng-class="{'bg-warning': isSelectedProduct(item)}">
-                                    <td class="w-10 px-2">{{item.CreatedDateStr}}</td>
-                                    <td class="w-10 px-2">{{item.MachineCode}}</td>
+                                    <td class="w-10 px-2" ng-bind="item.ShiftBelongsToDateStr"></td>
+                                    <td class="w-10 px-2" ng-bind="item.MachineCode"></td>
                                     @*<td class="w-10 px-2">{{item.SerialNo}}</td>*@
                                     @*<td class="w-10 px-2">{{item.ItemNo}}</td>*@
-                                    <td class="w-25 px-2">{{item.ItemName}}</td>
-                                    <td class="w-15 px-2">{{item.FirmName}}</td>
-                                    <td class="w-10 px-1">{{item.ShiftCode}}</td>
+                                    <td class="w-25 px-2" ng-bind="item.ItemName"></td>
+                                    <td class="w-15 px-2" ng-bind="item.FirmName"></td>
+                                    <td class="w-10 px-1" ng-bind="item.ShiftCode"></td>
                                     <td class="w-15 px-2"
                                         ng-class="{
                                         'bg-success': item.QualityStatus == 1,
@@ -187,20 +217,23 @@
                                            ng-click="showQualityText(item)"></a>
                                     </td>
                                     <td class="w-15 px-2">
-                                        <input type="number"
+                                        <button type="button" ng-click="changePackageQuantity(item)"
+                                                class="btn btn-sm btn-primary w-100 fw-bolder text-center" ng-bind="item.FirstQuantity">
+                                        </button>
+                                        @*<input type="number"
                                                class="form-control form-control-sm"
-                                               ng-model="item.FirstQuantity" />
+                                               ng-model="item.FirstQuantity" />*@
                                     </td>
                                     <td class="w-15 px-2">
                                         <div class="d-flex flex-row">
                                             <button type="button" ng-click="selectProduct(item)"
-                                                    class="btn btn-sm btn-primary flex-grow-1">
-                                                {{ isSelectedProduct(item) ? 'Kaldır' : 'Seç' }}
+                                                    class="btn btn-sm btn-primary flex-grow-1"
+                                                    ng-bind="isSelectedProduct(item) ? 'Kaldır' : 'Seç'">
                                             </button>
 
                                             <button type="button" ng-click="selectParty(item)"
-                                                    class="btn btn-sm btn-primary flex-grow-1 mx-2">
-                                                {{ isSelectedProduct(item) ? 'Partiyi Kaldır' : 'Partiyi Seç' }}
+                                                    class="btn btn-sm btn-primary flex-grow-1 mx-2"
+                                                    ng-bind="isSelectedProduct(item) ? 'Partiyi Kaldır' : 'Partiyi Seç'">
                                             </button>
                                         </div>
                                     </td>
@@ -212,8 +245,8 @@
                         <tfoot>
                             <tr class="bg-primary text-white">
                                 <th class="w-50 px-2 py-1"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ filteredPickupList.length }} KOLİ</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredPickupList, 'FirstQuantity') }} ADET</b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="filteredPickupList.length + ' KOLİ'"></b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getListSum(filteredPickupList, 'FirstQuantity') + ' ADET'"></b></th>
                                 <th class="w-10 px-2 py-1"></th>
                             </tr>
                         </tfoot>
@@ -227,8 +260,7 @@
                         <button type="button" class="btn btn-primary flex-grow-1 mx-1"
                                 ng-class="{'btn-dark': selectedShift.Id == item.Id}"
                                 ng-click="selectShift(item)"
-                                ng-repeat="item in shiftList">
-                            {{ item.ShiftCode }}
+                                ng-repeat="item in shiftList" ng-bind="item.ShiftCode">
                         </button>
                     </div>
                     <table class="table table-bordered table-hk-md">
@@ -247,13 +279,13 @@
                             <tbody>
                                 <tr ng-repeat="item in filteredSummaryList"
                                     ng-class="{'bg-warning': selectedSummary.ItemName == item.ItemName}">
-                                    <td class="w-50 px-2">{{item.ItemName}}</td>
-                                    <td class="w-20 px-1">{{ item.ShiftCode }}</td>
-                                    <td class="w-25 px-2">{{item.SerialCount}}</td>
-                                    <td class="w-25 px-2">{{item.SerialSum}}</td>
+                                    <td class="w-50 px-2" ng-bind="item.ItemName"></td>
+                                    <td class="w-20 px-1" ng-bind="item.ShiftCode"></td>
+                                    <td class="w-25 px-2" ng-bind="item.SerialCount"></td>
+                                    <td class="w-25 px-2" ng-bind="item.SerialSum"></td>
                                     <td class="w-10 px-2">
-                                        <button type="button" class="btn btn-sm btn-primary" ng-click="selectSummary(item)">
-                                            {{ selectedSummary.ItemName == item.ItemName ? 'Kaldır' : 'Seç' }}
+                                        <button type="button" class="btn btn-sm btn-primary" ng-click="selectSummary(item)"
+                                                ng-bind="selectedSummary.ItemName == item.ItemName ? 'Kaldır' : 'Seç'">
                                         </button>
                                     </td>
                                 </tr>
@@ -263,15 +295,15 @@
                     <table class="table table-bordered">
                         <tfoot>
                             <tr class="bg-primary text-white" ng-repeat="item in shiftList">
-                                <th class="w-50 px-2 py-1"><b>{{ item.ShiftCode }} Vardiyası</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialCount') }} KOLİ</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getShiftSum(item.ShiftCode, 'SerialSum') }} ADET</b></th>
+                                <th class="w-50 px-2 py-1"><b ng-bind="item.ShiftCode + ' Vardiyası'"></b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getShiftSum(item.ShiftCode, 'SerialCount') + ' KOLİ'"></b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getShiftSum(item.ShiftCode, 'SerialSum') + ' ADET'"></b></th>
                                 <th class="w-10 px-2 py-1"></th>
                             </tr>
                             <tr class="bg-primary text-white">
                                 <th class="w-50 px-2 py-1"><b>TOPLAM: </b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialCount') }} KOLİ</b></th>
-                                <th class="w-25 px-2 py-1"><b>{{ getListSum(filteredSummaryList, 'SerialSum') }} ADET</b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getListSum(filteredSummaryList, 'SerialCount') + ' KOLİ'"></b></th>
+                                <th class="w-25 px-2 py-1"><b ng-bind="getListSum(filteredSummaryList, 'SerialSum') + ' ADET'"></b></th>
                                 <th class="w-10 px-2 py-1"></th>
                             </tr>
                         </tfoot>
@@ -290,5 +322,5 @@
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/Scripts/html5-qrcode.min.js"></script>
-    <script src="~/FrontEndLogic/ProductQuality/serial-approval.js"></script>
+    <script src="~/FrontEndLogic/ProductQuality/serial-approval.js?v=7"></script>
 }

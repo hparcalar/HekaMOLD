@@ -3,14 +3,17 @@ using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
+using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Dictionaries;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace HekaMOLD.Enterprise.Controllers
@@ -96,7 +99,28 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetReceiptList(int receiptCategory, int receiptType)
+        public JsonResult SearchPurchaseReceipt(string receiptNo)
+        {
+            ItemReceiptModel data = new ItemReceiptModel();
+            try
+            {
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    data = bObj.SearchPurchaseReceipt(receiptNo);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResp = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResp.MaxJsonLength = int.MaxValue;
+            return jsonResp;
+        }
+
+        [HttpGet]
+        public JsonResult GetReceiptList(int receiptCategory, int receiptType, string dt1, string dt2)
         {
             ItemReceiptModel[] result = new ItemReceiptModel[0];
 
@@ -106,7 +130,9 @@ namespace HekaMOLD.Enterprise.Controllers
 
                 result = bObj.GetItemReceiptList(
                         (ReceiptCategoryType)receiptCategory,
-                        (ItemReceiptType?)rType
+                        (ItemReceiptType?)rType,
+                        dt1,
+                        dt2
                     );
             }
 
@@ -115,6 +141,37 @@ namespace HekaMOLD.Enterprise.Controllers
             return jsonResult;
         }
 
+        #region OFF THE RECORD FUNCTIONS
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetOTRList(int listType)
+        {
+            ItemReceiptDetailModel[] data = new ItemReceiptDetailModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                switch (listType)
+                {
+                    case 1:
+                        data = bObj.GetWaitingForSyncSalesList();
+                        break;
+                    case 2:
+                        data = bObj.GetReadyToSyncSalesList();
+                        break;
+                    case 3:
+                        data = bObj.GetOffTheRecordList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+        #endregion
+
         [HttpGet]
         public JsonResult BindModel(int rid)
         {
@@ -122,9 +179,84 @@ namespace HekaMOLD.Enterprise.Controllers
             using (ReceiptBO bObj = new ReceiptBO())
             {
                 model = bObj.GetItemReceipt(rid);
+                if (model != null)
+                {
+                    Dictionary<int, string> receiptTypes =
+                        DictItemReceiptType.GetReceiptTypes(ReceiptCategoryType.ItemManagement);
+                    if (receiptTypes.ContainsKey(model.ReceiptType ?? 0))
+                    {
+                        model.ReceiptCategory = (int)ReceiptCategoryType.ItemManagement;
+                    }
+                    else
+                    {
+                        receiptTypes =
+                            DictItemReceiptType.GetReceiptTypes(ReceiptCategoryType.Purchasing);
+                        if (receiptTypes.ContainsKey(model.ReceiptType ?? 0))
+                        {
+                            model.ReceiptCategory = (int)ReceiptCategoryType.Purchasing;
+                        }
+                        else
+                        {
+                            receiptTypes =
+                                DictItemReceiptType.GetReceiptTypes(ReceiptCategoryType.Sales);
+                            if (receiptTypes.ContainsKey(model.ReceiptType ?? 0))
+                            {
+                                model.ReceiptCategory = (int)ReceiptCategoryType.Sales;
+                            }
+                        }
+                    }
+                }
             }
 
             return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetSerialsOfDetail(int rid)
+        {
+            ItemSerialModel[] model = new ItemSerialModel[0];
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                model = bObj.GetSerialsOfDetail(rid);
+            }
+
+            var jsonResponse = Json(model, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpPost]
+        public JsonResult SaveItemEntry(int itemReceiptDetailId, int inPackageQuantity, bool printLabel, int printerId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+            string serialTypeConfig = WebConfigurationManager.AppSettings["WorkOrderSerialType"];
+
+            WorkOrderSerialType serialType = WorkOrderSerialType.SingleProduct;
+            if (serialTypeConfig == "ProductPackage")
+                serialType = WorkOrderSerialType.ProductPackage;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.AddItemEntry(itemReceiptDetailId, userId, serialType, inPackageQuantity);
+            }
+
+            if (printLabel == true)
+            {
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    var pqResult = bObj.AddToPrintQueue(new PrinterQueueModel
+                    {
+                        PrinterId = printerId,
+                        RecordType = (int)RecordType.ItemSerial,
+                        RecordId = result.RecordId,
+                        CreatedDate = DateTime.Now,
+                    });
+                }
+            }
+
+            return Json(result);
         }
 
         [HttpPost]
@@ -147,6 +279,28 @@ namespace HekaMOLD.Enterprise.Controllers
             {
                 return Json(new { Status = 0, ErrorMessage = ex.Message });
             }
+        }
+
+        [HttpPost]
+        public JsonResult PrintMaterialLabel(int receiptDetailId)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                var printerId = bObj.GetParameter("DefaultProductPrinter", Convert.ToInt32(Request.Cookies["PlantId"].Value));
+
+                result = bObj.AddToPrintQueue(new PrinterQueueModel
+                {
+                    PrinterId = Convert.ToInt32(printerId),
+                    RecordType = (int)RecordType.ItemReceiptDetail,
+                    RecordId = receiptDetailId,
+                    CreatedDate = DateTime.Now,
+                    
+                });
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
 
         [HttpPost]
@@ -173,6 +327,19 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
 
+        }
+
+        [HttpPost]
+        public JsonResult CreateConsumption(int productionReceiptId)
+        {
+            BusinessResult result = null;
+
+            using (RecipeBO bObj = new RecipeBO())
+            {
+                result = bObj.CreateRecipeConsumption(productionReceiptId);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
 
         [HttpPost]
@@ -218,6 +385,70 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(result);
+        }
+        #endregion
+
+        #region REPORTS
+        public ActionResult SalesReport()
+        {
+            return View();
+        }
+
+        public ActionResult ProdConsReport()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetSalesReport(string dt1, string dt2)
+        {
+            SalesReportModel[] data = new SalesReportModel[0];
+
+            try
+            {
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetSalesReport(new Business.Models.Filters.BasicRangeFilter
+                    {
+                        StartDate = dt1,
+                        EndDate = dt2,
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
+        }
+
+        [HttpGet]
+        public JsonResult GetProdConsReport(string dt1, string dt2)
+        {
+            SalesReportModel[] data = new SalesReportModel[0];
+
+            try
+            {
+                using (ReportingBO bObj = new ReportingBO())
+                {
+                    data = bObj.GetProdConsReport(new Business.Models.Filters.BasicRangeFilter
+                    {
+                        StartDate = dt1,
+                        EndDate = dt2,
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var jsonResponse = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResponse.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
         }
         #endregion
     }

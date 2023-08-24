@@ -64,13 +64,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetItemRequestList()
+        public JsonResult GetItemRequestList(string dt1, string dt2)
         {
             ItemRequestModel[] result = new ItemRequestModel[0];
 
             using (RequestBO bObj = new RequestBO())
             {
-                result = bObj.GetItemRequestList();
+                result = bObj.GetItemRequestList(dt1, dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

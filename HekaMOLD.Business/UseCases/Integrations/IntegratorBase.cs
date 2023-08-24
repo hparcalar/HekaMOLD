@@ -1,4 +1,5 @@
 ﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Receipt;
 using HekaMOLD.Business.Models.Operational;
@@ -10,16 +11,21 @@ using System.Threading.Tasks;
 
 namespace HekaMOLD.Business.UseCases.Integrations
 {
-    interface IntegratorBase
+    public interface IntegratorBase
     {
         event EventHandler OnTransferError;
         BusinessResult PullItems(SyncPointModel syncPoint);
         BusinessResult PullFirms(SyncPointModel syncPoint);
         BusinessResult PullRecipes(SyncPointModel syncPoint);
         BusinessResult PullUnits(SyncPointModel syncPoint);
+        BusinessResult PullProductDeliveries(SyncPointModel syncPoint);
+
+        BusinessResult CheckClosedSaleOrders(SyncPointModel syncPoint);
         BusinessResult PushPurchasingWaybills(SyncPointModel syncPoint, ItemReceiptModel[] receipts);
         BusinessResult PullSaleOrders(SyncPointModel syncPoint);
         BusinessResult PushFinishedProducts(SyncPointModel syncPoint, WorkOrderModel[] workOrders);
         BusinessResult PushDeliveryReceipts(SyncPointModel syncPoint, ItemReceiptModel[] receipts);
+        BusinessResult PushSaleOrders(SyncPointModel syncPoint);
+        BusinessResult PullEntryReceipts(SyncPointModel syncPoint);
     }
 }

@@ -15,6 +15,7 @@ using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Maintenance;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Enterprise.Controllers.Attributes;
+using HekaMOLD.Business.Models.Virtual;
 
 namespace HekaMOLD.Enterprise.Controllers
 {
@@ -143,6 +144,12 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(model.DocumentNo))
+                    throw new Exception("Belge numarası boş bırakılamaz.");
+
+                if ((model.FirmId ?? 0) <= 0)
+                    throw new Exception("Firma seçmelisiniz.");
+
                 BusinessResult result = null;
                 using (ReceiptBO bObj = new ReceiptBO())
                 {
@@ -183,6 +190,11 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         public ActionResult ManageShifts()
+        {
+            return View();
+        }
+
+        public ActionResult ProductPlanList()
         {
             return View();
         }
@@ -530,6 +542,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult SearchBarcodeForApproveSerial(string barcode)
+        {
+            WorkOrderSerialModel result = new WorkOrderSerialModel();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.SearchBarcodeForApproveSerial(barcode);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult GetApprovedSerials()
         {
             WorkOrderSerialModel[] result = new WorkOrderSerialModel[0];
@@ -546,6 +573,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 Serials = result,
                 Summaries = resultSum,
             }, JsonRequestBehavior.AllowGet);
+
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -566,6 +594,21 @@ namespace HekaMOLD.Enterprise.Controllers
                 Serials = result,
                 Summaries = resultSum,
             }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult SearchBarcodeForPickup(string barcode)
+        {
+            WorkOrderSerialModel result = new WorkOrderSerialModel();
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.SearchBarcodeForPickup(barcode);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -600,7 +643,20 @@ namespace HekaMOLD.Enterprise.Controllers
                 }
 
                 if (result.Result)
+                {
+                    //using (ProductionBO bObj = new ProductionBO())
+                    //{
+                    //    bObj.CreateNotification(new NotificationModel
+                    //    {
+                    //        UserId = null,
+                    //        NotifyType = (int)NotifyType.ProductPickupComplete,
+                    //        CreatedDate = DateTime.Now,
+                    //        IsProcessed = false,
+                    //        Message = string.Format("{0:HH:mm}", DateTime.Now) + ": Ürün teslim alma işlemi yapıldı.",
+                    //    });
+                    //}
                     return Json(new { Status = 1, RecordId = result.RecordId });
+                }
                 else
                     throw new Exception(result.ErrorMessage);
             }
@@ -611,15 +667,31 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        [FreeAction]
+        public JsonResult UpdateWorkOrderSerial(int serialId, decimal newQuantity)
+        {
+            BusinessResult result = null;
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.UpdateSerialQuantity(serialId, newQuantity);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
         public JsonResult DeleteSerials(WorkOrderSerialModel[] model)
         {
             BusinessResult result = null;
 
             try
             {
+                int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
                 using (ProductionBO bObj = new ProductionBO())
                 {
-                    result = bObj.DeleteSerials(model);
+                    result = bObj.DeleteSerials(model, userId);
                 }
             }
             catch (Exception)
@@ -630,6 +702,66 @@ namespace HekaMOLD.Enterprise.Controllers
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage=result.ErrorMessage });
         }
 
+        #endregion
+
+        #region COUNTING SERIALS
+        public ActionResult CountingForm()
+        {
+            return View();
+        }
+        [HttpPost]
+        public JsonResult AddCountingBarcode(string barcode, int warehouseId, int readCount=1, int decreaseCount=0)
+        {
+            BusinessResult result = null;
+
+            for (int i = 0; i < readCount; i++)
+            {
+                using (ReceiptBO bObj = new ReceiptBO())
+                {
+                    result = bObj.AddBarcodeToCounting(
+                        barcode, 
+                        warehouseId,
+                        i == (readCount - 1) ? decreaseCount : 0
+                        );
+                }
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteCountingBarcode(int serialId)
+        {
+            BusinessResult result = null;
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.RemoveBarcodeFromCounting(serialId);
+            }
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public JsonResult GetActiveCountingData(int warehouseId)
+        {
+            CountingReceiptDetailModel[] details = new CountingReceiptDetailModel[0];
+            CountingReceiptSerialModel[] serials = new CountingReceiptSerialModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                details = bObj.GetActiveCountingDetails(warehouseId);
+                serials = bObj.GetActiveCountingSerials(warehouseId);
+            }
+
+            var jsonResult = Json(new
+            {
+                Details = details,
+                Serials = serials,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
         #endregion
 
         #region PRODUCT WASTAGE
@@ -703,6 +835,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetItemSerialByBarcode(string barcode)
+        {
+            ItemSerialModel result = new ItemSerialModel();
+
+            using (ReportingBO bObj = new ReportingBO())
+            {
+                result = bObj.GetSerialByBarcode(barcode);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult GetProductDeliveryHistory()
         {
             ItemReceiptModel[] result = new ItemReceiptModel[0];
@@ -720,22 +867,32 @@ namespace HekaMOLD.Enterprise.Controllers
         [HttpPost]
         public JsonResult SaveProductDelivery(ItemReceiptModel receiptModel, 
             ItemSerialModel[] model, 
-            int[] orderDetails = null)
+            int[] orderDetails = null, DeliveryPlanModel[] deliveryPlans = null, PalletCountInfo[] palletCounts = null)
         {
             try
             {
                 BusinessResult result = null;
 
+                int wrId = 0;
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    wrId = bObj.GetWarehouseList()
+                        .Where(d => d.WarehouseType == (int)WarehouseType.ProductWarehouse)
+                        .Select(d => d.Id)
+                        .FirstOrDefault();
+                }
+
                 receiptModel.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
                 if (receiptModel.Id == 0)
                 {
                     receiptModel.CreatedDate = DateTime.Now;
+                    receiptModel.InWarehouseId = wrId;
                     receiptModel.CreatedUserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
                 }
 
                 using (ProductionBO bObj = new ProductionBO())
                 {
-                    result = bObj.CreateSerialDelivery(receiptModel, model, orderDetails);
+                    result = bObj.CreateSerialDelivery(receiptModel, model, orderDetails, deliveryPlans, palletCounts);
                 }
 
                 if (result.Result)
@@ -788,6 +945,7 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        #region EQUIPMENT CATEGORY
         [HttpPost]
         [FreeAction]
         public JsonResult SaveEquipmentCategory(string name)
@@ -810,9 +968,218 @@ namespace HekaMOLD.Enterprise.Controllers
 
             return Json(new { Status=result.Result ? 1 : 0, RecordId=result.RecordId, ErrorMessage=result.ErrorMessage });
         }
+
+        [HttpPost]
+        public JsonResult DeleteEquipmentCategory(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.DeleteEquipmentCategory(rid);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateEquipmentCategory(EquipmentCategoryModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.SaveOrUpdateEquipmentCategory(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public JsonResult GetEquipmentCategory(int rid)
+        {
+            EquipmentCategoryModel data = new EquipmentCategoryModel();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetEquipmentCategory(rid);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
+
+        #region EQUIPMENTS
+        [HttpPost]
+        public JsonResult UpdateEquipment(EquipmentModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.SaveOrUpdateEquipment(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteEquipment(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.DeleteEquipment(rid);
+            }
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public JsonResult GetEquipment(int rid)
+        {
+            EquipmentModel data = new EquipmentModel();
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetEquipment(rid);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetEquipmentHeader(int machineId, int equipmentCategoryId)
+        {
+            string machineName = "", equipmentCategoryName = "";
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                var dbMac = bObj.GetMachine(machineId);
+                var dbEqCat = bObj.GetEquipmentCategory(equipmentCategoryId);
+
+                if (dbMac != null && dbMac.Id > 0)
+                    machineName = dbMac.MachineName;
+                if (dbEqCat != null && dbEqCat.Id > 0)
+                    equipmentCategoryName = dbEqCat.EquipmentCategoryName;
+            }
+
+            var jsonResult = Json(new { 
+                MachineName = machineName,
+                EquipmentCategoryName = equipmentCategoryName,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetAllEquipments()
+        {
+            EquipmentModel[] data = new EquipmentModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetEquipmentList();
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
+
+        #endregion
+
+        #region ITEM DELIVERY TO PRODUCTION
+        public ActionResult ItemDelivery()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult SaveItemDelivery(int itemReceiptDetailId, decimal quantity)
+        {
+            try
+            {
+                BusinessResult result = null;
+
+                int defaultMachineId = 0;
+
+                using (DefinitionsBO bObj = new DefinitionsBO())
+                {
+                    defaultMachineId = bObj.GetMachineList()[0].Id;
+                }
+
+                using (PlanningBO bObj = new PlanningBO())
+                {
+                    result = bObj.CreateItemDeliveryToProduction(itemReceiptDetailId, defaultMachineId, quantity);
+                }
+
+                if (result.Result)
+                    return Json(new { Status = 1, RecordId = result.RecordId });
+                else
+                    throw new Exception(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = 0, ErrorMessage = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetItemsForDelivery()
+        {
+            ItemReceiptDetailModel[] result = new ItemReceiptDetailModel[0];
+
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                result = bObj.GetOpenItemEntries();
+            }
+
+            var jsonResult = Json(new
+            {
+                Serials = result,
+            }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+        #endregion
+
+        #region ITEM LABELS
+        public ActionResult PrintItemLabel()
+        {
+            return View();
+        }
         #endregion
 
         public ActionResult SettingsMobile()
+        {
+            return View();
+        }
+    
+        public ActionResult WarehouseManagement()
+        {
+            return View();
+        }
+
+        public ActionResult ProductQualityApprovement()
+        {
+            return View();
+        }
+        public ActionResult ProductionInformation()
+        {
+            return View();
+        }
+        public ActionResult WarehouseStates()
+        {
+            return View();
+        }
+        public ActionResult FinishedProductReport()
         {
             return View();
         }

@@ -25,13 +25,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetProductionNeeds()
+        public JsonResult GetProductionNeeds(string dt1, string dt2)
         {
             ItemOrderItemNeedsModel[] result = new ItemOrderItemNeedsModel[0];
 
             using (ProductionBO bObj = new ProductionBO())
             {
-                result = bObj.GetWorkOrderItemNeeds(new Business.Models.Filters.BasicRangeFilter());
+                result = bObj.GetWorkOrderItemNeeds(dt1,dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

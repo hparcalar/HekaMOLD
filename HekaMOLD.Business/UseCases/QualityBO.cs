@@ -12,6 +12,7 @@ using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.Filters;
+using System.Drawing.Drawing2D;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -36,7 +37,8 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.Details = d.EntryQualityPlanDetail.Select(m => new EntryQualityPlanDetailModel
                 {
                     Id = m.Id,
-                    CheckProperty = m.CheckProperty
+                    CheckProperty = m.CheckProperty,
+                    CheckType = m.CheckType,
                 }).ToArray();
 
                 string checkList = "";
@@ -70,7 +72,8 @@ namespace HekaMOLD.Business.UseCases
                 containerObj.Details = d.EntryQualityPlanDetail.Select(m => new EntryQualityPlanDetailModel
                 {
                     Id = m.Id,
-                    CheckProperty = m.CheckProperty
+                    CheckProperty = m.CheckProperty,
+                    CheckType = m.CheckType,
                 }).ToArray();
 
                 string checkList = "";
@@ -249,14 +252,26 @@ namespace HekaMOLD.Business.UseCases
         // END -- ENTRY QUALITY PLANS
 
         // ENTRY QUALITY DATA FORM WORKS
-        public EntryQualityDataModel[] GetEntryFormList()
+        public EntryQualityDataModel[] GetEntryFormList(string dt1 = "", string dt2 = "")
         {
             EntryQualityDataModel[] data = new EntryQualityDataModel[0];
 
             try
             {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(dt1))
+                    dt1 = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt2))
+                    dt2 = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                 var repo = _unitOfWork.GetRepository<EntryQualityData>();
-                data = repo.GetAll().ToList().Select(d => new EntryQualityDataModel
+                data = repo.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd).ToList().Select(d => new EntryQualityDataModel
                 {
                     Id = d.Id,
                     CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
@@ -464,6 +479,7 @@ namespace HekaMOLD.Business.UseCases
                         PeriodType = m.PeriodType,
                         ProductQualityCode = m.ProductQualityCode,
                         Responsible = m.Responsible,
+                        Display = m.Display,
                     }).ToArray();
             }
             catch (Exception)
@@ -550,14 +566,26 @@ namespace HekaMOLD.Business.UseCases
         }
 
         // PRODUCT QUALITY FORM WORKS
-        public ProductQualityDataModel[] GetProductFormList()
+        public ProductQualityDataModel[] GetProductFormList(string dt1 = "", string dt2 = "")
         {
             ProductQualityDataModel[] data = new ProductQualityDataModel[0];
 
             try
             {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(dt1))
+                    dt1 = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt2))
+                    dt2 = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                 var repo = _unitOfWork.GetRepository<ProductQualityData>();
-                data = repo.GetAll().ToList().Select(d => new ProductQualityDataModel
+                data = repo.Filter(d => d.ControlDate >= dtStart && d.ControlDate <= dtEnd).ToList().Select(d => new ProductQualityDataModel
                 {
                     Id = d.Id,
                     ControlDate = d.ControlDate,
@@ -602,6 +630,8 @@ namespace HekaMOLD.Business.UseCases
                 {
                     ProductQualityDataDetailModel detailModel = new ProductQualityDataDetailModel();
                     d.MapTo(detailModel);
+                    if (d.ProductQualityPlan != null)
+                        detailModel.MoldTestFieldName = d.ProductQualityPlan.MoldTestFieldName;
                     detailList.Add(detailModel);
                 });
                 model.Details = detailList.ToArray();
@@ -753,7 +783,7 @@ namespace HekaMOLD.Business.UseCases
         }
 
         // SERIAL APPROVALS & DENIALS
-        public BusinessResult ApproveSerials(WorkOrderSerialModel[] model, int plantId)
+        public BusinessResult ApproveSerials(WorkOrderSerialModel[] model, int plantId, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
             
@@ -769,7 +799,11 @@ namespace HekaMOLD.Business.UseCases
                     {
                         dbSerial.QualityStatus = (int)QualityStatusType.Ok;
                         dbSerial.SerialStatus = (int)SerialStatusType.Approved;
-                        item.QualityStatus = dbSerial.QualityStatus;
+
+                        dbSerial.QualityUserId = userId;
+                        dbSerial.QualityChangedDate = DateTime.Now;
+
+                        item.QualityStatus = (int)QualityStatusType.Ok;// dbSerial.QualityStatus;
 
                         if (warehouseId == 0 && (dbSerial.TargetWarehouseId) > 0)
                             warehouseId = dbSerial.TargetWarehouseId.Value;
@@ -789,6 +823,15 @@ namespace HekaMOLD.Business.UseCases
                         PlantId = plantId,
                         InWarehouseId = warehouseId,
                     }, model);
+
+                    // CREATE RECIPE CONSUMPTION
+                    if (result.Result)
+                    {
+                        using (RecipeBO rObj = new RecipeBO())
+                        {
+                            rObj.CreateRecipeConsumption(result.RecordId);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -800,7 +843,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult DenySerials(WorkOrderSerialModel[] model)
+        public BusinessResult DenySerials(WorkOrderSerialModel[] model, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -815,6 +858,9 @@ namespace HekaMOLD.Business.UseCases
                         dbSerial.QualityStatus = (int)QualityStatusType.Nok;
                         dbSerial.QualityExplanation = item.QualityExplanation;
                         dbSerial.SerialStatus = (int)SerialStatusType.Created;
+
+                        dbSerial.QualityChangedDate = DateTime.Now;
+                        dbSerial.QualityUserId = userId;
                     }
                 }
 
@@ -830,7 +876,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult WaitSerials(WorkOrderSerialModel[] model)
+        public BusinessResult WaitSerials(WorkOrderSerialModel[] model, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -844,6 +890,9 @@ namespace HekaMOLD.Business.UseCases
                     {
                         dbSerial.QualityStatus = (int)QualityStatusType.QualityWaiting;
                         dbSerial.SerialStatus = (int)SerialStatusType.Created;
+
+                        dbSerial.QualityChangedDate = DateTime.Now;
+                        dbSerial.QualityUserId = userId;
                     }
                 }
 
@@ -915,7 +964,7 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
-        public BusinessResult SendToWastage(WorkOrderSerialModel[] model)
+        public BusinessResult SendToWastage(WorkOrderSerialModel[] model, int? userId=null, string explanation = "")
         {
             BusinessResult result = new BusinessResult();
 
@@ -949,7 +998,9 @@ namespace HekaMOLD.Business.UseCases
                                     MachineId = dbSerial.WorkOrderDetail.MachineId,
                                     ProductId = dbSerial.WorkOrderDetail.ItemId,
                                     WorkOrderDetailId = dbSerial.WorkOrderDetailId,
+                                    CreatedUserId = userId,
                                     Quantity = dbSerial.FirstQuantity,
+                                    Explanation = explanation,
                                     WastageStatus = 0,
                                     ShiftId = currentShift.Id,
                                     ShiftBelongsToDate = currentShift.ShiftBelongsToDate,
@@ -973,7 +1024,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public BusinessResult ConditionalApproveSerials(WorkOrderSerialModel[] model, int plantId)
+        public BusinessResult ConditionalApproveSerials(WorkOrderSerialModel[] model, int plantId, int? userId = null)
         {
             BusinessResult result = new BusinessResult();
 
@@ -990,6 +1041,10 @@ namespace HekaMOLD.Business.UseCases
                         dbSerial.QualityStatus = (int)QualityStatusType.ConditionalApproved;
                         dbSerial.QualityExplanation = item.QualityExplanation;
                         dbSerial.SerialStatus = (int)SerialStatusType.Approved;
+
+                        dbSerial.QualityChangedDate = DateTime.Now;
+                        dbSerial.QualityUserId = userId;
+
                         item.QualityStatus = dbSerial.QualityStatus;
 
                         if (warehouseId == 0 && (dbSerial.TargetWarehouseId) > 0)
@@ -1021,7 +1076,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public ProductWastageModel[] GetScrapList(BasicRangeFilter filter)
+        public ProductWastageModel[] GetScrapList(BasicRangeFilter filter, string dt1 = "", string dt2 = "")
         {
             ProductWastageModel[] data = new ProductWastageModel[0];
 
@@ -1029,14 +1084,14 @@ namespace HekaMOLD.Business.UseCases
             {
                 DateTime dtStart, dtEnd;
 
-                if (string.IsNullOrEmpty(filter.StartDate))
-                    filter.StartDate = "01.01." + DateTime.Now.Year;
-                if (string.IsNullOrEmpty(filter.EndDate))
-                    filter.EndDate = "31.12." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt1))
+                    dt1 = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt2))
+                    dt2 = "31.12." + DateTime.Now.Year;
 
-                dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
                 var repo = _unitOfWork.GetRepository<ProductWastage>();
@@ -1054,6 +1109,7 @@ namespace HekaMOLD.Business.UseCases
                         CreatedUserId = d.CreatedUserId,
                         MachineId = d.MachineId,
                         WastageStatus = d.WastageStatus,
+                        Explanation = d.Explanation,
                         MachineCode = d.Machine != null ? d.Machine.MachineCode : "",
                         MachineName = d.Machine != null ? d.Machine.MachineName : "",
                         Quantity = d.Quantity,
@@ -1077,18 +1133,31 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
-        public WorkOrderSerialModel[] GetConditionalApprovedSerials()
+        public WorkOrderSerialModel[] GetConditionalApprovedSerials(string dt1 = "", string dt2 = "")
         {
             WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];
 
             try
             {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(dt1))
+                    dt1 = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt2))
+                    dt2 = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                 var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
                 data = repo.Filter(d =>
                     (
                         d.QualityStatus == (int)QualityStatusType.ConditionalApproved
                     )
-                    && d.SerialNo != null && d.SerialNo.Length > 0)
+                    && d.SerialNo != null && d.SerialNo.Length > 0 
+                    && (d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd))
                     .ToList()
                     .Select(d => new WorkOrderSerialModel
                     {

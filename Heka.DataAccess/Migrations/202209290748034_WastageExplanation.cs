@@ -1,0 +1,18 @@
+﻿namespace Heka.DataAccess.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class WastageExplanation : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn("dbo.ProductWastage", "Explanation", c => c.String());
+        }
+        
+        public override void Down()
+        {
+            DropColumn("dbo.ProductWastage", "Explanation");
+        }
+    }
+}

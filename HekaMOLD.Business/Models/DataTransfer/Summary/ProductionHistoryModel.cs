@@ -27,6 +27,6 @@ namespace HekaMOLD.Business.Models.DataTransfer.Summary
         public string ShiftCode { get; set; }
         public string ShiftName { get; set; }
         public int? SerialCount { get; set; }
-
+        public string UserName { get; set; }
     }
 }

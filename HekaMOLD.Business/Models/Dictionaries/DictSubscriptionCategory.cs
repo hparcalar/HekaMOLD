@@ -17,6 +17,7 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { SubscriptionCategory.Incident, "Arıza Bildirimleri" },
             { SubscriptionCategory.Posture, "Duruş Bildirimleri" },
             { SubscriptionCategory.ItemCriticals, "Malzeme Kritik Seviye Bildirimleri" },
+            { SubscriptionCategory.ProductPickup, "Ürün Teslim Alma" },
         };
     }
 }

@@ -8,7 +8,8 @@ namespace HekaMOLD.Business.Models.Constants
 {
     public enum SyncPointType
     {
-        WorkData = 1,
-        Master = 2,
+        MikroWorkData = 1,
+        MikroMaster = 2,
+        WebTicari = 3,
     }
 }

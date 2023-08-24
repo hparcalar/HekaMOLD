@@ -15,13 +15,25 @@ namespace HekaMOLD.Business.UseCases
 {
     public class RequestBO : CoreReceiptsBO
     {
-        public ItemRequestModel[] GetItemRequestList()
+        public ItemRequestModel[] GetItemRequestList(string dt1 = "", string dt2 = "")
         {
             List<ItemRequestModel> data = new List<ItemRequestModel>();
 
+            DateTime dtStart, dtEnd;
+
+            if (string.IsNullOrEmpty(dt1))
+                dt1 = "01.01." + DateTime.Now.Year;
+            if (string.IsNullOrEmpty(dt2))
+                dt2 = "31.12." + DateTime.Now.Year;
+
+            dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+            dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
             var repo = _unitOfWork.GetRepository<ItemRequest>();
 
-            repo.GetAll().ToList().ForEach(d =>
+            repo.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd).ToList().ForEach(d =>
             {
                 ItemRequestModel containerObj = new ItemRequestModel();
                 d.MapTo(containerObj);

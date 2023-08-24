@@ -27,6 +27,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public decimal? OverallTotal { get; set; }
         public int? SyncStatus { get; set; }
         public int? SyncPointId { get; set; }
+        public int? PaymentPlanId { get; set; }
         public DateTime? SyncDate { get; set; }
         public int? SyncUserId { get; set; }
         public string SyncKey { get; set; }
@@ -42,6 +43,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public string DateOfNeedStr { get; set; }
         public string OrderDateStr { get; set; }
         public string CreatedUserName { get; set; }
+        public string PaymentPlanCode { get; set; }
+        public string PaymentPlanName { get; set; }
         #endregion
     }
 }

@@ -25,6 +25,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult EditUsers()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetShiftList()
         {
@@ -33,6 +38,21 @@ namespace HekaMOLD.Enterprise.Controllers
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 result = bObj.GetShiftList();
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetShiftListWithUsers()
+        {
+            ShiftModel[] result = new ShiftModel[0];
+
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                result = bObj.GetShiftListWithUsers();
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

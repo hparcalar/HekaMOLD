@@ -6,6 +6,7 @@ using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.UseCases.Core;
+using HekaMOLD.Business.UseCases.Core.Base;
 using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
@@ -217,6 +218,7 @@ namespace HekaMOLD.Enterprise.Controllers
         #endregion
 
         #region LIST OF SELECTIONS
+        [HttpGet]
         [FreeAction]
         public JsonResult GetMachineList()
         {
@@ -225,6 +227,20 @@ namespace HekaMOLD.Enterprise.Controllers
             using (ProductionBO bObj = new ProductionBO())
             {
                 data = bObj.GetMachineList();
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetPlannableMachineList()
+        {
+            MachineModel[] data = new MachineModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetPlannableMachineList();
             }
 
             return Json(data, JsonRequestBehavior.AllowGet);
@@ -420,6 +436,48 @@ namespace HekaMOLD.Enterprise.Controllers
         }
         #endregion
 
+        #region MACHINE DEVICE SERVICE
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetMachineStatus(int id)
+        {
+            MachineStatusType data = MachineStatusType.Stopped;
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetMachineStatus(id);
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult StartMachineCycle(int id)
+        {
+            BusinessResult result = null;
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.StartMachineCycle(id);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult StopMachineCycle(int id)
+        {
+            BusinessResult result = null;
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                result = bObj.StopMachineCycle(id);
+            }
+
+            return Json(result);
+        }
+        #endregion
+
         #region PRINTING
         [HttpGet]
         [FreeAction]
@@ -453,6 +511,127 @@ namespace HekaMOLD.Enterprise.Controllers
             }
 
             return Json(new { Status = 1 });
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetPrintQueueList(int printerId)
+        {
+            PrinterQueueModel[] data = new PrinterQueueModel[0];
+            using (CoreSystemBO bObj = new CoreSystemBO())
+            {
+                data = bObj.GetPrinterQueue(printerId);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpPost]
+        [FreeAction]
+        public JsonResult SetQueueAsPrinted(int id)
+        {
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                bObj.SetElementAsPrinted(id);
+            }
+
+            return Json(new { Status = 1 });
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetCurrentShift()
+        {
+            ShiftModel data = new ShiftModel();
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetCurrentShift();
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetWorkOrderSerial(int id)
+        {
+            WorkOrderSerialModel data = new WorkOrderSerialModel();
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetWorkOrderSerial(id);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetItemSerial(int id)
+        {
+            WorkOrderSerialModel data = new WorkOrderSerialModel();
+            using (ReceiptBO bObj = new ReceiptBO())
+            {
+                var itemSerial = bObj.GetItemSerial(id);
+                if (itemSerial != null)
+                {
+                    data.CreatedDate = itemSerial.CreatedDate;
+                    data.CreatedDateStr = itemSerial.CreatedDateStr;
+                    data.CreatedUserId = itemSerial.CreatedUserId;
+                    data.FirmCode = itemSerial.FirmCode;
+                    data.FirmName = itemSerial.FirmName;
+                    data.FirstQuantity = itemSerial.FirstQuantity;
+                    data.Id = itemSerial.Id;
+                    data.InPackageQuantity = itemSerial.InPackageQuantity;
+                    data.ItemId = itemSerial.ItemId;
+                    data.ItemNo = itemSerial.ItemNo;
+                    data.ItemName = itemSerial.ItemName;
+                    data.ItemReceiptDetailId = itemSerial.ItemReceiptDetailId;
+                    data.LiveQuantity = itemSerial.LiveQuantity;
+                    data.SerialNo = itemSerial.SerialNo;
+                    data.ShiftCode = "";
+                    data.ShiftName = "";
+                }
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetItem(int id)
+        {
+            ItemModel data = new ItemModel();
+            using (DefinitionsBO bObj = new DefinitionsBO())
+            {
+                data = bObj.GetItem(id);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
+        public JsonResult GetWorkOrderDetail(int id)
+        {
+            WorkOrderDetailModel data = new WorkOrderDetailModel();
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetWorkOrderDetail(id);
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
         [HttpPost]

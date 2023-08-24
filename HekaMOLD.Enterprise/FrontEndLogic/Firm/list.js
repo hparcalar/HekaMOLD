@@ -16,6 +16,12 @@
             showRowLines: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             showBorders: true,
             filterRow: {
                 visible: true

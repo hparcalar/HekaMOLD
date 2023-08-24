@@ -42,6 +42,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         public DateTime? OrderDate { get; set; }
         public string OrderDateStr { get; set; }
         public string OrderExplanation { get; set; }
+        public string OrderStatusStr { get; set; }
+        public string CreatedDateStr { get; set; }
+        public string DateOfNeedStr { get; set; }
+        public string DocumentNo { get; set; }
         #endregion
 
         #region VISUAL ELEMENTS
@@ -55,6 +59,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Order
         #region PLANNING ELEMENTS
         public int? MachineId { get; set; }
         public string DeadlineDateStr { get; set; }
+        public DateTime? DeliveryPlanDate { get; set; }
+        public string DeliveryPlanDateStr { get; set; }
         #endregion
     }
 }

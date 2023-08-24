@@ -20,7 +20,7 @@ namespace HekaMOLD.Business.UseCases
         public AuthenticationResult Authenticate(string userCode, string password)
         {
             AuthenticationResult result = new AuthenticationResult();
-
+            
             try
             {
                 var repo = _unitOfWork.GetRepository<User>();
@@ -48,6 +48,9 @@ namespace HekaMOLD.Business.UseCases
                     && d.IsGranted == true);
                 result.UserData.IsWarehouseTerminal = dbUser.UserRole.UserAuth
                     .Any(d => d.UserAuthType.AuthTypeCode == "MobileWarehouseUser"
+                    && d.IsGranted == true);
+                result.UserData.IsBossMode = dbUser.UserRole.UserAuth
+                    .Any(d => d.UserAuthType.AuthTypeCode == "IsBossMode"
                     && d.IsGranted == true);
                 result.UserData.Auths = dbUser.UserRole.UserAuth
                     .Select(d => new UserAuthModel
@@ -160,10 +163,17 @@ namespace HekaMOLD.Business.UseCases
                 var dbMachine = repoMachine.Get(d => d.Id == machineId);
                 var exActiveMachines = repoMachine.Filter(d => d.Id != machineId && d.WorkingUserId == userId).ToArray();
 
-                var exActives = repo.Filter(d => d.MachineId == machineId && d.EndDate == null).ToArray();
-                foreach (var item in exActives.Where(m => lastActive == null || m.Id != lastActive.Id))
+                try
                 {
-                    item.EndDate = DateTime.Now;
+                    var exActives = repo.Filter(d => d.MachineId == machineId && d.EndDate == null).ToArray();
+                    foreach (var item in exActives.Where(m => lastActive == null || m.Id != lastActive.Id))
+                    {
+                        item.EndDate = DateTime.Now;
+                    }
+                }
+                catch (Exception)
+                {
+
                 }
 
                 foreach (var item in exActiveMachines)
@@ -332,13 +342,40 @@ namespace HekaMOLD.Business.UseCases
 
             var repo = _unitOfWork.GetRepository<User>();
 
-            repo.GetAll().ToList().ForEach(d =>
+            repo.Filter(d => d.Password != "-1").ToList().ForEach(d =>
             {
                 UserModel containerObj = new UserModel();
                 d.MapTo(containerObj);
+                containerObj.Password = "";
                 containerObj.ProfileImage = null;
                 containerObj.ProfileImageBase64 = "";
                 containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                containerObj.EmailAddr = d.EmailAddr;
+                containerObj.IsProdTerminal = d.UserRole.UserAuth
+                    .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);
+                containerObj.IsProdChief = d.UserRole.UserAuth
+                    .Any(m => m.UserAuthType.AuthTypeCode == "IsProductionChief" && m.IsGranted == true);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public UserModel[] GetUserList(string roleFilter)
+        {
+            List<UserModel> data = new List<UserModel>();
+
+            var repo = _unitOfWork.GetRepository<User>();
+
+            repo.Filter(d => d.Password != "-1" && d.UserRole != null && d.UserRole.RoleName.Contains(roleFilter)).ToList().ForEach(d =>
+            {
+                UserModel containerObj = new UserModel();
+                d.MapTo(containerObj);
+                containerObj.Password = "";
+                containerObj.ProfileImage = null;
+                containerObj.ProfileImageBase64 = "";
+                containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                containerObj.EmailAddr = d.EmailAddr;
                 containerObj.IsProdTerminal = d.UserRole.UserAuth
                     .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);
                 containerObj.IsProdChief = d.UserRole.UserAuth
@@ -363,13 +400,14 @@ namespace HekaMOLD.Business.UseCases
             if (chiefRole == null)
                 return default;
 
-            repo.Filter(d => d.UserRoleId == chiefRole.Id).ToList().ForEach(d =>
+            repo.Filter(d => d.Password != "-1" && d.UserRoleId == chiefRole.Id).ToList().ForEach(d =>
             {
                 UserModel containerObj = new UserModel();
                 d.MapTo(containerObj);
                 containerObj.ProfileImage = null;
                 containerObj.ProfileImageBase64 = "";
                 containerObj.RoleName = d.UserRole != null ? d.UserRole.RoleName : "";
+                containerObj.EmailAddr = d.EmailAddr;
                 containerObj.IsProdTerminal = d.UserRole.UserAuth
                     .Any(m => m.UserAuthType.AuthTypeCode == "MobileProductionUser" && m.IsGranted == true);
                 containerObj.IsProdChief = d.UserRole.UserAuth
@@ -438,7 +476,9 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<User>();
 
                 var dbObj = repo.Get(d => d.Id == id);
-                repo.Delete(dbObj);
+
+                dbObj.Password = "-1";
+                //repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
 
                 result.Result = true;

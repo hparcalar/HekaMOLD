@@ -4,6 +4,11 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
     $scope.modelObject = { Id: 0 };
     $scope.saveStatus = 0;
 
+    $scope.filterModel = {
+        startDate: moment().add(-1, 'M').format('DD.MM.YYYY'),
+        endDate: moment().format('DD.MM.YYYY'),
+    };
+
     $scope.waitingPlansVisible = true;
 
     $scope.machineList = [];
@@ -55,7 +60,8 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
             }).catch(function (err) { });
     }
     $scope.loadWaitingPlanList = function () {
-        $http.get(HOST_URL + 'Delivery/GetWaitingPlans', {}, 'json')
+        $http.get(HOST_URL + 'Delivery/GetWaitingPlans?dt1=' + $scope.filterModel.startDate +
+            '&dt2=' + $scope.filterModel.endDate, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.waitingPlanList = resp.data;
@@ -223,6 +229,17 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
     // WAITING PLANS GRID
     $scope.lastProcessedPlanId = '';
     $scope.loadWaitingPlans = function () {
+        var cFilter = null;
+
+        try {
+            var dataGrid = $("#waitingPlanList").dxDataGrid("instance");
+            if (dataGrid != null) {
+                cFilter = dataGrid.getCombinedFilter(true);
+            }
+        } catch (e) {
+
+        }
+
         $('#waitingPlanList').dxDataGrid({
             dataSource: $scope.waitingPlanList,
             keyExpr: 'Id',
@@ -231,6 +248,8 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
             cacheEnabled: false,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             showBorders: true,
             filterRow: {
                 visible: true
@@ -245,7 +264,15 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
                 mode: "virtual"
             },
             height: 450,
-            width:450,
+            width: 450,
+            onEditorPreparing: function (e) {
+                if (e.parentType === "filterRow") {
+                    let onValueChanged = e.editorOptions.onValueChanged
+                    e.editorOptions.onValueChanged = function (args) {
+                        e.component.columnOption(e.dataField, "filterValue", args.value.toUpperCase())
+                    }
+                }
+            },
             editing: {
                 allowUpdating: false,
                 allowDeleting: false
@@ -287,11 +314,12 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
                 var data = item.data,
                     markup =
                         "<tr draggable=\"true\" class=\"dx-row dx-data-row dx-row-lines waiting-plan-row\" data-id=\"" + data.Id + "\">" +
-                        "<td>" + data.WorkOrderDateStr + "</td>" +
-                        "<td>" + data.SaleOrderDeadline + "</td>" +
+                        "<td>" + data.OrderDateStr + "</td>" +
+                        "<td>" + data.DeadlineDateStr + "</td>" +
+                        "<td>" + data.DocumentNo + "</td>" +
                         "<td>" + data.FirmName + "</td>" +
-                        "<td>" + data.ProductCode + "</td>" +
-                        "<td>" + data.ProductName + "</td>" +
+                        "<td>" + data.ItemNo + "</td>" +
+                        "<td>" + data.ItemName + "</td>" +
                         "<td class=\"text-right\">" + data.Quantity.toFixed(2) + "</td>" +
                         "</tr>";
 
@@ -299,22 +327,27 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
             },
             columns: [
                 {
-                    dataField: 'WorkOrderDateStr',
+                    dataField: 'OrderDateStr',
                     caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy'
                 },
                 {
-                    dataField: 'SaleOrderDeadline',
+                    dataField: 'DeadlineDateStr',
                     caption: 'Termin', dataType: 'date', format: 'dd.MM.yyyy'
                 },
+                { dataField: 'DocumentNo', caption: 'Sipariş No' },
                 { dataField: 'FirmName', caption: 'Firma' },
-                { dataField: 'ProductCode', caption: 'Ürün Kodu' },
-                { dataField: 'ProductName', caption: 'Ürün Adı' },
+                { dataField: 'ItemNo', caption: 'Ürün Kodu' },
+                { dataField: 'ItemName', caption: 'Ürün Adı' },
                 {
                     dataField: 'Quantity', caption: 'Miktar',
                     dataType: 'number', format: { type: "fixedPoint", precision: 2 }
                 }
             ]
         });
+
+        var dGrid = $("#waitingPlanList").dxDataGrid("instance");
+        if (cFilter != null)
+            dGrid.filter(cFilter);
     }
     $scope.refreshList = function () {
         var dataGrid = $("#waitingPlanList").dxDataGrid("instance");
@@ -325,6 +358,28 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
     toastr.options.timeOut = 2000;
     toastr.options.progressBar = true;
     toastr.options.preventDuplicates = true;
+
+    // EDIT PLAN DETAILS
+    $scope.showPlanDetails = function (plan, uiElement) {
+        $scope.$broadcast('loadEditPlan', { id: plan.Id });
+
+        $('#dial-plan').dialog({
+            hide: true,
+            modal: true,
+            resizable: false,
+            width: 600,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.$on('editPlanEnd', function (e, d) {
+        $('#dial-plan').dialog('close');
+
+        $scope.loadMachineList();
+        $scope.loadWaitingPlanList();
+    });
 
     // KEYBOARD EVENTS
     $(document).keyup(function (event) {

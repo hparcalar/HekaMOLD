@@ -11,12 +11,14 @@ using DynamicExpresso;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.Constants;
+using System.Configuration;
 
 namespace HekaMOLD.MachineService.Services
 {
     public class DeviceListener : IDisposable
     {
         ApiHelper _apiDevice;
+        ApiHelper _apiApp;
         MachineModel _machine;
         MachineStatus _status;
         TimeSpan _lastZeroTime = TimeSpan.Zero;
@@ -42,6 +44,7 @@ namespace HekaMOLD.MachineService.Services
             // http://192.168.127.254/api/
             _apiDevice = new ApiHelper(machine.DeviceIp);
             _apiDevice.AddHeader("Accept", "vdn.dac.v1");
+            _apiApp = new ApiHelper(ConfigurationManager.AppSettings["ApiUri"]);
         }
 
         public void Dispose()
@@ -128,10 +131,12 @@ namespace HekaMOLD.MachineService.Services
             {
                 try
                 {
-                    using (ProductionBO bObj = new ProductionBO())
-                    {
-                        _machineStatus = bObj.GetMachineStatus(_machine.Id);
-                    }
+                    _machineStatus = await _apiApp.GetData<MachineStatusType>("Common/GetMachineStatus?id=" + _machine.Id);
+
+                    //using (ProductionBO bObj = new ProductionBO())
+                    //{
+                    //    _machineStatus = bObj.GetMachineStatus(_machine.Id);
+                    //}
                 }
                 catch (Exception)
                 {
@@ -172,42 +177,49 @@ namespace HekaMOLD.MachineService.Services
 
                         if (resultSatisfied != _lastResult)
                         {
-                            using (ProductionBO bObj = new ProductionBO())
-                            {
-                                BusinessResult bResult = null;
+                            BusinessResult bResult = null;
 
-                                if (resultSatisfied)
+                            if (resultSatisfied)
+                            {
+                                bResult = await _apiApp.PostData<int, BusinessResult>("Common/StartMachineCycle?id=" + _machine.Id,
+                                    _machine.Id);
+                                //bResult = bObj.StartMachineCycle(_machine.Id);
+                                _lastZeroTime = TimeSpan.Zero;
+                            }
+                            else
+                            {
+                                if ((_machine.SignalEndDelay ?? 0) > 0)
                                 {
-                                    bResult = bObj.StartMachineCycle(_machine.Id);
-                                    _lastZeroTime = TimeSpan.Zero;
+                                    if (_lastZeroTime != TimeSpan.Zero
+                                        && (DateTime.Now.TimeOfDay - _lastZeroTime).TotalSeconds > _machine.SignalEndDelay)
+                                    {
+                                        bResult = await _apiApp.PostData<int, BusinessResult>("Common/StopMachineCycle?id=" + _machine.Id,
+                                            _machine.Id);
+                                        //bResult = bObj.StopMachineCycle(_machine.Id);
+                                    }
+                                    else if (_lastZeroTime == TimeSpan.Zero)
+                                        _lastZeroTime = DateTime.Now.TimeOfDay;
                                 }
                                 else
                                 {
-                                    if ((_machine.SignalEndDelay ?? 0) > 0)
-                                    {
-                                        if (_lastZeroTime != TimeSpan.Zero
-                                            && (DateTime.Now.TimeOfDay - _lastZeroTime).TotalSeconds > _machine.SignalEndDelay)
-                                            bResult = bObj.StopMachineCycle(_machine.Id);
-                                        else if (_lastZeroTime == TimeSpan.Zero)
-                                            _lastZeroTime = DateTime.Now.TimeOfDay;
-                                    }
-                                    else
-                                        bResult = bObj.StopMachineCycle(_machine.Id);
+                                    bResult = await _apiApp.PostData<int, BusinessResult>("Common/StopMachineCycle?id=" + _machine.Id,
+                                        _machine.Id);
+                                    //bResult = bObj.StopMachineCycle(_machine.Id);
                                 }
+                            }
 
-                                if (bResult != null)
-                                {
-                                    if (bResult.Result)
-                                        Console.WriteLine(string.Format("{0:[HH:mm:ss]}", DateTime.Now) +
-                                            " " + _machine.MachineCode + ": " + (resultSatisfied ? "Cycle Started" : "Cycle End"));
-                                    else
-                                        Console.WriteLine(string.Format("{0:[HH:mm:ss]}", DateTime.Now) +
-                                            " " + _machine.MachineCode + ": HATA= " + bResult.ErrorMessage);
+                            if (bResult != null)
+                            {
+                                if (bResult.Result)
+                                    Console.WriteLine(string.Format("{0:[HH:mm:ss]}", DateTime.Now) +
+                                        " " + _machine.MachineCode + ": " + (resultSatisfied ? "Cycle Started" : "Cycle End"));
+                                else
+                                    Console.WriteLine(string.Format("{0:[HH:mm:ss]}", DateTime.Now) +
+                                        " " + _machine.MachineCode + ": HATA= " + bResult.ErrorMessage);
 
-                                    _lastResult = resultSatisfied;
-                                    _status.PostureRequestSent = false;
-                                    _status.LastCycleEnd = null;
-                                }
+                                _lastResult = resultSatisfied;
+                                _status.PostureRequestSent = false;
+                                _status.LastCycleEnd = null;
                             }
                         }
                         else
@@ -229,42 +241,42 @@ namespace HekaMOLD.MachineService.Services
             {
                 try
                 {
-                    if (_status.PostureExpirationCycleCount > 0 && _status.PostureRequestSent != true)
-                    {
-                        if (_status.LastCycleEnd == null)
-                        {
-                            using (ProductionBO bObj = new ProductionBO())
-                            {
-                                var lastSignal = bObj.GetLastMachineSignal(_status.MachineId);
-                                if (lastSignal != null)
-                                {
-                                    _status.LastCycleEnd = lastSignal.EndDate != null ?
-                                        lastSignal.EndDate : DateTime.Now;
-                                }
-                                else
-                                    _status.LastCycleEnd = DateTime.Now;
-                            }
-                        }
+                    //if (_status.PostureExpirationCycleCount > 0 && _status.PostureRequestSent != true)
+                    //{
+                    //    if (_status.LastCycleEnd == null)
+                    //    {
+                    //        using (ProductionBO bObj = new ProductionBO())
+                    //        {
+                    //            var lastSignal = bObj.GetLastMachineSignal(_status.MachineId);
+                    //            if (lastSignal != null)
+                    //            {
+                    //                _status.LastCycleEnd = lastSignal.EndDate != null ?
+                    //                    lastSignal.EndDate : DateTime.Now;
+                    //            }
+                    //            else
+                    //                _status.LastCycleEnd = DateTime.Now;
+                    //        }
+                    //    }
 
-                        if (_status.LastCycleEnd != null)
-                        {
-                            using (ProductionBO bObj = new ProductionBO())
-                            {
-                                var activeWork = bObj.GetActiveWorkOrderOnMachine(_status.MachineId);
-                                if (activeWork != null
-                                    && activeWork.WorkOrder != null && (activeWork.WorkOrder.MoldTestCycle ?? 0) > 0)
-                                {
-                                    var maxDiffSeconds = activeWork.WorkOrder.MoldTestCycle.Value *
-                                        _status.PostureExpirationCycleCount.Value;
-                                    if ((DateTime.Now - _status.LastCycleEnd).Value.TotalSeconds > maxDiffSeconds)
-                                    {
-                                        bObj.SetMachineAsIsUpForPosture(_status.MachineId, true);
-                                        _status.PostureRequestSent = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    //    if (_status.LastCycleEnd != null)
+                    //    {
+                    //        using (ProductionBO bObj = new ProductionBO())
+                    //        {
+                    //            var activeWork = bObj.GetActiveWorkOrderOnMachine(_status.MachineId);
+                    //            if (activeWork != null
+                    //                && activeWork.WorkOrder != null && (activeWork.WorkOrder.MoldTestCycle ?? 0) > 0)
+                    //            {
+                    //                var maxDiffSeconds = activeWork.WorkOrder.MoldTestCycle.Value *
+                    //                    _status.PostureExpirationCycleCount.Value;
+                    //                if ((DateTime.Now - _status.LastCycleEnd).Value.TotalSeconds > maxDiffSeconds)
+                    //                {
+                    //                    bObj.SetMachineAsIsUpForPosture(_status.MachineId, true);
+                    //                    _status.PostureRequestSent = true;
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
                 catch (Exception)
                 {

@@ -19,10 +19,10 @@
             <!--end::Page title-->
             <!--begin::Actions-->
             @*<div class="d-flex align-items-center py-1">
-                <a class="btn btn-sm btn-primary" href="@Url.Action("PrintTemplate", "Planning")">
-                    Planlama Çizelgesi
-                </a>
-            </div>*@
+                    <a class="btn btn-sm btn-primary" href="@Url.Action("PrintTemplate", "Planning")">
+                        Planlama Çizelgesi
+                    </a>
+                </div>*@
             <!--end::Actions-->
         </div>
         <!--end::Container-->
@@ -49,19 +49,19 @@
                                      data-id="{{machine.PlanDateTitle}}"
                                      ng-repeat="machine in machineList">
                                     <h5>{{machine.PlanDateTitle}}</h5>
-                                    <div class="d-flex flex-column">
+                                    <div class="d-flex flex-column overflow-auto" style="max-height:400px;">
                                         <div class="plan-box" draggable="true"
                                              data-plan-id="{{plan.Id}}"
+                                             ng-dblclick="showPlanDetails(plan, $event.currentTarget)"
                                              ng-click="selectPlan(plan)"
-                                             ng-class="{ 'plan-selected': plan.Id == selectedPlan.Id}"
+                                             ng-class="{ 'plan-selected': plan.Id == selectedPlan.Id, 'plan-box-completed': selectedPlan.PlanStatus == 1}"
                                              ng-repeat="plan in getMachinePlans(machine)">
 
-                                            <p>{{plan.WorkOrder.WorkOrderDateStr}}&nbsp;</p>
-                                            <p>{{plan.WorkOrder.FirmName}}&nbsp;</p>
-                                            <p><b>{{plan.WorkOrder.ProductName}}</b>&nbsp;</p>
+                                            <p>{{plan.ItemOrder.OrderDateStr}}&nbsp;</p>
+                                            <p>{{plan.ItemOrder.FirmName}}&nbsp;</p>
+                                            <p><b>{{plan.ItemOrder.ItemName}}</b>&nbsp;</p>
                                             <p>
-                                                {{plan.WorkOrder.CompleteQuantity}} /
-                                                {{plan.WorkOrder.Quantity}}
+                                                {{plan.ItemOrder.Quantity}}
                                             </p>
                                         </div>
                                     </div>
@@ -86,6 +86,10 @@
                                         </span>
                                         {{ waitingPlansVisible ? 'Gizle':'İş Emirleri' }}
                                     </button>
+                                    <div class="d-flex align-items-center py-1" style="width:350px !important;">
+                                        <input type="text" class="form-control datepicker" ng-model="filterModel.startDate" ng-change="loadWaitingPlanList()" placeholder="Başlangıç Tarihi" />
+                                        <input type="text" class="form-control datepicker mx-2" ng-model="filterModel.endDate" ng-change="loadWaitingPlanList()" placeholder="Bitiş Tarihi" />
+                                    </div>
                                 </div>
                                 <div class="card-body p-0" style="height:500px;">
                                     <div class="dx-viewport" ng-show="waitingPlansVisible">
@@ -104,6 +108,10 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
+
+    <div id="dial-plan" title="Plan Düzenleme" style="display:none;">
+        <ng-include src="'../Components/Views/EditDelivery.html'"></ng-include>
+    </div>
 </div>
 
 @section scripts{
@@ -112,5 +120,6 @@
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
 
     <link href="~/Content/planning.css" rel="stylesheet" />
+    <script src="~/Components/Controllers/edit-delivery.js"></script>
     <script src="~/FrontEndLogic/Delivery/planning.js"></script>
 }

@@ -213,6 +213,19 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
         $scope.modelObject = { Id: 0 };
     }
 
+    $scope.updateLastPlanView = function () {
+        try {
+            $http.post(HOST_URL + 'Planning/UpdateLastPlanView', {}, 'json')
+                .then(function (resp) {
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                       
+                    }
+                }).catch(function (err) { });
+        } catch (e) {
+
+        }
+    }
+
     $scope.saveModel = function (planObj) {
         $scope.saveStatus = 1;
 
@@ -226,6 +239,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
                         $scope.loadMachineList();
                         $scope.loadWaitingPlanList();
+                        $scope.updateLastPlanView();
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
@@ -248,6 +262,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                         $scope.loadWaitingPlanList();
 
                         $scope.selectPlan(planObj);
+                        $scope.updateLastPlanView();
                     }
                     else
                         toastr.error(resp.data.ErrorMessage, 'Hata');
@@ -302,7 +317,15 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
                 mode: "virtual"
             },
             height: 450,
-            width:450,
+            width: 450,
+            onEditorPreparing: function (e) {
+                if (e.parentType === "filterRow") {
+                    let onValueChanged = e.editorOptions.onValueChanged
+                    e.editorOptions.onValueChanged = function (args) {
+                        e.component.columnOption(e.dataField, "filterValue", args.value.toUpperCase())
+                    }
+                }
+            },
             editing: {
                 allowUpdating: false,
                 allowDeleting: false
@@ -474,6 +497,7 @@ app.controller('workOrderPlanningCtrl', function planningCtrl($scope, $http) {
 
                                             $scope.loadMachineList();
                                             $scope.loadWaitingPlanList();
+                                            $scope.updateLastPlanView();
                                         }
                                         else
                                             toastr.error(resp.data.ErrorMessage, 'Hata');

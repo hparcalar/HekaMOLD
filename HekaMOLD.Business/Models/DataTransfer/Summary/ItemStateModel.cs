@@ -12,6 +12,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Summary
         public int WarehouseId { get; set; }
         public string ItemNo { get; set; }
         public string ItemName { get; set; }
+        public int? ItemGroupId { get; set; }
+        public string ItemGroupCode { get; set; }
+        public string MachineCode { get; set; }
+        public string ItemGroupName { get; set; }
         public string WarehouseCode { get; set; }
         public string WarehouseName { get; set; }
         public decimal? InQty { get; set; }

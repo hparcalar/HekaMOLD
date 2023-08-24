@@ -16,6 +16,12 @@
             showRowLines: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             showBorders: true,
             filterRow: {
                 visible: true
@@ -38,6 +44,7 @@
             columns: [
                 { dataField: 'MachineCode', caption: 'Makine Kodu' },
                 { dataField: 'MachineName', caption: 'Makine Adı' },
+                { dataField: 'MachineTypeName', caption: 'Makine Türü' },
                 {
                     type: "buttons",
                     buttons: [

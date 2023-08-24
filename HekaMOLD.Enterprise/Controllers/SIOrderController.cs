@@ -28,6 +28,11 @@ namespace HekaMOLD.Enterprise.Controllers
             return View();
         }
 
+        public ActionResult OpenDetails()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetNextOrderNo()
         {
@@ -50,6 +55,7 @@ namespace HekaMOLD.Enterprise.Controllers
             UnitTypeModel[] units = new UnitTypeModel[0];
             FirmModel[] firms = new FirmModel[0];
             ForexTypeModel[] forexes = new ForexTypeModel[0];
+            PaymentPlanModel[] paymentPlans = new PaymentPlanModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -57,9 +63,13 @@ namespace HekaMOLD.Enterprise.Controllers
                 units = bObj.GetUnitTypeList();
                 firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
+                paymentPlans = bObj.GetPaymentPlanList();
             }
 
-            var jsonResult = Json(new { Items = items, Units = units, Firms = firms, Forexes = forexes }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Items = items, Units = units, Firms = firms, 
+                Forexes = forexes,
+                PaymentPlans = paymentPlans,
+            }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -72,6 +82,27 @@ namespace HekaMOLD.Enterprise.Controllers
             using (OrdersBO bObj = new OrdersBO())
             {
                 result = bObj.GetItemOrderList(ItemOrderType.Sale);
+
+                foreach (var item in result)
+                {
+                    if (item.OrderStatus == (int)OrderStatusType.Approved || item.OrderStatus == (int)OrderStatusType.Created)
+                        item.OrderStatusStr = "Planlanması bekleniyor";
+                }
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetOpenOrderDetailList()
+        {
+            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
+
+            using (OrdersBO bObj = new OrdersBO())
+            {
+                result = bObj.GetOpenOrderDetailListForView(ItemOrderType.Sale);
 
                 foreach (var item in result)
                 {

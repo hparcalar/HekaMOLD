@@ -24,6 +24,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public decimal? TotalInQuantity { get; set; }
         public decimal? TotalOutQuantity { get; set; }
         public decimal? TotalOverallQuantity { get; set; }
+        public bool? IsActive { get; set; }
 
         #region VISUAL ELEMENTS
         public string ItemTypeStr { get; set; }

@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Bitmiş Ürün Raporu";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+
+<div ng-controller="finishedProductStateCtrl" class="dx-viewport">
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar" style="background-color:white; left:0px">
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+            <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+                 class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
+                <!--begin::Title-->
+                <!--end::Title-->
+            </div>
+            <!--end::Page title-->
+            <!--begin::Actions-->
+            <div class="d-flex align-items-center py-1 mt-5" style="width:400px !important;">
+                <input type="text" class="form-control datepicker" ng-model="filterModel.startDate" ng-change="loadReport()" placeholder="Başlangıç Tarihi" />
+                <input type="text" class="form-control datepicker mx-2" ng-model="filterModel.endDate" ng-change="loadReport()" placeholder="Bitiş Tarihi" />
+            </div>
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid mt-10" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <!--begin::Row-->
+            <div class="row gy-5 gx-xl-8">
+                <!--begin::Col-->
+                <div class="col-xxl-12">
+
+                    <div class="dx-viewport">
+                        <div id="dataList"></div>
+                    </div>
+
+                </div>
+                <!--end::Col-->
+            </div>
+            <!--end::Row-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/FrontEndLogic/Warehouse/finished-product-state.js"></script>
+}
+

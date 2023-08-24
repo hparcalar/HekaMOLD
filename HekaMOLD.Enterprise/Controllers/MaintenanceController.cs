@@ -388,6 +388,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
         #endregion
 
+        #region PLANNING
+        public ActionResult Planning()
+        {
+            return View();
+        }
+        #endregion
+
         #region REPORTS
         public ActionResult ReportMaintenance()
         {

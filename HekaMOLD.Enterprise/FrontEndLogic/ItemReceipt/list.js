@@ -7,6 +7,11 @@
     $scope.selectedReceiptType = {Id:0,Text:'Tümü'};
     $scope.receiptTypeList = [];
 
+    $scope.filterModel = {
+        startDate: moment().add(-1, 'M').format('DD.MM.YYYY'),
+        endDate: moment().format('DD.MM.YYYY'),
+    };
+
     // LIST FUNCTIONS
     $scope.loadReport = function () {
         $('#dataList').dxDataGrid({
@@ -14,8 +19,9 @@
                 load: function () {
                     return $.getJSON(HOST_URL
                         + 'ItemReceipt/GetReceiptList?receiptCategory=' + $scope.receiptCategory
-                        + '&receiptType=' + $scope.receiptType, function (data) {
-                            
+                        + '&receiptType=' + $scope.receiptType + '&dt1=' + $scope.filterModel.startDate +
+                        '&dt2=' + $scope.filterModel.endDate, function (data) {
+
                         });
                 },
                 key: 'Id'
@@ -24,6 +30,12 @@
             showRowLines: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             showBorders: true,
             filterRow: {
                 visible: true
@@ -47,8 +59,9 @@
                 { dataField: 'ReceiptNo', caption: 'İrsaliye No' },
                 { dataField: 'ReceiptTypeStr', caption: 'Hareket Türü' },
                 { dataField: 'DocumentNo', caption: 'Belge No' },
-                { dataField: 'ReceiptDateStr', caption: 'Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
-                { dataField: 'FirmCode', caption: 'Firma Kodu' },
+                { dataField: 'ItemOrderDocumentNo', caption: 'Sipariş No' },
+                { dataField: 'ReceiptDateStr', caption: 'Tarih' },
+                /*{ dataField: 'FirmCode', caption: 'Firma Kodu' },*/
                 { dataField: 'FirmName', caption: 'Firma Adı' },
                 { dataField: 'ReceiptStatusStr', caption: 'Durum' },
                 { dataField: 'Explanation', caption: 'Açıklama' },

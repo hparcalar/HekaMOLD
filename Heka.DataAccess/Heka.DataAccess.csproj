@@ -54,282 +54,257 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Context\ActualRouteHistory.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\AllocatedCode.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Attachment.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\DeliveryPlan.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Dye.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\EntryQualityData.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\EntryQualityDataDetail.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\EntryQualityPlan.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\EntryQualityPlanDetail.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Equipment.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\EquipmentCategory.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Firm.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\FirmAuthor.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ForexHistory.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ForexType.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\HekaDataMapping.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HekaDataMapping.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\HekaDataMapping.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\HekaDataMapping.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HekaDataMapping.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Incident.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\IncidentCategory.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Invoice.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Item.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemCategory.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemGroup.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemLiveStatus.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemOrder.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemOrderConsume.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemOrderDetail.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemOrderItemNeeds.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemReceipt.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemReceiptConsume.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemReceiptDetail.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemRequest.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemRequestApproveLog.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemRequestCategory.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemRequestDetail.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemSerial.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemUnit.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ItemWarehouse.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\LayoutItem.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\LayoutObjectType.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Machine.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\MachineGroup.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\MachineMaintenanceInstruction.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\MachineMaintenanceInstructionEntry.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\MachinePlan.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\MachineSignal.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Mold.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\MoldProduct.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\MoldTest.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Notification.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Plant.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\PostureCategory.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\PrinterQueue.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Process.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ProcessGroup.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ProductionPosture.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ProductQualityData.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ProductQualityDataDetail.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ProductQualityPlan.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ProductRecipe.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ProductRecipeDetail.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ProductWastage.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ReportTemplate.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Route.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\RouteItem.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\SectionSetting.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Shift.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\ShiftTarget.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\SyncPoint.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\SystemParameter.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\SystemPrinter.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\TransactionLog.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\UnitType.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\UsageDocument.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\User.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\UserAuth.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\UserAuthType.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\UserRole.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\UserRoleSubscription.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\UserWorkOrderHistory.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\Warehouse.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\WorkOrder.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\WorkOrderAllocation.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\WorkOrderCategory.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\WorkOrderControl.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\WorkOrderControlType.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\WorkOrderDetail.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\WorkOrderItemNeeds.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Context\WorkOrderSerial.cs">
-      <DependentUpon>HekaDataMapping.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Context\HekaEntities.cs" />
+    <Compile Include="Context\Models\ActualRouteHistory.cs" />
+    <Compile Include="Context\Models\AllocatedCode.cs" />
+    <Compile Include="Context\Models\Attachment.cs" />
+    <Compile Include="Context\Models\ContractWorkFlow.cs" />
+    <Compile Include="Context\Models\CountingReceipt.cs" />
+    <Compile Include="Context\Models\CountingReceiptDetail.cs" />
+    <Compile Include="Context\Models\CountingReceiptSerial.cs" />
+    <Compile Include="Context\Models\CustomerComplaint.cs" />
+    <Compile Include="Context\Models\DeliveryPlan.cs" />
+    <Compile Include="Context\Models\Dye.cs" />
+    <Compile Include="Context\Models\EntryQualityData.cs" />
+    <Compile Include="Context\Models\EntryQualityDataDetail.cs" />
+    <Compile Include="Context\Models\EntryQualityPlan.cs" />
+    <Compile Include="Context\Models\EntryQualityPlanDetail.cs" />
+    <Compile Include="Context\Models\Equipment.cs" />
+    <Compile Include="Context\Models\EquipmentCategory.cs" />
+    <Compile Include="Context\Models\Firm.cs" />
+    <Compile Include="Context\Models\FirmAuthor.cs" />
+    <Compile Include="Context\Models\ForexHistory.cs" />
+    <Compile Include="Context\Models\ForexType.cs" />
+    <Compile Include="Context\Models\Incident.cs" />
+    <Compile Include="Context\Models\IncidentCategory.cs" />
+    <Compile Include="Context\Models\Invoice.cs" />
+    <Compile Include="Context\Models\Item.cs" />
+    <Compile Include="Context\Models\ItemCategory.cs" />
+    <Compile Include="Context\Models\ItemGroup.cs" />
+    <Compile Include="Context\Models\ItemLiveStatus.cs" />
+    <Compile Include="Context\Models\ItemOrder.cs" />
+    <Compile Include="Context\Models\ItemOrderConsume.cs" />
+    <Compile Include="Context\Models\ItemOrderDetail.cs" />
+    <Compile Include="Context\Models\ItemOrderItemNeeds.cs" />
+    <Compile Include="Context\Models\ItemPrice.cs" />
+    <Compile Include="Context\Models\ItemReceipt.cs" />
+    <Compile Include="Context\Models\ItemReceiptConsume.cs" />
+    <Compile Include="Context\Models\ItemReceiptDetail.cs" />
+    <Compile Include="Context\Models\ItemRequest.cs" />
+    <Compile Include="Context\Models\ItemRequestApproveLog.cs" />
+    <Compile Include="Context\Models\ItemRequestCategory.cs" />
+    <Compile Include="Context\Models\ItemRequestDetail.cs" />
+    <Compile Include="Context\Models\ItemSerial.cs" />
+    <Compile Include="Context\Models\ItemUnit.cs" />
+    <Compile Include="Context\Models\ItemWarehouse.cs" />
+    <Compile Include="Context\Models\LayoutItem.cs" />
+    <Compile Include="Context\Models\LayoutObjectType.cs" />
+    <Compile Include="Context\Models\LogisticsOrder.cs" />
+    <Compile Include="Context\Models\LogisticsOrderProductDetail.cs" />
+    <Compile Include="Context\Models\Machine.cs" />
+    <Compile Include="Context\Models\MachineGroup.cs" />
+    <Compile Include="Context\Models\MachineMaintenanceInstruction.cs" />
+    <Compile Include="Context\Models\MachineMaintenanceInstructionEntry.cs" />
+    <Compile Include="Context\Models\MachinePlan.cs" />
+    <Compile Include="Context\Models\MachinePlanView.cs" />
+    <Compile Include="Context\Models\MachinePlanViewDetail.cs" />
+    <Compile Include="Context\Models\MachinePreProcess.cs" />
+    <Compile Include="Context\Models\MachinePreProcessHistory.cs" />
+    <Compile Include="Context\Models\MachineSignal.cs" />
+    <Compile Include="Context\Models\MaintenancePlan.cs" />
+    <Compile Include="Context\Models\Mold.cs" />
+    <Compile Include="Context\Models\MoldProduct.cs" />
+    <Compile Include="Context\Models\MoldRevisionOperation.cs" />
+    <Compile Include="Context\Models\MoldTest.cs" />
+    <Compile Include="Context\Models\Notification.cs" />
+    <Compile Include="Context\Models\Pallet.cs" />
+    <Compile Include="Context\Models\PaymentPlan.cs" />
+    <Compile Include="Context\Models\Plant.cs" />
+    <Compile Include="Context\Models\PostureCategory.cs" />
+    <Compile Include="Context\Models\PreProcessType.cs" />
+    <Compile Include="Context\Models\PreventiveAction.cs" />
+    <Compile Include="Context\Models\PreventiveActionDetail.cs" />
+    <Compile Include="Context\Models\PrinterQueue.cs" />
+    <Compile Include="Context\Models\Process.cs" />
+    <Compile Include="Context\Models\ProcessGroup.cs" />
+    <Compile Include="Context\Models\ProductionPosture.cs" />
+    <Compile Include="Context\Models\ProductQualityData.cs" />
+    <Compile Include="Context\Models\ProductQualityDataDetail.cs" />
+    <Compile Include="Context\Models\ProductQualityPlan.cs" />
+    <Compile Include="Context\Models\ProductRecipe.cs" />
+    <Compile Include="Context\Models\ProductRecipeDetail.cs" />
+    <Compile Include="Context\Models\ProductWastage.cs" />
+    <Compile Include="Context\Models\ReportTemplate.cs" />
+    <Compile Include="Context\Models\ReturnalProduct.cs" />
+    <Compile Include="Context\Models\ReturnalProductDetail.cs" />
+    <Compile Include="Context\Models\Route.cs" />
+    <Compile Include="Context\Models\RouteItem.cs" />
+    <Compile Include="Context\Models\SectionSetting.cs" />
+    <Compile Include="Context\Models\Shift.cs" />
+    <Compile Include="Context\Models\ShiftTarget.cs" />
+    <Compile Include="Context\Models\SyncPoint.cs" />
+    <Compile Include="Context\Models\SystemParameter.cs" />
+    <Compile Include="Context\Models\SystemPrinter.cs" />
+    <Compile Include="Context\Models\TransactionLog.cs" />
+    <Compile Include="Context\Models\UnitType.cs" />
+    <Compile Include="Context\Models\UsageDocument.cs" />
+    <Compile Include="Context\Models\User.cs" />
+    <Compile Include="Context\Models\UserAuth.cs" />
+    <Compile Include="Context\Models\UserAuthType.cs" />
+    <Compile Include="Context\Models\UserRole.cs" />
+    <Compile Include="Context\Models\UserRoleSubscription.cs" />
+    <Compile Include="Context\Models\UserShortcut.cs" />
+    <Compile Include="Context\Models\UserWorkOrderHistory.cs" />
+    <Compile Include="Context\Models\Warehouse.cs" />
+    <Compile Include="Context\Models\WorkOrder.cs" />
+    <Compile Include="Context\Models\WorkOrderAllocation.cs" />
+    <Compile Include="Context\Models\WorkOrderCategory.cs" />
+    <Compile Include="Context\Models\WorkOrderControl.cs" />
+    <Compile Include="Context\Models\WorkOrderControlType.cs" />
+    <Compile Include="Context\Models\WorkOrderDetail.cs" />
+    <Compile Include="Context\Models\WorkOrderItemNeeds.cs" />
+    <Compile Include="Context\Models\WorkOrderSerial.cs" />
+    <Compile Include="Migrations\202112031032538_CodeFirstInitial.cs" />
+    <Compile Include="Migrations\202112031032538_CodeFirstInitial.designer.cs">
+      <DependentUpon>202112031032538_CodeFirstInitial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.cs" />
+    <Compile Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.designer.cs">
+      <DependentUpon>202112042047139_ItemPricesAndItemTaxDefinition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112061028085_ContractWorkFlow.cs" />
+    <Compile Include="Migrations\202112061028085_ContractWorkFlow.designer.cs">
+      <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112080853143_Machine_PreProcess.cs" />
+    <Compile Include="Migrations\202112080853143_Machine_PreProcess.designer.cs">
+      <DependentUpon>202112080853143_Machine_PreProcess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.cs" />
+    <Compile Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.designer.cs">
+      <DependentUpon>202112090847474_QualityUserAndMachineSignalOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.cs" />
+    <Compile Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.designer.cs">
+      <DependentUpon>202112200924410_WorkOrderSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.cs" />
+    <Compile Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.designer.cs">
+      <DependentUpon>202112200929417_ItemSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112202006183_MoldRevisions.cs" />
+    <Compile Include="Migrations\202112202006183_MoldRevisions.designer.cs">
+      <DependentUpon>202112202006183_MoldRevisions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112211044232_EntryQualityUpdate.cs" />
+    <Compile Include="Migrations\202112211044232_EntryQualityUpdate.designer.cs">
+      <DependentUpon>202112211044232_EntryQualityUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.cs" />
+    <Compile Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.designer.cs">
+      <DependentUpon>202112211323379_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112221732124_PalletStructure.cs" />
+    <Compile Include="Migrations\202112221732124_PalletStructure.designer.cs">
+      <DependentUpon>202112221732124_PalletStructure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112221743586_UserShortcuts.cs" />
+    <Compile Include="Migrations\202112221743586_UserShortcuts.designer.cs">
+      <DependentUpon>202112221743586_UserShortcuts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112230736363_MaintenancePlan.cs" />
+    <Compile Include="Migrations\202112230736363_MaintenancePlan.designer.cs">
+      <DependentUpon>202112230736363_MaintenancePlan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112311128394_CountingReceipt.cs" />
+    <Compile Include="Migrations\202112311128394_CountingReceipt.designer.cs">
+      <DependentUpon>202112311128394_CountingReceipt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112311143141_CountingReceiptSerial.cs" />
+    <Compile Include="Migrations\202112311143141_CountingReceiptSerial.designer.cs">
+      <DependentUpon>202112311143141_CountingReceiptSerial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112311204536_CountingSerialItemRelation.cs" />
+    <Compile Include="Migrations\202112311204536_CountingSerialItemRelation.designer.cs">
+      <DependentUpon>202112311204536_CountingSerialItemRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201050758330_ConsumptionRelationToProductionReceipt.cs" />
+    <Compile Include="Migrations\202201050758330_ConsumptionRelationToProductionReceipt.designer.cs">
+      <DependentUpon>202201050758330_ConsumptionRelationToProductionReceipt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201061332474_PaymentPlan.cs" />
+    <Compile Include="Migrations\202201061332474_PaymentPlan.designer.cs">
+      <DependentUpon>202201061332474_PaymentPlan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202201191112571_ProductQulialityPlanUpdateDisplay.cs" />
+    <Compile Include="Migrations\202201191112571_ProductQulialityPlanUpdateDisplay.designer.cs">
+      <DependentUpon>202201191112571_ProductQulialityPlanUpdateDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202061614272_MachinePlanView.cs" />
+    <Compile Include="Migrations\202202061614272_MachinePlanView.designer.cs">
+      <DependentUpon>202202061614272_MachinePlanView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202250957430_Quantity_DeliveryPlan.cs" />
+    <Compile Include="Migrations\202202250957430_Quantity_DeliveryPlan.designer.cs">
+      <DependentUpon>202202250957430_Quantity_DeliveryPlan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202203150439299_DeliveryPlan_ItemOrderDetail.cs" />
+    <Compile Include="Migrations\202203150439299_DeliveryPlan_ItemOrderDetail.designer.cs">
+      <DependentUpon>202203150439299_DeliveryPlan_ItemOrderDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204071138380_IncidentAndPosture_UserRelations.cs" />
+    <Compile Include="Migrations\202204071138380_IncidentAndPosture_UserRelations.designer.cs">
+      <DependentUpon>202204071138380_IncidentAndPosture_UserRelations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205230642186_PreventiveActions.cs" />
+    <Compile Include="Migrations\202205230642186_PreventiveActions.designer.cs">
+      <DependentUpon>202205230642186_PreventiveActions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205231005221_CustomerComplaints.cs" />
+    <Compile Include="Migrations\202205231005221_CustomerComplaints.designer.cs">
+      <DependentUpon>202205231005221_CustomerComplaints.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206271000528_ItemReceiptDetail_PalletCount.cs" />
+    <Compile Include="Migrations\202206271000528_ItemReceiptDetail_PalletCount.designer.cs">
+      <DependentUpon>202206271000528_ItemReceiptDetail_PalletCount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206271218243_EntryQualityDetail_TextResult.cs" />
+    <Compile Include="Migrations\202206271218243_EntryQualityDetail_TextResult.designer.cs">
+      <DependentUpon>202206271218243_EntryQualityDetail_TextResult.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206271236456_ItemReceiptDetail_Weights_And_Dimensions.cs" />
+    <Compile Include="Migrations\202206271236456_ItemReceiptDetail_Weights_And_Dimensions.designer.cs">
+      <DependentUpon>202206271236456_ItemReceiptDetail_Weights_And_Dimensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206301049472_ReturnalProduct.cs" />
+    <Compile Include="Migrations\202206301049472_ReturnalProduct.designer.cs">
+      <DependentUpon>202206301049472_ReturnalProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206301257402_ItemReceipt_Driver.cs" />
+    <Compile Include="Migrations\202206301257402_ItemReceipt_Driver.designer.cs">
+      <DependentUpon>202206301257402_ItemReceipt_Driver.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202207020402518_UserBelongToShift.cs" />
+    <Compile Include="Migrations\202207020402518_UserBelongToShift.designer.cs">
+      <DependentUpon>202207020402518_UserBelongToShift.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202209290748034_WastageExplanation.cs" />
+    <Compile Include="Migrations\202209290748034_WastageExplanation.designer.cs">
+      <DependentUpon>202209290748034_WastageExplanation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202211081831210_UserEmailAddr.cs" />
+    <Compile Include="Migrations\202211081831210_UserEmailAddr.designer.cs">
+      <DependentUpon>202211081831210_UserEmailAddr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202211241152236_ItemOrderNeedsSummary.cs" />
+    <Compile Include="Migrations\202211241152236_ItemOrderNeedsSummary.designer.cs">
+      <DependentUpon>202211241152236_ItemOrderNeedsSummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308161105226_itemIsActive.cs" />
+    <Compile Include="Migrations\202308161105226_itemIsActive.designer.cs">
+      <DependentUpon>202308161105226_itemIsActive.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migration\MigrationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EFRepository.cs" />
@@ -340,26 +315,114 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="Context\HekaDataMapping.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>HekaDataMapping.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Context\HekaDataMapping.edmx.diagram">
-      <DependentUpon>HekaDataMapping.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Context\HekaDataMapping.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>HekaDataMapping.edmx</DependentUpon>
-      <LastGenOutput>HekaDataMapping.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Context\HekaDataMapping.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>HekaDataMapping.edmx</DependentUpon>
-      <LastGenOutput>HekaDataMapping.cs</LastGenOutput>
-    </Content>
+    <EmbeddedResource Include="Migrations\202112031032538_CodeFirstInitial.resx">
+      <DependentUpon>202112031032538_CodeFirstInitial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112042047139_ItemPricesAndItemTaxDefinition.resx">
+      <DependentUpon>202112042047139_ItemPricesAndItemTaxDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112061028085_ContractWorkFlow.resx">
+      <DependentUpon>202112061028085_ContractWorkFlow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112080853143_Machine_PreProcess.resx">
+      <DependentUpon>202112080853143_Machine_PreProcess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112090847474_QualityUserAndMachineSignalOperator.resx">
+      <DependentUpon>202112090847474_QualityUserAndMachineSignalOperator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112200924410_WorkOrderSerial_ShiftBelongsToDate.resx">
+      <DependentUpon>202112200924410_WorkOrderSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112200929417_ItemSerial_ShiftBelongsToDate.resx">
+      <DependentUpon>202112200929417_ItemSerial_ShiftBelongsToDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112202006183_MoldRevisions.resx">
+      <DependentUpon>202112202006183_MoldRevisions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112211044232_EntryQualityUpdate.resx">
+      <DependentUpon>202112211044232_EntryQualityUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112211323379_RecipeConsumptionWorkOrderRelation.resx">
+      <DependentUpon>202112211323379_RecipeConsumptionWorkOrderRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221732124_PalletStructure.resx">
+      <DependentUpon>202112221732124_PalletStructure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112221743586_UserShortcuts.resx">
+      <DependentUpon>202112221743586_UserShortcuts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112230736363_MaintenancePlan.resx">
+      <DependentUpon>202112230736363_MaintenancePlan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112311128394_CountingReceipt.resx">
+      <DependentUpon>202112311128394_CountingReceipt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112311143141_CountingReceiptSerial.resx">
+      <DependentUpon>202112311143141_CountingReceiptSerial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112311204536_CountingSerialItemRelation.resx">
+      <DependentUpon>202112311204536_CountingSerialItemRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201050758330_ConsumptionRelationToProductionReceipt.resx">
+      <DependentUpon>202201050758330_ConsumptionRelationToProductionReceipt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201061332474_PaymentPlan.resx">
+      <DependentUpon>202201061332474_PaymentPlan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201191112571_ProductQulialityPlanUpdateDisplay.resx">
+      <DependentUpon>202201191112571_ProductQulialityPlanUpdateDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202061614272_MachinePlanView.resx">
+      <DependentUpon>202202061614272_MachinePlanView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202250957430_Quantity_DeliveryPlan.resx">
+      <DependentUpon>202202250957430_Quantity_DeliveryPlan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202203150439299_DeliveryPlan_ItemOrderDetail.resx">
+      <DependentUpon>202203150439299_DeliveryPlan_ItemOrderDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204071138380_IncidentAndPosture_UserRelations.resx">
+      <DependentUpon>202204071138380_IncidentAndPosture_UserRelations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205230642186_PreventiveActions.resx">
+      <DependentUpon>202205230642186_PreventiveActions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205231005221_CustomerComplaints.resx">
+      <DependentUpon>202205231005221_CustomerComplaints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206271000528_ItemReceiptDetail_PalletCount.resx">
+      <DependentUpon>202206271000528_ItemReceiptDetail_PalletCount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206271218243_EntryQualityDetail_TextResult.resx">
+      <DependentUpon>202206271218243_EntryQualityDetail_TextResult.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206271236456_ItemReceiptDetail_Weights_And_Dimensions.resx">
+      <DependentUpon>202206271236456_ItemReceiptDetail_Weights_And_Dimensions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206301049472_ReturnalProduct.resx">
+      <DependentUpon>202206301049472_ReturnalProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206301257402_ItemReceipt_Driver.resx">
+      <DependentUpon>202206301257402_ItemReceipt_Driver.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202207020402518_UserBelongToShift.resx">
+      <DependentUpon>202207020402518_UserBelongToShift.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202209290748034_WastageExplanation.resx">
+      <DependentUpon>202209290748034_WastageExplanation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202211081831210_UserEmailAddr.resx">
+      <DependentUpon>202211081831210_UserEmailAddr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202211241152236_ItemOrderNeedsSummary.resx">
+      <DependentUpon>202211241152236_ItemOrderNeedsSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308161105226_itemIsActive.resx">
+      <DependentUpon>202308161105226_itemIsActive.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migration\Versions\1.0.5.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.3.2.sql" />
     <EmbeddedResource Include="Migration\Versions\1.0.0.6.sql" />

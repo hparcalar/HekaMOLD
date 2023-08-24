@@ -65,6 +65,8 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string UnitCode { get; set; }
         public string UnitName { get; set; }
         public string OrderDeadline { get; set; }
+        public DateTime? WorkOrderDate { get; set; }
+        public WorkOrderSerialModel[] Serials { get; set; }
         public LabelConfigModel LabelConfigData
         {
             get

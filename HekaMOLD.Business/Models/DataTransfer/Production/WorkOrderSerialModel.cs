@@ -24,6 +24,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public int? QualityStatus { get; set; }
         public string QualityExplanation { get; set; }
         public int? TargetWarehouseId { get; set; }
+        public DateTime? QualityChangedDate { get; set; }
+        public int? QualityUserId { get; set; }
+        public DateTime? ShiftBelongsToDate { get; set; }
 
         #region VISUAL ELEMENTS
         public int? ItemId { get; set; }
@@ -37,6 +40,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Production
         public string MachineCode { get; set; }
         public string MachineName { get; set; }
         public string QualityStatusText { get; set; }
+        public string ShiftBelongsToDateStr { get; set; }
         #endregion
     }
 }

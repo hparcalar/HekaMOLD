@@ -18,12 +18,15 @@ namespace HekaMOLD.Business.Models.DataTransfer.Core
         public int? PlantId { get; set; }
         public int? UserRoleId { get; set; }
         public byte[] ProfileImage { get; set; }
+        public int? ShiftId { get; set; }
+        public string EmailAddr { get; set; }
         public UserAuthModel[] Auths { get; set; }
 
         #region VISUAL ELEMENTS
         public string RoleName { get; set; }
         public bool IsProdTerminal { get; set; }
         public bool IsProdChief { get; set; }
+        public bool IsBossMode { get; set; }
         public bool IsMechanicTerminal { get; set; }
         public bool IsWarehouseTerminal { get; set; }
         public string ProfileImageBase64 { get; set; }

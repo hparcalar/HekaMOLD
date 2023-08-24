@@ -68,16 +68,48 @@ namespace HekaMOLD.Enterprise.Controllers
 
         [HttpGet]
         [FreeAction]
+        public JsonResult GetMachineActions(int machineId, string filterDate)
+        {
+            UserWorkOrderHistoryModel[] data = new UserWorkOrderHistoryModel[0];
+
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                data = bObj.GetMachineActions(machineId, DateTime.ParseExact(filterDate, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr")));
+            }
+
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
+        [FreeAction]
         public JsonResult GetMachineStats(string t1, string t2)
         {
             MachineModel[] result = new MachineModel[0];
+
+            ShiftModel shiftData = null;
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                shiftData = bObj.GetCurrentShift();
+            }
+
+            if (shiftData != null)
+            {
+                DateTime dt1 = DateTime.ParseExact(t1, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                if (shiftData.ShiftBelongsToDate < dt1.Date)
+                {
+                    t1 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                    t2 = t1;//string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                }
+            }
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
                 result = bObj.GetMachineStats(t1, t2);
             }
 
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Data=result, Shift = shiftData }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -103,9 +135,30 @@ namespace HekaMOLD.Enterprise.Controllers
                 {
                     result = bObj.GetMachineStats(t1, t2);
                 }
+
+                // GÜNDÜZ VARDİYASINDA İSEK
+                //if (shiftData.StartTime < shiftData.EndTime)
+                //{
+                //    t1 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate.Value.AddDays(-1));
+                //    t2 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate.Value.AddDays(-1));
+
+                //    using (DefinitionsBO bObj = new DefinitionsBO())
+                //    {
+                //        var resultYesterday = bObj.GetMachineStats(t1, t2);
+                //        foreach (var item in resultYesterday)
+                //        {
+                //            var otherShiftData = item.MachineStats.ShiftStats.FirstOrDefault(d => d.ShiftId != shiftData.Id);
+                //            var currentMachineData = result.FirstOrDefault(d => d.Id == item.Id);
+                //            if (currentMachineData != null)
+                //            {
+                //                //currentMachineData.MachineStats
+                //            }
+                //        }
+                //    }
+                //}
             }
 
-            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { Data=result, Shift= shiftData }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
@@ -139,6 +192,22 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult GetMachineStatsByMachineId(int machineId, string t1, string t2)
         {
             MachineModel[] result = new MachineModel[0];
+
+            ShiftModel shiftData = null;
+            using (ProductionBO bObj = new ProductionBO())
+            {
+                shiftData = bObj.GetCurrentShift();
+            }
+
+            if (shiftData != null)
+            {
+                DateTime dt1 = DateTime.ParseExact(t1, "dd.MM.yyyy", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                if (shiftData.ShiftBelongsToDate < dt1.Date)
+                {
+                    t1 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                    t2 = string.Format("{0:dd.MM.yyyy}", shiftData.ShiftBelongsToDate);
+                }
+            }
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {

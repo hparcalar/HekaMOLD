@@ -1,12 +1,18 @@
 ﻿app.controller('entryQualityPlanFormListCtrl', function sidebarCtrl($scope, $http) {
     DevExpress.localization.locale('tr');
 
+    $scope.filterModel = {
+        startDate: moment().add(-1, 'M').format('DD.MM.YYYY'),
+        endDate: moment().format('DD.MM.YYYY'),
+    };
+
     // LIST FUNCTIONS
     $scope.loadReport = function () {
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'EntryQuality/GetPlanFormList', function (data) {
+                    return $.getJSON(HOST_URL + 'EntryQuality/GetPlanFormList?dt1=' + $scope.filterModel.startDate +
+                        '&dt2=' + $scope.filterModel.endDate, function (data) {
                             
                         });
                 },
@@ -14,8 +20,14 @@
             },
             showColumnLines: false,
             showRowLines: true,
+            allowColumnResizing: true,
+            wordWrapEnabled: true,
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             showBorders: true,
             wordWrapEnabled: true,
             filterRow: {
@@ -37,7 +49,7 @@
                 allowDeleting: false
             },
             columns: [
-                { dataField: 'ControlDateStr', caption: 'Kontrol Tarihi' },
+                { dataField: 'CreatedDateStr', caption: 'Kontrol Tarihi' },
                 { dataField: 'FirmName', caption: 'Firma' },
                 { dataField: 'ItemNo', caption: 'Malzeme Kodu' },
                 { dataField: 'ItemName', caption: 'Malzeme Adı' },

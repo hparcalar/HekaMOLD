@@ -25,11 +25,14 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public decimal? SubTotal { get; set; }
         public decimal? TaxPrice { get; set; }
         public decimal? OverallTotal { get; set; }
+        public int? WorkOrderDetailId { get; set; }
         public int? SyncStatus { get; set; }
         public int? SyncPointId { get; set; }
         public DateTime? SyncDate { get; set; }
         public int? SyncUserId { get; set; }
         public decimal? TotalQuantity { get; set; }
+        public int? ConsumptionReceiptId { get; set; }
+        public string Driver { get; set; }
         public ItemReceiptDetailModel[] Details { get; set; }
 
         #region VISUAL ELEMENTS
@@ -41,9 +44,12 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string CreatedDateStr { get; set; }
         public string ReceiptDateStr { get; set; }
         public string ReceiptTypeStr { get; set; }
+        public int ReceiptCategory { get; set; }
         public string InvoiceNo { get; set; }
         public string InvoiceDateStr { get; set; }
         public string InvoiceDocumentNo { get; set; }
+        public string ConsumptionReceiptNo { get; set; }
+        public string ItemOrderDocumentNo { get; set; }
         #endregion
     }
 }

@@ -1,12 +1,20 @@
 ﻿app.controller('productionNeedsCtrl', function sidebarCtrl($scope, $http) {
     DevExpress.localization.locale('tr');
 
+    $scope.saveStatus = 0;
+
+    $scope.filterModel = {
+        startDate: moment().add(-1, 'M').format('DD.MM.YYYY'),
+        endDate: moment().format('DD.MM.YYYY'),
+    };
+
     // LIST FUNCTIONS
     $scope.loadReport = function () {
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'ProductionNeeds/GetProductionNeeds', function (data) {
+                    return $.getJSON(HOST_URL + 'ProductionNeeds/GetProductionNeeds?dt1=' + $scope.filterModel.startDate +
+                        '&dt2=' + $scope.filterModel.endDate, function (data) {
 
                     });
                 },
@@ -17,6 +25,10 @@
             allowColumnResizing: true,
             wordWrapEnabled: true,
             rowAlternationEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             focusedRowEnabled: true,
             showBorders: true,
             filterRow: {
@@ -43,7 +55,7 @@
                     var dataGrid = $("#dataList").dxDataGrid("instance");
                     if (dataGrid != null) {
                         cFilter = dataGrid.getCombinedFilter(true);
-                        console.log(cFilter);
+                        
                     }
                 } catch (e) {
 
@@ -53,13 +65,15 @@
                 { dataField: 'ItemOrderDateStr', caption: 'Sip. Tarih', dataType: 'date', format: 'dd.MM.yyyy' },
                 { dataField: 'NeedsDateStr', caption: 'İhtiyaç Tar.', dataType: 'date', format: 'dd.MM.yyyy' },
                 /* { dataField: 'WorkOrderNo', caption: 'İş Emri No' },*/
-                { dataField: 'ProductCode', caption: 'Ürün Kodu' },
+                /*{ dataField: 'ProductCode', caption: 'Ürün Kodu' },*/
+
                 { dataField: 'ProductName', caption: 'Ürün Adı' },
                 { dataField: 'ItemOrderNo', caption: 'Sipariş No' },
                 /*{ dataField: 'DyeCode', caption: 'Renk Kodu' },*/
                 { dataField: 'ItemNo', caption: 'Malzeme No' },
                 { dataField: 'ItemName', caption: 'Malzeme Adı' },
                 /*{ dataField: 'SaleOrderDeadline', caption: 'Sipariş Termin' },*/
+                { dataField: 'RecipeQuantity', caption: 'Reçete Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'TargetQuantity', caption: 'Sipariş Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'WarehouseQuantity', caption: 'Depo Miktar', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Quantity', caption: 'İhtiyaç Miktar', format: { type: "fixedPoint", precision: 2 } },
@@ -157,7 +171,9 @@
                                 else
                                     toastr.error(resp.data.ErrorMessage, 'Hata');
                             }
-                        }).catch(function (err) { });
+                        }).catch(function (err) {
+                            $scope.saveStatus = 0;
+                        });
                 }
             }
         });

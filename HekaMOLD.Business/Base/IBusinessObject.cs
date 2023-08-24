@@ -7,6 +7,8 @@ using HekaMOLD.Business.Models.Operational;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -115,16 +117,28 @@ namespace HekaMOLD.Business.Base
                     int memberIndex = 0;
                     foreach (var member in members)
                     {
-                        if (memberIndex == 0)
+                        var newNotificaiton = new Notification();
+                        model.MapTo(newNotificaiton);
+                        newNotificaiton.UserId = member.Id;
+                        repo.Add(newNotificaiton);
+
+                        // send auto email
+                        if (!string.IsNullOrEmpty(member.EmailAddr))
                         {
-                            dbObj.UserId = member.Id;
-                        }
-                        else
-                        {
-                            var newNotificaiton = new Notification();
-                            model.MapTo(newNotificaiton);
-                            newNotificaiton.UserId = member.Id;
-                            repo.Add(newNotificaiton);
+                            try
+                            {
+                                var smtpClient = new SmtpClient("smtp-mail.outlook.com", 587);
+                                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                smtpClient.UseDefaultCredentials = false;
+                                smtpClient.Credentials = new NetworkCredential("btsmesheka@outlook.com", "Bts2021.*");
+                                smtpClient.EnableSsl = true;
+
+                                smtpClient.Send("btsmesheka@outlook.com", member.EmailAddr, model.Title, model.Message);
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
                         }
 
                         memberIndex++;
@@ -132,6 +146,7 @@ namespace HekaMOLD.Business.Base
                 }
 
                 uof.SaveChanges();
+
                 result.Result = true;
                 result.RecordId = dbObj.Id;
             }
@@ -172,6 +187,10 @@ namespace HekaMOLD.Business.Base
                     return SubscriptionCategory.ItemCriticals;
                 case NotifyType.ItemAtMaximumInWarehouse:
                     return SubscriptionCategory.ItemCriticals;
+                case NotifyType.ProductPickupComplete:
+                    return SubscriptionCategory.ProductPickup;
+                case NotifyType.ManuelProductLabelPrinted:
+                    return SubscriptionCategory.ProductPickup;
                 default:
                     return default;
             }

@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Core;
+﻿using HekaMOLD.Business.Models.Constants;
+using HekaMOLD.Business.Models.DataTransfer.Core;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Quality;
 using HekaMOLD.Business.Models.Operational;
@@ -153,13 +154,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetPlanFormList()
+        public JsonResult GetPlanFormList(string dt1, string dt2)
         {
             ProductQualityDataModel[] result = new ProductQualityDataModel[0];
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.GetProductFormList();
+                result = bObj.GetProductFormList(dt1,dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -247,11 +248,28 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             BusinessResult result = null;
             int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.ApproveSerials(model, plantId);
+                result = bObj.ApproveSerials(model, plantId, userId);
             }
+
+            //if (result.Result == true)
+            //{
+            //    using (ProductionBO bObj = new ProductionBO())
+            //    {
+            //        bObj.CreateNotification(new NotificationModel
+            //        {
+            //            UserId = null,
+            //            NotifyType = (int)NotifyType.ProductPickupComplete,
+            //            CreatedDate = DateTime.Now,
+            //            Title = "Ürün Teslim Alma Bildirimi",
+            //            IsProcessed = false,
+            //            Message = string.Format("{0:HH:mm}", DateTime.Now) + ": Ürün teslim alma işlemi yapıldı.",
+            //        });
+            //    }
+            //}
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
@@ -260,10 +278,11 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult DenySerials(WorkOrderSerialModel[] model)
         {
             BusinessResult result = null;
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.DenySerials(model);
+                result = bObj.DenySerials(model, userId);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
@@ -273,23 +292,25 @@ namespace HekaMOLD.Enterprise.Controllers
         public JsonResult WaitSerials(WorkOrderSerialModel[] model)
         {
             BusinessResult result = null;
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.WaitSerials(model);
+                result = bObj.WaitSerials(model, userId);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
         }
 
         [HttpPost]
-        public JsonResult SendToWastage(WorkOrderSerialModel[] model)
+        public JsonResult SendToWastage(WorkOrderSerialModel[] model, string explanation)
         {
             BusinessResult result = null;
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.SendToWastage(model);
+                result = bObj.SendToWastage(model, userId, explanation);
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
@@ -300,10 +321,32 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             BusinessResult result = null;
             int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+            int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.ConditionalApproveSerials(model, plantId);
+                result = bObj.ConditionalApproveSerials(model, plantId, userId);
+            }
+
+            return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
+        }
+        [HttpPost]
+        public JsonResult DeleteSerials(WorkOrderSerialModel[] model)
+        {
+            BusinessResult result = null;
+
+            try
+            {
+                int userId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+                using (ProductionBO bObj = new ProductionBO())
+                {
+                    result = bObj.DeleteSerials(model, userId);
+                }
+            }
+            catch (Exception)
+            {
+
             }
 
             return Json(new { Status = result.Result ? 1 : 0, ErrorMessage = result.ErrorMessage });
@@ -312,13 +355,13 @@ namespace HekaMOLD.Enterprise.Controllers
 
         #region CONDITIONAL APPROVE & SCRAP REPORTS
         [HttpGet]
-        public JsonResult GetConditionalApprovedList()
+        public JsonResult GetConditionalApprovedList(string dt1, string dt2)
         {
             WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];
 
             using (QualityBO bObj = new QualityBO())
             {
-                data = bObj.GetConditionalApprovedSerials();
+                data = bObj.GetConditionalApprovedSerials(dt1,dt2);
             }
 
             var jsonResp = Json(data, JsonRequestBehavior.AllowGet);
@@ -327,13 +370,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetScrapList()
+        public JsonResult GetScrapList(string dt1, string dt2)
         {
             ProductWastageModel[] data = new ProductWastageModel[0];
 
             using (QualityBO bObj = new QualityBO())
             {
-                data = bObj.GetScrapList(new Business.Models.Filters.BasicRangeFilter { });
+                data = bObj.GetScrapList(new Business.Models.Filters.BasicRangeFilter { }, dt1,dt2);
             }
 
             var jsonResp = Json(data, JsonRequestBehavior.AllowGet);

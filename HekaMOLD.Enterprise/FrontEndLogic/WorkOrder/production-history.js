@@ -24,6 +24,9 @@
             allowColumnResizing: true,
             focusedRowEnabled: true,
             showBorders: true,
+            export: {
+                enabled: true,
+            },
             filterRow: {
                 visible: true
             },
@@ -41,6 +44,7 @@
             columns: [
                 { dataField: 'WorkDateStr', caption: 'Tarih' },
                 { dataField: 'ShiftCode', caption: 'Vardiya' },
+                { dataField: 'UserName', caption: 'Personel' },
                 { dataField: 'SaleOrderNo', caption: 'Sipariş No' },
                 { dataField: 'ProductCode', caption: 'Ürün Kodu' },
                 { dataField: 'ProductName', caption: 'Ürün Adı' },

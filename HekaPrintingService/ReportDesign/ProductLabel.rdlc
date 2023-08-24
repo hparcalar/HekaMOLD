@@ -7,10 +7,10 @@
         <Value>=First(Fields!BarcodeImage.Value, "DS1")</Value>
         <MIMEType>image/jpeg</MIMEType>
         <Sizing>Fit</Sizing>
-        <Top>0.25543cm</Top>
-        <Left>7.02921cm</Left>
-        <Height>1.86103cm</Height>
-        <Width>2.37853cm</Width>
+        <Top>0.38243cm</Top>
+        <Left>0.87789cm</Left>
+        <Height>1.72958cm</Height>
+        <Width>2.18803cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -36,8 +36,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox2</rd:DefaultName>
-        <Top>1.32151cm</Top>
-        <Left>0.59214cm</Left>
+        <Top>1.31254cm</Top>
+        <Left>5.7718cm</Left>
         <Height>0.4095cm</Height>
         <Width>3.81233cm</Width>
         <ZIndex>1</ZIndex>
@@ -340,7 +340,6 @@
         </Style>
       </Textbox>
       <Textbox Name="Textbox15">
-        <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
         <Paragraphs>
           <Paragraph>
@@ -424,10 +423,10 @@
         <Source>Embedded</Source>
         <Value>BatusanLogo</Value>
         <Sizing>FitProportional</Sizing>
-        <Top>0.25543cm</Top>
-        <Left>0.53185cm</Left>
+        <Top>0.24646cm</Top>
+        <Left>5.71151cm</Left>
         <Height>0.9285cm</Height>
-        <Width>4.27283cm</Width>
+        <Width>3.87262cm</Width>
         <ZIndex>16</ZIndex>
         <Style>
           <Border>
@@ -454,10 +453,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox4</rd:DefaultName>
-        <Top>0.24646cm</Top>
-        <Left>4.9584cm</Left>
+        <Top>0.38243cm</Top>
+        <Left>3.51907cm</Left>
         <Height>1.86555cm</Height>
-        <Width>1.88031cm</Width>
+        <Width>1.64748cm</Width>
         <ZIndex>17</ZIndex>
         <Style>
           <Border>

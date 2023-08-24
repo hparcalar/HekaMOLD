@@ -128,6 +128,7 @@ namespace HekaMOLD.Business.UseCases.Core
                 {
                     dbShift.MapTo(data);
                     data.ShiftBelongsToDate = shiftBelongsTo;
+                    data.ChiefName = dbShift.User != null ? dbShift.User.UserName : "";
                 }
             }
             catch (Exception)

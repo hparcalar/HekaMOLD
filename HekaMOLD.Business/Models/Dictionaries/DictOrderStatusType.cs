@@ -16,7 +16,8 @@ namespace HekaMOLD.Business.Models.Dictionaries
             { OrderStatusType.Approved, "Sipariş Onaylandı" },
             { OrderStatusType.Cancelled, "Sipariş Reddedildi" },
             { OrderStatusType.Completed, "Sipariş Tamamlandı" },
-            { OrderStatusType.Planned, "Planlandı" }
+            { OrderStatusType.Planned, "Planlandı" },
+            { OrderStatusType.Delivered, "Sevk Edildi" }
         };
     }
 }

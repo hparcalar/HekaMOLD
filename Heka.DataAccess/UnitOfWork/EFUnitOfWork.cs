@@ -17,6 +17,7 @@ namespace Heka.DataAccess.UnitOfWork
         public EFUnitOfWork()
         {
             _dbContext = new HekaEntities();
+            _dbContext.Database.CommandTimeout = 180;
         }
 
         public EFUnitOfWork(DbContext dbContext)
@@ -25,6 +26,7 @@ namespace Heka.DataAccess.UnitOfWork
                 throw new ArgumentNullException("dbContext can not be null.");
 
             _dbContext = dbContext;
+            _dbContext.Database.CommandTimeout = 180;
         }
 
         public void SetTimeout(int seconds)
@@ -45,6 +47,21 @@ namespace Heka.DataAccess.UnitOfWork
                 // Transaction işlemleri burada ele alınabilir veya Identity Map kurumsal tasarım kalıbı kullanılarak
                 // sadece değişen alanları güncellemeyide sağlayabiliriz.
                 return _dbContext.SaveChanges();
+            }
+            catch
+            {
+                // Burada DbEntityValidationException hatalarını handle edebiliriz.
+                throw;
+            }
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            try
+            {
+                // Transaction işlemleri burada ele alınabilir veya Identity Map kurumsal tasarım kalıbı kullanılarak
+                // sadece değişen alanları güncellemeyide sağlayabiliriz.
+                return await _dbContext.SaveChangesAsync();
             }
             catch
             {

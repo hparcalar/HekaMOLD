@@ -19,6 +19,9 @@ namespace HekaMOLD.Business.Models.DataTransfer.Quality
         public string Method { get; set; }
         public string Responsible { get; set; }
         public decimal? SampleQuantity { get; set; }
+        public Nullable<int> CheckType { get; set; }
+        public Nullable<decimal> ToleranceMin { get; set; }
+        public Nullable<decimal> ToleranceMax { get; set; }
         public bool NewDetail { get; set; }
     }
 }

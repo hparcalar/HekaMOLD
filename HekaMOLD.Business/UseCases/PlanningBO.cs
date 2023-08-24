@@ -4,7 +4,9 @@ using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.DataTransfer.Order;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
+using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.UseCases.Core;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace HekaMOLD.Business.UseCases
 {
     public class PlanningBO : CoreProductionBO
     {
-        #region PLANNING
+        #region PRODUCTION PLANNING
         /// <summary>
         /// CREATES WORK ORDER FROM SALE ORDER OR UPDATES IT
         /// </summary>
@@ -294,11 +296,13 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj.MachineId != model.MachineId)
                 {
                     var exMachinePlans = repo.Filter(d => d.MachineId == dbObj.MachineId &&
-                        (
-                            d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Planned
-                            ||
-                            d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
-                        )
+                            (
+                                d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Planned
+                                ||
+                                d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
+                                ||
+                                d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.OnHold
+                            )
                             && d.Id != dbObj.Id)
                         .OrderBy(d => d.OrderNo)
                         .ToArray();
@@ -306,7 +310,7 @@ namespace HekaMOLD.Business.UseCases
                     var orderNo = 1;
                     foreach (var item in exMachinePlans)
                     {
-                        item.OrderNo = orderNo++;
+                        item.OrderNo = orderNo++;   
                     }
                 }
 
@@ -318,6 +322,8 @@ namespace HekaMOLD.Business.UseCases
                         d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.Planned
                         ||
                         d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress
+                        ||
+                        d.WorkOrderDetail.WorkOrderStatus == (int)WorkOrderStatusType.OnHold
                     )
                 ).ToArray();
 
@@ -340,18 +346,26 @@ namespace HekaMOLD.Business.UseCases
                         .OrderBy(d => d.OrderNo)
                         .ToArray();
 
-                    var lastOrderNo = model.OrderNo;
+                    var lastOrderNo = model.OrderNo + 1;
                     foreach (var item in laterPlans)
                     {
-                        if (item.OrderNo - lastOrderNo > 1)
-                            item.OrderNo = lastOrderNo + 1;
-                        else
-                            item.OrderNo++;
+                        item.OrderNo = lastOrderNo;
 
-                        lastOrderNo = item.OrderNo;
+                        lastOrderNo++;
                     }
 
                     dbObj.OrderNo = model.OrderNo;
+                }
+
+                if (activePlans.Any(d => d.OrderNo == dbObj.OrderNo && d.Id != dbObj.Id))
+                {
+                    var sameData = activePlans.Where(d => d.OrderNo == dbObj.OrderNo && d.Id != dbObj.Id);
+                    var lastOrderNo = model.OrderNo + 1;
+                    foreach (var smData in sameData)
+                    {
+                        smData.OrderNo = lastOrderNo;
+                        lastOrderNo++;
+                    }
                 }
 
                 _unitOfWork.SaveChanges();
@@ -382,7 +396,7 @@ namespace HekaMOLD.Business.UseCases
             ).ToList().Select(d => new ItemOrderDetailModel { 
                 Id = d.Id,
                 OrderDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.OrderDate),
-                
+                OrderDate = d.ItemOrder.OrderDate,
                 ItemNo = d.Item != null ? d.Item.ItemNo : "",
                 ItemName = d.Item != null ? d.Item.ItemName : "",
                 FirmName = d.ItemOrder.Firm != null ? 
@@ -390,7 +404,9 @@ namespace HekaMOLD.Business.UseCases
                 Quantity = d.Quantity,
                 DeadlineDateStr = d.ItemOrder.DateOfNeed != null ?
                     string.Format("{0:dd.MM.yyyy}", d.ItemOrder.DateOfNeed) : "",
-            }).ToArray();
+            })
+            .OrderByDescending(d => d.OrderDate)
+            .ToArray();
 
             return data;
         }
@@ -428,7 +444,7 @@ namespace HekaMOLD.Business.UseCases
                         WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
                         WastageQuantity = d.WorkOrderDetail.ProductWastage.Sum(m => m.Quantity) ?? 0,
                         CompleteQuantity = Convert.ToInt32(d.WorkOrderDetail.WorkOrderSerial
-                            .Where(m => m.SerialNo != null && m.SerialNo.Length > 0)
+                            .Where(m => m.QualityStatus == (int)QualityStatusType.Ok)
                             .Sum(m => m.FirstQuantity) ?? 0),
                         WorkOrderType = d.WorkOrderDetail.WorkOrderType ?? 1,
                     }
@@ -449,6 +465,7 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<MachinePlan>();
+                var repoPlanHistory = _unitOfWork.GetRepository<MachinePlanViewDetail>();
                 var repoWorkOrderDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
                 var repoWorkOrder = _unitOfWork.GetRepository<WorkOrder>();
                 var repoItemOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
@@ -469,6 +486,12 @@ namespace HekaMOLD.Business.UseCases
 
                     if (!dbWorkOrder.WorkOrderDetail.Any(d => d.Id != dbWorkOrderDetail.Id))
                         repoWorkOrder.Delete(dbWorkOrder);
+
+                    var histories = repoPlanHistory.Filter(d => d.WorkOrderDetailId == dbWorkOrderDetail.Id).ToArray();
+                    foreach (var item in histories)
+                    {
+                        repoPlanHistory.Delete(item);
+                    }
 
                     // UPDATE SALE ORDER STATUS FROM PLANNED TO APPROVED
                     var dbItemOrderDetail = repoItemOrderDetail.Get(d => d.Id == saleOrderDetailId);
@@ -570,6 +593,69 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
+
+                var dbObj = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbObj != null)
+                {
+                    data.Id = workOrderDetailId;
+                    data.WorkOrderNo = dbObj.WorkOrder.WorkOrderNo;
+                    data.FirmCode = dbObj.WorkOrder.Firm != null ? dbObj.WorkOrder.Firm.FirmCode : "";
+                    data.FirmName = dbObj.WorkOrder.Firm != null ? dbObj.WorkOrder.Firm.FirmName : dbObj.WorkOrder.TrialFirmName;
+                    data.ItemOrderDocumentNo = dbObj.ItemOrderDetail != null ? dbObj.ItemOrderDetail.ItemOrder.DocumentNo : "";
+                    data.ProductCode = dbObj.Item != null ? dbObj.Item.ItemNo : "";
+                    data.Explanation = dbObj.WorkOrder.Explanation;
+                    data.ProductName = dbObj.Item != null ? dbObj.Item.ItemName : dbObj.TrialProductName;
+                    data.Quantity = dbObj.Quantity;
+                    data.WorkOrderStatus = dbObj.WorkOrderStatus ?? 0;
+                    data.CompleteQuantity = Convert.ToInt32(dbObj.MachineSignal.Any() ?
+                        dbObj.MachineSignal.Where(m => m.SignalStatus == 1).Count() :
+                        dbObj.WorkOrderSerial.Sum(d => d.FirstQuantity) ?? 0);
+                    data.MoldCode = dbObj.Mold != null ? dbObj.Mold.MoldCode : "";
+                    data.MoldName = dbObj.Mold != null ? dbObj.Mold.MoldName : "";
+                    data.WastageQuantity = dbObj.ProductWastage.Sum(d => d.Quantity) ?? 0;
+                    data.OrderDeadline = dbObj.ItemOrderDetail != null &&
+                            dbObj.ItemOrderDetail.ItemOrder.DateOfNeed != null ?
+                                string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrderDetail.ItemOrder.DateOfNeed) : "";
+                    data.LabelConfig = dbObj.LabelConfig;
+                    data.Serials = repoSerial.Filter(d => d.WorkOrderDetailId == workOrderDetailId
+                            && d.SerialNo != null && d.SerialNo.Length > 0)
+                            .OrderByDescending(d => d.Id)
+                            .ToList()
+                            .Select(d => new WorkOrderSerialModel
+                            {
+                                Id = d.Id,
+                                SerialNo = d.SerialNo,
+                                ItemName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
+                                CreatedDateStr = string.Format("{0:dd.MM.yyyy HH:mm}", d.CreatedDate),
+                                FirstQuantity = d.FirstQuantity,
+                                LiveQuantity = d.LiveQuantity,
+                                InPackageQuantity = d.InPackageQuantity,
+                            }).ToArray();
+
+                    if (!string.IsNullOrEmpty(data.LabelConfig))
+                    {
+                        data.LabelConfigData = JsonConvert.DeserializeObject<LabelConfigModel>(data.LabelConfig);
+                    }
+                    else
+                        data.LabelConfigData = new LabelConfigModel { ShowFirm = true };
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public WorkOrderDetailModel GetWorkOrderDetailWithSerials(int workOrderDetailId)
+        {
+            WorkOrderDetailModel data = new WorkOrderDetailModel();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
                 var dbObj = repo.Get(d => d.Id == workOrderDetailId);
                 if (dbObj != null)
                 {
@@ -591,6 +677,14 @@ namespace HekaMOLD.Business.UseCases
                     data.OrderDeadline = dbObj.ItemOrderDetail != null &&
                             dbObj.ItemOrderDetail.ItemOrder.DateOfNeed != null ?
                                 string.Format("{0:dd.MM.yyyy}", dbObj.ItemOrderDetail.ItemOrder.DateOfNeed) : "";
+                    data.LabelConfig = dbObj.LabelConfig;
+
+                    if (!string.IsNullOrEmpty(data.LabelConfig))
+                    {
+                        data.LabelConfigData = JsonConvert.DeserializeObject<LabelConfigModel>(data.LabelConfig);
+                    }
+                    else
+                        data.LabelConfigData = new LabelConfigModel { ShowFirm = true };
                 }
             }
             catch (Exception)
@@ -611,16 +705,29 @@ namespace HekaMOLD.Business.UseCases
                 var repoSerial = _unitOfWork.GetRepository<WorkOrderSerial>();
                 var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
                 var repoShift = _unitOfWork.GetRepository<Shift>();
+                var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
 
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
                     throw new Exception("Düzenlenecek iş emri bilgisi bulunamadı.");
 
+                if (model.LabelConfigData != null)
+                    model.LabelConfig = JsonConvert.SerializeObject(model.LabelConfigData);
+
+                dbObj.LabelConfig = model.LabelConfig;
+
                 // SET DESCRIPTION
                 dbObj.WorkOrder.Explanation = model.Explanation;
 
-                // SET TARGET COUNT
+                // SET TARGET QUANTITY
                 dbObj.Quantity = model.Quantity;
+
+                // UPDATE ITEM ORDER DETAIL QUANTITY
+                var dbOrderDetail = repoOrderDetail.Get(d => d.Id == dbObj.SaleOrderDetailId);
+                if (dbOrderDetail != null)
+                {
+                    dbOrderDetail.Quantity = model.Quantity;
+                }
 
                 // UPDATE PRODUCED SERIALS
                 //int exComplete = dbObj.WorkOrderSerial.Sum(d => Convert.ToInt32(d.FirstQuantity ?? 0));
@@ -815,6 +922,8 @@ namespace HekaMOLD.Business.UseCases
                 if (dbObj == null)
                     throw new Exception("Durumu değiştirilmek istenen iş emri kaydına ulaşılamadı.");
 
+                //bool workOrderStarted = false;
+
                 if (dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Planned 
                     || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.Created 
                     || dbObj.WorkOrderStatus == (int)WorkOrderStatusType.OnHold)
@@ -838,6 +947,8 @@ namespace HekaMOLD.Business.UseCases
                     }
 
                     dbObj.WorkOrderStatus = (int)WorkOrderStatusType.InProgress;
+
+                    //workOrderStarted = true;
                 }
                 else
                 {
@@ -847,13 +958,302 @@ namespace HekaMOLD.Business.UseCases
                         dbObj.WorkOrderStatus = (int)WorkOrderStatusType.Completed;
                 }
 
+                var saleOrderDetailId = dbObj.SaleOrderDetailId ?? 0;
+
                 _unitOfWork.SaveChanges();
+
+                // TRG-POINT: UPDATE SALE ORDER DETAIL STATUS
+                if (saleOrderDetailId > 0)
+                {
+                    using (OrdersBO bObj = new OrdersBO())
+                    {
+                        bObj.CheckOrderDetailStatus(saleOrderDetailId).Wait();
+                    }
+                }
+
+                //if (workOrderStarted)
+                //{
+                    // CREATE PRODUCT RECIPE CONSUMPTION -- MOVED TO PRODUCT ENTRY TO WAREHOUSE
+                    //using (RecipeBO bObj = new RecipeBO())
+                    //{
+                    //    bObj.CreateRecipeConsumption(workOrderDetailId, warehouseId: null);
+                    //}
+                //}
 
                 // MOVED TO USER LOGIN WITH MACHINE SELECTION
                 //using (ProductionBO bObj = new ProductionBO())
                 //{
                 //    bObj.UpdateUserHistory(dbObj.MachineId ?? 0, userId ?? 0);
                 //}
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult SavePlanView(int plantId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var currentDate = DateTime.Now.Date;
+
+                var repo = _unitOfWork.GetRepository<MachinePlanView>();
+                var repoDetails = _unitOfWork.GetRepository<MachinePlanViewDetail>();
+
+                // CREATE VIEW HEADER
+                var dbObj = repo.Get(d => d.ViewDate == currentDate && d.PlantId == plantId);
+                if (dbObj == null)
+                {
+                    dbObj = new MachinePlanView
+                    {
+                        PlantId = plantId,
+                        ViewDate = currentDate,
+                    };
+                    repo.Add(dbObj);
+                }
+
+                // GET LAST UPDATED PLAN VIEW
+                MachinePlanModel[] currentPlans = new MachinePlanModel[0];
+                using (PlanningBO bObj = new PlanningBO())
+                {
+                    currentPlans = bObj.GetProductionPlans();
+                }
+
+                // CLEAR OLD DETAILS
+                var oldDetails = repoDetails.Filter(d => d.MachinePlanViewId == dbObj.Id).ToArray();
+                foreach (var item in oldDetails)
+                {
+                    repoDetails.Delete(item);
+                }
+
+                // UPDATE DETAILS
+                foreach (var item in currentPlans)
+                {
+                    repoDetails.Add(new MachinePlanViewDetail
+                    {
+                        MachineId = item.MachineId,
+                        MachinePlanView = dbObj,
+                        OrderNo = item.OrderNo,
+                        WorkOrderDetailId = item.WorkOrderDetailId,
+                    });
+                }
+
+                _unitOfWork.SaveChanges();
+
+                result.RecordId = dbObj.Id;
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public MachinePlanModel[] GetProductionPlanViews(DateTime planDate)
+        {
+            MachinePlanModel[] data = new MachinePlanModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<MachinePlanViewDetail>();
+                data = repo.Filter(d => d.MachinePlanView.ViewDate == planDate).ToList().Select(d => new MachinePlanModel
+                {
+                    Id = d.Id,
+                    MachineId = d.MachineId,
+                    OrderNo = d.OrderNo,
+                    WorkOrderDetailId = d.WorkOrderDetailId,
+                    WorkOrder = new WorkOrderDetailModel
+                    {
+                        ProductCode = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemNo : "",
+                        ProductName = d.WorkOrderDetail.Item != null ? d.WorkOrderDetail.Item.ItemName : d.WorkOrderDetail.TrialProductName,
+                        WorkOrderId = d.WorkOrderDetail.WorkOrderId,
+                        MoldId = d.WorkOrderDetail.MoldId,
+                        MoldCode = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldCode : "",
+                        MoldName = d.WorkOrderDetail.Mold != null ? d.WorkOrderDetail.Mold.MoldName : "",
+                        CreatedDate = d.WorkOrderDetail.CreatedDate,
+                        Quantity = d.WorkOrderDetail.Quantity,
+                        WorkOrderNo = d.WorkOrderDetail.WorkOrder.WorkOrderNo,
+                        WorkOrderDateStr = string.Format("{0:dd.MM.yyyy}", d.WorkOrderDetail.WorkOrder.WorkOrderDate),
+                        FirmCode = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmCode : "",
+                        FirmName = d.WorkOrderDetail.WorkOrder.Firm != null ?
+                            d.WorkOrderDetail.WorkOrder.Firm.FirmName : d.WorkOrderDetail.WorkOrder.TrialFirmName,
+                        WorkOrderStatus = d.WorkOrderDetail.WorkOrderStatus,
+                        WorkOrderStatusStr = ((WorkOrderStatusType)d.WorkOrderDetail.WorkOrderStatus).ToCaption(),
+                        WastageQuantity = d.WorkOrderDetail.ProductWastage.Sum(m => m.Quantity) ?? 0,
+                        CompleteQuantity = Convert.ToInt32(d.WorkOrderDetail.WorkOrderSerial
+                            .Where(m => m.QualityStatus == (int)QualityStatusType.Ok)
+                            .Sum(m => m.FirstQuantity) ?? 0),
+                        WorkOrderType = d.WorkOrderDetail.WorkOrderType ?? 1,
+                    }
+                }).OrderBy(d => d.OrderNo).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+        #endregion
+
+        #region ITEM ALLOCATION
+        public BusinessResult SaveAllocation(WorkOrderAllocationModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderAllocation>();
+                var dbAlloc = repo.Get(d => d.ItemReceiptDetailId == model.ItemReceiptDetailId
+                    && d.WorkOrderDetailId == model.WorkOrderDetailId);
+                if (dbAlloc == null)
+                {
+                    dbAlloc = new WorkOrderAllocation
+                    {
+                        ItemReceiptDetailId = model.ItemReceiptDetailId,
+                        WorkOrderDetailId = model.WorkOrderDetailId,
+                        Quantity = model.Quantity,
+                        CreatedDate = DateTime.Now,
+                        PackageQuantity = model.PackageQuantity,
+                    };
+                    repo.Add(dbAlloc);
+                }
+
+                dbAlloc.Quantity = model.Quantity;
+                dbAlloc.PackageQuantity = model.PackageQuantity;
+                dbAlloc.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbAlloc.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public WorkOrderAllocationModel[] GetAllocationList(int workOrderDetailId)
+        {
+            WorkOrderAllocationModel[] data = new WorkOrderAllocationModel[0];
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var dbDetail = repo.Get(d => d.Id == workOrderDetailId);
+                if (dbDetail == null)
+                    throw new Exception("İş emri kaydı bulunamadı.");
+
+                data = dbDetail.WorkOrderAllocation
+                    .Select(d => new WorkOrderAllocationModel
+                    {
+                        Id = d.Id,
+                        CreatedDate = d.CreatedDate,
+                        WorkOrderDetailId = d.WorkOrderDetailId,
+                        ItemReceiptDetailId = d.ItemReceiptDetailId,
+                        Quantity = d.Quantity,
+                        PackageQuantity = d.PackageQuantity,
+                        ItemReceiptNo = d.ItemReceiptDetail.ItemReceipt.ReceiptNo,
+                        ItemReceiptDocumentNo = d.ItemReceiptDetail.ItemReceipt.DocumentNo,
+                        ItemReceiptFirmCode = d.ItemReceiptDetail.ItemReceipt.Firm.FirmCode,
+                        ItemReceiptFirmName = d.ItemReceiptDetail.ItemReceipt.Firm.FirmName,
+                        ItemCode = d.ItemReceiptDetail.Item.ItemNo,
+                        ItemName = d.ItemReceiptDetail.Item.ItemName,
+                    }).ToArray();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return data;
+        }
+
+        public BusinessResult CreateItemDeliveryToProduction(int itemReceiptDetailId, int targetMachineId, decimal quantity)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<ItemReceiptDetail>();
+                var repoMachine = _unitOfWork.GetRepository<Machine>();
+
+                var dbReceipt = repo.Get(d => d.Id == itemReceiptDetailId);
+                var dbMachine = repoMachine.Get(d => d.Id == targetMachineId);
+
+                if (dbReceipt == null)
+                    throw new Exception("İrsaliye kaydı bulunamadı.");
+
+                if (dbMachine == null)
+                    throw new Exception("Makine tanımı bulunamadı.");
+
+                if (dbReceipt.Quantity - (dbReceipt.ItemReceiptConsumeByConsumed.Sum(d => d.UsedQuantity) ?? 0)
+                    - quantity < 0)
+                    throw new Exception("Giriş irsaliyesindeki kalan miktar aşıldı. Bu miktar üretime teslim edilemez.");
+
+                MachinePlanModel activeWork = null;
+                using (ProductionBO prodBO = new ProductionBO())
+                {
+                    activeWork = prodBO.GetActiveWorkOrderOnMachine(targetMachineId);
+                }
+
+                if (activeWork == null)
+                    throw new Exception("Makinenin üzerinde aktif bir üretim bulunmamaktadır. Önce başlanacak işin üretim şefi tarafından seçilmesi gerekmektedir.");
+
+                using (ReceiptBO rcpBO = new ReceiptBO())
+                {
+                    result = rcpBO.SaveOrUpdateItemReceipt(new Models.DataTransfer.Receipt.ItemReceiptModel
+                    {
+                        CreatedDate = DateTime.Now,
+                        ReceiptDate = DateTime.Now,
+                        ReceiptNo = rcpBO.GetNextReceiptNo(dbReceipt.ItemReceipt.PlantId.Value, ItemReceiptType.DeliveryToProduction),
+                        ReceiptStatus = (int)ReceiptStatusType.Created,
+                        ReceiptType = (int)ItemReceiptType.DeliveryToProduction,
+                        InWarehouseId = dbReceipt.ItemReceipt.InWarehouseId,
+                        PlantId = dbReceipt.ItemReceipt.PlantId,
+                        Details = new Models.DataTransfer.Receipt.ItemReceiptDetailModel[]
+                        {
+                            new Models.DataTransfer.Receipt.ItemReceiptDetailModel
+                            {
+                                ItemId = dbReceipt.ItemId,
+                                UnitId = dbReceipt.UnitId,
+                                LineNumber = 1,
+                                Quantity = quantity,
+                                CreatedDate = DateTime.Now,
+                                NewDetail = true,
+                                ReceiptStatus = (int)ReceiptStatusType.Created,
+                                TaxIncluded = false,
+                                TaxRate = 0,
+                                TaxAmount = 0,
+                            }
+                        }
+                    });
+
+                    // CREATE RECEIPT CONSUMPTION FROM ENTRY RECEIPT
+                    if (result.Result)
+                    {
+                        using (ReceiptBO cmpBO  = new ReceiptBO())
+                        {
+                            cmpBO.UpdateConsume(itemReceiptDetailId, result.DetailRecordId, quantity);
+                        }
+                    }
+                }
 
                 result.Result = true;
             }

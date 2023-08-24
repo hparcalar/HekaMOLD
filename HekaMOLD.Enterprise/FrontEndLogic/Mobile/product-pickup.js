@@ -1,11 +1,24 @@
-﻿app.controller('productPickupCtrl', function ($scope, $http) {
+﻿app.controller('productPickupCtrl', function ($scope, $http, $timeout) {
     $scope.modelObject = {
         Id:0,
         DocumentNo: '', FirmId: 0,
         FirmCode: '', FirmName: '',
         ShowOnlyOk: false,
-        Details: []
+        Details: [],
     };
+
+    $scope.barcodeBox = '';
+
+    $scope.onBarcodeKeyUp = function (e) {
+        try {
+            if (e.keyCode == '13' || $scope.barcodeBox.length >= 8) {
+                $scope.processBarcodeResult($scope.barcodeBox);
+            }
+        } catch (e) {
+
+        }
+        
+    }
 
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
@@ -17,6 +30,7 @@
     $scope.selectedProducts = [];
     $scope.selectedSummary = { ItemName: '' };
     $scope.selectedShift = { Id: 0 };
+    $scope.lastReadProduct = { Id:0 };
 
     $scope.bindModel = function () {
         $http.get(HOST_URL + 'Mobile/GetProductsForPickup', {}, 'json')
@@ -46,6 +60,40 @@
                     message: 'Herhangi bir red nedeni girilmemiş.',
                 });
         }
+    }
+
+    $scope.changePackageQuantity = function (packObj) {
+        bootbox.prompt({
+            title: "Koli içi miktarı giriniz",
+            centerVertical: true,
+            callback: function (result) {
+                if (result != null && result.length > 0) {
+                    var newQty = parseInt(result);
+                    if (newQty <= 0) {
+                        toastr.error('Miktar 0 dan büyük olmalıdır.');
+                        return;
+                    }
+
+                    $http.post(HOST_URL + 'Mobile/UpdateWorkOrderSerial', {
+                        serialId: packObj.Id,
+                        newQuantity: newQty,
+                    }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                if (resp.data.Result) {
+                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                                    $timeout(function () {
+                                        $scope.bindModel();
+                                    });
+                                }
+                                else
+                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                            }
+                        }).catch(function (err) { });
+                }
+            }
+        });
     }
 
     $scope.getListSum = function (list, key) {
@@ -88,6 +136,8 @@
     // -- END -- QUALITY STATUS FILTER FUNCTIONS
 
     $scope.updateFilteredList = function () {
+        $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
         // FILTER QUALITY STATUS
         if ($scope.selectedQualities.length > 0) {
             $scope.filteredPickupList = $scope.pickupList.filter(d => $scope.selectedQualities.some(q => q == d.QualityStatus));
@@ -119,8 +169,18 @@
                     if (d.QualityStatus == 1)
                         $scope.selectedProducts.push(d);
                 }
-                else
+                else {
+                    if (d.QualityStatus == 2) {
+                        toastr.error('Kalite RED almış ürün OK olana kadar depo hareketi göremez.');
+                        return;
+                    }
+                    else if (d.QualityStatus == 3) {
+                        toastr.error('Kalite BEKLEMEYE almış ürün OK olana kadar depo hareketi göremez.');
+                        return;
+                    }
+
                     $scope.selectedProducts.push(d);
+                }
             });
         }
     }
@@ -134,7 +194,7 @@
             return;
         }
         else if (item.QualityStatus == 3) {
-            toastr.error('Kalite RED almış ürün OK olana kadar depo hareketi göremez.');
+            toastr.error('Kalite BEKLEMEYE almış ürün OK olana kadar depo hareketi göremez.');
             return;
         }
 
@@ -142,6 +202,8 @@
             $scope.selectedProducts.splice($scope.selectedProducts.indexOf(item), 1);
         else
             $scope.selectedProducts.push(item);
+
+        $scope.lastReadProduct = item;
     }
 
     $scope.isSelectedProduct = function (item) {
@@ -178,7 +240,7 @@
         $scope.updateFilteredList();
     }
 
-    $scope.processBarcodeResult = function (barcode) {
+    $scope.processBarcodeResult = async function (barcode) {
         var product = $scope.pickupList.find(d => d.SerialNo == barcode);
         if (product != null && typeof product != 'undefined') {
             if (!$scope.selectedProducts.some(d => d.SerialNo == barcode))
@@ -186,6 +248,7 @@
             else {
                 toastr.warning('Bu ürün barkodu zaten okutulmuş.');
                 $scope.isBarcodeRead = true;
+                $scope.barcodeBox = '';
                 return;
             }
 
@@ -196,10 +259,22 @@
             } catch (e) {
 
             }
+
+            $scope.barcodeBox = '';
         }
         else {
             $scope.isBarcodeRead = true;
-            toastr.error('Okutulan barkoda ait bir kayıt bulunamadı.');
+
+            const resp = await $http.get(HOST_URL + 'Mobile/SearchBarcodeForPickup?barcode=' + barcode, {}, 'json');
+            if (resp != null && resp.data != null && resp.data.Id > 0) {
+                const pr = resp.data;
+                $scope.pickupList.splice(0,0, pr);
+                $scope.selectProduct(pr);
+            }
+            else
+                toastr.error('Okutulan barkoda ait bir kayıt bulunamadı.');
+
+            $scope.barcodeBox = '';
         }
     }
 
@@ -343,6 +418,14 @@
     }
 
     $scope.deleteEntries = function () {
+        for (var i = 0; i < $scope.selectedProducts.length; i++) {
+            var prd = $scope.selectedProducts[i];
+            if (prd.QualityStatus != null && prd.QualityStatus > 0) {
+                toastr.error('Seçilen ürünlerin kalite durumları silmek için uygun değil.');
+                return;
+            }
+        }
+
         bootbox.confirm({
             message: "Seçilen ürünleri silmek istediğinizden emin misiniz?",
             closeButton: false,

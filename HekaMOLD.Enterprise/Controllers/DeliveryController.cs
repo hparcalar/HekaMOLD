@@ -1,4 +1,5 @@
-﻿using HekaMOLD.Business.Models.DataTransfer.Production;
+﻿using HekaMOLD.Business.Models.DataTransfer.Order;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
 using HekaMOLD.Enterprise.Controllers.Filters;
@@ -55,13 +56,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetWaitingPlans()
+        public JsonResult GetWaitingPlans(string dt1, string dt2)
         {
-            WorkOrderDetailModel[] result = new WorkOrderDetailModel[0];
+            ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
 
             using (DeliveryBO bObj = new DeliveryBO())
             {
-                result = bObj.GetWaitingWorkOrders();
+                result = bObj.GetWaitingItemOrders(dt1, dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -70,13 +71,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetPlanDetail(int workOrderDetailId)
+        public JsonResult GetPlanDetail(int rid)
         {
-            WorkOrderDetailModel result = new WorkOrderDetailModel();
+            DeliveryPlanModel result = new DeliveryPlanModel();
 
-            using (PlanningBO bObj = new PlanningBO())
+            using (DeliveryBO bObj = new DeliveryBO())
             {
-                result = bObj.GetWorkOrderDetail(workOrderDetailId);
+                result = bObj.GetDeliveryPlan(rid);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -102,6 +103,19 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
+        public JsonResult EditPlan(DeliveryPlanModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DeliveryBO bObj = new DeliveryBO())
+            {
+                result = bObj.SavePlan(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
         public JsonResult DeletePlan(int rid)
         {
             BusinessResult result = new BusinessResult();
@@ -115,7 +129,20 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveModel(WorkOrderDetailModel model)
+        public JsonResult CompletePlan(int rid)
+        {
+            BusinessResult result = new BusinessResult();
+
+            using (DeliveryBO bObj = new DeliveryBO())
+            {
+                result = bObj.CompletePlan(rid);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult SaveModel(ItemOrderDetailModel model)
         {
             BusinessResult result = new BusinessResult();
 

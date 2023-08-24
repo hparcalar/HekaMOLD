@@ -5,8 +5,10 @@
     $scope.unitList = [];
     $scope.firmList = [];
     $scope.forexList = [];
+    $scope.paymentPlanList = [];
 
     $scope.selectedFirm = {};
+    $scope.selectedPaymentPlan = {};
     $scope.selectedRow = { Id:0 };
 
     $scope.saveStatus = 0;
@@ -29,6 +31,16 @@
         });
 
         return prms;
+    }
+    $scope.getToFixed = function(data, points) {
+        try {
+            if (typeof data != 'undefined')
+                return data.toFixed(points);
+        } catch (e) {
+            
+        }
+
+        return '';
     }
 
     // SELECTABLES
@@ -107,6 +119,11 @@
         else
             $scope.modelObject.FirmId = null;
 
+        if (typeof $scope.selectedPaymentPlan != 'undefined' && $scope.selectedPaymentPlan != null)
+            $scope.modelObject.PaymentPlanId = $scope.selectedPaymentPlan.Id;
+        else
+            $scope.modelObject.PaymentPlanId = null;
+
         $http.post(HOST_URL + 'SIOrder/SaveModel', $scope.modelObject, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -164,6 +181,19 @@
         });
     }
 
+    $scope.formatNumber = function (numberData) {
+        try {
+            var formatter = new Intl.NumberFormat('tr', {
+                style: 'decimal',
+                currency: 'TRY',
+            });
+
+            return formatter.format(numberData);
+        } catch (e) {
+            return 0;
+        }
+    }
+
     $scope.bindModel = function (id) {
         $http.get(HOST_URL + 'SIOrder/BindModel?rid=' + id, {}, 'json')
             .then(function (resp) {
@@ -176,6 +206,11 @@
                         $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
                     else
                         $scope.selectedFirm = {};
+
+                    if (typeof $scope.modelObject.PaymentPlanId != 'undefined' && $scope.modelObject.PaymentPlanId != null)
+                        $scope.selectedPaymentPlan = $scope.paymentPlanList.find(d => d.Id == $scope.modelObject.PaymentPlanId);
+                    else
+                        $scope.selectedPaymentPlan = {};
 
                     $scope.bindDetails();
                     $scope.calculateHeader();
@@ -193,8 +228,12 @@
                             row.UnitPrice = resp.data.UnitPrice;
                             row.TaxAmount = resp.data.TaxAmount;
                             row.ForexUnitPrice = resp.data.ForexUnitPrice;
+                            row.SubTotal = resp.data.SubTotal;
 
                             $scope.calculateHeader();
+
+                            var detailsGrid = $("#dataList").dxDataGrid("instance");
+                            detailsGrid.refresh();
                         }
                     }).catch(function (err) { });
             } catch (e) {
@@ -204,7 +243,7 @@
     }
 
     $scope.calculateHeader = function () {
-        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.OverallTotal - d.TaxAmount).reduce((n, x) => n + x);
+        $scope.modelObject.SubTotal = $scope.modelObject.Details.map(d => d.SubTotal).reduce((n, x) => n + x);
         $scope.modelObject.TaxPrice = $scope.modelObject.Details.map(d => d.TaxAmount).reduce((n, x) => n + x);
         $scope.modelObject.OverallTotal = $scope.modelObject.Details.map(d => d.OverallTotal).reduce((n, x) => n + x);
     }
@@ -255,12 +294,13 @@
                                 calculateRowAgain = true;
                             }
                         }
+
                         if (typeof values.ForexId != 'undefined') {
                             obj.ForexId = values.ForexId;
                             var forexObj = $scope.forexList.find(d => d.Id == obj.ForexId);
 
                             $http.get(HOST_URL + 'Common/GetForexRate?forexCode=' + forexObj.ForexTypeCode
-                                + '&forexDate=' + $scope.modelObject.OrderDate, {}, 'json')
+                                + '&forexDate=' + $scope.modelObject.OrderDateStr, {}, 'json')
                                 .then(function (resp) {
                                     if (typeof resp.data != 'undefined' && resp.data != null) {
                                         if (typeof resp.data.SalesForexRate != 'undefined') {
@@ -283,9 +323,11 @@
                 },
                 insert: function (values) {
                     var newId = 1;
+                    var lastRow = null;
                     if ($scope.modelObject.Details.length > 0) {
                         newId = $scope.modelObject.Details.map(d => d.Id).reduce((max, n) => n > max ? n : max)
                         newId++;
+                        lastRow = $scope.modelObject.Details[$scope.modelObject.Details.length - 1];
                     }
 
                     var itemObj = $scope.itemList.find(d => d.Id == values.ItemId);
@@ -304,7 +346,8 @@
                         UnitPrice: values.UnitPrice,
                         ForexRate: values.ForexRate,
                         ForexUnitPrice: values.ForexUnitPrice,
-                        ForexId: values.ForexId,
+                        ForexId: (typeof (values.ForexId) == 'undefined' || values.ForexId == null) && lastRow != null ?
+                            lastRow.ForexId : values.ForexId,
                         ItemRequestDetailId: null,
                         Explanation: values.Explanation,
                         NewDetail: true
@@ -332,7 +375,7 @@
             scrolling: {
                 mode: "virtual"
             },
-            height: 280,
+            height: 350,
             editing: {
                 allowUpdating: true,
                 allowDeleting: true,
@@ -344,6 +387,15 @@
             onInitNewRow: function (e) {
                 e.data.UnitPrice = 0;
                 e.data.TaxIncluded = 0;
+
+                if ($scope.modelObject.Details.length > 0) {
+                    var lastRow = $scope.modelObject.Details[$scope.modelObject.Details.length - 1];
+                    e.data.ForexId = lastRow.ForexId;
+                    e.data.TaxIncluded = lastRow.TaxIncluded;
+                    e.data.TaxRate = lastRow.TaxRate;
+                    e.data.Quantity = lastRow.Quantity;
+                    e.data.UnitId = lastRow.UnitId;
+                }
             },
             repaintChangesOnly: true,
             onCellPrepared: function (e) {
@@ -351,6 +403,12 @@
                     if (e.data.OrderStatus == 3) {
                         e.cellElement.css("background-color", "#e64040");
                         //e.cellElement.css("color", "white");
+                    }
+                    else if (e.data.OrderStatus == 4) {
+                        e.cellElement.css("background-color", "#dbfc03");
+                    }
+                    else if (e.data.OrderStatus == 5) {
+                        e.cellElement.css("background-color", "#4afc03");
                     }
                 }
             },
@@ -395,7 +453,12 @@
                     },
                     validationRules: [{ type: "required" }]
                 },
-                { dataField: 'UnitPrice', caption: 'Birim Fiyat', dataType: 'number', format: { type: "fixedPoint", precision: 2 }, validationRules: [{ type: "required" }] },
+                {
+                    dataField: 'UnitPrice', caption: 'Birim Fiyat',
+                    dataType: 'number', format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                    validationRules: [{ type: "required" }]
+                },
                 {
                     dataField: 'ForexId', caption: 'Döviz Cinsi',
                     allowSorting: false,
@@ -405,9 +468,18 @@
                         displayExpr: "ForexTypeCode"
                     }
                 },
-                { dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                { dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                {
+                    dataField: 'ForexRate', caption: 'Döviz Kuru', dataType: 'number', format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                },
+                {
+                    dataField: 'ForexUnitPrice', caption: 'Döviz Fiyatı', dataType: 'number', format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                },
+                {
+                    dataField: 'TaxAmount', allowEditing: false, caption: 'Kdv Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 },
+                    editorOptions: { format: { type: "fixedPoint", precision: 2 } },
+                },
                 { dataField: 'OverallTotal', allowEditing: false, caption: 'Satır Tutarı', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
                 { dataField: 'Explanation', caption: 'Açıklama' },
                 {
@@ -423,6 +495,22 @@
                                 var dataGrid = $("#dataList").dxDataGrid("instance");
                                 $scope.selectedRow = e.row.data;
                                 $scope.showRowMenu();
+                            }
+                        },
+                        {
+                            name: 'clone', cssClass: 'fas fa-copy', text: '', onClick: function (e) {
+                                var dataGrid = $("#dataList").dxDataGrid("instance");
+                                $scope.selectedRow = e.row.data;
+
+                                var cloneRow = {};
+                                Object.assign(cloneRow, $scope.selectedRow);
+                                cloneRow.Id = 0;
+                                cloneRow.LineNumber++;
+                                cloneRow.NewDetail = true;
+
+                                $scope.modelObject.Details.push(cloneRow);
+
+                                dataGrid.refresh();
                             }
                         }
                     ]
@@ -440,6 +528,7 @@
                         $scope.unitList = resp.data.Units;
                         $scope.firmList = resp.data.Firms;
                         $scope.forexList = resp.data.Forexes;
+                        $scope.paymentPlanList = resp.data.PaymentPlans;
 
                         resolve();
                     }

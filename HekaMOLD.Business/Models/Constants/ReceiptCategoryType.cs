@@ -13,6 +13,6 @@ namespace HekaMOLD.Business.Models.Constants
         ItemManagement=2,
         Sales=3,
         AllInputs=4,
-        AllOutputs=5
+        AllOutputs=5,
     }
 }

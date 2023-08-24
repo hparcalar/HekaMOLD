@@ -14,6 +14,10 @@ using HekaMOLD.Business.UseCases;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.Models.Virtual;
 using HekaMOLD.Business.Models.DataTransfer.Reporting;
+using HekaMOLD.Business.Models.DataTransfer.Labels;
+using HekaPrintingService.Helpers;
+using HekaMOLD.Business.Models.DataTransfer.Core;
+using HekaMOLD.Business.Models.DataTransfer.Production;
 
 namespace HekaPrintingService
 {
@@ -24,40 +28,65 @@ namespace HekaPrintingService
             InitializeComponent();
         }
 
-        private string[] _printerNames = new string[0];
-        private string _printers;
+        ApiHelper _api = null;
+
+        private string[] _printerNames = new string[] { "ArgoxUretim", "UretimYedek" };
+        private string _printers = string.Empty;
         protected string Printers
         {
             get
             {
-                if (string.IsNullOrEmpty(_printers))
+                if (string.IsNullOrEmpty(_printers) || _printerNames.Length == 0)
                 {
                     _printers = ConfigurationManager.AppSettings["Printers"];
 
-                    int[] printerList = _printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
-                    List<string> pNames = new List<string>();
+                    //try
+                    //{
+                    //    int[] printerList = _printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
+                    //    List<string> pNames = new List<string>();
 
-                    using (CoreSystemBO bObj = new CoreSystemBO())
-                    {
-                        foreach (var item in printerList)
-                        {
-                            var dbPrinter = bObj.GetPrinter(item);
-                            pNames.Add(dbPrinter != null ? dbPrinter.AccessPath : "");
-                        }
+                    //    using (CoreSystemBO bObj = new CoreSystemBO())
+                    //    {
+                    //        foreach (var item in printerList)
+                    //        {
+                    //            var dbPrinter = bObj.GetPrinter(item);
+                    //            pNames.Add(dbPrinter != null ? dbPrinter.AccessPath : "");
+                    //        }
 
-                        _printerNames = pNames.ToArray();
-                    }
+                    //        _printerNames = pNames.ToArray();
+                    //    }
+                    //}
+                    //catch (Exception)
+                    //{
+
+                    //}
+                    
                 }
 
                 return _printers;
             }
         }
 
+        //private int _PrinterIndex = -1;
+        //protected int PrinterIndex
+        //{
+        //    get
+        //    {
+        //        if (_PrinterIndex == -1)
+        //        {
+        //            _PrinterIndex = Convert.ToInt32(ConfigurationManager.AppSettings["PrinterIndex"]);
+        //        }
+
+        //        return _PrinterIndex;
+        //    }
+        //}
+
         bool _runTask = false;
         Task _taskQueue = null;
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            _api = new ApiHelper(ConfigurationManager.AppSettings["ApiUri"]);
             StartTask();
         }
 
@@ -86,20 +115,19 @@ namespace HekaPrintingService
         {
             while (_runTask)
             {
-                int[] printerList = Printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
-
-                int printerIndex = 0;
-                foreach (var printerId in printerList)
+                try
                 {
-                    using (CoreSystemBO bObj = new CoreSystemBO())
+                    int[] printerList = Printers.Split(',').Select(d => Convert.ToInt32(d)).ToArray();
+
+                    int printerIndex = 0;
+                    foreach (var printerId in printerList)
                     {
-                        var queueModel = bObj.GetNextFromPrinterQueue(printerId);
-                        if (queueModel != null && queueModel.Id > 0)
+                        var queueList = await _api.GetData<PrinterQueueModel[]>("Common/GetPrintQueueList?printerId=" + printerId.ToString());
+                        foreach (var queueModel in queueList)
                         {
-                            if (queueModel.RecordType == (int)RecordType.SerialItem)
+                            if (queueModel != null && queueModel.Id > 0)
                             {
-                                BusinessResult printResult = null;
-                                using (ProductionBO prodBo = new ProductionBO())
+                                if (queueModel.RecordType == (int)RecordType.SerialItem)
                                 {
                                     if (queueModel.RecordId == null)
                                     {
@@ -107,57 +135,140 @@ namespace HekaPrintingService
                                         {
                                             var dataModel = Newtonsoft.Json
                                                 .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
-                                            var dbWorkOrder = prodBo.GetWorkOrderDetail(dataModel.WorkOrderDetailId ?? 0);
+                                            var dbWorkOrder = await _api
+                                                .GetData<WorkOrderDetailModel>("Common/GetWorkOrderDetail?id=" + (dataModel.WorkOrderDetailId ?? 0));
                                             if (dbWorkOrder != null && dbWorkOrder.Id > 0)
                                             {
-                                                var currentShift = prodBo.GetCurrentShift();
+                                                var currentShift = await _api.GetData<ShiftModel>("Common/GetCurrentShift");
 
-                                                prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
+                                                using (ProductionBO prodBo = new ProductionBO())
                                                 {
-                                                    BarcodeContent = dataModel.Code,
-                                                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now),
-                                                    FirmName = dbWorkOrder.FirmName,
-                                                    ShiftName = currentShift != null ? currentShift.ShiftCode : "",
-                                                    InPackageQuantity = string.Format("{0:N2}", dbWorkOrder.InPackageQuantity ?? 0),
-                                                    ProductCode = dbWorkOrder.ProductCode,
-                                                    ProductName = dbWorkOrder.ProductName,
-                                                    Weight = "",
-                                                    Id = 0,
-                                                }, printerId, _printerNames[printerIndex]);
+                                                    prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
+                                                    {
+                                                        BarcodeContent = dataModel.Code,
+                                                        CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now),
+                                                        FirmName = dbWorkOrder.FirmName,
+                                                        ShiftName = currentShift != null ? currentShift.ShiftCode : "",
+                                                        InPackageQuantity = string.Format("{0:N2}", dbWorkOrder.InPackageQuantity ?? 0),
+                                                        ProductCode = dbWorkOrder.ProductCode,
+                                                        ProductName = dbWorkOrder.ProductName,
+                                                        Weight = "",
+                                                        Id = 0,
+                                                    }, printerId, _printerNames[printerIndex]);
+                                                }
                                             }
                                         }
                                     }
                                     else
-                                        printResult = prodBo.PrintProductLabel(queueModel.RecordId.Value, printerId,
-                                            _printerNames[printerIndex]);
+                                    {
+                                        var serialModel = await _api.GetData<WorkOrderSerialModel>("Common/GetWorkOrderSerial?id=" + queueModel.RecordId.Value);
+                                        var workModel = await _api.GetData<WorkOrderDetailModel>("Common/GetWorkOrderDetail?id=" + serialModel.WorkOrderDetailId.Value);
+
+                                        //var currentShift = await _api.GetData<ShiftModel>("Common/GetCurrentShift");
+                                        //serialModel.ShiftCode = currentShift != null ? currentShift.ShiftCode : "";
+                                        //serialModel.ShiftName = currentShift != null ? currentShift.ShiftCode : "";
+
+                                        using (ProductionBO prodBo = new ProductionBO())
+                                        {
+                                            var bRes = prodBo.PrintProductLabel(serialModel, workModel, printerId,
+                                                _printerNames[printerIndex]);
+
+                                            //if (bRes.Result == false)
+                                            //    MessageBox.Show(bRes.ErrorMessage);
+                                        }
+                                    }
+
+                                    await _api.PostData<int>("Common/SetQueueAsPrinted?id=" + queueModel.Id, queueModel.Id);
+
+                                    //AddLog(_printerNames[printerId] + " yazıcısına gönderildi.");
                                 }
-
-                                //if (printResult.Result)
-                                bObj.SetElementAsPrinted(queueModel.Id);
-
-                                //AddLog(_printerNames[printerId] + " yazıcısına gönderildi.");
-                            }
-                            else if (queueModel.RecordType == (int)RecordType.DeliveryList)
-                            {
-                                using (ReportingBO rObj = new ReportingBO())
+                                else if (queueModel.RecordType == (int)RecordType.ItemSerial)
                                 {
-                                    var allocData = Newtonsoft.Json
-                                        .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
+                                    var serialModel = await _api.GetData<WorkOrderSerialModel>("Common/GetItemSerial?id=" + queueModel.RecordId.Value);
 
-                                    var reportData = (List<DeliverySerialListModel>)rObj
-                                        .PrepareReportData(queueModel.RecordId.Value, ReportType.DeliverySerialList);
-                                    rObj.PrintReport<List<DeliverySerialListModel>>(allocData.ReportTemplateId.Value, 
-                                        printerId, reportData);
+                                    //var currentShift = await _api.GetData<ShiftModel>("Common/GetCurrentShift");
+                                    //serialModel.ShiftCode = currentShift != null ? currentShift.ShiftCode : "";
+                                    //serialModel.ShiftName = currentShift != null ? currentShift.ShiftCode : "";
+
+                                    using (ProductionBO prodBo = new ProductionBO())
+                                    {
+                                        var bRes = prodBo.PrintProductLabel(new HekaMOLD.Business.Models.DataTransfer.Labels.ProductLabel
+                                        {
+                                            BarcodeContent = serialModel.SerialNo,
+                                            CreatedDateStr = string.Format("{0:dd.MM.yyyy}", DateTime.Now),
+                                            FirmName = serialModel.FirmName,
+                                            ShiftName = "",
+                                            InPackageQuantity = string.Format("{0:N2}", serialModel.FirstQuantity ?? 0),
+                                            ProductCode = serialModel.ItemNo,
+                                            ProductName = serialModel.ItemName,
+                                            Weight = "",
+                                            Id = 0,
+                                        }, printerId, _printerNames[printerIndex]);
+
+
+                                        await _api.PostData<int>("Common/SetQueueAsPrinted?id=" + queueModel.Id, queueModel.Id);
+                                    }
                                 }
+                                else if (queueModel.RecordType == (int)RecordType.ItemLabel)
+                                {
+                                    if (queueModel.RecordId != null)
+                                    {
+                                        ProductLabel labelData = new ProductLabel();
 
-                                bObj.SetElementAsPrinted(queueModel.Id);
+                                        var dbItem = await _api.GetData<ItemModel>("Common/GetItem?id=" + queueModel.RecordId.Value);
+
+                                        if (dbItem != null && dbItem.Id > 0)
+                                        {
+                                            labelData.ProductCode = dbItem.ItemNo;
+                                            labelData.ProductName = dbItem.ItemName;
+                                            labelData.Id = dbItem.Id;
+                                        }
+
+                                        using (ReportingBO rObj = new ReportingBO())
+                                        {
+                                            var allocData = Newtonsoft.Json
+                                                .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
+
+                                            labelData.InPackageQuantity = string.Format("{0:N2}", allocData.Quantity ?? 0);
+                                            labelData.BarcodeContent = labelData.Id + "XX" + labelData.InPackageQuantity;
+                                            labelData.BarcodeImage = rObj.GenerateQRCode(labelData.BarcodeContent);
+
+                                            rObj.PrintReport<List<ProductLabel>>(-1, printerId, new List<ProductLabel>() { labelData });
+                                        }
+                                    }
+
+                                    await _api.PostData<int>("Common/SetQueueAsPrinted?id=" + queueModel.Id, queueModel.Id);
+                                }
+                                else if (queueModel.RecordType == (int)RecordType.DeliveryList)
+                                {
+                                    //using (ReportingBO rObj = new ReportingBO())
+                                    //{
+                                    //    var allocData = Newtonsoft.Json
+                                    //        .JsonConvert.DeserializeObject<AllocatedPrintDataModel>(queueModel.AllocatedPrintData);
+
+                                    //    var reportData = (List<DeliverySerialListModel>)rObj
+                                    //        .PrepareReportData(queueModel.RecordId.Value, ReportType.DeliverySerialList);
+                                    //    rObj.PrintReport<List<DeliverySerialListModel>>(allocData.ReportTemplateId.Value,
+                                    //        printerId, reportData);
+                                    //}
+
+                                    await _api.PostData<int>("Common/SetQueueAsPrinted?id=" + queueModel.Id, queueModel.Id);
+                                }
                             }
                         }
+
+                    
+                        printerIndex++;
                     }
-
-                    printerIndex++;
                 }
-
+                catch (Exception ex)
+                {
+                    this.BeginInvoke((Action)delegate
+                    {
+                        lstLog.Items.Add(ex.Message);
+                    });
+                }
+                
                 await Task.Delay(100);
             }
         }

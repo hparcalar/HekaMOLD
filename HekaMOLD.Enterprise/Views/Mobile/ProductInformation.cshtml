@@ -99,13 +99,15 @@
                             <p class="fw-bold">Hammadde Grm</p>
                             <p class="fw-bold">Şişirme Zamanı</p>
                             <p class="fw-bold">Toplam Zaman</p>
+                            <p class="fw-bold">Koli İçi Adet</p>
                         </div>
                         <div class="col-sm-4 col-md-4 col-xxl-4">
-                            <p ng-cloak>{{ modelObject.MoldData.HeadSize }}</p>
-                            <p ng-cloak>{{ modelObject.MoldData.RawMaterialName }}</p>
-                            <p ng-cloak>{{ modelObject.MoldData.RawMaterialGr }}</p>
-                            <p ng-cloak>{{ modelObject.MoldData.InflationTimeSeconds }}</p>
-                            <p ng-cloak>{{ modelObject.MoldData.TotalTimeSeconds }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.HeadSize }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.RawMaterialName }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.RawMaterialGr }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.InflationTimeSeconds }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.TotalTimeSeconds }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.InPackageQuantity }}</p>
                         </div>
 
                         @* RIGHT COLUMN *@
@@ -118,12 +120,12 @@
                             <p class="fw-bold">Kalıp Adı</p>
                         </div>
                         <div class="col-sm-4 col-md-4 col-xxl-4">
-                            <p ng-cloak>{{ modelObject.MoldData.DyeCode }} / {{ modelObject.MoldData.RalCode }}</p>
-                            <p ng-cloak>{{ modelObject.MoldData.PackageDimension }}</p>
-                            <p ng-cloak>{{ modelObject.MoldData.NutCaliber }} / {{ modelObject.MoldData.NutQuantity }}</p>
-                            <p ng-cloak>{{ modelObject.MoldData.InPalletPackageQuantity }}</p>
-                            <p ng-cloak>{{ modelObject.MoldData.MoldCode }}</p>
-                            <p ng-cloak>{{ modelObject.MoldData.MoldName }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.DyeCode }} / {{ modelObject.MoldData.RalCode }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.PackageDimension }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.NutCaliber }} / {{ modelObject.MoldData.NutQuantity }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.InPalletPackageQuantity }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.MoldCode }}</p>
+                            <p class="no-wrap" ng-cloak>{{ modelObject.MoldData.MoldName }}</p>
                         </div>
                     </div>
                 </div>
@@ -152,6 +154,13 @@
         var MACHINE_ID = @(Request.Cookies.AllKeys.Contains("MachineId") ? Request.Cookies["MachineId"].Value : "0");
         var MACHINE_NAME = '@(Request.Cookies.AllKeys.Contains("MachineName") ? Server.UrlDecode(Request.Cookies["MachineName"].Value) : "")';
     </script>
+    <style type="text/css">
+        .no-wrap{
+            text-wrap:none;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+    </style>
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>

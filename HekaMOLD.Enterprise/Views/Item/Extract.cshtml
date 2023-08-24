@@ -12,7 +12,11 @@
                  class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
                 <!--begin::Title-->
                 <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
-                    @ViewBag.Title ({{ modelObject.ItemNo }} / {{ modelObject.ItemName }})
+                    <button class="btn btn-primary btn-sm me-5" ng-click="showItemDialog()">
+                        Stok Seç
+                    </button>
+                    @ViewBag.Title 
+                    <span ng-bind="getItemLabel()" style="margin-left:10px;" class="badge badge-secondary"></span>
                 </h1>
                 <!--end::Title-->
             </div>
@@ -23,22 +27,22 @@
                 <label class="form-label fs-6 fw-bolder text-gray-700 mt-3 me-2">Giriş</label>
                 <!--begin::Input group-->
                 <div class="mt-2 me-3">
-                    <input type="number" readonly="readonly"
-                           class="form-control form-control-sm" ng-model="modelObject.TotalInQuantity" placeholder="" />
+                    <input type="text" readonly="readonly"
+                           class="form-control form-control-sm" value="{{ getInQty() }}" placeholder="" />
                 </div>
 
                 <label class="form-label fs-6 fw-bolder text-gray-700 mt-3 me-2">Çıkış</label>
                 <!--begin::Input group-->
                 <div class="mt-2 me-3">
-                    <input type="number" readonly="readonly"
-                           class="form-control form-control-sm" ng-model="modelObject.TotalOutQuantity" placeholder="" />
+                    <input type="text" readonly="readonly"
+                           class="form-control form-control-sm" value="{{ getOutQty() }}" placeholder="" />
                 </div>
 
                 <label class="form-label fs-6 fw-bolder text-gray-700 mt-3 me-2">Mevcut</label>
                 <!--begin::Input group-->
                 <div class="mt-2 me-3">
-                    <input type="number" readonly="readonly"
-                           class="form-control form-control-sm" ng-model="modelObject.TotalOverallQuantity" placeholder="" />
+                    <input type="text" readonly="readonly"
+                           class="form-control form-control-sm" value="{{ getTotalQty() }}" placeholder="" />
                 </div>
                 <!--end::Wrapper-->
             </div>
@@ -56,8 +60,8 @@
                 <!--begin::Col-->
                 <div class="col-xxl-12">
 
-                    <div class="dx-viewport">
-                        <div id="dataList"></div>
+                    <div id="tableContainer" class="dx-viewport h-75">
+                        <div id="dataList" class="h-100"></div>
                     </div>
 
                 </div>
@@ -68,6 +72,10 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
+
+    <div id="dial-items" title="Stok Listesi" style="display:none;">
+        <ng-include src="'../Components/Views/ItemList.html'"></ng-include>
+    </div>
 </div>
 
 @section scripts{
@@ -75,5 +83,6 @@
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/Components/Controllers/item-list.js"></script>
     <script src="~/FrontEndLogic/Item/extract.js"></script>
 }

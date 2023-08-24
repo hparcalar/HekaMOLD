@@ -1,4 +1,4 @@
-﻿app.controller('productDeliveryCtrl', function ($scope, $http) {
+﻿app.controller('productDeliveryCtrl', function ($scope, $http, $timeout) {
     $scope.modelObject = {
         Id:0,
         DocumentNo: '', FirmId: 0,
@@ -6,23 +6,234 @@
         Details: [], OrderDetails: [],
     };
 
+    $scope.barcodeBox = '';
+
     $scope.lastRecordId = 0;
     $scope.reportTemplateId = 0;
+    $scope.selectedDeliveryPlans = [];
 
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
     $scope.summaryList = [];
     $scope.selectedProducts = [];
 
+    $scope.palletInfo = []; // per element is : {ItemName: '', PalletCount: 0}
+
+    $scope.sumTotalCount = 0;
+    $scope.sumTotalQty = 0;
+    $scope.sumPalletQty = 0;
+
     $scope.bindModel = function () {
-        $http.get(HOST_URL + 'Mobile/GetProductsForDelivery', {}, 'json')
+        $scope.pickupList.splice(0, $scope.pickupList.length);
+        $scope.palletInfo.splice(0, $scope.palletInfo.length);
+        $scope.filteredPickupList = [];
+        $scope.summaryList = [];
+        $scope.selectedDeliveryPlans = [];
+
+        try {
+            $timeout(function () {
+                if (localStorage.getItem('readings') != null && localStorage.getItem('readings').length > 0) {
+                    var tmpList = JSON.parse(localStorage.getItem('readings'));
+                    for (var i = 0; i < tmpList.length; i++) {
+                        var tmpItem = tmpList[i];
+                        $scope.pickupList.push(tmpItem);
+                    }
+                    $scope.filteredPickupList = $scope.pickupList;
+                }
+
+                if (localStorage.getItem('pallets') != null && localStorage.getItem('pallets').length > 0) {
+                    var tmpList = JSON.parse(localStorage.getItem('pallets'));
+                    for (var i = 0; i < tmpList.length; i++) {
+                        var tmpItem = tmpList[i];
+                        $scope.palletInfo.push(tmpItem);
+                    }
+                }
+            });
+
+            $scope.$applyAsync();
+        } catch (e) {
+
+        }
+
+        $scope.updateSummaryList();
+
+        //$http.get(HOST_URL + 'Mobile/GetProductsForDelivery', {}, 'json')
+        //    .then(function (resp) {
+        //        if (typeof resp.data != 'undefined' && resp.data != null) {
+        //            $scope.pickupList = resp.data.Serials;
+        //            $scope.filteredPickupList = $scope.pickupList;
+        //            $scope.summaryList = resp.data.Summaries;
+        //        }
+        //    }).catch(function (err) { });
+    }
+
+    $scope.runningBarcodeRead = false;
+    $scope.onBarcodeKeyUp = function (e) {
+        if ($scope.runningBarcodeRead)
+            return;
+        
+        try {
+            if ($scope.barcodeBox.length == 8) {
+                $scope.runningBarcodeRead = true;
+                $scope.getSerialByBarcode($scope.barcodeBox);
+            }
+        } catch (e) {
+
+        }
+    }
+
+    $scope.deleteTemp = function () {
+        try {
+            localStorage.removeItem('readings');
+            window.location.reload();
+        } catch (e) {
+
+        }
+    }
+
+    $scope.getSerialByBarcode = function (barcode) {
+        if ($scope.pickupList.some(m => m.SerialNo == barcode)) {
+            toastr.warning('Okutulan koli zaten çeki listesine eklenmiş.');
+            $scope.barcodeBox = '';
+            $scope.runningBarcodeRead = false;
+            return;
+        }
+
+        $http.get(HOST_URL + 'Mobile/GetItemSerialByBarcode?barcode=' + barcode, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data.Serials;
-                    $scope.filteredPickupList = $scope.pickupList;
-                    $scope.summaryList = resp.data.Summaries;
+                    $timeout(function () {
+                        if (resp.data.Id > 0) {
+                            $scope.pickupList.push({ ...resp.data });
+                            $scope.pickupList = $scope.pickupList.filter(d => d.ItemNo != null);
+
+                            toastr.success('Okutulan koli çeki listesine eklendi.');
+                            $scope.updateSummaryList();
+                            try {
+                                localStorage.setItem('readings', JSON.stringify($scope.pickupList));
+                            } catch (e) {
+
+                            }
+                        }
+                        else {
+                            if (resp.data.ErrorMessage != null && resp.data.ErrorMessage.length > 0)
+                                toastr.error(resp.data.ErrorMessage);
+                            else
+                                toastr.error('Okutulan barkoda ait bir koli bulunamadı.');
+                        }
+
+                        $scope.runningBarcodeRead = false;
+                        $scope.barcodeBox = '';
+                    });
                 }
-            }).catch(function (err) { });
+            }).catch(function (err) {
+                $scope.runningBarcodeRead = false;
+            });
+    }
+
+    $scope.removeFromPickup = function (item) {
+        try {
+            $timeout(function () {
+                var indexOfItem = $scope.pickupList.indexOf(item);
+                $scope.pickupList.splice(indexOfItem, 1);
+
+                $scope.updateSummaryList();
+
+                try {
+                    localStorage.setItem('readings', JSON.stringify($scope.pickupList));
+                } catch (e) {
+
+                }
+            })
+        } catch (e) {
+
+        }
+    }
+
+    $scope.changePalletCount = function (item) {
+        bootbox.prompt({
+            title: "Palet adedi giriniz",
+            centerVertical: true,
+            callback: function (result) {
+                if (result != null && result.length > 0) {
+                    var newQty = parseInt(result);
+                    if (newQty <= 0) {
+                        toastr.error('Miktar 0 dan büyük olmalıdır.');
+                        return;
+                    }
+
+                    var palletElement = $scope.palletInfo.find(d => d.ItemName == item.ItemName);
+                    if (palletElement) {
+                        palletElement.PalletCount = newQty;
+                    }
+                    else {
+                        $scope.palletInfo.push({
+                            ItemName: item.ItemName,
+                            PalletCount: newQty,
+                        });
+                    }
+
+                    try {
+                        localStorage.setItem('pallets', JSON.stringify($scope.palletInfo));
+                    } catch (e) {
+
+                    }
+                    $scope.updateSummaryList();
+                }
+            }
+        });
+    }
+
+    $scope.updateSummaryList = function () {
+        $timeout(function () {
+            $scope.summaryList.splice(0, $scope.summaryList.length);
+            $scope.sumTotalCount = 0;
+            $scope.sumTotalQty = 0;
+            $scope.sumPalletQty = 0;
+
+            $scope.summaryList = [...$scope.pickupList.map((d) => {
+                return {
+                    ItemName: d.ItemName,
+                    SerialSum: d.FirstQuantity,
+                    SerialCount: 1,
+                };
+            }).reduce(
+                (map, item) => {
+                    const { ItemName: key, SerialCount, SerialSum } = item;
+                    const prev = map.get(key);
+
+                    $scope.sumTotalQty += SerialSum;
+                    $scope.sumTotalCount += SerialCount;
+
+                    if (prev) {
+                        prev.SerialSum += SerialSum
+                        prev.SerialCount += SerialCount
+                    } else {
+                        map.set(key, Object.assign({}, item))
+                    }
+
+                    return map
+                },
+                new Map())
+            ];
+
+            // assign pallet counts to summaries
+            $scope.summaryList.forEach(d => {
+                var palletElement = $scope.palletInfo.find(m => m.ItemName == d[1].ItemName);
+                if (palletElement) {
+                    d[1].PalletCount = palletElement.PalletCount;
+                    $scope.sumPalletQty += palletElement.PalletCount;
+                }
+                else
+                    d[1].PalletCount = 0;
+            });
+        });
+
+        try {
+            $scope.$applyAsync();
+        } catch (e) {
+
+        }
     }
 
     $scope.getListSum = function (list, key) {
@@ -46,7 +257,12 @@
     }
 
     $scope.isSelectedProduct = function (item) {
-        return $scope.selectedProducts.some(d => d.Id == item.Id);
+        try {
+            return $scope.selectedProducts.some(d => d.Id == item.Id);
+        } catch (e) {
+
+        }
+        return false;
     }
 
     $scope.processBarcodeResult = function (barcode) {
@@ -108,8 +324,9 @@
             },
             qrCodeMessage => {
                 if (!$scope.isBarcodeRead) {
-                    $scope.processBarcodeResult(qrCodeMessage);
-                    setTimeout(() => { $scope.isBarcodeRead = false; }, 1500);
+                    $scope.getSerialByBarcode(qrCodeMessage);
+                    /*$scope.processBarcodeResult(qrCodeMessage);*/
+                    setTimeout(() => { $scope.isBarcodeRead = false; }, 1200);
                 }
             },
             errorMessage => {
@@ -208,6 +425,22 @@
         });
     }
 
+    $scope.showSelectProductDialog = function () {
+        // DO BROADCAST
+        $scope.$broadcast('loadProductList', { productSelection: true, list: $scope.pickupList, });
+
+        $('#dial-wr-manager').dialog({
+            width: window.innerWidth * 0.95,
+            height: window.innerHeight * 0.95,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
     // RECEIVE EMIT DELIVERY PLAN DATA
     $scope.$on('transferDeliveryPlans', function (e, d) {
         var firstOrderRecord = null;
@@ -217,16 +450,18 @@
             firstOrderRecord = d[0];
 
         d.forEach(x => {
-            if (!productsOfPlan.some(m => m == x.WorkOrder.ItemId))
-                productsOfPlan.push(x.WorkOrder.ItemId);
+            if (!productsOfPlan.some(m => m == x.ItemOrder.ItemId))
+                productsOfPlan.push(x.ItemOrder.ItemId);
         });
 
-        $scope.filteredPickupList = $scope.pickupList.filter(m => productsOfPlan.includes(m.ItemId));
+        /*$scope.filteredPickupList = $scope.pickupList.filter(m => productsOfPlan.includes(m.ItemId));*/
 
         if (firstOrderRecord != null) {
             $scope.selectedFirm = $scope.firmList.find(m => m.Id == firstOrderRecord.FirmId);
             refreshArray($scope.firmList);
         }
+
+        $scope.selectedDeliveryPlans = d;
 
         $('#dial-deliveryplans').dialog('close');
     });
@@ -328,6 +563,13 @@
         $('#dial-orderlist').dialog('close');
     });
 
+    // RECEIVE EMIT SELECTED PACKAGE DATA
+    $scope.$on('packageSelected', function (e, d) {
+        $scope.getSerialByBarcode(d.SerialNo);
+
+        //$('#dial-wr-manager').dialog('close');
+    });
+
     $scope.clearSelectedOrders = function () {
         $scope.modelObject.OrderDetails.splice(0, $scope.modelObject.OrderDetails.length);
     }
@@ -364,25 +606,27 @@
                     else
                         $scope.modelObject.FirmId = null;
 
-                    if ($scope.modelObject.InWarehouseId == null) {
-                        toastr.error('Depo seçmelisiniz.');
-                        return;
-                    }
+                    //if ($scope.modelObject.InWarehouseId == null) {
+                    //    toastr.error('Depo seçmelisiniz.');
+                    //    return;
+                    //}
 
                     if ($scope.modelObject.FirmId == null) {
                         toastr.error('Firma seçmelisiniz.');
                         return;
                     }
 
-                    if ($scope.selectedWarehouse.WarehouseType != 2) {
-                        toastr.error('Ürün deposu seçmelisiniz.');
-                        return;
-                    }
+                    //if ($scope.selectedWarehouse.WarehouseType != 2) {
+                    //    toastr.error('Ürün deposu seçmelisiniz.');
+                    //    return;
+                    //}
 
                     $http.post(HOST_URL + 'Mobile/SaveProductDelivery', {
                         receiptModel: $scope.modelObject,
-                        model: $scope.selectedProducts,
-                        orderDetails: $scope.modelObject.OrderDetails.map(m => m.Id),
+                        model: $scope.pickupList,
+                        orderDetails: $scope.modelObject.OrderDetails.map(m => m.ItemOrderDetailId),
+                        deliveryPlans: $scope.selectedDeliveryPlans,
+                        palletCounts: $scope.palletInfo,
                     }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
@@ -400,6 +644,13 @@
                                         Details: [], OrderDetails: [],
                                     };
 
+                                    try {
+                                        localStorage.removeItem('readings');
+                                        localStorage.removeItem('pallets');
+                                    } catch (e) {
+
+                                    }
+                                    $scope.selectedDeliveryPlans = [];
                                     $scope.bindModel();
                                 }
                                 else
@@ -414,6 +665,7 @@
     // LOAD EVENTS
     $scope.loadSelectables().then(function () {
         refreshArray($scope.warehouseList);
+
         $scope.bindModel();
     });
 });

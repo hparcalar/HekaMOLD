@@ -28,7 +28,7 @@
                                    ng-model="activeWorkOrder.WorkOrder.ProductName" readonly="readonly" placeholder="" />
                         </div>
                         <div class="col-sm-4 col-xs-4 col-xxl-4">
-                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Koli İçi Adet</label>
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Paket İçi Adet</label>
                             <!--begin::Input group-->
                             <div class="mb-5">
                                 <input type="text" class="form-control form-control-solid"
@@ -148,7 +148,7 @@
         <!--end::Container-->
 
         <div id="dial-machinelist" title="Makine Seç" style="display:none;">
-            <ng-include src="'../Components/Views/MachineSelection.html'"></ng-include>
+            <ng-include src="'../Components/Views/PlanMachineSelection.html'"></ng-include>
         </div>
     </div>
     <!--end::Post-->
@@ -165,5 +165,5 @@
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
 
     <script src="~/FrontEndLogic/Mobile/production-status.js"></script>
-    <script src="~/Components/Controllers/machine-selection.js"></script>
+    <script src="~/Components/Controllers/plan-machine-selection.js"></script>
 }

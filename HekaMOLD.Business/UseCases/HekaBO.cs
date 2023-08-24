@@ -12,7 +12,8 @@ namespace HekaMOLD.Business.UseCases
         public bool RunMigrations()
         {
             MigrationManager migrationManager = new MigrationManager();
-            return migrationManager.RunMigrations();
+            migrationManager.MigrateUp();
+            return true;
         }
     }
 }

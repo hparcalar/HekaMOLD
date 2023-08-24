@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "Sayım İşlemi";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+
+<div>
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post" ng-controller="countingFormCtrl">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-fluid">
+            <div class="row gy-5 mt-0 gx-xl-8 bg-white">
+                <div class="col-sm-8 col-xs-8 col-xxl-8">
+                    <div class="row h-100">
+                        <div class="col-sm-3 col-xs-3 col-xxl-3">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Okutulacak Sayı</label>
+                            <div class="mb-5">
+                                <input type="text" class="form-control"
+                                       ng-model="modelObject.ReadCount"
+                                       placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-xs-3 col-xxl-3">
+                            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Noksan Adet</label>
+                            <div class="mb-5">
+                                <input type="text" class="form-control"
+                                       ng-model="modelObject.DecreaseCount"
+                                       placeholder="" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-xxl-4 col-xs-4 h-100">
+                            
+                        </div>
+
+                        <div class="col-sm-2 col-xs-2 col-xxl-2">
+                            <button type="button"
+                                    ng-click="readBarcode()"
+                                    class="btn btn-sm btn-primary btn-block h-75 mt-2">
+                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5,7 L19,7 C20.1045695,7 21,7.8954305 21,9 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,9 C3,7.8954305 3.8954305,7 5,7 Z M12,17 C14.209139,17 16,15.209139 16,13 C16,10.790861 14.209139,9 12,9 C9.790861,9 8,10.790861 8,13 C8,15.209139 9.790861,17 12,17 Z" id="Combined-Shape" fill="#000000"></path>
+                                    <rect id="Rectangle" fill="#000000" opacity="0.3" x="9" y="4" width="6" height="2" rx="1"></rect>
+                                    <circle id="Oval-2" fill="#000000" opacity="0.3" cx="12" cy="13" r="2"></circle>
+                                </svg>
+                                Barkod Okut
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-xs-4 col-xxl-4">
+                   
+                    
+                </div>
+            </div>
+
+            <!--begin::DETAIL TABLE-->
+            <div class="row gy-5 mt-4 gx-xl-8 bg-white">
+                @* STOK TABLOSU *@
+                <div class="col-xxl-6 col-sm-6">
+                    <h5 class="hk-title-mobile">Stok Listesi</h5>
+                    <table class="table table-bordered table-hk-md">
+                        <thead>
+                            <tr>
+                                <th class="w-50 px-2">Stok</th>
+                                <th class="w-25 px-1">Toplam Miktar</th>
+                                <th class="w-25 px-2">Barkod Adedi</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-md">
+                        <table ng-cloak class="table table-bordered table-hk-md">
+                            <tbody>
+                                <tr ng-repeat="item in detailList">
+                                    <td class="w-50 px-2">{{item.ItemName}}</td>
+                                    <td class="w-25 px-2">{{item.Quantity}}</td>
+                                    <td class="w-25 px-2">{{item.PackageQuantity}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @* SERİ TABLOSU *@
+                <div class="col-xxl-6 col-sm-6">
+                    <h5 class="hk-title-mobile">Sayılan Barkodlar</h5>
+                    <table class="table table-bordered table-hk-md">
+                        <thead>
+                            <tr>
+                                <th class="w-50 px-2">Stok</th>
+                                <th class="w-25 px-1">Miktar</th>
+                                <th class="w-25 px-2">#</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-scroller-md">
+                        <table ng-cloak class="table table-bordered table-striped table-hk-md">
+                            <tbody>
+                                <tr ng-repeat="item in serialList">
+                                    <td class="w-50 px-2">{{item.ItemName}}</td>
+                                    <td class="w-25 px-2">{{item.Quantity}}</td>
+                                    <td class="w-25 px-2">
+                                        <button type="button" class="btn btn-sm btn-primary" ng-click="removeSerial(item.Id)">
+                                            SİL
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--end::DETAIL TABLE-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+
+@section scripts{
+    <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
+    <script src="~/Scripts/dx.all.js"></script>
+    <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
+    <script src="~/Scripts/html5-qrcode.min.js"></script>
+    <script src="~/FrontEndLogic/Mobile/counting-form.js"></script>
+}

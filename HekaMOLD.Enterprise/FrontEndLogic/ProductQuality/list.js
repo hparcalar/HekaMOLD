@@ -17,6 +17,10 @@
             rowAlternationEnabled: true,
             focusedRowEnabled: true,
             showBorders: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: true,
+            },
             allowColumnResizing: true,
             wordWrapEnabled: true,
             filterRow: {
@@ -46,6 +50,8 @@
                 { dataField: 'ControlDevice', caption: 'Cihaz' },
                 { dataField: 'Method', caption: 'Yöntem' },
                 { dataField: 'Responsible', caption: 'Sorumlu' },
+                { dataField: 'Display', caption: 'Görüntüle' },
+
                 {
                     type: "buttons",
                     buttons: [

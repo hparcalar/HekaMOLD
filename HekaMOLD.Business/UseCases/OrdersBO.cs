@@ -1,4 +1,5 @@
 ﻿using Heka.DataAccess.Context;
+using Heka.DataAccess.UnitOfWork;
 using HekaMOLD.Business.Base;
 using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.Constants;
@@ -15,13 +16,25 @@ namespace HekaMOLD.Business.UseCases
 {
     public class OrdersBO : CoreReceiptsBO
     {
-        public ItemOrderModel[] GetItemOrderList(ItemOrderType orderType)
+        public ItemOrderModel[] GetItemOrderList(ItemOrderType orderType, string dt1 = "", string dt2 = "")
         {
             List<ItemOrderModel> data = new List<ItemOrderModel>();
 
+            DateTime dtStart, dtEnd;
+
+            if (string.IsNullOrEmpty(dt1))
+                dt1 = "01.01." + DateTime.Now.Year;
+            if (string.IsNullOrEmpty(dt2))
+                dt2 = "31.12." + DateTime.Now.Year;
+
+            dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+            dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
             var repo = _unitOfWork.GetRepository<ItemOrder>();
 
-            return repo.Filter(d => d.OrderType == (int)orderType).ToList()
+            return repo.Filter(d => d.OrderType == (int)orderType && (d.OrderDate >= dtStart && d.OrderDate <= dtEnd)).ToList()
                 .Select(d => new ItemOrderModel
                 {
                     Id = d.Id,
@@ -45,6 +58,203 @@ namespace HekaMOLD.Business.UseCases
                 .ToArray();
         }
 
+        public ItemOrderDetailModel[] GetOpenOrderDetailListForView(ItemOrderType orderType)
+        {
+            List<ItemOrderDetailModel> data = new List<ItemOrderDetailModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+            return repo.Filter(d => d.ItemOrder.OrderType == (int)orderType
+                && d.OrderStatus != (int)OrderStatusType.Completed
+                && d.OrderStatus != (int)OrderStatusType.Cancelled).ToList()
+                .Select(d => new ItemOrderDetailModel
+                {
+                    Id = d.Id,
+                    ItemOrderId = d.ItemOrderId,
+                    OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.CreatedDate),
+                    DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.DateOfNeed),
+                    FirmCode = d.ItemOrder.Firm != null ? d.ItemOrder.Firm.FirmCode : "",
+                    FirmName = d.ItemOrder.Firm != null ? d.ItemOrder.Firm.FirmName : "",
+                    OrderNo = d.ItemOrder.OrderNo,
+                    OrderDate = d.ItemOrder.OrderDate,
+                    DocumentNo = d.ItemOrder.DocumentNo,
+                    Explanation = d.Explanation,
+                    OrderStatus = d.OrderStatus,
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    Quantity = d.Quantity,
+                })
+                .OrderByDescending(d => d.OrderNo)
+                .ToArray();
+        }
+
+        public ItemOrderDetailModel[] GetOpenOrderDetailList(ItemOrderType orderType)
+        {
+            List<ItemOrderDetailModel> data = new List<ItemOrderDetailModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+            return repo.Filter(d => d.ItemOrder.OrderType == (int)orderType
+                && d.OrderStatus != (int)OrderStatusType.Completed 
+                && d.OrderStatus != (int)OrderStatusType.Cancelled
+                && d.OrderStatus != (int)OrderStatusType.Planned).ToList()
+                .Select(d => new ItemOrderDetailModel
+                {
+                    Id = d.Id,
+                    ItemOrderId = d.ItemOrderId,
+                    OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.CreatedDate),
+                    DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.ItemOrder.DateOfNeed),
+                    FirmCode = d.ItemOrder.Firm != null ? d.ItemOrder.Firm.FirmCode : "",
+                    FirmName = d.ItemOrder.Firm != null ? d.ItemOrder.Firm.FirmName : "",
+                    OrderNo = d.ItemOrder.OrderNo,
+                    OrderDate = d.ItemOrder.OrderDate,
+                    DocumentNo = d.ItemOrder.DocumentNo,
+                    Explanation = d.Explanation,
+                    OrderStatus = d.OrderStatus,
+                    ItemNo = d.Item != null ? d.Item.ItemNo : "",
+                    ItemName = d.Item != null ? d.Item.ItemName : "",
+                    Quantity = d.Quantity,
+                })
+                .OrderByDescending(d => d.OrderNo)
+                .ToArray();
+        }
+
+        public ItemOrderModel[] GetNonSyncOrders(ItemOrderType orderType)
+        {
+            List<ItemOrderModel> data = new List<ItemOrderModel>();
+
+            var repo = _unitOfWork.GetRepository<ItemOrder>();
+
+            return repo.Filter(d => d.OrderType == (int)orderType && (d.SyncStatus == null || d.SyncStatus == 0)).ToList()
+                .Select(d => new ItemOrderModel
+                {
+                    Id = d.Id,
+                    OrderStatusStr = ((OrderStatusType)d.OrderStatus.Value).ToCaption(),
+                    CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
+                    DateOfNeedStr = string.Format("{0:dd.MM.yyyy}", d.DateOfNeed),
+                    FirmCode = d.Firm != null ? d.Firm.FirmCode : "",
+                    FirmName = d.Firm != null ? d.Firm.FirmName : "",
+                    WarehouseCode = d.Warehouse != null ? d.Warehouse.WarehouseCode : "",
+                    WarehouseName = d.Warehouse != null ? d.Warehouse.WarehouseName : "",
+                    OrderNo = d.OrderNo,
+                    OrderDate = d.OrderDate,
+                    DocumentNo = d.DocumentNo,
+                    Explanation = d.Explanation,
+                    FirmId = d.FirmId,
+                    OrderStatus = d.OrderStatus,
+                    OrderType = d.OrderType,
+                    PlantId = d.PlantId,
+                    Details = d.ItemOrderDetail
+                    .Where(m => m.SyncStatus == null || m.SyncStatus == 0)
+                    .Select(m => new ItemOrderDetailModel
+                    {
+                        Id = m.Id,
+                        ItemId = m.ItemId,
+                        CreatedDate = m.CreatedDate,
+                        CreatedUserId = m.CreatedUserId,
+                        Explanation = m.Explanation,
+                        ForexId = m.ForexId,
+                        ForexRate = m.ForexRate,
+                        ForexUnitPrice = m.ForexUnitPrice,
+                        GrossQuantity = m.GrossQuantity,
+                        ItemOrderId = m.ItemOrderId,
+                        ItemRequestDetailId = m.ItemRequestDetailId,
+                        LineNumber = m.LineNumber,
+                        NetQuantity = m.NetQuantity,
+                        NewDetail = false,
+                        OrderStatus = m.OrderStatus,
+                        OverallTotal = m.OverallTotal,
+                        Quantity = m.Quantity,
+                        SubTotal = m.SubTotal,
+                        TaxAmount = m.TaxAmount,
+                        TaxIncluded = m.TaxIncluded,
+                        TaxRate = m.TaxRate,
+                        UnitId = m.UnitId,
+                        UnitPrice = m.UnitPrice,
+                        UpdatedDate = m.UpdatedDate,
+                        UpdatedUserId = m.UpdatedUserId,
+                        ItemNo = m.Item != null ? m.Item.ItemNo : "",
+                        ItemName = m.Item != null ? m.Item.ItemName : "",
+                        UnitCode = m.UnitType != null ? m.UnitType.UnitCode : "",
+                        UnitName = m.UnitType != null ? m.UnitType.UnitName : "",
+                    }).OrderBy(m => m.LineNumber).ToArray(),
+                })
+                .OrderByDescending(d => d.OrderDate)
+                .ToArray();
+        }
+
+        public BusinessResult SignDetailAsSynced(int receiptDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                IUnitOfWork newUof = new EFUnitOfWork();
+                var repo = newUof.GetRepository<ItemOrderDetail>();
+
+                var dbObj = repo.Get(d => d.Id == receiptDetailId);
+                if (dbObj == null)
+                    throw new Exception("Sipariş kalem kaydı bulunamadı.");
+
+                dbObj.SyncDate = DateTime.Now;
+                dbObj.SyncStatus = 1;
+
+                if (!dbObj.ItemOrder.ItemOrderDetail.Any(d => d.SyncStatus != 1))
+                {
+                    dbObj.ItemOrder.SyncDate = DateTime.Now;
+                    dbObj.ItemOrder.SyncStatus = 1;
+                }
+
+                newUof.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult SignDetailAsSent(int receiptDetailId)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                IUnitOfWork newUof = new EFUnitOfWork();
+                var repo = newUof.GetRepository<ItemOrderDetail>();
+
+                var dbObj = repo.Get(d => d.Id == receiptDetailId);
+                if (dbObj == null)
+                    throw new Exception("Sipariş kalem kaydı bulunamadı.");
+
+                dbObj.SyncDate = DateTime.Now;
+                dbObj.SyncStatus = 2;
+
+                if (!dbObj.ItemOrder.ItemOrderDetail.Any(d => d.SyncStatus != 2))
+                {
+                    dbObj.ItemOrder.SyncDate = DateTime.Now;
+                    dbObj.ItemOrder.SyncStatus = 2;
+                }
+
+                newUof.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
         public BusinessResult SaveOrUpdateItemOrder(ItemOrderModel model, bool detailCanBeNull=false)
         {
             BusinessResult result = new BusinessResult();
@@ -55,6 +265,7 @@ namespace HekaMOLD.Business.UseCases
                 var repoDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoRequestDetail = _unitOfWork.GetRepository<ItemRequestDetail>();
                 var repoNotify = _unitOfWork.GetRepository<Notification>();
+                var repoOrderNeeds = _unitOfWork.GetRepository<ItemOrderItemNeeds>();
 
                 bool newRecord = false;
                 var dbObj = repo.Get(d => d.Id == model.Id);
@@ -109,6 +320,9 @@ namespace HekaMOLD.Business.UseCases
                         item.Id = 0;
                 }
 
+                if (model.Details.GroupBy(m => m.ForexId).Count() > 1)
+                    throw new Exception("Aynı siparişte farklı para birimleri seçilemez.");
+
                 if (dbObj.OrderStatus != (int)OrderStatusType.Completed &&
                     dbObj.OrderStatus != (int)OrderStatusType.Cancelled)
                 {
@@ -122,6 +336,18 @@ namespace HekaMOLD.Business.UseCases
 
                         if (item.WorkOrderDetail.Any())
                             continue;
+
+                        if (item.OrderStatus == (int)OrderStatusType.Completed)
+                            continue;
+
+                        if (item.ItemOrderItemNeeds.Any())
+                        {
+                            var exNeeds = item.ItemOrderItemNeeds.ToArray();
+                            foreach (var needs in exNeeds)
+                            {
+                                repoOrderNeeds.Delete(needs);
+                            }
+                        }
 
                         #region SET REQUEST & DETAIL TO APPROVED
                         if (item.ItemRequestDetail != null)
@@ -271,6 +497,33 @@ namespace HekaMOLD.Business.UseCases
                 dbOrder.TaxAmount = model.TaxAmount;
                 dbOrder.ForexRate = model.ForexRate;
                 dbOrder.ForexId = model.ForexId;
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult SetOrderDetailStatus(ItemOrderDetailModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repoOrderDetail = _unitOfWork.GetRepository<ItemOrderDetail>();
+
+                var dbOrder = repoOrderDetail.Get(d => d.Id == model.Id);
+                if (dbOrder == null)
+                    throw new Exception("Sipariş kalem bilgisi HEKA yazılımında bulunamadı.");
+
+                dbOrder.OrderStatus = model.OrderStatus;
 
                 _unitOfWork.SaveChanges();
 
@@ -457,23 +710,24 @@ namespace HekaMOLD.Business.UseCases
                 model.ForexUnitPrice = model.UnitPrice / model.ForexRate;
             }
 
-            decimal? overallTotal = 0;
             decimal? taxExtractedUnitPrice = 0;
+            decimal? subTotal = 0;
 
             if (model.TaxIncluded == true)
             {
                 decimal? taxIncludedUnitPrice = (model.UnitPrice / (1 + (model.TaxRate / 100m)));
-                overallTotal = taxIncludedUnitPrice * model.Quantity;
                 taxExtractedUnitPrice = taxIncludedUnitPrice;
+                subTotal = taxExtractedUnitPrice * model.Quantity;
             }
             else
             {
-                overallTotal = model.UnitPrice * model.Quantity;
+                subTotal = model.UnitPrice * model.Quantity;
                 taxExtractedUnitPrice = model.UnitPrice;
             }
 
-            model.OverallTotal = overallTotal;
-            model.TaxAmount = overallTotal * model.TaxRate / 100.0m;
+            model.SubTotal = subTotal;
+            model.TaxAmount = subTotal * model.TaxRate / 100.0m;
+            model.OverallTotal = subTotal + model.TaxAmount;
 
             return model;
         }
@@ -765,6 +1019,7 @@ namespace HekaMOLD.Business.UseCases
                     {
                         Id = d.Id,
                         Quantity = d.Quantity,
+                        DocumentNo = d.ItemOrder.DocumentNo,
                         FirmId = d.ItemOrder.FirmId,
                         FirmCode = d.ItemOrder.Firm != null ?
                             d.ItemOrder.Firm.FirmCode : "",
@@ -783,7 +1038,9 @@ namespace HekaMOLD.Business.UseCases
                         UnitId = d.UnitId,
                         UnitCode = d.UnitType != null ? d.UnitType.UnitCode : "",
                         UnitName = d.UnitType != null ? d.UnitType.UnitName : ""
-                    }).ToArray();
+                    })
+                    .OrderByDescending(d => d.OrderNo)
+                    .ToArray();
             }
             catch (Exception)
             {
@@ -795,7 +1052,7 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region STATUS VALIDATIONS
-        public BusinessResult CheckOrderDetailStatus(int orderDetailId)
+        public async Task<BusinessResult> CheckOrderDetailStatus(int orderDetailId)
         {
             BusinessResult result = new BusinessResult();
 
@@ -803,12 +1060,59 @@ namespace HekaMOLD.Business.UseCases
             {
                 var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
                 var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+                var repoOrderConsume = _unitOfWork.GetRepository<ItemOrderConsume>();
 
                 var dbDetail = repo.Get(d => d.Id == orderDetailId);
                 if (dbDetail == null)
                     throw new Exception("Sipariş kalemi bulunamadı.");
 
-                
+                if (dbDetail.ItemOrder.OrderType == (int)ItemOrderType.Purchase)
+                {
+                    var incomedQuantity = repoOrderConsume.Filter(d => d.ItemOrderDetailId == orderDetailId
+                        && d.ConsumerReceiptDetailId != null)
+                        .Select(d => d.UsedQuantity).Sum() ?? 0;
+
+                    if (dbDetail.Quantity > incomedQuantity && incomedQuantity > 0)
+                        dbDetail.OrderStatus = (int)OrderStatusType.Approved;
+                    else if (dbDetail.Quantity <= incomedQuantity && incomedQuantity > 0)
+                        dbDetail.OrderStatus = (int)OrderStatusType.Completed;
+                }
+                else if (dbDetail.ItemOrder.OrderType == (int)ItemOrderType.Sale)
+                {
+                    var relatedWorks = repoWorkDetail.Filter(d => d.SaleOrderDetailId == dbDetail.Id).ToArray();
+                    if (relatedWorks.Count() > 0)
+                    {
+                        if (!relatedWorks.Any(d => d.WorkOrderStatus != (int)WorkOrderStatusType.Completed
+                            && d.WorkOrderStatus != (int)WorkOrderStatusType.Cancelled))
+                            dbDetail.OrderStatus = (int)OrderStatusType.Completed;
+                        else if (!relatedWorks.Any(d => d.WorkOrderStatus != (int)WorkOrderStatusType.Delivered))
+                            dbDetail.OrderStatus = (int)OrderStatusType.Delivered;
+                        else if (relatedWorks.Any(d => d.WorkOrderStatus == (int)WorkOrderStatusType.Created))
+                            dbDetail.OrderStatus = (int)OrderStatusType.Approved;
+                        else
+                            dbDetail.OrderStatus = (int)OrderStatusType.Planned;
+                    }
+                    else
+                        dbDetail.OrderStatus = (int)OrderStatusType.Approved;
+                }
+
+                // UPDATE ITEM ORDER HEADER TO ITS NEW STATUS
+                var dbHeader = dbDetail.ItemOrder;
+                if (dbHeader != null)
+                {
+                    if (dbDetail.OrderStatus == (int)OrderStatusType.Completed
+                        && !dbHeader.ItemOrderDetail.Any(d => d.OrderStatus != (int)OrderStatusType.Completed && d.Id != dbDetail.Id))
+                    {
+                        dbHeader.OrderStatus = (int)OrderStatusType.Completed;
+                    }
+                    else
+                    {
+                        if (dbHeader.OrderStatus == (int)OrderStatusType.Completed)
+                            dbHeader.OrderStatus = (int)OrderStatusType.Approved;
+                    }
+                }
+
+                await _unitOfWork.SaveChangesAsync();
 
                 result.Result = false;
             }

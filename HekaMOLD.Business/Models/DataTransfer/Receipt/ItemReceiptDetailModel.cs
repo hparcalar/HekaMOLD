@@ -34,6 +34,10 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public int? SyncStatus { get; set; }
         public DateTime? SyncDate { get; set; }
         public int? ItemOrderDetailId { get; set; }
+        public int? PalletCount { get; set; }
+        public Nullable<decimal> NetWeight { get; set; }
+        public Nullable<decimal> GrossWeight { get; set; }
+        public string PackageDimension { get; set; }
 
         #region SERIAL SAVING PARAMETERS
         public bool UpdateSerials { get; set; } = false;
@@ -50,6 +54,7 @@ namespace HekaMOLD.Business.Models.DataTransfer.Receipt
         public string FirmName { get; set; }
         public string WarehouseCode { get; set; }
         public string WarehouseName { get; set; }
+        public string ReceiptNo { get; set; }
         public string ReceiptTypeStr { get; set; }
         public string ReceiptDateStr { get; set; }
         public decimal? InQuantity { get; set; }

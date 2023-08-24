@@ -13,6 +13,17 @@
                         <p class="plan-label">Termin:</p>
                         <p>{{modelObject.OrderDeadline}}</p>
                     </div>
+                    <div class="d-flex flex-row flex-wrap">
+                        <button type="button" class="btn btn-danger btn-block w-100 py-2"
+                                ng-click="rollbackPlan()">
+                            <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3,13.5 L19,12 L3,10.5 L3,3.7732928 C3,3.70255344 3.01501031,3.63261921 3.04403925,3.56811047 C3.15735832,3.3162903 3.45336217,3.20401298 3.70518234,3.31733205 L21.9867539,11.5440392 C22.098181,11.5941815 22.1873901,11.6833905 22.2375323,11.7948177 C22.3508514,12.0466378 22.2385741,12.3426417 21.9867539,12.4559608 L3.70518234,20.6826679 C3.64067359,20.7116969 3.57073936,20.7267072 3.5,20.7267072 C3.22385763,20.7267072 3,20.5028496 3,20.2267072 L3,13.5 Z" id="Combined-Shape" fill="#000000"></path>
+                                </svg>
+                            </span>
+                            Planı Sil
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -36,13 +47,21 @@
                 <p class="plan-label">Kalıp:</p>
                 <p>{{modelObject.MoldName}}</p>
             </div>
+            <div class="d-flex flex-row flex-wrap">
+                <label class="form-label fs-6 fw-bolder text-gray-700 mb-3 me-4">Etiket Firma Adı</label>
+                <!--begin::Input group-->
+                <div class="ml-2 mb-5">
+                    <input type="checkbox" class="form-check-input"
+                           ng-model="modelObject.LabelConfigData.ShowFirm" placeholder="" />
+                </div>
+            </div>
         </div>
 
         <div class="col-xxl-3 col-sm-3 col-md-3 px-1 py-1">
-            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Üretilen</label>
+            <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Teslim Alınan</label>
             <!--begin::Input group-->
             <div class="mb-5">
-                <input type="number" class="form-control"
+                <input type="number" class="form-control" readonly="readonly"
                        ng-model="modelObject.CompleteQuantity" placeholder="" />
             </div>
         </div>

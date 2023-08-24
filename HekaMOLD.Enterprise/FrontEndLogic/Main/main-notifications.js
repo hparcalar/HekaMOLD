@@ -17,7 +17,7 @@
 
     $scope.pushNotifications = function () {
         try {
-            var unseenData = $scope.notificationList.filter(d => d.SeenStatus == 0
+            var unseenData = $scope.notificationList.filter(d => ((d.SeenStatus ?? 0) == 0)
                 && (d.PushStatus == null || d.PushStatus == 0)
                 && $scope.tempSeenNotifications.some(m => m == d.Id) == false);
 
@@ -26,7 +26,7 @@
             }
 
             unseenData.forEach(d => {
-                Push.create(d.Title, {
+                Push.create((d.Title ?? ''), {
                     body: d.Message,
                     timeout: 4000,
                     onClick: function () {
@@ -40,21 +40,28 @@
                 $scope.setNotificationAsPushed(d.Id);
             });
         } catch (e) {
-
         }
     }
 
+    $scope.updateNotifyFlag = false;
     $scope.updateNotifications = function () {
+        if ($scope.updateNotifyFlag == true)
+            return;
+
+        $scope.updateNotifyFlag = true;
         try {
             $http.get(HOST_URL + 'Common/GetNotifications', {}, 'json')
                 .then(function (resp) {
                     if (typeof resp.data != 'undefined' && resp.data != null) {
                         $scope.notificationList = resp.data;
                         setTimeout($scope.bindNotificationEvents, 300);
+                        $scope.updateNotifyFlag = false;
                     }
-                }).catch(function (err) { });
+                }).catch(function (err) {
+                    $scope.updateNotifyFlag = false;
+                });
         } catch (e) {
-
+            $scope.updateNotifyFlag = false;
         }
     }
 

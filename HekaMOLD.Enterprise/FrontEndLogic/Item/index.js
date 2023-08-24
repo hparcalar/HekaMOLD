@@ -5,7 +5,7 @@
 
     $scope.selectedItemType = {};
     $scope.itemTypeList = [{ Id: 1, Text: 'Hammadde' }, { Id: 2, Text: 'Ticari Mal' },
-        { Id: 3, Text: 'Yarı Mamul' }, { Id: 3, Text: 'Mamul' }];
+        { Id: 3, Text: 'Yarı Mamul' }, { Id: 4, Text: 'Mamul' }];
 
     $scope.selectedCategory = {};
     $scope.categoryList = [];
@@ -151,88 +151,93 @@
     }
 
     $scope.bindWarehousePrm = function () {
-        var getProperWarehouses = new Promise(function (resolve, reject) {
-            $http.get(HOST_URL + 'Item/GetProperWarehouses?itemType=' + $scope.selectedItemType.Id +
-                '&itemId=' + $scope.modelObject.Id, {}, 'json')
-                .then(function (resp) {
-                    if (typeof resp.data != 'undefined' && resp.data != null) {
-                        resolve(resp.data);
-                    }
-                }).catch(function (err) { });
-        });
-
-        getProperWarehouses.then(function (warehouseData) {
-            $scope.modelObject.Warehouses = warehouseData;
-
-            $('#warehouseList').dxDataGrid({
-                dataSource: {
-                    load: function () {
-                        return $scope.modelObject.Warehouses;
-                    },
-                    update: function (key, values) {
-                        var obj = $scope.modelObject.Warehouses.find(d => d.WarehouseId == key);
-                        if (obj != null) {
-                            if (typeof values.IsAllowed != 'undefined') { obj.IsAllowed = values.IsAllowed; }
-                            if (typeof values.MinimumQuantity != 'undefined') { obj.MinimumQuantity = values.MinimumQuantity; }
-                            if (typeof values.MaximumQuantity != 'undefined') { obj.MaximumQuantity = values.MaximumQuantity; }
-                            if (typeof values.MinimumBehaviour != 'undefined') { obj.MinimumBehaviour = values.MinimumBehaviour; }
-                            if (typeof values.MaximumBehaviour != 'undefined') { obj.MaximumBehaviour = values.MaximumBehaviour; }
+        try {
+            var getProperWarehouses = new Promise(function (resolve, reject) {
+                $http.get(HOST_URL + 'Item/GetProperWarehouses?itemType=' + ($scope.modelObject.ItemType ?? 0) +
+                    '&itemId=' + $scope.modelObject.Id, {}, 'json')
+                    .then(function (resp) {
+                        if (typeof resp.data != 'undefined' && resp.data != null) {
+                            resolve(resp.data);
                         }
-                    },
-                    remove: function (key) { },
-                    insert: function (values) { },
-                    key: 'WarehouseId'
-                },
-                showColumnLines: true,
-                showRowLines: true,
-                rowAlternationEnabled: true,
-                focusedRowEnabled: false,
-                showBorders: true,
-                filterRow: {
-                    visible: false
-                },
-                headerFilter: {
-                    visible: false
-                },
-                groupPanel: {
-                    visible: false
-                },
-                scrolling: {
-                    mode: "virtual"
-                },
-                height: 200,
-                editing: {
-                    allowUpdating: true,
-                    allowDeleting: false,
-                    allowAdding: false,
-                    mode: 'cell'
-                },
-                columns: [
-                    { dataField: 'WarehouseName', caption: 'Depo', allowEditing: false },
-                    { dataField: 'IsAllowed', caption: 'Hareket Görebilir' },
-                    { dataField: 'MinimumQuantity', caption: 'Minimum', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                    { dataField: 'MaximumQuantity', caption: 'Maksimum', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
-                    {
-                        dataField: 'MinimumBehaviour', caption: 'Minimum Aksiyonu',
-                        allowSorting: false,
-                        lookup: {
-                            dataSource: [{ Id: 1, Text: 'Yok' }, { Id: 2, Text: 'Uyar' }, { Id: 3, Text: 'İzin Verme' }],
-                            valueExpr: "Id",
-                            displayExpr: "Text"
-                        }
-                    },
-                    {
-                        dataField: 'MaximumBehaviour', caption: 'Maksimum Aksiyonu',
-                        allowSorting: false,
-                        lookup: {
-                            dataSource: [{ Id: 1, Text: 'Yok' }, { Id: 2, Text: 'Uyar' }, { Id: 3, Text: 'İzin Verme' }],
-                            valueExpr: "Id",
-                            displayExpr: "Text"
-                        }
-                    }
-                ]
+                    }).catch(function (err) { });
             });
-        });
+
+            getProperWarehouses.then(function (warehouseData) {
+                $scope.modelObject.Warehouses = warehouseData;
+
+                $('#warehouseList').dxDataGrid({
+                    dataSource: {
+                        load: function () {
+                            return $scope.modelObject.Warehouses;
+                        },
+                        update: function (key, values) {
+                            var obj = $scope.modelObject.Warehouses.find(d => d.WarehouseId == key);
+                            if (obj != null) {
+                                if (typeof values.IsAllowed != 'undefined') { obj.IsAllowed = values.IsAllowed; }
+                                if (typeof values.MinimumQuantity != 'undefined') { obj.MinimumQuantity = values.MinimumQuantity; }
+                                if (typeof values.MaximumQuantity != 'undefined') { obj.MaximumQuantity = values.MaximumQuantity; }
+                                if (typeof values.MinimumBehaviour != 'undefined') { obj.MinimumBehaviour = values.MinimumBehaviour; }
+                                if (typeof values.MaximumBehaviour != 'undefined') { obj.MaximumBehaviour = values.MaximumBehaviour; }
+                            }
+                        },
+                        remove: function (key) { },
+                        insert: function (values) { },
+                        key: 'WarehouseId'
+                    },
+                    showColumnLines: true,
+                    showRowLines: true,
+                    rowAlternationEnabled: true,
+                    focusedRowEnabled: false,
+                    showBorders: true,
+                    filterRow: {
+                        visible: false
+                    },
+                    headerFilter: {
+                        visible: false
+                    },
+                    groupPanel: {
+                        visible: false
+                    },
+                    scrolling: {
+                        mode: "virtual"
+                    },
+                    height: 200,
+                    editing: {
+                        allowUpdating: true,
+                        allowDeleting: false,
+                        allowAdding: false,
+                        mode: 'cell'
+                    },
+                    columns: [
+                        { dataField: 'WarehouseName', caption: 'Depo', allowEditing: false },
+                        { dataField: 'IsAllowed', caption: 'Hareket Görebilir' },
+                        { dataField: 'MinimumQuantity', caption: 'Minimum', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                        { dataField: 'MaximumQuantity', caption: 'Maksimum', dataType: 'number', format: { type: "fixedPoint", precision: 2 } },
+                        {
+                            dataField: 'MinimumBehaviour', caption: 'Minimum Aksiyonu',
+                            allowSorting: false,
+                            lookup: {
+                                dataSource: [{ Id: 1, Text: 'Yok' }, { Id: 2, Text: 'Uyar' }, { Id: 3, Text: 'İzin Verme' }],
+                                valueExpr: "Id",
+                                displayExpr: "Text"
+                            }
+                        },
+                        {
+                            dataField: 'MaximumBehaviour', caption: 'Maksimum Aksiyonu',
+                            allowSorting: false,
+                            lookup: {
+                                dataSource: [{ Id: 1, Text: 'Yok' }, { Id: 2, Text: 'Uyar' }, { Id: 3, Text: 'İzin Verme' }],
+                                valueExpr: "Id",
+                                displayExpr: "Text"
+                            }
+                        }
+                    ]
+                });
+            });
+        } catch (e) {
+
+        }
+        
     }
 
     $scope.bindUnitPrm = function () {
@@ -344,6 +349,28 @@
             show: true,
             draggable: false,
             closeText: "KAPAT"
+        });
+    }
+
+    $scope.showPrintLabelDialog = function () {
+        $scope.$broadcast('showItemPrinting',
+            $scope.modelObject.Id);
+
+        $('#dial-printing').dialog({
+            width: 500,
+            height: 400,
+            //height: window.innerHeight * 0.6,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+
+        $scope.$on('onItemLabelPrinted', function () {
+            $('#dial-printing').dialog("close");
+            $scope.bindModel($scope.modelObject.Id);
         });
     }
 

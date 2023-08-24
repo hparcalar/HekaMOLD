@@ -65,13 +65,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetItemOrderList()
+        public JsonResult GetItemOrderList(string dt1, string dt2)
         {
             ItemOrderModel[] result = new ItemOrderModel[0];
 
             using (OrdersBO bObj = new OrdersBO())
             {
-                result = bObj.GetItemOrderList(ItemOrderType.Purchase);
+                result = bObj.GetItemOrderList(ItemOrderType.Purchase, dt1,dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

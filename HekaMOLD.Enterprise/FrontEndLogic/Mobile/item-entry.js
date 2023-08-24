@@ -17,7 +17,13 @@
                     else
                         $scope.selectedWarehouse = $scope.warehouseList[0];
 
+                    if (typeof $scope.modelObject.FirmId != 'undefined' && $scope.modelObject.FirmId != null)
+                        $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
+                    else
+                        $scope.selectedFirm = $scope.firmList[0];
+
                     refreshArray($scope.warehouseList);
+                    refreshArray($scope.firmList);
                 }
             }).catch(function (err) { });
     }
@@ -25,11 +31,30 @@
     $scope.selectedWarehouse = { Id: 0, WarehouseName: '' };
     $scope.warehouseList = [];
 
+    $scope.selectedFirm = { Id: 0, FirmCode: '', FirmName : '' };
+    $scope.firmList = [];
+
     $scope.showOrderList = function () {
         // DO BROADCAST
         $scope.$broadcast('loadOpenPoList');
 
         $('#dial-orderlist').dialog({
+            width: window.innerWidth * 0.95,
+            height: window.innerHeight * 0.95,
+            hide: true,
+            modal: true,
+            resizable: false,
+            show: true,
+            draggable: false,
+            closeText: "KAPAT"
+        });
+    }
+
+    $scope.showItemList = function () {
+        // DO BROADCAST
+        $scope.$broadcast('loadItemList');
+
+        $('#dial-itemlist').dialog({
             width: window.innerWidth * 0.95,
             height: window.innerHeight * 0.95,
             hide: true,
@@ -51,6 +76,11 @@
                         var emptyWrObj = { Id: 0, WarehouseName: '-- Seçiniz --' };
                         $scope.warehouseList.splice(0, 0, emptyWrObj);
                         $scope.selectedWarehouse = emptyWrObj;
+
+                        $scope.firmList = resp.data.Firms;
+                        var emptyFirmObj = { Id: 0, FirmCode: '-- Seçiniz --', FirmName: '' };
+                        $scope.firmList.splice(0, 0, emptyFirmObj);
+                        $scope.selectedFirm = emptyFirmObj;
 
                         resolve();
                     }
@@ -85,6 +115,11 @@
                         $scope.modelObject.InWarehouseId = $scope.selectedWarehouse.Id;
                     else
                         $scope.modelObject.InWarehouseId = null;
+
+                    if (typeof $scope.selectedFirm != 'undefined' && $scope.selectedFirm != null)
+                        $scope.modelObject.FirmId = $scope.selectedFirm.Id;
+                    else
+                        $scope.modelObject.FirmId = null;
 
                     $http.post(HOST_URL + 'Mobile/SaveItemEntry', $scope.modelObject, 'json')
                         .then(function (resp) {
@@ -147,11 +182,43 @@
 
         if (firstOrderRecord != null) {
             $scope.modelObject.FirmId = firstOrderRecord.FirmId;
+
+            if (typeof $scope.modelObject.FirmId != 'undefined' && $scope.modelObject.FirmId != null)
+                $scope.selectedFirm = $scope.firmList.find(d => d.Id == $scope.modelObject.FirmId);
+            else
+                $scope.selectedFirm = $scope.firmList[0];
+
+            refreshArray($scope.firmList);
+
             $scope.modelObject.FirmCode = firstOrderRecord.FirmCode;
             $scope.modelObject.FirmName = firstOrderRecord.FirmName;
         }
 
         $('#dial-orderlist').dialog('close');
+    });
+
+    $scope.$on('transferItems', function (e, d) {
+        d.forEach(x => {
+            var newId = 1;
+            if ($scope.modelObject.Details.length > 0) {
+                newId = $scope.modelObject.Details.map(d => d.Id).reduce((max, n) => n > max ? n : max)
+                newId++;
+            }
+
+            $scope.modelObject.Details.push({
+                Id: newId,
+                ItemId: x.Id,
+                ItemNo: x.ItemNo,
+                ItemName: x.ItemName,
+                Quantity: 0,
+                UnitPrice: 0,
+                UnitCode: x.UnitCode,
+                UnitName: x.UnitCode,
+                NewDetail: true,
+            });
+        });
+
+        $('#dial-itemlist').dialog('close');
     });
 
     // LOAD EVENTS

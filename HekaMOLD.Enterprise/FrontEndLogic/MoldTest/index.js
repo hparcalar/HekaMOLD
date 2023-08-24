@@ -10,6 +10,10 @@
         $scope.modelObject = { Id: 0 };
     }
 
+    $scope.printView = function () {
+        window.print();
+    }
+
     $scope.showAttachmentList = function () {
         $scope.$broadcast('showAttachmentList',
             { RecordId: $scope.modelObject.Id, RecordType: 3 });

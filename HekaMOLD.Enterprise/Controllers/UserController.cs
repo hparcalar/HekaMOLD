@@ -42,6 +42,21 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        public JsonResult SearchUserList(string roleFilter)
+        {
+            UserModel[] result = new UserModel[0];
+
+            using (UsersBO bObj = new UsersBO())
+            {
+                result = bObj.GetUserList(roleFilter);
+            }
+
+            var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+        }
+
+        [HttpGet]
         public JsonResult GetSelectables()
         {
             UserRoleModel[] roles = new UserRoleModel[0];
@@ -100,6 +115,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (UsersBO bObj = new UsersBO())
                 {
+                    model.PlantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
                     result = bObj.SaveOrUpdateUser(model);
                 }
 

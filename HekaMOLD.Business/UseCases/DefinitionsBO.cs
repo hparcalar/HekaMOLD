@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
+using HekaMOLD.Business.Models.DataTransfer.Order;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -215,7 +216,7 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
-            return repo.GetAll().Select(d => new ItemModel
+            return repo.GetAll().Where(d => d.isActive != false).Select(d => new ItemModel
             {
                 Id=d.Id,
                 ItemNo = d.ItemNo,
@@ -235,7 +236,7 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
-            return repo.GetAll().Select(d => new ItemModel
+            return repo.GetAll().Where(d => d.isActive != false).Select(d => new ItemModel
             {
                 Id = d.Id,
                 ItemNo = d.ItemNo,
@@ -255,7 +256,7 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
-            return repo.GetAll().Select(d => new ItemModel
+            return repo.GetAll().Where(d => d.isActive != false).Select(d => new ItemModel
             {
                 Id = d.Id,
                 ItemNo = d.ItemNo,
@@ -322,65 +323,65 @@ namespace HekaMOLD.Business.UseCases
                 dbObj.UpdatedDate = DateTime.Now;
 
                 #region SAVE WAREHOUSE PRM
-                if (model.Warehouses == null)
-                    model.Warehouses = new ItemWarehouseModel[0];
+                //if (model.Warehouses == null)
+                //    model.Warehouses = new ItemWarehouseModel[0];
 
-                var toBeRemovedWarehouses = dbObj.ItemWarehouse
-                    .Where(d => !model.Warehouses.Select(m => m.Id).ToArray().Contains(d.Id))
-                    .ToArray();
-                foreach (var item in toBeRemovedWarehouses)
-                {
-                    repoWarehouses.Delete(item);
-                }
+                //var toBeRemovedWarehouses = dbObj.ItemWarehouse
+                //    .Where(d => !model.Warehouses.Select(m => m.Id).ToArray().Contains(d.Id))
+                //    .ToArray();
+                //foreach (var item in toBeRemovedWarehouses)
+                //{
+                //    repoWarehouses.Delete(item);
+                //}
 
-                foreach (var item in model.Warehouses
-                    .Where(d => !toBeRemovedWarehouses.Any(m => m.WarehouseId == d.WarehouseId)))
-                {
-                    var dbItemWr = repoWarehouses.GetById(item.Id);
-                    if (dbItemWr == null || item.Id == 0)
-                    {
-                        dbItemWr = new ItemWarehouse();
-                        item.MapTo(dbItemWr);
-                        dbItemWr.Item = dbObj;
-                        repoWarehouses.Add(dbItemWr);
-                    }
-                    else
-                    {
-                        item.MapTo(dbItemWr);
-                        dbItemWr.Item = dbObj;
-                    }
-                }
+                //foreach (var item in model.Warehouses
+                //    .Where(d => !toBeRemovedWarehouses.Any(m => m.WarehouseId == d.WarehouseId)))
+                //{
+                //    var dbItemWr = repoWarehouses.GetById(item.Id);
+                //    if (dbItemWr == null || item.Id == 0)
+                //    {
+                //        dbItemWr = new ItemWarehouse();
+                //        item.MapTo(dbItemWr);
+                //        dbItemWr.Item = dbObj;
+                //        repoWarehouses.Add(dbItemWr);
+                //    }
+                //    else
+                //    {
+                //        item.MapTo(dbItemWr);
+                //        dbItemWr.Item = dbObj;
+                //    }
+                //}
                 #endregion
 
                 #region SAVE ITEM UNITS PRM
-                if (model.Units == null)
-                    model.Units = new ItemUnitModel[0];
+                //if (model.Units == null)
+                //    model.Units = new ItemUnitModel[0];
 
-                var toBeRemovedUnits = dbObj.ItemUnit
-                    .Where(d => !model.Units.Where(m => m.NewDetail == false)
-                        .Select(m => m.Id).ToArray().Contains(d.Id)
-                    ).ToArray();
-                foreach (var item in toBeRemovedUnits)
-                {
-                    repoUnits.Delete(item);
-                }
+                //var toBeRemovedUnits = dbObj.ItemUnit
+                //    .Where(d => !model.Units.Where(m => m.NewDetail == false)
+                //        .Select(m => m.Id).ToArray().Contains(d.Id)
+                //    ).ToArray();
+                //foreach (var item in toBeRemovedUnits)
+                //{
+                //    repoUnits.Delete(item);
+                //}
 
-                foreach (var item in model.Units)
-                {
-                    if (item.NewDetail == true)
-                    {
-                        var dbItemUn = new ItemUnit();
-                        item.MapTo(dbItemUn);
-                        dbItemUn.Item = dbObj;
-                        repoUnits.Add(dbItemUn);
-                    }
-                    else if (!toBeRemovedUnits.Any(d => d.Id == item.Id))
-                    {
-                        var dbItemUn = repoUnits.GetById(item.Id);
-                        item.MapTo(dbItemUn);
-                        dbItemUn.Item = dbObj;
-                    }
-                }
+                //foreach (var item in model.Units)
+                //{
+                //    if (item.NewDetail == true)
+                //    {
+                //        var dbItemUn = new ItemUnit();
+                //        item.MapTo(dbItemUn);
+                //        dbItemUn.Item = dbObj;
+                //        repoUnits.Add(dbItemUn);
+                //    }
+                //    else if (!toBeRemovedUnits.Any(d => d.Id == item.Id))
+                //    {
+                //        var dbItemUn = repoUnits.GetById(item.Id);
+                //        item.MapTo(dbItemUn);
+                //        dbItemUn.Item = dbObj;
+                //    }
+                //}
                 #endregion
 
                 _unitOfWork.SaveChanges();
@@ -410,7 +411,15 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<Item>();
 
                 var dbObj = repo.Get(d => d.Id == id);
-                repo.Delete(dbObj);
+
+                if (dbObj != null) {
+                    Random rnd = new Random();
+                    var exNum = rnd.Next(999);
+                    dbObj.ItemNo = "ex-" + dbObj.ItemNo + exNum;
+                    dbObj.isActive = false;
+                }
+
+                //repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
 
                 result.Result = true;
@@ -997,6 +1006,21 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
+        public WarehouseModel GetItemWarehouse()
+        {
+            WarehouseModel data = null;
+
+            var repo = _unitOfWork.GetRepository<Warehouse>();
+            var dbObj = repo.Get(d => d.WarehouseType == (int)WarehouseType.ItemWarehouse);
+            if (dbObj != null)
+            {
+                data = new WarehouseModel();
+                dbObj.MapTo(data);
+            }
+
+            return data;
+        }
+
         #endregion
 
         #region ITEM UNIT BUSINESS
@@ -1361,6 +1385,7 @@ namespace HekaMOLD.Business.UseCases
                 WatchCycleStartCondition = d.WatchCycleStartCondition,
                 WorkingUserId = d.WorkingUserId,
                 SignalEndDelay = d.SignalEndDelay,
+                MachineTypeName = (d.MachineType ?? 0) == 0 ? "Planlanabilir" : "Diğer",
             }).ToArray();
 
             return data;
@@ -1369,20 +1394,13 @@ namespace HekaMOLD.Business.UseCases
         public MachineModel[] GetMachineStats(string startDate, string endDate)
         {
             List<MachineModel> data = new List<MachineModel>();
-            
-            if (string.IsNullOrEmpty(startDate))
-                startDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now.AddMonths(-1));
-            if (string.IsNullOrEmpty(endDate))
-                endDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now);
-
-            DateTime dt1 = DateTime.ParseExact(startDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.GetCultureInfo("tr"));
-            DateTime dt2 = DateTime.ParseExact(endDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
             var repo = _unitOfWork.GetRepository<Machine>();
             var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
             var repoShift = _unitOfWork.GetRepository<Shift>();
             var repoUser = _unitOfWork.GetRepository<User>();
             var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+            var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
 
             var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
             var repoIncident = _unitOfWork.GetRepository<Incident>();
@@ -1392,12 +1410,54 @@ namespace HekaMOLD.Business.UseCases
 
             // PRODUCTION BO FOR ACTIVE WORK ORDERS ON MACHINES
             ProductionBO prodBO = new ProductionBO();
+            var currentShift = prodBO.GetCurrentShift();
 
             repo.GetAll().ToList().ForEach(d =>
             {
-                MachineModel containerObj = new MachineModel();
+                var container = GetMachineSpecificStats(d.Id, startDate, endDate);
+
+                data.Add(container);
+            });
+
+            prodBO.Dispose();
+
+            return data.ToArray();
+        }
+
+        public MachineModel GetMachineSpecificStats(int machineId, string startDate, string endDate)
+        {
+            MachineModel containerObj = new MachineModel();
+            try
+            {
+                if (string.IsNullOrEmpty(startDate))
+                    startDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now.AddMonths(-1));
+                if (string.IsNullOrEmpty(endDate))
+                    endDate = string.Format("{0:dd.MM.yyyy}", DateTime.Now);
+
+                DateTime dt1 = DateTime.ParseExact(startDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                DateTime dt2 = DateTime.ParseExact(endDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
+                var repo = _unitOfWork.GetRepository<Machine>();
+                var repoSignal = _unitOfWork.GetRepository<MachineSignal>();
+                var repoShift = _unitOfWork.GetRepository<Shift>();
+                var repoUser = _unitOfWork.GetRepository<User>();
+                var repoMoldTest = _unitOfWork.GetRepository<MoldTest>();
+                var repoWorkDetail = _unitOfWork.GetRepository<WorkOrderDetail>();
+
+                var repoWastage = _unitOfWork.GetRepository<ProductWastage>();
+                var repoIncident = _unitOfWork.GetRepository<Incident>();
+                var repoPosture = _unitOfWork.GetRepository<ProductionPosture>();
+
+                var shiftList = repoShift.GetAll().ToArray();
+
+                // PRODUCTION BO FOR ACTIVE WORK ORDERS ON MACHINES
+                ProductionBO prodBO = new ProductionBO();
+                var currentShift = prodBO.GetCurrentShift();
+
+                var d = repo.Get(m => m.Id == machineId);
+
                 d.MapTo(containerObj);
-                
+
                 if (d.WorkingUserId != null)
                 {
                     var dbUser = repoUser.Get(m => m.Id == d.WorkingUserId);
@@ -1407,8 +1467,6 @@ namespace HekaMOLD.Business.UseCases
                         containerObj.WorkingUserName = dbUser.UserName;
                     }
                 }
-
-                containerObj.ActivePlan = prodBO.GetActiveWorkOrderOnMachine(d.Id);
 
                 var signalData = repoSignal.Filter(m => m.MachineId == d.Id &&
                     dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
@@ -1438,14 +1496,24 @@ namespace HekaMOLD.Business.UseCases
                     AvgProductionCount = signalData.Count() - Convert.ToInt32(machineWastageCount),
                     WastageCount = machineWastageCount,
                     IncidentCount = incidentData.Count(),
+                    IsLiveModel = dt1.Date == DateTime.Now.Date,
                     PostureCount = postureData.Count(),
                 };
+
+                if (dt1.Date == DateTime.Now.Date)
+                {
+                    containerObj.ActivePlan = prodBO.GetActiveWorkOrderOnMachineSimple(d.Id);
+                }
+
+                if (containerObj.MachineStats.AvgProductionCount < 0)
+                    containerObj.MachineStats.AvgProductionCount = 0;
 
                 // RESOLVE SHIFT STATS OF THAT MACHINE
                 List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
                 shiftList = shiftList.OrderBy(m => m.StartTime).ToArray();
                 foreach (var shift in shiftList)
                 {
+                    #region CALCULATION OF TARGETS
                     // CALCULATE TARGET COUNT
                     DateTime startTime = DateTime.Now.Date.Add(shift.StartTime.Value);
                     DateTime endTime = DateTime.Now.Date.Add(shift.EndTime.Value);
@@ -1453,55 +1521,108 @@ namespace HekaMOLD.Business.UseCases
                     if (shift.StartTime > shift.EndTime)
                         endTime = DateTime.Now.Date.AddDays(1).Add(shift.EndTime.Value);
 
-                    var totalBreakTimeSeconds = 75 * 60;
+                    var totalBreakTimeSeconds = 60 * 60;
                     var totalShiftTime = (endTime - startTime).TotalSeconds;
                     var netShiftTime = totalShiftTime - totalBreakTimeSeconds;
 
                     // GET ACTIVE PLANS CYCLE TIME
                     string lastProductName = "";
-                    decimal avgCycleTime = 0;
                     int targetCount = 0;
 
-                    var lastSignal = repoSignal.Filter(m => m.MachineId == d.Id 
-                        && m.WorkOrderDetailId != null
-                        && m.ShiftId == shift.Id)
-                        .OrderByDescending(m => m.Id).FirstOrDefault();
-                    if (lastSignal != null)
-                    {
-                        lastProductName = lastSignal.WorkOrderDetail.Item != null ?
-                            lastSignal.WorkOrderDetail.Item.ItemName : lastSignal.WorkOrderDetail.TrialProductName;
-                        if (lastSignal.WorkOrderDetail.Item != null)
-                        {
-                            var dbMoldTest = repoMoldTest.Get(m => m.ProductCode == lastSignal.WorkOrderDetail.Item.ItemNo);
-                            if (dbMoldTest != null)
-                                avgCycleTime = dbMoldTest.TotalTimeSeconds ?? 0;
-                        }
-                    }
+                    var shiftSignals = signalData.Where(m => m.MachineId == d.Id &&
+                        m.WorkOrderDetailId != null && m.ShiftId == shift.Id);
 
-                    // IF NO CYCLE TIME FOUND THEN CALCULATE OVER HISTORY
-                    if (avgCycleTime <= 0)
-                    {
-                        avgCycleTime = Convert.ToDecimal(repoSignal.Filter(m => m.MachineId == d.Id && m.ShiftId == shift.Id)
-                            .Average(m => m.Duration) ?? 0);
-                    }
 
-                    if (avgCycleTime > 0)
-                    {
-                        try
-                        {
-                            targetCount = Convert.ToInt32(Convert.ToDecimal(netShiftTime) / avgCycleTime);
-                        }
-                        catch (Exception)
-                        {
+                    //var workList = d.MachinePlan.OrderBy(m => m.OrderNo).Select(m => m.WorkOrderDetailId).ToArray();
+                    //var remainingShiftTime = netShiftTime;
+                    //foreach (var item in workList)
+                    //{
+                    //    var workDetail = d.WorkOrderDetail.FirstOrDefault(m => m.Id == item);
+                    //    if (workDetail != null)
+                    //    {
+                    //        try
+                    //        {
+                    //            var completeCount = repoSignal.Filter(m => m.WorkOrderDetailId == workDetail.Id 
+                    //                && m.ShiftBelongsToDate < dt1).Count();
+                    //            var remainingCount = workDetail.Quantity - completeCount;
 
-                        }
-                    }
+                    //            if (workDetail.WorkOrderStatus == (int)WorkOrderStatusType.InProgress)
+                    //                lastProductName = workDetail.Item != null ? workDetail.Item.ItemName : workDetail.TrialProductName;
+
+                    //            if (remainingCount <= 0)
+                    //                continue;
+
+                    //            // CHECK WORK ORDER
+                    //            bool targetTimeFound = false;
+                    //            int cycleTime = 0;
+
+                    //            if (workDetail.Item != null)
+                    //            {
+                    //                var moldTest = repoMoldTest.Get(m => m.ProductCode == workDetail.Item.ItemNo);
+                    //                if (moldTest != null && moldTest.TotalTimeSeconds > 0)
+                    //                {
+                    //                    cycleTime = moldTest.TotalTimeSeconds.Value;
+                    //                    targetTimeFound = true;
+                    //                }
+                    //            }
+
+                    //            // FIND THE CYCLE OVER HISTORY
+                    //            if (!targetTimeFound)
+                    //            {
+                    //                cycleTime = repoSignal.Filter(m => m.WorkOrderDetailId == workDetail.Id && m.SignalStatus == 1)
+                    //                    .OrderByDescending(m => m.Id)
+                    //                    .Select(m => m.Duration)
+                    //                    .FirstOrDefault() ?? 0;
+                    //            }
+
+                    //            // CALCULATE TARGET AND FILL REMAINING SHIFT TIME
+                    //            if (cycleTime > 0 && remainingShiftTime > 0)
+                    //            {
+                    //                var producableCount = remainingShiftTime / cycleTime;
+                    //                if (producableCount > Convert.ToDouble(remainingCount ?? 0))
+                    //                    producableCount = Convert.ToDouble(remainingCount);
+
+                    //                targetCount += Convert.ToInt32(producableCount);
+                    //                remainingShiftTime -= cycleTime * producableCount;
+                    //            }
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
+
+                    //        }
+
+                    //    }
+                    //}
+                    #endregion
 
                     var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
 
-                    shiftStats.Add(new ShiftStatsModel
+                    bool isCurrentShift = false;
+                    if (currentShift != null && currentShift.Id == shift.Id)
+                        isCurrentShift = true;
+
+                    var shiftTrg = targetCount - Convert.ToInt32(shiftWastageCount);
+                    if (shiftTrg < 0)
+                        shiftTrg = 0;
+
+                    var shiftProdDetails = signalData.Where(m => m.WorkOrderDetailId != null
+                        && m.ShiftId == shift.Id)
+                        .OrderByDescending(m => m.StartDate)
+                        .GroupBy(m => new { m.WorkOrderDetail })
+                        .ToArray()
+                        .Select(m => new ShiftProductionModel
+                        {
+                            ItemName = m.Key.WorkOrderDetail.Item != null ? m.Key.WorkOrderDetail.Item.ItemName : m.Key.WorkOrderDetail.TrialProductName,
+                            ProdCount = m.Count() - Convert.ToInt32(wastageData.Where(w => w.WorkOrderDetailId == m.Key.WorkOrderDetail.Id
+                                && w.ShiftId == shift.Id).Sum(w => w.Quantity) ?? 0),
+                            WastageCount = Convert.ToInt32(wastageData.Where(w => w.WorkOrderDetailId == m.Key.WorkOrderDetail.Id
+                                && w.ShiftId == shift.Id).Sum(w => w.Quantity) ?? 0),
+                        }).ToArray();
+
+                    var newShiftStat = new ShiftStatsModel
                     {
                         ShiftId = shift.Id,
+                        IsCurrentShift = isCurrentShift,
                         ChiefUserName = shift.User != null ? shift.User.UserName : "",
                         ShiftCode = shift.ShiftCode,
                         AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
@@ -1509,18 +1630,39 @@ namespace HekaMOLD.Business.UseCases
                             Convert.ToInt32(shiftWastageCount),
                         WastageCount = shiftWastageCount,
                         LastProductName = lastProductName,
-                        TargetCount = targetCount - Convert.ToInt32(shiftWastageCount),
-                    });
+                        TargetCount = shiftTrg,
+                        ProductionData = shiftProdDetails,
+                        IsLiveModel = dt1.Date == DateTime.Now.Date,
+                    };
+
+                    if (containerObj.ActivePlan != null
+                        && containerObj.ActivePlan.Id > 0
+                        && currentShift.Id == shift.Id)
+                    {
+                        newShiftStat.ActiveWastageCount = Convert.ToInt32(
+                                   wastageData.Where(m => m.ShiftId == shift.Id && m.WorkOrderDetailId == containerObj.ActivePlan.WorkOrderDetailId)
+                                       .Sum(m => m.Quantity) ?? 0
+                               );
+
+                        newShiftStat.ActiveProductionCount = signalData.Where(m => m.ShiftId == shift.Id
+                            && m.WorkOrderDetailId == containerObj.ActivePlan.WorkOrderDetailId)
+                            .Count() - newShiftStat.ActiveWastageCount;
+                    }
+
+                    shiftStats.Add(newShiftStat);
+
+                    if (newShiftStat.AvgProductionCount < 0)
+                        newShiftStat.AvgProductionCount = 0;
                 }
 
                 containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
+            }
+            catch (Exception)
+            {
 
-                data.Add(containerObj);
-            });
+            }
 
-            prodBO.Dispose();
-
-            return data.ToArray();
+            return containerObj;
         }
 
         public MachineModel[] GetMachineStats(int machineId, string startDate, string endDate)
@@ -1551,71 +1693,9 @@ namespace HekaMOLD.Business.UseCases
 
             repo.Filter(d => d.Id == machineId).ToList().ForEach(d =>
             {
-                MachineModel containerObj = new MachineModel();
-                d.MapTo(containerObj);
+                var container = GetMachineSpecificStats(d.Id, startDate, endDate);
 
-                if (d.WorkingUserId != null)
-                {
-                    var dbUser = repoUser.Get(m => m.Id == d.WorkingUserId);
-                    if (dbUser != null)
-                    {
-                        containerObj.WorkingUserCode = dbUser.UserCode;
-                        containerObj.WorkingUserName = dbUser.UserName;
-                    }
-                }
-
-                containerObj.ActivePlan = prodBO.GetActiveWorkOrderOnMachine(d.Id);
-
-                var signalData = repoSignal.Filter(m => m.MachineId == d.Id &&
-                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
-                var wastageData = repoWastage.Filter(m => m.MachineId == d.Id &&
-                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
-                var incidentData = repoIncident.Filter(m => m.MachineId == d.Id &&
-                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
-                var postureData = repoPosture.Filter(m => m.MachineId == d.Id &&
-                    dt1 <= m.ShiftBelongsToDate && dt2 >= m.ShiftBelongsToDate);
-
-                containerObj.IsInIncident = repoIncident.Any(m => m.MachineId == d.Id
-                    && m.IncidentStatus != (int)PostureStatusType.Resolved);
-                containerObj.ActiveIncidentText = repoIncident.Filter(m => m.MachineId == d.Id
-                    && m.IncidentStatus != (int)PostureStatusType.Resolved)
-                    .Select(m => m.IncidentCategory.IncidentCategoryName).FirstOrDefault();
-
-                containerObj.IsInPosture = repoPosture.Any(m => m.MachineId == d.Id
-                    && m.PostureStatus != (int)PostureStatusType.Resolved);
-                containerObj.ActivePostureText = repoPosture.Filter(m => m.MachineId == d.Id
-                    && m.PostureStatus != (int)PostureStatusType.Resolved)
-                    .Select(m => m.PostureCategory.PostureCategoryName).FirstOrDefault();
-
-                var machineWastageCount = wastageData.Sum(m => m.Quantity) ?? 0;
-                containerObj.MachineStats = new Models.DataTransfer.Summary.MachineStatsModel
-                {
-                    AvgInflationTime = Convert.ToDecimal(signalData.Average(m => m.Duration) ?? 0),
-                    AvgProductionCount = signalData.Count() - Convert.ToInt32(machineWastageCount),
-                    WastageCount = machineWastageCount,
-                    IncidentCount = incidentData.Count(),
-                    PostureCount = postureData.Count(),
-                };
-
-                // RESOLVE SHIFT STATS OF THAT MACHINE
-                List<ShiftStatsModel> shiftStats = new List<ShiftStatsModel>();
-                foreach (var shift in shiftList)
-                {
-                    var shiftWastageCount = wastageData.Where(m => m.ShiftId == shift.Id).Sum(m => m.Quantity) ?? 0;
-                    shiftStats.Add(new ShiftStatsModel
-                    {
-                        ShiftId = shift.Id,
-                        ShiftCode = shift.ShiftCode,
-                        AvgInflationTime = Convert.ToDecimal(signalData.Where(m => m.ShiftId == shift.Id).Average(m => m.Duration)),
-                        AvgProductionCount = signalData.Where(m => m.ShiftId == shift.Id).Count() 
-                            - Convert.ToInt32(shiftWastageCount),
-                        WastageCount = shiftWastageCount,
-                    });
-                }
-
-                containerObj.MachineStats.ShiftStats = shiftStats.ToArray();
-
-                data.Add(containerObj);
+                data.Add(container);
             });
 
             prodBO.Dispose();
@@ -2057,7 +2137,7 @@ namespace HekaMOLD.Business.UseCases
                 dbMoldItem.ItemNo = dbObj.MoldCode;
                 dbMoldItem.ItemName = dbObj.MoldName;
                 dbMoldItem.SupplierFirmId = dbObj.FirmId;
-                dbObj.Item1 = dbMoldItem;
+                dbObj.ItemMold = dbMoldItem;
                 #endregion
 
                 _unitOfWork.SaveChanges();
@@ -2116,6 +2196,9 @@ namespace HekaMOLD.Business.UseCases
             if (dbObj != null)
             {
                 model = dbObj.MapTo(model);
+                if (model.MoldStatus == null)
+                    model.MoldStatus = (int)MoldStatus.Active;
+
                 model.MoldStatusText = ((MoldStatus)(model.MoldStatus ?? 1)).ToCaption();
                 model.CreatedDateStr = model.CreatedDate != null ?
                     string.Format("{0:dd.MM.yyyy}", model.CreatedDate) : "";
@@ -2174,6 +2257,42 @@ namespace HekaMOLD.Business.UseCases
                     string.Format("{0:hh\\:mm}", d.EndTime) : "";
                 data.Add(containerObj);
             });
+
+            return data.ToArray();
+        }
+
+        public ShiftModel[] GetShiftListWithUsers()
+        {
+            List<ShiftModel> data = new List<ShiftModel>();
+
+            var repo = _unitOfWork.GetRepository<Shift>();
+            var repoUser = _unitOfWork.GetRepository<User>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                ShiftModel containerObj = new ShiftModel();
+                d.MapTo(containerObj);
+                containerObj.StartTimeStr = d.StartTime != null ?
+                    string.Format("{0:hh\\:mm}", d.StartTime) : "";
+                containerObj.EndTimeStr = d.EndTime != null ?
+                    string.Format("{0:hh\\:mm}", d.EndTime) : "";
+                data.Add(containerObj);
+            });
+
+            foreach (var item in data)
+            {
+                List<UserModel> shUsers = new List<UserModel>();
+
+                var dataUsers = repoUser.Filter(d => d.ShiftId == item.Id).ToArray();
+                foreach (var shUser in dataUsers)
+                {
+                    UserModel nModel = new UserModel();
+                    shUser.MapTo(nModel);
+                    shUsers.Add(nModel);
+                }
+
+                item.Users = shUsers.ToArray();
+            }
 
             return data.ToArray();
         }
@@ -2637,8 +2756,18 @@ namespace HekaMOLD.Business.UseCases
             try
             {
                 var repo = _unitOfWork.GetRepository<EquipmentCategory>();
+                var repoEq = _unitOfWork.GetRepository<Equipment>();
 
                 var dbObj = repo.Get(d => d.Id == id);
+                if (dbObj.Equipment.Any())
+                {
+                    var eqList = dbObj.Equipment.ToArray();
+                    foreach (var item in eqList)
+                    {
+                        repoEq.Delete(item);
+                    }
+                }
+
                 repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
 
@@ -2959,6 +3088,197 @@ namespace HekaMOLD.Business.UseCases
 
             return model;
         }
+        #endregion
+
+        #region PRE PROCESS TYPE BUSINESS
+        public PreProcessTypeModel[] GetPreProcessTypeList()
+        {
+            List<PreProcessTypeModel> data = new List<PreProcessTypeModel>();
+
+            var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                PreProcessTypeModel containerObj = new PreProcessTypeModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdatePreProcessType(PreProcessTypeModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.PreProcessCode))
+                    throw new Exception("Ön işlem kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.PreProcessName))
+                    throw new Exception("Ön işlem adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+                if (repo.Any(d => (d.PreProcessCode == model.PreProcessCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir ön işlem tanımı mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new PreProcessType();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePreProcessType(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<PreProcessType>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public PreProcessTypeModel GetPreProcessType(int id)
+        {
+            PreProcessTypeModel model = new PreProcessTypeModel { };
+
+            var repo = _unitOfWork.GetRepository<PreProcessType>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+        #endregion
+
+        #region PAYMENT PLAN BUSINESS
+        public PaymentPlanModel[] GetPaymentPlanList()
+        {
+            List<PaymentPlanModel> data = new List<PaymentPlanModel>();
+
+            var repo = _unitOfWork.GetRepository<PaymentPlan>();
+
+            repo.GetAll().ToList().ForEach(d =>
+            {
+                PaymentPlanModel containerObj = new PaymentPlanModel();
+                d.MapTo(containerObj);
+                data.Add(containerObj);
+            });
+
+            return data.ToArray();
+        }
+
+        public BusinessResult SaveOrUpdatePaymentPlan(PaymentPlanModel model)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.PaymentPlanCode))
+                    throw new Exception("Plan kodu girilmelidir.");
+                if (string.IsNullOrEmpty(model.PaymentPlanName))
+                    throw new Exception("Plan adı girilmelidir.");
+
+                var repo = _unitOfWork.GetRepository<PaymentPlan>();
+
+                if (repo.Any(d => (d.PaymentPlanCode == model.PaymentPlanCode)
+                    && d.Id != model.Id))
+                    throw new Exception("Aynı koda sahip başka bir plan mevcuttur. Lütfen farklı bir kod giriniz.");
+
+                var dbObj = repo.Get(d => d.Id == model.Id);
+                if (dbObj == null)
+                {
+                    dbObj = new PaymentPlan();
+                    repo.Add(dbObj);
+                }
+
+                model.MapTo(dbObj);
+
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+                result.RecordId = dbObj.Id;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public BusinessResult DeletePaymentPlan(int id)
+        {
+            BusinessResult result = new BusinessResult();
+
+            try
+            {
+                var repo = _unitOfWork.GetRepository<PaymentPlan>();
+
+                var dbObj = repo.Get(d => d.Id == id);
+                repo.Delete(dbObj);
+                _unitOfWork.SaveChanges();
+
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                result.Result = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
+        }
+
+        public PaymentPlanModel GetPaymentPlan(int id)
+        {
+            PaymentPlanModel model = new PaymentPlanModel { };
+
+            var repo = _unitOfWork.GetRepository<PaymentPlan>();
+            var dbObj = repo.Get(d => d.Id == id);
+            if (dbObj != null)
+            {
+                model = dbObj.MapTo(model);
+            }
+
+            return model;
+        }
+
         #endregion
     }
 }

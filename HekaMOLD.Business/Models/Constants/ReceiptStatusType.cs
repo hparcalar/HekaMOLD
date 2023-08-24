@@ -13,6 +13,8 @@ namespace HekaMOLD.Business.Models.Constants
         WaitingQualityApprove=2,
         QualityIsApproved=3,
         Blocked = 4,
-        Closed = 5
+        Closed = 5,
+        OffTheRecord= 6,
+        ReadyToSync = 7,
     }
 }

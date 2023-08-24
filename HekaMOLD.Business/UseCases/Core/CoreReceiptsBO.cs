@@ -148,13 +148,13 @@ namespace HekaMOLD.Business.UseCases.Core
             try
             {
                 var repo = _unitOfWork.GetRepository<ItemReceiptConsume>();
-                var existingConsume = repo.Get(d => d.ItemReceiptDetail == consumed && d.ItemReceiptDetail1 == consumer);
+                var existingConsume = repo.Get(d => d.ItemReceiptDetailConsumed == consumed && d.ItemReceiptDetailConsumer == consumer);
                 if (existingConsume == null)
                 {
                     existingConsume = new ItemReceiptConsume
                     {
-                        ItemReceiptDetail = consumed,
-                        ItemReceiptDetail1 = consumer,
+                        ItemReceiptDetailConsumed = consumed,
+                        ItemReceiptDetailConsumer = consumer,
                         UsedQuantity = usedQuantity,
                     };
                     repo.Add(existingConsume);
@@ -173,7 +173,7 @@ namespace HekaMOLD.Business.UseCases.Core
             return result;
         }
 
-        public BusinessResult UpdateItemStats(int[] itemId)
+        public async Task<BusinessResult> UpdateItemStats(int[] itemId)
         {
             BusinessResult result = new BusinessResult();
 
@@ -214,7 +214,7 @@ namespace HekaMOLD.Business.UseCases.Core
                     }
                 }
 
-                _uow.SaveChanges();
+                await _uow.SaveChangesAsync();
                 result.Result = true;
             }
             catch (Exception ex)

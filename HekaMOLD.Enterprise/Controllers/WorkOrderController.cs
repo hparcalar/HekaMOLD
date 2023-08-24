@@ -3,6 +3,7 @@ using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -42,13 +43,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetWorkOrderDetailList()
+        public JsonResult GetWorkOrderDetailList(string dt1, string dt2)
         {
             WorkOrderDetailModel[] result = new WorkOrderDetailModel[0];
 
             using (ProductionBO bObj = new ProductionBO())
             {
-                result = bObj.GetWorkOrderDetailList();
+                result = bObj.GetWorkOrderDetailList(dt1,dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -65,6 +66,7 @@ namespace HekaMOLD.Enterprise.Controllers
             ForexTypeModel[] forexes = new ForexTypeModel[0];
             MoldModel[] molds = new MoldModel[0];
             MoldTestModel[] moldTests = new MoldTestModel[0];
+            WorkOrderCategoryModel[] workCategories = new WorkOrderCategoryModel[0];
 
             using (DefinitionsBO bObj = new DefinitionsBO())
             {
@@ -73,6 +75,7 @@ namespace HekaMOLD.Enterprise.Controllers
                 firms = bObj.GetFirmList();
                 forexes = bObj.GetForexTypeList();
                 molds = bObj.GetMoldList();
+                workCategories = bObj.GetWorkOrderCategoryList();
             }
 
             using (MoldBO bObj = new MoldBO())
@@ -83,6 +86,7 @@ namespace HekaMOLD.Enterprise.Controllers
             var jsonResult = Json(new { Items = items, Units = units, 
                 Firms = firms, Forexes = forexes,
                 Molds = molds, MoldTests = moldTests,
+                WorkCategories = workCategories,
             }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
@@ -145,6 +149,9 @@ namespace HekaMOLD.Enterprise.Controllers
                 BusinessResult result = null;
                 using (ProductionBO bObj = new ProductionBO())
                 {
+                    int plantId = Convert.ToInt32(Request.Cookies["PlantId"].Value);
+                    model.PlantId = plantId;
+
                     result = bObj.SaveOrUpdateWorkOrder(model);
                 }
 
@@ -165,6 +172,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetProductionHistory(string dt1, string dt2)
         {
             ProductionHistoryModel[] data = new ProductionHistoryModel[0];

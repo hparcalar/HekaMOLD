@@ -1,4 +1,4 @@
-﻿app.controller('serialApprovalCtrl', function ($scope, $http) {
+﻿app.controller('serialApprovalCtrl', function ($scope, $http, $timeout) {
     $scope.modelObject = {
         Id:0,
         DocumentNo: '', FirmId: 0,
@@ -6,6 +6,20 @@
         ShowOnlyWaitings: false,
         Details: []
     };
+
+    $scope.firstLoad = false;
+    $scope.barcodeBox = '';
+
+    $scope.onBarcodeKeyUp = function (e) {
+        try {
+            if (e.keyCode == '13' || $scope.barcodeBox.length >= 8) {
+                $scope.processBarcodeResult($scope.barcodeBox);
+            }
+        } catch (e) {
+
+        }
+        
+    }
 
     $scope.pickupList = [];
     $scope.filteredPickupList = [];
@@ -17,19 +31,113 @@
     $scope.selectedProducts = [];
     $scope.selectedSummary = { ItemName: '' };
     $scope.selectedShift = { Id: 0 };
+    $scope.lastReadProduct = { Id: 0 };
 
     $scope.bindModel = function () {
         $http.get(HOST_URL + 'Mobile/GetApprovedSerials', {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
-                    $scope.pickupList = resp.data.Serials.sort((a, b) => a.WorkOrderDetailId - b.WorkOrderDetailId);
+                    $scope.pickupList = resp.data.Serials;
                     $scope.filteredPickupList = $scope.pickupList;
                     $scope.summaryList = resp.data.Summaries;
                     $scope.filteredSummaryList = $scope.summaryList;
 
                     $scope.updateFilteredList();
+
+                    if ($scope.firstLoad == false) {
+                        $scope.toggleQualityFilter(3); // first display only waiting products
+                        $scope.firstLoad = true;
+                    }
                 }
             }).catch(function (err) { });
+    }
+
+    $scope.changePackageQuantity = function (packObj) {
+        bootbox.prompt({
+            title: "Koli içi miktarı giriniz",
+            centerVertical: true,
+            callback: function (result) {
+                if (result != null && result.length > 0) {
+                    var newQty = parseInt(result);
+                    if (newQty <= 0) {
+                        toastr.error('Miktar 0 dan büyük olmalıdır.');
+                        return;
+                    }
+
+                    $http.post(HOST_URL + 'Mobile/UpdateWorkOrderSerial', {
+                        serialId: packObj.Id,
+                        newQuantity: newQty,
+                    }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                if (resp.data.Result) {
+                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                                    $timeout(function () {
+                                        $scope.bindModel();
+                                    });
+                                }
+                                else
+                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                            }
+                        }).catch(function (err) { });
+                }
+            }
+        });
+    }
+
+    $scope.deleteEntries = function () {
+        //for (var i = 0; i < $scope.selectedProducts.length; i++) {
+        //    var prd = $scope.selectedProducts[i];
+        //    if (prd.QualityStatus != null && prd.QualityStatus > 0) {
+        //        toastr.error('Seçilen ürünlerin kalite durumları silmek için uygun değil.');
+        //        return;
+        //    }
+        //}
+
+        bootbox.confirm({
+            message: "Seçilen ürünleri silmek istediğinizden emin misiniz?",
+            closeButton: false,
+            buttons: {
+                confirm: {
+                    label: 'Evet',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'Hayır',
+                    className: 'btn-light'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $scope.saveStatus = 1;
+
+                    $http.post(HOST_URL + 'ProductQuality/DeleteSerials', { model: $scope.selectedProducts }, 'json')
+                        .then(function (resp) {
+                            if (typeof resp.data != 'undefined' && resp.data != null) {
+                                $scope.saveStatus = 0;
+
+                                if (resp.data.Status == 1) {
+                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
+
+                                    $scope.modelObject = {
+                                        DocumentNo: '', FirmId: 0,
+                                        FirmCode: '', FirmName: '',
+                                        ShowOnlyOk: false,
+                                        Details: []
+                                    };
+
+                                    window.location.reload();
+                                    //$scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+                                    //$scope.bindModel();
+                                }
+                                else
+                                    toastr.error(resp.data.ErrorMessage, 'Hata');
+                            }
+                        }).catch(function (err) { });
+                }
+            }
+        });
     }
 
     $scope.showQualityText = function (item) {
@@ -71,6 +179,8 @@
     // -- END -- QUALITY STATUS FILTER FUNCTIONS
 
     $scope.updateFilteredList = function () {
+        $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
         // FILTER QUALITY STATUS
         if ($scope.selectedQualities.length > 0) {
             $scope.filteredPickupList = $scope.pickupList.filter(d => $scope.selectedQualities.some(q => q == d.QualityStatus));
@@ -125,6 +235,8 @@
         else {
             $scope.selectedProducts.push(item);
         }
+
+        $scope.lastReadProduct = item;
     }
 
     $scope.isSelectedProduct = function (item) {
@@ -180,17 +292,41 @@
         $scope.updateFilteredList();
     }
 
-    $scope.processBarcodeResult = function (barcode) {
+    $scope.processBarcodeResult = async function (barcode) {
         var product = $scope.pickupList.find(d => d.SerialNo == barcode);
         if (product != null && typeof product != 'undefined') {
             $scope.selectProduct(product);
             $scope.isBarcodeRead = true;
             try {
-                $scope.$apply();
+                $scope.$applyAsync();
             } catch (e) {
 
             }
         }
+        else {
+            $scope.isBarcodeRead = true;
+
+            const resp = await $http.get(HOST_URL + 'Mobile/SearchBarcodeForApproveSerial?barcode=' + barcode, {}, 'json');
+            if (resp != null && resp.data != null && resp.data.Id > 0) {
+                const pr = resp.data;
+                const existing = $scope.pickupList.find(d => d.SerialNo == barcode);
+                if (existing == null || typeof existing == 'undefined')
+                    $scope.pickupList.splice(0, 0, pr);
+
+                $scope.updateFilteredList();
+                $scope.selectProduct(pr);
+
+                try {
+                    $scope.$applyAsync();
+                } catch (e) {
+
+                }
+            }
+            else
+                toastr.error('Okutulan barkod bulunamadı.');
+        }
+
+        $scope.barcodeBox = '';
     }
 
     $scope.isBarcodeRead = false;
@@ -268,7 +404,7 @@
                                 className: 'btn-light'
                             }
                         },
-                        callback: function (resultMsg) {
+                        callback: async function (resultMsg) {
                             if (resultMsg != null) {
                                 $scope.saveStatus = 1;
 
@@ -276,29 +412,28 @@
                                     $scope.selectedProducts[i].QualityExplanation = resultMsg;
                                 }
 
-                                $http.post(HOST_URL + 'ProductQuality/ConditionalApprove',
-                                    { model: $scope.selectedProducts }, 'json')
-                                    .then(function (resp) {
-                                        if (typeof resp.data != 'undefined' && resp.data != null) {
-                                            $scope.saveStatus = 0;
+                                const resp = await $http.post(HOST_URL + 'ProductQuality/ConditionalApprove',
+                                    { model: $scope.selectedProducts }, 'json');
 
-                                            if (resp.data.Status == 1) {
-                                                toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                    $scope.saveStatus = 0;
 
-                                                $scope.modelObject = {
-                                                    DocumentNo: '', FirmId: 0,
-                                                    FirmCode: '', FirmName: '',
-                                                    ShowOnlyWaitings: false,
-                                                    Details: []
-                                                };
-                                                $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+                                    if (resp.data.Status == 1) {
+                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
 
-                                                $scope.bindModel();
-                                            }
-                                            else
-                                                toastr.error(resp.data.ErrorMessage, 'Hata');
-                                        }
-                                    }).catch(function (err) { });
+                                        $scope.modelObject = {
+                                            DocumentNo: '', FirmId: 0,
+                                            FirmCode: '', FirmName: '',
+                                            ShowOnlyWaitings: false,
+                                            Details: []
+                                        };
+                                        $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
+                                        $scope.bindModel();
+                                    }
+                                    else
+                                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                                }
                             }
                         }
                     });
@@ -308,25 +443,25 @@
     }
 
     $scope.sendToWastage = function () {
-        bootbox.confirm({
-            message: "Seçilen ürünleri HURDA ETMEK istediğinizden emin misiniz?",
+        bootbox.prompt({
+            title: "Seçilen ürünleri HURDA ETMEK istediğinizden emin misiniz?",
             closeButton: false,
-            buttons: {
-                confirm: {
-                    label: 'Evet',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Hayır',
-                    className: 'btn-light'
-                }
-            },
+            //buttons: {
+            //    confirm: {
+            //        label: 'Evet',
+            //        className: 'btn-primary'
+            //    },
+            //    cancel: {
+            //        label: 'Hayır',
+            //        className: 'btn-light'
+            //    }
+            //},
             callback: function (result) {
-                if (result) {
+                if (result != null && result.length > 0) {
                     $scope.saveStatus = 1;
 
                     $http.post(HOST_URL + 'ProductQuality/SendToWastage',
-                        { model: $scope.selectedProducts }, 'json')
+                        { model: $scope.selectedProducts, explanation: result }, 'json')
                         .then(function (resp) {
                             if (typeof resp.data != 'undefined' && resp.data != null) {
                                 $scope.saveStatus = 0;
@@ -367,33 +502,32 @@
                     className: 'btn-light'
                 }
             },
-            callback: function (result) {
+            callback: async function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
 
-                    $http.post(HOST_URL + 'ProductQuality/ApproveSerials',
-                        { model: $scope.selectedProducts }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
+                    const resp = await $http.post(HOST_URL + 'ProductQuality/ApproveSerials',
+                        { model: $scope.selectedProducts }, 'json');
 
-                                if (resp.data.Status == 1) {
-                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.saveStatus = 0;
 
-                                    $scope.modelObject = {
-                                        DocumentNo: '', FirmId: 0,
-                                        FirmCode: '', FirmName: '',
-                                        ShowOnlyWaitings: false,
-                                        Details: []
-                                    };
-                                    $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+                        if (resp.data.Status == 1) {
+                            toastr.success('İşlem başarılı.', 'Bilgilendirme');
 
-                                    $scope.bindModel();
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
+                            $scope.modelObject = {
+                                DocumentNo: '', FirmId: 0,
+                                FirmCode: '', FirmName: '',
+                                ShowOnlyWaitings: false,
+                                Details: []
+                            };
+                            $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
+                            $scope.bindModel();
+                        }
+                        else
+                            toastr.error(resp.data.ErrorMessage, 'Hata');
+                    }
                 }
             },
         });
@@ -429,7 +563,7 @@
                                 className: 'btn-light'
                             }
                         },
-                        callback: function (resultMsg) {
+                        callback: async function (resultMsg) {
                             if (resultMsg != null) {
                                 $scope.saveStatus = 1;
 
@@ -437,29 +571,28 @@
                                     $scope.selectedProducts[i].QualityExplanation = resultMsg;
                                 }
 
-                                $http.post(HOST_URL + 'ProductQuality/DenySerials',
-                                    { model: $scope.selectedProducts }, 'json')
-                                    .then(function (resp) {
-                                        if (typeof resp.data != 'undefined' && resp.data != null) {
-                                            $scope.saveStatus = 0;
+                                const resp = await $http.post(HOST_URL + 'ProductQuality/DenySerials',
+                                    { model: $scope.selectedProducts }, 'json');
 
-                                            if (resp.data.Status == 1) {
-                                                toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                                if (typeof resp.data != 'undefined' && resp.data != null) {
+                                    $scope.saveStatus = 0;
 
-                                                $scope.modelObject = {
-                                                    DocumentNo: '', FirmId: 0,
-                                                    FirmCode: '', FirmName: '',
-                                                    ShowOnlyWaitings: false,
-                                                    Details: []
-                                                };
-                                                $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+                                    if (resp.data.Status == 1) {
+                                        toastr.success('İşlem başarılı.', 'Bilgilendirme');
 
-                                                $scope.bindModel();
-                                            }
-                                            else
-                                                toastr.error(resp.data.ErrorMessage, 'Hata');
-                                        }
-                                    }).catch(function (err) { });
+                                        $scope.modelObject = {
+                                            DocumentNo: '', FirmId: 0,
+                                            FirmCode: '', FirmName: '',
+                                            ShowOnlyWaitings: false,
+                                            Details: []
+                                        };
+                                        $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
+                                        $scope.bindModel();
+                                    }
+                                    else
+                                        toastr.error(resp.data.ErrorMessage, 'Hata');
+                                }
                             }
                         }
                     });
@@ -482,33 +615,32 @@
                     className: 'btn-light'
                 }
             },
-            callback: function (result) {
+            callback: async function (result) {
                 if (result) {
                     $scope.saveStatus = 1;
 
-                    $http.post(HOST_URL + 'ProductQuality/WaitSerials',
-                        { model: $scope.selectedProducts }, 'json')
-                        .then(function (resp) {
-                            if (typeof resp.data != 'undefined' && resp.data != null) {
-                                $scope.saveStatus = 0;
+                    const resp = await $http.post(HOST_URL + 'ProductQuality/WaitSerials',
+                        { model: $scope.selectedProducts }, 'json');
 
-                                if (resp.data.Status == 1) {
-                                    toastr.success('İşlem başarılı.', 'Bilgilendirme');
+                    if (typeof resp.data != 'undefined' && resp.data != null) {
+                        $scope.saveStatus = 0;
 
-                                    $scope.modelObject = {
-                                        DocumentNo: '', FirmId: 0,
-                                        FirmCode: '', FirmName: '',
-                                        ShowOnlyWaitings: false,
-                                        Details: []
-                                    };
-                                    $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+                        if (resp.data.Status == 1) {
+                            toastr.success('İşlem başarılı.', 'Bilgilendirme');
 
-                                    $scope.bindModel();
-                                }
-                                else
-                                    toastr.error(resp.data.ErrorMessage, 'Hata');
-                            }
-                        }).catch(function (err) { });
+                            $scope.modelObject = {
+                                DocumentNo: '', FirmId: 0,
+                                FirmCode: '', FirmName: '',
+                                ShowOnlyWaitings: false,
+                                Details: []
+                            };
+                            $scope.selectedProducts.splice(0, $scope.selectedProducts.length);
+
+                            $scope.bindModel();
+                        }
+                        else
+                            toastr.error(resp.data.ErrorMessage, 'Hata');
+                    }
                 }
             },
         });
