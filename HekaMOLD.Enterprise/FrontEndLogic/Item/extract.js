@@ -27,6 +27,7 @@
                                     rowAlternationEnabled: true,
                                     focusedRowEnabled: true,
                                     showBorders: true,
+                                    showScrollbar: "always",
                                     export: {
                                         enabled: true,
                                         allowExportSelectedData: true,

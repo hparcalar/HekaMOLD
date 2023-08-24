@@ -153,13 +153,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetPlanFormList()
+        public JsonResult GetPlanFormList(string dt1, string dt2)
         {
             EntryQualityDataModel[] result = new EntryQualityDataModel[0];
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.GetEntryFormList();
+                result = bObj.GetEntryFormList(dt1, dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

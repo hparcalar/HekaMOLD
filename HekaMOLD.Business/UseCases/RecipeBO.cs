@@ -439,6 +439,7 @@ namespace HekaMOLD.Business.UseCases
                 foreach (var prodItem in prodReceiptDetails)
                 {
                     var productionForm = repoMoldTest.Get(d => d.ProductCode == prodItem.Item.ItemNo);
+                    //var productionForm = repoRecipeDetail.Get(d => d.ProductCode == prodItem.Item.ItemNo);
                     if (productionForm != null)
                     {
                         // raw material consumption

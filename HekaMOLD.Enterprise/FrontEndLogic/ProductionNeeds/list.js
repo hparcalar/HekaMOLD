@@ -3,12 +3,18 @@
 
     $scope.saveStatus = 0;
 
+    $scope.filterModel = {
+        startDate: moment().add(-1, 'M').format('DD.MM.YYYY'),
+        endDate: moment().format('DD.MM.YYYY'),
+    };
+
     // LIST FUNCTIONS
     $scope.loadReport = function () {
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'ProductionNeeds/GetProductionNeeds', function (data) {
+                    return $.getJSON(HOST_URL + 'ProductionNeeds/GetProductionNeeds?dt1=' + $scope.filterModel.startDate +
+                        '&dt2=' + $scope.filterModel.endDate, function (data) {
 
                     });
                 },

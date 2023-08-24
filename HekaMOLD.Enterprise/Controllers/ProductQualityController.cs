@@ -154,13 +154,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetPlanFormList()
+        public JsonResult GetPlanFormList(string dt1, string dt2)
         {
             ProductQualityDataModel[] result = new ProductQualityDataModel[0];
 
             using (QualityBO bObj = new QualityBO())
             {
-                result = bObj.GetProductFormList();
+                result = bObj.GetProductFormList(dt1,dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -355,13 +355,13 @@ namespace HekaMOLD.Enterprise.Controllers
 
         #region CONDITIONAL APPROVE & SCRAP REPORTS
         [HttpGet]
-        public JsonResult GetConditionalApprovedList()
+        public JsonResult GetConditionalApprovedList(string dt1, string dt2)
         {
             WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];
 
             using (QualityBO bObj = new QualityBO())
             {
-                data = bObj.GetConditionalApprovedSerials();
+                data = bObj.GetConditionalApprovedSerials(dt1,dt2);
             }
 
             var jsonResp = Json(data, JsonRequestBehavior.AllowGet);
@@ -370,13 +370,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetScrapList()
+        public JsonResult GetScrapList(string dt1, string dt2)
         {
             ProductWastageModel[] data = new ProductWastageModel[0];
 
             using (QualityBO bObj = new QualityBO())
             {
-                data = bObj.GetScrapList(new Business.Models.Filters.BasicRangeFilter { });
+                data = bObj.GetScrapList(new Business.Models.Filters.BasicRangeFilter { }, dt1,dt2);
             }
 
             var jsonResp = Json(data, JsonRequestBehavior.AllowGet);

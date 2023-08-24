@@ -4,6 +4,11 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
     $scope.modelObject = { Id: 0 };
     $scope.saveStatus = 0;
 
+    $scope.filterModel = {
+        startDate: moment().add(-1, 'M').format('DD.MM.YYYY'),
+        endDate: moment().format('DD.MM.YYYY'),
+    };
+
     $scope.waitingPlansVisible = true;
 
     $scope.machineList = [];
@@ -55,7 +60,8 @@ app.controller('deliveryPlanningCtrl', function deliveryPlanningCtrl($scope, $ht
             }).catch(function (err) { });
     }
     $scope.loadWaitingPlanList = function () {
-        $http.get(HOST_URL + 'Delivery/GetWaitingPlans', {}, 'json')
+        $http.get(HOST_URL + 'Delivery/GetWaitingPlans?dt1=' + $scope.filterModel.startDate +
+            '&dt2=' + $scope.filterModel.endDate, {}, 'json')
             .then(function (resp) {
                 if (typeof resp.data != 'undefined' && resp.data != null) {
                     $scope.waitingPlanList = resp.data;

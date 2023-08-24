@@ -1,4 +1,4 @@
-﻿app.controller('productionHistoryCtrl', function ($scope, $http) {
+﻿app.controller('productionInformationCtrl', function ($scope, $http) {
     DevExpress.localization.locale('tr');
 
     $scope.filterModel = {
@@ -13,10 +13,10 @@
                 load: function () {
                     return $.getJSON(HOST_URL + 'WorkOrder/GetProductionHistory?dt1=' + $scope.filterModel.startDate +
                         '&dt2=' + $scope.filterModel.endDate, function (data) {
-                            
+
                         });
                 },
-                key: ['WorkOrderDetailId','WorkDateStr', 'ShiftCode']
+                key: ['WorkOrderDetailId', 'WorkDateStr', 'ShiftCode']
             },
             showColumnLines: false,
             showRowLines: true,
@@ -24,16 +24,13 @@
             allowColumnResizing: true,
             focusedRowEnabled: true,
             showBorders: true,
-            export: {
-                enabled: true,
-            },
             filterRow: {
                 visible: true
             },
             headerFilter: {
                 visible: true
             },
-            height:700,
+            height: 700,
             groupPanel: {
                 visible: true
             },
@@ -45,11 +42,9 @@
                 { dataField: 'WorkDateStr', caption: 'Tarih' },
                 { dataField: 'ShiftCode', caption: 'Vardiya' },
                 { dataField: 'UserName', caption: 'Personel' },
-                { dataField: 'SaleOrderNo', caption: 'Sipariş No' },
                 { dataField: 'ProductCode', caption: 'Ürün Kodu' },
                 { dataField: 'ProductName', caption: 'Ürün Adı' },
                 { dataField: 'MachineCode', caption: 'Makine' },
-                { dataField: 'OrderQuantity', caption: 'Sipariş Miktar' },
                 { dataField: 'CompleteQuantity', caption: 'Üretilen Miktar' },
                 /*{ dataField: 'SerialCount', caption: 'Koli Adedi' },*/
                 { dataField: 'WastageQuantity', caption: 'Fire Miktar' },
@@ -68,8 +63,8 @@
                 }
                 ]
             }
-            });
-        }
+        });
+    }
 
     // ON LOAD EVENTS
     $scope.loadReport();

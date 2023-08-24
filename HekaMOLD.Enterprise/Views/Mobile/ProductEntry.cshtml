@@ -66,7 +66,7 @@
                             <label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Barkod</label>
                             <!--begin::Input group-->
                             <input type="text" ng-cloak class="form-control"
-                                   ng-model="modelObject.Barcode" placeholder="" />
+                                   ng-model="modelObject.Barcode" placeholder="" readonly/>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                         <!--begin::Input group-->
                         <div class="mb-0">
                             <input type="number" ng-cloak class="form-control"
-                                   ng-model="labelCount" placeholder="" />
+                                   ng-model="labelCount" placeholder=""/>
                         </div>
                     </div>
                     <div style="text-align:center; border:1px solid #ffd800; border-radius:3px;" class="bg-light-warning py-2"
@@ -178,7 +178,7 @@
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
     <script src="~/Scripts/html5-qrcode.min.js"></script>
-    <script src="~/FrontEndLogic/Mobile/product-entry.js?v=3"></script>
+    <script src="~/FrontEndLogic/Mobile/product-entry.js?v=4"></script>
     <script src="~/Components/Controllers/production-history-list.js"></script>
     <script src="~/Components/Controllers/plan-machine-selection.js"></script>
 }

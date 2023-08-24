@@ -223,7 +223,27 @@
                             <span href="#" class="text-dark fw-boldest fs-3">Sayım İşlemi</span>
                         </div>
                     </div>
+                    <div class="col-sm-6 col-xxl-6">
+                        <div class="row">
+                            <div class="col-sm-6 col-xxl-6">
+                                <div class="col bg-light-primary border border-primary text-center border-active active px-6 py-8 rounded-2 mb-7 heka-mobile-link"
+                                     ng-if="modelObject.IsProdChief == true" ng-click="redirect('ProductionInformation')">
+                                    <span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle opacity="0.25" cx="12" cy="12" r="10" fill="#191213" />
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C11.4477 7 11 7.44772 11 8C11 8.55229 11.4477 9 12 9C12.5523 9 13 8.55229 13 8C13 7.44772 12.5523 7 12 7ZM12 11C11.4477 11 11 11.4477 11 12V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V12C13 11.4477 12.5523 11 12 11Z" fill="#121319" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                    <div class="row">
+                                        <span href="#" class="text-dark fw-boldest fs-3">Üretim Bilgisi</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
                 @* PRODUCTION SUMMARY PANEL *@
             <div class="flex-fill mx-2 p-0" ng-cloak ng-if="modelObject.IsProdChief == false && modelObject.MachineId > 0">
@@ -297,9 +317,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
-            </div>
-
         </div>
         <!--end::Container-->
     </div>

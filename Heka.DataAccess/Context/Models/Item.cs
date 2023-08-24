@@ -54,6 +54,7 @@ namespace Heka.DataAccess.Context
 
         public Nullable<int> TaxRate { get; set; }
 
+        public Nullable<bool> isActive { get; set; }
 
         [InverseProperty("Item")]
         public virtual ICollection<EntryQualityData> EntryQualityData { get; set; }

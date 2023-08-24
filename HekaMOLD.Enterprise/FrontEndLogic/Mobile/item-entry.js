@@ -212,6 +212,8 @@
                 ItemName: x.ItemName,
                 Quantity: 0,
                 UnitPrice: 0,
+                UnitCode: x.UnitCode,
+                UnitName: x.UnitCode,
                 NewDetail: true,
             });
         });

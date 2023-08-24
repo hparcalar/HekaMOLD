@@ -216,7 +216,7 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
-            return repo.GetAll().Select(d => new ItemModel
+            return repo.GetAll().Where(d => d.isActive != false).Select(d => new ItemModel
             {
                 Id=d.Id,
                 ItemNo = d.ItemNo,
@@ -236,7 +236,7 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
-            return repo.GetAll().Select(d => new ItemModel
+            return repo.GetAll().Where(d => d.isActive != false).Select(d => new ItemModel
             {
                 Id = d.Id,
                 ItemNo = d.ItemNo,
@@ -256,7 +256,7 @@ namespace HekaMOLD.Business.UseCases
         {
             var repo = _unitOfWork.GetRepository<Item>();
 
-            return repo.GetAll().Select(d => new ItemModel
+            return repo.GetAll().Where(d => d.isActive != false).Select(d => new ItemModel
             {
                 Id = d.Id,
                 ItemNo = d.ItemNo,
@@ -411,7 +411,15 @@ namespace HekaMOLD.Business.UseCases
                 var repo = _unitOfWork.GetRepository<Item>();
 
                 var dbObj = repo.Get(d => d.Id == id);
-                repo.Delete(dbObj);
+
+                if (dbObj != null) {
+                    Random rnd = new Random();
+                    var exNum = rnd.Next(999);
+                    dbObj.ItemNo = "ex-" + dbObj.ItemNo + exNum;
+                    dbObj.isActive = false;
+                }
+
+                //repo.Delete(dbObj);
                 _unitOfWork.SaveChanges();
 
                 result.Result = true;

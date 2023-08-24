@@ -232,18 +232,31 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
-        public ItemOrderDetailModel[] GetWaitingItemOrders()
+        public ItemOrderDetailModel[] GetWaitingItemOrders(string dt1 = "", string dt2 = "")
         {
             ItemOrderDetailModel[] data = new ItemOrderDetailModel[0];
 
             DateTime dtYearStart = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd", 
                 System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
+            DateTime dtStart, dtEnd;
+
+            if (string.IsNullOrEmpty(dt1))
+                dt1 = "01.01." + DateTime.Now.Year;
+            if (string.IsNullOrEmpty(dt2))
+                dt2 = "31.12." + DateTime.Now.Year;
+
+            dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+            dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
             var repo = _unitOfWork.GetRepository<ItemOrderDetail>();
             data = repo.Filter(d =>
                 d.ItemOrder.OrderType == (int)ItemOrderType.Sale
                 && d.ItemOrder.OrderDate > dtYearStart
                 && (d.DeliveryPlan.Sum(m => m.Quantity ?? m.ItemOrderDetail.Quantity) ?? 0) < d.Quantity
+                && (d.ItemOrder.OrderDate >= dtStart && d.ItemOrder.OrderDate <= dtEnd)
             ).ToList().Select(d => new ItemOrderDetailModel
             {
                 Id = d.Id,

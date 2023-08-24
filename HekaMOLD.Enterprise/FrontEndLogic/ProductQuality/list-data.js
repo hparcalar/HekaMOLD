@@ -1,12 +1,18 @@
 ﻿app.controller('productQualityPlanFormListCtrl', function sidebarCtrl($scope, $http) {
     DevExpress.localization.locale('tr');
 
+    $scope.filterModel = {
+        startDate: moment().add(-1, 'M').format('DD.MM.YYYY'),
+        endDate: moment().format('DD.MM.YYYY'),
+    };
+
     // LIST FUNCTIONS
     $scope.loadReport = function () {
         $('#dataList').dxDataGrid({
             dataSource: {
                 load: function () {
-                    return $.getJSON(HOST_URL + 'ProductQuality/GetPlanFormList', function (data) {
+                    return $.getJSON(HOST_URL + 'ProductQuality/GetPlanFormList?dt1=' + $scope.filterModel.startDate +
+                        '&dt2=' + $scope.filterModel.endDate, function (data) {
                             
                         });
                 },
@@ -30,7 +36,7 @@
             },
             paging: {
                 enabled:true,
-                pageSize: 13,
+                pageSize: 20,
                 pageIndex:0
             },
             groupPanel: {

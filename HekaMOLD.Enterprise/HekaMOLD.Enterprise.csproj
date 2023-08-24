@@ -4169,6 +4169,7 @@
     <Content Include="FrontEndLogic\Mobile\product-delivery.js" />
     <Content Include="FrontEndLogic\Mobile\product-information.js" />
     <Content Include="FrontEndLogic\Mobile\product-plan-list.js" />
+    <Content Include="FrontEndLogic\Mobile\production-information.js" />
     <Content Include="FrontEndLogic\Mobile\wastage-entry.js" />
     <Content Include="FrontEndLogic\Mobile\product-pickup.js" />
     <Content Include="FrontEndLogic\Mobile\item-entry-list.js" />
@@ -4779,6 +4780,9 @@
     <Content Include="Views\Mobile\WarehouseManagement.cshtml" />
     <Content Include="Views\Mobile\ProductQualityApprovement.cshtml" />
     <Content Include="Views\ItemReceipt\ProdConsReport.cshtml" />
+    <Content Include="Views\Mobile\ProductionInformation.cshtml" />
+    <Content Include="Views\Mobile\WarehouseStates.cshtml" />
+    <Content Include="Views\Mobile\FinishedProductReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

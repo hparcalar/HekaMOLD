@@ -19,6 +19,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.IO;
@@ -31,13 +32,25 @@ namespace HekaMOLD.Business.UseCases
     public class ProductionBO : CoreProductionBO
     {
         #region WORK ORDER & DETAILS
-        public WorkOrderDetailModel[] GetWorkOrderDetailList()
+        public WorkOrderDetailModel[] GetWorkOrderDetailList(string dt1 = "", string dt2 = "")
         {
             WorkOrderDetailModel[] data = new WorkOrderDetailModel[0];
 
+            DateTime dtStart, dtEnd;
+
+            if (string.IsNullOrEmpty(dt1))
+                dt1 = "01.01." + DateTime.Now.Year;
+            if (string.IsNullOrEmpty(dt2))
+                dt2 = "31.12." + DateTime.Now.Year;
+
+            dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+            dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                    System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
             var repo = _unitOfWork.GetRepository<WorkOrderDetail>();
 
-            data = repo.GetAll().ToList()
+            data = repo.Filter(d => d.WorkOrder.WorkOrderDate >= dtStart && d.WorkOrder.WorkOrderDate <= dtEnd).ToList()
                 .Select(d => new WorkOrderDetailModel
                 {
                     Id = d.Id,
@@ -46,6 +59,7 @@ namespace HekaMOLD.Business.UseCases
                     ItemId = d.ItemId,
                     ProductCode = d.Item != null ? d.Item.ItemNo : "",
                     ProductName = d.Item != null ? d.Item.ItemName : d.TrialProductName,
+                    WorkOrderDate = d.WorkOrder != null ? d.WorkOrder.WorkOrderDate : null,
                     WorkOrderDateStr = d.WorkOrder.WorkOrderDate != null ?
                         string.Format("{0:dd.MM.yyyy}", d.WorkOrder.WorkOrderDate) : "",
                     WorkOrderNo = d.WorkOrder.WorkOrderNo,
@@ -1685,26 +1699,26 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region PRODUCTION ITEM NEEDS MANAGEMENT
-        public ItemOrderItemNeedsModel[] GetWorkOrderItemNeeds(BasicRangeFilter filter)
+        public ItemOrderItemNeedsModel[] GetWorkOrderItemNeeds(string dt1 = "", string dt2 = "")
         {
             ItemOrderItemNeedsModel[] data = new ItemOrderItemNeedsModel[0];
 
             try
             {
-                //DateTime dtStart, dtEnd;
+                DateTime dtStart, dtEnd;
 
-                //if (string.IsNullOrEmpty(filter.StartDate))
-                //    filter.StartDate = "01.01." + DateTime.Now.Year;
-                //if (string.IsNullOrEmpty(filter.EndDate))
-                //    filter.EndDate = "31.12." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt1))
+                    dt1 = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt2))
+                    dt2 = "31.12." + DateTime.Now.Year;
 
-                //dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
-                //        System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                //dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy",
-                //        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
                 var repo = _unitOfWork.GetRepository<ItemOrderItemNeeds>();
-                data = repo.Filter(d => d.RemainingNeedsQuantity > 0)
+                data = repo.Filter(d => d.RemainingNeedsQuantity > 0 && (d.ItemOrderDetail.ItemOrder.DateOfNeed >= dtStart && d.ItemOrderDetail.ItemOrder.DateOfNeed <= dtEnd))
                 .ToList()    
                 .Select(d => new ItemOrderItemNeedsModel
                 {

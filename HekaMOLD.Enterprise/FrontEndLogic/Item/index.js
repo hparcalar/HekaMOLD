@@ -5,7 +5,7 @@
 
     $scope.selectedItemType = {};
     $scope.itemTypeList = [{ Id: 1, Text: 'Hammadde' }, { Id: 2, Text: 'Ticari Mal' },
-        { Id: 3, Text: 'Yarı Mamul' }, { Id: 3, Text: 'Mamul' }];
+        { Id: 3, Text: 'Yarı Mamul' }, { Id: 4, Text: 'Mamul' }];
 
     $scope.selectedCategory = {};
     $scope.categoryList = [];

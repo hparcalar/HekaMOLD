@@ -1171,5 +1171,17 @@ namespace HekaMOLD.Enterprise.Controllers
         {
             return View();
         }
+        public ActionResult ProductionInformation()
+        {
+            return View();
+        }
+        public ActionResult WarehouseStates()
+        {
+            return View();
+        }
+        public ActionResult FinishedProductReport()
+        {
+            return View();
+        }
     }
 }

@@ -56,13 +56,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetWaitingPlans()
+        public JsonResult GetWaitingPlans(string dt1, string dt2)
         {
             ItemOrderDetailModel[] result = new ItemOrderDetailModel[0];
 
             using (DeliveryBO bObj = new DeliveryBO())
             {
-                result = bObj.GetWaitingItemOrders();
+                result = bObj.GetWaitingItemOrders(dt1, dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);

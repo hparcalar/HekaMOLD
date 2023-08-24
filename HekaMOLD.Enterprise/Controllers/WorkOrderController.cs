@@ -3,6 +3,7 @@ using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.DataTransfer.Summary;
 using HekaMOLD.Business.Models.Operational;
 using HekaMOLD.Business.UseCases;
+using HekaMOLD.Enterprise.Controllers.Attributes;
 using HekaMOLD.Enterprise.Controllers.Filters;
 using System;
 using System.Collections.Generic;
@@ -42,13 +43,13 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetWorkOrderDetailList()
+        public JsonResult GetWorkOrderDetailList(string dt1, string dt2)
         {
             WorkOrderDetailModel[] result = new WorkOrderDetailModel[0];
 
             using (ProductionBO bObj = new ProductionBO())
             {
-                result = bObj.GetWorkOrderDetailList();
+                result = bObj.GetWorkOrderDetailList(dt1,dt2);
             }
 
             var jsonResult = Json(result, JsonRequestBehavior.AllowGet);
@@ -171,6 +172,7 @@ namespace HekaMOLD.Enterprise.Controllers
         }
 
         [HttpGet]
+        [FreeAction]
         public JsonResult GetProductionHistory(string dt1, string dt2)
         {
             ProductionHistoryModel[] data = new ProductionHistoryModel[0];

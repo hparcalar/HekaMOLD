@@ -12,6 +12,7 @@ using HekaMOLD.Business.Helpers;
 using HekaMOLD.Business.Models.DataTransfer.Production;
 using HekaMOLD.Business.Models.Constants;
 using HekaMOLD.Business.Models.Filters;
+using System.Drawing.Drawing2D;
 
 namespace HekaMOLD.Business.UseCases
 {
@@ -251,14 +252,26 @@ namespace HekaMOLD.Business.UseCases
         // END -- ENTRY QUALITY PLANS
 
         // ENTRY QUALITY DATA FORM WORKS
-        public EntryQualityDataModel[] GetEntryFormList()
+        public EntryQualityDataModel[] GetEntryFormList(string dt1 = "", string dt2 = "")
         {
             EntryQualityDataModel[] data = new EntryQualityDataModel[0];
 
             try
             {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(dt1))
+                    dt1 = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt2))
+                    dt2 = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                 var repo = _unitOfWork.GetRepository<EntryQualityData>();
-                data = repo.GetAll().ToList().Select(d => new EntryQualityDataModel
+                data = repo.Filter(d => d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd).ToList().Select(d => new EntryQualityDataModel
                 {
                     Id = d.Id,
                     CreatedDateStr = string.Format("{0:dd.MM.yyyy}", d.CreatedDate),
@@ -553,14 +566,26 @@ namespace HekaMOLD.Business.UseCases
         }
 
         // PRODUCT QUALITY FORM WORKS
-        public ProductQualityDataModel[] GetProductFormList()
+        public ProductQualityDataModel[] GetProductFormList(string dt1 = "", string dt2 = "")
         {
             ProductQualityDataModel[] data = new ProductQualityDataModel[0];
 
             try
             {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(dt1))
+                    dt1 = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt2))
+                    dt2 = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                 var repo = _unitOfWork.GetRepository<ProductQualityData>();
-                data = repo.GetAll().ToList().Select(d => new ProductQualityDataModel
+                data = repo.Filter(d => d.ControlDate >= dtStart && d.ControlDate <= dtEnd).ToList().Select(d => new ProductQualityDataModel
                 {
                     Id = d.Id,
                     ControlDate = d.ControlDate,
@@ -1051,7 +1076,7 @@ namespace HekaMOLD.Business.UseCases
             return result;
         }
 
-        public ProductWastageModel[] GetScrapList(BasicRangeFilter filter)
+        public ProductWastageModel[] GetScrapList(BasicRangeFilter filter, string dt1 = "", string dt2 = "")
         {
             ProductWastageModel[] data = new ProductWastageModel[0];
 
@@ -1059,14 +1084,14 @@ namespace HekaMOLD.Business.UseCases
             {
                 DateTime dtStart, dtEnd;
 
-                if (string.IsNullOrEmpty(filter.StartDate))
-                    filter.StartDate = "01.01." + DateTime.Now.Year;
-                if (string.IsNullOrEmpty(filter.EndDate))
-                    filter.EndDate = "31.12." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt1))
+                    dt1 = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt2))
+                    dt2 = "31.12." + DateTime.Now.Year;
 
-                dtStart = DateTime.ParseExact(filter.StartDate + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
-                dtEnd = DateTime.ParseExact(filter.EndDate + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
                         System.Globalization.CultureInfo.GetCultureInfo("tr"));
 
                 var repo = _unitOfWork.GetRepository<ProductWastage>();
@@ -1108,18 +1133,31 @@ namespace HekaMOLD.Business.UseCases
             return data;
         }
 
-        public WorkOrderSerialModel[] GetConditionalApprovedSerials()
+        public WorkOrderSerialModel[] GetConditionalApprovedSerials(string dt1 = "", string dt2 = "")
         {
             WorkOrderSerialModel[] data = new WorkOrderSerialModel[0];
 
             try
             {
+                DateTime dtStart, dtEnd;
+
+                if (string.IsNullOrEmpty(dt1))
+                    dt1 = "01.01." + DateTime.Now.Year;
+                if (string.IsNullOrEmpty(dt2))
+                    dt2 = "31.12." + DateTime.Now.Year;
+
+                dtStart = DateTime.ParseExact(dt1 + " 00:00:00", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+                dtEnd = DateTime.ParseExact(dt2 + " 23:59:59", "dd.MM.yyyy HH:mm:ss",
+                        System.Globalization.CultureInfo.GetCultureInfo("tr"));
+
                 var repo = _unitOfWork.GetRepository<WorkOrderSerial>();
                 data = repo.Filter(d =>
                     (
                         d.QualityStatus == (int)QualityStatusType.ConditionalApproved
                     )
-                    && d.SerialNo != null && d.SerialNo.Length > 0)
+                    && d.SerialNo != null && d.SerialNo.Length > 0 
+                    && (d.CreatedDate >= dtStart && d.CreatedDate <= dtEnd))
                     .ToList()
                     .Select(d => new WorkOrderSerialModel
                     {

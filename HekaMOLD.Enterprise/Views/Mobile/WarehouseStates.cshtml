@@ -1,36 +1,28 @@
 ﻿@{
-    ViewBag.Title = "Hurda Edilen Ürünler";
+    ViewBag.Title = "Depo Durumları";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
 }
 
-<div ng-controller="scrapListCtrl" class="dx-viewport">
+<div ng-controller="warehouseStatesCtrl" class="dx-viewport">
     <!--begin::Toolbar-->
-    <div class="toolbar" id="kt_toolbar">
+    <div class="toolbar" id="kt_toolbar" style="background-color:white; left:0px">
         <!--begin::Container-->
         <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
             <!--begin::Page title-->
             <div data-kt-place="true" data-kt-place-mode="prepend" data-kt-place-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
                  class="d-flex align-items-center me-3 flex-wrap mb-5 mb-lg-0 lh-1">
                 <!--begin::Title-->
-                <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">
-                    @ViewBag.Title
-                </h1>
                 <!--end::Title-->
             </div>
             <!--end::Page title-->
             <!--begin::Actions-->
-            <div class="d-flex align-items-center py-1" style="width:400px !important;">
-                <div class="d-flex align-items-center py-1" style="width:400px !important;">
-                    <input type="text" class="form-control datepicker" ng-model="filterModel.startDate" ng-change="loadReport()" placeholder="Başlangıç Tarihi" />
-                    <input type="text" class="form-control datepicker mx-2" ng-model="filterModel.endDate" ng-change="loadReport()" placeholder="Bitiş Tarihi" />
-                </div>
-            </div>
             <!--end::Actions-->
         </div>
         <!--end::Container-->
     </div>
     <!--end::Toolbar-->
     <!--begin::Post-->
-    <div class="post d-flex flex-column-fluid" id="kt_post">
+    <div class="post d-flex flex-column-fluid mt-10" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-fluid">
             <!--begin::Row-->
@@ -56,5 +48,5 @@
     <link href="~/Content/dx.material.blue.light.compact.css" rel="stylesheet" />
     <script src="~/Scripts/dx.all.js"></script>
     <script src="~/Scripts/devextreme-localization/dx.messages.tr.js"></script>
-    <script src="~/FrontEndLogic/ProductQuality/scrap-list.js?v=2"></script>
+    <script src="~/FrontEndLogic/Warehouse/states.js"></script>
 }
