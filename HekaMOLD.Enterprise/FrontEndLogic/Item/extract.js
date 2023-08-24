@@ -15,7 +15,6 @@
                         .then(function (respExtract) {
                             if (typeof respExtract.data != 'undefined' && respExtract.data != null) {
                                 $scope.extractList = respExtract.data;
-
                                 $('#dataList').dxDataGrid({
                                     dataSource: {
                                         load: function () {
