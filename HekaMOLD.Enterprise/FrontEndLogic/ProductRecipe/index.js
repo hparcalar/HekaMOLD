@@ -75,7 +75,7 @@
                             resolve(resp.data.RecipeNo);
                         }
                         else {
-                            toastr.error('Sıradaki reçete numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
+                            // toastr.error('Sıradaki reçete numarası üretilemedi. Lütfen ekranı yenileyip tekrar deneyiniz.', 'Uyarı');
                             resolve('');
                         }
                     }

@@ -57,10 +57,8 @@ namespace HekaMOLD.Business.UseCases
 
             try
             {
-                if (string.IsNullOrEmpty(model.ProductRecipeCode))
-                    throw new Exception("Reçete no girilmelidir.");
-                //if (string.IsNullOrEmpty(model.Description))
-                //    throw new Exception("Açıklama girilmelidir.");
+                if (model.ProductId == null)
+                    throw new Exception("Ürün seçilmelidir.");
 
                 var repo = _unitOfWork.GetRepository<ProductRecipe>();
                 var repoDetails = _unitOfWork.GetRepository<ProductRecipeDetail>();
@@ -68,8 +66,17 @@ namespace HekaMOLD.Business.UseCases
                 var repoWr = _unitOfWork.GetRepository<Warehouse>();
                 var repoItemWr = _unitOfWork.GetRepository<ItemWarehouse>();
 
+                if (string.IsNullOrEmpty(model.ProductRecipeCode))
+                {
+                    var dbItem = repoItem.Get(d => d.Id == model.ProductId);
+                    if (dbItem == null)
+                        throw new Exception("Ürün seçilmelidir.");
+
+                    model.ProductRecipeCode = dbItem.ItemNo;
+                }
+
                 if (repo.Any(d => (d.ProductRecipeCode == model.ProductRecipeCode) && d.Id != model.Id))
-                    throw new Exception("Aynı koda sahip başka bir reçete mevcuttur. Lütfen farklı bir kod giriniz.");
+                    throw new Exception("Aynı koda sahip başka bir reçete mevcuttur. Lütfen o reçeteyi bulup düzenleyiniz.");
 
                 var dbObj = repo.Get(d => d.Id == model.Id);
                 if (dbObj == null)
@@ -329,6 +336,7 @@ namespace HekaMOLD.Business.UseCases
         #endregion
 
         #region PRODUCT RECIPE CONSUMPTIONS
+        [Obsolete("Eski reçete sarf metodudur ve kullanım dışıdır. Yenisi overload olarak eklendi.")]
         public BusinessResult CreateRecipeConsumption(int workOrderDetailId, int? warehouseId = null)
         {
             BusinessResult result = new BusinessResult();
@@ -439,98 +447,121 @@ namespace HekaMOLD.Business.UseCases
                 foreach (var prodItem in prodReceiptDetails)
                 {
                     var productionForm = repoMoldTest.Get(d => d.ProductCode == prodItem.Item.ItemNo);
-                    //var productionForm = repoRecipeDetail.Get(d => d.ProductCode == prodItem.Item.ItemNo);
-                    if (productionForm != null)
+                    var recipeDetails = repoRecipeDetail.Filter(d => d.ProductRecipe.ProductId == prodItem.ItemId).ToArray();
+
+                    foreach (var rItem in recipeDetails)
                     {
-                        // raw material consumption
-                        var dbRawItem = repoItem.Get(d => d.ItemNo == productionForm.RawMaterialName || d.ItemName == productionForm.RawMaterialName);
-                        if (dbRawItem != null)
+                        consDetails.Add(new ItemReceiptDetailModel
                         {
-                            consDetails.Add(new ItemReceiptDetailModel
-                            {
-                                ItemId = dbRawItem.Id,
-                                Quantity = productionForm.RawMaterialGr / 1000.0m * prodItem.Quantity,
-                                UnitId = prodItem.UnitId,
-                                LineNumber = lineNumber,
-                                CreatedDate = DateTime.Now,
-                                NewDetail = true,
-                                ReceiptStatus = (int)ReceiptStatusType.Created,
-                                SyncStatus = 1,
-                                TaxIncluded = false,
-                                TaxRate = 0,
-                                TaxAmount = 0,
-                            });
+                            ItemId = rItem.ItemId,
+                            Quantity = rItem.Quantity * prodItem.Quantity,
+                            UnitId = rItem.UnitId,
+                            LineNumber = lineNumber,
+                            CreatedDate = DateTime.Now,
+                            NewDetail = true,
+                            ReceiptStatus = (int)ReceiptStatusType.Created,
+                            SyncStatus = 1,
+                            TaxIncluded = false,
+                            TaxRate = 0,
+                            TaxAmount = 0,
+                        });
 
-                            lineNumber++;
-                        }
-
-                        // dye consumption
-                        var dbDye = repoItem.Get(d => d.ItemNo == productionForm.DyeCode || d.ItemName == productionForm.DyeCode
-                                || d.ItemNo == productionForm.RalCode || d.ItemName == productionForm.RalCode);
-                        if (dbDye != null)
-                        {
-                            consDetails.Add(new ItemReceiptDetailModel
-                            {
-                                ItemId = dbDye.Id,
-                                Quantity = 0.02m * prodItem.Quantity,
-                                UnitId = prodItem.UnitId,
-                                LineNumber = lineNumber,
-                                CreatedDate = DateTime.Now,
-                                NewDetail = true,
-                                ReceiptStatus = (int)ReceiptStatusType.Created,
-                                SyncStatus = 1,
-                                TaxIncluded = false,
-                                TaxRate = 0,
-                                TaxAmount = 0,
-                            });
-
-                            lineNumber++;
-                        }
-
-                        // package consumption
-                        var dbPackage = repoItem.Get(d => d.ItemNo == productionForm.PackageDimension || d.ItemName == productionForm.PackageDimension);
-                        if (dbPackage != null)
-                        {
-                            consDetails.Add(new ItemReceiptDetailModel
-                            {
-                                ItemId = dbPackage.Id,
-                                Quantity = prodItem.Quantity / (productionForm.InPackageQuantity ?? 1),
-                                UnitId = prodItem.UnitId,
-                                LineNumber = lineNumber,
-                                CreatedDate = DateTime.Now,
-                                NewDetail = true,
-                                ReceiptStatus = (int)ReceiptStatusType.Created,
-                                SyncStatus = 1,
-                                TaxIncluded = false,
-                                TaxRate = 0,
-                                TaxAmount = 0,
-                            });
-
-                            lineNumber++;
-                        }
-
-                        // nut consumption
-                        var dbNut = repoItem.Get(d => d.ItemNo == productionForm.NutCaliber || d.ItemName == productionForm.NutCaliber);
-                        if (dbNut != null)
-                        {
-                            consDetails.Add(new ItemReceiptDetailModel
-                            {
-                                ItemId = dbNut.Id,
-                                Quantity = prodItem.Quantity * (productionForm.NutQuantity ?? 0),
-                                UnitId = prodItem.UnitId,
-                                LineNumber = lineNumber,
-                                CreatedDate = DateTime.Now,
-                                NewDetail = true,
-                                ReceiptStatus = (int)ReceiptStatusType.Created,
-                                SyncStatus = 1,
-                                TaxIncluded = false,
-                                TaxRate = 0,
-                                TaxAmount = 0,
-                            });
-
-                            lineNumber++;
-                        }
+                        lineNumber++;
                     }
+
+                    #region __ OLD MOLD BASED CONSUMPTIONS __
+                    //if (productionForm != null)
+                    //{
+                    //    // raw material consumption
+                    //    var dbRawItem = repoItem.Get(d => d.ItemNo == productionForm.RawMaterialName || d.ItemName == productionForm.RawMaterialName);
+                    //    if (dbRawItem != null)
+                    //    {
+                    //        consDetails.Add(new ItemReceiptDetailModel
+                    //        {
+                    //            ItemId = dbRawItem.Id,
+                    //            Quantity = productionForm.RawMaterialGr / 1000.0m * prodItem.Quantity,
+                    //            UnitId = prodItem.UnitId,
+                    //            LineNumber = lineNumber,
+                    //            CreatedDate = DateTime.Now,
+                    //            NewDetail = true,
+                    //            ReceiptStatus = (int)ReceiptStatusType.Created,
+                    //            SyncStatus = 1,
+                    //            TaxIncluded = false,
+                    //            TaxRate = 0,
+                    //            TaxAmount = 0,
+                    //        });
+
+                    //        lineNumber++;
+                    //    }
+
+                    //    // dye consumption
+                    //    var dbDye = repoItem.Get(d => d.ItemNo == productionForm.DyeCode || d.ItemName == productionForm.DyeCode
+                    //            || d.ItemNo == productionForm.RalCode || d.ItemName == productionForm.RalCode);
+                    //    if (dbDye != null)
+                    //    {
+                    //        consDetails.Add(new ItemReceiptDetailModel
+                    //        {
+                    //            ItemId = dbDye.Id,
+                    //            Quantity = 0.02m * prodItem.Quantity,
+                    //            UnitId = prodItem.UnitId,
+                    //            LineNumber = lineNumber,
+                    //            CreatedDate = DateTime.Now,
+                    //            NewDetail = true,
+                    //            ReceiptStatus = (int)ReceiptStatusType.Created,
+                    //            SyncStatus = 1,
+                    //            TaxIncluded = false,
+                    //            TaxRate = 0,
+                    //            TaxAmount = 0,
+                    //        });
+
+                    //        lineNumber++;
+                    //    }
+
+                    //    // package consumption
+                    //    var dbPackage = repoItem.Get(d => d.ItemNo == productionForm.PackageDimension || d.ItemName == productionForm.PackageDimension);
+                    //    if (dbPackage != null)
+                    //    {
+                    //        consDetails.Add(new ItemReceiptDetailModel
+                    //        {
+                    //            ItemId = dbPackage.Id,
+                    //            Quantity = prodItem.Quantity / (productionForm.InPackageQuantity ?? 1),
+                    //            UnitId = prodItem.UnitId,
+                    //            LineNumber = lineNumber,
+                    //            CreatedDate = DateTime.Now,
+                    //            NewDetail = true,
+                    //            ReceiptStatus = (int)ReceiptStatusType.Created,
+                    //            SyncStatus = 1,
+                    //            TaxIncluded = false,
+                    //            TaxRate = 0,
+                    //            TaxAmount = 0,
+                    //        });
+
+                    //        lineNumber++;
+                    //    }
+
+                    //    // nut consumption
+                    //    var dbNut = repoItem.Get(d => d.ItemNo == productionForm.NutCaliber || d.ItemName == productionForm.NutCaliber);
+                    //    if (dbNut != null)
+                    //    {
+                    //        consDetails.Add(new ItemReceiptDetailModel
+                    //        {
+                    //            ItemId = dbNut.Id,
+                    //            Quantity = prodItem.Quantity * (productionForm.NutQuantity ?? 0),
+                    //            UnitId = prodItem.UnitId,
+                    //            LineNumber = lineNumber,
+                    //            CreatedDate = DateTime.Now,
+                    //            NewDetail = true,
+                    //            ReceiptStatus = (int)ReceiptStatusType.Created,
+                    //            SyncStatus = 1,
+                    //            TaxIncluded = false,
+                    //            TaxRate = 0,
+                    //            TaxAmount = 0,
+                    //        });
+
+                    //        lineNumber++;
+                    //    }
+                    //}
+                    #endregion
                 }
 
                 BusinessResult recipeCreationResult = new BusinessResult { Result = false };
