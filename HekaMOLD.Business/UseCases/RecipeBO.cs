@@ -114,15 +114,15 @@ namespace HekaMOLD.Business.UseCases
                 foreach (var item in model.Details)
                 {
                     // CHECK WAREHOUSE MOVEMENT IS ALLOWED FOR THE ITEM
-                    if (item.WarehouseId != null && !repoItemWr.Any(d => d.ItemId == item.ItemId &&
-                        d.WarehouseId == item.WarehouseId && d.IsAllowed == true
-                    ))
-                    {
-                        var dbItem = repoItem.Get(d => d.Id == item.ItemId);
-                        var dbWr = repoWr.Get(d => d.Id == item.WarehouseId);
-                        throw new Exception(dbItem.ItemNo + " nolu stok, " +
-                            dbWr.WarehouseName + " deposunda hareket göremez.");
-                    }
+                    //if (item.WarehouseId != null && !repoItemWr.Any(d => d.ItemId == item.ItemId &&
+                    //    d.WarehouseId == item.WarehouseId && d.IsAllowed == true
+                    //))
+                    //{
+                    //    var dbItem = repoItem.Get(d => d.Id == item.ItemId);
+                    //    var dbWr = repoWr.Get(d => d.Id == item.WarehouseId);
+                    //    throw new Exception(dbItem.ItemNo + " nolu stok, " +
+                    //        dbWr.WarehouseName + " deposunda hareket göremez.");
+                    //}
 
                     if (item.NewDetail == true)
                     {
